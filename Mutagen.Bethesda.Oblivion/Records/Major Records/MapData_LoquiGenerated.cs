@@ -355,7 +355,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Xml_Internal(
+            this.Write_Xml(
                 node: node,
                 name: name,
                 errorMask: errorMaskBuilder,
@@ -377,9 +377,23 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: out errorMask,
                 doMasks: doMasks,
                 translationMask: translationMask);
-            topNode.Elements().First().Save(path);
+            topNode.Elements().First().SaveIfChanged(path);
         }
 
+        public void Write_Xml(
+            string path,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            XElement topNode = new XElement("topnode");
+            Write_Xml(
+                node: topNode,
+                name: name,
+                errorMask: errorMask,
+                translationMask: translationMask);
+            topNode.Elements().First().SaveIfChanged(path);
+        }
         public virtual void Write_Xml(
             Stream stream,
             out MapData_ErrorMask errorMask,
@@ -398,11 +412,25 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public void Write_Xml(
+            Stream stream,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            XElement topNode = new XElement("topnode");
+            Write_Xml(
+                node: topNode,
+                name: name,
+                errorMask: errorMask,
+                translationMask: translationMask);
+            topNode.Elements().First().Save(stream);
+        }
+        public void Write_Xml(
             XElement node,
             string name = null,
             MapData_TranslationMask translationMask = null)
         {
-            this.Write_Xml_Internal(
+            this.Write_Xml(
                 node: node,
                 name: name,
                 errorMask: null,
@@ -414,12 +442,12 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             XElement topNode = new XElement("topnode");
-            Write_Xml_Internal(
+            Write_Xml(
                 node: topNode,
                 name: name,
                 errorMask: null,
                 translationMask: null);
-            topNode.Elements().First().Save(path);
+            topNode.Elements().First().SaveIfChanged(path);
         }
 
         public void Write_Xml(
@@ -427,7 +455,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             XElement topNode = new XElement("topnode");
-            Write_Xml_Internal(
+            Write_Xml(
                 node: topNode,
                 name: name,
                 errorMask: null,
@@ -435,7 +463,7 @@ namespace Mutagen.Bethesda.Oblivion
             topNode.Elements().First().Save(stream);
         }
 
-        protected void Write_Xml_Internal(
+        public void Write_Xml(
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask,
@@ -688,7 +716,7 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Binary_Internal(
+            this.Write_Binary(
                 writer: writer,
                 masterReferences: masterReferences,
                 recordTypeConverter: null,
@@ -720,6 +748,28 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
+        public void Write_Binary(
+            string path,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask)
+        {
+            using (var memStream = new MemoryTributary())
+            {
+                using (var writer = new MutagenWriter(memStream, dispose: false))
+                {
+                    Write_Binary(
+                        writer: writer,
+                        masterReferences: masterReferences,
+                        recordTypeConverter: null,
+                        errorMask: errorMask);
+                }
+                using (var fs = new FileStream(path, FileMode.Create, FileAccess.Write))
+                {
+                    memStream.Position = 0;
+                    memStream.CopyTo(fs);
+                }
+            }
+        }
         public virtual void Write_Binary(
             Stream stream,
             MasterReferences masterReferences,
@@ -737,10 +787,24 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public void Write_Binary(
+            Stream stream,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask)
+        {
+            using (var writer = new MutagenWriter(stream))
+            {
+                Write_Binary(
+                    writer: writer,
+                    masterReferences: masterReferences,
+                    recordTypeConverter: null,
+                    errorMask: errorMask);
+            }
+        }
+        public void Write_Binary(
             MutagenWriter writer,
             MasterReferences masterReferences)
         {
-            this.Write_Binary_Internal(
+            this.Write_Binary(
                 writer: writer,
                 masterReferences: masterReferences,
                 recordTypeConverter: null,
@@ -755,7 +819,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 using (var writer = new MutagenWriter(memStream, dispose: false))
                 {
-                    Write_Binary_Internal(
+                    Write_Binary(
                         writer: writer,
                         masterReferences: masterReferences,
                         recordTypeConverter: null,
@@ -775,7 +839,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             using (var writer = new MutagenWriter(stream))
             {
-                Write_Binary_Internal(
+                Write_Binary(
                     writer: writer,
                     masterReferences: masterReferences,
                     recordTypeConverter: null,
@@ -783,7 +847,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        protected void Write_Binary_Internal(
+        public void Write_Binary(
             MutagenWriter writer,
             MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
@@ -1949,6 +2013,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool UsableDimensions;
         public bool CellCoordinatesNWCell;
         public bool CellCoordinatesSECell;
+        #endregion
+
+        #region Ctors
+        public MapData_TranslationMask()
+        {
+        }
+
+        public MapData_TranslationMask(bool defaultOn)
+        {
+            this.UsableDimensions = defaultOn;
+            this.CellCoordinatesNWCell = defaultOn;
+            this.CellCoordinatesSECell = defaultOn;
+        }
+
         #endregion
 
         public TranslationCrystal GetCrystal()

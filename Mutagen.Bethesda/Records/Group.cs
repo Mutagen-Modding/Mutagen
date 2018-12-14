@@ -10,6 +10,10 @@ using Mutagen.Bethesda.Internals;
 using Noggog;
 using Loqui.Internal;
 using System.Collections;
+using Noggog.Utility;
+using Mutagen.Bethesda.Folder;
+using System.Xml.Linq;
+using DynamicData;
 
 namespace Mutagen.Bethesda
 {
@@ -18,7 +22,7 @@ namespace Mutagen.Bethesda
     {
         static partial void FillBinary_ContainedRecordType_Custom(
             MutagenFrame frame,
-            Group<T> item, 
+            Group<T> item,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
@@ -27,7 +31,7 @@ namespace Mutagen.Bethesda
 
         static partial void WriteBinary_ContainedRecordType_Custom(
             MutagenWriter writer,
-            Group<T> item, 
+            Group<T> item,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
@@ -55,53 +59,115 @@ namespace Mutagen.Bethesda
 
     public static class GroupExt
     {
-        public static async Task Write_XmlFolder<T, T_ErrMask>(
+        public static async Task Create_Xml_Folder<T>(
             this Group<T> group,
             DirectoryPath dir,
-            Func<IErrorMask> errMaskFunc,
-            int index,
-            bool doMasks)
+            ErrorMaskBuilder errorMask,
+            int index)
             where T : MajorRecord, ILoquiObject<T>, IFormKey
-            where T_ErrMask : MajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
         {
-            Group_ErrorMask<T_ErrMask> grupErrMask = null;
             try
             {
-                dir.Create();
-                List<Task<MajorRecord_ErrorMask>> writeTasks = new List<Task<MajorRecord_ErrorMask>>();
-                int counter = 0;
-                foreach (var item in group.Items)
+                errorMask?.PushIndex(index);
+                try
                 {
-                    writeTasks.Add(Task.Run(() =>
+                    errorMask?.PushIndex((int)Group_FieldIndex.Items);
+                    foreach (var item in dir.EnumerateFiles())
                     {
-                        item.Write_Xml_Folder(
-                            path: Path.Combine(dir.Path, $"{counter++} - {item.FormKey.IDString()} - {item.EditorID}.xml"),
-                            errorMask: out var itemErrMask,
-                            doMasks: doMasks);
-                        return itemErrMask;
-                    }));
-                }
-                var errMasks = await Task.WhenAll(writeTasks);
-                foreach (var itemErrMask in errMasks)
-                {
-                    if (itemErrMask == null) continue;
-                    if (grupErrMask == null)
-                    {
-                        grupErrMask = new Group_ErrorMask<T_ErrMask>();
-                        errMaskFunc().SetNthMask(
-                            index,
-                            new MaskItem<Exception, Group_ErrorMask<T_ErrMask>>(null, grupErrMask));
+                        if (!item.Info.Extension.Equals(".xml"))
+                        {
+                            continue;
+                        }
+
+                        var val = LoquiXmlFolderTranslation<T>.CREATE.Value(
+                            item.Path,
+                            null);
+                        group.Items.AddOrUpdate(val);
                     }
-                    ErrorMask.HandleErrorMaskAddition<IErrorMask, T_ErrMask>(
-                        mask: grupErrMask,
-                        index: (int)Group_FieldIndex.Items,
-                        errMaskObj: (T_ErrMask)itemErrMask);
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
                 }
             }
             catch (Exception ex)
-            when (doMasks)
+            when (errorMask != null)
             {
-                errMaskFunc().Overall = ex;
+                errorMask.ReportException(ex);
+            }
+            finally
+            {
+                errorMask?.PopIndex();
+            }
+        }
+
+        public static async Task Write_Xml_Folder<T, T_ErrMask>(
+            this Group<T> group,
+            DirectoryPath dir,
+            string name,
+            ErrorMaskBuilder errorMask,
+            int index)
+            where T : MajorRecord, ILoquiObject<T>, IFormKey
+            where T_ErrMask : MajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
+        {
+            try
+            {
+                errorMask?.PushIndex(index);
+                try
+                {
+                    errorMask?.PushIndex((int)Group_FieldIndex.Items);
+                    dir.Create();
+                    XElement topNode = new XElement("topnode");
+                    int counter = 0;
+                    foreach (var item in group.Items.Items)
+                    {
+                        using (errorMask.PushIndex(counter))
+                        {
+                            try
+                            {
+                                item.Write_Xml_Folder(
+                                    node: topNode,
+                                    name: name,
+                                    counter: counter,
+                                    dir: dir,
+                                    errorMask: errorMask);
+                            }
+                            catch (Exception ex)
+                            when (errorMask != null)
+                            {
+                                errorMask.ReportException(ex);
+                            }
+                        }
+                        counter++;
+                    }
+                    if (topNode.HasElements)
+                    {
+                        topNode.SaveIfChanged(Path.Combine(dir.Path, $"{name}.xml"));
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+            finally
+            {
+                errorMask?.PopIndex();
             }
         }
     }

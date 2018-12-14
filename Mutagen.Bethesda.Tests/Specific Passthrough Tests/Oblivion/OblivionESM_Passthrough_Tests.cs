@@ -108,13 +108,12 @@ namespace Mutagen.Bethesda.Tests
             Assert.False(inputErrMask?.IsInError() ?? false);
             using (var tmp = new TempFolder("Mutagen_Oblivion_XmlFolder", deleteAfter: false))
             {
-                // ToDO
-                // Upgrade XML to work on IMajorRecord interface
-                //mod[FormID.Factory("0006371E")].Write_Xml(Path.Combine(tmp.Dir.Path, "Test"));
-                //var exportMask = await mod.Write_XmlFolder(
-                //    tmp.Dir);
-                //Assert.False(exportMask?.IsInError() ?? false);
-                throw new NotImplementedException();
+                var exportMask = await mod.Write_XmlFolder(
+                    tmp.Dir);
+                Assert.False(exportMask?.IsInError() ?? false);
+                var reimport = await OblivionMod.Create_Xml_Folder(
+                    tmp.Dir);
+                Assert.Equal(mod, reimport.Mod);
             }
         }
     }

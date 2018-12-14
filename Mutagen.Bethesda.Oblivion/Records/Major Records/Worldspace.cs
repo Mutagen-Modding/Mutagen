@@ -1,13 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion.Internals;
+using Noggog;
+using Noggog.Utility;
 
 namespace Mutagen.Bethesda.Oblivion
 {
@@ -24,6 +28,14 @@ namespace Mutagen.Bethesda.Oblivion
             OblivionWorldspace = 0x04,
             NoLODWater = 0x10,
         }
+
+        private static readonly Worldspace_TranslationMask XmlFolderTranslation = new Worldspace_TranslationMask(true)
+        {
+            SubCells = new MaskItem<bool, WorldspaceBlock_TranslationMask>(false, null),
+            Road = new MaskItem<bool, Road_TranslationMask>(false, null),
+            TopCell = new MaskItem<bool, Cell_TranslationMask>(false, null),
+        };
+        private static readonly TranslationCrystal XmlFolderTranslationCrystal = XmlFolderTranslation.GetCrystal();
 
         static partial void FillBinary_OffsetLength_Custom(MutagenFrame frame, Worldspace item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
         {
@@ -184,7 +196,7 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     writer.WriteZeros(4);
                 }
-                
+
                 if (obj.Road_IsSet)
                 {
                     LoquiBinaryTranslation<Road>.Instance.Write(
@@ -216,6 +228,72 @@ namespace Mutagen.Bethesda.Oblivion
                             masterReferences: masterReferences,
                             errorMask: listSubMask);
                     });
+            }
+        }
+
+        public override void Write_Xml_Folder(
+            DirectoryPath? dir, 
+            string name, 
+            XElement node, 
+            int counter,
+            ErrorMaskBuilder errorMask)
+        {
+            dir = new DirectoryPath(Path.Combine(dir.Value.Path, Path.Combine(name, $"{counter} - {this.FormKey.IDString()} - {this.EditorID}")));
+            dir.Value.Create();
+
+            Write_Xml(
+                path: Path.Combine(dir.Value.Path, $"{nameof(Worldspace)}.xml"),
+                errorMask: errorMask,
+                translationMask: XmlFolderTranslationCrystal,
+                name: null);
+            if (this.Road_IsSet
+                && this.Road != null)
+            {
+                this.Road.Write_Xml(
+                    path: Path.Combine(dir.Value.Path, $"{nameof(Road)}.xml"),
+                    errorMask: errorMask,
+                    translationMask: null);
+            }
+            if (this.TopCell_IsSet
+                && this.TopCell != null)
+            {
+                this.TopCell.Write_Xml(
+                    path: Path.Combine(dir.Value.Path, $"{nameof(TopCell)}.xml"),
+                    errorMask: errorMask,
+                    translationMask: null);
+            }
+            foreach (var block in this.SubCellsEnumerable)
+            {
+                foreach (var subBlock in block.Items)
+                {
+                    if (subBlock.Items.Count == 0) continue;
+                    var parentDir = new DirectoryInfo(Path.Combine(dir.Value.Path, $"SubCells/{block.BlockNumberY}Y, {block.BlockNumberX}X/"));
+                    parentDir.Create();
+                    XElement topNode = new XElement("topNode");
+                    int subCellCounter = 0;
+                    foreach (var cell in subBlock.Items)
+                    {
+                        using (errorMask.PushIndex(subCellCounter))
+                        {
+                            try
+                            {
+                                cell.Write_Xml(
+                                    topNode,
+                                    errorMask: errorMask,
+                                    translationMask: null);
+                            }
+                            catch (Exception ex)
+                            {
+                                errorMask.ReportException(ex);
+                            }
+                        }
+                        subCellCounter++;
+                    }
+                    if (topNode.HasElements)
+                    {
+                        topNode.SaveIfChanged(Path.Combine(parentDir.FullName, $"{subBlock.BlockNumberY}Y, {subBlock.BlockNumberX}X.xml"));
+                    }
+                }
             }
         }
     }

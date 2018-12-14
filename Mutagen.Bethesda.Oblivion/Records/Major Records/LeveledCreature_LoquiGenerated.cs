@@ -486,7 +486,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Xml_Internal(
+            this.Write_Xml(
                 node: node,
                 name: name,
                 errorMask: errorMaskBuilder,
@@ -508,9 +508,23 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: out errorMask,
                 doMasks: doMasks,
                 translationMask: translationMask);
-            topNode.Elements().First().Save(path);
+            topNode.Elements().First().SaveIfChanged(path);
         }
 
+        public override void Write_Xml(
+            string path,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            XElement topNode = new XElement("topnode");
+            Write_Xml(
+                node: topNode,
+                name: name,
+                errorMask: errorMask,
+                translationMask: translationMask);
+            topNode.Elements().First().SaveIfChanged(path);
+        }
         public virtual void Write_Xml(
             Stream stream,
             out LeveledCreature_ErrorMask errorMask,
@@ -528,6 +542,20 @@ namespace Mutagen.Bethesda.Oblivion
             topNode.Elements().First().Save(stream);
         }
 
+        public override void Write_Xml(
+            Stream stream,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            XElement topNode = new XElement("topnode");
+            Write_Xml(
+                node: topNode,
+                name: name,
+                errorMask: errorMask,
+                translationMask: translationMask);
+            topNode.Elements().First().Save(stream);
+        }
         #region Base Class Trickdown Overrides
         public override void Write_Xml(
             XElement node,
@@ -537,7 +565,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Xml_Internal(
+            this.Write_Xml(
                 node: node,
                 name: name,
                 errorMask: errorMaskBuilder,
@@ -553,7 +581,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Xml_Internal(
+            this.Write_Xml(
                 node: node,
                 name: name,
                 errorMask: errorMaskBuilder,
@@ -563,7 +591,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        protected override void Write_Xml_Internal(
+        public override void Write_Xml(
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask,
@@ -877,7 +905,7 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Binary_Internal(
+            this.Write_Binary(
                 writer: writer,
                 masterReferences: masterReferences,
                 recordTypeConverter: null,
@@ -909,6 +937,28 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
+        public override void Write_Binary(
+            string path,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask)
+        {
+            using (var memStream = new MemoryTributary())
+            {
+                using (var writer = new MutagenWriter(memStream, dispose: false))
+                {
+                    Write_Binary(
+                        writer: writer,
+                        masterReferences: masterReferences,
+                        recordTypeConverter: null,
+                        errorMask: errorMask);
+                }
+                using (var fs = new FileStream(path, FileMode.Create, FileAccess.Write))
+                {
+                    memStream.Position = 0;
+                    memStream.CopyTo(fs);
+                }
+            }
+        }
         public virtual void Write_Binary(
             Stream stream,
             MasterReferences masterReferences,
@@ -925,6 +975,20 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
+        public override void Write_Binary(
+            Stream stream,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask)
+        {
+            using (var writer = new MutagenWriter(stream))
+            {
+                Write_Binary(
+                    writer: writer,
+                    masterReferences: masterReferences,
+                    recordTypeConverter: null,
+                    errorMask: errorMask);
+            }
+        }
         #region Base Class Trickdown Overrides
         public override void Write_Binary(
             MutagenWriter writer,
@@ -933,7 +997,7 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Binary_Internal(
+            this.Write_Binary(
                 writer: writer,
                 masterReferences: masterReferences,
                 errorMask: errorMaskBuilder,
@@ -948,7 +1012,7 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Binary_Internal(
+            this.Write_Binary(
                 writer: writer,
                 masterReferences: masterReferences,
                 errorMask: errorMaskBuilder,
@@ -958,7 +1022,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        protected override void Write_Binary_Internal(
+        public override void Write_Binary(
             MutagenWriter writer,
             MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
@@ -2116,7 +2180,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         LoquiXmlTranslation<LeveledEntry<NPCSpawn>>.Instance.Write(
                             node: subNode,
                             item: subItem,
-                            name: "Item",
+                            name: null,
                             errorMask: listSubMask,
                             translationMask: listTranslMask);
                     }
@@ -2670,12 +2734,29 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public class LeveledCreature_TranslationMask : NPCSpawn_TranslationMask
     {
         #region Members
-        private TranslationCrystal _crystal;
         public bool ChanceNone;
         public bool Flags;
         public MaskItem<bool, LeveledEntry_TranslationMask<NPCSpawn_TranslationMask>> Entries;
         public bool Script;
         public bool Template;
+        #endregion
+
+        #region Ctors
+        public LeveledCreature_TranslationMask()
+            : base()
+        {
+        }
+
+        public LeveledCreature_TranslationMask(bool defaultOn)
+            : base(defaultOn)
+        {
+            this.ChanceNone = defaultOn;
+            this.Flags = defaultOn;
+            this.Entries = new MaskItem<bool, LeveledEntry_TranslationMask<NPCSpawn_TranslationMask>>(defaultOn, null);
+            this.Script = defaultOn;
+            this.Template = defaultOn;
+        }
+
         #endregion
 
         protected override void GetCrystal(List<(bool On, TranslationCrystal SubCrystal)> ret)

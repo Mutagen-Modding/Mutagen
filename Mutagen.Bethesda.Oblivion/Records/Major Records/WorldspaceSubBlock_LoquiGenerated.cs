@@ -52,19 +52,20 @@ namespace Mutagen.Bethesda.Oblivion
         partial void CustomCtor();
         #endregion
 
-        #region BlockNumber
-        private Byte[] _BlockNumber = new byte[4];
-        public Byte[] BlockNumber
+        #region BlockNumberY
+        private Int16 _BlockNumberY;
+        public Int16 BlockNumberY
         {
-            get => _BlockNumber;
-            set
-            {
-                this._BlockNumber = value;
-                if (value == null)
-                {
-                    this._BlockNumber = new byte[4];
-                }
-            }
+            get => this._BlockNumberY;
+            set => this.RaiseAndSetIfChanged(ref this._BlockNumberY, value, nameof(BlockNumberY));
+        }
+        #endregion
+        #region BlockNumberX
+        private Int16 _BlockNumberX;
+        public Int16 BlockNumberX
+        {
+            get => this._BlockNumberX;
+            set => this.RaiseAndSetIfChanged(ref this._BlockNumberX, value, nameof(BlockNumberX));
         }
         #endregion
         #region GroupType
@@ -165,7 +166,8 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Equals(WorldspaceSubBlock rhs)
         {
             if (rhs == null) return false;
-            if (!this.BlockNumber.EqualsFast(rhs.BlockNumber)) return false;
+            if (this.BlockNumberY != rhs.BlockNumberY) return false;
+            if (this.BlockNumberX != rhs.BlockNumberX) return false;
             if (this.GroupType != rhs.GroupType) return false;
             if (!this.LastModified.EqualsFast(rhs.LastModified)) return false;
             if (Items.HasBeenSet != rhs.Items.HasBeenSet) return false;
@@ -179,7 +181,8 @@ namespace Mutagen.Bethesda.Oblivion
         public override int GetHashCode()
         {
             int ret = 0;
-            ret = HashHelper.GetHashCode(BlockNumber).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(BlockNumberY).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(BlockNumberX).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(GroupType).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(LastModified).CombineHashCode(ret);
             if (Items.HasBeenSet)
@@ -399,7 +402,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Xml_Internal(
+            this.Write_Xml(
                 node: node,
                 name: name,
                 errorMask: errorMaskBuilder,
@@ -421,9 +424,23 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: out errorMask,
                 doMasks: doMasks,
                 translationMask: translationMask);
-            topNode.Elements().First().Save(path);
+            topNode.Elements().First().SaveIfChanged(path);
         }
 
+        public void Write_Xml(
+            string path,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            XElement topNode = new XElement("topnode");
+            Write_Xml(
+                node: topNode,
+                name: name,
+                errorMask: errorMask,
+                translationMask: translationMask);
+            topNode.Elements().First().SaveIfChanged(path);
+        }
         public virtual void Write_Xml(
             Stream stream,
             out WorldspaceSubBlock_ErrorMask errorMask,
@@ -442,11 +459,25 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public void Write_Xml(
+            Stream stream,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            XElement topNode = new XElement("topnode");
+            Write_Xml(
+                node: topNode,
+                name: name,
+                errorMask: errorMask,
+                translationMask: translationMask);
+            topNode.Elements().First().Save(stream);
+        }
+        public void Write_Xml(
             XElement node,
             string name = null,
             WorldspaceSubBlock_TranslationMask translationMask = null)
         {
-            this.Write_Xml_Internal(
+            this.Write_Xml(
                 node: node,
                 name: name,
                 errorMask: null,
@@ -458,12 +489,12 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             XElement topNode = new XElement("topnode");
-            Write_Xml_Internal(
+            Write_Xml(
                 node: topNode,
                 name: name,
                 errorMask: null,
                 translationMask: null);
-            topNode.Elements().First().Save(path);
+            topNode.Elements().First().SaveIfChanged(path);
         }
 
         public void Write_Xml(
@@ -471,7 +502,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             XElement topNode = new XElement("topnode");
-            Write_Xml_Internal(
+            Write_Xml(
                 node: topNode,
                 name: name,
                 errorMask: null,
@@ -479,7 +510,7 @@ namespace Mutagen.Bethesda.Oblivion
             topNode.Elements().First().Save(stream);
         }
 
-        protected void Write_Xml_Internal(
+        public void Write_Xml(
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask,
@@ -503,20 +534,46 @@ namespace Mutagen.Bethesda.Oblivion
         {
             switch (name)
             {
-                case "BlockNumber":
+                case "BlockNumberY":
                     try
                     {
-                        errorMask?.PushIndex((int)WorldspaceSubBlock_FieldIndex.BlockNumber);
-                        if (ByteArrayXmlTranslation.Instance.Parse(
+                        errorMask?.PushIndex((int)WorldspaceSubBlock_FieldIndex.BlockNumberY);
+                        if (Int16XmlTranslation.Instance.Parse(
                             root: root,
-                            item: out Byte[] BlockNumberParse,
+                            item: out Int16 BlockNumberYParse,
                             errorMask: errorMask))
                         {
-                            item.BlockNumber = BlockNumberParse;
+                            item.BlockNumberY = BlockNumberYParse;
                         }
                         else
                         {
-                            item.BlockNumber = default(Byte[]);
+                            item.BlockNumberY = default(Int16);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "BlockNumberX":
+                    try
+                    {
+                        errorMask?.PushIndex((int)WorldspaceSubBlock_FieldIndex.BlockNumberX);
+                        if (Int16XmlTranslation.Instance.Parse(
+                            root: root,
+                            item: out Int16 BlockNumberXParse,
+                            errorMask: errorMask))
+                        {
+                            item.BlockNumberX = BlockNumberXParse;
+                        }
+                        else
+                        {
+                            item.BlockNumberX = default(Int16);
                         }
                     }
                     catch (Exception ex)
@@ -623,7 +680,8 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case WorldspaceSubBlock_FieldIndex.Items:
                     return Items.HasBeenSet;
-                case WorldspaceSubBlock_FieldIndex.BlockNumber:
+                case WorldspaceSubBlock_FieldIndex.BlockNumberY:
+                case WorldspaceSubBlock_FieldIndex.BlockNumberX:
                 case WorldspaceSubBlock_FieldIndex.GroupType:
                 case WorldspaceSubBlock_FieldIndex.LastModified:
                     return true;
@@ -795,7 +853,7 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Binary_Internal(
+            this.Write_Binary(
                 writer: writer,
                 masterReferences: masterReferences,
                 recordTypeConverter: null,
@@ -827,6 +885,28 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
+        public void Write_Binary(
+            string path,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask)
+        {
+            using (var memStream = new MemoryTributary())
+            {
+                using (var writer = new MutagenWriter(memStream, dispose: false))
+                {
+                    Write_Binary(
+                        writer: writer,
+                        masterReferences: masterReferences,
+                        recordTypeConverter: null,
+                        errorMask: errorMask);
+                }
+                using (var fs = new FileStream(path, FileMode.Create, FileAccess.Write))
+                {
+                    memStream.Position = 0;
+                    memStream.CopyTo(fs);
+                }
+            }
+        }
         public virtual void Write_Binary(
             Stream stream,
             MasterReferences masterReferences,
@@ -844,10 +924,24 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public void Write_Binary(
+            Stream stream,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask)
+        {
+            using (var writer = new MutagenWriter(stream))
+            {
+                Write_Binary(
+                    writer: writer,
+                    masterReferences: masterReferences,
+                    recordTypeConverter: null,
+                    errorMask: errorMask);
+            }
+        }
+        public void Write_Binary(
             MutagenWriter writer,
             MasterReferences masterReferences)
         {
-            this.Write_Binary_Internal(
+            this.Write_Binary(
                 writer: writer,
                 masterReferences: masterReferences,
                 recordTypeConverter: null,
@@ -862,7 +956,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 using (var writer = new MutagenWriter(memStream, dispose: false))
                 {
-                    Write_Binary_Internal(
+                    Write_Binary(
                         writer: writer,
                         masterReferences: masterReferences,
                         recordTypeConverter: null,
@@ -882,7 +976,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             using (var writer = new MutagenWriter(stream))
             {
-                Write_Binary_Internal(
+                Write_Binary(
                     writer: writer,
                     masterReferences: masterReferences,
                     recordTypeConverter: null,
@@ -890,7 +984,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        protected void Write_Binary_Internal(
+        public void Write_Binary(
             MutagenWriter writer,
             MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
@@ -913,17 +1007,41 @@ namespace Mutagen.Bethesda.Oblivion
         {
             try
             {
-                errorMask?.PushIndex((int)WorldspaceSubBlock_FieldIndex.BlockNumber);
-                if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
-                    frame: frame.SpawnWithLength(4),
-                    item: out Byte[] BlockNumberParse,
+                errorMask?.PushIndex((int)WorldspaceSubBlock_FieldIndex.BlockNumberY);
+                if (Mutagen.Bethesda.Binary.Int16BinaryTranslation.Instance.Parse(
+                    frame: frame.Spawn(snapToFinalPosition: false),
+                    item: out Int16 BlockNumberYParse,
                     errorMask: errorMask))
                 {
-                    item.BlockNumber = BlockNumberParse;
+                    item.BlockNumberY = BlockNumberYParse;
                 }
                 else
                 {
-                    item.BlockNumber = default(Byte[]);
+                    item.BlockNumberY = default(Int16);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+            finally
+            {
+                errorMask?.PopIndex();
+            }
+            try
+            {
+                errorMask?.PushIndex((int)WorldspaceSubBlock_FieldIndex.BlockNumberX);
+                if (Mutagen.Bethesda.Binary.Int16BinaryTranslation.Instance.Parse(
+                    frame: frame.Spawn(snapToFinalPosition: false),
+                    item: out Int16 BlockNumberXParse,
+                    errorMask: errorMask))
+                {
+                    item.BlockNumberX = BlockNumberXParse;
+                }
+                else
+                {
+                    item.BlockNumberX = default(Int16);
                 }
             }
             catch (Exception ex)
@@ -1147,8 +1265,11 @@ namespace Mutagen.Bethesda.Oblivion
             WorldspaceSubBlock_FieldIndex enu = (WorldspaceSubBlock_FieldIndex)index;
             switch (enu)
             {
-                case WorldspaceSubBlock_FieldIndex.BlockNumber:
-                    this.BlockNumber = (Byte[])obj;
+                case WorldspaceSubBlock_FieldIndex.BlockNumberY:
+                    this.BlockNumberY = (Int16)obj;
+                    break;
+                case WorldspaceSubBlock_FieldIndex.BlockNumberX:
+                    this.BlockNumberX = (Int16)obj;
                     break;
                 case WorldspaceSubBlock_FieldIndex.GroupType:
                     this.GroupType = (GroupTypeEnum)obj;
@@ -1196,8 +1317,11 @@ namespace Mutagen.Bethesda.Oblivion
             }
             switch (enu)
             {
-                case WorldspaceSubBlock_FieldIndex.BlockNumber:
-                    obj.BlockNumber = (Byte[])pair.Value;
+                case WorldspaceSubBlock_FieldIndex.BlockNumberY:
+                    obj.BlockNumberY = (Int16)pair.Value;
+                    break;
+                case WorldspaceSubBlock_FieldIndex.BlockNumberX:
+                    obj.BlockNumberX = (Int16)pair.Value;
                     break;
                 case WorldspaceSubBlock_FieldIndex.GroupType:
                     obj.GroupType = (GroupTypeEnum)pair.Value;
@@ -1223,7 +1347,9 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface IWorldspaceSubBlock : IWorldspaceSubBlockGetter, ILoquiClass<IWorldspaceSubBlock, IWorldspaceSubBlockGetter>, ILoquiClass<WorldspaceSubBlock, IWorldspaceSubBlockGetter>
     {
-        new Byte[] BlockNumber { get; set; }
+        new Int16 BlockNumberY { get; set; }
+
+        new Int16 BlockNumberX { get; set; }
 
         new GroupTypeEnum GroupType { get; set; }
 
@@ -1234,8 +1360,12 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface IWorldspaceSubBlockGetter : ILoquiObject
     {
-        #region BlockNumber
-        Byte[] BlockNumber { get; }
+        #region BlockNumberY
+        Int16 BlockNumberY { get; }
+
+        #endregion
+        #region BlockNumberX
+        Int16 BlockNumberX { get; }
 
         #endregion
         #region GroupType
@@ -1261,10 +1391,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #region Field Index
     public enum WorldspaceSubBlock_FieldIndex
     {
-        BlockNumber = 0,
-        GroupType = 1,
-        LastModified = 2,
-        Items = 3,
+        BlockNumberY = 0,
+        BlockNumberX = 1,
+        GroupType = 2,
+        LastModified = 3,
+        Items = 4,
     }
     #endregion
 
@@ -1282,9 +1413,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const string GUID = "33d37c53-7561-4ea0-aef8-a9b9475eb68f";
 
-        public const ushort AdditionalFieldCount = 4;
+        public const ushort AdditionalFieldCount = 5;
 
-        public const ushort FieldCount = 4;
+        public const ushort FieldCount = 5;
 
         public static readonly Type MaskType = typeof(WorldspaceSubBlock_Mask<>);
 
@@ -1312,8 +1443,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (str.Upper)
             {
-                case "BLOCKNUMBER":
-                    return (ushort)WorldspaceSubBlock_FieldIndex.BlockNumber;
+                case "BLOCKNUMBERY":
+                    return (ushort)WorldspaceSubBlock_FieldIndex.BlockNumberY;
+                case "BLOCKNUMBERX":
+                    return (ushort)WorldspaceSubBlock_FieldIndex.BlockNumberX;
                 case "GROUPTYPE":
                     return (ushort)WorldspaceSubBlock_FieldIndex.GroupType;
                 case "LASTMODIFIED":
@@ -1332,7 +1465,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case WorldspaceSubBlock_FieldIndex.Items:
                     return true;
-                case WorldspaceSubBlock_FieldIndex.BlockNumber:
+                case WorldspaceSubBlock_FieldIndex.BlockNumberY:
+                case WorldspaceSubBlock_FieldIndex.BlockNumberX:
                 case WorldspaceSubBlock_FieldIndex.GroupType:
                 case WorldspaceSubBlock_FieldIndex.LastModified:
                     return false;
@@ -1348,7 +1482,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case WorldspaceSubBlock_FieldIndex.Items:
                     return true;
-                case WorldspaceSubBlock_FieldIndex.BlockNumber:
+                case WorldspaceSubBlock_FieldIndex.BlockNumberY:
+                case WorldspaceSubBlock_FieldIndex.BlockNumberX:
                 case WorldspaceSubBlock_FieldIndex.GroupType:
                 case WorldspaceSubBlock_FieldIndex.LastModified:
                     return false;
@@ -1362,7 +1497,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             WorldspaceSubBlock_FieldIndex enu = (WorldspaceSubBlock_FieldIndex)index;
             switch (enu)
             {
-                case WorldspaceSubBlock_FieldIndex.BlockNumber:
+                case WorldspaceSubBlock_FieldIndex.BlockNumberY:
+                case WorldspaceSubBlock_FieldIndex.BlockNumberX:
                 case WorldspaceSubBlock_FieldIndex.GroupType:
                 case WorldspaceSubBlock_FieldIndex.LastModified:
                 case WorldspaceSubBlock_FieldIndex.Items:
@@ -1377,8 +1513,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             WorldspaceSubBlock_FieldIndex enu = (WorldspaceSubBlock_FieldIndex)index;
             switch (enu)
             {
-                case WorldspaceSubBlock_FieldIndex.BlockNumber:
-                    return "BlockNumber";
+                case WorldspaceSubBlock_FieldIndex.BlockNumberY:
+                    return "BlockNumberY";
+                case WorldspaceSubBlock_FieldIndex.BlockNumberX:
+                    return "BlockNumberX";
                 case WorldspaceSubBlock_FieldIndex.GroupType:
                     return "GroupType";
                 case WorldspaceSubBlock_FieldIndex.LastModified:
@@ -1395,7 +1533,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             WorldspaceSubBlock_FieldIndex enu = (WorldspaceSubBlock_FieldIndex)index;
             switch (enu)
             {
-                case WorldspaceSubBlock_FieldIndex.BlockNumber:
+                case WorldspaceSubBlock_FieldIndex.BlockNumberY:
+                case WorldspaceSubBlock_FieldIndex.BlockNumberX:
                 case WorldspaceSubBlock_FieldIndex.GroupType:
                 case WorldspaceSubBlock_FieldIndex.LastModified:
                 case WorldspaceSubBlock_FieldIndex.Items:
@@ -1410,7 +1549,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             WorldspaceSubBlock_FieldIndex enu = (WorldspaceSubBlock_FieldIndex)index;
             switch (enu)
             {
-                case WorldspaceSubBlock_FieldIndex.BlockNumber:
+                case WorldspaceSubBlock_FieldIndex.BlockNumberY:
+                case WorldspaceSubBlock_FieldIndex.BlockNumberX:
                 case WorldspaceSubBlock_FieldIndex.GroupType:
                 case WorldspaceSubBlock_FieldIndex.LastModified:
                 case WorldspaceSubBlock_FieldIndex.Items:
@@ -1425,8 +1565,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             WorldspaceSubBlock_FieldIndex enu = (WorldspaceSubBlock_FieldIndex)index;
             switch (enu)
             {
-                case WorldspaceSubBlock_FieldIndex.BlockNumber:
-                    return typeof(Byte[]);
+                case WorldspaceSubBlock_FieldIndex.BlockNumberY:
+                    return typeof(Int16);
+                case WorldspaceSubBlock_FieldIndex.BlockNumberX:
+                    return typeof(Int16);
                 case WorldspaceSubBlock_FieldIndex.GroupType:
                     return typeof(GroupTypeEnum);
                 case WorldspaceSubBlock_FieldIndex.LastModified:
@@ -1441,7 +1583,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType GRUP_HEADER = new RecordType("GRUP");
         public static readonly RecordType CELL_HEADER = new RecordType("CELL");
         public static readonly RecordType TRIGGERING_RECORD_TYPE = GRUP_HEADER;
-        public const int NumStructFields = 3;
+        public const int NumStructFields = 4;
         public const int NumTypedFields = 1;
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1485,12 +1627,29 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             WorldspaceSubBlock_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {
-            if (copyMask?.BlockNumber ?? true)
+            if (copyMask?.BlockNumberY ?? true)
             {
-                errorMask?.PushIndex((int)WorldspaceSubBlock_FieldIndex.BlockNumber);
+                errorMask?.PushIndex((int)WorldspaceSubBlock_FieldIndex.BlockNumberY);
                 try
                 {
-                    item.BlockNumber = rhs.BlockNumber;
+                    item.BlockNumberY = rhs.BlockNumberY;
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if (copyMask?.BlockNumberX ?? true)
+            {
+                errorMask?.PushIndex((int)WorldspaceSubBlock_FieldIndex.BlockNumberX);
+                try
+                {
+                    item.BlockNumberX = rhs.BlockNumberX;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1584,7 +1743,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             WorldspaceSubBlock_FieldIndex enu = (WorldspaceSubBlock_FieldIndex)index;
             switch (enu)
             {
-                case WorldspaceSubBlock_FieldIndex.BlockNumber:
+                case WorldspaceSubBlock_FieldIndex.BlockNumberY:
+                case WorldspaceSubBlock_FieldIndex.BlockNumberX:
                 case WorldspaceSubBlock_FieldIndex.GroupType:
                 case WorldspaceSubBlock_FieldIndex.LastModified:
                     if (on) break;
@@ -1605,8 +1765,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             WorldspaceSubBlock_FieldIndex enu = (WorldspaceSubBlock_FieldIndex)index;
             switch (enu)
             {
-                case WorldspaceSubBlock_FieldIndex.BlockNumber:
-                    obj.BlockNumber = default(Byte[]);
+                case WorldspaceSubBlock_FieldIndex.BlockNumberY:
+                    obj.BlockNumberY = default(Int16);
+                    break;
+                case WorldspaceSubBlock_FieldIndex.BlockNumberX:
+                    obj.BlockNumberX = default(Int16);
                     break;
                 case WorldspaceSubBlock_FieldIndex.GroupType:
                     obj.GroupType = default(GroupTypeEnum);
@@ -1629,7 +1792,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             WorldspaceSubBlock_FieldIndex enu = (WorldspaceSubBlock_FieldIndex)index;
             switch (enu)
             {
-                case WorldspaceSubBlock_FieldIndex.BlockNumber:
+                case WorldspaceSubBlock_FieldIndex.BlockNumberY:
+                case WorldspaceSubBlock_FieldIndex.BlockNumberX:
                 case WorldspaceSubBlock_FieldIndex.GroupType:
                 case WorldspaceSubBlock_FieldIndex.LastModified:
                     return true;
@@ -1647,8 +1811,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             WorldspaceSubBlock_FieldIndex enu = (WorldspaceSubBlock_FieldIndex)index;
             switch (enu)
             {
-                case WorldspaceSubBlock_FieldIndex.BlockNumber:
-                    return obj.BlockNumber;
+                case WorldspaceSubBlock_FieldIndex.BlockNumberY:
+                    return obj.BlockNumberY;
+                case WorldspaceSubBlock_FieldIndex.BlockNumberX:
+                    return obj.BlockNumberX;
                 case WorldspaceSubBlock_FieldIndex.GroupType:
                     return obj.GroupType;
                 case WorldspaceSubBlock_FieldIndex.LastModified:
@@ -1664,7 +1830,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IWorldspaceSubBlock item,
             NotifyingUnsetParameters cmds = null)
         {
-            item.BlockNumber = default(Byte[]);
+            item.BlockNumberY = default(Int16);
+            item.BlockNumberX = default(Int16);
             item.GroupType = default(GroupTypeEnum);
             item.LastModified = default(Byte[]);
             item.Items.Unset();
@@ -1685,7 +1852,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             WorldspaceSubBlock_Mask<bool> ret)
         {
             if (rhs == null) return;
-            ret.BlockNumber = item.BlockNumber.EqualsFast(rhs.BlockNumber);
+            ret.BlockNumberY = item.BlockNumberY == rhs.BlockNumberY;
+            ret.BlockNumberX = item.BlockNumberX == rhs.BlockNumberX;
             ret.GroupType = item.GroupType == rhs.GroupType;
             ret.LastModified = item.LastModified.EqualsFast(rhs.LastModified);
             if (item.Items.HasBeenSet == rhs.Items.HasBeenSet)
@@ -1742,9 +1910,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
-                if (printMask?.BlockNumber ?? true)
+                if (printMask?.BlockNumberY ?? true)
                 {
-                    fg.AppendLine($"BlockNumber => {item.BlockNumber}");
+                    fg.AppendLine($"BlockNumberY => {item.BlockNumberY}");
+                }
+                if (printMask?.BlockNumberX ?? true)
+                {
+                    fg.AppendLine($"BlockNumberX => {item.BlockNumberX}");
                 }
                 if (printMask?.GroupType ?? true)
                 {
@@ -1787,7 +1959,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static WorldspaceSubBlock_Mask<bool> GetHasBeenSetMask(IWorldspaceSubBlockGetter item)
         {
             var ret = new WorldspaceSubBlock_Mask<bool>();
-            ret.BlockNumber = true;
+            ret.BlockNumberY = true;
+            ret.BlockNumberX = true;
             ret.GroupType = true;
             ret.LastModified = true;
             ret.Items = new MaskItem<bool, IEnumerable<MaskItem<bool, Cell_Mask<bool>>>>(item.Items.HasBeenSet, item.Items.Select((i) => new MaskItem<bool, Cell_Mask<bool>>(true, i.GetHasBeenSetMask())));
@@ -1827,13 +2000,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.WorldspaceSubBlock");
             }
-            if ((translationMask?.GetShouldTranslate((int)WorldspaceSubBlock_FieldIndex.BlockNumber) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)WorldspaceSubBlock_FieldIndex.BlockNumberY) ?? true))
             {
-                ByteArrayXmlTranslation.Instance.Write(
+                Int16XmlTranslation.Instance.Write(
                     node: elem,
-                    name: nameof(item.BlockNumber),
-                    item: item.BlockNumber,
-                    fieldIndex: (int)WorldspaceSubBlock_FieldIndex.BlockNumber,
+                    name: nameof(item.BlockNumberY),
+                    item: item.BlockNumberY,
+                    fieldIndex: (int)WorldspaceSubBlock_FieldIndex.BlockNumberY,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)WorldspaceSubBlock_FieldIndex.BlockNumberX) ?? true))
+            {
+                Int16XmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.BlockNumberX),
+                    item: item.BlockNumberX,
+                    fieldIndex: (int)WorldspaceSubBlock_FieldIndex.BlockNumberX,
                     errorMask: errorMask);
             }
             if ((translationMask?.GetShouldTranslate((int)WorldspaceSubBlock_FieldIndex.GroupType) ?? true))
@@ -1869,7 +2051,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         LoquiXmlTranslation<Cell>.Instance.Write(
                             node: subNode,
                             item: subItem,
-                            name: "Item",
+                            name: null,
                             errorMask: listSubMask,
                             translationMask: listTranslMask);
                     }
@@ -1933,10 +2115,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             MasterReferences masterReferences)
         {
-            Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Binary.Int16BinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.BlockNumber,
-                fieldIndex: (int)WorldspaceSubBlock_FieldIndex.BlockNumber,
+                item: item.BlockNumberY,
+                fieldIndex: (int)WorldspaceSubBlock_FieldIndex.BlockNumberY,
+                errorMask: errorMask);
+            Mutagen.Bethesda.Binary.Int16BinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.BlockNumberX,
+                fieldIndex: (int)WorldspaceSubBlock_FieldIndex.BlockNumberX,
                 errorMask: errorMask);
             Mutagen.Bethesda.Binary.EnumBinaryTranslation<GroupTypeEnum>.Instance.Write(
                 writer,
@@ -1993,7 +2180,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public WorldspaceSubBlock_Mask(T initialValue)
         {
-            this.BlockNumber = initialValue;
+            this.BlockNumberY = initialValue;
+            this.BlockNumberX = initialValue;
             this.GroupType = initialValue;
             this.LastModified = initialValue;
             this.Items = new MaskItem<T, IEnumerable<MaskItem<T, Cell_Mask<T>>>>(initialValue, null);
@@ -2001,7 +2189,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region Members
-        public T BlockNumber;
+        public T BlockNumberY;
+        public T BlockNumberX;
         public T GroupType;
         public T LastModified;
         public MaskItem<T, IEnumerable<MaskItem<T, Cell_Mask<T>>>> Items;
@@ -2017,7 +2206,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool Equals(WorldspaceSubBlock_Mask<T> rhs)
         {
             if (rhs == null) return false;
-            if (!object.Equals(this.BlockNumber, rhs.BlockNumber)) return false;
+            if (!object.Equals(this.BlockNumberY, rhs.BlockNumberY)) return false;
+            if (!object.Equals(this.BlockNumberX, rhs.BlockNumberX)) return false;
             if (!object.Equals(this.GroupType, rhs.GroupType)) return false;
             if (!object.Equals(this.LastModified, rhs.LastModified)) return false;
             if (!object.Equals(this.Items, rhs.Items)) return false;
@@ -2026,7 +2216,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override int GetHashCode()
         {
             int ret = 0;
-            ret = ret.CombineHashCode(this.BlockNumber?.GetHashCode());
+            ret = ret.CombineHashCode(this.BlockNumberY?.GetHashCode());
+            ret = ret.CombineHashCode(this.BlockNumberX?.GetHashCode());
             ret = ret.CombineHashCode(this.GroupType?.GetHashCode());
             ret = ret.CombineHashCode(this.LastModified?.GetHashCode());
             ret = ret.CombineHashCode(this.Items?.GetHashCode());
@@ -2038,7 +2229,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region All Equal
         public bool AllEqual(Func<T, bool> eval)
         {
-            if (!eval(this.BlockNumber)) return false;
+            if (!eval(this.BlockNumberY)) return false;
+            if (!eval(this.BlockNumberX)) return false;
             if (!eval(this.GroupType)) return false;
             if (!eval(this.LastModified)) return false;
             if (this.Items != null)
@@ -2067,7 +2259,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         protected void Translate_InternalFill<R>(WorldspaceSubBlock_Mask<R> obj, Func<T, R> eval)
         {
-            obj.BlockNumber = eval(this.BlockNumber);
+            obj.BlockNumberY = eval(this.BlockNumberY);
+            obj.BlockNumberX = eval(this.BlockNumberX);
             obj.GroupType = eval(this.GroupType);
             obj.LastModified = eval(this.LastModified);
             if (Items != null)
@@ -2123,9 +2316,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
-                if (printMask?.BlockNumber ?? true)
+                if (printMask?.BlockNumberY ?? true)
                 {
-                    fg.AppendLine($"BlockNumber => {BlockNumber}");
+                    fg.AppendLine($"BlockNumberY => {BlockNumberY}");
+                }
+                if (printMask?.BlockNumberX ?? true)
+                {
+                    fg.AppendLine($"BlockNumberX => {BlockNumberX}");
                 }
                 if (printMask?.GroupType ?? true)
                 {
@@ -2183,7 +2380,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 return _warnings;
             }
         }
-        public Exception BlockNumber;
+        public Exception BlockNumberY;
+        public Exception BlockNumberX;
         public Exception GroupType;
         public Exception LastModified;
         public MaskItem<Exception, IEnumerable<MaskItem<Exception, Cell_ErrorMask>>> Items;
@@ -2195,8 +2393,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             WorldspaceSubBlock_FieldIndex enu = (WorldspaceSubBlock_FieldIndex)index;
             switch (enu)
             {
-                case WorldspaceSubBlock_FieldIndex.BlockNumber:
-                    return BlockNumber;
+                case WorldspaceSubBlock_FieldIndex.BlockNumberY:
+                    return BlockNumberY;
+                case WorldspaceSubBlock_FieldIndex.BlockNumberX:
+                    return BlockNumberX;
                 case WorldspaceSubBlock_FieldIndex.GroupType:
                     return GroupType;
                 case WorldspaceSubBlock_FieldIndex.LastModified:
@@ -2213,8 +2413,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             WorldspaceSubBlock_FieldIndex enu = (WorldspaceSubBlock_FieldIndex)index;
             switch (enu)
             {
-                case WorldspaceSubBlock_FieldIndex.BlockNumber:
-                    this.BlockNumber = ex;
+                case WorldspaceSubBlock_FieldIndex.BlockNumberY:
+                    this.BlockNumberY = ex;
+                    break;
+                case WorldspaceSubBlock_FieldIndex.BlockNumberX:
+                    this.BlockNumberX = ex;
                     break;
                 case WorldspaceSubBlock_FieldIndex.GroupType:
                     this.GroupType = ex;
@@ -2235,8 +2438,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             WorldspaceSubBlock_FieldIndex enu = (WorldspaceSubBlock_FieldIndex)index;
             switch (enu)
             {
-                case WorldspaceSubBlock_FieldIndex.BlockNumber:
-                    this.BlockNumber = (Exception)obj;
+                case WorldspaceSubBlock_FieldIndex.BlockNumberY:
+                    this.BlockNumberY = (Exception)obj;
+                    break;
+                case WorldspaceSubBlock_FieldIndex.BlockNumberX:
+                    this.BlockNumberX = (Exception)obj;
                     break;
                 case WorldspaceSubBlock_FieldIndex.GroupType:
                     this.GroupType = (Exception)obj;
@@ -2255,7 +2461,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool IsInError()
         {
             if (Overall != null) return true;
-            if (BlockNumber != null) return true;
+            if (BlockNumberY != null) return true;
+            if (BlockNumberX != null) return true;
             if (GroupType != null) return true;
             if (LastModified != null) return true;
             if (Items != null) return true;
@@ -2293,7 +2500,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         protected void ToString_FillInternal(FileGeneration fg)
         {
-            fg.AppendLine($"BlockNumber => {BlockNumber}");
+            fg.AppendLine($"BlockNumberY => {BlockNumberY}");
+            fg.AppendLine($"BlockNumberX => {BlockNumberX}");
             fg.AppendLine($"GroupType => {GroupType}");
             fg.AppendLine($"LastModified => {LastModified}");
             fg.AppendLine("Items =>");
@@ -2325,7 +2533,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public WorldspaceSubBlock_ErrorMask Combine(WorldspaceSubBlock_ErrorMask rhs)
         {
             var ret = new WorldspaceSubBlock_ErrorMask();
-            ret.BlockNumber = this.BlockNumber.Combine(rhs.BlockNumber);
+            ret.BlockNumberY = this.BlockNumberY.Combine(rhs.BlockNumberY);
+            ret.BlockNumberX = this.BlockNumberX.Combine(rhs.BlockNumberX);
             ret.GroupType = this.GroupType.Combine(rhs.GroupType);
             ret.LastModified = this.LastModified.Combine(rhs.LastModified);
             ret.Items = new MaskItem<Exception, IEnumerable<MaskItem<Exception, Cell_ErrorMask>>>(this.Items.Overall.Combine(rhs.Items.Overall), new List<MaskItem<Exception, Cell_ErrorMask>>(this.Items.Specific.And(rhs.Items.Specific)));
@@ -2350,7 +2559,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public class WorldspaceSubBlock_CopyMask
     {
         #region Members
-        public bool BlockNumber;
+        public bool BlockNumberY;
+        public bool BlockNumberX;
         public bool GroupType;
         public bool LastModified;
         public MaskItem<CopyOption, Cell_CopyMask> Items;
@@ -2361,10 +2571,27 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         #region Members
         private TranslationCrystal _crystal;
-        public bool BlockNumber;
+        public bool BlockNumberY;
+        public bool BlockNumberX;
         public bool GroupType;
         public bool LastModified;
         public MaskItem<bool, Cell_TranslationMask> Items;
+        #endregion
+
+        #region Ctors
+        public WorldspaceSubBlock_TranslationMask()
+        {
+        }
+
+        public WorldspaceSubBlock_TranslationMask(bool defaultOn)
+        {
+            this.BlockNumberY = defaultOn;
+            this.BlockNumberX = defaultOn;
+            this.GroupType = defaultOn;
+            this.LastModified = defaultOn;
+            this.Items = new MaskItem<bool, Cell_TranslationMask>(defaultOn, null);
+        }
+
         #endregion
 
         public TranslationCrystal GetCrystal()
@@ -2381,7 +2608,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         protected void GetCrystal(List<(bool On, TranslationCrystal SubCrystal)> ret)
         {
-            ret.Add((BlockNumber, null));
+            ret.Add((BlockNumberY, null));
+            ret.Add((BlockNumberX, null));
             ret.Add((GroupType, null));
             ret.Add((LastModified, null));
             ret.Add((Items?.Overall ?? true, Items?.Specific?.GetCrystal()));

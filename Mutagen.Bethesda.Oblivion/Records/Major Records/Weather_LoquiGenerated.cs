@@ -814,7 +814,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Xml_Internal(
+            this.Write_Xml(
                 node: node,
                 name: name,
                 errorMask: errorMaskBuilder,
@@ -836,9 +836,23 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: out errorMask,
                 doMasks: doMasks,
                 translationMask: translationMask);
-            topNode.Elements().First().Save(path);
+            topNode.Elements().First().SaveIfChanged(path);
         }
 
+        public override void Write_Xml(
+            string path,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            XElement topNode = new XElement("topnode");
+            Write_Xml(
+                node: topNode,
+                name: name,
+                errorMask: errorMask,
+                translationMask: translationMask);
+            topNode.Elements().First().SaveIfChanged(path);
+        }
         public virtual void Write_Xml(
             Stream stream,
             out Weather_ErrorMask errorMask,
@@ -856,6 +870,20 @@ namespace Mutagen.Bethesda.Oblivion
             topNode.Elements().First().Save(stream);
         }
 
+        public override void Write_Xml(
+            Stream stream,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            XElement topNode = new XElement("topnode");
+            Write_Xml(
+                node: topNode,
+                name: name,
+                errorMask: errorMask,
+                translationMask: translationMask);
+            topNode.Elements().First().Save(stream);
+        }
         #region Base Class Trickdown Overrides
         public override void Write_Xml(
             XElement node,
@@ -865,7 +893,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Xml_Internal(
+            this.Write_Xml(
                 node: node,
                 name: name,
                 errorMask: errorMaskBuilder,
@@ -875,7 +903,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        protected override void Write_Xml_Internal(
+        public override void Write_Xml(
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask,
@@ -2075,7 +2103,7 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Binary_Internal(
+            this.Write_Binary(
                 writer: writer,
                 masterReferences: masterReferences,
                 recordTypeConverter: null,
@@ -2107,6 +2135,28 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
+        public override void Write_Binary(
+            string path,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask)
+        {
+            using (var memStream = new MemoryTributary())
+            {
+                using (var writer = new MutagenWriter(memStream, dispose: false))
+                {
+                    Write_Binary(
+                        writer: writer,
+                        masterReferences: masterReferences,
+                        recordTypeConverter: null,
+                        errorMask: errorMask);
+                }
+                using (var fs = new FileStream(path, FileMode.Create, FileAccess.Write))
+                {
+                    memStream.Position = 0;
+                    memStream.CopyTo(fs);
+                }
+            }
+        }
         public virtual void Write_Binary(
             Stream stream,
             MasterReferences masterReferences,
@@ -2123,6 +2173,20 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
+        public override void Write_Binary(
+            Stream stream,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask)
+        {
+            using (var writer = new MutagenWriter(stream))
+            {
+                Write_Binary(
+                    writer: writer,
+                    masterReferences: masterReferences,
+                    recordTypeConverter: null,
+                    errorMask: errorMask);
+            }
+        }
         #region Base Class Trickdown Overrides
         public override void Write_Binary(
             MutagenWriter writer,
@@ -2131,7 +2195,7 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Binary_Internal(
+            this.Write_Binary(
                 writer: writer,
                 masterReferences: masterReferences,
                 errorMask: errorMaskBuilder,
@@ -2141,7 +2205,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        protected override void Write_Binary_Internal(
+        public override void Write_Binary(
             MutagenWriter writer,
             MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
@@ -5882,7 +5946,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         LoquiXmlTranslation<WeatherType>.Instance.Write(
                             node: subNode,
                             item: subItem,
-                            name: "Item",
+                            name: null,
                             errorMask: listSubMask,
                             translationMask: listTranslMask);
                     }
@@ -6182,7 +6246,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         LoquiXmlTranslation<WeatherSound>.Instance.Write(
                             node: subNode,
                             item: subItem,
-                            name: "Item",
+                            name: null,
                             errorMask: listSubMask,
                             translationMask: listTranslMask);
                     }
@@ -7696,7 +7760,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public class Weather_TranslationMask : MajorRecord_TranslationMask
     {
         #region Members
-        private TranslationCrystal _crystal;
         public bool TextureLowerLayer;
         public bool TextureUpperLayer;
         public MaskItem<bool, Model_TranslationMask> Model;
@@ -7733,6 +7796,55 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool Classification;
         public bool LightningColor;
         public MaskItem<bool, WeatherSound_TranslationMask> Sounds;
+        #endregion
+
+        #region Ctors
+        public Weather_TranslationMask()
+            : base()
+        {
+        }
+
+        public Weather_TranslationMask(bool defaultOn)
+            : base(defaultOn)
+        {
+            this.TextureLowerLayer = defaultOn;
+            this.TextureUpperLayer = defaultOn;
+            this.Model = new MaskItem<bool, Model_TranslationMask>(defaultOn, null);
+            this.WeatherTypes = new MaskItem<bool, WeatherType_TranslationMask>(defaultOn, null);
+            this.FogDayNear = defaultOn;
+            this.FogDayFar = defaultOn;
+            this.FogNightNear = defaultOn;
+            this.FogNightFar = defaultOn;
+            this.HdrEyeAdaptSpeed = defaultOn;
+            this.HdrBlurRadius = defaultOn;
+            this.HdrBlurPasses = defaultOn;
+            this.HdrEmissiveMult = defaultOn;
+            this.HdrTargetLum = defaultOn;
+            this.HdrUpperLumClamp = defaultOn;
+            this.HdrBrightScale = defaultOn;
+            this.HdrBrightClamp = defaultOn;
+            this.HdrLumRampNoTex = defaultOn;
+            this.HdrLumRampMin = defaultOn;
+            this.HdrLumRampMax = defaultOn;
+            this.HdrSunlightDimmer = defaultOn;
+            this.HdrGrassDimmer = defaultOn;
+            this.HdrTreeDimmer = defaultOn;
+            this.WindSpeed = defaultOn;
+            this.CloudSpeedLower = defaultOn;
+            this.CloudSpeedUpper = defaultOn;
+            this.TransDelta = defaultOn;
+            this.SunGlare = defaultOn;
+            this.SunDamage = defaultOn;
+            this.PrecipitationBeginFadeIn = defaultOn;
+            this.PrecipitationEndFadeOut = defaultOn;
+            this.ThunderLightningBeginFadeIn = defaultOn;
+            this.ThunderLightningEndFadeOut = defaultOn;
+            this.ThunderLightningFrequency = defaultOn;
+            this.Classification = defaultOn;
+            this.LightningColor = defaultOn;
+            this.Sounds = new MaskItem<bool, WeatherSound_TranslationMask>(defaultOn, null);
+        }
+
         #endregion
 
         protected override void GetCrystal(List<(bool On, TranslationCrystal SubCrystal)> ret)

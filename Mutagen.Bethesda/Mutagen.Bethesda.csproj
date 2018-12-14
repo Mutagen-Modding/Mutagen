@@ -139,6 +139,8 @@
     <Compile Include="Translators\Binary\UInt64BinaryTranslation.cs" />
     <Compile Include="Translators\Binary\UtilityTranslation.cs" />
     <Compile Include="Translators\XML\FormKeyXmlTranslation.cs" />
+    <Compile Include="Translators\Folder\IXmlFolderItem.cs" />
+    <Compile Include="Translators\Folder\LoquiXmlFolderTranslation.cs" />
     <Compile Include="Records\MajorRecord_LoquiGenerated.cs">
       <DependentUpon>MajorRecord.xml</DependentUpon>
     </Compile>

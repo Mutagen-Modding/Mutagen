@@ -380,7 +380,7 @@ namespace Mutagen.Bethesda.Tests
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Xml_Internal(
+            this.Write_Xml(
                 node: node,
                 name: name,
                 errorMask: errorMaskBuilder,
@@ -402,9 +402,23 @@ namespace Mutagen.Bethesda.Tests
                 errorMask: out errorMask,
                 doMasks: doMasks,
                 translationMask: translationMask);
-            topNode.Elements().First().Save(path);
+            topNode.Elements().First().SaveIfChanged(path);
         }
 
+        public void Write_Xml(
+            string path,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            XElement topNode = new XElement("topnode");
+            Write_Xml(
+                node: topNode,
+                name: name,
+                errorMask: errorMask,
+                translationMask: translationMask);
+            topNode.Elements().First().SaveIfChanged(path);
+        }
         public virtual void Write_Xml(
             Stream stream,
             out TestingSettings_ErrorMask errorMask,
@@ -423,11 +437,25 @@ namespace Mutagen.Bethesda.Tests
         }
 
         public void Write_Xml(
+            Stream stream,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            XElement topNode = new XElement("topnode");
+            Write_Xml(
+                node: topNode,
+                name: name,
+                errorMask: errorMask,
+                translationMask: translationMask);
+            topNode.Elements().First().Save(stream);
+        }
+        public void Write_Xml(
             XElement node,
             string name = null,
             TestingSettings_TranslationMask translationMask = null)
         {
-            this.Write_Xml_Internal(
+            this.Write_Xml(
                 node: node,
                 name: name,
                 errorMask: null,
@@ -439,12 +467,12 @@ namespace Mutagen.Bethesda.Tests
             string name = null)
         {
             XElement topNode = new XElement("topnode");
-            Write_Xml_Internal(
+            Write_Xml(
                 node: topNode,
                 name: name,
                 errorMask: null,
                 translationMask: null);
-            topNode.Elements().First().Save(path);
+            topNode.Elements().First().SaveIfChanged(path);
         }
 
         public void Write_Xml(
@@ -452,7 +480,7 @@ namespace Mutagen.Bethesda.Tests
             string name = null)
         {
             XElement topNode = new XElement("topnode");
-            Write_Xml_Internal(
+            Write_Xml(
                 node: topNode,
                 name: name,
                 errorMask: null,
@@ -460,7 +488,7 @@ namespace Mutagen.Bethesda.Tests
             topNode.Elements().First().Save(stream);
         }
 
-        protected void Write_Xml_Internal(
+        public void Write_Xml(
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask,
@@ -2470,6 +2498,28 @@ namespace Mutagen.Bethesda.Tests.Internals
         public bool DataFolder;
         public MaskItem<bool, Passthrough_TranslationMask> OblivionESM;
         public MaskItem<bool, Passthrough_TranslationMask> KnightsESP;
+        #endregion
+
+        #region Ctors
+        public TestingSettings_TranslationMask()
+        {
+        }
+
+        public TestingSettings_TranslationMask(bool defaultOn)
+        {
+            this.TestNormal = defaultOn;
+            this.TestObservable = defaultOn;
+            this.TestFolder = defaultOn;
+            this.ReuseCaches = defaultOn;
+            this.DeleteCachesAfter = defaultOn;
+            this.TestGroupMasks = defaultOn;
+            this.TestModList = defaultOn;
+            this.TestFlattenedMod = defaultOn;
+            this.DataFolder = defaultOn;
+            this.OblivionESM = new MaskItem<bool, Passthrough_TranslationMask>(defaultOn, null);
+            this.KnightsESP = new MaskItem<bool, Passthrough_TranslationMask>(defaultOn, null);
+        }
+
         #endregion
 
         public TranslationCrystal GetCrystal()

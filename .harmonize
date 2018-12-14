@@ -10,10 +10,10 @@
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>a2513f399c656ce16f9e1a388e7479e86e93a821</Sha>
+         <Sha>8227eecb347a08d2b3bfcc17da3f328f79cda631</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>11-28-2018 08:16:02</CommitDate>
-         <Description>ErrorMask disposable usage</Description>
+         <CommitDate>12-13-2018 18:20:12</CommitDate>
+         <Description>LoquiXmlTranslation improvements</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
    </ParentRepos>

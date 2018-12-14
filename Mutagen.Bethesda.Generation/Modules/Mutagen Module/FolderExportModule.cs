@@ -13,7 +13,11 @@ namespace Mutagen.Bethesda.Generation
         public override async Task<IEnumerable<string>> RequiredUsingStatements(ObjectGeneration obj)
         {
             if (obj.GetObjectType() != ObjectType.Mod) return Enumerable.Empty<string>();
-            return "System.Threading.Tasks".Single();
+            return new string[]
+            {
+                "System.Threading.Tasks",
+                "Noggog.Utility"
+            };
         }
 
         public override async Task GenerateInClass(ObjectGeneration obj, FileGeneration fg)
@@ -37,20 +41,18 @@ namespace Mutagen.Bethesda.Generation
         private void GenerateForMod(ObjectGeneration obj, FileGeneration fg)
         {
             using (var args = new FunctionWrapper(fg,
-                $"public async Task<{obj.Mask(MaskType.Error)}> Write_XmlFolder"))
+                $"public static async Task<({obj.Name} Mod, {obj.Mask(MaskType.Error)} ErrorMask)> Create_Xml_Folder"))
             {
                 args.Add("DirectoryPath dir");
                 args.Add("bool doMasks = true");
             }
             using (new BraceWrapper(fg))
             {
-                fg.AppendLine($"{obj.Mask(MaskType.Error)} errMaskRet = null;");
-                fg.AppendLine("List<Task> tasks = new List<Task>();");
-                fg.AppendLine($"Func<{obj.Mask(MaskType.Error)}> errMaskFunc = doMasks ? () => errMaskRet ?? (errMaskRet = new {obj.Mask(MaskType.Error)}()) : default(Func<{obj.Mask(MaskType.Error)}>);");
-                fg.AppendLine("try");
+                fg.AppendLine($"ErrorMaskBuilder errorMaskBuilder = null;");
+                fg.AppendLine($"var ret = new {obj.Name}();");
+                fg.AppendLine("using (new FolderCleaner(dir, FolderCleaner.CleanType.AccessTime))");
                 using (new BraceWrapper(fg))
                 {
-                    fg.AppendLine("dir.Create();");
                     foreach (var field in obj.IterateFields())
                     {
                         if (!(field is LoquiType loqui))
@@ -61,67 +63,116 @@ namespace Mutagen.Bethesda.Generation
                         {
                             case ObjectType.Record:
                                 using (var args = new ArgsWrapper(fg,
-                                    $"this.{field.Name}.Write_Xml_Folder"))
+                                    $"ret.{field.Name}.CopyFieldsFrom(Mutagen.Bethesda.Folder.LoquiXmlFolderTranslation<{loqui.TypeName}>.CREATE.Value",
+                                    suffixLine: ");")
+                                {
+                                    SemiColon = false
+                                })
                                 {
                                     args.Add($"path: Path.Combine(dir.Path, \"{field.Name}.xml\")");
-                                    args.Add($"errorMask: out var {field.Name}ErrorMask");
-                                    args.Add($"doMasks: doMasks");
-                                }
-                                using (var args = new ArgsWrapper(fg,
-                                    $"ErrorMask.HandleErrorMask"))
-                                {
-                                    args.Add($"creator: errMaskFunc");
-                                    args.Add($"index: (int){field.IndexEnumName}");
-                                    args.Add($"errMaskObj: {field.Name}ErrorMask");
+                                    args.Add($"errorMask: errorMaskBuilder");
                                 }
                                 break;
                             case ObjectType.Group:
-                                if (!(field is GroupType group)) break;
-                                if (!group.TryGetSpecificationAsObject("T", out var subObj)) continue;
+                                if (!loqui.TryGetSpecificationAsObject("T", out var subObj)) continue;
                                 using (var args = new ArgsWrapper(fg,
-                                    $"tasks.Add({field.Name}.Write_XmlFolder<{subObj.Name}, {subObj.Mask(MaskType.Error)}>",
-                                    suffixLine: ")"))
+                                    $"await ret.{field.Name}.Create_Xml_Folder<{subObj.Name}>"))
                                 {
-                                    args.Add($"dir: new DirectoryPath(Path.Combine(dir.Path, \"{field.Name}\"))");
-                                    args.Add($"errMaskFunc: errMaskFunc");
+                                    args.Add($"dir: new DirectoryPath(Path.Combine(dir.Path, nameof({field.Name})))");
+                                    args.Add($"errorMask: errorMaskBuilder");
                                     args.Add($"index: (int){field.IndexEnumName}");
-                                    args.Add("doMasks: doMasks");
                                 }
                                 break;
                             default:
                                 break;
                         }
                     }
-                    fg.AppendLine("await Task.WhenAll(tasks);");
                 }
-                fg.AppendLine("catch (Exception ex)");
-                fg.AppendLine("when (doMasks)");
-                using (new BraceWrapper(fg))
+                fg.AppendLine("return (ret, null);");
+            }
+
+            using (var args = new FunctionWrapper(fg,
+                $"public async Task<{obj.Mask(MaskType.Error)}> Write_XmlFolder"))
+            {
+                args.Add("DirectoryPath dir");
+                args.Add("bool doMasks = true");
+            }
+            using (new BraceWrapper(fg))
+            {
+                fg.AppendLine($"ErrorMaskBuilder errorMaskBuilder = null;");
+                fg.AppendLine("dir.Create();");
+                foreach (var field in obj.IterateFields())
                 {
-                    fg.AppendLine("errMaskFunc().Overall = ex;");
+                    if (!(field is LoquiType loqui))
+                    {
+                        throw new ArgumentException();
+                    }
+                    switch (loqui.TargetObjectGeneration.GetObjectType())
+                    {
+                        case ObjectType.Record:
+                            using (var args = new ArgsWrapper(fg,
+                                $"this.{field.Name}.Write_Xml"))
+                            {
+                                args.Add($"path: Path.Combine(dir.Path, \"{field.Name}.xml\")");
+                                args.Add($"errorMask: errorMaskBuilder");
+                                args.Add($"translationMask: null");
+                            }
+                            break;
+                        case ObjectType.Group:
+                            ObjectGeneration subObj;
+                            if (field is GroupType group)
+                            {
+                                if (!group.TryGetSpecificationAsObject("T", out subObj)) continue;
+                                using (var args = new ArgsWrapper(fg,
+                                    $"await {field.Name}.Write_Xml_Folder<{subObj.Name}, {subObj.Mask(MaskType.Error)}>"))
+                                {
+                                    args.Add($"dir: dir.Path");
+                                    args.Add($"name: nameof({field.Name})");
+                                    args.Add($"errorMask: errorMaskBuilder");
+                                    args.Add($"index: (int){field.IndexEnumName}");
+                                }
+                            }
+                            else
+                            {
+                                using (var args = new ArgsWrapper(fg,
+                                    $"await {field.Name}.Write_Xml_Folder"))
+                                {
+                                    args.Add($"dir: dir.Path");
+                                    args.Add($"name: nameof({field.Name})");
+                                    args.Add($"errorMask: errorMaskBuilder");
+                                    args.Add($"index: (int){field.IndexEnumName}");
+                                }
+                            }
+                            break;
+                        default:
+                            break;
+                    }
                 }
-                fg.AppendLine("return errMaskRet;");
+                fg.AppendLine("return null;");
             }
         }
 
         private async Task GenerateForRecord(ObjectGeneration obj, FileGeneration fg)
         {
             if (!obj.IsTopClass) return;
+
             using (var args = new FunctionWrapper(fg,
                 $"public{await obj.FunctionOverride()}void Write_Xml_Folder"))
             {
-                args.Add("string path");
-                args.Add($"out {obj.Mask(MaskType.Error)} errorMask");
-                args.Add($"bool doMasks = true");
+                args.Add("DirectoryPath? dir");
+                args.Add("string name");
+                args.Add("XElement node");
+                args.Add("int counter");
+                args.Add($"ErrorMaskBuilder errorMask");
             }
             using (new BraceWrapper(fg))
             {
                 using (var args = new ArgsWrapper(fg,
                     "Write_Xml"))
                 {
-                    args.Add("path: path");
-                    args.Add("errorMask: out errorMask");
-                    args.Add("doMasks: doMasks");
+                    args.Add("node: node");
+                    args.Add("errorMask: errorMask");
+                    args.Add("translationMask: null");
                 }
             }
         }

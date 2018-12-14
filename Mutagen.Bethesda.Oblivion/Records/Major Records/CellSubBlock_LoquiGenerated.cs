@@ -53,18 +53,11 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region BlockNumber
-        private Byte[] _BlockNumber = new byte[4];
-        public Byte[] BlockNumber
+        private Int32 _BlockNumber;
+        public Int32 BlockNumber
         {
-            get => _BlockNumber;
-            set
-            {
-                this._BlockNumber = value;
-                if (value == null)
-                {
-                    this._BlockNumber = new byte[4];
-                }
-            }
+            get => this._BlockNumber;
+            set => this.RaiseAndSetIfChanged(ref this._BlockNumber, value, nameof(BlockNumber));
         }
         #endregion
         #region GroupType
@@ -165,7 +158,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Equals(CellSubBlock rhs)
         {
             if (rhs == null) return false;
-            if (!this.BlockNumber.EqualsFast(rhs.BlockNumber)) return false;
+            if (this.BlockNumber != rhs.BlockNumber) return false;
             if (this.GroupType != rhs.GroupType) return false;
             if (!this.LastModified.EqualsFast(rhs.LastModified)) return false;
             if (Items.HasBeenSet != rhs.Items.HasBeenSet) return false;
@@ -399,7 +392,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Xml_Internal(
+            this.Write_Xml(
                 node: node,
                 name: name,
                 errorMask: errorMaskBuilder,
@@ -421,9 +414,23 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: out errorMask,
                 doMasks: doMasks,
                 translationMask: translationMask);
-            topNode.Elements().First().Save(path);
+            topNode.Elements().First().SaveIfChanged(path);
         }
 
+        public void Write_Xml(
+            string path,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            XElement topNode = new XElement("topnode");
+            Write_Xml(
+                node: topNode,
+                name: name,
+                errorMask: errorMask,
+                translationMask: translationMask);
+            topNode.Elements().First().SaveIfChanged(path);
+        }
         public virtual void Write_Xml(
             Stream stream,
             out CellSubBlock_ErrorMask errorMask,
@@ -442,11 +449,25 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public void Write_Xml(
+            Stream stream,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            XElement topNode = new XElement("topnode");
+            Write_Xml(
+                node: topNode,
+                name: name,
+                errorMask: errorMask,
+                translationMask: translationMask);
+            topNode.Elements().First().Save(stream);
+        }
+        public void Write_Xml(
             XElement node,
             string name = null,
             CellSubBlock_TranslationMask translationMask = null)
         {
-            this.Write_Xml_Internal(
+            this.Write_Xml(
                 node: node,
                 name: name,
                 errorMask: null,
@@ -458,12 +479,12 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             XElement topNode = new XElement("topnode");
-            Write_Xml_Internal(
+            Write_Xml(
                 node: topNode,
                 name: name,
                 errorMask: null,
                 translationMask: null);
-            topNode.Elements().First().Save(path);
+            topNode.Elements().First().SaveIfChanged(path);
         }
 
         public void Write_Xml(
@@ -471,7 +492,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             XElement topNode = new XElement("topnode");
-            Write_Xml_Internal(
+            Write_Xml(
                 node: topNode,
                 name: name,
                 errorMask: null,
@@ -479,7 +500,7 @@ namespace Mutagen.Bethesda.Oblivion
             topNode.Elements().First().Save(stream);
         }
 
-        protected void Write_Xml_Internal(
+        public void Write_Xml(
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask,
@@ -507,16 +528,16 @@ namespace Mutagen.Bethesda.Oblivion
                     try
                     {
                         errorMask?.PushIndex((int)CellSubBlock_FieldIndex.BlockNumber);
-                        if (ByteArrayXmlTranslation.Instance.Parse(
+                        if (Int32XmlTranslation.Instance.Parse(
                             root: root,
-                            item: out Byte[] BlockNumberParse,
+                            item: out Int32 BlockNumberParse,
                             errorMask: errorMask))
                         {
                             item.BlockNumber = BlockNumberParse;
                         }
                         else
                         {
-                            item.BlockNumber = default(Byte[]);
+                            item.BlockNumber = default(Int32);
                         }
                     }
                     catch (Exception ex)
@@ -795,7 +816,7 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Binary_Internal(
+            this.Write_Binary(
                 writer: writer,
                 masterReferences: masterReferences,
                 recordTypeConverter: null,
@@ -827,6 +848,28 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
+        public void Write_Binary(
+            string path,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask)
+        {
+            using (var memStream = new MemoryTributary())
+            {
+                using (var writer = new MutagenWriter(memStream, dispose: false))
+                {
+                    Write_Binary(
+                        writer: writer,
+                        masterReferences: masterReferences,
+                        recordTypeConverter: null,
+                        errorMask: errorMask);
+                }
+                using (var fs = new FileStream(path, FileMode.Create, FileAccess.Write))
+                {
+                    memStream.Position = 0;
+                    memStream.CopyTo(fs);
+                }
+            }
+        }
         public virtual void Write_Binary(
             Stream stream,
             MasterReferences masterReferences,
@@ -844,10 +887,24 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public void Write_Binary(
+            Stream stream,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask)
+        {
+            using (var writer = new MutagenWriter(stream))
+            {
+                Write_Binary(
+                    writer: writer,
+                    masterReferences: masterReferences,
+                    recordTypeConverter: null,
+                    errorMask: errorMask);
+            }
+        }
+        public void Write_Binary(
             MutagenWriter writer,
             MasterReferences masterReferences)
         {
-            this.Write_Binary_Internal(
+            this.Write_Binary(
                 writer: writer,
                 masterReferences: masterReferences,
                 recordTypeConverter: null,
@@ -862,7 +919,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 using (var writer = new MutagenWriter(memStream, dispose: false))
                 {
-                    Write_Binary_Internal(
+                    Write_Binary(
                         writer: writer,
                         masterReferences: masterReferences,
                         recordTypeConverter: null,
@@ -882,7 +939,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             using (var writer = new MutagenWriter(stream))
             {
-                Write_Binary_Internal(
+                Write_Binary(
                     writer: writer,
                     masterReferences: masterReferences,
                     recordTypeConverter: null,
@@ -890,7 +947,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        protected void Write_Binary_Internal(
+        public void Write_Binary(
             MutagenWriter writer,
             MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
@@ -914,16 +971,16 @@ namespace Mutagen.Bethesda.Oblivion
             try
             {
                 errorMask?.PushIndex((int)CellSubBlock_FieldIndex.BlockNumber);
-                if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
-                    frame: frame.SpawnWithLength(4),
-                    item: out Byte[] BlockNumberParse,
+                if (Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
+                    frame: frame.Spawn(snapToFinalPosition: false),
+                    item: out Int32 BlockNumberParse,
                     errorMask: errorMask))
                 {
                     item.BlockNumber = BlockNumberParse;
                 }
                 else
                 {
-                    item.BlockNumber = default(Byte[]);
+                    item.BlockNumber = default(Int32);
                 }
             }
             catch (Exception ex)
@@ -1148,7 +1205,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case CellSubBlock_FieldIndex.BlockNumber:
-                    this.BlockNumber = (Byte[])obj;
+                    this.BlockNumber = (Int32)obj;
                     break;
                 case CellSubBlock_FieldIndex.GroupType:
                     this.GroupType = (GroupTypeEnum)obj;
@@ -1197,7 +1254,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case CellSubBlock_FieldIndex.BlockNumber:
-                    obj.BlockNumber = (Byte[])pair.Value;
+                    obj.BlockNumber = (Int32)pair.Value;
                     break;
                 case CellSubBlock_FieldIndex.GroupType:
                     obj.GroupType = (GroupTypeEnum)pair.Value;
@@ -1223,7 +1280,7 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface ICellSubBlock : ICellSubBlockGetter, ILoquiClass<ICellSubBlock, ICellSubBlockGetter>, ILoquiClass<CellSubBlock, ICellSubBlockGetter>
     {
-        new Byte[] BlockNumber { get; set; }
+        new Int32 BlockNumber { get; set; }
 
         new GroupTypeEnum GroupType { get; set; }
 
@@ -1235,7 +1292,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface ICellSubBlockGetter : ILoquiObject
     {
         #region BlockNumber
-        Byte[] BlockNumber { get; }
+        Int32 BlockNumber { get; }
 
         #endregion
         #region GroupType
@@ -1426,7 +1483,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case CellSubBlock_FieldIndex.BlockNumber:
-                    return typeof(Byte[]);
+                    return typeof(Int32);
                 case CellSubBlock_FieldIndex.GroupType:
                     return typeof(GroupTypeEnum);
                 case CellSubBlock_FieldIndex.LastModified:
@@ -1606,7 +1663,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case CellSubBlock_FieldIndex.BlockNumber:
-                    obj.BlockNumber = default(Byte[]);
+                    obj.BlockNumber = default(Int32);
                     break;
                 case CellSubBlock_FieldIndex.GroupType:
                     obj.GroupType = default(GroupTypeEnum);
@@ -1664,7 +1721,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ICellSubBlock item,
             NotifyingUnsetParameters cmds = null)
         {
-            item.BlockNumber = default(Byte[]);
+            item.BlockNumber = default(Int32);
             item.GroupType = default(GroupTypeEnum);
             item.LastModified = default(Byte[]);
             item.Items.Unset();
@@ -1685,7 +1742,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             CellSubBlock_Mask<bool> ret)
         {
             if (rhs == null) return;
-            ret.BlockNumber = item.BlockNumber.EqualsFast(rhs.BlockNumber);
+            ret.BlockNumber = item.BlockNumber == rhs.BlockNumber;
             ret.GroupType = item.GroupType == rhs.GroupType;
             ret.LastModified = item.LastModified.EqualsFast(rhs.LastModified);
             if (item.Items.HasBeenSet == rhs.Items.HasBeenSet)
@@ -1829,7 +1886,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)CellSubBlock_FieldIndex.BlockNumber) ?? true))
             {
-                ByteArrayXmlTranslation.Instance.Write(
+                Int32XmlTranslation.Instance.Write(
                     node: elem,
                     name: nameof(item.BlockNumber),
                     item: item.BlockNumber,
@@ -1869,7 +1926,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         LoquiXmlTranslation<Cell>.Instance.Write(
                             node: subNode,
                             item: subItem,
-                            name: "Item",
+                            name: null,
                             errorMask: listSubMask,
                             translationMask: listTranslMask);
                     }
@@ -1933,7 +1990,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             MasterReferences masterReferences)
         {
-            Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.BlockNumber,
                 fieldIndex: (int)CellSubBlock_FieldIndex.BlockNumber,
@@ -2365,6 +2422,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool GroupType;
         public bool LastModified;
         public MaskItem<bool, Cell_TranslationMask> Items;
+        #endregion
+
+        #region Ctors
+        public CellSubBlock_TranslationMask()
+        {
+        }
+
+        public CellSubBlock_TranslationMask(bool defaultOn)
+        {
+            this.BlockNumber = defaultOn;
+            this.GroupType = defaultOn;
+            this.LastModified = defaultOn;
+            this.Items = new MaskItem<bool, Cell_TranslationMask>(defaultOn, null);
+        }
+
         #endregion
 
         public TranslationCrystal GetCrystal()

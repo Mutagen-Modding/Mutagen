@@ -958,7 +958,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Xml_Internal(
+            this.Write_Xml(
                 node: node,
                 name: name,
                 errorMask: errorMaskBuilder,
@@ -980,9 +980,23 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: out errorMask,
                 doMasks: doMasks,
                 translationMask: translationMask);
-            topNode.Elements().First().Save(path);
+            topNode.Elements().First().SaveIfChanged(path);
         }
 
+        public override void Write_Xml(
+            string path,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            XElement topNode = new XElement("topnode");
+            Write_Xml(
+                node: topNode,
+                name: name,
+                errorMask: errorMask,
+                translationMask: translationMask);
+            topNode.Elements().First().SaveIfChanged(path);
+        }
         public virtual void Write_Xml(
             Stream stream,
             out Race_ErrorMask errorMask,
@@ -1000,6 +1014,20 @@ namespace Mutagen.Bethesda.Oblivion
             topNode.Elements().First().Save(stream);
         }
 
+        public override void Write_Xml(
+            Stream stream,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            XElement topNode = new XElement("topnode");
+            Write_Xml(
+                node: topNode,
+                name: name,
+                errorMask: errorMask,
+                translationMask: translationMask);
+            topNode.Elements().First().Save(stream);
+        }
         #region Base Class Trickdown Overrides
         public override void Write_Xml(
             XElement node,
@@ -1009,7 +1037,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Xml_Internal(
+            this.Write_Xml(
                 node: node,
                 name: name,
                 errorMask: errorMaskBuilder,
@@ -1019,7 +1047,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        protected override void Write_Xml_Internal(
+        public override void Write_Xml(
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask,
@@ -1932,7 +1960,7 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Binary_Internal(
+            this.Write_Binary(
                 writer: writer,
                 masterReferences: masterReferences,
                 recordTypeConverter: null,
@@ -1964,6 +1992,28 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
+        public override void Write_Binary(
+            string path,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask)
+        {
+            using (var memStream = new MemoryTributary())
+            {
+                using (var writer = new MutagenWriter(memStream, dispose: false))
+                {
+                    Write_Binary(
+                        writer: writer,
+                        masterReferences: masterReferences,
+                        recordTypeConverter: null,
+                        errorMask: errorMask);
+                }
+                using (var fs = new FileStream(path, FileMode.Create, FileAccess.Write))
+                {
+                    memStream.Position = 0;
+                    memStream.CopyTo(fs);
+                }
+            }
+        }
         public virtual void Write_Binary(
             Stream stream,
             MasterReferences masterReferences,
@@ -1980,6 +2030,20 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
+        public override void Write_Binary(
+            Stream stream,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask)
+        {
+            using (var writer = new MutagenWriter(stream))
+            {
+                Write_Binary(
+                    writer: writer,
+                    masterReferences: masterReferences,
+                    recordTypeConverter: null,
+                    errorMask: errorMask);
+            }
+        }
         #region Base Class Trickdown Overrides
         public override void Write_Binary(
             MutagenWriter writer,
@@ -1988,7 +2052,7 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Binary_Internal(
+            this.Write_Binary(
                 writer: writer,
                 masterReferences: masterReferences,
                 errorMask: errorMaskBuilder,
@@ -1998,7 +2062,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        protected override void Write_Binary_Internal(
+        public override void Write_Binary(
             MutagenWriter writer,
             MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
@@ -5085,7 +5149,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         FormKeyXmlTranslation.Instance.Write(
                             node: subNode,
-                            name: "Item",
+                            name: null,
                             item: subItem?.FormKey,
                             errorMask: listSubMask);
                     }
@@ -5106,7 +5170,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         LoquiXmlTranslation<RaceRelation>.Instance.Write(
                             node: subNode,
                             item: subItem,
-                            name: "Item",
+                            name: null,
                             errorMask: listSubMask,
                             translationMask: listTranslMask);
                     }
@@ -5126,7 +5190,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         LoquiXmlTranslation<SkillBoost>.Instance.Write(
                             node: subNode,
                             item: subItem,
-                            name: "Item",
+                            name: null,
                             errorMask: listSubMask,
                             translationMask: listTranslMask);
                     }
@@ -5264,7 +5328,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         LoquiXmlTranslation<FacePart>.Instance.Write(
                             node: subNode,
                             item: subItem,
-                            name: "Item",
+                            name: null,
                             errorMask: listSubMask,
                             translationMask: listTranslMask);
                     }
@@ -5295,7 +5359,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         FormKeyXmlTranslation.Instance.Write(
                             node: subNode,
-                            name: "Item",
+                            name: null,
                             item: subItem?.FormKey,
                             errorMask: listSubMask);
                     }
@@ -5315,7 +5379,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         FormKeyXmlTranslation.Instance.Write(
                             node: subNode,
-                            name: "Item",
+                            name: null,
                             item: subItem?.FormKey,
                             errorMask: listSubMask);
                     }
@@ -6889,7 +6953,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public class Race_TranslationMask : MajorRecord_TranslationMask
     {
         #region Members
-        private TranslationCrystal _crystal;
         public bool Name;
         public bool Description;
         public bool Spells;
@@ -6913,6 +6976,42 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool Eyes;
         public MaskItem<bool, FaceGenData_TranslationMask> FaceGenData;
         public bool Unknown;
+        #endregion
+
+        #region Ctors
+        public Race_TranslationMask()
+            : base()
+        {
+        }
+
+        public Race_TranslationMask(bool defaultOn)
+            : base(defaultOn)
+        {
+            this.Name = defaultOn;
+            this.Description = defaultOn;
+            this.Spells = defaultOn;
+            this.Relations = new MaskItem<bool, RaceRelation_TranslationMask>(defaultOn, null);
+            this.SkillBoosts = new MaskItem<bool, SkillBoost_TranslationMask>(defaultOn, null);
+            this.Fluff = defaultOn;
+            this.MaleHeight = defaultOn;
+            this.FemaleHeight = defaultOn;
+            this.MaleWeight = defaultOn;
+            this.FemaleWeight = defaultOn;
+            this.Flags = defaultOn;
+            this.Voices = new MaskItem<bool, RaceVoices_TranslationMask>(defaultOn, null);
+            this.DefaultHair = new MaskItem<bool, RaceHair_TranslationMask>(defaultOn, null);
+            this.DefaultHairColor = defaultOn;
+            this.FaceGenMainClamp = defaultOn;
+            this.FaceGenFaceClamp = defaultOn;
+            this.RaceStats = new MaskItem<bool, RaceStatsGendered_TranslationMask>(defaultOn, null);
+            this.FaceData = new MaskItem<bool, FacePart_TranslationMask>(defaultOn, null);
+            this.BodyData = new MaskItem<bool, GenderedBodyData_TranslationMask>(defaultOn, null);
+            this.Hairs = defaultOn;
+            this.Eyes = defaultOn;
+            this.FaceGenData = new MaskItem<bool, FaceGenData_TranslationMask>(defaultOn, null);
+            this.Unknown = defaultOn;
+        }
+
         #endregion
 
         protected override void GetCrystal(List<(bool On, TranslationCrystal SubCrystal)> ret)

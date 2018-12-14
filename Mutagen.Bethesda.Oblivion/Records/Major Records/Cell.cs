@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using CSharpExt.Rx;
 using Loqui;
 using Loqui.Internal;
@@ -32,6 +34,16 @@ namespace Mutagen.Bethesda.Oblivion
             HandChanged = 0x0040,
             BehaveLikeExteriod = 0x0080,
         }
+
+        private static readonly Cell_TranslationMask XmlFolderTranslation = new Cell_TranslationMask(true)
+        {
+            Temporary = false,
+            Persistent = false,
+            VisibleWhenDistant = false,
+            PathGrid = new MaskItem<bool, PathGrid_TranslationMask>(false, null),
+            Landscape = new MaskItem<bool, Landscape_TranslationMask>(false, null)
+        };
+        private static readonly TranslationCrystal XmlFolderTranslationCrystal = XmlFolderTranslation.GetCrystal();
 
         static partial void CustomBinaryEnd_Import(MutagenFrame frame, Cell obj, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
         {
@@ -428,5 +440,6 @@ namespace Mutagen.Bethesda.Oblivion
                 }
             }
         }
+        
     }
 }

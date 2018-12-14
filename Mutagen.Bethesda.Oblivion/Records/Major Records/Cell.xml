@@ -2,7 +2,7 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="CellBlock" objType="Group" GUID="da71d7e7-5ba9-4dce-afbe-7dc5aa63ef11" ID="131">
     <Fields>
-      <ByteArray name="BlockNumber" length="4" nullable="NotNull" />
+      <Int32 name="BlockNumber" />
       <Enum name="GroupType" enumName="GroupTypeEnum" byteLength="4" />
       <ByteArray name="LastModified" length="4" nullable="NotNull" />
       <RefList name="Items" refName="CellSubBlock" />
@@ -10,7 +10,7 @@
   </Object>
   <Object name="CellSubBlock" objType="Group" GUID="7a5be323-09fa-4e8a-83fa-da407985da6c" ID="132">
     <Fields>
-      <ByteArray name="BlockNumber" length="4" nullable="NotNull" />
+      <Int32 name="BlockNumber" />
       <Enum name="GroupType" enumName="GroupTypeEnum" byteLength="4" />
       <ByteArray name="LastModified" length="4" nullable="NotNull" />
       <RefList name="Items" refName="Cell" />

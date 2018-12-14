@@ -970,7 +970,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Xml_Internal(
+            this.Write_Xml(
                 node: node,
                 name: name,
                 errorMask: errorMaskBuilder,
@@ -992,9 +992,23 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: out errorMask,
                 doMasks: doMasks,
                 translationMask: translationMask);
-            topNode.Elements().First().Save(path);
+            topNode.Elements().First().SaveIfChanged(path);
         }
 
+        public override void Write_Xml(
+            string path,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            XElement topNode = new XElement("topnode");
+            Write_Xml(
+                node: topNode,
+                name: name,
+                errorMask: errorMask,
+                translationMask: translationMask);
+            topNode.Elements().First().SaveIfChanged(path);
+        }
         public virtual void Write_Xml(
             Stream stream,
             out EffectShader_ErrorMask errorMask,
@@ -1012,6 +1026,20 @@ namespace Mutagen.Bethesda.Oblivion
             topNode.Elements().First().Save(stream);
         }
 
+        public override void Write_Xml(
+            Stream stream,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            XElement topNode = new XElement("topnode");
+            Write_Xml(
+                node: topNode,
+                name: name,
+                errorMask: errorMask,
+                translationMask: translationMask);
+            topNode.Elements().First().Save(stream);
+        }
         #region Base Class Trickdown Overrides
         public override void Write_Xml(
             XElement node,
@@ -1021,7 +1049,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Xml_Internal(
+            this.Write_Xml(
                 node: node,
                 name: name,
                 errorMask: errorMaskBuilder,
@@ -1031,7 +1059,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        protected override void Write_Xml_Internal(
+        public override void Write_Xml(
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask,
@@ -2774,7 +2802,7 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Binary_Internal(
+            this.Write_Binary(
                 writer: writer,
                 masterReferences: masterReferences,
                 recordTypeConverter: null,
@@ -2806,6 +2834,28 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
+        public override void Write_Binary(
+            string path,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask)
+        {
+            using (var memStream = new MemoryTributary())
+            {
+                using (var writer = new MutagenWriter(memStream, dispose: false))
+                {
+                    Write_Binary(
+                        writer: writer,
+                        masterReferences: masterReferences,
+                        recordTypeConverter: null,
+                        errorMask: errorMask);
+                }
+                using (var fs = new FileStream(path, FileMode.Create, FileAccess.Write))
+                {
+                    memStream.Position = 0;
+                    memStream.CopyTo(fs);
+                }
+            }
+        }
         public virtual void Write_Binary(
             Stream stream,
             MasterReferences masterReferences,
@@ -2822,6 +2872,20 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
+        public override void Write_Binary(
+            Stream stream,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask)
+        {
+            using (var writer = new MutagenWriter(stream))
+            {
+                Write_Binary(
+                    writer: writer,
+                    masterReferences: masterReferences,
+                    recordTypeConverter: null,
+                    errorMask: errorMask);
+            }
+        }
         #region Base Class Trickdown Overrides
         public override void Write_Binary(
             MutagenWriter writer,
@@ -2830,7 +2894,7 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Binary_Internal(
+            this.Write_Binary(
                 writer: writer,
                 masterReferences: masterReferences,
                 errorMask: errorMaskBuilder,
@@ -2840,7 +2904,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        protected override void Write_Binary_Internal(
+        public override void Write_Binary(
             MutagenWriter writer,
             MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
@@ -10559,7 +10623,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public class EffectShader_TranslationMask : MajorRecord_TranslationMask
     {
         #region Members
-        private TranslationCrystal _crystal;
         public bool FillTexture;
         public bool ParticleShaderTexture;
         public bool Flags;
@@ -10618,6 +10681,77 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool ColorKey1ColorKeyTime;
         public bool ColorKey2ColorKeyTime;
         public bool ColorKey3ColorKeyTime;
+        #endregion
+
+        #region Ctors
+        public EffectShader_TranslationMask()
+            : base()
+        {
+        }
+
+        public EffectShader_TranslationMask(bool defaultOn)
+            : base(defaultOn)
+        {
+            this.FillTexture = defaultOn;
+            this.ParticleShaderTexture = defaultOn;
+            this.Flags = defaultOn;
+            this.MembraneShaderSourceBlendMode = defaultOn;
+            this.MembraneShaderBlendOperation = defaultOn;
+            this.MembraneShaderZTestFunction = defaultOn;
+            this.FillTextureEffectColor = defaultOn;
+            this.FillTextureEffectAlphaFadeInTime = defaultOn;
+            this.FillTextureEffectFullAlphaTime = defaultOn;
+            this.FillTextureEffectAlphaFadeOutTime = defaultOn;
+            this.FillTextureEffectPersistentAlphaRatio = defaultOn;
+            this.FillTextureEffectAlphaPulseAmplitude = defaultOn;
+            this.FillTextureEffectAlphaPulseFrequency = defaultOn;
+            this.FillTextureEffectTextureAnimationSpeedU = defaultOn;
+            this.FillTextureEffectTextureAnimationSpeedV = defaultOn;
+            this.EdgeEffectFallOff = defaultOn;
+            this.EdgeEffectColor = defaultOn;
+            this.EdgeEffectAlphaFadeInTime = defaultOn;
+            this.EdgeEffectFullAlphaTime = defaultOn;
+            this.EdgeEffectAlphaFadeOutTime = defaultOn;
+            this.EdgeEffectPersistentAlphaRatio = defaultOn;
+            this.EdgeEffectAlphaPulseAmplitude = defaultOn;
+            this.EdgeEffectAlphaPulseFrequency = defaultOn;
+            this.FillTextureEffectFullAlphaRatio = defaultOn;
+            this.EdgeEffectFullAlphaRatio = defaultOn;
+            this.MembraneShaderDestBlendMode = defaultOn;
+            this.ParticleShaderSourceBlendMode = defaultOn;
+            this.ParticleShaderBlendOperation = defaultOn;
+            this.ParticleShaderZTestFunction = defaultOn;
+            this.ParticleShaderDestBlendMode = defaultOn;
+            this.ParticleShaderParticleBirthRampUpTime = defaultOn;
+            this.ParticleShaderFullParticleBirthTime = defaultOn;
+            this.ParticleShaderParticleBirthRampDownTime = defaultOn;
+            this.ParticleShaderFullParticleBirthRatio = defaultOn;
+            this.ParticleShaderPersistentParticleBirthRatio = defaultOn;
+            this.ParticleShaderParticleLifetime = defaultOn;
+            this.ParticleShaderParticleLifetimePlusMinus = defaultOn;
+            this.ParticleShaderInitialSpeedAlongNormal = defaultOn;
+            this.ParticleShaderAccelerationAlongNormal = defaultOn;
+            this.ParticleShaderInitialVelocity1 = defaultOn;
+            this.ParticleShaderInitialVelocity2 = defaultOn;
+            this.ParticleShaderInitialVelocity3 = defaultOn;
+            this.ParticleShaderAcceleration1 = defaultOn;
+            this.ParticleShaderAcceleration2 = defaultOn;
+            this.ParticleShaderAcceleration3 = defaultOn;
+            this.ParticleShaderScaleKey1 = defaultOn;
+            this.ParticleShaderScaleKey2 = defaultOn;
+            this.ParticleShaderScaleKey1Time = defaultOn;
+            this.ParticleShaderScaleKey2Time = defaultOn;
+            this.ColorKey1Color = defaultOn;
+            this.ColorKey2Color = defaultOn;
+            this.ColorKey3Color = defaultOn;
+            this.ColorKey1ColorAlpha = defaultOn;
+            this.ColorKey2ColorAlpha = defaultOn;
+            this.ColorKey3ColorAlpha = defaultOn;
+            this.ColorKey1ColorKeyTime = defaultOn;
+            this.ColorKey2ColorKeyTime = defaultOn;
+            this.ColorKey3ColorKeyTime = defaultOn;
+        }
+
         #endregion
 
         protected override void GetCrystal(List<(bool On, TranslationCrystal SubCrystal)> ret)
