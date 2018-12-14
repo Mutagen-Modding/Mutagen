@@ -1,51 +1,28 @@
-<?xml version="1.0" encoding="Windows-1252"?>
-<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+<?xml version="1.0" encoding="us-ascii"?>
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{FE4B569A-C9E5-4A2B-B990-8C5161235C21}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Mutagen.Bethesda</RootNamespace>
-    <AssemblyName>Mutagen.Bethesda</AssemblyName>
-    <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <LangVersion>7.3</LangVersion>
+    <EnableDefaultCompileItems>False</EnableDefaultCompileItems>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <LangVersion>7.1</LangVersion>
-    <NoWarn>CS1998</NoWarn>
-    <WarningsAsErrors>CS4014</WarningsAsErrors>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <NoWarn>1701;1702; 1998</NoWarn>
+    <WarningsAsErrors>NU1605, CS4014</WarningsAsErrors>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <LangVersion>7.1</LangVersion>
-    <NoWarn>CS1998</NoWarn>
-    <WarningsAsErrors>CS4014</WarningsAsErrors>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <WarningsAsErrors>NU1605, CS4014</WarningsAsErrors>
+    <NoWarn>1701;1702; 1998</NoWarn>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="PresentationCore" />
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Xml" />
+    <PackageReference Include="DotNetZip" Version="1.12.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\CSharpExt\CSharpExt\CSharpExt.csproj" />
+    <ProjectReference Include="..\..\DynamicData\DynamicData\DynamicData.csproj" />
+    <ProjectReference Include="..\..\Loqui\Loqui\Loqui.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BinaryFileProcessor.cs" />
@@ -53,12 +30,15 @@
     <Compile Include="Enums\GroupTypeEnum.cs" />
     <Compile Include="Extensions\IBinaryStreamExt.cs" />
     <Compile Include="Extensions\NoggogRxExt.cs" />
+    <Compile Include="FormID.cs" />
     <Compile Include="FormKey.cs" />
     <Compile Include="Interfaces\IDuplicatable.cs" />
     <Compile Include="Interfaces\IFormKey.cs" />
+    <Compile Include="Interfaces\IMod.cs" />
     <Compile Include="Interfaces\INamed.cs" />
-    <Compile Include="Links\EDIDSetLink.cs" />
     <Compile Include="Links\EDIDLink.cs" />
+    <Compile Include="Links\EDIDSetLink.cs" />
+    <Compile Include="Links\FormIDLink.cs" />
     <Compile Include="Links\FormIDLinkTesterHelper.cs" />
     <Compile Include="Links\FormIDSetLink.cs" />
     <Compile Include="Links\IEDIDLink.cs" />
@@ -67,22 +47,18 @@
     <Compile Include="Links\ILinkContainer.cs" />
     <Compile Include="Links\LinkExt.cs" />
     <Compile Include="Links\NamedFormID.cs" />
-    <Compile Include="FormID.cs" />
-    <Compile Include="Links\FormIDLink.cs" />
-    <Compile Include="Interfaces\IMod.cs" />
     <Compile Include="MasterReferences.cs" />
-    <Compile Include="ModRecordSorter.cs" />
-    <Compile Include="Pipeline.cs" />
-    <Compile Include="RecordLocator.cs" />
-    <Compile Include="ModRecordAligner.cs" />
+    <Compile Include="ModDecompressor.cs" />
     <Compile Include="ModID.cs" />
     <Compile Include="ModKey.cs" />
     <Compile Include="ModList.cs" />
     <Compile Include="ModListing.cs" />
-    <Compile Include="ModDecompressor.cs" />
+    <Compile Include="ModRecordAligner.cs" />
+    <Compile Include="ModRecordSorter.cs" />
     <Compile Include="ObjectType.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Pipeline.cs" />
     <Compile Include="RecordInterest.cs" />
+    <Compile Include="RecordLocator.cs" />
     <Compile Include="Records\Group.cs">
       <DependentUpon>Group.xml</DependentUpon>
     </Compile>
@@ -92,12 +68,19 @@
     <Compile Include="Records\ListGroup.cs">
       <DependentUpon>Group.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\ListGroup_LoquiGenerated.cs">
+      <DependentUpon>Group.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\MajorRecord.cs">
+      <DependentUpon>MajorRecord.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MajorRecord_LoquiGenerated.cs">
       <DependentUpon>MajorRecord.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\MasterReference_LoquiGenerated.cs">
       <DependentUpon>MasterReference.xml</DependentUpon>
     </Compile>
+    <Compile Include="ProtocolDefinition_Bethesda.cs" />
     <Compile Include="RecordType.cs" />
     <Compile Include="RecordTypeConverter.cs" />
     <Compile Include="Translators\Binary\BinaryTranslationCaster.cs" />
@@ -113,13 +96,6 @@
     <Compile Include="Translators\Binary\EnumBinaryTranslation.cs" />
     <Compile Include="Translators\Binary\FilePathBinaryTranslation.cs" />
     <Compile Include="Translators\Binary\FloatBinaryTranslation.cs" />
-    <Compile Include="Translators\Binary\ModKeyBinaryTranslation.cs" />
-    <Compile Include="Translators\Binary\P2Int16BinaryTranslation.cs" />
-    <Compile Include="Translators\Binary\P2IntBinaryTranslation.cs" />
-    <Compile Include="Translators\Binary\P3FloatBinaryTranslation.cs" />
-    <Compile Include="Translators\Binary\P3UInt16BinaryTranslation.cs" />
-    <Compile Include="Translators\Binary\P2FloatBinaryTranslation.cs" />
-    <Compile Include="Translators\Binary\RecordTypeBinaryTranslation.cs" />
     <Compile Include="Translators\Binary\FormKeyBinaryTranslation.cs" />
     <Compile Include="Translators\Binary\HeaderExport.cs" />
     <Compile Include="Translators\Binary\HeaderTranslation.cs" />
@@ -130,9 +106,16 @@
     <Compile Include="Translators\Binary\Int8BinaryTranslation.cs" />
     <Compile Include="Translators\Binary\ListBinaryTranslation.cs" />
     <Compile Include="Translators\Binary\LoquiBinaryTranslation.cs" />
+    <Compile Include="Translators\Binary\ModKeyBinaryTranslation.cs" />
     <Compile Include="Translators\Binary\MutagenFrame.cs" />
     <Compile Include="Translators\Binary\MutagenWriter.cs" />
+    <Compile Include="Translators\Binary\P2FloatBinaryTranslation.cs" />
+    <Compile Include="Translators\Binary\P2Int16BinaryTranslation.cs" />
+    <Compile Include="Translators\Binary\P2IntBinaryTranslation.cs" />
+    <Compile Include="Translators\Binary\P3FloatBinaryTranslation.cs" />
+    <Compile Include="Translators\Binary\P3UInt16BinaryTranslation.cs" />
     <Compile Include="Translators\Binary\PrimitiveBinaryTranslation.cs" />
+    <Compile Include="Translators\Binary\RecordTypeBinaryTranslation.cs" />
     <Compile Include="Translators\Binary\StringBinaryTranslation.cs" />
     <Compile Include="Translators\Binary\TypicalBinaryTranslation.cs" />
     <Compile Include="Translators\Binary\UInt16BinaryTranslation.cs" />
@@ -140,60 +123,7 @@
     <Compile Include="Translators\Binary\UInt64BinaryTranslation.cs" />
     <Compile Include="Translators\Binary\UtilityTranslation.cs" />
     <Compile Include="Translators\XML\FormKeyXmlTranslation.cs" />
-    <Compile Include="Records\MajorRecord_LoquiGenerated.cs">
-      <DependentUpon>MajorRecord.xml</DependentUpon>
-    </Compile>
-    <Compile Include="ProtocolDefinition_Bethesda.cs" />
-    <Compile Include="Records\ListGroup_LoquiGenerated.cs">
-      <DependentUpon>Group.xml</DependentUpon>
-    </Compile>
     <Compile Include="Translators\XML\ModKeyXmlTranslation.cs" />
     <Compile Include="Utility.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="MutagenSource.xsd">
-      <SubType>Designer</SubType>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\CSharpExt\CSharpExt\CSharpExt.csproj">
-      <Project>{c56b9607-41cf-4f59-9eef-f79d57309eda}</Project>
-      <Name>CSharpExt</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\DynamicData\DynamicData\DynamicData.csproj">
-      <Project>{6c3ece8b-4127-4356-b379-8068b08efb37}</Project>
-      <Name>DynamicData</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Loqui\Loqui\Loqui.csproj">
-      <Project>{91f19c1e-adf8-4b84-9452-04c2cd8f46d4}</Project>
-      <Name>Loqui</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="DotNetZip">
-      <Version>1.12.0</Version>
-    </PackageReference>
-    <PackageReference Include="ReactiveUI">
-      <Version>9.3.5</Version>
-    </PackageReference>
-    <PackageReference Include="System.Reactive">
-      <Version>4.1.2</Version>
-    </PackageReference>
-    <PackageReference Include="System.ValueTuple">
-      <Version>4.5.0</Version>
-    </PackageReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Records\Group.xml">
-      <SubType>Designer</SubType>
-    </Content>
-    <Content Include="Records\MajorRecord.xml">
-      <SubType>Designer</SubType>
-    </Content>
-    <Content Include="Records\MasterReference.xml">
-      <SubType>Designer</SubType>
-    </Content>
-  </ItemGroup>
-  <ItemGroup />
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

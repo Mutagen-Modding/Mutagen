@@ -120,6 +120,10 @@
       <Project>{c56b9607-41cf-4f59-9eef-f79d57309eda}</Project>
       <Name>CSharpExt</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\DynamicData\DynamicData\DynamicData.csproj">
+      <Project>{a5513654-ad62-4cc9-968b-f5f8f72c4142}</Project>
+      <Name>DynamicData</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Loqui\Loqui.Generation.Presentation\Loqui.Generation.Presentation.csproj">
       <Project>{70dc5884-5522-4552-82b5-56c95065155e}</Project>
       <Name>Loqui.Generation.Presentation</Name>
@@ -137,7 +141,7 @@
       <Name>Loqui</Name>
     </ProjectReference>
     <ProjectReference Include="..\Mutagen.Bethesda\Mutagen.Bethesda.csproj">
-      <Project>{fe4b569a-c9e5-4a2b-b990-8c5161235c21}</Project>
+      <Project>{4d6dbb44-b89a-47a8-ab14-acc8391c1a59}</Project>
       <Name>Mutagen.Bethesda</Name>
     </ProjectReference>
   </ItemGroup>

@@ -1,10 +1,10 @@
 ﻿using Noggog;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Media;
 
 namespace Mutagen.Bethesda
 {
@@ -12,7 +12,7 @@ namespace Mutagen.Bethesda
     {
         public static Color ReadColor(this IBinaryReadStream stream)
         {
-            var ret = Color.FromRgb(
+            var ret = Color.FromArgb(
                 stream.ReadUInt8(),
                 stream.ReadUInt8(),
                 stream.ReadUInt8());

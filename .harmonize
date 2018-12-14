@@ -2,18 +2,18 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>aaa55b47f660580b474788f8d07730cb20954ee7</Sha>
+         <Sha>5cf5ea6e22315877e3d1b4992265ae2b9d34705e</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>11-25-2018 14:51:06</CommitDate>
-         <Description>Swapped DynamicData from official nuget to forked repo.  Updated API to match IList and IReadOnlyDictionary changes</Description>
+         <CommitDate>12-07-2018 23:11:40</CommitDate>
+         <Description>Changed CSharpExt to .NET standard library</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>60a820023faf3dcad5d35a6b4ee128105c15de67</Sha>
+         <Sha>888d82c02d7289a19d7e297cf2890050f113aab1</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>11-25-2018 14:51:36</CommitDate>
-         <Description>DynamicData forked dependency.  API update</Description>
+         <CommitDate>12-13-2018 22:59:56</CommitDate>
+         <Description>Loqui libraries swapped to .NET standard</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>

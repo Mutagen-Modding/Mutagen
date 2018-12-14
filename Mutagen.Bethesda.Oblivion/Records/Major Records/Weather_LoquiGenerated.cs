@@ -18,7 +18,7 @@ using System.Reactive.Linq;
 using Mutagen.Bethesda.Oblivion;
 using DynamicData;
 using CSharpExt.Rx;
-using System.Windows.Media;
+using System.Drawing;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
 using System.Xml;

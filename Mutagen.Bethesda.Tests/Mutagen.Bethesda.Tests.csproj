@@ -116,13 +116,13 @@
       <Project>{91f19c1e-adf8-4b84-9452-04c2cd8f46d4}</Project>
       <Name>Loqui</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Mutagen.Bethesda\Mutagen.Bethesda.csproj">
-      <Project>{FE4B569A-C9E5-4A2B-B990-8C5161235C21}</Project>
-      <Name>Mutagen.Bethesda</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Mutagen.Bethesda.Oblivion\Mutagen.Bethesda.Oblivion.csproj">
-      <Project>{c9fc687d-7da3-4bfc-b49a-d66c0f1c1774}</Project>
+      <Project>{d4ebf681-3a69-4919-bf64-d9cc6896a0c6}</Project>
       <Name>Mutagen.Bethesda.Oblivion</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Mutagen.Bethesda\Mutagen.Bethesda.csproj">
+      <Project>{4d6dbb44-b89a-47a8-ab14-acc8391c1a59}</Project>
+      <Name>Mutagen.Bethesda</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
