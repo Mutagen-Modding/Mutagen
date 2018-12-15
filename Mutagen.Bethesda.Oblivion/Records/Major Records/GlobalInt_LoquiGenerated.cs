@@ -576,6 +576,18 @@ namespace Mutagen.Bethesda.Oblivion
         {
             this.FormKey = formKey;
         }
+
+        partial void PostDuplicate(GlobalInt obj, GlobalInt rhs, Func<FormKey> getNextFormKey, IList<(MajorRecord Record, FormKey OriginalFormKey)> duplicatedRecords);
+
+        public override MajorRecord Duplicate(Func<FormKey> getNextFormKey, IList<(MajorRecord Record, FormKey OriginalFormKey)> duplicatedRecords)
+        {
+            var ret = new GlobalInt(getNextFormKey());
+            ret.CopyFieldsFrom(this);
+            duplicatedRecords?.Add((ret, this.FormKey));
+            PostDuplicate(ret, this, getNextFormKey, duplicatedRecords);
+            return ret;
+        }
+
         #endregion
 
         #region Binary Translation
@@ -1859,11 +1871,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     public class GlobalInt_CopyMask : Global_CopyMask
     {
+        public GlobalInt_CopyMask()
+        {
+        }
+
+        public GlobalInt_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
+        {
+            this.Data = defaultOn;
+        }
+
         #region Members
         public bool Data;
         #endregion
 
     }
+
     public class GlobalInt_TranslationMask : Global_TranslationMask
     {
         #region Members

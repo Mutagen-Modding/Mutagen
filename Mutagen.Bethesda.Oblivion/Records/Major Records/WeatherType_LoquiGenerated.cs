@@ -15,7 +15,7 @@ using Mutagen.Bethesda.Oblivion.Internals;
 using ReactiveUI;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Windows.Media;
+using System.Drawing;
 using System.Xml;
 using System.Xml.Linq;
 using System.IO;
@@ -2145,6 +2145,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     public class WeatherType_CopyMask
     {
+        public WeatherType_CopyMask()
+        {
+        }
+
+        public WeatherType_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
+        {
+            this.Sunrise = defaultOn;
+            this.Day = defaultOn;
+            this.Sunset = defaultOn;
+            this.Night = defaultOn;
+        }
+
         #region Members
         public bool Sunrise;
         public bool Day;
@@ -2153,6 +2165,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
+
     public class WeatherType_TranslationMask : ITranslationMask
     {
         #region Members

@@ -1996,6 +1996,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     public class ClassTraining_CopyMask
     {
+        public ClassTraining_CopyMask()
+        {
+        }
+
+        public ClassTraining_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
+        {
+            this.TrainedSkill = defaultOn;
+            this.MaximumTrainingLevel = defaultOn;
+            this.Fluff = defaultOn;
+        }
+
         #region Members
         public bool TrainedSkill;
         public bool MaximumTrainingLevel;
@@ -2003,6 +2014,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
+
     public class ClassTraining_TranslationMask : ITranslationMask
     {
         #region Members

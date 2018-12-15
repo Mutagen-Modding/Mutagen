@@ -14,6 +14,11 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public partial class CellBlock : IXmlFolderItem
     {
+        public static CellBlock_CopyMask duplicateMask = new CellBlock_CopyMask(true)
+        {
+            Items = new Loqui.MaskItem<Loqui.CopyOption, CellSubBlock_CopyMask>(Loqui.CopyOption.Skip, null)
+        };
+
         public void Write_Xml_Folder(
             DirectoryPath? dir,
             string name,
@@ -42,5 +47,14 @@ namespace Mutagen.Bethesda.Oblivion
                 }
             }
         }
+
+        public object Duplicate(Func<FormKey> getNextFormKey, IList<(MajorRecord Record, FormKey OriginalFormKey)> duplicatedRecordTracker = null)
+        {
+            var ret = new CellBlock();
+            ret.CopyFieldsFrom(this, duplicateMask);
+            ret.Items.SetTo(this.Items.Select(i => (CellSubBlock)i.Duplicate(getNextFormKey, duplicatedRecordTracker)));
+            return ret;
+        }
     }
 }
+

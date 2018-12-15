@@ -1915,12 +1915,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     public class PointToReferenceMapping_CopyMask
     {
+        public PointToReferenceMapping_CopyMask()
+        {
+        }
+
+        public PointToReferenceMapping_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
+        {
+            this.Reference = defaultOn;
+            this.Points = deepCopyOption;
+        }
+
         #region Members
         public bool Reference;
         public CopyOption Points;
         #endregion
 
     }
+
     public class PointToReferenceMapping_TranslationMask : ITranslationMask
     {
         #region Members

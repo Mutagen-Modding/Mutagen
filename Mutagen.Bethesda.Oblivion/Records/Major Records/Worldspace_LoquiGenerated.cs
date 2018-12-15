@@ -1289,7 +1289,7 @@ namespace Mutagen.Bethesda.Oblivion
                     yield return item;
                 }
             }
-            foreach (var item in SubCells.SelectMany(f => f.Links))
+            foreach (var item in SubCells.Items.SelectMany(f => f.Links))
             {
                 yield return item;
             }
@@ -1325,7 +1325,7 @@ namespace Mutagen.Bethesda.Oblivion
                     sourceMod,
                     cmds);
             }
-            foreach (var item in SubCells)
+            foreach (var item in SubCells.Items)
             {
                 item.Link(
                     modList,
@@ -1338,6 +1338,18 @@ namespace Mutagen.Bethesda.Oblivion
         {
             this.FormKey = formKey;
         }
+
+        partial void PostDuplicate(Worldspace obj, Worldspace rhs, Func<FormKey> getNextFormKey, IList<(MajorRecord Record, FormKey OriginalFormKey)> duplicatedRecords);
+
+        public override MajorRecord Duplicate(Func<FormKey> getNextFormKey, IList<(MajorRecord Record, FormKey OriginalFormKey)> duplicatedRecords)
+        {
+            var ret = new Worldspace(getNextFormKey());
+            ret.CopyFieldsFrom(this);
+            duplicatedRecords?.Add((ret, this.FormKey));
+            PostDuplicate(ret, this, getNextFormKey, duplicatedRecords);
+            return ret;
+        }
+
         #endregion
 
         #region Binary Translation
@@ -2878,8 +2890,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     else
                     {
-                        item.MapData_IsSet = false;
-                        item.MapData = default(MapData);
+                        item.MapData_Set(
+                            item: default(MapData),
+                            hasBeenSet: false);
                     }
                 }
                 catch (Exception ex)
@@ -3081,8 +3094,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     else
                     {
-                        item.Road_IsSet = false;
-                        item.Road = default(Road);
+                        item.Road_Set(
+                            item: default(Road),
+                            hasBeenSet: false);
                     }
                 }
                 catch (Exception ex)
@@ -3134,8 +3148,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     else
                     {
-                        item.TopCell_IsSet = false;
-                        item.TopCell = default(Cell);
+                        item.TopCell_Set(
+                            item: default(Cell),
+                            hasBeenSet: false);
                     }
                 }
                 catch (Exception ex)
@@ -4647,6 +4662,28 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     public class Worldspace_CopyMask : Place_CopyMask
     {
+        public Worldspace_CopyMask()
+        {
+        }
+
+        public Worldspace_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
+        {
+            this.Name = defaultOn;
+            this.Parent = defaultOn;
+            this.Climate = defaultOn;
+            this.Water = defaultOn;
+            this.Icon = defaultOn;
+            this.MapData = new MaskItem<CopyOption, MapData_CopyMask>(deepCopyOption, default);
+            this.Flags = defaultOn;
+            this.ObjectBoundsMin = defaultOn;
+            this.ObjectBoundsMax = defaultOn;
+            this.Music = defaultOn;
+            this.OffsetData = defaultOn;
+            this.Road = new MaskItem<CopyOption, Road_CopyMask>(deepCopyOption, default);
+            this.TopCell = new MaskItem<CopyOption, Cell_CopyMask>(deepCopyOption, default);
+            this.SubCells = new MaskItem<CopyOption, WorldspaceBlock_CopyMask>(deepCopyOption, default);
+        }
+
         #region Members
         public bool Name;
         public bool Parent;
@@ -4665,6 +4702,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
+
     public class Worldspace_TranslationMask : Place_TranslationMask
     {
         #region Members

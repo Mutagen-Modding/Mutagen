@@ -768,7 +768,7 @@ namespace Mutagen.Bethesda.Oblivion
         public IEnumerable<ILink> Links => GetLinks();
         private IEnumerable<ILink> GetLinks()
         {
-            foreach (var item in References.WhereCastable<ScriptReference, ILinkContainer>()
+            foreach (var item in References.Items.WhereCastable<ScriptReference, ILinkContainer>()
                 .SelectMany((f) => f.Links))
             {
                 yield return item;
@@ -782,7 +782,7 @@ namespace Mutagen.Bethesda.Oblivion
             NotifyingFireParameters cmds = null)
             where M : IMod<M>
         {
-            foreach (var item in References.WhereCastable<ScriptReference, ILinkSubContainer>())
+            foreach (var item in References.Items.WhereCastable<ScriptReference, ILinkSubContainer>())
             {
                 item.Link(
                     modList,
@@ -2925,6 +2925,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     public class ScriptFields_CopyMask
     {
+        public ScriptFields_CopyMask()
+        {
+        }
+
+        public ScriptFields_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
+        {
+            this.MetadataSummary = new MaskItem<bool, ScriptMetaSummary_CopyMask>(defaultOn, default);
+            this.CompiledScript = defaultOn;
+            this.SourceCode = defaultOn;
+            this.LocalVariables = new MaskItem<CopyOption, LocalVariable_CopyMask>(deepCopyOption, default);
+            this.References = new MaskItem<CopyOption, ScriptReference_CopyMask>(deepCopyOption, default);
+        }
+
         #region Members
         public MaskItem<bool, ScriptMetaSummary_CopyMask> MetadataSummary;
         public bool CompiledScript;
@@ -2934,6 +2947,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
+
     public class ScriptFields_TranslationMask : ITranslationMask
     {
         #region Members

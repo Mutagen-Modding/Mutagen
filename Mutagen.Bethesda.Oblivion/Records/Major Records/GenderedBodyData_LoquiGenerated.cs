@@ -1443,8 +1443,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     else
                     {
-                        item.Male_IsSet = false;
-                        item.Male = default(BodyData);
+                        item.Male_Set(
+                            item: default(BodyData),
+                            hasBeenSet: false);
                     }
                 }
                 catch (Exception ex)
@@ -1496,8 +1497,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     else
                     {
-                        item.Female_IsSet = false;
-                        item.Female = default(BodyData);
+                        item.Female_Set(
+                            item: default(BodyData),
+                            hasBeenSet: false);
                     }
                 }
                 catch (Exception ex)
@@ -2070,12 +2072,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     public class GenderedBodyData_CopyMask
     {
+        public GenderedBodyData_CopyMask()
+        {
+        }
+
+        public GenderedBodyData_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
+        {
+            this.Male = new MaskItem<CopyOption, BodyData_CopyMask>(deepCopyOption, default);
+            this.Female = new MaskItem<CopyOption, BodyData_CopyMask>(deepCopyOption, default);
+        }
+
         #region Members
         public MaskItem<CopyOption, BodyData_CopyMask> Male;
         public MaskItem<CopyOption, BodyData_CopyMask> Female;
         #endregion
 
     }
+
     public class GenderedBodyData_TranslationMask : ITranslationMask
     {
         #region Members

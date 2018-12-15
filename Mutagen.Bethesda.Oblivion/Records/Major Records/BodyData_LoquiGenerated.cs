@@ -1425,8 +1425,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     else
                     {
-                        item.Model_IsSet = false;
-                        item.Model = default(Model);
+                        item.Model_Set(
+                            item: default(Model),
+                            hasBeenSet: false);
                     }
                 }
                 catch (Exception ex)
@@ -2152,12 +2153,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     public class BodyData_CopyMask
     {
+        public BodyData_CopyMask()
+        {
+        }
+
+        public BodyData_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
+        {
+            this.Model = new MaskItem<CopyOption, Model_CopyMask>(deepCopyOption, default);
+            this.BodyParts = new MaskItem<CopyOption, BodyPart_CopyMask>(deepCopyOption, default);
+        }
+
         #region Members
         public MaskItem<CopyOption, Model_CopyMask> Model;
         public MaskItem<CopyOption, BodyPart_CopyMask> BodyParts;
         #endregion
 
     }
+
     public class BodyData_TranslationMask : ITranslationMask
     {
         #region Members

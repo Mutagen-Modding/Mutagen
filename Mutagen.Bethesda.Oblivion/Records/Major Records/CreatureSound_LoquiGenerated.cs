@@ -601,7 +601,7 @@ namespace Mutagen.Bethesda.Oblivion
         public IEnumerable<ILink> Links => GetLinks();
         private IEnumerable<ILink> GetLinks()
         {
-            foreach (var item in Sounds.SelectMany(f => f.Links))
+            foreach (var item in Sounds.Items.SelectMany(f => f.Links))
             {
                 yield return item;
             }
@@ -614,7 +614,7 @@ namespace Mutagen.Bethesda.Oblivion
             NotifyingFireParameters cmds = null)
             where M : IMod<M>
         {
-            foreach (var item in Sounds)
+            foreach (var item in Sounds.Items)
             {
                 item.Link(
                     modList,
@@ -2144,12 +2144,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     public class CreatureSound_CopyMask
     {
+        public CreatureSound_CopyMask()
+        {
+        }
+
+        public CreatureSound_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
+        {
+            this.SoundType = defaultOn;
+            this.Sounds = new MaskItem<CopyOption, SoundItem_CopyMask>(deepCopyOption, default);
+        }
+
         #region Members
         public bool SoundType;
         public MaskItem<CopyOption, SoundItem_CopyMask> Sounds;
         #endregion
 
     }
+
     public class CreatureSound_TranslationMask : ITranslationMask
     {
         #region Members

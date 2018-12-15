@@ -668,7 +668,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 yield return item;
             }
-            foreach (var item in Locations.SelectMany(f => f.Links))
+            foreach (var item in Locations.Items.SelectMany(f => f.Links))
             {
                 yield return item;
             }
@@ -685,7 +685,7 @@ namespace Mutagen.Bethesda.Oblivion
                 modList,
                 sourceMod,
                 cmds);
-            foreach (var item in Locations)
+            foreach (var item in Locations.Items)
             {
                 item.Link(
                     modList,
@@ -698,6 +698,18 @@ namespace Mutagen.Bethesda.Oblivion
         {
             this.FormKey = formKey;
         }
+
+        partial void PostDuplicate(LoadScreen obj, LoadScreen rhs, Func<FormKey> getNextFormKey, IList<(MajorRecord Record, FormKey OriginalFormKey)> duplicatedRecords);
+
+        public override MajorRecord Duplicate(Func<FormKey> getNextFormKey, IList<(MajorRecord Record, FormKey OriginalFormKey)> duplicatedRecords)
+        {
+            var ret = new LoadScreen(getNextFormKey());
+            ret.CopyFieldsFrom(this);
+            duplicatedRecords?.Add((ret, this.FormKey));
+            PostDuplicate(ret, this, getNextFormKey, duplicatedRecords);
+            return ret;
+        }
+
         #endregion
 
         #region Binary Translation
@@ -2354,6 +2366,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     public class LoadScreen_CopyMask : MajorRecord_CopyMask
     {
+        public LoadScreen_CopyMask()
+        {
+        }
+
+        public LoadScreen_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
+        {
+            this.Icon = defaultOn;
+            this.Description = defaultOn;
+            this.Locations = new MaskItem<CopyOption, LoadScreenLocation_CopyMask>(deepCopyOption, default);
+        }
+
         #region Members
         public bool Icon;
         public bool Description;
@@ -2361,6 +2384,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
+
     public class LoadScreen_TranslationMask : MajorRecord_TranslationMask
     {
         #region Members

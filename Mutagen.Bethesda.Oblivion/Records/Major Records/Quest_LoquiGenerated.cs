@@ -889,12 +889,12 @@ namespace Mutagen.Bethesda.Oblivion
                 yield return item;
             }
             yield return Script_Property;
-            foreach (var item in Stages.WhereCastable<QuestStage, ILinkContainer>()
+            foreach (var item in Stages.Items.WhereCastable<QuestStage, ILinkContainer>()
                 .SelectMany((f) => f.Links))
             {
                 yield return item;
             }
-            foreach (var item in Targets.SelectMany(f => f.Links))
+            foreach (var item in Targets.Items.SelectMany(f => f.Links))
             {
                 yield return item;
             }
@@ -915,14 +915,14 @@ namespace Mutagen.Bethesda.Oblivion
                 modList,
                 sourceMod,
                 cmds);
-            foreach (var item in Stages.WhereCastable<QuestStage, ILinkSubContainer>())
+            foreach (var item in Stages.Items.WhereCastable<QuestStage, ILinkSubContainer>())
             {
                 item.Link(
                     modList,
                     sourceMod,
                     cmds);
             }
-            foreach (var item in Targets)
+            foreach (var item in Targets.Items)
             {
                 item.Link(
                     modList,
@@ -935,6 +935,18 @@ namespace Mutagen.Bethesda.Oblivion
         {
             this.FormKey = formKey;
         }
+
+        partial void PostDuplicate(Quest obj, Quest rhs, Func<FormKey> getNextFormKey, IList<(MajorRecord Record, FormKey OriginalFormKey)> duplicatedRecords);
+
+        public override MajorRecord Duplicate(Func<FormKey> getNextFormKey, IList<(MajorRecord Record, FormKey OriginalFormKey)> duplicatedRecords)
+        {
+            var ret = new Quest(getNextFormKey());
+            ret.CopyFieldsFrom(this);
+            duplicatedRecords?.Add((ret, this.FormKey));
+            PostDuplicate(ret, this, getNextFormKey, duplicatedRecords);
+            return ret;
+        }
+
         #endregion
 
         #region Binary Translation
@@ -3501,6 +3513,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     public class Quest_CopyMask : MajorRecord_CopyMask
     {
+        public Quest_CopyMask()
+        {
+        }
+
+        public Quest_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
+        {
+            this.Script = defaultOn;
+            this.Name = defaultOn;
+            this.Icon = defaultOn;
+            this.Flags = defaultOn;
+            this.Priority = defaultOn;
+            this.Conditions = new MaskItem<CopyOption, Condition_CopyMask>(deepCopyOption, default);
+            this.Stages = new MaskItem<CopyOption, QuestStage_CopyMask>(deepCopyOption, default);
+            this.Targets = new MaskItem<CopyOption, QuestTarget_CopyMask>(deepCopyOption, default);
+        }
+
         #region Members
         public bool Script;
         public bool Name;
@@ -3513,6 +3541,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
+
     public class Quest_TranslationMask : MajorRecord_TranslationMask
     {
         #region Members

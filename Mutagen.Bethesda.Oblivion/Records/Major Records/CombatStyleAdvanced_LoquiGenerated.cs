@@ -4735,6 +4735,35 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     public class CombatStyleAdvanced_CopyMask
     {
+        public CombatStyleAdvanced_CopyMask()
+        {
+        }
+
+        public CombatStyleAdvanced_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
+        {
+            this.DodgeFatigueModMult = defaultOn;
+            this.DodgeFatigueModBase = defaultOn;
+            this.EncumbSpeedModBase = defaultOn;
+            this.EncumbSpeedModMult = defaultOn;
+            this.DodgeWhileUnderAttackMult = defaultOn;
+            this.DodgeNotUnderAttackMult = defaultOn;
+            this.DodgeBackWhileUnderAttackMult = defaultOn;
+            this.DodgeBackNotUnderAttackMult = defaultOn;
+            this.DodgeForwardWhileUnderAttackMult = defaultOn;
+            this.DodgeForwardNotUnderAttackMult = defaultOn;
+            this.BlockSkillModifierMult = defaultOn;
+            this.BlockSkillModifierBase = defaultOn;
+            this.BlockWhileUnderAttackMult = defaultOn;
+            this.BlockNotUnderAttackMult = defaultOn;
+            this.AttackSkillModifierMult = defaultOn;
+            this.AttackSkillModifierBase = defaultOn;
+            this.AttackWhileUnderAttackMult = defaultOn;
+            this.AttackNotUnderAttackMult = defaultOn;
+            this.AttackDuringBlockMult = defaultOn;
+            this.PowerAttackFatigueModBase = defaultOn;
+            this.PowerAttackFatigueModMult = defaultOn;
+        }
+
         #region Members
         public bool DodgeFatigueModMult;
         public bool DodgeFatigueModBase;
@@ -4760,6 +4789,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
+
     public class CombatStyleAdvanced_TranslationMask : ITranslationMask
     {
         #region Members

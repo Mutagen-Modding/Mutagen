@@ -1003,7 +1003,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 yield return item;
             }
-            foreach (var item in Weathers.SelectMany(f => f.Links))
+            foreach (var item in Weathers.Items.SelectMany(f => f.Links))
             {
                 yield return item;
             }
@@ -1020,7 +1020,7 @@ namespace Mutagen.Bethesda.Oblivion
                 modList,
                 sourceMod,
                 cmds);
-            foreach (var item in Weathers)
+            foreach (var item in Weathers.Items)
             {
                 item.Link(
                     modList,
@@ -1033,6 +1033,18 @@ namespace Mutagen.Bethesda.Oblivion
         {
             this.FormKey = formKey;
         }
+
+        partial void PostDuplicate(Climate obj, Climate rhs, Func<FormKey> getNextFormKey, IList<(MajorRecord Record, FormKey OriginalFormKey)> duplicatedRecords);
+
+        public override MajorRecord Duplicate(Func<FormKey> getNextFormKey, IList<(MajorRecord Record, FormKey OriginalFormKey)> duplicatedRecords)
+        {
+            var ret = new Climate(getNextFormKey());
+            ret.CopyFieldsFrom(this);
+            duplicatedRecords?.Add((ret, this.FormKey));
+            PostDuplicate(ret, this, getNextFormKey, duplicatedRecords);
+            return ret;
+        }
+
         #endregion
 
         #region Binary Translation
@@ -2402,8 +2414,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     else
                     {
-                        item.Model_IsSet = false;
-                        item.Model = default(Model);
+                        item.Model_Set(
+                            item: default(Model),
+                            hasBeenSet: false);
                     }
                 }
                 catch (Exception ex)
@@ -3735,6 +3748,25 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     public class Climate_CopyMask : MajorRecord_CopyMask
     {
+        public Climate_CopyMask()
+        {
+        }
+
+        public Climate_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
+        {
+            this.Weathers = new MaskItem<CopyOption, WeatherChance_CopyMask>(deepCopyOption, default);
+            this.SunTexture = defaultOn;
+            this.SunGlareTexture = defaultOn;
+            this.Model = new MaskItem<CopyOption, Model_CopyMask>(deepCopyOption, default);
+            this.SunriseBegin = defaultOn;
+            this.SunriseEnd = defaultOn;
+            this.SunsetBegin = defaultOn;
+            this.SunsetEnd = defaultOn;
+            this.Volatility = defaultOn;
+            this.Phase = defaultOn;
+            this.PhaseLength = defaultOn;
+        }
+
         #region Members
         public MaskItem<CopyOption, WeatherChance_CopyMask> Weathers;
         public bool SunTexture;
@@ -3750,6 +3782,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
+
     public class Climate_TranslationMask : MajorRecord_TranslationMask
     {
         #region Members

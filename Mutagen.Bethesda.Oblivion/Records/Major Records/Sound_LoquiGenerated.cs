@@ -608,6 +608,18 @@ namespace Mutagen.Bethesda.Oblivion
         {
             this.FormKey = formKey;
         }
+
+        partial void PostDuplicate(Sound obj, Sound rhs, Func<FormKey> getNextFormKey, IList<(MajorRecord Record, FormKey OriginalFormKey)> duplicatedRecords);
+
+        public override MajorRecord Duplicate(Func<FormKey> getNextFormKey, IList<(MajorRecord Record, FormKey OriginalFormKey)> duplicatedRecords)
+        {
+            var ret = new Sound(getNextFormKey());
+            ret.CopyFieldsFrom(this);
+            duplicatedRecords?.Add((ret, this.FormKey));
+            PostDuplicate(ret, this, getNextFormKey, duplicatedRecords);
+            return ret;
+        }
+
         #endregion
 
         #region Binary Translation
@@ -1458,8 +1470,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     else
                     {
-                        item.Data_IsSet = false;
-                        item.Data = default(SoundData);
+                        item.Data_Set(
+                            item: default(SoundData),
+                            hasBeenSet: false);
                     }
                 }
                 catch (Exception ex)
@@ -2057,12 +2070,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     public class Sound_CopyMask : MajorRecord_CopyMask
     {
+        public Sound_CopyMask()
+        {
+        }
+
+        public Sound_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
+        {
+            this.File = defaultOn;
+            this.Data = new MaskItem<CopyOption, SoundData_CopyMask>(deepCopyOption, default);
+        }
+
         #region Members
         public bool File;
         public MaskItem<CopyOption, SoundData_CopyMask> Data;
         #endregion
 
     }
+
     public class Sound_TranslationMask : MajorRecord_TranslationMask
     {
         #region Members

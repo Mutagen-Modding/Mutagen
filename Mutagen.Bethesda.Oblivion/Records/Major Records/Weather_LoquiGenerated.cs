@@ -18,7 +18,7 @@ using System.Reactive.Linq;
 using Mutagen.Bethesda.Oblivion;
 using DynamicData;
 using CSharpExt.Rx;
-using System.Windows.Media;
+using System.Drawing;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
 using System.Xml;
@@ -1957,7 +1957,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 yield return item;
             }
-            foreach (var item in Sounds.SelectMany(f => f.Links))
+            foreach (var item in Sounds.Items.SelectMany(f => f.Links))
             {
                 yield return item;
             }
@@ -1974,7 +1974,7 @@ namespace Mutagen.Bethesda.Oblivion
                 modList,
                 sourceMod,
                 cmds);
-            foreach (var item in Sounds)
+            foreach (var item in Sounds.Items)
             {
                 item.Link(
                     modList,
@@ -1987,6 +1987,18 @@ namespace Mutagen.Bethesda.Oblivion
         {
             this.FormKey = formKey;
         }
+
+        partial void PostDuplicate(Weather obj, Weather rhs, Func<FormKey> getNextFormKey, IList<(MajorRecord Record, FormKey OriginalFormKey)> duplicatedRecords);
+
+        public override MajorRecord Duplicate(Func<FormKey> getNextFormKey, IList<(MajorRecord Record, FormKey OriginalFormKey)> duplicatedRecords)
+        {
+            var ret = new Weather(getNextFormKey());
+            ret.CopyFieldsFrom(this);
+            duplicatedRecords?.Add((ret, this.FormKey));
+            PostDuplicate(ret, this, getNextFormKey, duplicatedRecords);
+            return ret;
+        }
+
         #endregion
 
         #region Binary Translation
@@ -4500,8 +4512,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     else
                     {
-                        item.Model_IsSet = false;
-                        item.Model = default(Model);
+                        item.Model_Set(
+                            item: default(Model),
+                            hasBeenSet: false);
                     }
                 }
                 catch (Exception ex)
@@ -7717,6 +7730,50 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     public class Weather_CopyMask : MajorRecord_CopyMask
     {
+        public Weather_CopyMask()
+        {
+        }
+
+        public Weather_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
+        {
+            this.TextureLowerLayer = defaultOn;
+            this.TextureUpperLayer = defaultOn;
+            this.Model = new MaskItem<CopyOption, Model_CopyMask>(deepCopyOption, default);
+            this.WeatherTypes = new MaskItem<CopyOption, WeatherType_CopyMask>(deepCopyOption, default);
+            this.FogDayNear = defaultOn;
+            this.FogDayFar = defaultOn;
+            this.FogNightNear = defaultOn;
+            this.FogNightFar = defaultOn;
+            this.HdrEyeAdaptSpeed = defaultOn;
+            this.HdrBlurRadius = defaultOn;
+            this.HdrBlurPasses = defaultOn;
+            this.HdrEmissiveMult = defaultOn;
+            this.HdrTargetLum = defaultOn;
+            this.HdrUpperLumClamp = defaultOn;
+            this.HdrBrightScale = defaultOn;
+            this.HdrBrightClamp = defaultOn;
+            this.HdrLumRampNoTex = defaultOn;
+            this.HdrLumRampMin = defaultOn;
+            this.HdrLumRampMax = defaultOn;
+            this.HdrSunlightDimmer = defaultOn;
+            this.HdrGrassDimmer = defaultOn;
+            this.HdrTreeDimmer = defaultOn;
+            this.WindSpeed = defaultOn;
+            this.CloudSpeedLower = defaultOn;
+            this.CloudSpeedUpper = defaultOn;
+            this.TransDelta = defaultOn;
+            this.SunGlare = defaultOn;
+            this.SunDamage = defaultOn;
+            this.PrecipitationBeginFadeIn = defaultOn;
+            this.PrecipitationEndFadeOut = defaultOn;
+            this.ThunderLightningBeginFadeIn = defaultOn;
+            this.ThunderLightningEndFadeOut = defaultOn;
+            this.ThunderLightningFrequency = defaultOn;
+            this.Classification = defaultOn;
+            this.LightningColor = defaultOn;
+            this.Sounds = new MaskItem<CopyOption, WeatherSound_CopyMask>(deepCopyOption, default);
+        }
+
         #region Members
         public bool TextureLowerLayer;
         public bool TextureUpperLayer;
@@ -7757,6 +7814,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
+
     public class Weather_TranslationMask : MajorRecord_TranslationMask
     {
         #region Members

@@ -1712,11 +1712,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     public class ScriptVariableReference_CopyMask : ScriptReference_CopyMask
     {
+        public ScriptVariableReference_CopyMask()
+        {
+        }
+
+        public ScriptVariableReference_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
+        {
+            this.VariableIndex = defaultOn;
+        }
+
         #region Members
         public bool VariableIndex;
         #endregion
 
     }
+
     public class ScriptVariableReference_TranslationMask : ScriptReference_TranslationMask
     {
         #region Members

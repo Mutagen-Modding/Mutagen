@@ -2475,6 +2475,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     public class MagicEffectSubData_CopyMask
     {
+        public MagicEffectSubData_CopyMask()
+        {
+        }
+
+        public MagicEffectSubData_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
+        {
+            this.EnchantEffect = defaultOn;
+            this.CastingSound = defaultOn;
+            this.BoltSound = defaultOn;
+            this.HitSound = defaultOn;
+            this.AreaSound = defaultOn;
+            this.ConstantEffectEnchantmentFactor = defaultOn;
+            this.ConstantEffectBarterFactor = defaultOn;
+        }
+
         #region Members
         public bool EnchantEffect;
         public bool CastingSound;
@@ -2486,6 +2501,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
+
     public class MagicEffectSubData_TranslationMask : ITranslationMask
     {
         #region Members

@@ -15,7 +15,7 @@ using Mutagen.Bethesda.Oblivion.Internals;
 using ReactiveUI;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Windows.Media;
+using System.Drawing;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
 using System.Xml;
@@ -2686,6 +2686,18 @@ namespace Mutagen.Bethesda.Oblivion
         {
             this.FormKey = formKey;
         }
+
+        partial void PostDuplicate(EffectShader obj, EffectShader rhs, Func<FormKey> getNextFormKey, IList<(MajorRecord Record, FormKey OriginalFormKey)> duplicatedRecords);
+
+        public override MajorRecord Duplicate(Func<FormKey> getNextFormKey, IList<(MajorRecord Record, FormKey OriginalFormKey)> duplicatedRecords)
+        {
+            var ret = new EffectShader(getNextFormKey());
+            ret.CopyFieldsFrom(this);
+            duplicatedRecords?.Add((ret, this.FormKey));
+            PostDuplicate(ret, this, getNextFormKey, duplicatedRecords);
+            return ret;
+        }
+
         #endregion
 
         #region Binary Translation
@@ -10558,6 +10570,72 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     public class EffectShader_CopyMask : MajorRecord_CopyMask
     {
+        public EffectShader_CopyMask()
+        {
+        }
+
+        public EffectShader_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
+        {
+            this.FillTexture = defaultOn;
+            this.ParticleShaderTexture = defaultOn;
+            this.Flags = defaultOn;
+            this.MembraneShaderSourceBlendMode = defaultOn;
+            this.MembraneShaderBlendOperation = defaultOn;
+            this.MembraneShaderZTestFunction = defaultOn;
+            this.FillTextureEffectColor = defaultOn;
+            this.FillTextureEffectAlphaFadeInTime = defaultOn;
+            this.FillTextureEffectFullAlphaTime = defaultOn;
+            this.FillTextureEffectAlphaFadeOutTime = defaultOn;
+            this.FillTextureEffectPersistentAlphaRatio = defaultOn;
+            this.FillTextureEffectAlphaPulseAmplitude = defaultOn;
+            this.FillTextureEffectAlphaPulseFrequency = defaultOn;
+            this.FillTextureEffectTextureAnimationSpeedU = defaultOn;
+            this.FillTextureEffectTextureAnimationSpeedV = defaultOn;
+            this.EdgeEffectFallOff = defaultOn;
+            this.EdgeEffectColor = defaultOn;
+            this.EdgeEffectAlphaFadeInTime = defaultOn;
+            this.EdgeEffectFullAlphaTime = defaultOn;
+            this.EdgeEffectAlphaFadeOutTime = defaultOn;
+            this.EdgeEffectPersistentAlphaRatio = defaultOn;
+            this.EdgeEffectAlphaPulseAmplitude = defaultOn;
+            this.EdgeEffectAlphaPulseFrequency = defaultOn;
+            this.FillTextureEffectFullAlphaRatio = defaultOn;
+            this.EdgeEffectFullAlphaRatio = defaultOn;
+            this.MembraneShaderDestBlendMode = defaultOn;
+            this.ParticleShaderSourceBlendMode = defaultOn;
+            this.ParticleShaderBlendOperation = defaultOn;
+            this.ParticleShaderZTestFunction = defaultOn;
+            this.ParticleShaderDestBlendMode = defaultOn;
+            this.ParticleShaderParticleBirthRampUpTime = defaultOn;
+            this.ParticleShaderFullParticleBirthTime = defaultOn;
+            this.ParticleShaderParticleBirthRampDownTime = defaultOn;
+            this.ParticleShaderFullParticleBirthRatio = defaultOn;
+            this.ParticleShaderPersistentParticleBirthRatio = defaultOn;
+            this.ParticleShaderParticleLifetime = defaultOn;
+            this.ParticleShaderParticleLifetimePlusMinus = defaultOn;
+            this.ParticleShaderInitialSpeedAlongNormal = defaultOn;
+            this.ParticleShaderAccelerationAlongNormal = defaultOn;
+            this.ParticleShaderInitialVelocity1 = defaultOn;
+            this.ParticleShaderInitialVelocity2 = defaultOn;
+            this.ParticleShaderInitialVelocity3 = defaultOn;
+            this.ParticleShaderAcceleration1 = defaultOn;
+            this.ParticleShaderAcceleration2 = defaultOn;
+            this.ParticleShaderAcceleration3 = defaultOn;
+            this.ParticleShaderScaleKey1 = defaultOn;
+            this.ParticleShaderScaleKey2 = defaultOn;
+            this.ParticleShaderScaleKey1Time = defaultOn;
+            this.ParticleShaderScaleKey2Time = defaultOn;
+            this.ColorKey1Color = defaultOn;
+            this.ColorKey2Color = defaultOn;
+            this.ColorKey3Color = defaultOn;
+            this.ColorKey1ColorAlpha = defaultOn;
+            this.ColorKey2ColorAlpha = defaultOn;
+            this.ColorKey3ColorAlpha = defaultOn;
+            this.ColorKey1ColorKeyTime = defaultOn;
+            this.ColorKey2ColorKeyTime = defaultOn;
+            this.ColorKey3ColorKeyTime = defaultOn;
+        }
+
         #region Members
         public bool FillTexture;
         public bool ParticleShaderTexture;
@@ -10620,6 +10698,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
+
     public class EffectShader_TranslationMask : MajorRecord_TranslationMask
     {
         #region Members

@@ -762,7 +762,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 yield return item;
             }
-            foreach (var item in Effects.SelectMany(f => f.Links))
+            foreach (var item in Effects.Items.SelectMany(f => f.Links))
             {
                 yield return item;
             }
@@ -779,7 +779,7 @@ namespace Mutagen.Bethesda.Oblivion
                 modList,
                 sourceMod,
                 cmds);
-            foreach (var item in Effects)
+            foreach (var item in Effects.Items)
             {
                 item.Link(
                     modList,
@@ -792,6 +792,18 @@ namespace Mutagen.Bethesda.Oblivion
         {
             this.FormKey = formKey;
         }
+
+        partial void PostDuplicate(Enchantment obj, Enchantment rhs, Func<FormKey> getNextFormKey, IList<(MajorRecord Record, FormKey OriginalFormKey)> duplicatedRecords);
+
+        public override MajorRecord Duplicate(Func<FormKey> getNextFormKey, IList<(MajorRecord Record, FormKey OriginalFormKey)> duplicatedRecords)
+        {
+            var ret = new Enchantment(getNextFormKey());
+            ret.CopyFieldsFrom(this);
+            duplicatedRecords?.Add((ret, this.FormKey));
+            PostDuplicate(ret, this, getNextFormKey, duplicatedRecords);
+            return ret;
+        }
+
         #endregion
 
         #region Binary Translation
@@ -2783,6 +2795,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     public class Enchantment_CopyMask : MajorRecord_CopyMask
     {
+        public Enchantment_CopyMask()
+        {
+        }
+
+        public Enchantment_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
+        {
+            this.Name = defaultOn;
+            this.Type = defaultOn;
+            this.ChargeAmount = defaultOn;
+            this.EnchantCost = defaultOn;
+            this.Flags = defaultOn;
+            this.Effects = new MaskItem<CopyOption, Effect_CopyMask>(deepCopyOption, default);
+        }
+
         #region Members
         public bool Name;
         public bool Type;
@@ -2793,6 +2819,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
+
     public class Enchantment_TranslationMask : MajorRecord_TranslationMask
     {
         #region Members

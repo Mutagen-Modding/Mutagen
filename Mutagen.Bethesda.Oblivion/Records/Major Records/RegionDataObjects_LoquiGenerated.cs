@@ -532,7 +532,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 yield return item;
             }
-            foreach (var item in Objects.SelectMany(f => f.Links))
+            foreach (var item in Objects.Items.SelectMany(f => f.Links))
             {
                 yield return item;
             }
@@ -549,7 +549,7 @@ namespace Mutagen.Bethesda.Oblivion
                 modList,
                 sourceMod,
                 cmds);
-            foreach (var item in Objects)
+            foreach (var item in Objects.Items)
             {
                 item.Link(
                     modList,
@@ -1922,11 +1922,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     public class RegionDataObjects_CopyMask : RegionData_CopyMask
     {
+        public RegionDataObjects_CopyMask()
+        {
+        }
+
+        public RegionDataObjects_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
+        {
+            this.Objects = new MaskItem<CopyOption, RegionDataObject_CopyMask>(deepCopyOption, default);
+        }
+
         #region Members
         public MaskItem<CopyOption, RegionDataObject_CopyMask> Objects;
         #endregion
 
     }
+
     public class RegionDataObjects_TranslationMask : RegionData_TranslationMask
     {
         #region Members

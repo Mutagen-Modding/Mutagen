@@ -940,6 +940,18 @@ namespace Mutagen.Bethesda.Oblivion
         {
             this.FormKey = formKey;
         }
+
+        partial void PostDuplicate(PlacedCreature obj, PlacedCreature rhs, Func<FormKey> getNextFormKey, IList<(MajorRecord Record, FormKey OriginalFormKey)> duplicatedRecords);
+
+        public override MajorRecord Duplicate(Func<FormKey> getNextFormKey, IList<(MajorRecord Record, FormKey OriginalFormKey)> duplicatedRecords)
+        {
+            var ret = new PlacedCreature(getNextFormKey());
+            ret.CopyFieldsFrom(this);
+            duplicatedRecords?.Add((ret, this.FormKey));
+            PostDuplicate(ret, this, getNextFormKey, duplicatedRecords);
+            return ret;
+        }
+
         #endregion
 
         #region Binary Translation
@@ -2154,8 +2166,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     else
                     {
-                        item.EnableParent_IsSet = false;
-                        item.EnableParent = default(EnableParent);
+                        item.EnableParent_Set(
+                            item: default(EnableParent),
+                            hasBeenSet: false);
                     }
                 }
                 catch (Exception ex)
@@ -3259,6 +3272,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     public class PlacedCreature_CopyMask : MajorRecord_CopyMask
     {
+        public PlacedCreature_CopyMask()
+        {
+        }
+
+        public PlacedCreature_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
+        {
+            this.Base = defaultOn;
+            this.Owner = defaultOn;
+            this.FactionRank = defaultOn;
+            this.GlobalVariable = defaultOn;
+            this.EnableParent = new MaskItem<CopyOption, EnableParent_CopyMask>(deepCopyOption, default);
+            this.RagdollData = defaultOn;
+            this.Scale = defaultOn;
+            this.Position = defaultOn;
+            this.Rotation = defaultOn;
+        }
+
         #region Members
         public bool Base;
         public bool Owner;
@@ -3272,6 +3302,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
+
     public class PlacedCreature_TranslationMask : MajorRecord_TranslationMask
     {
         #region Members

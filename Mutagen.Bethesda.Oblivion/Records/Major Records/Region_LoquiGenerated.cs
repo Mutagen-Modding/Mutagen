@@ -15,7 +15,7 @@ using Mutagen.Bethesda.Oblivion.Internals;
 using ReactiveUI;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Windows.Media;
+using System.Drawing;
 using DynamicData;
 using CSharpExt.Rx;
 using Mutagen.Bethesda.Oblivion;
@@ -1094,6 +1094,18 @@ namespace Mutagen.Bethesda.Oblivion
         {
             this.FormKey = formKey;
         }
+
+        partial void PostDuplicate(Region obj, Region rhs, Func<FormKey> getNextFormKey, IList<(MajorRecord Record, FormKey OriginalFormKey)> duplicatedRecords);
+
+        public override MajorRecord Duplicate(Func<FormKey> getNextFormKey, IList<(MajorRecord Record, FormKey OriginalFormKey)> duplicatedRecords)
+        {
+            var ret = new Region(getNextFormKey());
+            ret.CopyFieldsFrom(this);
+            duplicatedRecords?.Add((ret, this.FormKey));
+            PostDuplicate(ret, this, getNextFormKey, duplicatedRecords);
+            return ret;
+        }
+
         #endregion
 
         #region Binary Translation
@@ -2260,8 +2272,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     else
                     {
-                        item.Objects_IsSet = false;
-                        item.Objects = default(RegionDataObjects);
+                        item.Objects_Set(
+                            item: default(RegionDataObjects),
+                            hasBeenSet: false);
                     }
                 }
                 catch (Exception ex)
@@ -2313,8 +2326,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     else
                     {
-                        item.Weather_IsSet = false;
-                        item.Weather = default(RegionDataWeather);
+                        item.Weather_Set(
+                            item: default(RegionDataWeather),
+                            hasBeenSet: false);
                     }
                 }
                 catch (Exception ex)
@@ -2366,8 +2380,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     else
                     {
-                        item.MapName_IsSet = false;
-                        item.MapName = default(RegionDataMapName);
+                        item.MapName_Set(
+                            item: default(RegionDataMapName),
+                            hasBeenSet: false);
                     }
                 }
                 catch (Exception ex)
@@ -2419,8 +2434,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     else
                     {
-                        item.Grasses_IsSet = false;
-                        item.Grasses = default(RegionDataGrasses);
+                        item.Grasses_Set(
+                            item: default(RegionDataGrasses),
+                            hasBeenSet: false);
                     }
                 }
                 catch (Exception ex)
@@ -2472,8 +2488,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     else
                     {
-                        item.Sounds_IsSet = false;
-                        item.Sounds = default(RegionDataSounds);
+                        item.Sounds_Set(
+                            item: default(RegionDataSounds),
+                            hasBeenSet: false);
                     }
                 }
                 catch (Exception ex)
@@ -3638,6 +3655,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     public class Region_CopyMask : MajorRecord_CopyMask
     {
+        public Region_CopyMask()
+        {
+        }
+
+        public Region_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
+        {
+            this.Icon = defaultOn;
+            this.MapColor = defaultOn;
+            this.Worldspace = defaultOn;
+            this.Areas = new MaskItem<CopyOption, RegionArea_CopyMask>(deepCopyOption, default);
+            this.Objects = new MaskItem<CopyOption, RegionDataObjects_CopyMask>(deepCopyOption, default);
+            this.Weather = new MaskItem<CopyOption, RegionDataWeather_CopyMask>(deepCopyOption, default);
+            this.MapName = new MaskItem<CopyOption, RegionDataMapName_CopyMask>(deepCopyOption, default);
+            this.Grasses = new MaskItem<CopyOption, RegionDataGrasses_CopyMask>(deepCopyOption, default);
+            this.Sounds = new MaskItem<CopyOption, RegionDataSounds_CopyMask>(deepCopyOption, default);
+        }
+
         #region Members
         public bool Icon;
         public bool MapColor;
@@ -3651,6 +3685,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
+
     public class Region_TranslationMask : MajorRecord_TranslationMask
     {
         #region Members

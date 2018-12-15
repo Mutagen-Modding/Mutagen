@@ -15,7 +15,7 @@ using Mutagen.Bethesda.Oblivion.Internals;
 using ReactiveUI;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Windows.Media;
+using System.Drawing;
 using System.Xml;
 using System.Xml.Linq;
 using System.IO;
@@ -2918,6 +2918,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     public class CellLighting_CopyMask
     {
+        public CellLighting_CopyMask()
+        {
+        }
+
+        public CellLighting_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
+        {
+            this.AmbientColor = defaultOn;
+            this.DirectionalColor = defaultOn;
+            this.FogColor = defaultOn;
+            this.FogNear = defaultOn;
+            this.FogFar = defaultOn;
+            this.DirectionalRotationXY = defaultOn;
+            this.DirectionalRotationZ = defaultOn;
+            this.DirectionalFade = defaultOn;
+            this.FogClipDistance = defaultOn;
+        }
+
         #region Members
         public bool AmbientColor;
         public bool DirectionalColor;
@@ -2931,6 +2948,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
+
     public class CellLighting_TranslationMask : ITranslationMask
     {
         #region Members

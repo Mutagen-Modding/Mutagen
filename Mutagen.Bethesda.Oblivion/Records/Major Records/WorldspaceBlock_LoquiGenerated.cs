@@ -695,7 +695,7 @@ namespace Mutagen.Bethesda.Oblivion
         public IEnumerable<ILink> Links => GetLinks();
         private IEnumerable<ILink> GetLinks()
         {
-            foreach (var item in Items.SelectMany(f => f.Links))
+            foreach (var item in Items.Items.SelectMany(f => f.Links))
             {
                 yield return item;
             }
@@ -708,7 +708,7 @@ namespace Mutagen.Bethesda.Oblivion
             NotifyingFireParameters cmds = null)
             where M : IMod<M>
         {
-            foreach (var item in Items)
+            foreach (var item in Items.Items)
             {
                 item.Link(
                     modList,
@@ -2557,6 +2557,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     public class WorldspaceBlock_CopyMask
     {
+        public WorldspaceBlock_CopyMask()
+        {
+        }
+
+        public WorldspaceBlock_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
+        {
+            this.BlockNumber = defaultOn;
+            this.GroupType = defaultOn;
+            this.LastModified = defaultOn;
+            this.Items = new MaskItem<CopyOption, WorldspaceSubBlock_CopyMask>(deepCopyOption, default);
+        }
+
         #region Members
         public bool BlockNumberY;
         public bool BlockNumberX;
@@ -2566,6 +2578,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
+
     public class WorldspaceBlock_TranslationMask : ITranslationMask
     {
         #region Members

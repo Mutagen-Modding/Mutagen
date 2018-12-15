@@ -2468,6 +2468,25 @@ namespace Mutagen.Bethesda.Tests.Internals
     }
     public class TestingSettings_CopyMask
     {
+        public TestingSettings_CopyMask()
+        {
+        }
+
+        public TestingSettings_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
+        {
+            this.TestNormal = defaultOn;
+            this.TestObservable = defaultOn;
+            this.TestFolder = defaultOn;
+            this.ReuseCaches = defaultOn;
+            this.DeleteCachesAfter = defaultOn;
+            this.TestGroupMasks = defaultOn;
+            this.TestModList = defaultOn;
+            this.TestFlattenedMod = defaultOn;
+            this.DataFolder = defaultOn;
+            this.OblivionESM = new MaskItem<CopyOption, Passthrough_CopyMask>(deepCopyOption, default);
+            this.KnightsESP = new MaskItem<CopyOption, Passthrough_CopyMask>(deepCopyOption, default);
+        }
+
         #region Members
         public bool TestNormal;
         public bool TestObservable;
@@ -2483,6 +2502,7 @@ namespace Mutagen.Bethesda.Tests.Internals
         #endregion
 
     }
+
     public class TestingSettings_TranslationMask : ITranslationMask
     {
         #region Members

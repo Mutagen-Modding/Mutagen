@@ -1980,6 +1980,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     public class RegionSound_CopyMask
     {
+        public RegionSound_CopyMask()
+        {
+        }
+
+        public RegionSound_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
+        {
+            this.Sound = defaultOn;
+            this.Flags = defaultOn;
+            this.Chance = defaultOn;
+        }
+
         #region Members
         public bool Sound;
         public bool Flags;
@@ -1987,6 +1998,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
+
     public class RegionSound_TranslationMask : ITranslationMask
     {
         #region Members

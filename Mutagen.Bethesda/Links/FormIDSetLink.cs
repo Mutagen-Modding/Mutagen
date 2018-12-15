@@ -17,6 +17,11 @@ namespace Mutagen.Bethesda
         public FormKey? UnlinkedForm { get; private set; }
         public FormKey FormKey => LinkExt.GetFormKey(this);
         Type ILink.TargetType => typeof(T);
+        FormKey ILink.FormKey
+        {
+            get => this.FormKey;
+            set => SetUnlinkedForm(value);
+        }
 #if DEBUG
         public bool AttemptedLink { get; set; }
 #endif
@@ -42,6 +47,12 @@ namespace Mutagen.Bethesda
         {
             this.UnlinkedForm = change?.FormKey ?? UnlinkedForm;
             this._HasBeenSet = this.UnlinkedForm.HasValue;
+        }
+
+        public void SetUnlinkedForm(FormKey form)
+        {
+            this.UnlinkedForm = form;
+            this.Item = default;
         }
 
         public override void Set(T value, bool hasBeenSet, NotifyingFireParameters cmds = null)

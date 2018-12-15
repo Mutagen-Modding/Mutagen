@@ -15,7 +15,7 @@ using Mutagen.Bethesda.Oblivion.Internals;
 using ReactiveUI;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Windows.Media;
+using System.Drawing;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
@@ -1834,6 +1834,18 @@ namespace Mutagen.Bethesda.Oblivion
         {
             this.FormKey = formKey;
         }
+
+        partial void PostDuplicate(Water obj, Water rhs, Func<FormKey> getNextFormKey, IList<(MajorRecord Record, FormKey OriginalFormKey)> duplicatedRecords);
+
+        public override MajorRecord Duplicate(Func<FormKey> getNextFormKey, IList<(MajorRecord Record, FormKey OriginalFormKey)> duplicatedRecords)
+        {
+            var ret = new Water(getNextFormKey());
+            ret.CopyFieldsFrom(this);
+            duplicatedRecords?.Add((ret, this.FormKey));
+            PostDuplicate(ret, this, getNextFormKey, duplicatedRecords);
+            return ret;
+        }
+
         #endregion
 
         #region Binary Translation
@@ -4818,8 +4830,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     else
                     {
-                        item.RelatedWaters_IsSet = false;
-                        item.RelatedWaters = default(RelatedWaters);
+                        item.RelatedWaters_Set(
+                            item: default(RelatedWaters),
+                            hasBeenSet: false);
                     }
                 }
                 catch (Exception ex)
@@ -7004,6 +7017,46 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     public class Water_CopyMask : MajorRecord_CopyMask
     {
+        public Water_CopyMask()
+        {
+        }
+
+        public Water_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
+        {
+            this.Texture = defaultOn;
+            this.Opacity = defaultOn;
+            this.Flags = defaultOn;
+            this.MaterialID = defaultOn;
+            this.Sound = defaultOn;
+            this.WindVelocity = defaultOn;
+            this.WindDirection = defaultOn;
+            this.WaveAmplitude = defaultOn;
+            this.WaveFrequency = defaultOn;
+            this.SunPower = defaultOn;
+            this.ReflectivityAmount = defaultOn;
+            this.FresnelAmount = defaultOn;
+            this.ScrollXSpeed = defaultOn;
+            this.ScrollYSpeed = defaultOn;
+            this.FogDistanceNearPlane = defaultOn;
+            this.FogDistanceFarPlane = defaultOn;
+            this.ShallowColor = defaultOn;
+            this.DeepColor = defaultOn;
+            this.ReflectionColor = defaultOn;
+            this.TextureBlend = defaultOn;
+            this.RainSimulatorForce = defaultOn;
+            this.RainSimulatorVelocity = defaultOn;
+            this.RainSimulatorFalloff = defaultOn;
+            this.RainSimulatorDampner = defaultOn;
+            this.RainSimulatorStartingSize = defaultOn;
+            this.DisplacementSimulatorForce = defaultOn;
+            this.DisplacementSimulatorVelocity = defaultOn;
+            this.DisplacementSimulatorFalloff = defaultOn;
+            this.DisplacementSimulatorDampner = defaultOn;
+            this.DisplacementSimulatorStartingSize = defaultOn;
+            this.Damage = defaultOn;
+            this.RelatedWaters = new MaskItem<CopyOption, RelatedWaters_CopyMask>(deepCopyOption, default);
+        }
+
         #region Members
         public bool Texture;
         public bool Opacity;
@@ -7040,6 +7093,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
+
     public class Water_TranslationMask : MajorRecord_TranslationMask
     {
         #region Members

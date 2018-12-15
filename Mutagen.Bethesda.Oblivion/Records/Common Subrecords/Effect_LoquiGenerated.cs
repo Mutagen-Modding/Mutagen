@@ -1969,8 +1969,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     else
                     {
-                        item.ScriptEffect_IsSet = false;
-                        item.ScriptEffect = default(ScriptEffect);
+                        item.ScriptEffect_Set(
+                            item: default(ScriptEffect),
+                            hasBeenSet: false);
                     }
                 }
                 catch (Exception ex)
@@ -2783,6 +2784,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     public class Effect_CopyMask
     {
+        public Effect_CopyMask()
+        {
+        }
+
+        public Effect_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
+        {
+            this.MagicEffect = defaultOn;
+            this.Magnitude = defaultOn;
+            this.Area = defaultOn;
+            this.Duration = defaultOn;
+            this.Type = defaultOn;
+            this.ActorValue = defaultOn;
+            this.ScriptEffect = new MaskItem<CopyOption, ScriptEffect_CopyMask>(deepCopyOption, default);
+        }
+
         #region Members
         public bool MagicEffect;
         public bool Magnitude;
@@ -2794,6 +2810,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
+
     public class Effect_TranslationMask : ITranslationMask
     {
         #region Members

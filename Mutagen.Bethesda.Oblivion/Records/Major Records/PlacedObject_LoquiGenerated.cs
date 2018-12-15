@@ -1848,6 +1848,18 @@ namespace Mutagen.Bethesda.Oblivion
         {
             this.FormKey = formKey;
         }
+
+        partial void PostDuplicate(PlacedObject obj, PlacedObject rhs, Func<FormKey> getNextFormKey, IList<(MajorRecord Record, FormKey OriginalFormKey)> duplicatedRecords);
+
+        public override MajorRecord Duplicate(Func<FormKey> getNextFormKey, IList<(MajorRecord Record, FormKey OriginalFormKey)> duplicatedRecords)
+        {
+            var ret = new PlacedObject(getNextFormKey());
+            ret.CopyFieldsFrom(this);
+            duplicatedRecords?.Add((ret, this.FormKey));
+            PostDuplicate(ret, this, getNextFormKey, duplicatedRecords);
+            return ret;
+        }
+
         #endregion
 
         #region Binary Translation
@@ -3899,8 +3911,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     else
                     {
-                        item.TeleportDestination_IsSet = false;
-                        item.TeleportDestination = default(TeleportDestination);
+                        item.TeleportDestination_Set(
+                            item: default(TeleportDestination),
+                            hasBeenSet: false);
                     }
                 }
                 catch (Exception ex)
@@ -3952,8 +3965,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     else
                     {
-                        item.Lock_IsSet = false;
-                        item.Lock = default(LockInformation);
+                        item.Lock_Set(
+                            item: default(LockInformation),
+                            hasBeenSet: false);
                     }
                 }
                 catch (Exception ex)
@@ -4075,8 +4089,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     else
                     {
-                        item.EnableParent_IsSet = false;
-                        item.EnableParent = default(EnableParent);
+                        item.EnableParent_Set(
+                            item: default(EnableParent),
+                            hasBeenSet: false);
                     }
                 }
                 catch (Exception ex)
@@ -4178,8 +4193,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     else
                     {
-                        item.DistantLODData_IsSet = false;
-                        item.DistantLODData = default(DistantLODData);
+                        item.DistantLODData_Set(
+                            item: default(DistantLODData),
+                            hasBeenSet: false);
                     }
                 }
                 catch (Exception ex)
@@ -4401,8 +4417,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     else
                     {
-                        item.MapMarker_IsSet = false;
-                        item.MapMarker = default(MapMarker);
+                        item.MapMarker_Set(
+                            item: default(MapMarker),
+                            hasBeenSet: false);
                     }
                 }
                 catch (Exception ex)
@@ -6550,6 +6567,39 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     public class PlacedObject_CopyMask : MajorRecord_CopyMask
     {
+        public PlacedObject_CopyMask()
+        {
+        }
+
+        public PlacedObject_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
+        {
+            this.Base = defaultOn;
+            this.XPCIFluff = defaultOn;
+            this.FULLFluff = defaultOn;
+            this.TeleportDestination = new MaskItem<CopyOption, TeleportDestination_CopyMask>(deepCopyOption, default);
+            this.Lock = new MaskItem<CopyOption, LockInformation_CopyMask>(deepCopyOption, default);
+            this.Owner = defaultOn;
+            this.FactionRank = defaultOn;
+            this.GlobalVariable = defaultOn;
+            this.EnableParent = new MaskItem<CopyOption, EnableParent_CopyMask>(deepCopyOption, default);
+            this.Target = defaultOn;
+            this.SpeedTreeSeed = defaultOn;
+            this.DistantLODData = new MaskItem<CopyOption, DistantLODData_CopyMask>(deepCopyOption, default);
+            this.Charge = defaultOn;
+            this.Health = defaultOn;
+            this.LevelModifier = defaultOn;
+            this.Unknown = defaultOn;
+            this.ActionFlags = defaultOn;
+            this.Count = defaultOn;
+            this.MapMarker = new MaskItem<CopyOption, MapMarker_CopyMask>(deepCopyOption, default);
+            this.OpenByDefault = defaultOn;
+            this.RagdollData = defaultOn;
+            this.Scale = defaultOn;
+            this.ContainedSoul = defaultOn;
+            this.Position = defaultOn;
+            this.Rotation = defaultOn;
+        }
+
         #region Members
         public bool Base;
         public bool XPCIFluff;
@@ -6579,6 +6629,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
+
     public class PlacedObject_TranslationMask : MajorRecord_TranslationMask
     {
         #region Members

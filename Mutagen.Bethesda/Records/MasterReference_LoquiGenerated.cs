@@ -1988,12 +1988,23 @@ namespace Mutagen.Bethesda.Internals
     }
     public class MasterReference_CopyMask
     {
+        public MasterReference_CopyMask()
+        {
+        }
+
+        public MasterReference_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
+        {
+            this.Master = defaultOn;
+            this.FileSize = defaultOn;
+        }
+
         #region Members
         public bool Master;
         public bool FileSize;
         #endregion
 
     }
+
     public class MasterReference_TranslationMask : ITranslationMask
     {
         #region Members

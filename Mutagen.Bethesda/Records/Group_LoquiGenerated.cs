@@ -36,7 +36,7 @@ namespace Mutagen.Bethesda
         ILoquiObjectSetter,
         ILinkSubContainer,
         IEquatable<Group<T>>
-        where T : IFormKey, ILoquiObject<T>
+        where T : IMajorRecord, ILoquiObject<T>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Group_Registration.Instance;
@@ -568,7 +568,7 @@ namespace Mutagen.Bethesda
         public IEnumerable<ILink> Links => GetLinks();
         private IEnumerable<ILink> GetLinks()
         {
-            foreach (var item in Items.WhereCastable<T, ILinkContainer>()
+            foreach (var item in Items.Items.WhereCastable<T, ILinkContainer>()
                 .SelectMany((f) => f.Links))
             {
                 yield return item;
@@ -582,7 +582,7 @@ namespace Mutagen.Bethesda
             NotifyingFireParameters cmds = null)
             where M : IMod<M>
         {
-            foreach (var item in Items.WhereCastable<T, ILinkSubContainer>())
+            foreach (var item in Items.Items.WhereCastable<T, ILinkSubContainer>())
             {
                 item.Link(
                     modList,
@@ -1171,7 +1171,7 @@ namespace Mutagen.Bethesda
 
     #region Interface
     public partial interface IGroup<T> : IGroupGetter<T>, ILoquiClass<IGroup<T>, IGroupGetter<T>>, ILoquiClass<Group<T>, IGroupGetter<T>>
-        where T : IFormKey, ILoquiObject<T>
+        where T : IMajorRecord, ILoquiObject<T>
     {
         new GroupTypeEnum GroupType { get; set; }
 
@@ -1181,7 +1181,7 @@ namespace Mutagen.Bethesda
     }
 
     public partial interface IGroupGetter<T> : ILoquiObject
-        where T : IFormKey, ILoquiObject<T>
+        where T : IMajorRecord, ILoquiObject<T>
     {
         #region ContainedRecordType
         String ContainedRecordType { get; }
@@ -1405,7 +1405,7 @@ namespace Mutagen.Bethesda.Internals
     }
 
     public class Group_Registration<T> : Group_Registration
-        where T : IFormKey, ILoquiObject<T>
+        where T : IMajorRecord, ILoquiObject<T>
     {
         public static readonly Group_Registration<T> GenericInstance = new Group_Registration<T>();
 
@@ -1441,7 +1441,7 @@ namespace Mutagen.Bethesda.Internals
             ErrorMaskBuilder errorMask,
             Group_CopyMask<T_CopyMask> copyMask,
             NotifyingFireParameters cmds = null)
-            where T : IFormKey, ILoquiObject<T>
+            where T : IMajorRecord, ILoquiObject<T>
             where T_CopyMask : class, new()
         {
             if (copyMask?.GroupType ?? true)
@@ -1519,7 +1519,7 @@ namespace Mutagen.Bethesda.Internals
             bool on,
             IGroup<T> obj,
             NotifyingFireParameters cmds = null)
-            where T : IFormKey, ILoquiObject<T>
+            where T : IMajorRecord, ILoquiObject<T>
         {
             Group_FieldIndex enu = (Group_FieldIndex)index;
             switch (enu)
@@ -1542,7 +1542,7 @@ namespace Mutagen.Bethesda.Internals
             ushort index,
             IGroup<T> obj,
             NotifyingUnsetParameters cmds = null)
-            where T : IFormKey, ILoquiObject<T>
+            where T : IMajorRecord, ILoquiObject<T>
         {
             Group_FieldIndex enu = (Group_FieldIndex)index;
             switch (enu)
@@ -1566,7 +1566,7 @@ namespace Mutagen.Bethesda.Internals
         public static bool GetNthObjectHasBeenSet<T>(
             ushort index,
             IGroup<T> obj)
-            where T : IFormKey, ILoquiObject<T>
+            where T : IMajorRecord, ILoquiObject<T>
         {
             Group_FieldIndex enu = (Group_FieldIndex)index;
             switch (enu)
@@ -1585,7 +1585,7 @@ namespace Mutagen.Bethesda.Internals
         public static object GetNthObject<T>(
             ushort index,
             IGroupGetter<T> obj)
-            where T : IFormKey, ILoquiObject<T>
+            where T : IMajorRecord, ILoquiObject<T>
         {
             Group_FieldIndex enu = (Group_FieldIndex)index;
             switch (enu)
@@ -1606,7 +1606,7 @@ namespace Mutagen.Bethesda.Internals
         public static void Clear<T>(
             IGroup<T> item,
             NotifyingUnsetParameters cmds = null)
-            where T : IFormKey, ILoquiObject<T>
+            where T : IMajorRecord, ILoquiObject<T>
         {
             item.GroupType = default(GroupTypeEnum);
             item.LastModified = default(Byte[]);
@@ -1616,7 +1616,7 @@ namespace Mutagen.Bethesda.Internals
         public static Group_Mask<bool> GetEqualsMask<T>(
             this IGroupGetter<T> item,
             IGroupGetter<T> rhs)
-            where T : IFormKey, ILoquiObject<T>
+            where T : IMajorRecord, ILoquiObject<T>
         {
             var ret = new Group_Mask<bool>();
             FillEqualsMask(item, rhs, ret);
@@ -1627,7 +1627,7 @@ namespace Mutagen.Bethesda.Internals
             IGroupGetter<T> item,
             IGroupGetter<T> rhs,
             Group_Mask<bool> ret)
-            where T : IFormKey, ILoquiObject<T>
+            where T : IMajorRecord, ILoquiObject<T>
         {
             if (rhs == null) return;
             ret.ContainedRecordType = object.Equals(item.ContainedRecordType, rhs.ContainedRecordType);
@@ -1648,7 +1648,7 @@ namespace Mutagen.Bethesda.Internals
             this IGroupGetter<T> item,
             string name = null,
             Group_Mask<bool> printMask = null)
-            where T : IFormKey, ILoquiObject<T>
+            where T : IMajorRecord, ILoquiObject<T>
         {
             var fg = new FileGeneration();
             item.ToString(fg, name, printMask);
@@ -1660,7 +1660,7 @@ namespace Mutagen.Bethesda.Internals
             FileGeneration fg,
             string name = null,
             Group_Mask<bool> printMask = null)
-            where T : IFormKey, ILoquiObject<T>
+            where T : IMajorRecord, ILoquiObject<T>
         {
             if (name == null)
             {
@@ -1696,7 +1696,7 @@ namespace Mutagen.Bethesda.Internals
                             fg.AppendLine("[");
                             using (new DepthWrapper(fg))
                             {
-                                subItem?.ToString(fg, "Item");
+                                subItem.Value?.ToString(fg, "Item");
                             }
                             fg.AppendLine("]");
                         }
@@ -1710,20 +1710,20 @@ namespace Mutagen.Bethesda.Internals
         public static bool HasBeenSet<T>(
             this IGroupGetter<T> item,
             Group_Mask<bool?> checkMask)
-            where T : IFormKey, ILoquiObject<T>
+            where T : IMajorRecord, ILoquiObject<T>
         {
             if (checkMask.Items.Overall.HasValue && checkMask.Items.Overall.Value != item.Items.HasBeenSet) return false;
             return true;
         }
 
         public static Group_Mask<bool> GetHasBeenSetMask<T>(IGroupGetter<T> item)
-            where T : IFormKey, ILoquiObject<T>
+            where T : IMajorRecord, ILoquiObject<T>
         {
             var ret = new Group_Mask<bool>();
             ret.ContainedRecordType = true;
             ret.GroupType = true;
             ret.LastModified = true;
-            ret.Items = new MaskItem<bool, IEnumerable<MaskItem<bool, IMask<bool>>>>(item.Items.HasBeenSet, item.Items.Select((i) => new MaskItem<bool, IMask<bool>>(true, i.GetHasBeenSetMask())));
+            ret.Items = new MaskItem<bool, IEnumerable<MaskItem<bool, IMask<bool>>>>(item.Items.HasBeenSet, item.Items.Values.Select((i) => new MaskItem<bool, IMask<bool>>(true, i.GetHasBeenSetMask())));
             return ret;
         }
 
@@ -1736,7 +1736,7 @@ namespace Mutagen.Bethesda.Internals
             out Group_ErrorMask<T_ErrMask> errorMask,
             Group_TranslationMask<T_TranslMask> translationMask,
             string name = null)
-            where T : IFormKey, ILoquiObject<T>
+            where T : IMajorRecord, ILoquiObject<T>
             where T_ErrMask : class, IErrorMask<T_ErrMask>, new()
             where T_TranslMask : class, ITranslationMask, new()
         {
@@ -1756,7 +1756,7 @@ namespace Mutagen.Bethesda.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask,
             string name = null)
-            where T : IFormKey, ILoquiObject<T>
+            where T : IMajorRecord, ILoquiObject<T>
         {
             var elem = new XElement(name ?? "Mutagen.Bethesda.Group");
             node.Add(elem);
@@ -1791,7 +1791,7 @@ namespace Mutagen.Bethesda.Internals
                     KeyedDictXmlTranslation<FormKey, T>.Instance.Write(
                         node: elem,
                         name: nameof(item.Items),
-                        items: item.Items,
+                        items: item.Items.Items,
                         translationMask: translationMask,
                         errorMask: errorMask,
                         valTransl: (XElement subNode, T subItem, ErrorMaskBuilder dictSubMask, TranslationCrystal dictTranslMask) =>
@@ -1829,7 +1829,7 @@ namespace Mutagen.Bethesda.Internals
             RecordTypeConverter recordTypeConverter,
             bool doMasks,
             out Group_ErrorMask<T_ErrMask> errorMask)
-            where T : IFormKey, ILoquiObject<T>
+            where T : IMajorRecord, ILoquiObject<T>
             where T_ErrMask : class, IErrorMask<T_ErrMask>, new()
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
@@ -1848,7 +1848,7 @@ namespace Mutagen.Bethesda.Internals
             MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
-            where T : IFormKey, ILoquiObject<T>
+            where T : IMajorRecord, ILoquiObject<T>
         {
             using (HeaderExport.ExportHeader(
                 writer: writer,
@@ -1875,7 +1875,7 @@ namespace Mutagen.Bethesda.Internals
             MutagenWriter writer,
             ErrorMaskBuilder errorMask,
             MasterReferences masterReferences)
-            where T : IFormKey, ILoquiObject<T>
+            where T : IMajorRecord, ILoquiObject<T>
         {
             Group<T>.WriteBinary_ContainedRecordType(
                 writer: writer,
@@ -1901,22 +1901,22 @@ namespace Mutagen.Bethesda.Internals
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask,
             MasterReferences masterReferences)
-            where T : IFormKey, ILoquiObject<T>
+            where T : IMajorRecord, ILoquiObject<T>
         {
             if (item.Items.HasBeenSet)
             {
                 Mutagen.Bethesda.Binary.ListBinaryTranslation<T>.Instance.Write(
                     writer: writer,
-                    items: item.Items,
+                    items: item.Items.Items,
                     fieldIndex: (int)Group_FieldIndex.Items,
                     errorMask: errorMask,
                     transl: (MutagenWriter r, T dictSubItem, ErrorMaskBuilder dictSubMask) =>
                     {
-                            LoquiBinaryTranslation<T>.Instance.Write(
-                                writer: r,
-                                item: dictSubItem,
-                                errorMask: dictSubMask,
-                                masterReferences: masterReferences);
+                        LoquiBinaryTranslation<T>.Instance.Write(
+                            writer: r,
+                            item: dictSubItem,
+                            errorMask: dictSubMask,
+                            masterReferences: masterReferences);
                     }
                     );
             }
@@ -2293,6 +2293,18 @@ namespace Mutagen.Bethesda.Internals
     public class Group_CopyMask<T_CopyMask>
         where T_CopyMask : class, new()
     {
+        public Group_CopyMask()
+        {
+        }
+
+        public Group_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
+        {
+            this.ContainedRecordType = defaultOn;
+            this.GroupType = defaultOn;
+            this.LastModified = defaultOn;
+            this.Items = new MaskItem<CopyOption, T_CopyMask>(deepCopyOption, default);
+        }
+
         #region Members
         public bool ContainedRecordType;
         public bool GroupType;
@@ -2301,6 +2313,7 @@ namespace Mutagen.Bethesda.Internals
         #endregion
 
     }
+
     public class Group_TranslationMask<T_TranslMask> : ITranslationMask
         where T_TranslMask : class, ITranslationMask, new()
     {

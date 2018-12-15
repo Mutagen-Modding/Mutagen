@@ -18,7 +18,7 @@ using System.Reactive.Linq;
 using Mutagen.Bethesda.Oblivion;
 using DynamicData;
 using CSharpExt.Rx;
-using System.Windows.Media;
+using System.Drawing;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
 using System.Xml;
@@ -3238,7 +3238,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 yield return item;
             }
-            foreach (var item in Factions.SelectMany(f => f.Links))
+            foreach (var item in Factions.Items.SelectMany(f => f.Links))
             {
                 yield return item;
             }
@@ -3249,7 +3249,7 @@ namespace Mutagen.Bethesda.Oblivion
                 yield return item;
             }
             yield return Script_Property;
-            foreach (var item in Items.SelectMany(f => f.Links))
+            foreach (var item in Items.Items.SelectMany(f => f.Links))
             {
                 yield return item;
             }
@@ -3277,7 +3277,7 @@ namespace Mutagen.Bethesda.Oblivion
                 modList,
                 sourceMod,
                 cmds);
-            foreach (var item in Factions)
+            foreach (var item in Factions.Items)
             {
                 item.Link(
                     modList,
@@ -3303,7 +3303,7 @@ namespace Mutagen.Bethesda.Oblivion
                 modList,
                 sourceMod,
                 cmds);
-            foreach (var item in Items)
+            foreach (var item in Items.Items)
             {
                 item.Link(
                     modList,
@@ -3342,6 +3342,18 @@ namespace Mutagen.Bethesda.Oblivion
         {
             this.FormKey = formKey;
         }
+
+        partial void PostDuplicate(NPC obj, NPC rhs, Func<FormKey> getNextFormKey, IList<(MajorRecord Record, FormKey OriginalFormKey)> duplicatedRecords);
+
+        public override MajorRecord Duplicate(Func<FormKey> getNextFormKey, IList<(MajorRecord Record, FormKey OriginalFormKey)> duplicatedRecords)
+        {
+            var ret = new NPC(getNextFormKey());
+            ret.CopyFieldsFrom(this);
+            duplicatedRecords?.Add((ret, this.FormKey));
+            PostDuplicate(ret, this, getNextFormKey, duplicatedRecords);
+            return ret;
+        }
+
         #endregion
 
         #region Binary Translation
@@ -7178,8 +7190,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     else
                     {
-                        item.Model_IsSet = false;
-                        item.Model = default(Model);
+                        item.Model_Set(
+                            item: default(Model),
+                            hasBeenSet: false);
                     }
                 }
                 catch (Exception ex)
@@ -13131,6 +13144,79 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     public class NPC_CopyMask : NPCAbstract_CopyMask
     {
+        public NPC_CopyMask()
+        {
+        }
+
+        public NPC_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
+        {
+            this.Name = defaultOn;
+            this.Model = new MaskItem<CopyOption, Model_CopyMask>(deepCopyOption, default);
+            this.Flags = defaultOn;
+            this.BaseSpellPoints = defaultOn;
+            this.Fatigue = defaultOn;
+            this.BarterGold = defaultOn;
+            this.LevelOffset = defaultOn;
+            this.CalcMin = defaultOn;
+            this.CalcMax = defaultOn;
+            this.Factions = new MaskItem<CopyOption, RankPlacement_CopyMask>(deepCopyOption, default);
+            this.DeathItem = defaultOn;
+            this.Race = defaultOn;
+            this.Spells = deepCopyOption;
+            this.Script = defaultOn;
+            this.Items = new MaskItem<CopyOption, ItemEntry_CopyMask>(deepCopyOption, default);
+            this.Aggression = defaultOn;
+            this.Confidence = defaultOn;
+            this.EnergyLevel = defaultOn;
+            this.Responsibility = defaultOn;
+            this.BuySellServices = defaultOn;
+            this.Teaches = defaultOn;
+            this.MaximumTrainingLevel = defaultOn;
+            this.Fluff = defaultOn;
+            this.AIPackages = deepCopyOption;
+            this.Animations = deepCopyOption;
+            this.Class = defaultOn;
+            this.Armorer = defaultOn;
+            this.Athletics = defaultOn;
+            this.Blade = defaultOn;
+            this.Block = defaultOn;
+            this.Blunt = defaultOn;
+            this.HandToHand = defaultOn;
+            this.HeavyArmor = defaultOn;
+            this.Alchemy = defaultOn;
+            this.Alteration = defaultOn;
+            this.Conjuration = defaultOn;
+            this.Destruction = defaultOn;
+            this.Illusion = defaultOn;
+            this.Mysticism = defaultOn;
+            this.Restoration = defaultOn;
+            this.Acrobatics = defaultOn;
+            this.LightArmor = defaultOn;
+            this.Marksman = defaultOn;
+            this.Mercantile = defaultOn;
+            this.Security = defaultOn;
+            this.Sneak = defaultOn;
+            this.Speechcraft = defaultOn;
+            this.Health = defaultOn;
+            this.Strength = defaultOn;
+            this.Intelligence = defaultOn;
+            this.Willpower = defaultOn;
+            this.Agility = defaultOn;
+            this.Speed = defaultOn;
+            this.Endurance = defaultOn;
+            this.Personality = defaultOn;
+            this.Luck = defaultOn;
+            this.Hair = defaultOn;
+            this.HairLength = defaultOn;
+            this.Eyes = deepCopyOption;
+            this.HairColor = defaultOn;
+            this.CombatStyle = defaultOn;
+            this.FaceGenGeometrySymmetric = defaultOn;
+            this.FaceGenGeometryAsymmetric = defaultOn;
+            this.FaceGenTextureSymmetric = defaultOn;
+            this.Unknown = defaultOn;
+        }
+
         #region Members
         public bool Name;
         public MaskItem<CopyOption, Model_CopyMask> Model;
@@ -13200,6 +13286,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
+
     public class NPC_TranslationMask : NPCAbstract_TranslationMask
     {
         #region Members

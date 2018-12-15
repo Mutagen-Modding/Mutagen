@@ -2085,6 +2085,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     public class RoadPoint_CopyMask
     {
+        public RoadPoint_CopyMask()
+        {
+        }
+
+        public RoadPoint_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
+        {
+            this.Point = defaultOn;
+            this.NumConnectionsFluffBytes = defaultOn;
+            this.Connections = deepCopyOption;
+        }
+
         #region Members
         public bool Point;
         public bool NumConnectionsFluffBytes;
@@ -2092,6 +2103,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
+
     public class RoadPoint_TranslationMask : ITranslationMask
     {
         #region Members

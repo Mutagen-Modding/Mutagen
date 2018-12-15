@@ -589,7 +589,7 @@ namespace Mutagen.Bethesda
         public IEnumerable<ILink> Links => GetLinks();
         private IEnumerable<ILink> GetLinks()
         {
-            foreach (var item in Items.WhereCastable<T, ILinkContainer>()
+            foreach (var item in Items.Items.WhereCastable<T, ILinkContainer>()
                 .SelectMany((f) => f.Links))
             {
                 yield return item;
@@ -603,7 +603,7 @@ namespace Mutagen.Bethesda
             NotifyingFireParameters cmds = null)
             where M : IMod<M>
         {
-            foreach (var item in Items.WhereCastable<T, ILinkSubContainer>())
+            foreach (var item in Items.Items.WhereCastable<T, ILinkSubContainer>())
             {
                 item.Link(
                     modList,
@@ -2297,6 +2297,18 @@ namespace Mutagen.Bethesda.Internals
     public class ListGroup_CopyMask<T_CopyMask>
         where T_CopyMask : class, new()
     {
+        public ListGroup_CopyMask()
+        {
+        }
+
+        public ListGroup_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
+        {
+            this.ContainedRecordType = defaultOn;
+            this.GroupType = defaultOn;
+            this.LastModified = defaultOn;
+            this.Items = new MaskItem<CopyOption, T_CopyMask>(deepCopyOption, default);
+        }
+
         #region Members
         public bool ContainedRecordType;
         public bool GroupType;
@@ -2305,6 +2317,7 @@ namespace Mutagen.Bethesda.Internals
         #endregion
 
     }
+
     public class ListGroup_TranslationMask<T_TranslMask> : ITranslationMask
         where T_TranslMask : class, ITranslationMask, new()
     {

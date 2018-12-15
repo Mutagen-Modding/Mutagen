@@ -2000,6 +2000,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     public class HavokData_CopyMask
     {
+        public HavokData_CopyMask()
+        {
+        }
+
+        public HavokData_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
+        {
+            this.Material = defaultOn;
+            this.Friction = defaultOn;
+            this.Restitution = defaultOn;
+        }
+
         #region Members
         public bool Material;
         public bool Friction;
@@ -2007,6 +2018,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
+
     public class HavokData_TranslationMask : ITranslationMask
     {
         #region Members

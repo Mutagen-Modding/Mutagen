@@ -763,7 +763,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 yield return item;
             }
-            foreach (var item in Effects.SelectMany(f => f.Links))
+            foreach (var item in Effects.Items.SelectMany(f => f.Links))
             {
                 yield return item;
             }
@@ -780,7 +780,7 @@ namespace Mutagen.Bethesda.Oblivion
                 modList,
                 sourceMod,
                 cmds);
-            foreach (var item in Effects)
+            foreach (var item in Effects.Items)
             {
                 item.Link(
                     modList,
@@ -793,6 +793,18 @@ namespace Mutagen.Bethesda.Oblivion
         {
             this.FormKey = formKey;
         }
+
+        partial void PostDuplicate(SpellUnleveled obj, SpellUnleveled rhs, Func<FormKey> getNextFormKey, IList<(MajorRecord Record, FormKey OriginalFormKey)> duplicatedRecords);
+
+        public override MajorRecord Duplicate(Func<FormKey> getNextFormKey, IList<(MajorRecord Record, FormKey OriginalFormKey)> duplicatedRecords)
+        {
+            var ret = new SpellUnleveled(getNextFormKey());
+            ret.CopyFieldsFrom(this);
+            duplicatedRecords?.Add((ret, this.FormKey));
+            PostDuplicate(ret, this, getNextFormKey, duplicatedRecords);
+            return ret;
+        }
+
         #endregion
 
         #region Binary Translation
@@ -2721,6 +2733,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     public class SpellUnleveled_CopyMask : Spell_CopyMask
     {
+        public SpellUnleveled_CopyMask()
+        {
+        }
+
+        public SpellUnleveled_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
+        {
+            this.Type = defaultOn;
+            this.Cost = defaultOn;
+            this.Level = defaultOn;
+            this.Flag = defaultOn;
+            this.Effects = new MaskItem<CopyOption, Effect_CopyMask>(deepCopyOption, default);
+        }
+
         #region Members
         public bool Type;
         public bool Cost;
@@ -2730,6 +2755,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
+
     public class SpellUnleveled_TranslationMask : Spell_TranslationMask
     {
         #region Members

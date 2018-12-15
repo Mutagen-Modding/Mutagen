@@ -4118,6 +4118,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     public class RegionDataObject_CopyMask
     {
+        public RegionDataObject_CopyMask()
+        {
+        }
+
+        public RegionDataObject_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
+        {
+            this.Object = defaultOn;
+            this.ParentIndex = defaultOn;
+            this.Unknown1 = defaultOn;
+            this.Density = defaultOn;
+            this.Clustering = defaultOn;
+            this.MinSlope = defaultOn;
+            this.MaxSlope = defaultOn;
+            this.Flags = defaultOn;
+            this.RadiusWrtPercent = defaultOn;
+            this.Radius = defaultOn;
+            this.MinHeight = defaultOn;
+            this.MaxHeight = defaultOn;
+            this.Sink = defaultOn;
+            this.SinkVariance = defaultOn;
+            this.SizeVariance = defaultOn;
+            this.AngleVariance = defaultOn;
+            this.Unknow2n = defaultOn;
+        }
+
         #region Members
         public bool Object;
         public bool ParentIndex;
@@ -4139,6 +4164,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
+
     public class RegionDataObject_TranslationMask : ITranslationMask
     {
         #region Members

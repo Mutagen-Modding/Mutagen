@@ -730,7 +730,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 yield return item;
             }
-            foreach (var item in Items.SelectMany(f => f.Links))
+            foreach (var item in Items.Items.SelectMany(f => f.Links))
             {
                 yield return item;
             }
@@ -754,7 +754,7 @@ namespace Mutagen.Bethesda.Oblivion
                     sourceMod,
                     cmds);
             }
-            foreach (var item in Items)
+            foreach (var item in Items.Items)
             {
                 item.Link(
                     modList,
@@ -767,6 +767,18 @@ namespace Mutagen.Bethesda.Oblivion
         {
             this.FormKey = formKey;
         }
+
+        partial void PostDuplicate(DialogTopic obj, DialogTopic rhs, Func<FormKey> getNextFormKey, IList<(MajorRecord Record, FormKey OriginalFormKey)> duplicatedRecords);
+
+        public override MajorRecord Duplicate(Func<FormKey> getNextFormKey, IList<(MajorRecord Record, FormKey OriginalFormKey)> duplicatedRecords)
+        {
+            var ret = new DialogTopic(getNextFormKey());
+            ret.CopyFieldsFrom(this);
+            duplicatedRecords?.Add((ret, this.FormKey));
+            PostDuplicate(ret, this, getNextFormKey, duplicatedRecords);
+            return ret;
+        }
+
         #endregion
 
         #region Binary Translation
@@ -2661,6 +2673,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     public class DialogTopic_CopyMask : MajorRecord_CopyMask
     {
+        public DialogTopic_CopyMask()
+        {
+        }
+
+        public DialogTopic_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
+        {
+            this.Quests = deepCopyOption;
+            this.Name = defaultOn;
+            this.DialogType = defaultOn;
+            this.Items = new MaskItem<CopyOption, DialogItem_CopyMask>(deepCopyOption, default);
+        }
+
         #region Members
         public CopyOption Quests;
         public bool Name;
@@ -2669,6 +2693,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
+
     public class DialogTopic_TranslationMask : MajorRecord_TranslationMask
     {
         #region Members

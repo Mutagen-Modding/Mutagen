@@ -1999,6 +1999,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     public class DistantLODData_CopyMask
     {
+        public DistantLODData_CopyMask()
+        {
+        }
+
+        public DistantLODData_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
+        {
+            this.Unknown0 = defaultOn;
+            this.Unknown1 = defaultOn;
+            this.Unknown2 = defaultOn;
+        }
+
         #region Members
         public bool Unknown0;
         public bool Unknown1;
@@ -2006,6 +2017,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
+
     public class DistantLODData_TranslationMask : ITranslationMask
     {
         #region Members

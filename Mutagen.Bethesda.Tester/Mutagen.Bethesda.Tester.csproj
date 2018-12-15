@@ -61,12 +61,16 @@
       <Project>{c56b9607-41cf-4f59-9eef-f79d57309eda}</Project>
       <Name>CSharpExt</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\DynamicData\DynamicData\DynamicData.csproj">
+      <Project>{a5513654-ad62-4cc9-968b-f5f8f72c4142}</Project>
+      <Name>DynamicData</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Loqui\Loqui\Loqui.csproj">
       <Project>{91f19c1e-adf8-4b84-9452-04c2cd8f46d4}</Project>
       <Name>Loqui</Name>
     </ProjectReference>
     <ProjectReference Include="..\Mutagen.Bethesda.Oblivion\Mutagen.Bethesda.Oblivion.csproj">
-      <Project>{c9fc687d-7da3-4bfc-b49a-d66c0f1c1774}</Project>
+      <Project>{d4ebf681-3a69-4919-bf64-d9cc6896a0c6}</Project>
       <Name>Mutagen.Bethesda.Oblivion</Name>
     </ProjectReference>
     <ProjectReference Include="..\Mutagen.Bethesda.Tests\Mutagen.Bethesda.Tests.csproj">
@@ -74,13 +78,13 @@
       <Name>Mutagen.Bethesda.Tests</Name>
     </ProjectReference>
     <ProjectReference Include="..\Mutagen.Bethesda\Mutagen.Bethesda.csproj">
-      <Project>{fe4b569a-c9e5-4a2b-b990-8c5161235c21}</Project>
+      <Project>{4d6dbb44-b89a-47a8-ab14-acc8391c1a59}</Project>
       <Name>Mutagen.Bethesda</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="ReactiveUI">
-      <Version>9.1.1</Version>
+      <Version>9.3.5</Version>
     </PackageReference>
     <PackageReference Include="System.Reactive">
       <Version>4.1.2</Version>

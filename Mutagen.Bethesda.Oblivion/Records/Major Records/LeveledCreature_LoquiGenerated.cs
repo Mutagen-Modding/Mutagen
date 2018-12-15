@@ -749,7 +749,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 yield return item;
             }
-            foreach (var item in Entries.SelectMany(f => f.Links))
+            foreach (var item in Entries.Items.SelectMany(f => f.Links))
             {
                 yield return item;
             }
@@ -768,7 +768,7 @@ namespace Mutagen.Bethesda.Oblivion
                 modList,
                 sourceMod,
                 cmds);
-            foreach (var item in Entries)
+            foreach (var item in Entries.Items)
             {
                 item.Link(
                     modList,
@@ -789,6 +789,18 @@ namespace Mutagen.Bethesda.Oblivion
         {
             this.FormKey = formKey;
         }
+
+        partial void PostDuplicate(LeveledCreature obj, LeveledCreature rhs, Func<FormKey> getNextFormKey, IList<(MajorRecord Record, FormKey OriginalFormKey)> duplicatedRecords);
+
+        public override MajorRecord Duplicate(Func<FormKey> getNextFormKey, IList<(MajorRecord Record, FormKey OriginalFormKey)> duplicatedRecords)
+        {
+            var ret = new LeveledCreature(getNextFormKey());
+            ret.CopyFieldsFrom(this);
+            duplicatedRecords?.Add((ret, this.FormKey));
+            PostDuplicate(ret, this, getNextFormKey, duplicatedRecords);
+            return ret;
+        }
+
         #endregion
 
         #region Binary Translation
@@ -2722,6 +2734,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     public class LeveledCreature_CopyMask : NPCSpawn_CopyMask
     {
+        public LeveledCreature_CopyMask()
+        {
+        }
+
+        public LeveledCreature_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
+        {
+            this.ChanceNone = defaultOn;
+            this.Flags = defaultOn;
+            this.Entries = new MaskItem<CopyOption, LeveledEntry_CopyMask<NPCSpawn_CopyMask>>(deepCopyOption, default);
+            this.Script = defaultOn;
+            this.Template = defaultOn;
+        }
+
         #region Members
         public bool ChanceNone;
         public bool Flags;
@@ -2731,6 +2756,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
+
     public class LeveledCreature_TranslationMask : NPCSpawn_TranslationMask
     {
         #region Members

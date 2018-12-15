@@ -1080,6 +1080,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             this.FormKey = formKey;
         }
+
         #endregion
 
         #region Binary Translation
@@ -2457,8 +2458,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     else
                     {
-                        item.MaleBipedModel_IsSet = false;
-                        item.MaleBipedModel = default(Model);
+                        item.MaleBipedModel_Set(
+                            item: default(Model),
+                            hasBeenSet: false);
                     }
                 }
                 catch (Exception ex)
@@ -2510,8 +2512,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     else
                     {
-                        item.MaleWorldModel_IsSet = false;
-                        item.MaleWorldModel = default(Model);
+                        item.MaleWorldModel_Set(
+                            item: default(Model),
+                            hasBeenSet: false);
                     }
                 }
                 catch (Exception ex)
@@ -2593,8 +2596,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     else
                     {
-                        item.FemaleBipedModel_IsSet = false;
-                        item.FemaleBipedModel = default(Model);
+                        item.FemaleBipedModel_Set(
+                            item: default(Model),
+                            hasBeenSet: false);
                     }
                 }
                 catch (Exception ex)
@@ -2646,8 +2650,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     else
                     {
-                        item.FemaleWorldModel_IsSet = false;
-                        item.FemaleWorldModel = default(Model);
+                        item.FemaleWorldModel_Set(
+                            item: default(Model),
+                            hasBeenSet: false);
                     }
                 }
                 catch (Exception ex)
@@ -3929,6 +3934,26 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     public class ClothingAbstract_CopyMask : ItemAbstract_CopyMask
     {
+        public ClothingAbstract_CopyMask()
+        {
+        }
+
+        public ClothingAbstract_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
+        {
+            this.Name = defaultOn;
+            this.Script = defaultOn;
+            this.Enchantment = defaultOn;
+            this.EnchantmentPoints = defaultOn;
+            this.BipedFlags = defaultOn;
+            this.Flags = defaultOn;
+            this.MaleBipedModel = new MaskItem<CopyOption, Model_CopyMask>(deepCopyOption, default);
+            this.MaleWorldModel = new MaskItem<CopyOption, Model_CopyMask>(deepCopyOption, default);
+            this.MaleIcon = defaultOn;
+            this.FemaleBipedModel = new MaskItem<CopyOption, Model_CopyMask>(deepCopyOption, default);
+            this.FemaleWorldModel = new MaskItem<CopyOption, Model_CopyMask>(deepCopyOption, default);
+            this.FemaleIcon = defaultOn;
+        }
+
         #region Members
         public bool Name;
         public bool Script;
@@ -3945,6 +3970,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
+
     public class ClothingAbstract_TranslationMask : ItemAbstract_TranslationMask
     {
         #region Members

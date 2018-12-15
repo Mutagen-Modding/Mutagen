@@ -626,6 +626,18 @@ namespace Mutagen.Bethesda.Oblivion
         {
             this.FormKey = formKey;
         }
+
+        partial void PostDuplicate(Clothing obj, Clothing rhs, Func<FormKey> getNextFormKey, IList<(MajorRecord Record, FormKey OriginalFormKey)> duplicatedRecords);
+
+        public override MajorRecord Duplicate(Func<FormKey> getNextFormKey, IList<(MajorRecord Record, FormKey OriginalFormKey)> duplicatedRecords)
+        {
+            var ret = new Clothing(getNextFormKey());
+            ret.CopyFieldsFrom(this);
+            duplicatedRecords?.Add((ret, this.FormKey));
+            PostDuplicate(ret, this, getNextFormKey, duplicatedRecords);
+            return ret;
+        }
+
         #endregion
 
         #region Binary Translation
@@ -2083,12 +2095,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     public class Clothing_CopyMask : ClothingAbstract_CopyMask
     {
+        public Clothing_CopyMask()
+        {
+        }
+
+        public Clothing_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
+        {
+            this.Value = defaultOn;
+            this.Weight = defaultOn;
+        }
+
         #region Members
         public bool Value;
         public bool Weight;
         #endregion
 
     }
+
     public class Clothing_TranslationMask : ClothingAbstract_TranslationMask
     {
         #region Members

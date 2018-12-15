@@ -111,7 +111,7 @@ namespace Mutagen.Bethesda.Generation
                     {
                         if (loqui.TargetObjectGeneration.Name == "Group")
                         {
-                            fg.AppendLine($"this.{field.Name}.Items.AddOrUpdate(rhsMod.{field.Name}.Items);");
+                            fg.AppendLine($"this.{field.Name}.Items.AddOrUpdate(rhsMod.{field.Name}.Items.Items);");
                         }
                         else
                         {
@@ -123,6 +123,67 @@ namespace Mutagen.Bethesda.Generation
                         }
                     }
                 }
+            }
+            fg.AppendLine();
+
+            if (obj.GetObjectType() != ObjectType.Mod) return;
+            using (var args = new FunctionWrapper(fg,
+                "public Dictionary<FormKey, MajorRecord> CopyInDuplicate"))
+            {
+                args.Add($"{obj.Name} rhs");
+                args.Add($"GroupMask mask = null");
+            }
+            using (new BraceWrapper(fg))
+            {
+                fg.AppendLine("var duppedRecords = new List<(MajorRecord Record, FormKey OriginalFormKey)>();");
+                foreach (var field in obj.IterateFields())
+                {
+                    if (!(field is LoquiType loqui)) continue;
+                    if (loqui.TargetObjectGeneration.GetObjectType() != ObjectType.Group) continue;
+                    fg.AppendLine($"if (mask?.{field.Name} ?? true)");
+                    using (new BraceWrapper(fg))
+                    {
+                        fg.AppendLine($"this.{field.Name}.Items.{(loqui.TargetObjectGeneration.Name == "Group" ? "AddOrUpdate" : "AddRange")}(");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"rhs.{field.Name}.Items.Items");
+                            using (new DepthWrapper(fg))
+                            {
+                                fg.AppendLine($".Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))");
+                                fg.AppendLine($".Cast<{loqui.GetGroupTarget().Name}>());");
+                            }
+                        }
+                    }
+                }
+                fg.AppendLine("Dictionary<FormKey, MajorRecord> router = new Dictionary<FormKey, MajorRecord>();");
+                fg.AppendLine("router.Set(duppedRecords.Select(dup => new KeyValuePair<FormKey, MajorRecord>(dup.OriginalFormKey, dup.Record)));");
+                fg.AppendLine("foreach (var rec in router.Values)");
+                using (new BraceWrapper(fg))
+                {
+                    fg.AppendLine($"foreach (var link in rec.Links)");
+                    using (new BraceWrapper(fg))
+                    {
+                        fg.AppendLine($"if (link.FormKey.ModKey == rhs.ModKey");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"&& router.TryGetValue(link.FormKey, out var duppedRecord))");
+                        }
+                        using (new BraceWrapper(fg))
+                        {
+                            fg.AppendLine($"link.FormKey = duppedRecord.FormKey;");
+                        }
+                    }
+                }
+                fg.AppendLine("foreach (var rec in router.Values)");
+                using (new BraceWrapper(fg))
+                {
+                    fg.AppendLine($"foreach (var link in rec.Links)");
+                    using (new BraceWrapper(fg))
+                    {
+                        fg.AppendLine($"link.Link(modList: null, sourceMod: this);");
+                    }
+                }
+                fg.AppendLine($"return router;");
             }
             fg.AppendLine();
 

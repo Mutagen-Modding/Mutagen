@@ -393,6 +393,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             this.FormKey = formKey;
         }
+
         #endregion
 
         #region Binary Translation
@@ -1297,7 +1298,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     public class Place_CopyMask : MajorRecord_CopyMask
     {
+        public Place_CopyMask()
+        {
+        }
+
+        public Place_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
+        {
+        }
+
     }
+
     public class Place_TranslationMask : MajorRecord_TranslationMask
     {
         #region Ctors

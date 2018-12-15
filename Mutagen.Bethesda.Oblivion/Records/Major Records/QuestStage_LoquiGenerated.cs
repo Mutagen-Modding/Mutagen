@@ -577,7 +577,7 @@ namespace Mutagen.Bethesda.Oblivion
         public IEnumerable<ILink> Links => GetLinks();
         private IEnumerable<ILink> GetLinks()
         {
-            foreach (var item in LogEntries.WhereCastable<LogEntry, ILinkContainer>()
+            foreach (var item in LogEntries.Items.WhereCastable<LogEntry, ILinkContainer>()
                 .SelectMany((f) => f.Links))
             {
                 yield return item;
@@ -591,7 +591,7 @@ namespace Mutagen.Bethesda.Oblivion
             NotifyingFireParameters cmds = null)
             where M : IMod<M>
         {
-            foreach (var item in LogEntries.WhereCastable<LogEntry, ILinkSubContainer>())
+            foreach (var item in LogEntries.Items.WhereCastable<LogEntry, ILinkSubContainer>())
             {
                 item.Link(
                     modList,
@@ -2103,12 +2103,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     public class QuestStage_CopyMask
     {
+        public QuestStage_CopyMask()
+        {
+        }
+
+        public QuestStage_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
+        {
+            this.Stage = defaultOn;
+            this.LogEntries = new MaskItem<CopyOption, LogEntry_CopyMask>(deepCopyOption, default);
+        }
+
         #region Members
         public bool Stage;
         public MaskItem<CopyOption, LogEntry_CopyMask> LogEntries;
         #endregion
 
     }
+
     public class QuestStage_TranslationMask : ITranslationMask
     {
         #region Members

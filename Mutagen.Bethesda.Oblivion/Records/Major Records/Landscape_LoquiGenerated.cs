@@ -858,7 +858,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 yield return item;
             }
-            foreach (var item in Layers.SelectMany(f => f.Links))
+            foreach (var item in Layers.Items.SelectMany(f => f.Links))
             {
                 yield return item;
             }
@@ -879,7 +879,7 @@ namespace Mutagen.Bethesda.Oblivion
                 modList,
                 sourceMod,
                 cmds);
-            foreach (var item in Layers)
+            foreach (var item in Layers.Items)
             {
                 item.Link(
                     modList,
@@ -899,6 +899,18 @@ namespace Mutagen.Bethesda.Oblivion
         {
             this.FormKey = formKey;
         }
+
+        partial void PostDuplicate(Landscape obj, Landscape rhs, Func<FormKey> getNextFormKey, IList<(MajorRecord Record, FormKey OriginalFormKey)> duplicatedRecords);
+
+        public override MajorRecord Duplicate(Func<FormKey> getNextFormKey, IList<(MajorRecord Record, FormKey OriginalFormKey)> duplicatedRecords)
+        {
+            var ret = new Landscape(getNextFormKey());
+            ret.CopyFieldsFrom(this);
+            duplicatedRecords?.Add((ret, this.FormKey));
+            PostDuplicate(ret, this, getNextFormKey, duplicatedRecords);
+            return ret;
+        }
+
         #endregion
 
         #region Binary Translation
@@ -3090,6 +3102,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     public class Landscape_CopyMask : MajorRecord_CopyMask
     {
+        public Landscape_CopyMask()
+        {
+        }
+
+        public Landscape_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
+        {
+            this.Unknown = defaultOn;
+            this.VertexNormals = defaultOn;
+            this.VertexHeightMap = defaultOn;
+            this.VertexColors = defaultOn;
+            this.Layers = new MaskItem<CopyOption, BaseLayer_CopyMask>(deepCopyOption, default);
+            this.Textures = deepCopyOption;
+        }
+
         #region Members
         public bool Unknown;
         public bool VertexNormals;
@@ -3100,6 +3126,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
+
     public class Landscape_TranslationMask : MajorRecord_TranslationMask
     {
         #region Members

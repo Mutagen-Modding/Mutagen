@@ -18,8 +18,23 @@ using DynamicData;
 namespace Mutagen.Bethesda
 {
     public partial class Group<T> : IEnumerable<T>
-        where T : ILoquiObject<T>, IFormKey
+        where T : ILoquiObject<T>, IMajorRecord
     {
+        private Lazy<IObservableCache<T, string>> _editorIDCache;
+        public IObservableCache<T, string> ByEditorID => _editorIDCache.Value;
+
+        partial void CustomCtor()
+        {
+            _editorIDCache = new Lazy<IObservableCache<T, string>>(() =>
+            {
+                return this.Items.Connect()
+                    .RemoveKey()
+                    .AddKey(m => m.EditorID)
+                    .AsObservableCache();
+            },
+            isThreadSafe: true);
+        }
+
         static partial void FillBinary_ContainedRecordType_Custom(
             MutagenFrame frame,
             Group<T> item,
@@ -48,7 +63,7 @@ namespace Mutagen.Bethesda
 
         public IEnumerator<T> GetEnumerator()
         {
-            return _Items.GetEnumerator();
+            return _Items.Items.GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()

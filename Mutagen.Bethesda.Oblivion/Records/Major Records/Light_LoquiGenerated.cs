@@ -16,7 +16,7 @@ using ReactiveUI;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using Mutagen.Bethesda.Oblivion;
-using System.Windows.Media;
+using System.Drawing;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
 using System.Xml;
@@ -1154,6 +1154,18 @@ namespace Mutagen.Bethesda.Oblivion
         {
             this.FormKey = formKey;
         }
+
+        partial void PostDuplicate(Light obj, Light rhs, Func<FormKey> getNextFormKey, IList<(MajorRecord Record, FormKey OriginalFormKey)> duplicatedRecords);
+
+        public override MajorRecord Duplicate(Func<FormKey> getNextFormKey, IList<(MajorRecord Record, FormKey OriginalFormKey)> duplicatedRecords)
+        {
+            var ret = new Light(getNextFormKey());
+            ret.CopyFieldsFrom(this);
+            duplicatedRecords?.Add((ret, this.FormKey));
+            PostDuplicate(ret, this, getNextFormKey, duplicatedRecords);
+            return ret;
+        }
+
         #endregion
 
         #region Binary Translation
@@ -2550,8 +2562,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     else
                     {
-                        item.Model_IsSet = false;
-                        item.Model = default(Model);
+                        item.Model_Set(
+                            item: default(Model),
+                            hasBeenSet: false);
                     }
                 }
                 catch (Exception ex)
@@ -4096,6 +4109,28 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     public class Light_CopyMask : ItemAbstract_CopyMask
     {
+        public Light_CopyMask()
+        {
+        }
+
+        public Light_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
+        {
+            this.Model = new MaskItem<CopyOption, Model_CopyMask>(deepCopyOption, default);
+            this.Script = defaultOn;
+            this.Name = defaultOn;
+            this.Icon = defaultOn;
+            this.Time = defaultOn;
+            this.Radius = defaultOn;
+            this.Color = defaultOn;
+            this.Flags = defaultOn;
+            this.FalloffExponent = defaultOn;
+            this.FOV = defaultOn;
+            this.Value = defaultOn;
+            this.Weight = defaultOn;
+            this.Fade = defaultOn;
+            this.Sound = defaultOn;
+        }
+
         #region Members
         public MaskItem<CopyOption, Model_CopyMask> Model;
         public bool Script;
@@ -4114,6 +4149,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
+
     public class Light_TranslationMask : ItemAbstract_TranslationMask
     {
         #region Members

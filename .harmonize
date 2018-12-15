@@ -2,18 +2,18 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>1309238eb5070bb4d6019b98ab66acebb407bf24</Sha>
+         <Sha>aa1d8ce60b7f314c72d7d256e332cd0d2033e5ea</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>11-16-2018 16:39:09</CommitDate>
-         <Description>7.3 C#</Description>
+         <CommitDate>12-15-2018 15:07:28</CommitDate>
+         <Description>Merge remote-tracking branch 'origin/master'</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>8227eecb347a08d2b3bfcc17da3f328f79cda631</Sha>
+         <Sha>ebba126f6e09aadfe0ce77391eae15b79b8713d1</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>12-13-2018 18:20:12</CommitDate>
-         <Description>LoquiXmlTranslation improvements</Description>
+         <CommitDate>12-15-2018 15:59:47</CommitDate>
+         <Description>Merge commit '8227eecb347a08d2b3bfcc17da3f328f79cda631'</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
    </ParentRepos>

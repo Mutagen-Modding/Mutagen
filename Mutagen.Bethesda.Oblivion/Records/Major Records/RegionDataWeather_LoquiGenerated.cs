@@ -532,7 +532,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 yield return item;
             }
-            foreach (var item in Weathers.SelectMany(f => f.Links))
+            foreach (var item in Weathers.Items.SelectMany(f => f.Links))
             {
                 yield return item;
             }
@@ -549,7 +549,7 @@ namespace Mutagen.Bethesda.Oblivion
                 modList,
                 sourceMod,
                 cmds);
-            foreach (var item in Weathers)
+            foreach (var item in Weathers.Items)
             {
                 item.Link(
                     modList,
@@ -1922,11 +1922,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     public class RegionDataWeather_CopyMask : RegionData_CopyMask
     {
+        public RegionDataWeather_CopyMask()
+        {
+        }
+
+        public RegionDataWeather_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
+        {
+            this.Weathers = new MaskItem<CopyOption, WeatherChance_CopyMask>(deepCopyOption, default);
+        }
+
         #region Members
         public MaskItem<CopyOption, WeatherChance_CopyMask> Weathers;
         #endregion
 
     }
+
     public class RegionDataWeather_TranslationMask : RegionData_TranslationMask
     {
         #region Members

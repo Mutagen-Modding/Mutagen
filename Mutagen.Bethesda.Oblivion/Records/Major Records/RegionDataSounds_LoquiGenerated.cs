@@ -606,7 +606,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 yield return item;
             }
-            foreach (var item in Sounds.SelectMany(f => f.Links))
+            foreach (var item in Sounds.Items.SelectMany(f => f.Links))
             {
                 yield return item;
             }
@@ -623,7 +623,7 @@ namespace Mutagen.Bethesda.Oblivion
                 modList,
                 sourceMod,
                 cmds);
-            foreach (var item in Sounds)
+            foreach (var item in Sounds.Items)
             {
                 item.Link(
                     modList,
@@ -2145,12 +2145,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     public class RegionDataSounds_CopyMask : RegionData_CopyMask
     {
+        public RegionDataSounds_CopyMask()
+        {
+        }
+
+        public RegionDataSounds_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
+        {
+            this.MusicType = defaultOn;
+            this.Sounds = new MaskItem<CopyOption, RegionSound_CopyMask>(deepCopyOption, default);
+        }
+
         #region Members
         public bool MusicType;
         public MaskItem<CopyOption, RegionSound_CopyMask> Sounds;
         #endregion
 
     }
+
     public class RegionDataSounds_TranslationMask : RegionData_TranslationMask
     {
         #region Members

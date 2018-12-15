@@ -851,6 +851,18 @@ namespace Mutagen.Bethesda.Oblivion
         {
             this.FormKey = formKey;
         }
+
+        partial void PostDuplicate(AIPackage obj, AIPackage rhs, Func<FormKey> getNextFormKey, IList<(MajorRecord Record, FormKey OriginalFormKey)> duplicatedRecords);
+
+        public override MajorRecord Duplicate(Func<FormKey> getNextFormKey, IList<(MajorRecord Record, FormKey OriginalFormKey)> duplicatedRecords)
+        {
+            var ret = new AIPackage(getNextFormKey());
+            ret.CopyFieldsFrom(this);
+            duplicatedRecords?.Add((ret, this.FormKey));
+            PostDuplicate(ret, this, getNextFormKey, duplicatedRecords);
+            return ret;
+        }
+
         #endregion
 
         #region Binary Translation
@@ -1895,8 +1907,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     else
                     {
-                        item.Location_IsSet = false;
-                        item.Location = default(AIPackageLocation);
+                        item.Location_Set(
+                            item: default(AIPackageLocation),
+                            hasBeenSet: false);
                     }
                 }
                 catch (Exception ex)
@@ -1948,8 +1961,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     else
                     {
-                        item.Schedule_IsSet = false;
-                        item.Schedule = default(AIPackageSchedule);
+                        item.Schedule_Set(
+                            item: default(AIPackageSchedule),
+                            hasBeenSet: false);
                     }
                 }
                 catch (Exception ex)
@@ -2001,8 +2015,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     else
                     {
-                        item.Target_IsSet = false;
-                        item.Target = default(AIPackageTarget);
+                        item.Target_Set(
+                            item: default(AIPackageTarget),
+                            hasBeenSet: false);
                     }
                 }
                 catch (Exception ex)
@@ -3023,6 +3038,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     public class AIPackage_CopyMask : MajorRecord_CopyMask
     {
+        public AIPackage_CopyMask()
+        {
+        }
+
+        public AIPackage_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
+        {
+            this.Flags = defaultOn;
+            this.GeneralType = defaultOn;
+            this.Location = new MaskItem<CopyOption, AIPackageLocation_CopyMask>(deepCopyOption, default);
+            this.Schedule = new MaskItem<CopyOption, AIPackageSchedule_CopyMask>(deepCopyOption, default);
+            this.Target = new MaskItem<CopyOption, AIPackageTarget_CopyMask>(deepCopyOption, default);
+            this.Conditions = new MaskItem<CopyOption, Condition_CopyMask>(deepCopyOption, default);
+        }
+
         #region Members
         public bool Flags;
         public bool GeneralType;
@@ -3033,6 +3062,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
+
     public class AIPackage_TranslationMask : MajorRecord_TranslationMask
     {
         #region Members

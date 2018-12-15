@@ -1835,12 +1835,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     public class Relation_CopyMask
     {
+        public Relation_CopyMask()
+        {
+        }
+
+        public Relation_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
+        {
+            this.Faction = defaultOn;
+            this.Modifier = defaultOn;
+        }
+
         #region Members
         public bool Faction;
         public bool Modifier;
         #endregion
 
     }
+
     public class Relation_TranslationMask : ITranslationMask
     {
         #region Members

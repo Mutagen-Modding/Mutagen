@@ -1757,7 +1757,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 yield return item;
             }
-            foreach (var item in Relations.SelectMany(f => f.Links))
+            foreach (var item in Relations.Items.SelectMany(f => f.Links))
             {
                 yield return item;
             }
@@ -1803,7 +1803,7 @@ namespace Mutagen.Bethesda.Oblivion
                     sourceMod,
                     cmds);
             }
-            foreach (var item in Relations)
+            foreach (var item in Relations.Items)
             {
                 item.Link(
                     modList,
@@ -1844,6 +1844,18 @@ namespace Mutagen.Bethesda.Oblivion
         {
             this.FormKey = formKey;
         }
+
+        partial void PostDuplicate(Race obj, Race rhs, Func<FormKey> getNextFormKey, IList<(MajorRecord Record, FormKey OriginalFormKey)> duplicatedRecords);
+
+        public override MajorRecord Duplicate(Func<FormKey> getNextFormKey, IList<(MajorRecord Record, FormKey OriginalFormKey)> duplicatedRecords)
+        {
+            var ret = new Race(getNextFormKey());
+            ret.CopyFieldsFrom(this);
+            duplicatedRecords?.Add((ret, this.FormKey));
+            PostDuplicate(ret, this, getNextFormKey, duplicatedRecords);
+            return ret;
+        }
+
         #endregion
 
         #region Binary Translation
@@ -3922,8 +3934,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     else
                     {
-                        item.Voices_IsSet = false;
-                        item.Voices = default(RaceVoices);
+                        item.Voices_Set(
+                            item: default(RaceVoices),
+                            hasBeenSet: false);
                     }
                 }
                 catch (Exception ex)
@@ -3975,8 +3988,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     else
                     {
-                        item.DefaultHair_IsSet = false;
-                        item.DefaultHair = default(RaceHair);
+                        item.DefaultHair_Set(
+                            item: default(RaceHair),
+                            hasBeenSet: false);
                     }
                 }
                 catch (Exception ex)
@@ -4118,8 +4132,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     else
                     {
-                        item.RaceStats_IsSet = false;
-                        item.RaceStats = default(RaceStatsGendered);
+                        item.RaceStats_Set(
+                            item: default(RaceStatsGendered),
+                            hasBeenSet: false);
                     }
                 }
                 catch (Exception ex)
@@ -4206,8 +4221,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     else
                     {
-                        item.BodyData_IsSet = false;
-                        item.BodyData = default(GenderedBodyData);
+                        item.BodyData_Set(
+                            item: default(GenderedBodyData),
+                            hasBeenSet: false);
                     }
                 }
                 catch (Exception ex)
@@ -4297,8 +4313,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     else
                     {
-                        item.FaceGenData_IsSet = false;
-                        item.FaceGenData = default(FaceGenData);
+                        item.FaceGenData_Set(
+                            item: default(FaceGenData),
+                            hasBeenSet: false);
                     }
                 }
                 catch (Exception ex)
@@ -6923,6 +6940,37 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     public class Race_CopyMask : MajorRecord_CopyMask
     {
+        public Race_CopyMask()
+        {
+        }
+
+        public Race_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
+        {
+            this.Name = defaultOn;
+            this.Description = defaultOn;
+            this.Spells = deepCopyOption;
+            this.Relations = new MaskItem<CopyOption, RaceRelation_CopyMask>(deepCopyOption, default);
+            this.SkillBoosts = new MaskItem<CopyOption, SkillBoost_CopyMask>(deepCopyOption, default);
+            this.Fluff = defaultOn;
+            this.MaleHeight = defaultOn;
+            this.FemaleHeight = defaultOn;
+            this.MaleWeight = defaultOn;
+            this.FemaleWeight = defaultOn;
+            this.Flags = defaultOn;
+            this.Voices = new MaskItem<CopyOption, RaceVoices_CopyMask>(deepCopyOption, default);
+            this.DefaultHair = new MaskItem<CopyOption, RaceHair_CopyMask>(deepCopyOption, default);
+            this.DefaultHairColor = defaultOn;
+            this.FaceGenMainClamp = defaultOn;
+            this.FaceGenFaceClamp = defaultOn;
+            this.RaceStats = new MaskItem<CopyOption, RaceStatsGendered_CopyMask>(deepCopyOption, default);
+            this.FaceData = new MaskItem<CopyOption, FacePart_CopyMask>(deepCopyOption, default);
+            this.BodyData = new MaskItem<CopyOption, GenderedBodyData_CopyMask>(deepCopyOption, default);
+            this.Hairs = deepCopyOption;
+            this.Eyes = deepCopyOption;
+            this.FaceGenData = new MaskItem<CopyOption, FaceGenData_CopyMask>(deepCopyOption, default);
+            this.Unknown = defaultOn;
+        }
+
         #region Members
         public bool Name;
         public bool Description;
@@ -6950,6 +6998,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
+
     public class Race_TranslationMask : MajorRecord_TranslationMask
     {
         #region Members

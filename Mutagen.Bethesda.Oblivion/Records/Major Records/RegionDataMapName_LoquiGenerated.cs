@@ -1778,11 +1778,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     public class RegionDataMapName_CopyMask : RegionData_CopyMask
     {
+        public RegionDataMapName_CopyMask()
+        {
+        }
+
+        public RegionDataMapName_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
+        {
+            this.MapName = defaultOn;
+        }
+
         #region Members
         public bool MapName;
         #endregion
 
     }
+
     public class RegionDataMapName_TranslationMask : RegionData_TranslationMask
     {
         #region Members

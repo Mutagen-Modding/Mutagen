@@ -763,6 +763,18 @@ namespace Mutagen.Bethesda.Oblivion
         {
             this.FormKey = formKey;
         }
+
+        partial void PostDuplicate(LandTexture obj, LandTexture rhs, Func<FormKey> getNextFormKey, IList<(MajorRecord Record, FormKey OriginalFormKey)> duplicatedRecords);
+
+        public override MajorRecord Duplicate(Func<FormKey> getNextFormKey, IList<(MajorRecord Record, FormKey OriginalFormKey)> duplicatedRecords)
+        {
+            var ret = new LandTexture(getNextFormKey());
+            ret.CopyFieldsFrom(this);
+            duplicatedRecords?.Add((ret, this.FormKey));
+            PostDuplicate(ret, this, getNextFormKey, duplicatedRecords);
+            return ret;
+        }
+
         #endregion
 
         #region Binary Translation
@@ -1676,8 +1688,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     else
                     {
-                        item.Havok_IsSet = false;
-                        item.Havok = default(HavokData);
+                        item.Havok_Set(
+                            item: default(HavokData),
+                            hasBeenSet: false);
                     }
                 }
                 catch (Exception ex)
@@ -2563,6 +2576,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     public class LandTexture_CopyMask : MajorRecord_CopyMask
     {
+        public LandTexture_CopyMask()
+        {
+        }
+
+        public LandTexture_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
+        {
+            this.Icon = defaultOn;
+            this.Havok = new MaskItem<CopyOption, HavokData_CopyMask>(deepCopyOption, default);
+            this.TextureSpecularExponent = defaultOn;
+            this.PotentialGrass = deepCopyOption;
+        }
+
         #region Members
         public bool Icon;
         public MaskItem<CopyOption, HavokData_CopyMask> Havok;
@@ -2571,6 +2596,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
+
     public class LandTexture_TranslationMask : MajorRecord_TranslationMask
     {
         #region Members

@@ -591,6 +591,8 @@ namespace Mutagen.Bethesda
         {
             this.FormKey = formKey;
         }
+
+        public abstract MajorRecord Duplicate(Func<FormKey> getNextFormKey, IList<(MajorRecord Record, FormKey OriginalFormKey)> duplicatedRecords = null);
         #endregion
 
         #region Binary Translation
@@ -2216,6 +2218,19 @@ namespace Mutagen.Bethesda.Internals
     }
     public class MajorRecord_CopyMask
     {
+        public MajorRecord_CopyMask()
+        {
+        }
+
+        public MajorRecord_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
+        {
+            this.MajorRecordFlags = defaultOn;
+            this.FormKey = defaultOn;
+            this.Version = defaultOn;
+            this.EditorID = defaultOn;
+            this.RecordType = defaultOn;
+        }
+
         #region Members
         public bool MajorRecordFlags;
         public bool FormKey;
@@ -2225,6 +2240,7 @@ namespace Mutagen.Bethesda.Internals
         #endregion
 
     }
+
     public class MajorRecord_TranslationMask : ITranslationMask
     {
         #region Members

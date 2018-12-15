@@ -2000,6 +2000,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     public class AIPackageTarget_CopyMask
     {
+        public AIPackageTarget_CopyMask()
+        {
+        }
+
+        public AIPackageTarget_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
+        {
+            this.ObjectType = defaultOn;
+            this.Object = defaultOn;
+            this.Count = defaultOn;
+        }
+
         #region Members
         public bool ObjectType;
         public bool Object;
@@ -2007,6 +2018,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
+
     public class AIPackageTarget_TranslationMask : ITranslationMask
     {
         #region Members

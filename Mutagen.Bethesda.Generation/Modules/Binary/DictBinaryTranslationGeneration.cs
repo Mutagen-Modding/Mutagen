@@ -72,7 +72,7 @@ namespace Mutagen.Bethesda.Generation
                 $"{this.Namespace}ListBinaryTranslation<{dict.ValueTypeGen.TypeName}>.Instance.Write"))
             {
                 args.Add($"writer: {writerAccessor}");
-                args.Add($"items: {itemAccessor.PropertyOrDirectAccess}");
+                args.Add($"items: {itemAccessor.PropertyOrDirectAccess}.Items");
                 args.Add($"fieldIndex: (int){typeGen.IndexEnumName}");
                 if (listBinaryType == ListBinaryType.Trigger)
                 {
@@ -91,17 +91,14 @@ namespace Mutagen.Bethesda.Generation
                         using (new BraceWrapper(gen))
                         {
                             LoquiType targetLoqui = dict.ValueTypeGen as LoquiType;
-                            using (new DepthWrapper(gen))
-                            {
-                                subTransl.GenerateWrite(
-                                    fg: gen,
-                                    objGen: objGen,
-                                    typeGen: targetLoqui,
-                                    itemAccessor: new Accessor("dictSubItem"),
-                                    writerAccessor: "r",
-                                    translationAccessor: "dictTranslMask",
-                                    maskAccessor: "dictSubMask");
-                            }
+                            subTransl.GenerateWrite(
+                                fg: gen,
+                                objGen: objGen,
+                                typeGen: targetLoqui,
+                                itemAccessor: new Accessor("dictSubItem"),
+                                writerAccessor: "r",
+                                translationAccessor: "dictTranslMask",
+                                maskAccessor: "dictSubMask");
                         }
                     });
                 }

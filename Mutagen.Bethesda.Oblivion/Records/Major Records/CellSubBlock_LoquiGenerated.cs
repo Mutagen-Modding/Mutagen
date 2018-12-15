@@ -658,7 +658,7 @@ namespace Mutagen.Bethesda.Oblivion
         public IEnumerable<ILink> Links => GetLinks();
         private IEnumerable<ILink> GetLinks()
         {
-            foreach (var item in Items.SelectMany(f => f.Links))
+            foreach (var item in Items.Items.SelectMany(f => f.Links))
             {
                 yield return item;
             }
@@ -671,7 +671,7 @@ namespace Mutagen.Bethesda.Oblivion
             NotifyingFireParameters cmds = null)
             where M : IMod<M>
         {
-            foreach (var item in Items)
+            foreach (var item in Items.Items)
             {
                 item.Link(
                     modList,
@@ -2406,6 +2406,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     public class CellSubBlock_CopyMask
     {
+        public CellSubBlock_CopyMask()
+        {
+        }
+
+        public CellSubBlock_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
+        {
+            this.BlockNumber = defaultOn;
+            this.GroupType = defaultOn;
+            this.LastModified = defaultOn;
+            this.Items = new MaskItem<CopyOption, Cell_CopyMask>(deepCopyOption, default);
+        }
+
         #region Members
         public bool BlockNumber;
         public bool GroupType;
@@ -2414,6 +2426,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
+
     public class CellSubBlock_TranslationMask : ITranslationMask
     {
         #region Members

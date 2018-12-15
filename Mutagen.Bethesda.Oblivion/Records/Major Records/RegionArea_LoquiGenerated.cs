@@ -2063,12 +2063,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     public class RegionArea_CopyMask
     {
+        public RegionArea_CopyMask()
+        {
+        }
+
+        public RegionArea_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
+        {
+            this.EdgeFallOff = defaultOn;
+            this.RegionPoints = deepCopyOption;
+        }
+
         #region Members
         public bool EdgeFallOff;
         public CopyOption RegionPoints;
         #endregion
 
     }
+
     public class RegionArea_TranslationMask : ITranslationMask
     {
         #region Members

@@ -2205,6 +2205,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     public class FaceGenData_CopyMask
     {
+        public FaceGenData_CopyMask()
+        {
+        }
+
+        public FaceGenData_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
+        {
+            this.SymmetricGeometry = defaultOn;
+            this.AsymmetricGeometry = defaultOn;
+            this.SymmetricTexture = defaultOn;
+        }
+
         #region Members
         public bool SymmetricGeometry;
         public bool AsymmetricGeometry;
@@ -2212,6 +2223,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
+
     public class FaceGenData_TranslationMask : ITranslationMask
     {
         #region Members

@@ -1938,6 +1938,18 @@ namespace Mutagen.Bethesda.Oblivion
         {
             this.FormKey = formKey;
         }
+
+        partial void PostDuplicate(CombatStyle obj, CombatStyle rhs, Func<FormKey> getNextFormKey, IList<(MajorRecord Record, FormKey OriginalFormKey)> duplicatedRecords);
+
+        public override MajorRecord Duplicate(Func<FormKey> getNextFormKey, IList<(MajorRecord Record, FormKey OriginalFormKey)> duplicatedRecords)
+        {
+            var ret = new CombatStyle(getNextFormKey());
+            ret.CopyFieldsFrom(this);
+            duplicatedRecords?.Add((ret, this.FormKey));
+            PostDuplicate(ret, this, getNextFormKey, duplicatedRecords);
+            return ret;
+        }
+
         #endregion
 
         #region Binary Translation
@@ -5085,8 +5097,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     else
                     {
-                        item.Advanced_IsSet = false;
-                        item.Advanced = default(CombatStyleAdvanced);
+                        item.Advanced_Set(
+                            item: default(CombatStyleAdvanced),
+                            hasBeenSet: false);
                     }
                 }
                 catch (Exception ex)
@@ -7460,6 +7473,51 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     public class CombatStyle_CopyMask : MajorRecord_CopyMask
     {
+        public CombatStyle_CopyMask()
+        {
+        }
+
+        public CombatStyle_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
+        {
+            this.DodgePercentChance = defaultOn;
+            this.LeftRightPercentChance = defaultOn;
+            this.DodgeLeftRightTimerMin = defaultOn;
+            this.DodgeLeftRightTimerMax = defaultOn;
+            this.DodgeForwardTimerMin = defaultOn;
+            this.DodgeForwardTimerMax = defaultOn;
+            this.DodgeBackTimerMin = defaultOn;
+            this.DodgeBackTimerMax = defaultOn;
+            this.IdleTimerMin = defaultOn;
+            this.IdleTimerMax = defaultOn;
+            this.BlockPercentChance = defaultOn;
+            this.AttackPercentChance = defaultOn;
+            this.RecoilStaggerBonusToAttack = defaultOn;
+            this.UnconsciousBonusToAttack = defaultOn;
+            this.HandToHandBonusToAttack = defaultOn;
+            this.PowerAttackPercentChance = defaultOn;
+            this.RecoilStaggerBonusToPowerAttack = defaultOn;
+            this.UnconsciousBonusToPowerAttack = defaultOn;
+            this.PowerAttackNormal = defaultOn;
+            this.PowerAttackForward = defaultOn;
+            this.PowerAttackBack = defaultOn;
+            this.PowerAttackLeft = defaultOn;
+            this.PowerAttackRight = defaultOn;
+            this.HoldTimerMin = defaultOn;
+            this.HoldTimerMax = defaultOn;
+            this.Flags = defaultOn;
+            this.AcrobaticDodgePercentChance = defaultOn;
+            this.RangeMultOptimal = defaultOn;
+            this.RangeMultMax = defaultOn;
+            this.SwitchDistanceMelee = defaultOn;
+            this.SwitchDistanceRanged = defaultOn;
+            this.BuffStandoffDistance = defaultOn;
+            this.RangedStandoffDistance = defaultOn;
+            this.GroupStandoffDistance = defaultOn;
+            this.RushingAttackPercentChance = defaultOn;
+            this.RushingAttackDistanceMult = defaultOn;
+            this.Advanced = new MaskItem<CopyOption, CombatStyleAdvanced_CopyMask>(deepCopyOption, default);
+        }
+
         #region Members
         public bool DodgePercentChance;
         public bool LeftRightPercentChance;
@@ -7501,6 +7559,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
+
     public class CombatStyle_TranslationMask : MajorRecord_TranslationMask
     {
         #region Members

@@ -1960,6 +1960,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     public class LoadScreenLocation_CopyMask
     {
+        public LoadScreenLocation_CopyMask()
+        {
+        }
+
+        public LoadScreenLocation_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
+        {
+            this.Direct = defaultOn;
+            this.Indirect = defaultOn;
+            this.GridPoint = defaultOn;
+        }
+
         #region Members
         public bool Direct;
         public bool Indirect;
@@ -1967,6 +1978,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
+
     public class LoadScreenLocation_TranslationMask : ITranslationMask
     {
         #region Members

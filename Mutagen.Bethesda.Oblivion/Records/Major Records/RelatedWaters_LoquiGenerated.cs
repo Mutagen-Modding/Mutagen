@@ -1918,6 +1918,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     public class RelatedWaters_CopyMask
     {
+        public RelatedWaters_CopyMask()
+        {
+        }
+
+        public RelatedWaters_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
+        {
+            this.RelatedWaterDaytime = defaultOn;
+            this.RelatedWaterNighttime = defaultOn;
+            this.RelatedWaterUnderwater = defaultOn;
+        }
+
         #region Members
         public bool RelatedWaterDaytime;
         public bool RelatedWaterNighttime;
@@ -1925,6 +1936,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
+
     public class RelatedWaters_TranslationMask : ITranslationMask
     {
         #region Members

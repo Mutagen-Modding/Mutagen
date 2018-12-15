@@ -1999,6 +1999,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     public class Header_CopyMask
     {
+        public Header_CopyMask()
+        {
+        }
+
+        public Header_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
+        {
+            this.Version = defaultOn;
+            this.NumRecords = defaultOn;
+            this.NextObjectID = defaultOn;
+        }
+
         #region Members
         public bool Version;
         public bool NumRecords;
@@ -2006,6 +2017,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
+
     public class Header_TranslationMask : ITranslationMask
     {
         #region Members
