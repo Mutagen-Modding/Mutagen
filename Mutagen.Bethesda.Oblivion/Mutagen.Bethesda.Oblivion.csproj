@@ -166,9 +166,6 @@
     <Compile Include="Records\Major Records\CellLighting_LoquiGenerated.cs">
       <DependentUpon>Cell.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\CellSubBlock.cs">
-      <DependentUpon>Cell.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\CellSubBlock_LoquiGenerated.cs">
       <DependentUpon>Cell.xml</DependentUpon>
     </Compile>

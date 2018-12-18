@@ -1,4 +1,5 @@
 ﻿using Loqui.Internal;
+using Mutagen.Bethesda.Oblivion.Internals;
 using Noggog;
 using System;
 using System.Collections.Generic;

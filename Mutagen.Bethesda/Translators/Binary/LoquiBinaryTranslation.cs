@@ -193,10 +193,11 @@ namespace Mutagen.Bethesda.Binary
                 .Where(methodInfo =>
                 {
                     var param = methodInfo.GetParameters();
-                    if (param.Length != 3) return false;
+                    if (param.Length != 4) return false;
                     if (!param[0].ParameterType.Equals(typeof(MutagenWriter))) return false;
-                    if (!param[1].ParameterType.Equals(typeof(RecordTypeConverter))) return false;
-                    if (!param[2].ParameterType.Equals(typeof(ErrorMaskBuilder))) return false;
+                    if (!param[1].ParameterType.Equals(typeof(MasterReferences))) return false;
+                    if (!param[2].ParameterType.Equals(typeof(RecordTypeConverter))) return false;
+                    if (!param[3].ParameterType.Equals(typeof(ErrorMaskBuilder))) return false;
                     return true;
                 })
                 .First();
@@ -330,8 +331,18 @@ namespace Mutagen.Bethesda.Binary
             {
                 return (WRITE_FUNC<T>)writeFunc;
             }
-            var method = t.GetMethods(BindingFlags.NonPublic | BindingFlags.Instance)
-                .Where((methodInfo) => methodInfo.Name.Equals("Write_Binary_Internal"))
+            var method = t.GetMethods(BindingFlags.Public | BindingFlags.Instance)
+                .Where((methodInfo) => methodInfo.Name.Equals("Write_Binary"))
+                .Where(methodInfo =>
+                {
+                    var param = methodInfo.GetParameters();
+                    if (param.Length != 4) return false;
+                    if (!param[0].ParameterType.Equals(typeof(MutagenWriter))) return false;
+                    if (!param[1].ParameterType.Equals(typeof(MasterReferences))) return false;
+                    if (!param[2].ParameterType.Equals(typeof(RecordTypeConverter))) return false;
+                    if (!param[3].ParameterType.Equals(typeof(ErrorMaskBuilder))) return false;
+                    return true;
+                })
                 .First();
             if (!method.IsGenericMethod)
             {

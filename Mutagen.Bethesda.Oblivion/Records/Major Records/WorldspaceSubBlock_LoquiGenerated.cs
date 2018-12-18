@@ -2564,7 +2564,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public WorldspaceSubBlock_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
         {
-            this.BlockNumber = defaultOn;
+            this.BlockNumberY = defaultOn;
+            this.BlockNumberX = defaultOn;
             this.GroupType = defaultOn;
             this.LastModified = defaultOn;
             this.Items = new MaskItem<CopyOption, Cell_CopyMask>(deepCopyOption, default);

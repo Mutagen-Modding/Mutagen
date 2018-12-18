@@ -74,9 +74,6 @@
     <Compile Include="Records\MajorRecord.cs">
       <DependentUpon>MajorRecord.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\MajorRecord_LoquiGenerated.cs">
-      <DependentUpon>MajorRecord.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\MasterReference_LoquiGenerated.cs">
       <DependentUpon>MasterReference.xml</DependentUpon>
     </Compile>
@@ -127,10 +124,6 @@
     <Compile Include="Translators\Folder\LoquiXmlFolderTranslation.cs" />
     <Compile Include="Records\MajorRecord_LoquiGenerated.cs">
       <DependentUpon>MajorRecord.xml</DependentUpon>
-    </Compile>
-    <Compile Include="ProtocolDefinition_Bethesda.cs" />
-    <Compile Include="Records\ListGroup_LoquiGenerated.cs">
-      <DependentUpon>Group.xml</DependentUpon>
     </Compile>
     <Compile Include="Translators\XML\ModKeyXmlTranslation.cs" />
     <Compile Include="Utility.cs" />
