@@ -55,7 +55,7 @@ namespace Mutagen.Bethesda.Generation
                         fg.AppendLine($"case {subObj.Name} {field.Name.ToLower()}:");
                         using (new DepthWrapper(fg))
                         {
-                            fg.AppendLine($"{loqui.ProtectedName}.Items.AddOrUpdate({field.Name.ToLower()});");
+                            fg.AppendLine($"{loqui.ProtectedName}.Items.Set({field.Name.ToLower()});");
                             fg.AppendLine($"break;");
                         }
                     }
@@ -111,7 +111,7 @@ namespace Mutagen.Bethesda.Generation
                     {
                         if (loqui.TargetObjectGeneration.Name == "Group")
                         {
-                            fg.AppendLine($"this.{field.Name}.Items.AddOrUpdate(rhsMod.{field.Name}.Items.Items);");
+                            fg.AppendLine($"this.{field.Name}.Items.Set(rhsMod.{field.Name}.Items.Items);");
                         }
                         else
                         {
@@ -143,7 +143,7 @@ namespace Mutagen.Bethesda.Generation
                     fg.AppendLine($"if (mask?.{field.Name} ?? true)");
                     using (new BraceWrapper(fg))
                     {
-                        fg.AppendLine($"this.{field.Name}.Items.{(loqui.TargetObjectGeneration.Name == "Group" ? "AddOrUpdate" : "AddRange")}(");
+                        fg.AppendLine($"this.{field.Name}.Items.{(loqui.TargetObjectGeneration.Name == "Group" ? "Set" : "AddRange")}(");
                         using (new DepthWrapper(fg))
                         {
                             fg.AppendLine($"rhs.{field.Name}.Items.Items");

@@ -97,7 +97,7 @@ namespace Mutagen.Bethesda
                         var val = LoquiXmlFolderTranslation<T>.CREATE.Value(
                             item.Path,
                             null);
-                        group.Items.AddOrUpdate(val);
+                        group.Items.Set(val);
                     }
                 }
                 catch (Exception ex)

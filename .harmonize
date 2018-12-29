@@ -2,18 +2,18 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>aa1d8ce60b7f314c72d7d256e332cd0d2033e5ea</Sha>
+         <Sha>0a719ed6ed147414b27009917a7049b9073d5664</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>12-15-2018 15:07:28</CommitDate>
-         <Description>Merge remote-tracking branch 'origin/master'</Description>
+         <CommitDate>12-29-2018 01:15:28</CommitDate>
+         <Description>Fix for SourceSetCache.TryGetValue</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>ebba126f6e09aadfe0ce77391eae15b79b8713d1</Sha>
+         <Sha>8795f2e55f5b8cd14894df39714c6b00e1487391</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>12-15-2018 15:59:47</CommitDate>
-         <Description>Merge commit '8227eecb347a08d2b3bfcc17da3f328f79cda631'</Description>
+         <CommitDate>12-29-2018 03:30:03</CommitDate>
+         <Description>Bugfix for reactiveUI /w notifying ctors</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
    </ParentRepos>
