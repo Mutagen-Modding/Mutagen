@@ -391,6 +391,7 @@ namespace Mutagen.Bethesda.Oblivion
         public Global(FormKey formKey)
         {
             this.FormKey = formKey;
+            CustomCtor();
         }
 
         #endregion

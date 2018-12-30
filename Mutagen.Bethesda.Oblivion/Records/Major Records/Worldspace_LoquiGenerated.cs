@@ -1337,6 +1337,7 @@ namespace Mutagen.Bethesda.Oblivion
         public Worldspace(FormKey formKey)
         {
             this.FormKey = formKey;
+            CustomCtor();
         }
 
         partial void PostDuplicate(Worldspace obj, Worldspace rhs, Func<FormKey> getNextFormKey, IList<(MajorRecord Record, FormKey OriginalFormKey)> duplicatedRecords);

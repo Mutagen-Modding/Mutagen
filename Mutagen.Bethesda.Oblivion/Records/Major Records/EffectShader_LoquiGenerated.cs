@@ -2685,6 +2685,7 @@ namespace Mutagen.Bethesda.Oblivion
         public EffectShader(FormKey formKey)
         {
             this.FormKey = formKey;
+            CustomCtor();
         }
 
         partial void PostDuplicate(EffectShader obj, EffectShader rhs, Func<FormKey> getNextFormKey, IList<(MajorRecord Record, FormKey OriginalFormKey)> duplicatedRecords);

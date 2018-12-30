@@ -575,6 +575,7 @@ namespace Mutagen.Bethesda.Oblivion
         public GameSettingInt(FormKey formKey)
         {
             this.FormKey = formKey;
+            CustomCtor();
         }
 
         partial void PostDuplicate(GameSettingInt obj, GameSettingInt rhs, Func<FormKey> getNextFormKey, IList<(MajorRecord Record, FormKey OriginalFormKey)> duplicatedRecords);

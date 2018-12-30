@@ -879,6 +879,7 @@ namespace Mutagen.Bethesda.Oblivion
         public Door(FormKey formKey)
         {
             this.FormKey = formKey;
+            CustomCtor();
         }
 
         partial void PostDuplicate(Door obj, Door rhs, Func<FormKey> getNextFormKey, IList<(MajorRecord Record, FormKey OriginalFormKey)> duplicatedRecords);

@@ -844,6 +844,7 @@ namespace Mutagen.Bethesda.Oblivion
         public Flora(FormKey formKey)
         {
             this.FormKey = formKey;
+            CustomCtor();
         }
 
         partial void PostDuplicate(Flora obj, Flora rhs, Func<FormKey> getNextFormKey, IList<(MajorRecord Record, FormKey OriginalFormKey)> duplicatedRecords);

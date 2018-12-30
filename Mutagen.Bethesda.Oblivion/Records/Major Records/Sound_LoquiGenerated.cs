@@ -607,6 +607,7 @@ namespace Mutagen.Bethesda.Oblivion
         public Sound(FormKey formKey)
         {
             this.FormKey = formKey;
+            CustomCtor();
         }
 
         partial void PostDuplicate(Sound obj, Sound rhs, Func<FormKey> getNextFormKey, IList<(MajorRecord Record, FormKey OriginalFormKey)> duplicatedRecords);

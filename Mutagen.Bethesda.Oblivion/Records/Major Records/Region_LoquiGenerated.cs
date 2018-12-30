@@ -1093,6 +1093,7 @@ namespace Mutagen.Bethesda.Oblivion
         public Region(FormKey formKey)
         {
             this.FormKey = formKey;
+            CustomCtor();
         }
 
         partial void PostDuplicate(Region obj, Region rhs, Func<FormKey> getNextFormKey, IList<(MajorRecord Record, FormKey OriginalFormKey)> duplicatedRecords);

@@ -527,6 +527,7 @@ namespace Mutagen.Bethesda.Oblivion
         public Road(FormKey formKey)
         {
             this.FormKey = formKey;
+            CustomCtor();
         }
 
         partial void PostDuplicate(Road obj, Road rhs, Func<FormKey> getNextFormKey, IList<(MajorRecord Record, FormKey OriginalFormKey)> duplicatedRecords);

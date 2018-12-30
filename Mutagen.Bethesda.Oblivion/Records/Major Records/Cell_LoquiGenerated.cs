@@ -1523,6 +1523,7 @@ namespace Mutagen.Bethesda.Oblivion
         public Cell(FormKey formKey)
         {
             this.FormKey = formKey;
+            CustomCtor();
         }
 
         partial void PostDuplicate(Cell obj, Cell rhs, Func<FormKey> getNextFormKey, IList<(MajorRecord Record, FormKey OriginalFormKey)> duplicatedRecords);

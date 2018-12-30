@@ -2795,6 +2795,7 @@ namespace Mutagen.Bethesda.Oblivion
         public Creature(FormKey formKey)
         {
             this.FormKey = formKey;
+            CustomCtor();
         }
 
         partial void PostDuplicate(Creature obj, Creature rhs, Func<FormKey> getNextFormKey, IList<(MajorRecord Record, FormKey OriginalFormKey)> duplicatedRecords);

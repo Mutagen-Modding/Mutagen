@@ -590,6 +590,7 @@ namespace Mutagen.Bethesda
         public MajorRecord(FormKey formKey)
         {
             this.FormKey = formKey;
+            CustomCtor();
         }
 
         public abstract MajorRecord Duplicate(Func<FormKey> getNextFormKey, IList<(MajorRecord Record, FormKey OriginalFormKey)> duplicatedRecords = null);

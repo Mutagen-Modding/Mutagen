@@ -913,6 +913,7 @@ namespace Mutagen.Bethesda.Oblivion
         public AlchemicalApparatus(FormKey formKey)
         {
             this.FormKey = formKey;
+            CustomCtor();
         }
 
         partial void PostDuplicate(AlchemicalApparatus obj, AlchemicalApparatus rhs, Func<FormKey> getNextFormKey, IList<(MajorRecord Record, FormKey OriginalFormKey)> duplicatedRecords);

@@ -1986,6 +1986,7 @@ namespace Mutagen.Bethesda.Oblivion
         public Weather(FormKey formKey)
         {
             this.FormKey = formKey;
+            CustomCtor();
         }
 
         partial void PostDuplicate(Weather obj, Weather rhs, Func<FormKey> getNextFormKey, IList<(MajorRecord Record, FormKey OriginalFormKey)> duplicatedRecords);

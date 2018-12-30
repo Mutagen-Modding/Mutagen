@@ -1032,6 +1032,7 @@ namespace Mutagen.Bethesda.Oblivion
         public Climate(FormKey formKey)
         {
             this.FormKey = formKey;
+            CustomCtor();
         }
 
         partial void PostDuplicate(Climate obj, Climate rhs, Func<FormKey> getNextFormKey, IList<(MajorRecord Record, FormKey OriginalFormKey)> duplicatedRecords);

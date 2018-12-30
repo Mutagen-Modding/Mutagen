@@ -818,6 +818,7 @@ namespace Mutagen.Bethesda.Oblivion
         public Faction(FormKey formKey)
         {
             this.FormKey = formKey;
+            CustomCtor();
         }
 
         partial void PostDuplicate(Faction obj, Faction rhs, Func<FormKey> getNextFormKey, IList<(MajorRecord Record, FormKey OriginalFormKey)> duplicatedRecords);

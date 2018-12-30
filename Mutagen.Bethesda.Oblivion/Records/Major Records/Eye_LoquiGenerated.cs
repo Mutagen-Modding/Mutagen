@@ -667,6 +667,7 @@ namespace Mutagen.Bethesda.Oblivion
         public Eye(FormKey formKey)
         {
             this.FormKey = formKey;
+            CustomCtor();
         }
 
         partial void PostDuplicate(Eye obj, Eye rhs, Func<FormKey> getNextFormKey, IList<(MajorRecord Record, FormKey OriginalFormKey)> duplicatedRecords);

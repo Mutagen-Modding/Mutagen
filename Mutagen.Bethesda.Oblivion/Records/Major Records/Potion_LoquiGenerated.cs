@@ -967,6 +967,7 @@ namespace Mutagen.Bethesda.Oblivion
         public Potion(FormKey formKey)
         {
             this.FormKey = formKey;
+            CustomCtor();
         }
 
         partial void PostDuplicate(Potion obj, Potion rhs, Func<FormKey> getNextFormKey, IList<(MajorRecord Record, FormKey OriginalFormKey)> duplicatedRecords);

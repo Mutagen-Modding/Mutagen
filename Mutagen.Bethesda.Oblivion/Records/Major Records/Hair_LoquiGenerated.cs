@@ -732,6 +732,7 @@ namespace Mutagen.Bethesda.Oblivion
         public Hair(FormKey formKey)
         {
             this.FormKey = formKey;
+            CustomCtor();
         }
 
         partial void PostDuplicate(Hair obj, Hair rhs, Func<FormKey> getNextFormKey, IList<(MajorRecord Record, FormKey OriginalFormKey)> duplicatedRecords);

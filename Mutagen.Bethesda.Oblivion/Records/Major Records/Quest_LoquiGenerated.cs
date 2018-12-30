@@ -934,6 +934,7 @@ namespace Mutagen.Bethesda.Oblivion
         public Quest(FormKey formKey)
         {
             this.FormKey = formKey;
+            CustomCtor();
         }
 
         partial void PostDuplicate(Quest obj, Quest rhs, Func<FormKey> getNextFormKey, IList<(MajorRecord Record, FormKey OriginalFormKey)> duplicatedRecords);

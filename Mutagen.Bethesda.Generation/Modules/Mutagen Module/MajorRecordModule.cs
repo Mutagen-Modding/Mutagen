@@ -27,6 +27,7 @@ namespace Mutagen.Bethesda.Generation
             using (new BraceWrapper(fg))
             {
                 fg.AppendLine("this.FormKey = formKey;");
+                fg.AppendLine("CustomCtor();");
             }
             fg.AppendLine();
 

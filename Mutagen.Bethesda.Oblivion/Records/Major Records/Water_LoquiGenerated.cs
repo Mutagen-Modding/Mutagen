@@ -1833,6 +1833,7 @@ namespace Mutagen.Bethesda.Oblivion
         public Water(FormKey formKey)
         {
             this.FormKey = formKey;
+            CustomCtor();
         }
 
         partial void PostDuplicate(Water obj, Water rhs, Func<FormKey> getNextFormKey, IList<(MajorRecord Record, FormKey OriginalFormKey)> duplicatedRecords);

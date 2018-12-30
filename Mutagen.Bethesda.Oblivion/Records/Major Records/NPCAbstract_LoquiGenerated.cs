@@ -425,6 +425,7 @@ namespace Mutagen.Bethesda.Oblivion
         public NPCAbstract(FormKey formKey)
         {
             this.FormKey = formKey;
+            CustomCtor();
         }
 
         #endregion

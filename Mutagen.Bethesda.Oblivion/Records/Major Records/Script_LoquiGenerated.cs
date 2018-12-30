@@ -563,6 +563,7 @@ namespace Mutagen.Bethesda.Oblivion
         public Script(FormKey formKey)
         {
             this.FormKey = formKey;
+            CustomCtor();
         }
 
         partial void PostDuplicate(Script obj, Script rhs, Func<FormKey> getNextFormKey, IList<(MajorRecord Record, FormKey OriginalFormKey)> duplicatedRecords);
