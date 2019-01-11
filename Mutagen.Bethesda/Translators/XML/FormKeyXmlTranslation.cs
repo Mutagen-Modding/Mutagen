@@ -14,14 +14,14 @@ namespace Mutagen.Bethesda
     {
         public readonly static FormKeyXmlTranslation Instance = new FormKeyXmlTranslation();
 
-        public void ParseInto<T>(XElement root, int fieldIndex, FormIDSetLink<T> item, ErrorMaskBuilder errorMask)
+        public void ParseInto<T>(XElement node, int fieldIndex, FormIDSetLink<T> item, ErrorMaskBuilder errorMask)
             where T : IMajorRecord
         {
             using (errorMask.PushIndex(fieldIndex))
             {
                 try
                 {
-                    if (Parse(root, out FormKey val, errorMask))
+                    if (Parse(node, out FormKey val, errorMask))
                     {
                         item.Set(val);
                     }
@@ -38,14 +38,14 @@ namespace Mutagen.Bethesda
             }
         }
 
-        public void ParseInto<T>(XElement root, int fieldIndex, FormIDLink<T> item, ErrorMaskBuilder errorMask)
+        public void ParseInto<T>(XElement node, int fieldIndex, FormIDLink<T> item, ErrorMaskBuilder errorMask)
             where T : IMajorRecord
         {
             using (errorMask.PushIndex(fieldIndex))
             {
                 try
                 {
-                    if (Parse(root, out FormKey val, errorMask))
+                    if (Parse(node, out FormKey val, errorMask))
                     {
                         item.Set(val);
                     }
@@ -62,14 +62,14 @@ namespace Mutagen.Bethesda
             }
         }
 
-        public void ParseInto<T>(XElement root, int fieldIndex, EDIDLink<T> item, ErrorMaskBuilder errorMask)
+        public void ParseInto<T>(XElement node, int fieldIndex, EDIDLink<T> item, ErrorMaskBuilder errorMask)
             where T : class, IMajorRecord
         {
             using (errorMask.PushIndex(fieldIndex))
             {
                 try
                 {
-                    if (Parse(root, out FormKey val, errorMask))
+                    if (Parse(node, out FormKey val, errorMask))
                     {
                         item.Set(val);
                     }
@@ -86,14 +86,14 @@ namespace Mutagen.Bethesda
             }
         }
 
-        public void ParseInto<T>(XElement root, int fieldIndex, EDIDSetLink<T> item, ErrorMaskBuilder errorMask)
+        public void ParseInto<T>(XElement node, int fieldIndex, EDIDSetLink<T> item, ErrorMaskBuilder errorMask)
             where T : class, IMajorRecord
         {
             using (errorMask.PushIndex(fieldIndex))
             {
                 try
                 {
-                    if (Parse(root, out FormKey val, errorMask))
+                    if (Parse(node, out FormKey val, errorMask))
                     {
                         item.Set(val);
                     }
@@ -111,12 +111,12 @@ namespace Mutagen.Bethesda
         }
 
         public bool Parse<T>(
-            XElement root, 
+            XElement node, 
             out FormIDLink<T> item, 
             ErrorMaskBuilder errorMask)
             where T : IMajorRecord
         {
-            if (Parse(root, out FormKey id, errorMask))
+            if (Parse(node, out FormKey id, errorMask))
             {
                 item = new FormIDLink<T>(id);
                 return true;
@@ -126,25 +126,25 @@ namespace Mutagen.Bethesda
         }
 
         public bool Parse<T>(
-            XElement root,
+            XElement node,
             out FormIDLink<T> item, 
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
             where T : IMajorRecord
         {
             return this.Parse(
-                root: root,
+                node: node,
                 item: out item,
                 errorMask: errorMask);
         }
 
         public bool Parse<T>(
-            XElement root, 
+            XElement node, 
             out FormIDSetLink<T> item,
             ErrorMaskBuilder errorMask)
             where T : IMajorRecord
         {
-            if (Parse(root, out FormKey id, errorMask))
+            if (Parse(node, out FormKey id, errorMask))
             {
                 item = new FormIDSetLink<T>(id);
                 return true;
@@ -154,25 +154,25 @@ namespace Mutagen.Bethesda
         }
 
         public bool Parse<T>(
-            XElement root, 
+            XElement node, 
             out FormIDSetLink<T> item, 
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
             where T : IMajorRecord
         {
             return this.Parse(
-                root: root,
+                node: node,
                 item: out item,
                 errorMask: errorMask);
         }
 
         public bool Parse<T>(
-            XElement root, 
+            XElement node, 
             out EDIDLink<T> item,
             ErrorMaskBuilder errorMask)
             where T : class, IMajorRecord
         {
-            if (Parse(root, out FormKey id, errorMask))
+            if (Parse(node, out FormKey id, errorMask))
             {
                 item = new EDIDLink<T>(id);
                 return true;
@@ -182,25 +182,25 @@ namespace Mutagen.Bethesda
         }
 
         public bool Parse<T>(
-            XElement root, 
+            XElement node, 
             out EDIDLink<T> item,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
             where T : class, IMajorRecord
         {
             return this.Parse(
-                root: root,
+                node: node,
                 item: out item,
                 errorMask: errorMask);
         }
 
         public bool Parse<T>(
-            XElement root,
+            XElement node,
             out EDIDSetLink<T> item,
             ErrorMaskBuilder errorMask)
             where T : class, IMajorRecord
         {
-            if (Parse(root, out FormKey id, errorMask))
+            if (Parse(node, out FormKey id, errorMask))
             {
                 item = new EDIDSetLink<T>(id);
                 return true;
@@ -210,14 +210,14 @@ namespace Mutagen.Bethesda
         }
 
         public bool Parse<T>(
-            XElement root, 
+            XElement node, 
             out EDIDSetLink<T> item, 
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
             where T : class, IMajorRecord
         {
             return this.Parse(
-                root: root,
+                node: node,
                 item: out item,
                 errorMask: errorMask);
         }

@@ -10,10 +10,10 @@
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>ebba126f6e09aadfe0ce77391eae15b79b8713d1</Sha>
+         <Sha>d846432fec5647ecde2a93d18ebbe974b8a010d4</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>12-15-2018 15:59:47</CommitDate>
-         <Description>Merge commit '8227eecb347a08d2b3bfcc17da3f328f79cda631'</Description>
+         <CommitDate>01-14-2019 17:48:08</CommitDate>
+         <Description>XML node parameter magic strings replaced with linked APILine parameter name</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
    </ParentRepos>

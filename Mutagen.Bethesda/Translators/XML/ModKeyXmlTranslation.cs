@@ -16,9 +16,9 @@ namespace Mutagen.Bethesda
 
         public string ElementName => "ModKey";
 
-        public bool Parse(XElement root, out ModKey item, ErrorMaskBuilder errorMask)
+        public bool Parse(XElement node, out ModKey item, ErrorMaskBuilder errorMask)
         {
-            if (!StringXmlTranslation.Instance.Parse(root, out var str, errorMask))
+            if (!StringXmlTranslation.Instance.Parse(node, out var str, errorMask))
             {
                 item = default;
                 return false;
@@ -27,9 +27,9 @@ namespace Mutagen.Bethesda
             return ModKey.TryFactory(str, out item);
         }
 
-        public bool Parse(XElement root, out ModKey item, ErrorMaskBuilder errorMask, TranslationCrystal translationMask)
+        public bool Parse(XElement node, out ModKey item, ErrorMaskBuilder errorMask, TranslationCrystal translationMask)
         {
-            if (!StringXmlTranslation.Instance.Parse(root, out var str, errorMask, translationMask))
+            if (!StringXmlTranslation.Instance.Parse(node, out var str, errorMask, translationMask))
             {
                 item = default;
                 return false;

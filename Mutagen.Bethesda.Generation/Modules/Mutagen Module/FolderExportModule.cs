@@ -63,7 +63,7 @@ namespace Mutagen.Bethesda.Generation
                         {
                             case ObjectType.Record:
                                 using (var args = new ArgsWrapper(fg,
-                                    $"ret.{field.Name}.CopyFieldsFrom(Mutagen.Bethesda.Folder.LoquiXmlFolderTranslation<{loqui.TypeName}>.CREATE.Value",
+                                    $"ret.{field.Name}.CopyFieldsFrom({loqui.TypeName}.Create_Xml",
                                     suffixLine: ");")
                                 {
                                     SemiColon = false
@@ -71,6 +71,7 @@ namespace Mutagen.Bethesda.Generation
                                 {
                                     args.Add($"path: Path.Combine(dir.Path, \"{field.Name}.xml\")");
                                     args.Add($"errorMask: errorMaskBuilder");
+                                    args.Add($"translationMask: null");
                                 }
                                 break;
                             case ObjectType.Group:

@@ -83,55 +83,49 @@ namespace Mutagen.Bethesda.Generation
             this._typeGenerations[typeof(CustomLogic)] = new CustomLogicTranslationGeneration();
             APILine[] modAPILines = new APILine[]
             {
-                new APILine((obj) => TryGet<string>.Create(
-                    successful: obj.GetObjectType() == ObjectType.Mod,
-                    val: "GroupMask importMask = null")),
+                new APILine(
+                    nicknameKey: "GroupMask",
+                    resolutionString: "GroupMask importMask = null",
+                    when: (obj) => obj.GetObjectType() == ObjectType.Mod)
             };
+            APILine masterRefs = new APILine(
+                nicknameKey: "MasterReferences",
+                resolutionString: "MasterReferences masterReferences",
+                when: (obj) => obj.GetObjectType() != ObjectType.Mod);
+            var modKey = new APILine(
+                nicknameKey: "ModKey",
+                resolutionString: "ModKey modKey",
+                when: (obj) => obj.GetObjectType() == ObjectType.Mod);
+            var recTypeConverter = new APILine(
+                "RecordTypeConverter",
+                $"{nameof(RecordTypeConverter)} recordTypeConverter");
             this.MainAPI = new TranslationModuleAPI(
                 writerAPI: new MethodAPI(
-                    majorAPI: new APILine[] { "MutagenWriter writer" },
+                    majorAPI: new APILine[] { new APILine("MutagenWriter", "MutagenWriter writer") },
                     optionalAPI: modAPILines,
                     customAPI: new CustomMethodAPI[]
                     {
-                        CustomMethodAPI.FactoryPublic(new APILine((obj) =>
-                            TryGet<string>.Create(
-                                successful: obj.GetObjectType() != ObjectType.Mod,
-                                val: "MasterReferences masterReferences"))),
-                        CustomMethodAPI.FactoryPublic(new APILine((obj) =>
-                            TryGet<string>.Create(
-                                successful: obj.GetObjectType() == ObjectType.Mod,
-                                val: "ModKey modKey"))),
-                        CustomMethodAPI.FactoryPrivate($"{nameof(RecordTypeConverter)} recordTypeConverter", "null")
+                        CustomMethodAPI.FactoryPublic(masterRefs),
+                        CustomMethodAPI.FactoryPublic(modKey),
+                        CustomMethodAPI.FactoryPrivate(recTypeConverter, "null")
                     }),
                 readerAPI: new MethodAPI(
-                    majorAPI: new APILine[] { "MutagenFrame frame" },
+                    majorAPI: new APILine[] { new APILine("MutagenFrame", "MutagenFrame frame") },
                     optionalAPI: modAPILines,
                     customAPI: new CustomMethodAPI[]
                     {
-                        CustomMethodAPI.FactoryPublic(new APILine((obj) =>
-                            TryGet<string>.Create(
-                                successful: obj.GetObjectType() != ObjectType.Mod,
-                                val: "MasterReferences masterReferences"))),
-                        CustomMethodAPI.FactoryPublic(new APILine((obj) =>
-                            TryGet<string>.Create(
-                                successful: obj.GetObjectType() == ObjectType.Mod,
-                                val: "ModKey modKey"))),
-                        CustomMethodAPI.FactoryPrivate($"{nameof(RecordTypeConverter)} recordTypeConverter", "null")
+                        CustomMethodAPI.FactoryPublic(masterRefs),
+                        CustomMethodAPI.FactoryPublic(modKey),
+                        CustomMethodAPI.FactoryPrivate(recTypeConverter, "null")
                     }));
             this.MinorAPIs.Add(
                 new TranslationModuleAPI(
                     new MethodAPI(
-                        majorAPI: new APILine[] { "string path" },
+                        majorAPI: new APILine[] { new APILine("Path", "string path") },
                         customAPI: new CustomMethodAPI[]
                         {
-                            CustomMethodAPI.FactoryPublic(new APILine((obj) =>
-                                TryGet<string>.Create(
-                                    successful: obj.GetObjectType() != ObjectType.Mod,
-                                    val: "MasterReferences masterReferences"))),
-                            CustomMethodAPI.FactoryPublic(new APILine((obj) =>
-                                TryGet<string>.Create(
-                                    successful: obj.GetObjectType() == ObjectType.Mod,
-                                    val: "ModKey modKey"))),
+                            CustomMethodAPI.FactoryPublic(masterRefs),
+                            CustomMethodAPI.FactoryPublic(modKey),
                         },
                         optionalAPI: modAPILines))
                 {
@@ -143,17 +137,11 @@ namespace Mutagen.Bethesda.Generation
             this.MinorAPIs.Add(
                 new TranslationModuleAPI(
                     new MethodAPI(
-                        majorAPI: new APILine[] { "Stream stream" },
+                        majorAPI: new APILine[] { new APILine("Stream", "Stream stream") },
                         customAPI: new CustomMethodAPI[]
                         {
-                            CustomMethodAPI.FactoryPublic(new APILine((obj) =>
-                                TryGet<string>.Create(
-                                    successful: obj.GetObjectType() != ObjectType.Mod,
-                                    val: "MasterReferences masterReferences"))),
-                            CustomMethodAPI.FactoryPublic(new APILine((obj) =>
-                                TryGet<string>.Create(
-                                    successful: obj.GetObjectType() == ObjectType.Mod,
-                                    val: "ModKey modKey"))),
+                            CustomMethodAPI.FactoryPublic(masterRefs),
+                            CustomMethodAPI.FactoryPublic(modKey),
                         },
                         optionalAPI: modAPILines))
                 {
@@ -191,7 +179,7 @@ namespace Mutagen.Bethesda.Generation
             fg.AppendLine("using (var writer = new MutagenWriter(stream))");
             using (new BraceWrapper(fg))
             {
-                internalToDo(this.MainAPI.WriterMemberNames(obj));
+                internalToDo(this.MainAPI.PublicMembers(obj, TranslationModuleAPI.Direction.Writer).ToArray());
             }
         }
 
@@ -201,7 +189,7 @@ namespace Mutagen.Bethesda.Generation
             using (new BraceWrapper(fg))
             {
                 fg.AppendLine("var frame = new MutagenFrame(reader);");
-                internalToDo(this.MainAPI.ReaderMemberNames(obj));
+                internalToDo(this.MainAPI.PublicMembers(obj, TranslationModuleAPI.Direction.Reader).ToArray());
             }
         }
 
@@ -761,7 +749,7 @@ namespace Mutagen.Bethesda.Generation
                 fg.AppendLine("using (var writer = new MutagenWriter(memStream, dispose: false))");
                 using (new BraceWrapper(fg))
                 {
-                    internalToDo(this.MainAPI.WriterMemberNames(obj));
+                    internalToDo(this.MainAPI.PublicMembers(obj, TranslationModuleAPI.Direction.Writer).ToArray());
                 }
                 fg.AppendLine("using (var fs = new FileStream(path, FileMode.Create, FileAccess.Write))");
                 using (new BraceWrapper(fg))
@@ -778,7 +766,7 @@ namespace Mutagen.Bethesda.Generation
             using (new BraceWrapper(fg))
             {
                 fg.AppendLine("var frame = new MutagenFrame(reader);");
-                internalToDo(this.MainAPI.ReaderMemberNames(obj));
+                internalToDo(this.MainAPI.PublicMembers(obj, TranslationModuleAPI.Direction.Reader).ToArray());
             }
         }
 
