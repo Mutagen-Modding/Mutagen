@@ -55,7 +55,11 @@ namespace Mutagen.Bethesda.Oblivion
         public RegionData.RegionDataType DataType
         {
             get => this._DataType;
-            protected set => this.RaiseAndSetIfChanged(ref this._DataType, value, nameof(DataType));
+            protected set
+            {
+                this.RDATDataTypeState |= RDATDataType.Has;
+                this.RaiseAndSetIfChanged(ref this._DataType, value, nameof(DataType));
+            }
         }
         #endregion
         #region Flags
@@ -63,7 +67,11 @@ namespace Mutagen.Bethesda.Oblivion
         public RegionData.RegionDataFlag Flags
         {
             get => this._Flags;
-            set => this.RaiseAndSetIfChanged(ref this._Flags, value, nameof(Flags));
+            set
+            {
+                this.RDATDataTypeState |= RDATDataType.Has;
+                this.RaiseAndSetIfChanged(ref this._Flags, value, nameof(Flags));
+            }
         }
         #endregion
         #region Priority
@@ -71,7 +79,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Byte Priority
         {
             get => this._Priority;
-            set => this.RaiseAndSetIfChanged(ref this._Priority, value, nameof(Priority));
+            set
+            {
+                this.RDATDataTypeState |= RDATDataType.Has;
+                this.RaiseAndSetIfChanged(ref this._Priority, value, nameof(Priority));
+            }
         }
         #endregion
 

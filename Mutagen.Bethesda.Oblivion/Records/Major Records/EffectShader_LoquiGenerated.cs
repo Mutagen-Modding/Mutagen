@@ -107,7 +107,11 @@ namespace Mutagen.Bethesda.Oblivion
         public EffectShader.Flag Flags
         {
             get => this._Flags;
-            set => this.RaiseAndSetIfChanged(ref this._Flags, value, nameof(Flags));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.RaiseAndSetIfChanged(ref this._Flags, value, nameof(Flags));
+            }
         }
         #endregion
         #region MembraneShaderSourceBlendMode
@@ -115,7 +119,11 @@ namespace Mutagen.Bethesda.Oblivion
         public EffectShader.SourceBlendMode MembraneShaderSourceBlendMode
         {
             get => this._MembraneShaderSourceBlendMode;
-            set => this.RaiseAndSetIfChanged(ref this._MembraneShaderSourceBlendMode, value, nameof(MembraneShaderSourceBlendMode));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.RaiseAndSetIfChanged(ref this._MembraneShaderSourceBlendMode, value, nameof(MembraneShaderSourceBlendMode));
+            }
         }
         #endregion
         #region MembraneShaderBlendOperation
@@ -123,7 +131,11 @@ namespace Mutagen.Bethesda.Oblivion
         public EffectShader.BlendOperation MembraneShaderBlendOperation
         {
             get => this._MembraneShaderBlendOperation;
-            set => this.RaiseAndSetIfChanged(ref this._MembraneShaderBlendOperation, value, nameof(MembraneShaderBlendOperation));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.RaiseAndSetIfChanged(ref this._MembraneShaderBlendOperation, value, nameof(MembraneShaderBlendOperation));
+            }
         }
         #endregion
         #region MembraneShaderZTestFunction
@@ -131,7 +143,11 @@ namespace Mutagen.Bethesda.Oblivion
         public EffectShader.ZTestFunction MembraneShaderZTestFunction
         {
             get => this._MembraneShaderZTestFunction;
-            set => this.RaiseAndSetIfChanged(ref this._MembraneShaderZTestFunction, value, nameof(MembraneShaderZTestFunction));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.RaiseAndSetIfChanged(ref this._MembraneShaderZTestFunction, value, nameof(MembraneShaderZTestFunction));
+            }
         }
         #endregion
         #region FillTextureEffectColor
@@ -139,7 +155,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Color FillTextureEffectColor
         {
             get => this._FillTextureEffectColor;
-            set => this.RaiseAndSetIfChanged(ref this._FillTextureEffectColor, value, nameof(FillTextureEffectColor));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.RaiseAndSetIfChanged(ref this._FillTextureEffectColor, value, nameof(FillTextureEffectColor));
+            }
         }
         #endregion
         #region FillTextureEffectAlphaFadeInTime
@@ -147,7 +167,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Single FillTextureEffectAlphaFadeInTime
         {
             get => this._FillTextureEffectAlphaFadeInTime;
-            set => this.RaiseAndSetIfChanged(ref this._FillTextureEffectAlphaFadeInTime, value, nameof(FillTextureEffectAlphaFadeInTime));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.RaiseAndSetIfChanged(ref this._FillTextureEffectAlphaFadeInTime, value, nameof(FillTextureEffectAlphaFadeInTime));
+            }
         }
         #endregion
         #region FillTextureEffectFullAlphaTime
@@ -155,7 +179,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Single FillTextureEffectFullAlphaTime
         {
             get => this._FillTextureEffectFullAlphaTime;
-            set => this.RaiseAndSetIfChanged(ref this._FillTextureEffectFullAlphaTime, value, nameof(FillTextureEffectFullAlphaTime));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.RaiseAndSetIfChanged(ref this._FillTextureEffectFullAlphaTime, value, nameof(FillTextureEffectFullAlphaTime));
+            }
         }
         #endregion
         #region FillTextureEffectAlphaFadeOutTime
@@ -163,7 +191,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Single FillTextureEffectAlphaFadeOutTime
         {
             get => this._FillTextureEffectAlphaFadeOutTime;
-            set => this.RaiseAndSetIfChanged(ref this._FillTextureEffectAlphaFadeOutTime, value, nameof(FillTextureEffectAlphaFadeOutTime));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.RaiseAndSetIfChanged(ref this._FillTextureEffectAlphaFadeOutTime, value, nameof(FillTextureEffectAlphaFadeOutTime));
+            }
         }
         #endregion
         #region FillTextureEffectPersistentAlphaRatio
@@ -171,7 +203,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Single FillTextureEffectPersistentAlphaRatio
         {
             get => this._FillTextureEffectPersistentAlphaRatio;
-            set => this.RaiseAndSetIfChanged(ref this._FillTextureEffectPersistentAlphaRatio, value, nameof(FillTextureEffectPersistentAlphaRatio));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.RaiseAndSetIfChanged(ref this._FillTextureEffectPersistentAlphaRatio, value, nameof(FillTextureEffectPersistentAlphaRatio));
+            }
         }
         #endregion
         #region FillTextureEffectAlphaPulseAmplitude
@@ -179,7 +215,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Single FillTextureEffectAlphaPulseAmplitude
         {
             get => this._FillTextureEffectAlphaPulseAmplitude;
-            set => this.RaiseAndSetIfChanged(ref this._FillTextureEffectAlphaPulseAmplitude, value, nameof(FillTextureEffectAlphaPulseAmplitude));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.RaiseAndSetIfChanged(ref this._FillTextureEffectAlphaPulseAmplitude, value, nameof(FillTextureEffectAlphaPulseAmplitude));
+            }
         }
         #endregion
         #region FillTextureEffectAlphaPulseFrequency
@@ -187,7 +227,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Single FillTextureEffectAlphaPulseFrequency
         {
             get => this._FillTextureEffectAlphaPulseFrequency;
-            set => this.RaiseAndSetIfChanged(ref this._FillTextureEffectAlphaPulseFrequency, value, nameof(FillTextureEffectAlphaPulseFrequency));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.RaiseAndSetIfChanged(ref this._FillTextureEffectAlphaPulseFrequency, value, nameof(FillTextureEffectAlphaPulseFrequency));
+            }
         }
         #endregion
         #region FillTextureEffectTextureAnimationSpeedU
@@ -195,7 +239,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Single FillTextureEffectTextureAnimationSpeedU
         {
             get => this._FillTextureEffectTextureAnimationSpeedU;
-            set => this.RaiseAndSetIfChanged(ref this._FillTextureEffectTextureAnimationSpeedU, value, nameof(FillTextureEffectTextureAnimationSpeedU));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.RaiseAndSetIfChanged(ref this._FillTextureEffectTextureAnimationSpeedU, value, nameof(FillTextureEffectTextureAnimationSpeedU));
+            }
         }
         #endregion
         #region FillTextureEffectTextureAnimationSpeedV
@@ -203,7 +251,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Single FillTextureEffectTextureAnimationSpeedV
         {
             get => this._FillTextureEffectTextureAnimationSpeedV;
-            set => this.RaiseAndSetIfChanged(ref this._FillTextureEffectTextureAnimationSpeedV, value, nameof(FillTextureEffectTextureAnimationSpeedV));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.RaiseAndSetIfChanged(ref this._FillTextureEffectTextureAnimationSpeedV, value, nameof(FillTextureEffectTextureAnimationSpeedV));
+            }
         }
         #endregion
         #region EdgeEffectFallOff
@@ -211,7 +263,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Single EdgeEffectFallOff
         {
             get => this._EdgeEffectFallOff;
-            set => this.RaiseAndSetIfChanged(ref this._EdgeEffectFallOff, value, nameof(EdgeEffectFallOff));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.RaiseAndSetIfChanged(ref this._EdgeEffectFallOff, value, nameof(EdgeEffectFallOff));
+            }
         }
         #endregion
         #region EdgeEffectColor
@@ -219,7 +275,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Color EdgeEffectColor
         {
             get => this._EdgeEffectColor;
-            set => this.RaiseAndSetIfChanged(ref this._EdgeEffectColor, value, nameof(EdgeEffectColor));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.RaiseAndSetIfChanged(ref this._EdgeEffectColor, value, nameof(EdgeEffectColor));
+            }
         }
         #endregion
         #region EdgeEffectAlphaFadeInTime
@@ -227,7 +287,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Single EdgeEffectAlphaFadeInTime
         {
             get => this._EdgeEffectAlphaFadeInTime;
-            set => this.RaiseAndSetIfChanged(ref this._EdgeEffectAlphaFadeInTime, value, nameof(EdgeEffectAlphaFadeInTime));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.RaiseAndSetIfChanged(ref this._EdgeEffectAlphaFadeInTime, value, nameof(EdgeEffectAlphaFadeInTime));
+            }
         }
         #endregion
         #region EdgeEffectFullAlphaTime
@@ -235,7 +299,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Single EdgeEffectFullAlphaTime
         {
             get => this._EdgeEffectFullAlphaTime;
-            set => this.RaiseAndSetIfChanged(ref this._EdgeEffectFullAlphaTime, value, nameof(EdgeEffectFullAlphaTime));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.RaiseAndSetIfChanged(ref this._EdgeEffectFullAlphaTime, value, nameof(EdgeEffectFullAlphaTime));
+            }
         }
         #endregion
         #region EdgeEffectAlphaFadeOutTime
@@ -243,7 +311,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Single EdgeEffectAlphaFadeOutTime
         {
             get => this._EdgeEffectAlphaFadeOutTime;
-            set => this.RaiseAndSetIfChanged(ref this._EdgeEffectAlphaFadeOutTime, value, nameof(EdgeEffectAlphaFadeOutTime));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.RaiseAndSetIfChanged(ref this._EdgeEffectAlphaFadeOutTime, value, nameof(EdgeEffectAlphaFadeOutTime));
+            }
         }
         #endregion
         #region EdgeEffectPersistentAlphaRatio
@@ -251,7 +323,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Single EdgeEffectPersistentAlphaRatio
         {
             get => this._EdgeEffectPersistentAlphaRatio;
-            set => this.RaiseAndSetIfChanged(ref this._EdgeEffectPersistentAlphaRatio, value, nameof(EdgeEffectPersistentAlphaRatio));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.RaiseAndSetIfChanged(ref this._EdgeEffectPersistentAlphaRatio, value, nameof(EdgeEffectPersistentAlphaRatio));
+            }
         }
         #endregion
         #region EdgeEffectAlphaPulseAmplitude
@@ -259,7 +335,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Single EdgeEffectAlphaPulseAmplitude
         {
             get => this._EdgeEffectAlphaPulseAmplitude;
-            set => this.RaiseAndSetIfChanged(ref this._EdgeEffectAlphaPulseAmplitude, value, nameof(EdgeEffectAlphaPulseAmplitude));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.RaiseAndSetIfChanged(ref this._EdgeEffectAlphaPulseAmplitude, value, nameof(EdgeEffectAlphaPulseAmplitude));
+            }
         }
         #endregion
         #region EdgeEffectAlphaPulseFrequency
@@ -267,7 +347,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Single EdgeEffectAlphaPulseFrequency
         {
             get => this._EdgeEffectAlphaPulseFrequency;
-            set => this.RaiseAndSetIfChanged(ref this._EdgeEffectAlphaPulseFrequency, value, nameof(EdgeEffectAlphaPulseFrequency));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.RaiseAndSetIfChanged(ref this._EdgeEffectAlphaPulseFrequency, value, nameof(EdgeEffectAlphaPulseFrequency));
+            }
         }
         #endregion
         #region FillTextureEffectFullAlphaRatio
@@ -275,7 +359,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Single FillTextureEffectFullAlphaRatio
         {
             get => this._FillTextureEffectFullAlphaRatio;
-            set => this.RaiseAndSetIfChanged(ref this._FillTextureEffectFullAlphaRatio, value, nameof(FillTextureEffectFullAlphaRatio));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.RaiseAndSetIfChanged(ref this._FillTextureEffectFullAlphaRatio, value, nameof(FillTextureEffectFullAlphaRatio));
+            }
         }
         #endregion
         #region EdgeEffectFullAlphaRatio
@@ -283,7 +371,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Single EdgeEffectFullAlphaRatio
         {
             get => this._EdgeEffectFullAlphaRatio;
-            set => this.RaiseAndSetIfChanged(ref this._EdgeEffectFullAlphaRatio, value, nameof(EdgeEffectFullAlphaRatio));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.RaiseAndSetIfChanged(ref this._EdgeEffectFullAlphaRatio, value, nameof(EdgeEffectFullAlphaRatio));
+            }
         }
         #endregion
         #region MembraneShaderDestBlendMode
@@ -291,7 +383,11 @@ namespace Mutagen.Bethesda.Oblivion
         public EffectShader.SourceBlendMode MembraneShaderDestBlendMode
         {
             get => this._MembraneShaderDestBlendMode;
-            set => this.RaiseAndSetIfChanged(ref this._MembraneShaderDestBlendMode, value, nameof(MembraneShaderDestBlendMode));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.RaiseAndSetIfChanged(ref this._MembraneShaderDestBlendMode, value, nameof(MembraneShaderDestBlendMode));
+            }
         }
         #endregion
         #region ParticleShaderSourceBlendMode
@@ -299,7 +395,12 @@ namespace Mutagen.Bethesda.Oblivion
         public EffectShader.SourceBlendMode ParticleShaderSourceBlendMode
         {
             get => this._ParticleShaderSourceBlendMode;
-            set => this.RaiseAndSetIfChanged(ref this._ParticleShaderSourceBlendMode, value, nameof(ParticleShaderSourceBlendMode));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.DATADataTypeState &= ~DATADataType.Break0;
+                this.RaiseAndSetIfChanged(ref this._ParticleShaderSourceBlendMode, value, nameof(ParticleShaderSourceBlendMode));
+            }
         }
         #endregion
         #region ParticleShaderBlendOperation
@@ -307,7 +408,12 @@ namespace Mutagen.Bethesda.Oblivion
         public EffectShader.BlendOperation ParticleShaderBlendOperation
         {
             get => this._ParticleShaderBlendOperation;
-            set => this.RaiseAndSetIfChanged(ref this._ParticleShaderBlendOperation, value, nameof(ParticleShaderBlendOperation));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.DATADataTypeState &= ~DATADataType.Break0;
+                this.RaiseAndSetIfChanged(ref this._ParticleShaderBlendOperation, value, nameof(ParticleShaderBlendOperation));
+            }
         }
         #endregion
         #region ParticleShaderZTestFunction
@@ -315,7 +421,12 @@ namespace Mutagen.Bethesda.Oblivion
         public EffectShader.ZTestFunction ParticleShaderZTestFunction
         {
             get => this._ParticleShaderZTestFunction;
-            set => this.RaiseAndSetIfChanged(ref this._ParticleShaderZTestFunction, value, nameof(ParticleShaderZTestFunction));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.DATADataTypeState &= ~DATADataType.Break0;
+                this.RaiseAndSetIfChanged(ref this._ParticleShaderZTestFunction, value, nameof(ParticleShaderZTestFunction));
+            }
         }
         #endregion
         #region ParticleShaderDestBlendMode
@@ -323,7 +434,12 @@ namespace Mutagen.Bethesda.Oblivion
         public EffectShader.SourceBlendMode ParticleShaderDestBlendMode
         {
             get => this._ParticleShaderDestBlendMode;
-            set => this.RaiseAndSetIfChanged(ref this._ParticleShaderDestBlendMode, value, nameof(ParticleShaderDestBlendMode));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.DATADataTypeState &= ~DATADataType.Break0;
+                this.RaiseAndSetIfChanged(ref this._ParticleShaderDestBlendMode, value, nameof(ParticleShaderDestBlendMode));
+            }
         }
         #endregion
         #region ParticleShaderParticleBirthRampUpTime
@@ -331,7 +447,12 @@ namespace Mutagen.Bethesda.Oblivion
         public Single ParticleShaderParticleBirthRampUpTime
         {
             get => this._ParticleShaderParticleBirthRampUpTime;
-            set => this.RaiseAndSetIfChanged(ref this._ParticleShaderParticleBirthRampUpTime, value, nameof(ParticleShaderParticleBirthRampUpTime));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.DATADataTypeState &= ~DATADataType.Break0;
+                this.RaiseAndSetIfChanged(ref this._ParticleShaderParticleBirthRampUpTime, value, nameof(ParticleShaderParticleBirthRampUpTime));
+            }
         }
         #endregion
         #region ParticleShaderFullParticleBirthTime
@@ -339,7 +460,12 @@ namespace Mutagen.Bethesda.Oblivion
         public Single ParticleShaderFullParticleBirthTime
         {
             get => this._ParticleShaderFullParticleBirthTime;
-            set => this.RaiseAndSetIfChanged(ref this._ParticleShaderFullParticleBirthTime, value, nameof(ParticleShaderFullParticleBirthTime));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.DATADataTypeState &= ~DATADataType.Break0;
+                this.RaiseAndSetIfChanged(ref this._ParticleShaderFullParticleBirthTime, value, nameof(ParticleShaderFullParticleBirthTime));
+            }
         }
         #endregion
         #region ParticleShaderParticleBirthRampDownTime
@@ -347,7 +473,12 @@ namespace Mutagen.Bethesda.Oblivion
         public Single ParticleShaderParticleBirthRampDownTime
         {
             get => this._ParticleShaderParticleBirthRampDownTime;
-            set => this.RaiseAndSetIfChanged(ref this._ParticleShaderParticleBirthRampDownTime, value, nameof(ParticleShaderParticleBirthRampDownTime));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.DATADataTypeState &= ~DATADataType.Break0;
+                this.RaiseAndSetIfChanged(ref this._ParticleShaderParticleBirthRampDownTime, value, nameof(ParticleShaderParticleBirthRampDownTime));
+            }
         }
         #endregion
         #region ParticleShaderFullParticleBirthRatio
@@ -355,7 +486,12 @@ namespace Mutagen.Bethesda.Oblivion
         public Single ParticleShaderFullParticleBirthRatio
         {
             get => this._ParticleShaderFullParticleBirthRatio;
-            set => this.RaiseAndSetIfChanged(ref this._ParticleShaderFullParticleBirthRatio, value, nameof(ParticleShaderFullParticleBirthRatio));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.DATADataTypeState &= ~DATADataType.Break0;
+                this.RaiseAndSetIfChanged(ref this._ParticleShaderFullParticleBirthRatio, value, nameof(ParticleShaderFullParticleBirthRatio));
+            }
         }
         #endregion
         #region ParticleShaderPersistentParticleBirthRatio
@@ -363,7 +499,12 @@ namespace Mutagen.Bethesda.Oblivion
         public Single ParticleShaderPersistentParticleBirthRatio
         {
             get => this._ParticleShaderPersistentParticleBirthRatio;
-            set => this.RaiseAndSetIfChanged(ref this._ParticleShaderPersistentParticleBirthRatio, value, nameof(ParticleShaderPersistentParticleBirthRatio));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.DATADataTypeState &= ~DATADataType.Break0;
+                this.RaiseAndSetIfChanged(ref this._ParticleShaderPersistentParticleBirthRatio, value, nameof(ParticleShaderPersistentParticleBirthRatio));
+            }
         }
         #endregion
         #region ParticleShaderParticleLifetime
@@ -371,7 +512,12 @@ namespace Mutagen.Bethesda.Oblivion
         public Single ParticleShaderParticleLifetime
         {
             get => this._ParticleShaderParticleLifetime;
-            set => this.RaiseAndSetIfChanged(ref this._ParticleShaderParticleLifetime, value, nameof(ParticleShaderParticleLifetime));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.DATADataTypeState &= ~DATADataType.Break0;
+                this.RaiseAndSetIfChanged(ref this._ParticleShaderParticleLifetime, value, nameof(ParticleShaderParticleLifetime));
+            }
         }
         #endregion
         #region ParticleShaderParticleLifetimePlusMinus
@@ -379,7 +525,12 @@ namespace Mutagen.Bethesda.Oblivion
         public Single ParticleShaderParticleLifetimePlusMinus
         {
             get => this._ParticleShaderParticleLifetimePlusMinus;
-            set => this.RaiseAndSetIfChanged(ref this._ParticleShaderParticleLifetimePlusMinus, value, nameof(ParticleShaderParticleLifetimePlusMinus));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.DATADataTypeState &= ~DATADataType.Break0;
+                this.RaiseAndSetIfChanged(ref this._ParticleShaderParticleLifetimePlusMinus, value, nameof(ParticleShaderParticleLifetimePlusMinus));
+            }
         }
         #endregion
         #region ParticleShaderInitialSpeedAlongNormal
@@ -387,7 +538,12 @@ namespace Mutagen.Bethesda.Oblivion
         public Single ParticleShaderInitialSpeedAlongNormal
         {
             get => this._ParticleShaderInitialSpeedAlongNormal;
-            set => this.RaiseAndSetIfChanged(ref this._ParticleShaderInitialSpeedAlongNormal, value, nameof(ParticleShaderInitialSpeedAlongNormal));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.DATADataTypeState &= ~DATADataType.Break0;
+                this.RaiseAndSetIfChanged(ref this._ParticleShaderInitialSpeedAlongNormal, value, nameof(ParticleShaderInitialSpeedAlongNormal));
+            }
         }
         #endregion
         #region ParticleShaderAccelerationAlongNormal
@@ -395,7 +551,12 @@ namespace Mutagen.Bethesda.Oblivion
         public Single ParticleShaderAccelerationAlongNormal
         {
             get => this._ParticleShaderAccelerationAlongNormal;
-            set => this.RaiseAndSetIfChanged(ref this._ParticleShaderAccelerationAlongNormal, value, nameof(ParticleShaderAccelerationAlongNormal));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.DATADataTypeState &= ~DATADataType.Break0;
+                this.RaiseAndSetIfChanged(ref this._ParticleShaderAccelerationAlongNormal, value, nameof(ParticleShaderAccelerationAlongNormal));
+            }
         }
         #endregion
         #region ParticleShaderInitialVelocity1
@@ -403,7 +564,12 @@ namespace Mutagen.Bethesda.Oblivion
         public Single ParticleShaderInitialVelocity1
         {
             get => this._ParticleShaderInitialVelocity1;
-            set => this.RaiseAndSetIfChanged(ref this._ParticleShaderInitialVelocity1, value, nameof(ParticleShaderInitialVelocity1));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.DATADataTypeState &= ~DATADataType.Break0;
+                this.RaiseAndSetIfChanged(ref this._ParticleShaderInitialVelocity1, value, nameof(ParticleShaderInitialVelocity1));
+            }
         }
         #endregion
         #region ParticleShaderInitialVelocity2
@@ -411,7 +577,12 @@ namespace Mutagen.Bethesda.Oblivion
         public Single ParticleShaderInitialVelocity2
         {
             get => this._ParticleShaderInitialVelocity2;
-            set => this.RaiseAndSetIfChanged(ref this._ParticleShaderInitialVelocity2, value, nameof(ParticleShaderInitialVelocity2));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.DATADataTypeState &= ~DATADataType.Break0;
+                this.RaiseAndSetIfChanged(ref this._ParticleShaderInitialVelocity2, value, nameof(ParticleShaderInitialVelocity2));
+            }
         }
         #endregion
         #region ParticleShaderInitialVelocity3
@@ -419,7 +590,12 @@ namespace Mutagen.Bethesda.Oblivion
         public Single ParticleShaderInitialVelocity3
         {
             get => this._ParticleShaderInitialVelocity3;
-            set => this.RaiseAndSetIfChanged(ref this._ParticleShaderInitialVelocity3, value, nameof(ParticleShaderInitialVelocity3));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.DATADataTypeState &= ~DATADataType.Break0;
+                this.RaiseAndSetIfChanged(ref this._ParticleShaderInitialVelocity3, value, nameof(ParticleShaderInitialVelocity3));
+            }
         }
         #endregion
         #region ParticleShaderAcceleration1
@@ -427,7 +603,12 @@ namespace Mutagen.Bethesda.Oblivion
         public Single ParticleShaderAcceleration1
         {
             get => this._ParticleShaderAcceleration1;
-            set => this.RaiseAndSetIfChanged(ref this._ParticleShaderAcceleration1, value, nameof(ParticleShaderAcceleration1));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.DATADataTypeState &= ~DATADataType.Break0;
+                this.RaiseAndSetIfChanged(ref this._ParticleShaderAcceleration1, value, nameof(ParticleShaderAcceleration1));
+            }
         }
         #endregion
         #region ParticleShaderAcceleration2
@@ -435,7 +616,12 @@ namespace Mutagen.Bethesda.Oblivion
         public Single ParticleShaderAcceleration2
         {
             get => this._ParticleShaderAcceleration2;
-            set => this.RaiseAndSetIfChanged(ref this._ParticleShaderAcceleration2, value, nameof(ParticleShaderAcceleration2));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.DATADataTypeState &= ~DATADataType.Break0;
+                this.RaiseAndSetIfChanged(ref this._ParticleShaderAcceleration2, value, nameof(ParticleShaderAcceleration2));
+            }
         }
         #endregion
         #region ParticleShaderAcceleration3
@@ -443,7 +629,12 @@ namespace Mutagen.Bethesda.Oblivion
         public Single ParticleShaderAcceleration3
         {
             get => this._ParticleShaderAcceleration3;
-            set => this.RaiseAndSetIfChanged(ref this._ParticleShaderAcceleration3, value, nameof(ParticleShaderAcceleration3));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.DATADataTypeState &= ~DATADataType.Break0;
+                this.RaiseAndSetIfChanged(ref this._ParticleShaderAcceleration3, value, nameof(ParticleShaderAcceleration3));
+            }
         }
         #endregion
         #region ParticleShaderScaleKey1
@@ -451,7 +642,12 @@ namespace Mutagen.Bethesda.Oblivion
         public Single ParticleShaderScaleKey1
         {
             get => this._ParticleShaderScaleKey1;
-            set => this.RaiseAndSetIfChanged(ref this._ParticleShaderScaleKey1, value, nameof(ParticleShaderScaleKey1));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.DATADataTypeState &= ~DATADataType.Break0;
+                this.RaiseAndSetIfChanged(ref this._ParticleShaderScaleKey1, value, nameof(ParticleShaderScaleKey1));
+            }
         }
         #endregion
         #region ParticleShaderScaleKey2
@@ -459,7 +655,12 @@ namespace Mutagen.Bethesda.Oblivion
         public Single ParticleShaderScaleKey2
         {
             get => this._ParticleShaderScaleKey2;
-            set => this.RaiseAndSetIfChanged(ref this._ParticleShaderScaleKey2, value, nameof(ParticleShaderScaleKey2));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.DATADataTypeState &= ~DATADataType.Break0;
+                this.RaiseAndSetIfChanged(ref this._ParticleShaderScaleKey2, value, nameof(ParticleShaderScaleKey2));
+            }
         }
         #endregion
         #region ParticleShaderScaleKey1Time
@@ -467,7 +668,12 @@ namespace Mutagen.Bethesda.Oblivion
         public Single ParticleShaderScaleKey1Time
         {
             get => this._ParticleShaderScaleKey1Time;
-            set => this.RaiseAndSetIfChanged(ref this._ParticleShaderScaleKey1Time, value, nameof(ParticleShaderScaleKey1Time));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.DATADataTypeState &= ~DATADataType.Break0;
+                this.RaiseAndSetIfChanged(ref this._ParticleShaderScaleKey1Time, value, nameof(ParticleShaderScaleKey1Time));
+            }
         }
         #endregion
         #region ParticleShaderScaleKey2Time
@@ -475,7 +681,12 @@ namespace Mutagen.Bethesda.Oblivion
         public Single ParticleShaderScaleKey2Time
         {
             get => this._ParticleShaderScaleKey2Time;
-            set => this.RaiseAndSetIfChanged(ref this._ParticleShaderScaleKey2Time, value, nameof(ParticleShaderScaleKey2Time));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.DATADataTypeState &= ~DATADataType.Break0;
+                this.RaiseAndSetIfChanged(ref this._ParticleShaderScaleKey2Time, value, nameof(ParticleShaderScaleKey2Time));
+            }
         }
         #endregion
         #region ColorKey1Color
@@ -483,7 +694,12 @@ namespace Mutagen.Bethesda.Oblivion
         public Color ColorKey1Color
         {
             get => this._ColorKey1Color;
-            set => this.RaiseAndSetIfChanged(ref this._ColorKey1Color, value, nameof(ColorKey1Color));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.DATADataTypeState &= ~DATADataType.Break0;
+                this.RaiseAndSetIfChanged(ref this._ColorKey1Color, value, nameof(ColorKey1Color));
+            }
         }
         #endregion
         #region ColorKey2Color
@@ -491,7 +707,12 @@ namespace Mutagen.Bethesda.Oblivion
         public Color ColorKey2Color
         {
             get => this._ColorKey2Color;
-            set => this.RaiseAndSetIfChanged(ref this._ColorKey2Color, value, nameof(ColorKey2Color));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.DATADataTypeState &= ~DATADataType.Break0;
+                this.RaiseAndSetIfChanged(ref this._ColorKey2Color, value, nameof(ColorKey2Color));
+            }
         }
         #endregion
         #region ColorKey3Color
@@ -499,7 +720,12 @@ namespace Mutagen.Bethesda.Oblivion
         public Color ColorKey3Color
         {
             get => this._ColorKey3Color;
-            set => this.RaiseAndSetIfChanged(ref this._ColorKey3Color, value, nameof(ColorKey3Color));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.DATADataTypeState &= ~DATADataType.Break0;
+                this.RaiseAndSetIfChanged(ref this._ColorKey3Color, value, nameof(ColorKey3Color));
+            }
         }
         #endregion
         #region ColorKey1ColorAlpha
@@ -507,7 +733,12 @@ namespace Mutagen.Bethesda.Oblivion
         public Single ColorKey1ColorAlpha
         {
             get => this._ColorKey1ColorAlpha;
-            set => this.RaiseAndSetIfChanged(ref this._ColorKey1ColorAlpha, value, nameof(ColorKey1ColorAlpha));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.DATADataTypeState &= ~DATADataType.Break0;
+                this.RaiseAndSetIfChanged(ref this._ColorKey1ColorAlpha, value, nameof(ColorKey1ColorAlpha));
+            }
         }
         #endregion
         #region ColorKey2ColorAlpha
@@ -515,7 +746,12 @@ namespace Mutagen.Bethesda.Oblivion
         public Single ColorKey2ColorAlpha
         {
             get => this._ColorKey2ColorAlpha;
-            set => this.RaiseAndSetIfChanged(ref this._ColorKey2ColorAlpha, value, nameof(ColorKey2ColorAlpha));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.DATADataTypeState &= ~DATADataType.Break0;
+                this.RaiseAndSetIfChanged(ref this._ColorKey2ColorAlpha, value, nameof(ColorKey2ColorAlpha));
+            }
         }
         #endregion
         #region ColorKey3ColorAlpha
@@ -523,7 +759,12 @@ namespace Mutagen.Bethesda.Oblivion
         public Single ColorKey3ColorAlpha
         {
             get => this._ColorKey3ColorAlpha;
-            set => this.RaiseAndSetIfChanged(ref this._ColorKey3ColorAlpha, value, nameof(ColorKey3ColorAlpha));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.DATADataTypeState &= ~DATADataType.Break0;
+                this.RaiseAndSetIfChanged(ref this._ColorKey3ColorAlpha, value, nameof(ColorKey3ColorAlpha));
+            }
         }
         #endregion
         #region ColorKey1ColorKeyTime
@@ -531,7 +772,12 @@ namespace Mutagen.Bethesda.Oblivion
         public Single ColorKey1ColorKeyTime
         {
             get => this._ColorKey1ColorKeyTime;
-            set => this.RaiseAndSetIfChanged(ref this._ColorKey1ColorKeyTime, value, nameof(ColorKey1ColorKeyTime));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.DATADataTypeState &= ~DATADataType.Break0;
+                this.RaiseAndSetIfChanged(ref this._ColorKey1ColorKeyTime, value, nameof(ColorKey1ColorKeyTime));
+            }
         }
         #endregion
         #region ColorKey2ColorKeyTime
@@ -539,7 +785,12 @@ namespace Mutagen.Bethesda.Oblivion
         public Single ColorKey2ColorKeyTime
         {
             get => this._ColorKey2ColorKeyTime;
-            set => this.RaiseAndSetIfChanged(ref this._ColorKey2ColorKeyTime, value, nameof(ColorKey2ColorKeyTime));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.DATADataTypeState &= ~DATADataType.Break0;
+                this.RaiseAndSetIfChanged(ref this._ColorKey2ColorKeyTime, value, nameof(ColorKey2ColorKeyTime));
+            }
         }
         #endregion
         #region ColorKey3ColorKeyTime
@@ -547,7 +798,12 @@ namespace Mutagen.Bethesda.Oblivion
         public Single ColorKey3ColorKeyTime
         {
             get => this._ColorKey3ColorKeyTime;
-            set => this.RaiseAndSetIfChanged(ref this._ColorKey3ColorKeyTime, value, nameof(ColorKey3ColorKeyTime));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.DATADataTypeState &= ~DATADataType.Break0;
+                this.RaiseAndSetIfChanged(ref this._ColorKey3ColorKeyTime, value, nameof(ColorKey3ColorKeyTime));
+            }
         }
         #endregion
 

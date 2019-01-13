@@ -168,7 +168,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Single Speed
         {
             get => this._Speed;
-            set => this.RaiseAndSetIfChanged(ref this._Speed, value, nameof(Speed));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.RaiseAndSetIfChanged(ref this._Speed, value, nameof(Speed));
+            }
         }
         #endregion
         #region Flags
@@ -176,7 +180,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Ammo.AmmoFlag Flags
         {
             get => this._Flags;
-            set => this.RaiseAndSetIfChanged(ref this._Flags, value, nameof(Flags));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.RaiseAndSetIfChanged(ref this._Flags, value, nameof(Flags));
+            }
         }
         #endregion
         #region Value
@@ -184,7 +192,11 @@ namespace Mutagen.Bethesda.Oblivion
         public UInt32 Value
         {
             get => this._Value;
-            set => this.RaiseAndSetIfChanged(ref this._Value, value, nameof(Value));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.RaiseAndSetIfChanged(ref this._Value, value, nameof(Value));
+            }
         }
         #endregion
         #region Weight
@@ -192,7 +204,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Single Weight
         {
             get => this._Weight;
-            set => this.RaiseAndSetIfChanged(ref this._Weight, value, nameof(Weight));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.RaiseAndSetIfChanged(ref this._Weight, value, nameof(Weight));
+            }
         }
         #endregion
         #region Damage
@@ -200,7 +216,11 @@ namespace Mutagen.Bethesda.Oblivion
         public UInt16 Damage
         {
             get => this._Damage;
-            set => this.RaiseAndSetIfChanged(ref this._Damage, value, nameof(Damage));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.RaiseAndSetIfChanged(ref this._Damage, value, nameof(Damage));
+            }
         }
         #endregion
 

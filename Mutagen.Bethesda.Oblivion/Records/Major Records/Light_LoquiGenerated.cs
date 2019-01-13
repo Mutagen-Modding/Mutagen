@@ -144,7 +144,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Int32 Time
         {
             get => this._Time;
-            set => this.RaiseAndSetIfChanged(ref this._Time, value, nameof(Time));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.RaiseAndSetIfChanged(ref this._Time, value, nameof(Time));
+            }
         }
         #endregion
         #region Radius
@@ -152,7 +156,11 @@ namespace Mutagen.Bethesda.Oblivion
         public UInt32 Radius
         {
             get => this._Radius;
-            set => this.RaiseAndSetIfChanged(ref this._Radius, value, nameof(Radius));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.RaiseAndSetIfChanged(ref this._Radius, value, nameof(Radius));
+            }
         }
         #endregion
         #region Color
@@ -160,7 +168,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Color Color
         {
             get => this._Color;
-            set => this.RaiseAndSetIfChanged(ref this._Color, value, nameof(Color));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.RaiseAndSetIfChanged(ref this._Color, value, nameof(Color));
+            }
         }
         #endregion
         #region Flags
@@ -168,7 +180,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Light.LightFlag Flags
         {
             get => this._Flags;
-            set => this.RaiseAndSetIfChanged(ref this._Flags, value, nameof(Flags));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.RaiseAndSetIfChanged(ref this._Flags, value, nameof(Flags));
+            }
         }
         #endregion
         #region FalloffExponent
@@ -177,7 +193,12 @@ namespace Mutagen.Bethesda.Oblivion
         public Single FalloffExponent
         {
             get => this._FalloffExponent;
-            set => this.RaiseAndSetIfChanged(ref this._FalloffExponent, value, nameof(FalloffExponent));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.DATADataTypeState |= DATADataType.Range0;
+                this.RaiseAndSetIfChanged(ref this._FalloffExponent, value, nameof(FalloffExponent));
+            }
         }
         #endregion
         #region FOV
@@ -186,7 +207,12 @@ namespace Mutagen.Bethesda.Oblivion
         public Single FOV
         {
             get => this._FOV;
-            set => this.RaiseAndSetIfChanged(ref this._FOV, value, nameof(FOV));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.DATADataTypeState |= DATADataType.Range0;
+                this.RaiseAndSetIfChanged(ref this._FOV, value, nameof(FOV));
+            }
         }
         #endregion
         #region Value
@@ -194,7 +220,11 @@ namespace Mutagen.Bethesda.Oblivion
         public UInt32 Value
         {
             get => this._Value;
-            set => this.RaiseAndSetIfChanged(ref this._Value, value, nameof(Value));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.RaiseAndSetIfChanged(ref this._Value, value, nameof(Value));
+            }
         }
         #endregion
         #region Weight
@@ -202,7 +232,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Single Weight
         {
             get => this._Weight;
-            set => this.RaiseAndSetIfChanged(ref this._Weight, value, nameof(Weight));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.RaiseAndSetIfChanged(ref this._Weight, value, nameof(Weight));
+            }
         }
         #endregion
         #region Fade

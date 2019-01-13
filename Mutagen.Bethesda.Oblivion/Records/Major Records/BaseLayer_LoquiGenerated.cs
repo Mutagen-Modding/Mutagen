@@ -61,7 +61,11 @@ namespace Mutagen.Bethesda.Oblivion
         public AlphaLayer.QuadrantEnum Quadrant
         {
             get => this._Quadrant;
-            set => this.RaiseAndSetIfChanged(ref this._Quadrant, value, nameof(Quadrant));
+            set
+            {
+                this.BTXTDataTypeState |= BTXTDataType.Has;
+                this.RaiseAndSetIfChanged(ref this._Quadrant, value, nameof(Quadrant));
+            }
         }
         #endregion
         #region LayerNumber
@@ -69,7 +73,11 @@ namespace Mutagen.Bethesda.Oblivion
         public UInt16 LayerNumber
         {
             get => this._LayerNumber;
-            protected set => this.RaiseAndSetIfChanged(ref this._LayerNumber, value, nameof(LayerNumber));
+            protected set
+            {
+                this.BTXTDataTypeState |= BTXTDataType.Has;
+                this.RaiseAndSetIfChanged(ref this._LayerNumber, value, nameof(LayerNumber));
+            }
         }
         #endregion
 

@@ -54,7 +54,11 @@ namespace Mutagen.Bethesda.Oblivion
         public EmotionType Emotion
         {
             get => this._Emotion;
-            set => this.RaiseAndSetIfChanged(ref this._Emotion, value, nameof(Emotion));
+            set
+            {
+                this.TRDTDataTypeState |= TRDTDataType.Has;
+                this.RaiseAndSetIfChanged(ref this._Emotion, value, nameof(Emotion));
+            }
         }
         #endregion
         #region EmotionValue
@@ -62,7 +66,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Int32 EmotionValue
         {
             get => this._EmotionValue;
-            set => this.RaiseAndSetIfChanged(ref this._EmotionValue, value, nameof(EmotionValue));
+            set
+            {
+                this.TRDTDataTypeState |= TRDTDataType.Has;
+                this.RaiseAndSetIfChanged(ref this._EmotionValue, value, nameof(EmotionValue));
+            }
         }
         #endregion
         #region Fluff1
@@ -85,7 +93,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Byte ResponseNumber
         {
             get => this._ResponseNumber;
-            set => this.RaiseAndSetIfChanged(ref this._ResponseNumber, value, nameof(ResponseNumber));
+            set
+            {
+                this.TRDTDataTypeState |= TRDTDataType.Has;
+                this.RaiseAndSetIfChanged(ref this._ResponseNumber, value, nameof(ResponseNumber));
+            }
         }
         #endregion
         #region Fluff2

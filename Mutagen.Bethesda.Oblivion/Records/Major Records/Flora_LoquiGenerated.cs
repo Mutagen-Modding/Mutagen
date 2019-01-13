@@ -122,7 +122,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Byte Spring
         {
             get => this._Spring;
-            set => this.RaiseAndSetIfChanged(ref this._Spring, value, nameof(Spring));
+            set
+            {
+                this.PFPCDataTypeState |= PFPCDataType.Has;
+                this.RaiseAndSetIfChanged(ref this._Spring, value, nameof(Spring));
+            }
         }
         #endregion
         #region Summer
@@ -130,7 +134,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Byte Summer
         {
             get => this._Summer;
-            set => this.RaiseAndSetIfChanged(ref this._Summer, value, nameof(Summer));
+            set
+            {
+                this.PFPCDataTypeState |= PFPCDataType.Has;
+                this.RaiseAndSetIfChanged(ref this._Summer, value, nameof(Summer));
+            }
         }
         #endregion
         #region Fall
@@ -138,7 +146,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Byte Fall
         {
             get => this._Fall;
-            set => this.RaiseAndSetIfChanged(ref this._Fall, value, nameof(Fall));
+            set
+            {
+                this.PFPCDataTypeState |= PFPCDataType.Has;
+                this.RaiseAndSetIfChanged(ref this._Fall, value, nameof(Fall));
+            }
         }
         #endregion
         #region Winter
@@ -146,7 +158,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Byte Winter
         {
             get => this._Winter;
-            set => this.RaiseAndSetIfChanged(ref this._Winter, value, nameof(Winter));
+            set
+            {
+                this.PFPCDataTypeState |= PFPCDataType.Has;
+                this.RaiseAndSetIfChanged(ref this._Winter, value, nameof(Winter));
+            }
         }
         #endregion
 

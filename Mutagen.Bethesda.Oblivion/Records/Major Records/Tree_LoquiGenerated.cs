@@ -128,7 +128,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Single LeafCurvature
         {
             get => this._LeafCurvature;
-            set => this.RaiseAndSetIfChanged(ref this._LeafCurvature, value, nameof(LeafCurvature));
+            set
+            {
+                this.CNAMDataTypeState |= CNAMDataType.Has;
+                this.RaiseAndSetIfChanged(ref this._LeafCurvature, value, nameof(LeafCurvature));
+            }
         }
         #endregion
         #region MinimumLeafAngle
@@ -136,7 +140,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Single MinimumLeafAngle
         {
             get => this._MinimumLeafAngle;
-            set => this.RaiseAndSetIfChanged(ref this._MinimumLeafAngle, value, nameof(MinimumLeafAngle));
+            set
+            {
+                this.CNAMDataTypeState |= CNAMDataType.Has;
+                this.RaiseAndSetIfChanged(ref this._MinimumLeafAngle, value, nameof(MinimumLeafAngle));
+            }
         }
         #endregion
         #region MaximumLeafAngle
@@ -144,7 +152,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Single MaximumLeafAngle
         {
             get => this._MaximumLeafAngle;
-            set => this.RaiseAndSetIfChanged(ref this._MaximumLeafAngle, value, nameof(MaximumLeafAngle));
+            set
+            {
+                this.CNAMDataTypeState |= CNAMDataType.Has;
+                this.RaiseAndSetIfChanged(ref this._MaximumLeafAngle, value, nameof(MaximumLeafAngle));
+            }
         }
         #endregion
         #region BranchDimmingValue
@@ -152,7 +164,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Single BranchDimmingValue
         {
             get => this._BranchDimmingValue;
-            set => this.RaiseAndSetIfChanged(ref this._BranchDimmingValue, value, nameof(BranchDimmingValue));
+            set
+            {
+                this.CNAMDataTypeState |= CNAMDataType.Has;
+                this.RaiseAndSetIfChanged(ref this._BranchDimmingValue, value, nameof(BranchDimmingValue));
+            }
         }
         #endregion
         #region LeafDimmingValue
@@ -160,7 +176,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Single LeafDimmingValue
         {
             get => this._LeafDimmingValue;
-            set => this.RaiseAndSetIfChanged(ref this._LeafDimmingValue, value, nameof(LeafDimmingValue));
+            set
+            {
+                this.CNAMDataTypeState |= CNAMDataType.Has;
+                this.RaiseAndSetIfChanged(ref this._LeafDimmingValue, value, nameof(LeafDimmingValue));
+            }
         }
         #endregion
         #region ShadowRadius
@@ -168,7 +188,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Int32 ShadowRadius
         {
             get => this._ShadowRadius;
-            set => this.RaiseAndSetIfChanged(ref this._ShadowRadius, value, nameof(ShadowRadius));
+            set
+            {
+                this.CNAMDataTypeState |= CNAMDataType.Has;
+                this.RaiseAndSetIfChanged(ref this._ShadowRadius, value, nameof(ShadowRadius));
+            }
         }
         #endregion
         #region RockingSpeed
@@ -176,7 +200,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Single RockingSpeed
         {
             get => this._RockingSpeed;
-            set => this.RaiseAndSetIfChanged(ref this._RockingSpeed, value, nameof(RockingSpeed));
+            set
+            {
+                this.CNAMDataTypeState |= CNAMDataType.Has;
+                this.RaiseAndSetIfChanged(ref this._RockingSpeed, value, nameof(RockingSpeed));
+            }
         }
         #endregion
         #region RustleSpeed
@@ -184,7 +212,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Single RustleSpeed
         {
             get => this._RustleSpeed;
-            set => this.RaiseAndSetIfChanged(ref this._RustleSpeed, value, nameof(RustleSpeed));
+            set
+            {
+                this.CNAMDataTypeState |= CNAMDataType.Has;
+                this.RaiseAndSetIfChanged(ref this._RustleSpeed, value, nameof(RustleSpeed));
+            }
         }
         #endregion
         #region BillboardWidth
@@ -192,7 +224,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Single BillboardWidth
         {
             get => this._BillboardWidth;
-            set => this.RaiseAndSetIfChanged(ref this._BillboardWidth, value, nameof(BillboardWidth));
+            set
+            {
+                this.BNAMDataTypeState |= BNAMDataType.Has;
+                this.RaiseAndSetIfChanged(ref this._BillboardWidth, value, nameof(BillboardWidth));
+            }
         }
         #endregion
         #region BillboardHeight
@@ -200,7 +236,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Single BillboardHeight
         {
             get => this._BillboardHeight;
-            set => this.RaiseAndSetIfChanged(ref this._BillboardHeight, value, nameof(BillboardHeight));
+            set
+            {
+                this.BNAMDataTypeState |= BNAMDataType.Has;
+                this.RaiseAndSetIfChanged(ref this._BillboardHeight, value, nameof(BillboardHeight));
+            }
         }
         #endregion
 

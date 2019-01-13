@@ -62,7 +62,11 @@ namespace Mutagen.Bethesda.Oblivion
         public UInt32 Magnitude
         {
             get => this._Magnitude;
-            set => this.RaiseAndSetIfChanged(ref this._Magnitude, value, nameof(Magnitude));
+            set
+            {
+                this.EFITDataTypeState |= EFITDataType.Has;
+                this.RaiseAndSetIfChanged(ref this._Magnitude, value, nameof(Magnitude));
+            }
         }
         #endregion
         #region Area
@@ -70,7 +74,11 @@ namespace Mutagen.Bethesda.Oblivion
         public UInt32 Area
         {
             get => this._Area;
-            set => this.RaiseAndSetIfChanged(ref this._Area, value, nameof(Area));
+            set
+            {
+                this.EFITDataTypeState |= EFITDataType.Has;
+                this.RaiseAndSetIfChanged(ref this._Area, value, nameof(Area));
+            }
         }
         #endregion
         #region Duration
@@ -78,7 +86,11 @@ namespace Mutagen.Bethesda.Oblivion
         public UInt32 Duration
         {
             get => this._Duration;
-            set => this.RaiseAndSetIfChanged(ref this._Duration, value, nameof(Duration));
+            set
+            {
+                this.EFITDataTypeState |= EFITDataType.Has;
+                this.RaiseAndSetIfChanged(ref this._Duration, value, nameof(Duration));
+            }
         }
         #endregion
         #region Type
@@ -86,7 +98,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Effect.EffectType Type
         {
             get => this._Type;
-            set => this.RaiseAndSetIfChanged(ref this._Type, value, nameof(Type));
+            set
+            {
+                this.EFITDataTypeState |= EFITDataType.Has;
+                this.RaiseAndSetIfChanged(ref this._Type, value, nameof(Type));
+            }
         }
         #endregion
         #region ActorValue
@@ -94,7 +110,11 @@ namespace Mutagen.Bethesda.Oblivion
         public ActorValueExtended ActorValue
         {
             get => this._ActorValue;
-            set => this.RaiseAndSetIfChanged(ref this._ActorValue, value, nameof(ActorValue));
+            set
+            {
+                this.EFITDataTypeState |= EFITDataType.Has;
+                this.RaiseAndSetIfChanged(ref this._ActorValue, value, nameof(ActorValue));
+            }
         }
         #endregion
         #region ScriptEffect

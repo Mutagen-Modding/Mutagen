@@ -121,7 +121,11 @@ namespace Mutagen.Bethesda.Oblivion
         public BipedFlag BipedFlags
         {
             get => this._BipedFlags;
-            set => this.RaiseAndSetIfChanged(ref this._BipedFlags, value, nameof(BipedFlags));
+            set
+            {
+                this.BMDTDataTypeState |= BMDTDataType.Has;
+                this.RaiseAndSetIfChanged(ref this._BipedFlags, value, nameof(BipedFlags));
+            }
         }
         #endregion
         #region Flags
@@ -129,7 +133,11 @@ namespace Mutagen.Bethesda.Oblivion
         public EquipmentFlag Flags
         {
             get => this._Flags;
-            set => this.RaiseAndSetIfChanged(ref this._Flags, value, nameof(Flags));
+            set
+            {
+                this.BMDTDataTypeState |= BMDTDataType.Has;
+                this.RaiseAndSetIfChanged(ref this._Flags, value, nameof(Flags));
+            }
         }
         #endregion
         #region MaleBipedModel

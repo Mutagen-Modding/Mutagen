@@ -54,7 +54,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Single X
         {
             get => this._X;
-            set => this.RaiseAndSetIfChanged(ref this._X, value, nameof(X));
+            set
+            {
+                this.DNAMDataTypeState |= DNAMDataType.Has;
+                this.RaiseAndSetIfChanged(ref this._X, value, nameof(X));
+            }
         }
         #endregion
         #region Y
@@ -62,7 +66,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Single Y
         {
             get => this._Y;
-            set => this.RaiseAndSetIfChanged(ref this._Y, value, nameof(Y));
+            set
+            {
+                this.DNAMDataTypeState |= DNAMDataType.Has;
+                this.RaiseAndSetIfChanged(ref this._Y, value, nameof(Y));
+            }
         }
         #endregion
         #region Z
@@ -70,7 +78,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Single Z
         {
             get => this._Z;
-            set => this.RaiseAndSetIfChanged(ref this._Z, value, nameof(Z));
+            set
+            {
+                this.DNAMDataTypeState |= DNAMDataType.Has;
+                this.RaiseAndSetIfChanged(ref this._Z, value, nameof(Z));
+            }
         }
         #endregion
 

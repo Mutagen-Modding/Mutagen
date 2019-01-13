@@ -59,7 +59,11 @@ namespace Mutagen.Bethesda.Oblivion
         public DialogType DialogType
         {
             get => this._DialogType;
-            set => this.RaiseAndSetIfChanged(ref this._DialogType, value, nameof(DialogType));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.RaiseAndSetIfChanged(ref this._DialogType, value, nameof(DialogType));
+            }
         }
         #endregion
         #region Flags
@@ -67,7 +71,12 @@ namespace Mutagen.Bethesda.Oblivion
         public DialogItem.Flag Flags
         {
             get => this._Flags;
-            set => this.RaiseAndSetIfChanged(ref this._Flags, value, nameof(Flags));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.DATADataTypeState &= ~DATADataType.Break0;
+                this.RaiseAndSetIfChanged(ref this._Flags, value, nameof(Flags));
+            }
         }
         #endregion
         #region Quest

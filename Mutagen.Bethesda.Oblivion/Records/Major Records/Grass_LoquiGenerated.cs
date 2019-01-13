@@ -82,7 +82,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Byte Density
         {
             get => this._Density;
-            set => this.RaiseAndSetIfChanged(ref this._Density, value, nameof(Density));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.RaiseAndSetIfChanged(ref this._Density, value, nameof(Density));
+            }
         }
         #endregion
         #region MinSlope
@@ -90,7 +94,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Byte MinSlope
         {
             get => this._MinSlope;
-            set => this.RaiseAndSetIfChanged(ref this._MinSlope, value, nameof(MinSlope));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.RaiseAndSetIfChanged(ref this._MinSlope, value, nameof(MinSlope));
+            }
         }
         #endregion
         #region MaxSlope
@@ -98,7 +106,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Byte MaxSlope
         {
             get => this._MaxSlope;
-            set => this.RaiseAndSetIfChanged(ref this._MaxSlope, value, nameof(MaxSlope));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.RaiseAndSetIfChanged(ref this._MaxSlope, value, nameof(MaxSlope));
+            }
         }
         #endregion
         #region UnitFromWaterAmount
@@ -106,7 +118,11 @@ namespace Mutagen.Bethesda.Oblivion
         public UInt16 UnitFromWaterAmount
         {
             get => this._UnitFromWaterAmount;
-            set => this.RaiseAndSetIfChanged(ref this._UnitFromWaterAmount, value, nameof(UnitFromWaterAmount));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.RaiseAndSetIfChanged(ref this._UnitFromWaterAmount, value, nameof(UnitFromWaterAmount));
+            }
         }
         #endregion
         #region UnitFromWaterMode
@@ -114,7 +130,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Grass.UnitFromWaterType UnitFromWaterMode
         {
             get => this._UnitFromWaterMode;
-            set => this.RaiseAndSetIfChanged(ref this._UnitFromWaterMode, value, nameof(UnitFromWaterMode));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.RaiseAndSetIfChanged(ref this._UnitFromWaterMode, value, nameof(UnitFromWaterMode));
+            }
         }
         #endregion
         #region PositionRange
@@ -122,7 +142,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Single PositionRange
         {
             get => this._PositionRange;
-            set => this.RaiseAndSetIfChanged(ref this._PositionRange, value, nameof(PositionRange));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.RaiseAndSetIfChanged(ref this._PositionRange, value, nameof(PositionRange));
+            }
         }
         #endregion
         #region HeightRange
@@ -130,7 +154,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Single HeightRange
         {
             get => this._HeightRange;
-            set => this.RaiseAndSetIfChanged(ref this._HeightRange, value, nameof(HeightRange));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.RaiseAndSetIfChanged(ref this._HeightRange, value, nameof(HeightRange));
+            }
         }
         #endregion
         #region ColorRange
@@ -138,7 +166,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Single ColorRange
         {
             get => this._ColorRange;
-            set => this.RaiseAndSetIfChanged(ref this._ColorRange, value, nameof(ColorRange));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.RaiseAndSetIfChanged(ref this._ColorRange, value, nameof(ColorRange));
+            }
         }
         #endregion
         #region WavePeriod
@@ -146,7 +178,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Single WavePeriod
         {
             get => this._WavePeriod;
-            set => this.RaiseAndSetIfChanged(ref this._WavePeriod, value, nameof(WavePeriod));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.RaiseAndSetIfChanged(ref this._WavePeriod, value, nameof(WavePeriod));
+            }
         }
         #endregion
         #region Flags
@@ -154,7 +190,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Grass.GrassFlag Flags
         {
             get => this._Flags;
-            set => this.RaiseAndSetIfChanged(ref this._Flags, value, nameof(Flags));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.RaiseAndSetIfChanged(ref this._Flags, value, nameof(Flags));
+            }
         }
         #endregion
 

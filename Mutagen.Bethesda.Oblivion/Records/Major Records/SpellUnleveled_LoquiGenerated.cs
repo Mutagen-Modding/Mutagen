@@ -58,7 +58,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Spell.SpellType Type
         {
             get => this._Type;
-            set => this.RaiseAndSetIfChanged(ref this._Type, value, nameof(Type));
+            set
+            {
+                this.SPITDataTypeState |= SPITDataType.Has;
+                this.RaiseAndSetIfChanged(ref this._Type, value, nameof(Type));
+            }
         }
         #endregion
         #region Cost
@@ -66,7 +70,11 @@ namespace Mutagen.Bethesda.Oblivion
         public UInt32 Cost
         {
             get => this._Cost;
-            set => this.RaiseAndSetIfChanged(ref this._Cost, value, nameof(Cost));
+            set
+            {
+                this.SPITDataTypeState |= SPITDataType.Has;
+                this.RaiseAndSetIfChanged(ref this._Cost, value, nameof(Cost));
+            }
         }
         #endregion
         #region Level
@@ -74,7 +82,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Spell.SpellLevel Level
         {
             get => this._Level;
-            set => this.RaiseAndSetIfChanged(ref this._Level, value, nameof(Level));
+            set
+            {
+                this.SPITDataTypeState |= SPITDataType.Has;
+                this.RaiseAndSetIfChanged(ref this._Level, value, nameof(Level));
+            }
         }
         #endregion
         #region Flag
@@ -82,7 +94,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Spell.SpellFlag Flag
         {
             get => this._Flag;
-            set => this.RaiseAndSetIfChanged(ref this._Flag, value, nameof(Flag));
+            set
+            {
+                this.SPITDataTypeState |= SPITDataType.Has;
+                this.RaiseAndSetIfChanged(ref this._Flag, value, nameof(Flag));
+            }
         }
         #endregion
         #region Effects

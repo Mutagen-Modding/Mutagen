@@ -136,7 +136,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Container.ContainerFlag Flags
         {
             get => this._Flags;
-            set => this.RaiseAndSetIfChanged(ref this._Flags, value, nameof(Flags));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.RaiseAndSetIfChanged(ref this._Flags, value, nameof(Flags));
+            }
         }
         #endregion
         #region Weight
@@ -144,7 +148,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Single Weight
         {
             get => this._Weight;
-            set => this.RaiseAndSetIfChanged(ref this._Weight, value, nameof(Weight));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.RaiseAndSetIfChanged(ref this._Weight, value, nameof(Weight));
+            }
         }
         #endregion
         #region OpenSound

@@ -58,7 +58,11 @@ namespace Mutagen.Bethesda.Oblivion
         public AIPackage.Flag Flags
         {
             get => this._Flags;
-            set => this.RaiseAndSetIfChanged(ref this._Flags, value, nameof(Flags));
+            set
+            {
+                this.PKDTDataTypeState |= PKDTDataType.Has;
+                this.RaiseAndSetIfChanged(ref this._Flags, value, nameof(Flags));
+            }
         }
         #endregion
         #region GeneralType
@@ -66,7 +70,11 @@ namespace Mutagen.Bethesda.Oblivion
         public AIPackage.GeneralTypeEnum GeneralType
         {
             get => this._GeneralType;
-            set => this.RaiseAndSetIfChanged(ref this._GeneralType, value, nameof(GeneralType));
+            set
+            {
+                this.PKDTDataTypeState |= PKDTDataType.Has;
+                this.RaiseAndSetIfChanged(ref this._GeneralType, value, nameof(GeneralType));
+            }
         }
         #endregion
         #region Location

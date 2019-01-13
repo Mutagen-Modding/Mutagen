@@ -167,7 +167,12 @@ namespace Mutagen.Bethesda.Oblivion
         public Single WindVelocity
         {
             get => this._WindVelocity;
-            set => this.RaiseAndSetIfChanged(ref this._WindVelocity, value, nameof(WindVelocity));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.DATADataTypeState &= ~DATADataType.Break0;
+                this.RaiseAndSetIfChanged(ref this._WindVelocity, value, nameof(WindVelocity));
+            }
         }
         #endregion
         #region WindDirection
@@ -175,7 +180,12 @@ namespace Mutagen.Bethesda.Oblivion
         public Single WindDirection
         {
             get => this._WindDirection;
-            set => this.RaiseAndSetIfChanged(ref this._WindDirection, value, nameof(WindDirection));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.DATADataTypeState &= ~DATADataType.Break0;
+                this.RaiseAndSetIfChanged(ref this._WindDirection, value, nameof(WindDirection));
+            }
         }
         #endregion
         #region WaveAmplitude
@@ -183,7 +193,12 @@ namespace Mutagen.Bethesda.Oblivion
         public Single WaveAmplitude
         {
             get => this._WaveAmplitude;
-            set => this.RaiseAndSetIfChanged(ref this._WaveAmplitude, value, nameof(WaveAmplitude));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.DATADataTypeState &= ~DATADataType.Break0;
+                this.RaiseAndSetIfChanged(ref this._WaveAmplitude, value, nameof(WaveAmplitude));
+            }
         }
         #endregion
         #region WaveFrequency
@@ -191,7 +206,12 @@ namespace Mutagen.Bethesda.Oblivion
         public Single WaveFrequency
         {
             get => this._WaveFrequency;
-            set => this.RaiseAndSetIfChanged(ref this._WaveFrequency, value, nameof(WaveFrequency));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.DATADataTypeState &= ~DATADataType.Break0;
+                this.RaiseAndSetIfChanged(ref this._WaveFrequency, value, nameof(WaveFrequency));
+            }
         }
         #endregion
         #region SunPower
@@ -199,7 +219,12 @@ namespace Mutagen.Bethesda.Oblivion
         public Single SunPower
         {
             get => this._SunPower;
-            set => this.RaiseAndSetIfChanged(ref this._SunPower, value, nameof(SunPower));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.DATADataTypeState &= ~DATADataType.Break0;
+                this.RaiseAndSetIfChanged(ref this._SunPower, value, nameof(SunPower));
+            }
         }
         #endregion
         #region ReflectivityAmount
@@ -207,7 +232,12 @@ namespace Mutagen.Bethesda.Oblivion
         public Single ReflectivityAmount
         {
             get => this._ReflectivityAmount;
-            set => this.RaiseAndSetIfChanged(ref this._ReflectivityAmount, value, nameof(ReflectivityAmount));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.DATADataTypeState &= ~DATADataType.Break0;
+                this.RaiseAndSetIfChanged(ref this._ReflectivityAmount, value, nameof(ReflectivityAmount));
+            }
         }
         #endregion
         #region FresnelAmount
@@ -215,7 +245,12 @@ namespace Mutagen.Bethesda.Oblivion
         public Single FresnelAmount
         {
             get => this._FresnelAmount;
-            set => this.RaiseAndSetIfChanged(ref this._FresnelAmount, value, nameof(FresnelAmount));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.DATADataTypeState &= ~DATADataType.Break0;
+                this.RaiseAndSetIfChanged(ref this._FresnelAmount, value, nameof(FresnelAmount));
+            }
         }
         #endregion
         #region ScrollXSpeed
@@ -223,7 +258,12 @@ namespace Mutagen.Bethesda.Oblivion
         public Single ScrollXSpeed
         {
             get => this._ScrollXSpeed;
-            set => this.RaiseAndSetIfChanged(ref this._ScrollXSpeed, value, nameof(ScrollXSpeed));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.DATADataTypeState &= ~DATADataType.Break0;
+                this.RaiseAndSetIfChanged(ref this._ScrollXSpeed, value, nameof(ScrollXSpeed));
+            }
         }
         #endregion
         #region ScrollYSpeed
@@ -231,7 +271,12 @@ namespace Mutagen.Bethesda.Oblivion
         public Single ScrollYSpeed
         {
             get => this._ScrollYSpeed;
-            set => this.RaiseAndSetIfChanged(ref this._ScrollYSpeed, value, nameof(ScrollYSpeed));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.DATADataTypeState &= ~DATADataType.Break0;
+                this.RaiseAndSetIfChanged(ref this._ScrollYSpeed, value, nameof(ScrollYSpeed));
+            }
         }
         #endregion
         #region FogDistanceNearPlane
@@ -239,7 +284,12 @@ namespace Mutagen.Bethesda.Oblivion
         public Single FogDistanceNearPlane
         {
             get => this._FogDistanceNearPlane;
-            set => this.RaiseAndSetIfChanged(ref this._FogDistanceNearPlane, value, nameof(FogDistanceNearPlane));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.DATADataTypeState &= ~DATADataType.Break0;
+                this.RaiseAndSetIfChanged(ref this._FogDistanceNearPlane, value, nameof(FogDistanceNearPlane));
+            }
         }
         #endregion
         #region FogDistanceFarPlane
@@ -247,7 +297,13 @@ namespace Mutagen.Bethesda.Oblivion
         public Single FogDistanceFarPlane
         {
             get => this._FogDistanceFarPlane;
-            set => this.RaiseAndSetIfChanged(ref this._FogDistanceFarPlane, value, nameof(FogDistanceFarPlane));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.DATADataTypeState &= ~DATADataType.Break0;
+                this.DATADataTypeState &= ~DATADataType.Break1;
+                this.RaiseAndSetIfChanged(ref this._FogDistanceFarPlane, value, nameof(FogDistanceFarPlane));
+            }
         }
         #endregion
         #region ShallowColor
@@ -255,7 +311,13 @@ namespace Mutagen.Bethesda.Oblivion
         public Color ShallowColor
         {
             get => this._ShallowColor;
-            set => this.RaiseAndSetIfChanged(ref this._ShallowColor, value, nameof(ShallowColor));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.DATADataTypeState &= ~DATADataType.Break0;
+                this.DATADataTypeState &= ~DATADataType.Break1;
+                this.RaiseAndSetIfChanged(ref this._ShallowColor, value, nameof(ShallowColor));
+            }
         }
         #endregion
         #region DeepColor
@@ -263,7 +325,13 @@ namespace Mutagen.Bethesda.Oblivion
         public Color DeepColor
         {
             get => this._DeepColor;
-            set => this.RaiseAndSetIfChanged(ref this._DeepColor, value, nameof(DeepColor));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.DATADataTypeState &= ~DATADataType.Break0;
+                this.DATADataTypeState &= ~DATADataType.Break1;
+                this.RaiseAndSetIfChanged(ref this._DeepColor, value, nameof(DeepColor));
+            }
         }
         #endregion
         #region ReflectionColor
@@ -271,7 +339,13 @@ namespace Mutagen.Bethesda.Oblivion
         public Color ReflectionColor
         {
             get => this._ReflectionColor;
-            set => this.RaiseAndSetIfChanged(ref this._ReflectionColor, value, nameof(ReflectionColor));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.DATADataTypeState &= ~DATADataType.Break0;
+                this.DATADataTypeState &= ~DATADataType.Break1;
+                this.RaiseAndSetIfChanged(ref this._ReflectionColor, value, nameof(ReflectionColor));
+            }
         }
         #endregion
         #region TextureBlend
@@ -279,7 +353,13 @@ namespace Mutagen.Bethesda.Oblivion
         public Byte TextureBlend
         {
             get => this._TextureBlend;
-            set => this.RaiseAndSetIfChanged(ref this._TextureBlend, value, nameof(TextureBlend));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.DATADataTypeState &= ~DATADataType.Break0;
+                this.DATADataTypeState &= ~DATADataType.Break1;
+                this.RaiseAndSetIfChanged(ref this._TextureBlend, value, nameof(TextureBlend));
+            }
         }
         #endregion
         #region RainSimulatorForce
@@ -287,7 +367,14 @@ namespace Mutagen.Bethesda.Oblivion
         public Single RainSimulatorForce
         {
             get => this._RainSimulatorForce;
-            set => this.RaiseAndSetIfChanged(ref this._RainSimulatorForce, value, nameof(RainSimulatorForce));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.DATADataTypeState &= ~DATADataType.Break0;
+                this.DATADataTypeState &= ~DATADataType.Break1;
+                this.DATADataTypeState &= ~DATADataType.Break2;
+                this.RaiseAndSetIfChanged(ref this._RainSimulatorForce, value, nameof(RainSimulatorForce));
+            }
         }
         #endregion
         #region RainSimulatorVelocity
@@ -295,7 +382,14 @@ namespace Mutagen.Bethesda.Oblivion
         public Single RainSimulatorVelocity
         {
             get => this._RainSimulatorVelocity;
-            set => this.RaiseAndSetIfChanged(ref this._RainSimulatorVelocity, value, nameof(RainSimulatorVelocity));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.DATADataTypeState &= ~DATADataType.Break0;
+                this.DATADataTypeState &= ~DATADataType.Break1;
+                this.DATADataTypeState &= ~DATADataType.Break2;
+                this.RaiseAndSetIfChanged(ref this._RainSimulatorVelocity, value, nameof(RainSimulatorVelocity));
+            }
         }
         #endregion
         #region RainSimulatorFalloff
@@ -303,7 +397,14 @@ namespace Mutagen.Bethesda.Oblivion
         public Single RainSimulatorFalloff
         {
             get => this._RainSimulatorFalloff;
-            set => this.RaiseAndSetIfChanged(ref this._RainSimulatorFalloff, value, nameof(RainSimulatorFalloff));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.DATADataTypeState &= ~DATADataType.Break0;
+                this.DATADataTypeState &= ~DATADataType.Break1;
+                this.DATADataTypeState &= ~DATADataType.Break2;
+                this.RaiseAndSetIfChanged(ref this._RainSimulatorFalloff, value, nameof(RainSimulatorFalloff));
+            }
         }
         #endregion
         #region RainSimulatorDampner
@@ -311,7 +412,14 @@ namespace Mutagen.Bethesda.Oblivion
         public Single RainSimulatorDampner
         {
             get => this._RainSimulatorDampner;
-            set => this.RaiseAndSetIfChanged(ref this._RainSimulatorDampner, value, nameof(RainSimulatorDampner));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.DATADataTypeState &= ~DATADataType.Break0;
+                this.DATADataTypeState &= ~DATADataType.Break1;
+                this.DATADataTypeState &= ~DATADataType.Break2;
+                this.RaiseAndSetIfChanged(ref this._RainSimulatorDampner, value, nameof(RainSimulatorDampner));
+            }
         }
         #endregion
         #region RainSimulatorStartingSize
@@ -319,7 +427,14 @@ namespace Mutagen.Bethesda.Oblivion
         public Single RainSimulatorStartingSize
         {
             get => this._RainSimulatorStartingSize;
-            set => this.RaiseAndSetIfChanged(ref this._RainSimulatorStartingSize, value, nameof(RainSimulatorStartingSize));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.DATADataTypeState &= ~DATADataType.Break0;
+                this.DATADataTypeState &= ~DATADataType.Break1;
+                this.DATADataTypeState &= ~DATADataType.Break2;
+                this.RaiseAndSetIfChanged(ref this._RainSimulatorStartingSize, value, nameof(RainSimulatorStartingSize));
+            }
         }
         #endregion
         #region DisplacementSimulatorForce
@@ -327,7 +442,14 @@ namespace Mutagen.Bethesda.Oblivion
         public Single DisplacementSimulatorForce
         {
             get => this._DisplacementSimulatorForce;
-            set => this.RaiseAndSetIfChanged(ref this._DisplacementSimulatorForce, value, nameof(DisplacementSimulatorForce));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.DATADataTypeState &= ~DATADataType.Break0;
+                this.DATADataTypeState &= ~DATADataType.Break1;
+                this.DATADataTypeState &= ~DATADataType.Break2;
+                this.RaiseAndSetIfChanged(ref this._DisplacementSimulatorForce, value, nameof(DisplacementSimulatorForce));
+            }
         }
         #endregion
         #region DisplacementSimulatorVelocity
@@ -335,7 +457,15 @@ namespace Mutagen.Bethesda.Oblivion
         public Single DisplacementSimulatorVelocity
         {
             get => this._DisplacementSimulatorVelocity;
-            set => this.RaiseAndSetIfChanged(ref this._DisplacementSimulatorVelocity, value, nameof(DisplacementSimulatorVelocity));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.DATADataTypeState &= ~DATADataType.Break0;
+                this.DATADataTypeState &= ~DATADataType.Break1;
+                this.DATADataTypeState &= ~DATADataType.Break2;
+                this.DATADataTypeState &= ~DATADataType.Break3;
+                this.RaiseAndSetIfChanged(ref this._DisplacementSimulatorVelocity, value, nameof(DisplacementSimulatorVelocity));
+            }
         }
         #endregion
         #region DisplacementSimulatorFalloff
@@ -343,7 +473,15 @@ namespace Mutagen.Bethesda.Oblivion
         public Single DisplacementSimulatorFalloff
         {
             get => this._DisplacementSimulatorFalloff;
-            set => this.RaiseAndSetIfChanged(ref this._DisplacementSimulatorFalloff, value, nameof(DisplacementSimulatorFalloff));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.DATADataTypeState &= ~DATADataType.Break0;
+                this.DATADataTypeState &= ~DATADataType.Break1;
+                this.DATADataTypeState &= ~DATADataType.Break2;
+                this.DATADataTypeState &= ~DATADataType.Break3;
+                this.RaiseAndSetIfChanged(ref this._DisplacementSimulatorFalloff, value, nameof(DisplacementSimulatorFalloff));
+            }
         }
         #endregion
         #region DisplacementSimulatorDampner
@@ -351,7 +489,15 @@ namespace Mutagen.Bethesda.Oblivion
         public Single DisplacementSimulatorDampner
         {
             get => this._DisplacementSimulatorDampner;
-            set => this.RaiseAndSetIfChanged(ref this._DisplacementSimulatorDampner, value, nameof(DisplacementSimulatorDampner));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.DATADataTypeState &= ~DATADataType.Break0;
+                this.DATADataTypeState &= ~DATADataType.Break1;
+                this.DATADataTypeState &= ~DATADataType.Break2;
+                this.DATADataTypeState &= ~DATADataType.Break3;
+                this.RaiseAndSetIfChanged(ref this._DisplacementSimulatorDampner, value, nameof(DisplacementSimulatorDampner));
+            }
         }
         #endregion
         #region DisplacementSimulatorStartingSize
@@ -359,7 +505,15 @@ namespace Mutagen.Bethesda.Oblivion
         public Single DisplacementSimulatorStartingSize
         {
             get => this._DisplacementSimulatorStartingSize;
-            set => this.RaiseAndSetIfChanged(ref this._DisplacementSimulatorStartingSize, value, nameof(DisplacementSimulatorStartingSize));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.DATADataTypeState &= ~DATADataType.Break0;
+                this.DATADataTypeState &= ~DATADataType.Break1;
+                this.DATADataTypeState &= ~DATADataType.Break2;
+                this.DATADataTypeState &= ~DATADataType.Break3;
+                this.RaiseAndSetIfChanged(ref this._DisplacementSimulatorStartingSize, value, nameof(DisplacementSimulatorStartingSize));
+            }
         }
         #endregion
         #region Damage
@@ -367,7 +521,15 @@ namespace Mutagen.Bethesda.Oblivion
         public UInt16 Damage
         {
             get => this._Damage;
-            set => this.RaiseAndSetIfChanged(ref this._Damage, value, nameof(Damage));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.DATADataTypeState &= ~DATADataType.Break0;
+                this.DATADataTypeState &= ~DATADataType.Break1;
+                this.DATADataTypeState &= ~DATADataType.Break2;
+                this.DATADataTypeState &= ~DATADataType.Break3;
+                this.RaiseAndSetIfChanged(ref this._Damage, value, nameof(Damage));
+            }
         }
         #endregion
         #region RelatedWaters

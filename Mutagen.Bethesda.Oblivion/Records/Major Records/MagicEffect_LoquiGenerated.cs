@@ -164,7 +164,11 @@ namespace Mutagen.Bethesda.Oblivion
         public MagicEffect.MagicFlag Flags
         {
             get => this._Flags;
-            set => this.RaiseAndSetIfChanged(ref this._Flags, value, nameof(Flags));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.RaiseAndSetIfChanged(ref this._Flags, value, nameof(Flags));
+            }
         }
         #endregion
         #region BaseCost
@@ -172,7 +176,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Single BaseCost
         {
             get => this._BaseCost;
-            set => this.RaiseAndSetIfChanged(ref this._BaseCost, value, nameof(BaseCost));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.RaiseAndSetIfChanged(ref this._BaseCost, value, nameof(BaseCost));
+            }
         }
         #endregion
         #region Unused
@@ -195,7 +203,11 @@ namespace Mutagen.Bethesda.Oblivion
         public MagicSchool MagicSchool
         {
             get => this._MagicSchool;
-            set => this.RaiseAndSetIfChanged(ref this._MagicSchool, value, nameof(MagicSchool));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.RaiseAndSetIfChanged(ref this._MagicSchool, value, nameof(MagicSchool));
+            }
         }
         #endregion
         #region Resistance
@@ -203,7 +215,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Resistance Resistance
         {
             get => this._Resistance;
-            set => this.RaiseAndSetIfChanged(ref this._Resistance, value, nameof(Resistance));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.RaiseAndSetIfChanged(ref this._Resistance, value, nameof(Resistance));
+            }
         }
         #endregion
         #region CounterEffectCount
@@ -211,7 +227,11 @@ namespace Mutagen.Bethesda.Oblivion
         public UInt32 CounterEffectCount
         {
             get => this._CounterEffectCount;
-            set => this.RaiseAndSetIfChanged(ref this._CounterEffectCount, value, nameof(CounterEffectCount));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.RaiseAndSetIfChanged(ref this._CounterEffectCount, value, nameof(CounterEffectCount));
+            }
         }
         #endregion
         #region Light
@@ -225,7 +245,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Single ProjectileSpeed
         {
             get => this._ProjectileSpeed;
-            set => this.RaiseAndSetIfChanged(ref this._ProjectileSpeed, value, nameof(ProjectileSpeed));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.RaiseAndSetIfChanged(ref this._ProjectileSpeed, value, nameof(ProjectileSpeed));
+            }
         }
         #endregion
         #region EffectShader

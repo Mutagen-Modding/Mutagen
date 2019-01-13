@@ -132,7 +132,11 @@ namespace Mutagen.Bethesda.Oblivion
         public ActorValue Action
         {
             get => this._Action;
-            set => this.RaiseAndSetIfChanged(ref this._Action, value, nameof(Action));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.RaiseAndSetIfChanged(ref this._Action, value, nameof(Action));
+            }
         }
         #endregion
         #region Attribute
@@ -140,7 +144,11 @@ namespace Mutagen.Bethesda.Oblivion
         public ActorValue Attribute
         {
             get => this._Attribute;
-            set => this.RaiseAndSetIfChanged(ref this._Attribute, value, nameof(Attribute));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.RaiseAndSetIfChanged(ref this._Attribute, value, nameof(Attribute));
+            }
         }
         #endregion
         #region Specialization
@@ -148,7 +156,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Specialization Specialization
         {
             get => this._Specialization;
-            set => this.RaiseAndSetIfChanged(ref this._Specialization, value, nameof(Specialization));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.RaiseAndSetIfChanged(ref this._Specialization, value, nameof(Specialization));
+            }
         }
         #endregion
         #region UseValueFirst
@@ -156,7 +168,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Single UseValueFirst
         {
             get => this._UseValueFirst;
-            set => this.RaiseAndSetIfChanged(ref this._UseValueFirst, value, nameof(UseValueFirst));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.RaiseAndSetIfChanged(ref this._UseValueFirst, value, nameof(UseValueFirst));
+            }
         }
         #endregion
         #region UseValueSecond
@@ -164,7 +180,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Single UseValueSecond
         {
             get => this._UseValueSecond;
-            set => this.RaiseAndSetIfChanged(ref this._UseValueSecond, value, nameof(UseValueSecond));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.RaiseAndSetIfChanged(ref this._UseValueSecond, value, nameof(UseValueSecond));
+            }
         }
         #endregion
         #region ApprenticeText

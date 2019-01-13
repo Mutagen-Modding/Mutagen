@@ -170,7 +170,11 @@ namespace Mutagen.Bethesda.Oblivion
         public UInt32 Value
         {
             get => this._Value;
-            set => this.RaiseAndSetIfChanged(ref this._Value, value, nameof(Value));
+            set
+            {
+                this.ENITDataTypeState |= ENITDataType.Has;
+                this.RaiseAndSetIfChanged(ref this._Value, value, nameof(Value));
+            }
         }
         #endregion
         #region Flags
@@ -178,7 +182,11 @@ namespace Mutagen.Bethesda.Oblivion
         public IngredientFlag Flags
         {
             get => this._Flags;
-            set => this.RaiseAndSetIfChanged(ref this._Flags, value, nameof(Flags));
+            set
+            {
+                this.ENITDataTypeState |= ENITDataType.Has;
+                this.RaiseAndSetIfChanged(ref this._Flags, value, nameof(Flags));
+            }
         }
         #endregion
         #region Effects

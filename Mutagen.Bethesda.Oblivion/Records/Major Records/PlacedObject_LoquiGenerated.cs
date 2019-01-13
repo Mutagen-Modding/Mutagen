@@ -528,7 +528,11 @@ namespace Mutagen.Bethesda.Oblivion
         public P3Float Position
         {
             get => this._Position;
-            set => this.RaiseAndSetIfChanged(ref this._Position, value, nameof(Position));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.RaiseAndSetIfChanged(ref this._Position, value, nameof(Position));
+            }
         }
         #endregion
         #region Rotation
@@ -536,7 +540,11 @@ namespace Mutagen.Bethesda.Oblivion
         public P3Float Rotation
         {
             get => this._Rotation;
-            set => this.RaiseAndSetIfChanged(ref this._Rotation, value, nameof(Rotation));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.RaiseAndSetIfChanged(ref this._Rotation, value, nameof(Rotation));
+            }
         }
         #endregion
 

@@ -55,7 +55,11 @@ namespace Mutagen.Bethesda.Oblivion
         public UInt32 Value
         {
             get => this._Value;
-            set => this.RaiseAndSetIfChanged(ref this._Value, value, nameof(Value));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.RaiseAndSetIfChanged(ref this._Value, value, nameof(Value));
+            }
         }
         #endregion
         #region Weight
@@ -63,7 +67,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Single Weight
         {
             get => this._Weight;
-            set => this.RaiseAndSetIfChanged(ref this._Weight, value, nameof(Weight));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.RaiseAndSetIfChanged(ref this._Weight, value, nameof(Weight));
+            }
         }
         #endregion
 

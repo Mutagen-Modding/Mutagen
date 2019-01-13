@@ -155,7 +155,11 @@ namespace Mutagen.Bethesda.Oblivion
         public DateTime SunriseBegin
         {
             get => this._SunriseBegin;
-            set => this.RaiseAndSetIfChanged(ref this._SunriseBegin, value, nameof(SunriseBegin));
+            set
+            {
+                this.TNAMDataTypeState |= TNAMDataType.Has;
+                this.RaiseAndSetIfChanged(ref this._SunriseBegin, value, nameof(SunriseBegin));
+            }
         }
         #endregion
         #region SunriseEnd
@@ -163,7 +167,11 @@ namespace Mutagen.Bethesda.Oblivion
         public DateTime SunriseEnd
         {
             get => this._SunriseEnd;
-            set => this.RaiseAndSetIfChanged(ref this._SunriseEnd, value, nameof(SunriseEnd));
+            set
+            {
+                this.TNAMDataTypeState |= TNAMDataType.Has;
+                this.RaiseAndSetIfChanged(ref this._SunriseEnd, value, nameof(SunriseEnd));
+            }
         }
         #endregion
         #region SunsetBegin
@@ -171,7 +179,11 @@ namespace Mutagen.Bethesda.Oblivion
         public DateTime SunsetBegin
         {
             get => this._SunsetBegin;
-            set => this.RaiseAndSetIfChanged(ref this._SunsetBegin, value, nameof(SunsetBegin));
+            set
+            {
+                this.TNAMDataTypeState |= TNAMDataType.Has;
+                this.RaiseAndSetIfChanged(ref this._SunsetBegin, value, nameof(SunsetBegin));
+            }
         }
         #endregion
         #region SunsetEnd
@@ -179,7 +191,11 @@ namespace Mutagen.Bethesda.Oblivion
         public DateTime SunsetEnd
         {
             get => this._SunsetEnd;
-            set => this.RaiseAndSetIfChanged(ref this._SunsetEnd, value, nameof(SunsetEnd));
+            set
+            {
+                this.TNAMDataTypeState |= TNAMDataType.Has;
+                this.RaiseAndSetIfChanged(ref this._SunsetEnd, value, nameof(SunsetEnd));
+            }
         }
         #endregion
         #region Volatility
@@ -187,7 +203,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Byte Volatility
         {
             get => this._Volatility;
-            set => this.RaiseAndSetIfChanged(ref this._Volatility, value, nameof(Volatility));
+            set
+            {
+                this.TNAMDataTypeState |= TNAMDataType.Has;
+                this.RaiseAndSetIfChanged(ref this._Volatility, value, nameof(Volatility));
+            }
         }
         #endregion
         #region Phase
@@ -195,7 +215,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Climate.MoonPhase Phase
         {
             get => this._Phase;
-            set => this.RaiseAndSetIfChanged(ref this._Phase, value, nameof(Phase));
+            set
+            {
+                this.TNAMDataTypeState |= TNAMDataType.Has;
+                this.RaiseAndSetIfChanged(ref this._Phase, value, nameof(Phase));
+            }
         }
         #endregion
         #region PhaseLength

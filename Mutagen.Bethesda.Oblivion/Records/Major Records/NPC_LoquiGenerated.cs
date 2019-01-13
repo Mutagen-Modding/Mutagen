@@ -114,7 +114,11 @@ namespace Mutagen.Bethesda.Oblivion
         public NPC.NPCFlag Flags
         {
             get => this._Flags;
-            set => this.RaiseAndSetIfChanged(ref this._Flags, value, nameof(Flags));
+            set
+            {
+                this.ACBSDataTypeState |= ACBSDataType.Has;
+                this.RaiseAndSetIfChanged(ref this._Flags, value, nameof(Flags));
+            }
         }
         #endregion
         #region BaseSpellPoints
@@ -122,7 +126,11 @@ namespace Mutagen.Bethesda.Oblivion
         public UInt16 BaseSpellPoints
         {
             get => this._BaseSpellPoints;
-            set => this.RaiseAndSetIfChanged(ref this._BaseSpellPoints, value, nameof(BaseSpellPoints));
+            set
+            {
+                this.ACBSDataTypeState |= ACBSDataType.Has;
+                this.RaiseAndSetIfChanged(ref this._BaseSpellPoints, value, nameof(BaseSpellPoints));
+            }
         }
         #endregion
         #region Fatigue
@@ -130,7 +138,11 @@ namespace Mutagen.Bethesda.Oblivion
         public UInt16 Fatigue
         {
             get => this._Fatigue;
-            set => this.RaiseAndSetIfChanged(ref this._Fatigue, value, nameof(Fatigue));
+            set
+            {
+                this.ACBSDataTypeState |= ACBSDataType.Has;
+                this.RaiseAndSetIfChanged(ref this._Fatigue, value, nameof(Fatigue));
+            }
         }
         #endregion
         #region BarterGold
@@ -138,7 +150,11 @@ namespace Mutagen.Bethesda.Oblivion
         public UInt16 BarterGold
         {
             get => this._BarterGold;
-            set => this.RaiseAndSetIfChanged(ref this._BarterGold, value, nameof(BarterGold));
+            set
+            {
+                this.ACBSDataTypeState |= ACBSDataType.Has;
+                this.RaiseAndSetIfChanged(ref this._BarterGold, value, nameof(BarterGold));
+            }
         }
         #endregion
         #region LevelOffset
@@ -146,7 +162,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Int16 LevelOffset
         {
             get => this._LevelOffset;
-            set => this.RaiseAndSetIfChanged(ref this._LevelOffset, value, nameof(LevelOffset));
+            set
+            {
+                this.ACBSDataTypeState |= ACBSDataType.Has;
+                this.RaiseAndSetIfChanged(ref this._LevelOffset, value, nameof(LevelOffset));
+            }
         }
         #endregion
         #region CalcMin
@@ -154,7 +174,11 @@ namespace Mutagen.Bethesda.Oblivion
         public UInt16 CalcMin
         {
             get => this._CalcMin;
-            set => this.RaiseAndSetIfChanged(ref this._CalcMin, value, nameof(CalcMin));
+            set
+            {
+                this.ACBSDataTypeState |= ACBSDataType.Has;
+                this.RaiseAndSetIfChanged(ref this._CalcMin, value, nameof(CalcMin));
+            }
         }
         #endregion
         #region CalcMax
@@ -162,7 +186,11 @@ namespace Mutagen.Bethesda.Oblivion
         public UInt16 CalcMax
         {
             get => this._CalcMax;
-            set => this.RaiseAndSetIfChanged(ref this._CalcMax, value, nameof(CalcMax));
+            set
+            {
+                this.ACBSDataTypeState |= ACBSDataType.Has;
+                this.RaiseAndSetIfChanged(ref this._CalcMax, value, nameof(CalcMax));
+            }
         }
         #endregion
         #region Factions
@@ -242,7 +270,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Byte Aggression
         {
             get => this._Aggression;
-            set => this.RaiseAndSetIfChanged(ref this._Aggression, value, nameof(Aggression));
+            set
+            {
+                this.AIDTDataTypeState |= AIDTDataType.Has;
+                this.RaiseAndSetIfChanged(ref this._Aggression, value, nameof(Aggression));
+            }
         }
         #endregion
         #region Confidence
@@ -250,7 +282,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Byte Confidence
         {
             get => this._Confidence;
-            set => this.RaiseAndSetIfChanged(ref this._Confidence, value, nameof(Confidence));
+            set
+            {
+                this.AIDTDataTypeState |= AIDTDataType.Has;
+                this.RaiseAndSetIfChanged(ref this._Confidence, value, nameof(Confidence));
+            }
         }
         #endregion
         #region EnergyLevel
@@ -258,7 +294,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Byte EnergyLevel
         {
             get => this._EnergyLevel;
-            set => this.RaiseAndSetIfChanged(ref this._EnergyLevel, value, nameof(EnergyLevel));
+            set
+            {
+                this.AIDTDataTypeState |= AIDTDataType.Has;
+                this.RaiseAndSetIfChanged(ref this._EnergyLevel, value, nameof(EnergyLevel));
+            }
         }
         #endregion
         #region Responsibility
@@ -266,7 +306,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Byte Responsibility
         {
             get => this._Responsibility;
-            set => this.RaiseAndSetIfChanged(ref this._Responsibility, value, nameof(Responsibility));
+            set
+            {
+                this.AIDTDataTypeState |= AIDTDataType.Has;
+                this.RaiseAndSetIfChanged(ref this._Responsibility, value, nameof(Responsibility));
+            }
         }
         #endregion
         #region BuySellServices
@@ -274,7 +318,11 @@ namespace Mutagen.Bethesda.Oblivion
         public NPC.BuySellServiceFlag BuySellServices
         {
             get => this._BuySellServices;
-            set => this.RaiseAndSetIfChanged(ref this._BuySellServices, value, nameof(BuySellServices));
+            set
+            {
+                this.AIDTDataTypeState |= AIDTDataType.Has;
+                this.RaiseAndSetIfChanged(ref this._BuySellServices, value, nameof(BuySellServices));
+            }
         }
         #endregion
         #region Teaches
@@ -282,7 +330,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Skill Teaches
         {
             get => this._Teaches;
-            set => this.RaiseAndSetIfChanged(ref this._Teaches, value, nameof(Teaches));
+            set
+            {
+                this.AIDTDataTypeState |= AIDTDataType.Has;
+                this.RaiseAndSetIfChanged(ref this._Teaches, value, nameof(Teaches));
+            }
         }
         #endregion
         #region MaximumTrainingLevel
@@ -290,7 +342,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Byte MaximumTrainingLevel
         {
             get => this._MaximumTrainingLevel;
-            set => this.RaiseAndSetIfChanged(ref this._MaximumTrainingLevel, value, nameof(MaximumTrainingLevel));
+            set
+            {
+                this.AIDTDataTypeState |= AIDTDataType.Has;
+                this.RaiseAndSetIfChanged(ref this._MaximumTrainingLevel, value, nameof(MaximumTrainingLevel));
+            }
         }
         #endregion
         #region Fluff
@@ -355,7 +411,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Byte Armorer
         {
             get => this._Armorer;
-            set => this.RaiseAndSetIfChanged(ref this._Armorer, value, nameof(Armorer));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.RaiseAndSetIfChanged(ref this._Armorer, value, nameof(Armorer));
+            }
         }
         #endregion
         #region Athletics
@@ -363,7 +423,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Byte Athletics
         {
             get => this._Athletics;
-            set => this.RaiseAndSetIfChanged(ref this._Athletics, value, nameof(Athletics));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.RaiseAndSetIfChanged(ref this._Athletics, value, nameof(Athletics));
+            }
         }
         #endregion
         #region Blade
@@ -371,7 +435,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Byte Blade
         {
             get => this._Blade;
-            set => this.RaiseAndSetIfChanged(ref this._Blade, value, nameof(Blade));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.RaiseAndSetIfChanged(ref this._Blade, value, nameof(Blade));
+            }
         }
         #endregion
         #region Block
@@ -379,7 +447,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Byte Block
         {
             get => this._Block;
-            set => this.RaiseAndSetIfChanged(ref this._Block, value, nameof(Block));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.RaiseAndSetIfChanged(ref this._Block, value, nameof(Block));
+            }
         }
         #endregion
         #region Blunt
@@ -387,7 +459,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Byte Blunt
         {
             get => this._Blunt;
-            set => this.RaiseAndSetIfChanged(ref this._Blunt, value, nameof(Blunt));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.RaiseAndSetIfChanged(ref this._Blunt, value, nameof(Blunt));
+            }
         }
         #endregion
         #region HandToHand
@@ -395,7 +471,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Byte HandToHand
         {
             get => this._HandToHand;
-            set => this.RaiseAndSetIfChanged(ref this._HandToHand, value, nameof(HandToHand));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.RaiseAndSetIfChanged(ref this._HandToHand, value, nameof(HandToHand));
+            }
         }
         #endregion
         #region HeavyArmor
@@ -403,7 +483,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Byte HeavyArmor
         {
             get => this._HeavyArmor;
-            set => this.RaiseAndSetIfChanged(ref this._HeavyArmor, value, nameof(HeavyArmor));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.RaiseAndSetIfChanged(ref this._HeavyArmor, value, nameof(HeavyArmor));
+            }
         }
         #endregion
         #region Alchemy
@@ -411,7 +495,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Byte Alchemy
         {
             get => this._Alchemy;
-            set => this.RaiseAndSetIfChanged(ref this._Alchemy, value, nameof(Alchemy));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.RaiseAndSetIfChanged(ref this._Alchemy, value, nameof(Alchemy));
+            }
         }
         #endregion
         #region Alteration
@@ -419,7 +507,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Byte Alteration
         {
             get => this._Alteration;
-            set => this.RaiseAndSetIfChanged(ref this._Alteration, value, nameof(Alteration));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.RaiseAndSetIfChanged(ref this._Alteration, value, nameof(Alteration));
+            }
         }
         #endregion
         #region Conjuration
@@ -427,7 +519,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Byte Conjuration
         {
             get => this._Conjuration;
-            set => this.RaiseAndSetIfChanged(ref this._Conjuration, value, nameof(Conjuration));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.RaiseAndSetIfChanged(ref this._Conjuration, value, nameof(Conjuration));
+            }
         }
         #endregion
         #region Destruction
@@ -435,7 +531,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Byte Destruction
         {
             get => this._Destruction;
-            set => this.RaiseAndSetIfChanged(ref this._Destruction, value, nameof(Destruction));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.RaiseAndSetIfChanged(ref this._Destruction, value, nameof(Destruction));
+            }
         }
         #endregion
         #region Illusion
@@ -443,7 +543,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Byte Illusion
         {
             get => this._Illusion;
-            set => this.RaiseAndSetIfChanged(ref this._Illusion, value, nameof(Illusion));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.RaiseAndSetIfChanged(ref this._Illusion, value, nameof(Illusion));
+            }
         }
         #endregion
         #region Mysticism
@@ -451,7 +555,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Byte Mysticism
         {
             get => this._Mysticism;
-            set => this.RaiseAndSetIfChanged(ref this._Mysticism, value, nameof(Mysticism));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.RaiseAndSetIfChanged(ref this._Mysticism, value, nameof(Mysticism));
+            }
         }
         #endregion
         #region Restoration
@@ -459,7 +567,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Byte Restoration
         {
             get => this._Restoration;
-            set => this.RaiseAndSetIfChanged(ref this._Restoration, value, nameof(Restoration));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.RaiseAndSetIfChanged(ref this._Restoration, value, nameof(Restoration));
+            }
         }
         #endregion
         #region Acrobatics
@@ -467,7 +579,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Byte Acrobatics
         {
             get => this._Acrobatics;
-            set => this.RaiseAndSetIfChanged(ref this._Acrobatics, value, nameof(Acrobatics));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.RaiseAndSetIfChanged(ref this._Acrobatics, value, nameof(Acrobatics));
+            }
         }
         #endregion
         #region LightArmor
@@ -475,7 +591,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Byte LightArmor
         {
             get => this._LightArmor;
-            set => this.RaiseAndSetIfChanged(ref this._LightArmor, value, nameof(LightArmor));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.RaiseAndSetIfChanged(ref this._LightArmor, value, nameof(LightArmor));
+            }
         }
         #endregion
         #region Marksman
@@ -483,7 +603,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Byte Marksman
         {
             get => this._Marksman;
-            set => this.RaiseAndSetIfChanged(ref this._Marksman, value, nameof(Marksman));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.RaiseAndSetIfChanged(ref this._Marksman, value, nameof(Marksman));
+            }
         }
         #endregion
         #region Mercantile
@@ -491,7 +615,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Byte Mercantile
         {
             get => this._Mercantile;
-            set => this.RaiseAndSetIfChanged(ref this._Mercantile, value, nameof(Mercantile));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.RaiseAndSetIfChanged(ref this._Mercantile, value, nameof(Mercantile));
+            }
         }
         #endregion
         #region Security
@@ -499,7 +627,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Byte Security
         {
             get => this._Security;
-            set => this.RaiseAndSetIfChanged(ref this._Security, value, nameof(Security));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.RaiseAndSetIfChanged(ref this._Security, value, nameof(Security));
+            }
         }
         #endregion
         #region Sneak
@@ -507,7 +639,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Byte Sneak
         {
             get => this._Sneak;
-            set => this.RaiseAndSetIfChanged(ref this._Sneak, value, nameof(Sneak));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.RaiseAndSetIfChanged(ref this._Sneak, value, nameof(Sneak));
+            }
         }
         #endregion
         #region Speechcraft
@@ -515,7 +651,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Byte Speechcraft
         {
             get => this._Speechcraft;
-            set => this.RaiseAndSetIfChanged(ref this._Speechcraft, value, nameof(Speechcraft));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.RaiseAndSetIfChanged(ref this._Speechcraft, value, nameof(Speechcraft));
+            }
         }
         #endregion
         #region Health
@@ -523,7 +663,11 @@ namespace Mutagen.Bethesda.Oblivion
         public UInt32 Health
         {
             get => this._Health;
-            set => this.RaiseAndSetIfChanged(ref this._Health, value, nameof(Health));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.RaiseAndSetIfChanged(ref this._Health, value, nameof(Health));
+            }
         }
         #endregion
         #region Strength
@@ -531,7 +675,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Byte Strength
         {
             get => this._Strength;
-            set => this.RaiseAndSetIfChanged(ref this._Strength, value, nameof(Strength));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.RaiseAndSetIfChanged(ref this._Strength, value, nameof(Strength));
+            }
         }
         #endregion
         #region Intelligence
@@ -539,7 +687,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Byte Intelligence
         {
             get => this._Intelligence;
-            set => this.RaiseAndSetIfChanged(ref this._Intelligence, value, nameof(Intelligence));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.RaiseAndSetIfChanged(ref this._Intelligence, value, nameof(Intelligence));
+            }
         }
         #endregion
         #region Willpower
@@ -547,7 +699,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Byte Willpower
         {
             get => this._Willpower;
-            set => this.RaiseAndSetIfChanged(ref this._Willpower, value, nameof(Willpower));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.RaiseAndSetIfChanged(ref this._Willpower, value, nameof(Willpower));
+            }
         }
         #endregion
         #region Agility
@@ -555,7 +711,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Byte Agility
         {
             get => this._Agility;
-            set => this.RaiseAndSetIfChanged(ref this._Agility, value, nameof(Agility));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.RaiseAndSetIfChanged(ref this._Agility, value, nameof(Agility));
+            }
         }
         #endregion
         #region Speed
@@ -563,7 +723,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Byte Speed
         {
             get => this._Speed;
-            set => this.RaiseAndSetIfChanged(ref this._Speed, value, nameof(Speed));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.RaiseAndSetIfChanged(ref this._Speed, value, nameof(Speed));
+            }
         }
         #endregion
         #region Endurance
@@ -571,7 +735,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Byte Endurance
         {
             get => this._Endurance;
-            set => this.RaiseAndSetIfChanged(ref this._Endurance, value, nameof(Endurance));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.RaiseAndSetIfChanged(ref this._Endurance, value, nameof(Endurance));
+            }
         }
         #endregion
         #region Personality
@@ -579,7 +747,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Byte Personality
         {
             get => this._Personality;
-            set => this.RaiseAndSetIfChanged(ref this._Personality, value, nameof(Personality));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.RaiseAndSetIfChanged(ref this._Personality, value, nameof(Personality));
+            }
         }
         #endregion
         #region Luck
@@ -587,7 +759,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Byte Luck
         {
             get => this._Luck;
-            set => this.RaiseAndSetIfChanged(ref this._Luck, value, nameof(Luck));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.RaiseAndSetIfChanged(ref this._Luck, value, nameof(Luck));
+            }
         }
         #endregion
         #region Hair

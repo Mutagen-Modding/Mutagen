@@ -84,7 +84,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Enchantment.EnchantmentType Type
         {
             get => this._Type;
-            set => this.RaiseAndSetIfChanged(ref this._Type, value, nameof(Type));
+            set
+            {
+                this.ENITDataTypeState |= ENITDataType.Has;
+                this.RaiseAndSetIfChanged(ref this._Type, value, nameof(Type));
+            }
         }
         #endregion
         #region ChargeAmount
@@ -92,7 +96,11 @@ namespace Mutagen.Bethesda.Oblivion
         public UInt32 ChargeAmount
         {
             get => this._ChargeAmount;
-            set => this.RaiseAndSetIfChanged(ref this._ChargeAmount, value, nameof(ChargeAmount));
+            set
+            {
+                this.ENITDataTypeState |= ENITDataType.Has;
+                this.RaiseAndSetIfChanged(ref this._ChargeAmount, value, nameof(ChargeAmount));
+            }
         }
         #endregion
         #region EnchantCost
@@ -100,7 +108,11 @@ namespace Mutagen.Bethesda.Oblivion
         public UInt32 EnchantCost
         {
             get => this._EnchantCost;
-            set => this.RaiseAndSetIfChanged(ref this._EnchantCost, value, nameof(EnchantCost));
+            set
+            {
+                this.ENITDataTypeState |= ENITDataType.Has;
+                this.RaiseAndSetIfChanged(ref this._EnchantCost, value, nameof(EnchantCost));
+            }
         }
         #endregion
         #region Flags
@@ -108,7 +120,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Enchantment.Flag Flags
         {
             get => this._Flags;
-            set => this.RaiseAndSetIfChanged(ref this._Flags, value, nameof(Flags));
+            set
+            {
+                this.ENITDataTypeState |= ENITDataType.Has;
+                this.RaiseAndSetIfChanged(ref this._Flags, value, nameof(Flags));
+            }
         }
         #endregion
         #region Effects

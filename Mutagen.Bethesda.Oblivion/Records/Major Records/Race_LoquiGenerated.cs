@@ -180,7 +180,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Single MaleHeight
         {
             get => this._MaleHeight;
-            set => this.RaiseAndSetIfChanged(ref this._MaleHeight, value, nameof(MaleHeight));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.RaiseAndSetIfChanged(ref this._MaleHeight, value, nameof(MaleHeight));
+            }
         }
         #endregion
         #region FemaleHeight
@@ -188,7 +192,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Single FemaleHeight
         {
             get => this._FemaleHeight;
-            set => this.RaiseAndSetIfChanged(ref this._FemaleHeight, value, nameof(FemaleHeight));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.RaiseAndSetIfChanged(ref this._FemaleHeight, value, nameof(FemaleHeight));
+            }
         }
         #endregion
         #region MaleWeight
@@ -196,7 +204,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Single MaleWeight
         {
             get => this._MaleWeight;
-            set => this.RaiseAndSetIfChanged(ref this._MaleWeight, value, nameof(MaleWeight));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.RaiseAndSetIfChanged(ref this._MaleWeight, value, nameof(MaleWeight));
+            }
         }
         #endregion
         #region FemaleWeight
@@ -204,7 +216,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Single FemaleWeight
         {
             get => this._FemaleWeight;
-            set => this.RaiseAndSetIfChanged(ref this._FemaleWeight, value, nameof(FemaleWeight));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.RaiseAndSetIfChanged(ref this._FemaleWeight, value, nameof(FemaleWeight));
+            }
         }
         #endregion
         #region Flags
@@ -212,7 +228,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Race.Flag Flags
         {
             get => this._Flags;
-            set => this.RaiseAndSetIfChanged(ref this._Flags, value, nameof(Flags));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.RaiseAndSetIfChanged(ref this._Flags, value, nameof(Flags));
+            }
         }
         #endregion
         #region Voices

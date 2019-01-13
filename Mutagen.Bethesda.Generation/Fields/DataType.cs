@@ -101,6 +101,25 @@ namespace Mutagen.Bethesda.Generation
                         this.SubFields.Add(typeGen.Value);
                     }
                 }
+
+                foreach (var subField in this.IterateFieldsWithMeta())
+                {
+                    if (subField.Field is TypicalTypeGeneration typical)
+                    {
+                        typical.PreSetEvent += (fg) =>
+                        {
+                            fg.AppendLine($"this.{this.StateName} |= {this.EnumName}.Has;");
+                            foreach (var b in subField.EncounteredBreaks)
+                            {
+                                fg.AppendLine($"this.{this.StateName} &= ~{this.EnumName}.Break{b};");
+                            }
+                            if (subField.Range != null)
+                            {
+                                fg.AppendLine($"this.{this.StateName} |= {this.EnumName}.Range{subField.RangeIndex};");
+                            }
+                        };
+                    }
+                }
             }
             this.HasBeenSetProperty.Set(false);
         }
@@ -123,7 +142,7 @@ namespace Mutagen.Bethesda.Generation
                 }
                 yield return new DataTypeIteration()
                 {
-                    EncounteredBreaks = encounteredBreaks,
+                    EncounteredBreaks = encounteredBreaks.ToList(),
                     Field = this.SubFields[i],
                     FieldIndex = i,
                     Range = range,

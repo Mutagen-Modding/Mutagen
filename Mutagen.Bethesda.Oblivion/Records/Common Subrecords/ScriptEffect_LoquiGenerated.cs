@@ -62,7 +62,12 @@ namespace Mutagen.Bethesda.Oblivion
         public MagicSchool MagicSchool
         {
             get => this._MagicSchool;
-            set => this.RaiseAndSetIfChanged(ref this._MagicSchool, value, nameof(MagicSchool));
+            set
+            {
+                this.SCITDataTypeState |= SCITDataType.Has;
+                this.SCITDataTypeState &= ~SCITDataType.Break0;
+                this.RaiseAndSetIfChanged(ref this._MagicSchool, value, nameof(MagicSchool));
+            }
         }
         #endregion
         #region VisualEffect
@@ -76,7 +81,13 @@ namespace Mutagen.Bethesda.Oblivion
         public ScriptEffect.Flag Flags
         {
             get => this._Flags;
-            set => this.RaiseAndSetIfChanged(ref this._Flags, value, nameof(Flags));
+            set
+            {
+                this.SCITDataTypeState |= SCITDataType.Has;
+                this.SCITDataTypeState &= ~SCITDataType.Break0;
+                this.SCITDataTypeState &= ~SCITDataType.Break1;
+                this.RaiseAndSetIfChanged(ref this._Flags, value, nameof(Flags));
+            }
         }
         #endregion
         #region Name

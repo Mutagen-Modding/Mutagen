@@ -116,7 +116,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Quest.Flag Flags
         {
             get => this._Flags;
-            set => this.RaiseAndSetIfChanged(ref this._Flags, value, nameof(Flags));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.RaiseAndSetIfChanged(ref this._Flags, value, nameof(Flags));
+            }
         }
         #endregion
         #region Priority
@@ -124,7 +128,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Byte Priority
         {
             get => this._Priority;
-            set => this.RaiseAndSetIfChanged(ref this._Priority, value, nameof(Priority));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.RaiseAndSetIfChanged(ref this._Priority, value, nameof(Priority));
+            }
         }
         #endregion
         #region Conditions

@@ -200,7 +200,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Book.BookFlag Flags
         {
             get => this._Flags;
-            set => this.RaiseAndSetIfChanged(ref this._Flags, value, nameof(Flags));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.RaiseAndSetIfChanged(ref this._Flags, value, nameof(Flags));
+            }
         }
         #endregion
         #region Teaches
@@ -208,7 +212,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Skill Teaches
         {
             get => this._Teaches;
-            set => this.RaiseAndSetIfChanged(ref this._Teaches, value, nameof(Teaches));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.RaiseAndSetIfChanged(ref this._Teaches, value, nameof(Teaches));
+            }
         }
         #endregion
         #region Value
@@ -216,7 +224,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Single Value
         {
             get => this._Value;
-            set => this.RaiseAndSetIfChanged(ref this._Value, value, nameof(Value));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.RaiseAndSetIfChanged(ref this._Value, value, nameof(Value));
+            }
         }
         #endregion
         #region Weight
@@ -224,7 +236,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Single Weight
         {
             get => this._Weight;
-            set => this.RaiseAndSetIfChanged(ref this._Weight, value, nameof(Weight));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.RaiseAndSetIfChanged(ref this._Weight, value, nameof(Weight));
+            }
         }
         #endregion
 

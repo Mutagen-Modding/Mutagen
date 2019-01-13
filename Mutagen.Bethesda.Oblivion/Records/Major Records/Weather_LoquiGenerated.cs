@@ -156,7 +156,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Single FogDayNear
         {
             get => this._FogDayNear;
-            set => this.RaiseAndSetIfChanged(ref this._FogDayNear, value, nameof(FogDayNear));
+            set
+            {
+                this.FNAMDataTypeState |= FNAMDataType.Has;
+                this.RaiseAndSetIfChanged(ref this._FogDayNear, value, nameof(FogDayNear));
+            }
         }
         #endregion
         #region FogDayFar
@@ -164,7 +168,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Single FogDayFar
         {
             get => this._FogDayFar;
-            set => this.RaiseAndSetIfChanged(ref this._FogDayFar, value, nameof(FogDayFar));
+            set
+            {
+                this.FNAMDataTypeState |= FNAMDataType.Has;
+                this.RaiseAndSetIfChanged(ref this._FogDayFar, value, nameof(FogDayFar));
+            }
         }
         #endregion
         #region FogNightNear
@@ -172,7 +180,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Single FogNightNear
         {
             get => this._FogNightNear;
-            set => this.RaiseAndSetIfChanged(ref this._FogNightNear, value, nameof(FogNightNear));
+            set
+            {
+                this.FNAMDataTypeState |= FNAMDataType.Has;
+                this.RaiseAndSetIfChanged(ref this._FogNightNear, value, nameof(FogNightNear));
+            }
         }
         #endregion
         #region FogNightFar
@@ -180,7 +192,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Single FogNightFar
         {
             get => this._FogNightFar;
-            set => this.RaiseAndSetIfChanged(ref this._FogNightFar, value, nameof(FogNightFar));
+            set
+            {
+                this.FNAMDataTypeState |= FNAMDataType.Has;
+                this.RaiseAndSetIfChanged(ref this._FogNightFar, value, nameof(FogNightFar));
+            }
         }
         #endregion
         #region HdrEyeAdaptSpeed
@@ -188,7 +204,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Single HdrEyeAdaptSpeed
         {
             get => this._HdrEyeAdaptSpeed;
-            set => this.RaiseAndSetIfChanged(ref this._HdrEyeAdaptSpeed, value, nameof(HdrEyeAdaptSpeed));
+            set
+            {
+                this.HNAMDataTypeState |= HNAMDataType.Has;
+                this.RaiseAndSetIfChanged(ref this._HdrEyeAdaptSpeed, value, nameof(HdrEyeAdaptSpeed));
+            }
         }
         #endregion
         #region HdrBlurRadius
@@ -196,7 +216,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Single HdrBlurRadius
         {
             get => this._HdrBlurRadius;
-            set => this.RaiseAndSetIfChanged(ref this._HdrBlurRadius, value, nameof(HdrBlurRadius));
+            set
+            {
+                this.HNAMDataTypeState |= HNAMDataType.Has;
+                this.RaiseAndSetIfChanged(ref this._HdrBlurRadius, value, nameof(HdrBlurRadius));
+            }
         }
         #endregion
         #region HdrBlurPasses
@@ -204,7 +228,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Single HdrBlurPasses
         {
             get => this._HdrBlurPasses;
-            set => this.RaiseAndSetIfChanged(ref this._HdrBlurPasses, value, nameof(HdrBlurPasses));
+            set
+            {
+                this.HNAMDataTypeState |= HNAMDataType.Has;
+                this.RaiseAndSetIfChanged(ref this._HdrBlurPasses, value, nameof(HdrBlurPasses));
+            }
         }
         #endregion
         #region HdrEmissiveMult
@@ -212,7 +240,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Single HdrEmissiveMult
         {
             get => this._HdrEmissiveMult;
-            set => this.RaiseAndSetIfChanged(ref this._HdrEmissiveMult, value, nameof(HdrEmissiveMult));
+            set
+            {
+                this.HNAMDataTypeState |= HNAMDataType.Has;
+                this.RaiseAndSetIfChanged(ref this._HdrEmissiveMult, value, nameof(HdrEmissiveMult));
+            }
         }
         #endregion
         #region HdrTargetLum
@@ -220,7 +252,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Single HdrTargetLum
         {
             get => this._HdrTargetLum;
-            set => this.RaiseAndSetIfChanged(ref this._HdrTargetLum, value, nameof(HdrTargetLum));
+            set
+            {
+                this.HNAMDataTypeState |= HNAMDataType.Has;
+                this.RaiseAndSetIfChanged(ref this._HdrTargetLum, value, nameof(HdrTargetLum));
+            }
         }
         #endregion
         #region HdrUpperLumClamp
@@ -228,7 +264,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Single HdrUpperLumClamp
         {
             get => this._HdrUpperLumClamp;
-            set => this.RaiseAndSetIfChanged(ref this._HdrUpperLumClamp, value, nameof(HdrUpperLumClamp));
+            set
+            {
+                this.HNAMDataTypeState |= HNAMDataType.Has;
+                this.RaiseAndSetIfChanged(ref this._HdrUpperLumClamp, value, nameof(HdrUpperLumClamp));
+            }
         }
         #endregion
         #region HdrBrightScale
@@ -236,7 +276,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Single HdrBrightScale
         {
             get => this._HdrBrightScale;
-            set => this.RaiseAndSetIfChanged(ref this._HdrBrightScale, value, nameof(HdrBrightScale));
+            set
+            {
+                this.HNAMDataTypeState |= HNAMDataType.Has;
+                this.RaiseAndSetIfChanged(ref this._HdrBrightScale, value, nameof(HdrBrightScale));
+            }
         }
         #endregion
         #region HdrBrightClamp
@@ -244,7 +288,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Single HdrBrightClamp
         {
             get => this._HdrBrightClamp;
-            set => this.RaiseAndSetIfChanged(ref this._HdrBrightClamp, value, nameof(HdrBrightClamp));
+            set
+            {
+                this.HNAMDataTypeState |= HNAMDataType.Has;
+                this.RaiseAndSetIfChanged(ref this._HdrBrightClamp, value, nameof(HdrBrightClamp));
+            }
         }
         #endregion
         #region HdrLumRampNoTex
@@ -252,7 +300,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Single HdrLumRampNoTex
         {
             get => this._HdrLumRampNoTex;
-            set => this.RaiseAndSetIfChanged(ref this._HdrLumRampNoTex, value, nameof(HdrLumRampNoTex));
+            set
+            {
+                this.HNAMDataTypeState |= HNAMDataType.Has;
+                this.RaiseAndSetIfChanged(ref this._HdrLumRampNoTex, value, nameof(HdrLumRampNoTex));
+            }
         }
         #endregion
         #region HdrLumRampMin
@@ -260,7 +312,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Single HdrLumRampMin
         {
             get => this._HdrLumRampMin;
-            set => this.RaiseAndSetIfChanged(ref this._HdrLumRampMin, value, nameof(HdrLumRampMin));
+            set
+            {
+                this.HNAMDataTypeState |= HNAMDataType.Has;
+                this.RaiseAndSetIfChanged(ref this._HdrLumRampMin, value, nameof(HdrLumRampMin));
+            }
         }
         #endregion
         #region HdrLumRampMax
@@ -268,7 +324,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Single HdrLumRampMax
         {
             get => this._HdrLumRampMax;
-            set => this.RaiseAndSetIfChanged(ref this._HdrLumRampMax, value, nameof(HdrLumRampMax));
+            set
+            {
+                this.HNAMDataTypeState |= HNAMDataType.Has;
+                this.RaiseAndSetIfChanged(ref this._HdrLumRampMax, value, nameof(HdrLumRampMax));
+            }
         }
         #endregion
         #region HdrSunlightDimmer
@@ -276,7 +336,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Single HdrSunlightDimmer
         {
             get => this._HdrSunlightDimmer;
-            set => this.RaiseAndSetIfChanged(ref this._HdrSunlightDimmer, value, nameof(HdrSunlightDimmer));
+            set
+            {
+                this.HNAMDataTypeState |= HNAMDataType.Has;
+                this.RaiseAndSetIfChanged(ref this._HdrSunlightDimmer, value, nameof(HdrSunlightDimmer));
+            }
         }
         #endregion
         #region HdrGrassDimmer
@@ -284,7 +348,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Single HdrGrassDimmer
         {
             get => this._HdrGrassDimmer;
-            set => this.RaiseAndSetIfChanged(ref this._HdrGrassDimmer, value, nameof(HdrGrassDimmer));
+            set
+            {
+                this.HNAMDataTypeState |= HNAMDataType.Has;
+                this.RaiseAndSetIfChanged(ref this._HdrGrassDimmer, value, nameof(HdrGrassDimmer));
+            }
         }
         #endregion
         #region HdrTreeDimmer
@@ -292,7 +360,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Single HdrTreeDimmer
         {
             get => this._HdrTreeDimmer;
-            set => this.RaiseAndSetIfChanged(ref this._HdrTreeDimmer, value, nameof(HdrTreeDimmer));
+            set
+            {
+                this.HNAMDataTypeState |= HNAMDataType.Has;
+                this.RaiseAndSetIfChanged(ref this._HdrTreeDimmer, value, nameof(HdrTreeDimmer));
+            }
         }
         #endregion
         #region WindSpeed
@@ -300,7 +372,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Byte WindSpeed
         {
             get => this._WindSpeed;
-            set => this.RaiseAndSetIfChanged(ref this._WindSpeed, value, nameof(WindSpeed));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.RaiseAndSetIfChanged(ref this._WindSpeed, value, nameof(WindSpeed));
+            }
         }
         #endregion
         #region CloudSpeedLower
@@ -308,7 +384,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Byte CloudSpeedLower
         {
             get => this._CloudSpeedLower;
-            set => this.RaiseAndSetIfChanged(ref this._CloudSpeedLower, value, nameof(CloudSpeedLower));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.RaiseAndSetIfChanged(ref this._CloudSpeedLower, value, nameof(CloudSpeedLower));
+            }
         }
         #endregion
         #region CloudSpeedUpper
@@ -316,7 +396,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Byte CloudSpeedUpper
         {
             get => this._CloudSpeedUpper;
-            set => this.RaiseAndSetIfChanged(ref this._CloudSpeedUpper, value, nameof(CloudSpeedUpper));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.RaiseAndSetIfChanged(ref this._CloudSpeedUpper, value, nameof(CloudSpeedUpper));
+            }
         }
         #endregion
         #region TransDelta
@@ -324,7 +408,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Byte TransDelta
         {
             get => this._TransDelta;
-            set => this.RaiseAndSetIfChanged(ref this._TransDelta, value, nameof(TransDelta));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.RaiseAndSetIfChanged(ref this._TransDelta, value, nameof(TransDelta));
+            }
         }
         #endregion
         #region SunGlare
@@ -332,7 +420,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Byte SunGlare
         {
             get => this._SunGlare;
-            set => this.RaiseAndSetIfChanged(ref this._SunGlare, value, nameof(SunGlare));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.RaiseAndSetIfChanged(ref this._SunGlare, value, nameof(SunGlare));
+            }
         }
         #endregion
         #region SunDamage
@@ -340,7 +432,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Byte SunDamage
         {
             get => this._SunDamage;
-            set => this.RaiseAndSetIfChanged(ref this._SunDamage, value, nameof(SunDamage));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.RaiseAndSetIfChanged(ref this._SunDamage, value, nameof(SunDamage));
+            }
         }
         #endregion
         #region PrecipitationBeginFadeIn
@@ -348,7 +444,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Byte PrecipitationBeginFadeIn
         {
             get => this._PrecipitationBeginFadeIn;
-            set => this.RaiseAndSetIfChanged(ref this._PrecipitationBeginFadeIn, value, nameof(PrecipitationBeginFadeIn));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.RaiseAndSetIfChanged(ref this._PrecipitationBeginFadeIn, value, nameof(PrecipitationBeginFadeIn));
+            }
         }
         #endregion
         #region PrecipitationEndFadeOut
@@ -356,7 +456,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Byte PrecipitationEndFadeOut
         {
             get => this._PrecipitationEndFadeOut;
-            set => this.RaiseAndSetIfChanged(ref this._PrecipitationEndFadeOut, value, nameof(PrecipitationEndFadeOut));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.RaiseAndSetIfChanged(ref this._PrecipitationEndFadeOut, value, nameof(PrecipitationEndFadeOut));
+            }
         }
         #endregion
         #region ThunderLightningBeginFadeIn
@@ -364,7 +468,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Byte ThunderLightningBeginFadeIn
         {
             get => this._ThunderLightningBeginFadeIn;
-            set => this.RaiseAndSetIfChanged(ref this._ThunderLightningBeginFadeIn, value, nameof(ThunderLightningBeginFadeIn));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.RaiseAndSetIfChanged(ref this._ThunderLightningBeginFadeIn, value, nameof(ThunderLightningBeginFadeIn));
+            }
         }
         #endregion
         #region ThunderLightningEndFadeOut
@@ -372,7 +480,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Byte ThunderLightningEndFadeOut
         {
             get => this._ThunderLightningEndFadeOut;
-            set => this.RaiseAndSetIfChanged(ref this._ThunderLightningEndFadeOut, value, nameof(ThunderLightningEndFadeOut));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.RaiseAndSetIfChanged(ref this._ThunderLightningEndFadeOut, value, nameof(ThunderLightningEndFadeOut));
+            }
         }
         #endregion
         #region ThunderLightningFrequency
@@ -380,7 +492,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Byte ThunderLightningFrequency
         {
             get => this._ThunderLightningFrequency;
-            set => this.RaiseAndSetIfChanged(ref this._ThunderLightningFrequency, value, nameof(ThunderLightningFrequency));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.RaiseAndSetIfChanged(ref this._ThunderLightningFrequency, value, nameof(ThunderLightningFrequency));
+            }
         }
         #endregion
         #region Classification
@@ -388,7 +504,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Weather.WeatherClassification Classification
         {
             get => this._Classification;
-            set => this.RaiseAndSetIfChanged(ref this._Classification, value, nameof(Classification));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.RaiseAndSetIfChanged(ref this._Classification, value, nameof(Classification));
+            }
         }
         #endregion
         #region LightningColor
@@ -396,7 +516,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Color LightningColor
         {
             get => this._LightningColor;
-            set => this.RaiseAndSetIfChanged(ref this._LightningColor, value, nameof(LightningColor));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.RaiseAndSetIfChanged(ref this._LightningColor, value, nameof(LightningColor));
+            }
         }
         #endregion
         #region Sounds

@@ -79,7 +79,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Single DodgeLeftRightTimerMin
         {
             get => this._DodgeLeftRightTimerMin;
-            set => this.RaiseAndSetIfChanged(ref this._DodgeLeftRightTimerMin, value, nameof(DodgeLeftRightTimerMin));
+            set
+            {
+                this.CSTDDataTypeState |= CSTDDataType.Has;
+                this.RaiseAndSetIfChanged(ref this._DodgeLeftRightTimerMin, value, nameof(DodgeLeftRightTimerMin));
+            }
         }
         #endregion
         #region DodgeLeftRightTimerMax
@@ -87,7 +91,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Single DodgeLeftRightTimerMax
         {
             get => this._DodgeLeftRightTimerMax;
-            set => this.RaiseAndSetIfChanged(ref this._DodgeLeftRightTimerMax, value, nameof(DodgeLeftRightTimerMax));
+            set
+            {
+                this.CSTDDataTypeState |= CSTDDataType.Has;
+                this.RaiseAndSetIfChanged(ref this._DodgeLeftRightTimerMax, value, nameof(DodgeLeftRightTimerMax));
+            }
         }
         #endregion
         #region DodgeForwardTimerMin
@@ -95,7 +103,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Single DodgeForwardTimerMin
         {
             get => this._DodgeForwardTimerMin;
-            set => this.RaiseAndSetIfChanged(ref this._DodgeForwardTimerMin, value, nameof(DodgeForwardTimerMin));
+            set
+            {
+                this.CSTDDataTypeState |= CSTDDataType.Has;
+                this.RaiseAndSetIfChanged(ref this._DodgeForwardTimerMin, value, nameof(DodgeForwardTimerMin));
+            }
         }
         #endregion
         #region DodgeForwardTimerMax
@@ -103,7 +115,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Single DodgeForwardTimerMax
         {
             get => this._DodgeForwardTimerMax;
-            set => this.RaiseAndSetIfChanged(ref this._DodgeForwardTimerMax, value, nameof(DodgeForwardTimerMax));
+            set
+            {
+                this.CSTDDataTypeState |= CSTDDataType.Has;
+                this.RaiseAndSetIfChanged(ref this._DodgeForwardTimerMax, value, nameof(DodgeForwardTimerMax));
+            }
         }
         #endregion
         #region DodgeBackTimerMin
@@ -111,7 +127,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Single DodgeBackTimerMin
         {
             get => this._DodgeBackTimerMin;
-            set => this.RaiseAndSetIfChanged(ref this._DodgeBackTimerMin, value, nameof(DodgeBackTimerMin));
+            set
+            {
+                this.CSTDDataTypeState |= CSTDDataType.Has;
+                this.RaiseAndSetIfChanged(ref this._DodgeBackTimerMin, value, nameof(DodgeBackTimerMin));
+            }
         }
         #endregion
         #region DodgeBackTimerMax
@@ -119,7 +139,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Single DodgeBackTimerMax
         {
             get => this._DodgeBackTimerMax;
-            set => this.RaiseAndSetIfChanged(ref this._DodgeBackTimerMax, value, nameof(DodgeBackTimerMax));
+            set
+            {
+                this.CSTDDataTypeState |= CSTDDataType.Has;
+                this.RaiseAndSetIfChanged(ref this._DodgeBackTimerMax, value, nameof(DodgeBackTimerMax));
+            }
         }
         #endregion
         #region IdleTimerMin
@@ -127,7 +151,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Single IdleTimerMin
         {
             get => this._IdleTimerMin;
-            set => this.RaiseAndSetIfChanged(ref this._IdleTimerMin, value, nameof(IdleTimerMin));
+            set
+            {
+                this.CSTDDataTypeState |= CSTDDataType.Has;
+                this.RaiseAndSetIfChanged(ref this._IdleTimerMin, value, nameof(IdleTimerMin));
+            }
         }
         #endregion
         #region IdleTimerMax
@@ -135,7 +163,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Single IdleTimerMax
         {
             get => this._IdleTimerMax;
-            set => this.RaiseAndSetIfChanged(ref this._IdleTimerMax, value, nameof(IdleTimerMax));
+            set
+            {
+                this.CSTDDataTypeState |= CSTDDataType.Has;
+                this.RaiseAndSetIfChanged(ref this._IdleTimerMax, value, nameof(IdleTimerMax));
+            }
         }
         #endregion
         #region BlockPercentChance
@@ -167,7 +199,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Single RecoilStaggerBonusToAttack
         {
             get => this._RecoilStaggerBonusToAttack;
-            set => this.RaiseAndSetIfChanged(ref this._RecoilStaggerBonusToAttack, value, nameof(RecoilStaggerBonusToAttack));
+            set
+            {
+                this.CSTDDataTypeState |= CSTDDataType.Has;
+                this.RaiseAndSetIfChanged(ref this._RecoilStaggerBonusToAttack, value, nameof(RecoilStaggerBonusToAttack));
+            }
         }
         #endregion
         #region UnconsciousBonusToAttack
@@ -175,7 +211,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Single UnconsciousBonusToAttack
         {
             get => this._UnconsciousBonusToAttack;
-            set => this.RaiseAndSetIfChanged(ref this._UnconsciousBonusToAttack, value, nameof(UnconsciousBonusToAttack));
+            set
+            {
+                this.CSTDDataTypeState |= CSTDDataType.Has;
+                this.RaiseAndSetIfChanged(ref this._UnconsciousBonusToAttack, value, nameof(UnconsciousBonusToAttack));
+            }
         }
         #endregion
         #region HandToHandBonusToAttack
@@ -183,7 +223,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Single HandToHandBonusToAttack
         {
             get => this._HandToHandBonusToAttack;
-            set => this.RaiseAndSetIfChanged(ref this._HandToHandBonusToAttack, value, nameof(HandToHandBonusToAttack));
+            set
+            {
+                this.CSTDDataTypeState |= CSTDDataType.Has;
+                this.RaiseAndSetIfChanged(ref this._HandToHandBonusToAttack, value, nameof(HandToHandBonusToAttack));
+            }
         }
         #endregion
         #region PowerAttackPercentChance
@@ -203,7 +247,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Single RecoilStaggerBonusToPowerAttack
         {
             get => this._RecoilStaggerBonusToPowerAttack;
-            set => this.RaiseAndSetIfChanged(ref this._RecoilStaggerBonusToPowerAttack, value, nameof(RecoilStaggerBonusToPowerAttack));
+            set
+            {
+                this.CSTDDataTypeState |= CSTDDataType.Has;
+                this.RaiseAndSetIfChanged(ref this._RecoilStaggerBonusToPowerAttack, value, nameof(RecoilStaggerBonusToPowerAttack));
+            }
         }
         #endregion
         #region UnconsciousBonusToPowerAttack
@@ -211,7 +259,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Single UnconsciousBonusToPowerAttack
         {
             get => this._UnconsciousBonusToPowerAttack;
-            set => this.RaiseAndSetIfChanged(ref this._UnconsciousBonusToPowerAttack, value, nameof(UnconsciousBonusToPowerAttack));
+            set
+            {
+                this.CSTDDataTypeState |= CSTDDataType.Has;
+                this.RaiseAndSetIfChanged(ref this._UnconsciousBonusToPowerAttack, value, nameof(UnconsciousBonusToPowerAttack));
+            }
         }
         #endregion
         #region PowerAttackNormal
@@ -279,7 +331,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Single HoldTimerMin
         {
             get => this._HoldTimerMin;
-            set => this.RaiseAndSetIfChanged(ref this._HoldTimerMin, value, nameof(HoldTimerMin));
+            set
+            {
+                this.CSTDDataTypeState |= CSTDDataType.Has;
+                this.RaiseAndSetIfChanged(ref this._HoldTimerMin, value, nameof(HoldTimerMin));
+            }
         }
         #endregion
         #region HoldTimerMax
@@ -287,7 +343,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Single HoldTimerMax
         {
             get => this._HoldTimerMax;
-            set => this.RaiseAndSetIfChanged(ref this._HoldTimerMax, value, nameof(HoldTimerMax));
+            set
+            {
+                this.CSTDDataTypeState |= CSTDDataType.Has;
+                this.RaiseAndSetIfChanged(ref this._HoldTimerMax, value, nameof(HoldTimerMax));
+            }
         }
         #endregion
         #region Flags
@@ -295,7 +355,11 @@ namespace Mutagen.Bethesda.Oblivion
         public CombatStyle.Flag Flags
         {
             get => this._Flags;
-            set => this.RaiseAndSetIfChanged(ref this._Flags, value, nameof(Flags));
+            set
+            {
+                this.CSTDDataTypeState |= CSTDDataType.Has;
+                this.RaiseAndSetIfChanged(ref this._Flags, value, nameof(Flags));
+            }
         }
         #endregion
         #region AcrobaticDodgePercentChance
@@ -315,7 +379,12 @@ namespace Mutagen.Bethesda.Oblivion
         public Single RangeMultOptimal
         {
             get => this._RangeMultOptimal;
-            set => this.RaiseAndSetIfChanged(ref this._RangeMultOptimal, value, nameof(RangeMultOptimal));
+            set
+            {
+                this.CSTDDataTypeState |= CSTDDataType.Has;
+                this.CSTDDataTypeState &= ~CSTDDataType.Break0;
+                this.RaiseAndSetIfChanged(ref this._RangeMultOptimal, value, nameof(RangeMultOptimal));
+            }
         }
         #endregion
         #region RangeMultMax
@@ -323,7 +392,12 @@ namespace Mutagen.Bethesda.Oblivion
         public Single RangeMultMax
         {
             get => this._RangeMultMax;
-            set => this.RaiseAndSetIfChanged(ref this._RangeMultMax, value, nameof(RangeMultMax));
+            set
+            {
+                this.CSTDDataTypeState |= CSTDDataType.Has;
+                this.CSTDDataTypeState &= ~CSTDDataType.Break0;
+                this.RaiseAndSetIfChanged(ref this._RangeMultMax, value, nameof(RangeMultMax));
+            }
         }
         #endregion
         #region SwitchDistanceMelee
@@ -331,7 +405,13 @@ namespace Mutagen.Bethesda.Oblivion
         public Single SwitchDistanceMelee
         {
             get => this._SwitchDistanceMelee;
-            set => this.RaiseAndSetIfChanged(ref this._SwitchDistanceMelee, value, nameof(SwitchDistanceMelee));
+            set
+            {
+                this.CSTDDataTypeState |= CSTDDataType.Has;
+                this.CSTDDataTypeState &= ~CSTDDataType.Break0;
+                this.CSTDDataTypeState &= ~CSTDDataType.Break1;
+                this.RaiseAndSetIfChanged(ref this._SwitchDistanceMelee, value, nameof(SwitchDistanceMelee));
+            }
         }
         #endregion
         #region SwitchDistanceRanged
@@ -339,7 +419,13 @@ namespace Mutagen.Bethesda.Oblivion
         public Single SwitchDistanceRanged
         {
             get => this._SwitchDistanceRanged;
-            set => this.RaiseAndSetIfChanged(ref this._SwitchDistanceRanged, value, nameof(SwitchDistanceRanged));
+            set
+            {
+                this.CSTDDataTypeState |= CSTDDataType.Has;
+                this.CSTDDataTypeState &= ~CSTDDataType.Break0;
+                this.CSTDDataTypeState &= ~CSTDDataType.Break1;
+                this.RaiseAndSetIfChanged(ref this._SwitchDistanceRanged, value, nameof(SwitchDistanceRanged));
+            }
         }
         #endregion
         #region BuffStandoffDistance
@@ -347,7 +433,13 @@ namespace Mutagen.Bethesda.Oblivion
         public Single BuffStandoffDistance
         {
             get => this._BuffStandoffDistance;
-            set => this.RaiseAndSetIfChanged(ref this._BuffStandoffDistance, value, nameof(BuffStandoffDistance));
+            set
+            {
+                this.CSTDDataTypeState |= CSTDDataType.Has;
+                this.CSTDDataTypeState &= ~CSTDDataType.Break0;
+                this.CSTDDataTypeState &= ~CSTDDataType.Break1;
+                this.RaiseAndSetIfChanged(ref this._BuffStandoffDistance, value, nameof(BuffStandoffDistance));
+            }
         }
         #endregion
         #region RangedStandoffDistance
@@ -355,7 +447,14 @@ namespace Mutagen.Bethesda.Oblivion
         public Single RangedStandoffDistance
         {
             get => this._RangedStandoffDistance;
-            set => this.RaiseAndSetIfChanged(ref this._RangedStandoffDistance, value, nameof(RangedStandoffDistance));
+            set
+            {
+                this.CSTDDataTypeState |= CSTDDataType.Has;
+                this.CSTDDataTypeState &= ~CSTDDataType.Break0;
+                this.CSTDDataTypeState &= ~CSTDDataType.Break1;
+                this.CSTDDataTypeState &= ~CSTDDataType.Break2;
+                this.RaiseAndSetIfChanged(ref this._RangedStandoffDistance, value, nameof(RangedStandoffDistance));
+            }
         }
         #endregion
         #region GroupStandoffDistance
@@ -363,7 +462,14 @@ namespace Mutagen.Bethesda.Oblivion
         public Single GroupStandoffDistance
         {
             get => this._GroupStandoffDistance;
-            set => this.RaiseAndSetIfChanged(ref this._GroupStandoffDistance, value, nameof(GroupStandoffDistance));
+            set
+            {
+                this.CSTDDataTypeState |= CSTDDataType.Has;
+                this.CSTDDataTypeState &= ~CSTDDataType.Break0;
+                this.CSTDDataTypeState &= ~CSTDDataType.Break1;
+                this.CSTDDataTypeState &= ~CSTDDataType.Break2;
+                this.RaiseAndSetIfChanged(ref this._GroupStandoffDistance, value, nameof(GroupStandoffDistance));
+            }
         }
         #endregion
         #region RushingAttackPercentChance
@@ -383,7 +489,15 @@ namespace Mutagen.Bethesda.Oblivion
         public Single RushingAttackDistanceMult
         {
             get => this._RushingAttackDistanceMult;
-            set => this.RaiseAndSetIfChanged(ref this._RushingAttackDistanceMult, value, nameof(RushingAttackDistanceMult));
+            set
+            {
+                this.CSTDDataTypeState |= CSTDDataType.Has;
+                this.CSTDDataTypeState &= ~CSTDDataType.Break0;
+                this.CSTDDataTypeState &= ~CSTDDataType.Break1;
+                this.CSTDDataTypeState &= ~CSTDDataType.Break2;
+                this.CSTDDataTypeState &= ~CSTDDataType.Break3;
+                this.RaiseAndSetIfChanged(ref this._RushingAttackDistanceMult, value, nameof(RushingAttackDistanceMult));
+            }
         }
         #endregion
         #region Advanced

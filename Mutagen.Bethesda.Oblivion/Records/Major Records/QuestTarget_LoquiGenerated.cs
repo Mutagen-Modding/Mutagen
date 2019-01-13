@@ -63,7 +63,11 @@ namespace Mutagen.Bethesda.Oblivion
         public QuestTarget.Flag Flags
         {
             get => this._Flags;
-            set => this.RaiseAndSetIfChanged(ref this._Flags, value, nameof(Flags));
+            set
+            {
+                this.QSTADataTypeState |= QSTADataType.Has;
+                this.RaiseAndSetIfChanged(ref this._Flags, value, nameof(Flags));
+            }
         }
         #endregion
         #region Conditions

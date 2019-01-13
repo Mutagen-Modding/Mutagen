@@ -154,7 +154,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Class.SpecializationFlag Specialization
         {
             get => this._Specialization;
-            set => this.RaiseAndSetIfChanged(ref this._Specialization, value, nameof(Specialization));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.RaiseAndSetIfChanged(ref this._Specialization, value, nameof(Specialization));
+            }
         }
         #endregion
         #region SecondaryAttributes
@@ -180,7 +184,11 @@ namespace Mutagen.Bethesda.Oblivion
         public ClassFlag Flags
         {
             get => this._Flags;
-            set => this.RaiseAndSetIfChanged(ref this._Flags, value, nameof(Flags));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.RaiseAndSetIfChanged(ref this._Flags, value, nameof(Flags));
+            }
         }
         #endregion
         #region ClassServices
@@ -188,7 +196,11 @@ namespace Mutagen.Bethesda.Oblivion
         public ClassService ClassServices
         {
             get => this._ClassServices;
-            set => this.RaiseAndSetIfChanged(ref this._ClassServices, value, nameof(ClassServices));
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.RaiseAndSetIfChanged(ref this._ClassServices, value, nameof(ClassServices));
+            }
         }
         #endregion
         #region Training
