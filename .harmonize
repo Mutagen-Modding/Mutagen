@@ -2,10 +2,10 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>0a719ed6ed147414b27009917a7049b9073d5664</Sha>
+         <Sha>53d5abc81d3f30af50184b6b6bc24f0eac57b896</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>12-29-2018 01:15:28</CommitDate>
-         <Description>Fix for SourceSetCache.TryGetValue</Description>
+         <CommitDate>01-15-2019 22:25:11</CommitDate>
+         <Description>ObservableExt.WithPrevious</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>
@@ -18,9 +18,9 @@
       </RepoListing>
       <RepoListing>
          <Nickname>DynamicData</Nickname>
-         <Sha>9535fe5f38adca83c1c7bf0126db44c8c256a708</Sha>
+         <Sha>d5c2631f1106016c638f568e4503e94ab95ff2ff</Sha>
          <Path>../DynamicData</Path>
-         <CommitDate>01-12-2019 17:40:30</CommitDate>
+         <CommitDate>01-17-2019 20:23:22</CommitDate>
          <Description>CollectionCount convenience selector</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>

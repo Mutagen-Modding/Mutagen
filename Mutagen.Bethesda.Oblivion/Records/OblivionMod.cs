@@ -59,6 +59,9 @@ namespace Mutagen.Bethesda.Oblivion
                 Observable
                     .Return<IMajorRecord>(cell)
                     .ToObservableChangeSet(),
+                cell.WhenAny(x => x.PathGrid)
+                    .Select<PathGrid, IMajorRecord>(l => l)
+                    .ToObservableChangeSet_SingleItemNotNull(),
                 cell.WhenAny(x => x.Landscape)
                     .Select<Landscape, IMajorRecord>(l => l)
                     .ToObservableChangeSet_SingleItemNotNull(),
@@ -72,6 +75,9 @@ namespace Mutagen.Bethesda.Oblivion
         private IObservable<IChangeSet<IMajorRecord>> GetWorldspaceRecords(Worldspace worldspace)
         {
             return Observable.Merge<IChangeSet<IMajorRecord>>(
+                Observable
+                    .Return<IMajorRecord>(worldspace)
+                    .ToObservableChangeSet(),
                 worldspace.WhenAny(x => x.Road)
                     .Select<Road, IMajorRecord>(l => l)
                     .ToObservableChangeSet_SingleItemNotNull(),
@@ -86,8 +92,12 @@ namespace Mutagen.Bethesda.Oblivion
 
         private IObservable<IChangeSet<IMajorRecord>> GetDialogRecords(DialogTopic dialog)
         {
-            return dialog.Items.Connect()
-                .Transform<DialogItem, IMajorRecord>(i => i);
+            return Observable.Merge<IChangeSet<IMajorRecord>>(
+                Observable
+                    .Return<IMajorRecord>(dialog)
+                    .ToObservableChangeSet(),
+                dialog.Items.Connect()
+                    .Transform<DialogItem, IMajorRecord>(i => i));
         }
 
         public FormKey GetNextFormKey()
@@ -95,6 +105,57 @@ namespace Mutagen.Bethesda.Oblivion
             return new FormKey(
                 this.ModKey,
                 this.TES4.Header.NextObjectID++);
+        }
+
+        partial void GetCustomRecordCount(Action<int> setter)
+        {
+            int count = 0;
+            // Tally Cell Group counts
+            int cellSubGroupCount(Cell cell)
+            {
+                int cellGroupCount = 0;
+                if (cell.Temporary.Count > 0
+                    || cell.PathGrid_IsSet
+                    || cell.Landscape_IsSet)
+                {
+                    cellGroupCount++;
+                }
+                if (cell.Persistent.Count > 0)
+                {
+                    cellGroupCount++;
+                }
+                if (cell.VisibleWhenDistant.Count > 0)
+                {
+                    cellGroupCount++;
+                }
+                if (cellGroupCount > 0)
+                {
+                    cellGroupCount++;
+                }
+                return cellGroupCount;
+            }
+            count += this.Cells.Items.Count; // Block Count
+            count += this.Cells.Items.Sum(block => block.Items.Count); // Sub Block Count
+            count += this.Cells.Items
+                .SelectMany(block => block.Items)
+                .SelectMany(subBlock => subBlock.Items)
+                .Select(cellSubGroupCount)
+                .Sum();
+
+            // Tally Worldspace Group Counts
+            count += this.Worldspaces.Sum(wrld => wrld.SubCells.Count); // Cell Blocks
+            count += this.Worldspaces
+                .SelectMany(wrld => wrld.SubCells.Items)
+                .Sum(block => block.Items.Count); // Cell Sub Blocks
+            count += this.Worldspaces
+                .SelectMany(wrld => wrld.SubCells.Items)
+                .SelectMany(block => block.Items)
+                .SelectMany(subBlock => subBlock.Items)
+                .Sum(cellSubGroupCount); // Cell sub groups
+
+            // Tally Dialog Group Counts
+            count += this.DialogTopics.Items.Count;
+            setter(count);
         }
     }
 }

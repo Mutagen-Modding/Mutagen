@@ -3501,6 +3501,75 @@ namespace Mutagen.Bethesda.Oblivion
             return router;
         }
 
+        public void SyncRecordCount()
+        {
+            this.TES4.Header.NumRecords = GetRecordCount();
+        }
+
+        public int GetRecordCount()
+        {
+            int count = this.MajorRecords.Count;
+            count += GameSettings.Items.Count > 0 ? 1 : 0;
+            count += Globals.Items.Count > 0 ? 1 : 0;
+            count += Classes.Items.Count > 0 ? 1 : 0;
+            count += Factions.Items.Count > 0 ? 1 : 0;
+            count += Hairs.Items.Count > 0 ? 1 : 0;
+            count += Eyes.Items.Count > 0 ? 1 : 0;
+            count += Races.Items.Count > 0 ? 1 : 0;
+            count += Sounds.Items.Count > 0 ? 1 : 0;
+            count += Skills.Items.Count > 0 ? 1 : 0;
+            count += MagicEffects.Items.Count > 0 ? 1 : 0;
+            count += Scripts.Items.Count > 0 ? 1 : 0;
+            count += LandTextures.Items.Count > 0 ? 1 : 0;
+            count += Enchantments.Items.Count > 0 ? 1 : 0;
+            count += Spells.Items.Count > 0 ? 1 : 0;
+            count += Birthsigns.Items.Count > 0 ? 1 : 0;
+            count += Activators.Items.Count > 0 ? 1 : 0;
+            count += AlchemicalApparatus.Items.Count > 0 ? 1 : 0;
+            count += Armors.Items.Count > 0 ? 1 : 0;
+            count += Books.Items.Count > 0 ? 1 : 0;
+            count += Clothes.Items.Count > 0 ? 1 : 0;
+            count += Containers.Items.Count > 0 ? 1 : 0;
+            count += Doors.Items.Count > 0 ? 1 : 0;
+            count += Ingredients.Items.Count > 0 ? 1 : 0;
+            count += Lights.Items.Count > 0 ? 1 : 0;
+            count += Miscellaneous.Items.Count > 0 ? 1 : 0;
+            count += Statics.Items.Count > 0 ? 1 : 0;
+            count += Grasses.Items.Count > 0 ? 1 : 0;
+            count += Trees.Items.Count > 0 ? 1 : 0;
+            count += Flora.Items.Count > 0 ? 1 : 0;
+            count += Furnature.Items.Count > 0 ? 1 : 0;
+            count += Weapons.Items.Count > 0 ? 1 : 0;
+            count += Ammo.Items.Count > 0 ? 1 : 0;
+            count += NPCs.Items.Count > 0 ? 1 : 0;
+            count += Creatures.Items.Count > 0 ? 1 : 0;
+            count += LeveledCreatures.Items.Count > 0 ? 1 : 0;
+            count += SoulGems.Items.Count > 0 ? 1 : 0;
+            count += Keys.Items.Count > 0 ? 1 : 0;
+            count += Potions.Items.Count > 0 ? 1 : 0;
+            count += Subspaces.Items.Count > 0 ? 1 : 0;
+            count += SigilStones.Items.Count > 0 ? 1 : 0;
+            count += LeveledItems.Items.Count > 0 ? 1 : 0;
+            count += Weathers.Items.Count > 0 ? 1 : 0;
+            count += Climates.Items.Count > 0 ? 1 : 0;
+            count += Regions.Items.Count > 0 ? 1 : 0;
+            count += Cells.Items.Count > 0 ? 1 : 0;
+            count += Worldspaces.Items.Count > 0 ? 1 : 0;
+            count += DialogTopics.Items.Count > 0 ? 1 : 0;
+            count += Quests.Items.Count > 0 ? 1 : 0;
+            count += IdleAnimations.Items.Count > 0 ? 1 : 0;
+            count += AIPackages.Items.Count > 0 ? 1 : 0;
+            count += CombatStyles.Items.Count > 0 ? 1 : 0;
+            count += LoadScreens.Items.Count > 0 ? 1 : 0;
+            count += LeveledSpells.Items.Count > 0 ? 1 : 0;
+            count += AnimatedObjects.Items.Count > 0 ? 1 : 0;
+            count += Waters.Items.Count > 0 ? 1 : 0;
+            count += EffectShaders.Items.Count > 0 ? 1 : 0;
+            GetCustomRecordCount((customCount) => count += customCount);
+            return count;
+        }
+
+        partial void GetCustomRecordCount(Action<int> setter);
 
         public IEnumerable<ILink> Links => GetLinks();
         private IEnumerable<ILink> GetLinks()

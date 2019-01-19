@@ -126,7 +126,6 @@ namespace Mutagen.Bethesda.Generation
             }
             fg.AppendLine();
 
-            if (obj.GetObjectType() != ObjectType.Mod) return;
             using (var args = new FunctionWrapper(fg,
                 "public Dictionary<FormKey, MajorRecord> CopyInDuplicate"))
             {
@@ -187,8 +186,38 @@ namespace Mutagen.Bethesda.Generation
             }
             fg.AppendLine();
 
-            await base.GenerateInClass(obj, fg);
+            using (var args = new FunctionWrapper(fg,
+                "public void SyncRecordCount"))
+            {
+            }
+            using (new BraceWrapper(fg))
+            {
+                fg.AppendLine("this.TES4.Header.NumRecords = GetRecordCount();");
+            }
             fg.AppendLine();
+
+            using (var args = new FunctionWrapper(fg,
+                "public int GetRecordCount"))
+            {
+            }
+            using (new BraceWrapper(fg))
+            {
+                fg.AppendLine("int count = this.MajorRecords.Count;");
+                foreach (var field in obj.IterateFields())
+                {
+                    if (!(field is LoquiType loqui)) continue;
+                    if (loqui.TargetObjectGeneration.GetObjectType() != ObjectType.Group) continue;
+                    fg.AppendLine($"count += {field.Name}.Items.Count > 0 ? 1 : 0;");
+                }
+                fg.AppendLine("GetCustomRecordCount((customCount) => count += customCount);");
+                fg.AppendLine("return count;");
+            }
+            fg.AppendLine();
+
+            fg.AppendLine("partial void GetCustomRecordCount(Action<int> setter);");
+            fg.AppendLine();
+
+            await base.GenerateInClass(obj, fg);
         }
 
         public override async Task GenerateInCtor(ObjectGeneration obj, FileGeneration fg)

@@ -23,5 +23,6 @@ namespace Mutagen.Bethesda
             ModKey modKey);
         ModKey ModKey { get; }
         FormKey GetNextFormKey();
+        void SyncRecordCount();
     }
 }
