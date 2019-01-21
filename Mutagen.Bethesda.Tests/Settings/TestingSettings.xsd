@@ -1,21 +1,23 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <xs:schema id="TestingSettings" targetNamespace="Tests" elementFormDefault="qualified" xmlns="Tests" xmlns:xs="http://www.w3.org/2001/XMLSchema">
    <xs:include schemaLocation="Passthrough.xsd" />
+   <xs:include schemaLocation="PassthroughSettings.xsd" />
    <xs:include schemaLocation="Common.xsd" />
    <xs:element name="TestingSettings" type="TestingSettingsType" />
    <xs:complexType name="TestingSettingsType">
       <xs:choice minOccurs="0" maxOccurs="unbounded">
-         <xs:element name="TestNormal" type="ValueType" minOccurs="0" maxOccurs="1" />
-         <xs:element name="TestObservable" type="ValueType" minOccurs="0" maxOccurs="1" />
          <xs:element name="TestFolder" type="ValueType" minOccurs="0" maxOccurs="1" />
-         <xs:element name="ReuseCaches" type="ValueType" minOccurs="0" maxOccurs="1" />
-         <xs:element name="DeleteCachesAfter" type="ValueType" minOccurs="0" maxOccurs="1" />
          <xs:element name="TestGroupMasks" type="ValueType" minOccurs="0" maxOccurs="1" />
          <xs:element name="TestModList" type="ValueType" minOccurs="0" maxOccurs="1" />
          <xs:element name="TestFlattenedMod" type="ValueType" minOccurs="0" maxOccurs="1" />
-         <xs:element name="DataFolder" type="NullableValueType" minOccurs="0" maxOccurs="1" />
+         <xs:element name="PassthroughSettings" type="PassthroughSettingsType" minOccurs="0" maxOccurs="1" />
          <xs:element name="OblivionESM" type="PassthroughType" minOccurs="0" maxOccurs="1" />
-         <xs:element name="KnightsESP" type="PassthroughType" minOccurs="0" maxOccurs="1" />
+         <xs:element name="OtherPassthroughs" type="OtherPassthroughsType" minOccurs="0" maxOccurs="1" />
+      </xs:choice>
+   </xs:complexType>
+   <xs:complexType name="OtherPassthroughsType">
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+         <xs:element name="Item" type="PassthroughType" />
       </xs:choice>
    </xs:complexType>
 </xs:schema>

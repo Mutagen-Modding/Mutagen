@@ -48,6 +48,9 @@ namespace Mutagen.Bethesda.Tests
         #region Path
         public String Path { get; set; }
         #endregion
+        #region NumMasters
+        public Byte NumMasters { get; set; }
+        #endregion
 
         #region Loqui Getter Interface
 
@@ -112,6 +115,7 @@ namespace Mutagen.Bethesda.Tests
             if (rhs == null) return false;
             if (this.Do != rhs.Do) return false;
             if (!object.Equals(this.Path, rhs.Path)) return false;
+            if (this.NumMasters != rhs.NumMasters) return false;
             return true;
         }
 
@@ -120,6 +124,7 @@ namespace Mutagen.Bethesda.Tests
             int ret = 0;
             ret = HashHelper.GetHashCode(Do).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(Path).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(NumMasters).CombineHashCode(ret);
             return ret;
         }
 
@@ -517,6 +522,32 @@ namespace Mutagen.Bethesda.Tests
                         errorMask?.PopIndex();
                     }
                     break;
+                case "NumMasters":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Passthrough_FieldIndex.NumMasters);
+                        if (ByteXmlTranslation.Instance.Parse(
+                            root: root,
+                            item: out Byte NumMastersParse,
+                            errorMask: errorMask))
+                        {
+                            item.NumMasters = NumMastersParse;
+                        }
+                        else
+                        {
+                            item.NumMasters = default(Byte);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
                 default:
                     break;
             }
@@ -652,6 +683,9 @@ namespace Mutagen.Bethesda.Tests
                 case Passthrough_FieldIndex.Path:
                     this.Path = (String)obj;
                     break;
+                case Passthrough_FieldIndex.NumMasters:
+                    this.NumMasters = (Byte)obj;
+                    break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -695,6 +729,9 @@ namespace Mutagen.Bethesda.Tests
                 case Passthrough_FieldIndex.Path:
                     obj.Path = (String)pair.Value;
                     break;
+                case Passthrough_FieldIndex.NumMasters:
+                    obj.NumMasters = (Byte)pair.Value;
+                    break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
@@ -714,6 +751,8 @@ namespace Mutagen.Bethesda.Tests
 
         new String Path { get; set; }
 
+        new Byte NumMasters { get; set; }
+
     }
 
     public partial interface IPassthroughGetter : ILoquiObject
@@ -724,6 +763,10 @@ namespace Mutagen.Bethesda.Tests
         #endregion
         #region Path
         String Path { get; }
+
+        #endregion
+        #region NumMasters
+        Byte NumMasters { get; }
 
         #endregion
 
@@ -740,6 +783,7 @@ namespace Mutagen.Bethesda.Tests.Internals
     {
         Do = 0,
         Path = 1,
+        NumMasters = 2,
     }
     #endregion
 
@@ -757,9 +801,9 @@ namespace Mutagen.Bethesda.Tests.Internals
 
         public const string GUID = "4eabe8e5-a068-4934-a847-401d92253ade";
 
-        public const ushort AdditionalFieldCount = 2;
+        public const ushort AdditionalFieldCount = 3;
 
-        public const ushort FieldCount = 2;
+        public const ushort FieldCount = 3;
 
         public static readonly Type MaskType = typeof(Passthrough_Mask<>);
 
@@ -791,6 +835,8 @@ namespace Mutagen.Bethesda.Tests.Internals
                     return (ushort)Passthrough_FieldIndex.Do;
                 case "PATH":
                     return (ushort)Passthrough_FieldIndex.Path;
+                case "NUMMASTERS":
+                    return (ushort)Passthrough_FieldIndex.NumMasters;
                 default:
                     return null;
             }
@@ -803,6 +849,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             {
                 case Passthrough_FieldIndex.Do:
                 case Passthrough_FieldIndex.Path:
+                case Passthrough_FieldIndex.NumMasters:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -816,6 +863,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             {
                 case Passthrough_FieldIndex.Do:
                 case Passthrough_FieldIndex.Path:
+                case Passthrough_FieldIndex.NumMasters:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -829,6 +877,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             {
                 case Passthrough_FieldIndex.Do:
                 case Passthrough_FieldIndex.Path:
+                case Passthrough_FieldIndex.NumMasters:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -844,6 +893,8 @@ namespace Mutagen.Bethesda.Tests.Internals
                     return "Do";
                 case Passthrough_FieldIndex.Path:
                     return "Path";
+                case Passthrough_FieldIndex.NumMasters:
+                    return "NumMasters";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -856,6 +907,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             {
                 case Passthrough_FieldIndex.Do:
                 case Passthrough_FieldIndex.Path:
+                case Passthrough_FieldIndex.NumMasters:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -869,6 +921,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             {
                 case Passthrough_FieldIndex.Do:
                 case Passthrough_FieldIndex.Path:
+                case Passthrough_FieldIndex.NumMasters:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -884,6 +937,8 @@ namespace Mutagen.Bethesda.Tests.Internals
                     return typeof(Boolean);
                 case Passthrough_FieldIndex.Path:
                     return typeof(String);
+                case Passthrough_FieldIndex.NumMasters:
+                    return typeof(Byte);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -943,6 +998,12 @@ namespace Mutagen.Bethesda.Tests.Internals
                 item.Path = rhs.Path;
                 errorMask?.PopIndex();
             }
+            if (copyMask?.NumMasters ?? true)
+            {
+                errorMask?.PushIndex((int)Passthrough_FieldIndex.NumMasters);
+                item.NumMasters = rhs.NumMasters;
+                errorMask?.PopIndex();
+            }
         }
 
         #endregion
@@ -958,6 +1019,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             {
                 case Passthrough_FieldIndex.Do:
                 case Passthrough_FieldIndex.Path:
+                case Passthrough_FieldIndex.NumMasters:
                     if (on) break;
                     throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
                 default:
@@ -979,6 +1041,9 @@ namespace Mutagen.Bethesda.Tests.Internals
                 case Passthrough_FieldIndex.Path:
                     obj.Path = default(String);
                     break;
+                case Passthrough_FieldIndex.NumMasters:
+                    obj.NumMasters = default(Byte);
+                    break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -993,6 +1058,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             {
                 case Passthrough_FieldIndex.Do:
                 case Passthrough_FieldIndex.Path:
+                case Passthrough_FieldIndex.NumMasters:
                     return true;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1010,6 +1076,8 @@ namespace Mutagen.Bethesda.Tests.Internals
                     return obj.Do;
                 case Passthrough_FieldIndex.Path:
                     return obj.Path;
+                case Passthrough_FieldIndex.NumMasters:
+                    return obj.NumMasters;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1021,6 +1089,7 @@ namespace Mutagen.Bethesda.Tests.Internals
         {
             item.Do = default(Boolean);
             item.Path = default(String);
+            item.NumMasters = default(Byte);
         }
 
         public static Passthrough_Mask<bool> GetEqualsMask(
@@ -1040,6 +1109,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             if (rhs == null) return;
             ret.Do = item.Do == rhs.Do;
             ret.Path = object.Equals(item.Path, rhs.Path);
+            ret.NumMasters = item.NumMasters == rhs.NumMasters;
         }
 
         public static string ToString(
@@ -1077,6 +1147,10 @@ namespace Mutagen.Bethesda.Tests.Internals
                 {
                     fg.AppendLine($"Path => {item.Path}");
                 }
+                if (printMask?.NumMasters ?? true)
+                {
+                    fg.AppendLine($"NumMasters => {item.NumMasters}");
+                }
             }
             fg.AppendLine("]");
         }
@@ -1093,6 +1167,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             var ret = new Passthrough_Mask<bool>();
             ret.Do = true;
             ret.Path = true;
+            ret.NumMasters = true;
             return ret;
         }
 
@@ -1147,6 +1222,15 @@ namespace Mutagen.Bethesda.Tests.Internals
                     fieldIndex: (int)Passthrough_FieldIndex.Path,
                     errorMask: errorMask);
             }
+            if ((translationMask?.GetShouldTranslate((int)Passthrough_FieldIndex.NumMasters) ?? true))
+            {
+                ByteXmlTranslation.Instance.Write(
+                    node: elem,
+                    name: nameof(item.NumMasters),
+                    item: item.NumMasters,
+                    fieldIndex: (int)Passthrough_FieldIndex.NumMasters,
+                    errorMask: errorMask);
+            }
         }
         #endregion
 
@@ -1168,12 +1252,14 @@ namespace Mutagen.Bethesda.Tests.Internals
         {
             this.Do = initialValue;
             this.Path = initialValue;
+            this.NumMasters = initialValue;
         }
         #endregion
 
         #region Members
         public T Do;
         public T Path;
+        public T NumMasters;
         #endregion
 
         #region Equals
@@ -1188,6 +1274,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             if (rhs == null) return false;
             if (!object.Equals(this.Do, rhs.Do)) return false;
             if (!object.Equals(this.Path, rhs.Path)) return false;
+            if (!object.Equals(this.NumMasters, rhs.NumMasters)) return false;
             return true;
         }
         public override int GetHashCode()
@@ -1195,6 +1282,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             int ret = 0;
             ret = ret.CombineHashCode(this.Do?.GetHashCode());
             ret = ret.CombineHashCode(this.Path?.GetHashCode());
+            ret = ret.CombineHashCode(this.NumMasters?.GetHashCode());
             return ret;
         }
 
@@ -1205,6 +1293,7 @@ namespace Mutagen.Bethesda.Tests.Internals
         {
             if (!eval(this.Do)) return false;
             if (!eval(this.Path)) return false;
+            if (!eval(this.NumMasters)) return false;
             return true;
         }
         #endregion
@@ -1221,6 +1310,7 @@ namespace Mutagen.Bethesda.Tests.Internals
         {
             obj.Do = eval(this.Do);
             obj.Path = eval(this.Path);
+            obj.NumMasters = eval(this.NumMasters);
         }
         #endregion
 
@@ -1257,6 +1347,10 @@ namespace Mutagen.Bethesda.Tests.Internals
                 {
                     fg.AppendLine($"Path => {Path}");
                 }
+                if (printMask?.NumMasters ?? true)
+                {
+                    fg.AppendLine($"NumMasters => {NumMasters}");
+                }
             }
             fg.AppendLine("]");
         }
@@ -1282,6 +1376,7 @@ namespace Mutagen.Bethesda.Tests.Internals
         }
         public Exception Do;
         public Exception Path;
+        public Exception NumMasters;
         #endregion
 
         #region IErrorMask
@@ -1294,6 +1389,8 @@ namespace Mutagen.Bethesda.Tests.Internals
                     return Do;
                 case Passthrough_FieldIndex.Path:
                     return Path;
+                case Passthrough_FieldIndex.NumMasters:
+                    return NumMasters;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1309,6 +1406,9 @@ namespace Mutagen.Bethesda.Tests.Internals
                     break;
                 case Passthrough_FieldIndex.Path:
                     this.Path = ex;
+                    break;
+                case Passthrough_FieldIndex.NumMasters:
+                    this.NumMasters = ex;
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1326,6 +1426,9 @@ namespace Mutagen.Bethesda.Tests.Internals
                 case Passthrough_FieldIndex.Path:
                     this.Path = (Exception)obj;
                     break;
+                case Passthrough_FieldIndex.NumMasters:
+                    this.NumMasters = (Exception)obj;
+                    break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1336,6 +1439,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             if (Overall != null) return true;
             if (Do != null) return true;
             if (Path != null) return true;
+            if (NumMasters != null) return true;
             return false;
         }
         #endregion
@@ -1372,6 +1476,7 @@ namespace Mutagen.Bethesda.Tests.Internals
         {
             fg.AppendLine($"Do => {Do}");
             fg.AppendLine($"Path => {Path}");
+            fg.AppendLine($"NumMasters => {NumMasters}");
         }
         #endregion
 
@@ -1381,6 +1486,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             var ret = new Passthrough_ErrorMask();
             ret.Do = this.Do.Combine(rhs.Do);
             ret.Path = this.Path.Combine(rhs.Path);
+            ret.NumMasters = this.NumMasters.Combine(rhs.NumMasters);
             return ret;
         }
         public static Passthrough_ErrorMask Combine(Passthrough_ErrorMask lhs, Passthrough_ErrorMask rhs)
@@ -1409,11 +1515,13 @@ namespace Mutagen.Bethesda.Tests.Internals
         {
             this.Do = defaultOn;
             this.Path = defaultOn;
+            this.NumMasters = defaultOn;
         }
 
         #region Members
         public bool Do;
         public bool Path;
+        public bool NumMasters;
         #endregion
 
     }
@@ -1424,6 +1532,7 @@ namespace Mutagen.Bethesda.Tests.Internals
         private TranslationCrystal _crystal;
         public bool Do;
         public bool Path;
+        public bool NumMasters;
         #endregion
 
         #region Ctors
@@ -1435,6 +1544,7 @@ namespace Mutagen.Bethesda.Tests.Internals
         {
             this.Do = defaultOn;
             this.Path = defaultOn;
+            this.NumMasters = defaultOn;
         }
 
         #endregion
@@ -1455,6 +1565,7 @@ namespace Mutagen.Bethesda.Tests.Internals
         {
             ret.Add((Do, null));
             ret.Add((Path, null));
+            ret.Add((NumMasters, null));
         }
     }
     #endregion

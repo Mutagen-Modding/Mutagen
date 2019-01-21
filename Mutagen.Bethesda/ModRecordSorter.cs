@@ -14,15 +14,14 @@ namespace Mutagen.Bethesda
     public static class ModRecordSorter
     {
         public static void Sort(
-            FilePath inputPath,
-            FilePath outputPath,
-            TempFolder temp = null)
+            Func<Stream> streamCreator,
+            Stream outputStream)
         {
-            using (var inputStream = new BinaryReadStream(inputPath.Path))
+            using (var inputStream = new BinaryReadStream(streamCreator()))
             {
-                using (var locatorStream = new BinaryReadStream(inputPath.Path))
+                using (var locatorStream = new BinaryReadStream(streamCreator()))
                 {
-                    using (var writer = new MutagenWriter(new FileStream(outputPath.Path, FileMode.Create)))
+                    using (var writer = new MutagenWriter(outputStream, dispose: false))
                     {
                         while (!inputStream.Complete)
                         {

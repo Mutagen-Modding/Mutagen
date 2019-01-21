@@ -14,21 +14,24 @@ using Xunit;
 
 namespace Mutagen.Bethesda.Tests
 {
-    public abstract class Oblivion_Passthrough_Test
+    public class Oblivion_Passthrough_Test
     {
-        public abstract string Nickname { get; }
+        public string Nickname { get; }
         public string FilePath { get; set; }
-        public abstract ModKey ModKey { get; }
+        public ModKey ModKey { get; }
         public byte NumMasters { get; }
+        private PassthroughSettings settings;
 
-        public Oblivion_Passthrough_Test(byte numMasters, string path = null)
+        public Oblivion_Passthrough_Test(PassthroughSettings settings, Passthrough passthrough)
         {
-            this.FilePath = path;
-            this.NumMasters = numMasters;
+            this.FilePath = Path.Combine(settings.DataFolder, passthrough.Path);
+            this.Nickname = passthrough.Path;
+            this.NumMasters = passthrough.NumMasters;
+            this.settings = settings;
         }
 
         public async Task ImportExport(
-            TestingSettings settings,
+            PassthroughSettings settings,
             TempFolder tmp,
             string inputPath,
             string outputPathStraight,
@@ -85,7 +88,7 @@ namespace Mutagen.Bethesda.Tests
             }
         }
 
-        public ModRecordAligner.AlignmentRules GetAlignmentRules()
+        public static ModRecordAligner.AlignmentRules GetAlignmentRules()
         {
             var ret = new ModRecordAligner.AlignmentRules();
             ret.AddAlignments(
@@ -1337,8 +1340,7 @@ namespace Mutagen.Bethesda.Tests
         }
         #endregion
 
-        public async Task BinaryPassthroughTest(
-            TestingSettings settings)
+        public async Task BinaryPassthroughTest()
         {
             using (var tmp = new TempFolder(new DirectoryInfo(Path.Combine(Path.GetTempPath(), $"Mutagen_Binary_Tests/{Nickname}")), deleteAfter: settings.DeleteCachesAfter))
             {
@@ -1352,17 +1354,22 @@ namespace Mutagen.Bethesda.Tests
 
                 if (!settings.ReuseCaches || !File.Exists(uncompressedPath))
                 {
-                    ModDecompressor.Decompress(
-                        inputPath: this.FilePath,
-                        outputPath: uncompressedPath);
+                    using (var outStream = new FileStream(uncompressedPath, FileMode.Create, FileAccess.Write))
+                    {
+                        ModDecompressor.Decompress(
+                            streamCreator: () => File.OpenRead(this.FilePath),
+                            outputStream: outStream);
+                    }
                 }
 
                 if (!settings.ReuseCaches || !File.Exists(orderedPath))
                 {
-                    ModRecordSorter.Sort(
-                        inputPath: uncompressedPath,
-                        outputPath: orderedPath,
-                        temp: tmp);
+                    using (var outStream = new FileStream(orderedPath, FileMode.Create))
+                    {
+                        ModRecordSorter.Sort(
+                            streamCreator: () => File.OpenRead(uncompressedPath),
+                            outputStream: outStream);
+                    }
                 }
 
                 await ImportExport(

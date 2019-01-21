@@ -10,10 +10,10 @@
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>4a9ff2c0a549bba9a174bb1387f78eec5011ad2d</Sha>
+         <Sha>a7f591e2ad0c834535b3cea8574fd12e5ca1aa78</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>01-06-2019 02:55:01</CommitDate>
-         <Description>Some pre-post set customization features for typical type generation</Description>
+         <CommitDate>01-21-2019 01:38:09</CommitDate>
+         <Description>Bugfix for XSD generation</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>

@@ -30,10 +30,7 @@ namespace Mutagen.Bethesda.Tester
 
             var settings = TestingSettings.Create_Xml(settingsFile.Path);
 
-            await TestBattery.RunTests(
-                settings,
-                reuseCaches: settings.ReuseCaches,
-                deleteCaches: settings.DeleteCachesAfter);
+            await TestBattery.RunTests(settings);
         }
     }
 }

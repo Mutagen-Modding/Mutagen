@@ -15,22 +15,12 @@ using Xunit;
 
 namespace Mutagen.Bethesda.Tests
 {
-    public class OblivionESM_Passthrough_Tests : Oblivion_Passthrough_Test
+    public class OblivionESM_Passthrough_Tests
     {
-        public override string Nickname => TestingConstants.OBLIVION_ESM;
-        public override ModKey ModKey => ModKey.Factory(TestingConstants.OBLIVION_ESM);
-
-        public OblivionESM_Passthrough_Tests(TestingSettings settings)
-            : base(
-                  numMasters: 0,
-                  path: Path.Combine(settings.DataFolder, settings.OblivionESM.Path))
-        {
-        }
-
-        public async Task OblivionESM_GroupMask_Import()
+        public static async Task OblivionESM_GroupMask_Import(PassthroughSettings settings, Passthrough passthrough)
         {
             var mod = OblivionMod.Create_Binary(
-                this.FilePath,
+                Path.Combine(settings.DataFolder, passthrough.Path),
                 modKey: Mutagen.Bethesda.Oblivion.Constants.Oblivion,
                 errorMask: out var inputErrMask,
                 importMask: new GroupMask()
@@ -63,10 +53,10 @@ namespace Mutagen.Bethesda.Tests
             }
         }
 
-        public async Task OblivionESM_GroupMask_Export()
+        public static async Task OblivionESM_GroupMask_Export(PassthroughSettings settings, Passthrough passthrough)
         {
             var mod = OblivionMod.Create_Binary(
-                this.FilePath,
+                Path.Combine(settings.DataFolder, passthrough.Path),
                 modKey: Mutagen.Bethesda.Oblivion.Constants.Oblivion,
                 errorMask: out var inputErrMask);
             Assert.False(inputErrMask?.IsInError() ?? false);
@@ -99,10 +89,10 @@ namespace Mutagen.Bethesda.Tests
             }
         }
 
-        public async Task OblivionESM_Folder_Reimport()
+        public static async Task OblivionESM_Folder_Reimport(PassthroughSettings settings, Passthrough passthrough)
         {
             var mod = OblivionMod.Create_Binary(
-                this.FilePath,
+                Path.Combine(settings.DataFolder, passthrough.Path),
                 modKey: Mutagen.Bethesda.Oblivion.Constants.Oblivion,
                 errorMask: out var inputErrMask);
             Assert.False(inputErrMask?.IsInError() ?? false);

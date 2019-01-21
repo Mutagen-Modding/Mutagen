@@ -8,49 +8,37 @@ namespace Mutagen.Bethesda.Tests
 {
     public static class TestBattery
     {
-        public static Task RunTests(
-            TestingSettings settings,
-            bool reuseCaches = true,
-            bool deleteCaches = false)
+        public static Task RunTests(TestingSettings settings)
         {
             return Task.WhenAll(
-                GetTests(
-                    settings: settings,
-                    reuseCaches: reuseCaches,
-                    deleteCaches: deleteCaches)
+                GetTests(settings: settings)
                 .Select((t) => Task.Run(() => t)));
         }
 
-        public static IEnumerable<Task> GetTests(
-            TestingSettings settings,
-            bool reuseCaches = true,
-            bool deleteCaches = false)
+        public static IEnumerable<Task> GetTests(TestingSettings settings)
         {
-            var obliv = new OblivionESM_Passthrough_Tests(settings);
-
-            if (settings.TestNormal
-                || settings.TestObservable)
+            if ((settings.PassthroughSettings?.TestNormal ?? false)
+                || (settings.PassthroughSettings?.TestObservable ?? false))
             {
-                if (settings.KnightsESP?.Do ?? false)
+                if (settings.OblivionESM.Do)
                 {
-                    yield return new Knights_Passthrough_Tests(settings).BinaryPassthroughTest(
-                        settings: settings);
+                    yield return new Oblivion_Passthrough_Test(settings.PassthroughSettings, settings.OblivionESM).BinaryPassthroughTest();
                 }
-                if (settings.OblivionESM?.Do ?? false)
+                foreach (var passthrough in settings.OtherPassthroughsEnumerable)
                 {
-                    yield return obliv.BinaryPassthroughTest(
-                        settings: settings);
+                    if (!passthrough.Do) continue;
+                    yield return new Oblivion_Passthrough_Test(settings.PassthroughSettings, passthrough).BinaryPassthroughTest();
                 }
             }
 
             if (settings.TestGroupMasks)
             {
-                yield return obliv.OblivionESM_GroupMask_Import();
-                yield return obliv.OblivionESM_GroupMask_Export();
+                yield return OblivionESM_Passthrough_Tests.OblivionESM_GroupMask_Import(settings.PassthroughSettings, settings.OblivionESM);
+                yield return OblivionESM_Passthrough_Tests.OblivionESM_GroupMask_Export(settings.PassthroughSettings, settings.OblivionESM);
             }
             if (settings.TestFolder)
             {
-                yield return obliv.OblivionESM_Folder_Reimport();
+                yield return OblivionESM_Passthrough_Tests.OblivionESM_Folder_Reimport(settings.PassthroughSettings, settings.OblivionESM);
             }
             if (settings.TestModList)
             {

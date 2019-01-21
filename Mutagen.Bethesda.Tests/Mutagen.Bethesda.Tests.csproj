@@ -53,9 +53,7 @@
     <Compile Include="FlattenedMod_Tests.cs" />
     <Compile Include="ModKey_Tests.cs" />
     <Compile Include="ModList_Tests.cs" />
-    <Compile Include="Specific Passthrough Tests\Oblivion\Knights_Passthrough_Tests.cs" />
     <Compile Include="Misc_Tests.cs" />
-    <Compile Include="Specific Passthrough Tests\Oblivion\OblivionESM_Passthrough_Tests.cs" />
     <Compile Include="FormID_Tests.cs" />
     <Compile Include="Passthrough_Tests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -65,6 +63,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
     <Compile Include="RecordType_Tests.cs" />
+    <Compile Include="Specific Passthrough Tests\Oblivion\OblivionESM_Passthrough_Tests.cs" />
     <Compile Include="Specific Passthrough Tests\Oblivion\Oblivion_Passthrough_Test.cs" />
     <Compile Include="TestBattery.cs" />
     <Compile Include="TestingConstants.cs" />
@@ -73,6 +72,9 @@
     </Compile>
     <Compile Include="Settings\ProtocolDefinition_Tests.cs" />
     <Compile Include="Settings\Passthrough_LoquiGenerated.cs">
+      <DependentUpon>TestingSettings.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Settings\PassthroughSettings_LoquiGenerated.cs">
       <DependentUpon>TestingSettings.xml</DependentUpon>
     </Compile>
   </ItemGroup>
@@ -100,6 +102,9 @@
     </None>
     <None Include="Settings\Common.xsd" />
     <None Include="Settings\Passthrough.xsd">
+      <DependentUpon>TestingSettings.xml</DependentUpon>
+    </None>
+    <None Include="Settings\PassthroughSettings.xsd">
       <DependentUpon>TestingSettings.xml</DependentUpon>
     </None>
   </ItemGroup>

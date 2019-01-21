@@ -13,16 +13,15 @@ namespace Mutagen.Bethesda
     public static class ModDecompressor
     {
         public static void Decompress(
-            FilePath inputPath,
-            FilePath outputPath,
+            Func<Stream> streamCreator,
+            Stream outputStream,
             RecordInterest interest = null)
         {
-            using (var inputStream = new BinaryReadStream(inputPath.Path))
+            using (var inputStream = new BinaryReadStream(streamCreator()))
             {
-                using (var inputStreamJumpback = new BinaryReadStream(inputPath.Path))
+                using (var inputStreamJumpback = new BinaryReadStream(streamCreator()))
                 {
-                    var fs = new FileStream(outputPath.Path, FileMode.Create, FileAccess.Write);
-                    using (var writer = new System.IO.BinaryWriter(fs))
+                    using (var writer = new System.IO.BinaryWriter(outputStream, Encoding.Default, leaveOpen: true))
                     {
                         long runningDiff = 0;
                         var fileLocs = RecordLocator.GetFileLocations(
@@ -56,7 +55,7 @@ namespace Mutagen.Bethesda
                             {
                                 noRecordLength = inputStream.Length - inputStream.Position;
                             }
-                            inputStream.WriteTo(fs, (int)noRecordLength);
+                            inputStream.WriteTo(outputStream, (int)noRecordLength);
 
                             // If complete overall, return
                             if (inputStream.Complete) break;
@@ -103,7 +102,7 @@ namespace Mutagen.Bethesda
                         foreach (var item in grupMeta)
                         {
                             var grupLoc = item.Key;
-                            fs.Position = grupLoc + 4 + item.Value.Offset;
+                            outputStream.Position = grupLoc + 4 + item.Value.Offset;
                             writer.Write(item.Value.Length);
                         }
                     }
