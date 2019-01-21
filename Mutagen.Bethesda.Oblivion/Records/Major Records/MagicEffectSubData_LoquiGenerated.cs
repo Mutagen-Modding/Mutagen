@@ -1583,8 +1583,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)MagicEffectSubData_FieldIndex.EnchantEffect);
                 try
                 {
-                    item.EnchantEffect_Property.Set(
-                        value: rhs.EnchantEffect,
+                    item.EnchantEffect_Property.SetLink(
+                        value: rhs.EnchantEffect_Property,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -1602,8 +1602,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)MagicEffectSubData_FieldIndex.CastingSound);
                 try
                 {
-                    item.CastingSound_Property.Set(
-                        value: rhs.CastingSound,
+                    item.CastingSound_Property.SetLink(
+                        value: rhs.CastingSound_Property,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -1621,8 +1621,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)MagicEffectSubData_FieldIndex.BoltSound);
                 try
                 {
-                    item.BoltSound_Property.Set(
-                        value: rhs.BoltSound,
+                    item.BoltSound_Property.SetLink(
+                        value: rhs.BoltSound_Property,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -1640,8 +1640,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)MagicEffectSubData_FieldIndex.HitSound);
                 try
                 {
-                    item.HitSound_Property.Set(
-                        value: rhs.HitSound,
+                    item.HitSound_Property.SetLink(
+                        value: rhs.HitSound_Property,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -1659,8 +1659,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)MagicEffectSubData_FieldIndex.AreaSound);
                 try
                 {
-                    item.AreaSound_Property.Set(
-                        value: rhs.AreaSound,
+                    item.AreaSound_Property.SetLink(
+                        value: rhs.AreaSound_Property,
                         cmds: cmds);
                 }
                 catch (Exception ex)

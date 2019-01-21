@@ -1433,8 +1433,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)BaseLayer_FieldIndex.Texture);
                 try
                 {
-                    item.Texture_Property.Set(
-                        value: rhs.Texture,
+                    item.Texture_Property.SetLink(
+                        value: rhs.Texture_Property,
                         cmds: cmds);
                 }
                 catch (Exception ex)

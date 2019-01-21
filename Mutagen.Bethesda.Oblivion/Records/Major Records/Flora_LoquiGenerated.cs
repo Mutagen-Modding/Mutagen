@@ -1995,7 +1995,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Flora_FieldIndex.Script);
                 try
                 {
-                    item.Script_Property.SetToWithDefault(
+                    item.Script_Property.SetLink(
                         rhs: rhs.Script_Property,
                         def: def?.Script_Property,
                         cmds: cmds);
@@ -2015,7 +2015,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Flora_FieldIndex.Ingredient);
                 try
                 {
-                    item.Ingredient_Property.SetToWithDefault(
+                    item.Ingredient_Property.SetLink(
                         rhs: rhs.Ingredient_Property,
                         def: def?.Ingredient_Property,
                         cmds: cmds);

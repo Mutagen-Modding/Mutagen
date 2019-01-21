@@ -1376,8 +1376,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)RankPlacement_FieldIndex.Faction);
                 try
                 {
-                    item.Faction_Property.Set(
-                        value: rhs.Faction,
+                    item.Faction_Property.SetLink(
+                        value: rhs.Faction_Property,
                         cmds: cmds);
                 }
                 catch (Exception ex)

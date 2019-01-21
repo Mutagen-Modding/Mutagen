@@ -1240,8 +1240,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)RaceHair_FieldIndex.Male);
                 try
                 {
-                    item.Male_Property.Set(
-                        value: rhs.Male,
+                    item.Male_Property.SetLink(
+                        value: rhs.Male_Property,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -1259,8 +1259,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)RaceHair_FieldIndex.Female);
                 try
                 {
-                    item.Female_Property.Set(
-                        value: rhs.Female,
+                    item.Female_Property.SetLink(
+                        value: rhs.Female_Property,
                         cmds: cmds);
                 }
                 catch (Exception ex)

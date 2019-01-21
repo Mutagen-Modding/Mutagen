@@ -64,6 +64,12 @@ namespace Mutagen.Bethesda
             this.Set(formKey.Value);
         }
 
+        public void SetLink(ILink<T> value, NotifyingFireParameters cmds = null)
+        {
+            base.Set(value.Item, cmds);
+            this.UnlinkedForm = value.FormKey;
+        }
+
         public void Set(FormKey id)
         {
             this.UnlinkedForm = id;

@@ -1978,7 +1978,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Door_FieldIndex.Script);
                 try
                 {
-                    item.Script_Property.SetToWithDefault(
+                    item.Script_Property.SetLink(
                         rhs: rhs.Script_Property,
                         def: def?.Script_Property,
                         cmds: cmds);
@@ -1998,7 +1998,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Door_FieldIndex.OpenSound);
                 try
                 {
-                    item.OpenSound_Property.SetToWithDefault(
+                    item.OpenSound_Property.SetLink(
                         rhs: rhs.OpenSound_Property,
                         def: def?.OpenSound_Property,
                         cmds: cmds);
@@ -2018,7 +2018,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Door_FieldIndex.CloseSound);
                 try
                 {
-                    item.CloseSound_Property.SetToWithDefault(
+                    item.CloseSound_Property.SetLink(
                         rhs: rhs.CloseSound_Property,
                         def: def?.CloseSound_Property,
                         cmds: cmds);
@@ -2038,7 +2038,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Door_FieldIndex.LoopSound);
                 try
                 {
-                    item.LoopSound_Property.SetToWithDefault(
+                    item.LoopSound_Property.SetLink(
                         rhs: rhs.LoopSound_Property,
                         def: def?.LoopSound_Property,
                         cmds: cmds);

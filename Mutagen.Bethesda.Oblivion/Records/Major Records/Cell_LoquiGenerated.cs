@@ -3163,7 +3163,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Cell_FieldIndex.Climate);
                 try
                 {
-                    item.Climate_Property.SetToWithDefault(
+                    item.Climate_Property.SetLink(
                         rhs: rhs.Climate_Property,
                         def: def?.Climate_Property,
                         cmds: cmds);
@@ -3183,7 +3183,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Cell_FieldIndex.Water);
                 try
                 {
-                    item.Water_Property.SetToWithDefault(
+                    item.Water_Property.SetLink(
                         rhs: rhs.Water_Property,
                         def: def?.Water_Property,
                         cmds: cmds);
@@ -3203,7 +3203,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Cell_FieldIndex.Owner);
                 try
                 {
-                    item.Owner_Property.SetToWithDefault(
+                    item.Owner_Property.SetLink(
                         rhs: rhs.Owner_Property,
                         def: def?.Owner_Property,
                         cmds: cmds);
@@ -3253,7 +3253,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Cell_FieldIndex.GlobalVariable);
                 try
                 {
-                    item.GlobalVariable_Property.SetToWithDefault(
+                    item.GlobalVariable_Property.SetLink(
                         rhs: rhs.GlobalVariable_Property,
                         def: def?.GlobalVariable_Property,
                         cmds: cmds);

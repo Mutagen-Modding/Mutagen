@@ -1294,8 +1294,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)RelatedWaters_FieldIndex.RelatedWaterDaytime);
                 try
                 {
-                    item.RelatedWaterDaytime_Property.Set(
-                        value: rhs.RelatedWaterDaytime,
+                    item.RelatedWaterDaytime_Property.SetLink(
+                        value: rhs.RelatedWaterDaytime_Property,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -1313,8 +1313,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)RelatedWaters_FieldIndex.RelatedWaterNighttime);
                 try
                 {
-                    item.RelatedWaterNighttime_Property.Set(
-                        value: rhs.RelatedWaterNighttime,
+                    item.RelatedWaterNighttime_Property.SetLink(
+                        value: rhs.RelatedWaterNighttime_Property,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -1332,8 +1332,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)RelatedWaters_FieldIndex.RelatedWaterUnderwater);
                 try
                 {
-                    item.RelatedWaterUnderwater_Property.Set(
-                        value: rhs.RelatedWaterUnderwater,
+                    item.RelatedWaterUnderwater_Property.SetLink(
+                        value: rhs.RelatedWaterUnderwater_Property,
                         cmds: cmds);
                 }
                 catch (Exception ex)

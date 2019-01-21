@@ -1404,7 +1404,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)AnimatedObject_FieldIndex.IdleAnimation);
                 try
                 {
-                    item.IdleAnimation_Property.SetToWithDefault(
+                    item.IdleAnimation_Property.SetLink(
                         rhs: rhs.IdleAnimation_Property,
                         def: def?.IdleAnimation_Property,
                         cmds: cmds);

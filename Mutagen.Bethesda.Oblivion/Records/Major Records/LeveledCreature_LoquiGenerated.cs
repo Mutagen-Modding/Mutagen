@@ -1787,7 +1787,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)LeveledCreature_FieldIndex.Script);
                 try
                 {
-                    item.Script_Property.SetToWithDefault(
+                    item.Script_Property.SetLink(
                         rhs: rhs.Script_Property,
                         def: def?.Script_Property,
                         cmds: cmds);
@@ -1807,7 +1807,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)LeveledCreature_FieldIndex.Template);
                 try
                 {
-                    item.Template_Property.SetToWithDefault(
+                    item.Template_Property.SetLink(
                         rhs: rhs.Template_Property,
                         def: def?.Template_Property,
                         cmds: cmds);

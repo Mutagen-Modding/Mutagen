@@ -2767,7 +2767,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Worldspace_FieldIndex.Parent);
                 try
                 {
-                    item.Parent_Property.SetToWithDefault(
+                    item.Parent_Property.SetLink(
                         rhs: rhs.Parent_Property,
                         def: def?.Parent_Property,
                         cmds: cmds);
@@ -2787,7 +2787,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Worldspace_FieldIndex.Climate);
                 try
                 {
-                    item.Climate_Property.SetToWithDefault(
+                    item.Climate_Property.SetLink(
                         rhs: rhs.Climate_Property,
                         def: def?.Climate_Property,
                         cmds: cmds);
@@ -2807,7 +2807,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Worldspace_FieldIndex.Water);
                 try
                 {
-                    item.Water_Property.SetToWithDefault(
+                    item.Water_Property.SetLink(
                         rhs: rhs.Water_Property,
                         def: def?.Water_Property,
                         cmds: cmds);

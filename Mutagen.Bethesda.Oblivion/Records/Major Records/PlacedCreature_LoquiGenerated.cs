@@ -2051,7 +2051,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)PlacedCreature_FieldIndex.Base);
                 try
                 {
-                    item.Base_Property.SetToWithDefault(
+                    item.Base_Property.SetLink(
                         rhs: rhs.Base_Property,
                         def: def?.Base_Property,
                         cmds: cmds);
@@ -2071,7 +2071,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)PlacedCreature_FieldIndex.Owner);
                 try
                 {
-                    item.Owner_Property.SetToWithDefault(
+                    item.Owner_Property.SetLink(
                         rhs: rhs.Owner_Property,
                         def: def?.Owner_Property,
                         cmds: cmds);
@@ -2121,7 +2121,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)PlacedCreature_FieldIndex.GlobalVariable);
                 try
                 {
-                    item.GlobalVariable_Property.SetToWithDefault(
+                    item.GlobalVariable_Property.SetLink(
                         rhs: rhs.GlobalVariable_Property,
                         def: def?.GlobalVariable_Property,
                         cmds: cmds);

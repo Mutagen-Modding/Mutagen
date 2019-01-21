@@ -1634,8 +1634,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)ScriptEffect_FieldIndex.Script);
                 try
                 {
-                    item.Script_Property.Set(
-                        value: rhs.Script,
+                    item.Script_Property.SetLink(
+                        value: rhs.Script_Property,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -1670,8 +1670,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)ScriptEffect_FieldIndex.VisualEffect);
                 try
                 {
-                    item.VisualEffect_Property.Set(
-                        value: rhs.VisualEffect,
+                    item.VisualEffect_Property.SetLink(
+                        value: rhs.VisualEffect_Property,
                         cmds: cmds);
                 }
                 catch (Exception ex)

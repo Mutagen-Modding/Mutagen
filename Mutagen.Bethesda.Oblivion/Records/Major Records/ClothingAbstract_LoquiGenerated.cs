@@ -2329,7 +2329,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)ClothingAbstract_FieldIndex.Script);
                 try
                 {
-                    item.Script_Property.SetToWithDefault(
+                    item.Script_Property.SetLink(
                         rhs: rhs.Script_Property,
                         def: def?.Script_Property,
                         cmds: cmds);
@@ -2349,7 +2349,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)ClothingAbstract_FieldIndex.Enchantment);
                 try
                 {
-                    item.Enchantment_Property.SetToWithDefault(
+                    item.Enchantment_Property.SetLink(
                         rhs: rhs.Enchantment_Property,
                         def: def?.Enchantment_Property,
                         cmds: cmds);

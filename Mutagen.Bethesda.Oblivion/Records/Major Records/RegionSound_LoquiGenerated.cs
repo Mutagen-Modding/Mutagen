@@ -1367,8 +1367,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)RegionSound_FieldIndex.Sound);
                 try
                 {
-                    item.Sound_Property.Set(
-                        value: rhs.Sound,
+                    item.Sound_Property.SetLink(
+                        value: rhs.Sound_Property,
                         cmds: cmds);
                 }
                 catch (Exception ex)

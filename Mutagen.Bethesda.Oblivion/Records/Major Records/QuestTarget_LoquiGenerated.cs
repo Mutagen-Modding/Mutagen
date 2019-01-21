@@ -1438,8 +1438,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)QuestTarget_FieldIndex.Target);
                 try
                 {
-                    item.Target_Property.Set(
-                        value: rhs.Target,
+                    item.Target_Property.SetLink(
+                        value: rhs.Target_Property,
                         cmds: cmds);
                 }
                 catch (Exception ex)

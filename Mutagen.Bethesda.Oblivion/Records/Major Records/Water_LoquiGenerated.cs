@@ -4497,7 +4497,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Water_FieldIndex.Sound);
                 try
                 {
-                    item.Sound_Property.SetToWithDefault(
+                    item.Sound_Property.SetLink(
                         rhs: rhs.Sound_Property,
                         def: def?.Sound_Property,
                         cmds: cmds);

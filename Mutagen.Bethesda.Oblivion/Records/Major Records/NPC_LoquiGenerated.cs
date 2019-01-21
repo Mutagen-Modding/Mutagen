@@ -7541,7 +7541,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)NPC_FieldIndex.DeathItem);
                 try
                 {
-                    item.DeathItem_Property.SetToWithDefault(
+                    item.DeathItem_Property.SetLink(
                         rhs: rhs.DeathItem_Property,
                         def: def?.DeathItem_Property,
                         cmds: cmds);
@@ -7561,7 +7561,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)NPC_FieldIndex.Race);
                 try
                 {
-                    item.Race_Property.SetToWithDefault(
+                    item.Race_Property.SetLink(
                         rhs: rhs.Race_Property,
                         def: def?.Race_Property,
                         cmds: cmds);
@@ -7600,7 +7600,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)NPC_FieldIndex.Script);
                 try
                 {
-                    item.Script_Property.SetToWithDefault(
+                    item.Script_Property.SetLink(
                         rhs: rhs.Script_Property,
                         def: def?.Script_Property,
                         cmds: cmds);
@@ -7829,7 +7829,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)NPC_FieldIndex.Class);
                 try
                 {
-                    item.Class_Property.SetToWithDefault(
+                    item.Class_Property.SetLink(
                         rhs: rhs.Class_Property,
                         def: def?.Class_Property,
                         cmds: cmds);
@@ -8359,7 +8359,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)NPC_FieldIndex.Hair);
                 try
                 {
-                    item.Hair_Property.SetToWithDefault(
+                    item.Hair_Property.SetLink(
                         rhs: rhs.Hair_Property,
                         def: def?.Hair_Property,
                         cmds: cmds);
@@ -8458,7 +8458,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)NPC_FieldIndex.CombatStyle);
                 try
                 {
-                    item.CombatStyle_Property.SetToWithDefault(
+                    item.CombatStyle_Property.SetLink(
                         rhs: rhs.CombatStyle_Property,
                         def: def?.CombatStyle_Property,
                         cmds: cmds);

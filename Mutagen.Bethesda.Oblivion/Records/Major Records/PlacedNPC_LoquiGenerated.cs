@@ -2293,7 +2293,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)PlacedNPC_FieldIndex.Base);
                 try
                 {
-                    item.Base_Property.SetToWithDefault(
+                    item.Base_Property.SetLink(
                         rhs: rhs.Base_Property,
                         def: def?.Base_Property,
                         cmds: cmds);
@@ -2481,7 +2481,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)PlacedNPC_FieldIndex.MerchantContainer);
                 try
                 {
-                    item.MerchantContainer_Property.SetToWithDefault(
+                    item.MerchantContainer_Property.SetLink(
                         rhs: rhs.MerchantContainer_Property,
                         def: def?.MerchantContainer_Property,
                         cmds: cmds);
@@ -2501,7 +2501,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)PlacedNPC_FieldIndex.Horse);
                 try
                 {
-                    item.Horse_Property.SetToWithDefault(
+                    item.Horse_Property.SetLink(
                         rhs: rhs.Horse_Property,
                         def: def?.Horse_Property,
                         cmds: cmds);

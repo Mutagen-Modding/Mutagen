@@ -1386,8 +1386,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)AIPackageLocation_FieldIndex.LocationReference);
                 try
                 {
-                    item.LocationReference_Property.Set(
-                        value: rhs.LocationReference,
+                    item.LocationReference_Property.SetLink(
+                        value: rhs.LocationReference_Property,
                         cmds: cmds);
                 }
                 catch (Exception ex)

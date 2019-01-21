@@ -2848,8 +2848,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)MagicEffect_FieldIndex.Light);
                 try
                 {
-                    item.Light_Property.Set(
-                        value: rhs.Light,
+                    item.Light_Property.SetLink(
+                        value: rhs.Light_Property,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -2884,8 +2884,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)MagicEffect_FieldIndex.EffectShader);
                 try
                 {
-                    item.EffectShader_Property.Set(
-                        value: rhs.EffectShader,
+                    item.EffectShader_Property.SetLink(
+                        value: rhs.EffectShader_Property,
                         cmds: cmds);
                 }
                 catch (Exception ex)

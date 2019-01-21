@@ -2154,7 +2154,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)DialogItem_FieldIndex.Quest);
                 try
                 {
-                    item.Quest_Property.SetToWithDefault(
+                    item.Quest_Property.SetLink(
                         rhs: rhs.Quest_Property,
                         def: def?.Quest_Property,
                         cmds: cmds);
@@ -2174,7 +2174,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)DialogItem_FieldIndex.PreviousTopic);
                 try
                 {
-                    item.PreviousTopic_Property.SetToWithDefault(
+                    item.PreviousTopic_Property.SetLink(
                         rhs: rhs.PreviousTopic_Property,
                         def: def?.PreviousTopic_Property,
                         cmds: cmds);

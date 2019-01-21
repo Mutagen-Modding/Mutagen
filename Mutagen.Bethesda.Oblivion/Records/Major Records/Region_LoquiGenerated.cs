@@ -2184,7 +2184,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Region_FieldIndex.Worldspace);
                 try
                 {
-                    item.Worldspace_Property.SetToWithDefault(
+                    item.Worldspace_Property.SetLink(
                         rhs: rhs.Worldspace_Property,
                         def: def?.Worldspace_Property,
                         cmds: cmds);

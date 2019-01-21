@@ -1278,8 +1278,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)WeatherChance_FieldIndex.Weather);
                 try
                 {
-                    item.Weather_Property.Set(
-                        value: rhs.Weather,
+                    item.Weather_Property.SetLink(
+                        value: rhs.Weather_Property,
                         cmds: cmds);
                 }
                 catch (Exception ex)

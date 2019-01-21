@@ -2567,8 +2567,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)RegionDataObject_FieldIndex.Object);
                 try
                 {
-                    item.Object_Property.Set(
-                        value: rhs.Object,
+                    item.Object_Property.SetLink(
+                        value: rhs.Object_Property,
                         cmds: cmds);
                 }
                 catch (Exception ex)

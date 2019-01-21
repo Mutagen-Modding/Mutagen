@@ -6304,7 +6304,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Creature_FieldIndex.DeathItem);
                 try
                 {
-                    item.DeathItem_Property.SetToWithDefault(
+                    item.DeathItem_Property.SetLink(
                         rhs: rhs.DeathItem_Property,
                         def: def?.DeathItem_Property,
                         cmds: cmds);
@@ -6324,7 +6324,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Creature_FieldIndex.Script);
                 try
                 {
-                    item.Script_Property.SetToWithDefault(
+                    item.Script_Property.SetLink(
                         rhs: rhs.Script_Property,
                         def: def?.Script_Property,
                         cmds: cmds);
@@ -6786,7 +6786,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Creature_FieldIndex.CombatStyle);
                 try
                 {
-                    item.CombatStyle_Property.SetToWithDefault(
+                    item.CombatStyle_Property.SetLink(
                         rhs: rhs.CombatStyle_Property,
                         def: def?.CombatStyle_Property,
                         cmds: cmds);
@@ -6956,7 +6956,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Creature_FieldIndex.InheritsSoundFrom);
                 try
                 {
-                    item.InheritsSoundFrom_Property.SetToWithDefault(
+                    item.InheritsSoundFrom_Property.SetLink(
                         rhs: rhs.InheritsSoundFrom_Property,
                         def: def?.InheritsSoundFrom_Property,
                         cmds: cmds);

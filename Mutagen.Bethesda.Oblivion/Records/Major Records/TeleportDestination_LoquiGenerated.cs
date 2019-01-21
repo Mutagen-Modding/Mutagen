@@ -1369,8 +1369,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)TeleportDestination_FieldIndex.Destination);
                 try
                 {
-                    item.Destination_Property.Set(
-                        value: rhs.Destination,
+                    item.Destination_Property.SetLink(
+                        value: rhs.Destination_Property,
                         cmds: cmds);
                 }
                 catch (Exception ex)

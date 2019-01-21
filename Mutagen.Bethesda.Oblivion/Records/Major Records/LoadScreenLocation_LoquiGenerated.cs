@@ -1339,8 +1339,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)LoadScreenLocation_FieldIndex.Direct);
                 try
                 {
-                    item.Direct_Property.Set(
-                        value: rhs.Direct,
+                    item.Direct_Property.SetLink(
+                        value: rhs.Direct_Property,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -1358,8 +1358,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)LoadScreenLocation_FieldIndex.Indirect);
                 try
                 {
-                    item.Indirect_Property.Set(
-                        value: rhs.Indirect,
+                    item.Indirect_Property.SetLink(
+                        value: rhs.Indirect_Property,
                         cmds: cmds);
                 }
                 catch (Exception ex)

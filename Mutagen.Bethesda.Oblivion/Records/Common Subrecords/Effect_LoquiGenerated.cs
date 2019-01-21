@@ -1851,8 +1851,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Effect_FieldIndex.MagicEffect);
                 try
                 {
-                    item.MagicEffect_Property.Set(
-                        value: rhs.MagicEffect,
+                    item.MagicEffect_Property.SetLink(
+                        value: rhs.MagicEffect_Property,
                         cmds: cmds);
                 }
                 catch (Exception ex)

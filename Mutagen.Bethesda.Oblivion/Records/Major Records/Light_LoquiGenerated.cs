@@ -2617,7 +2617,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Light_FieldIndex.Script);
                 try
                 {
-                    item.Script_Property.SetToWithDefault(
+                    item.Script_Property.SetLink(
                         rhs: rhs.Script_Property,
                         def: def?.Script_Property,
                         cmds: cmds);
@@ -2863,7 +2863,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Light_FieldIndex.Sound);
                 try
                 {
-                    item.Sound_Property.SetToWithDefault(
+                    item.Sound_Property.SetLink(
                         rhs: rhs.Sound_Property,
                         def: def?.Sound_Property,
                         cmds: cmds);

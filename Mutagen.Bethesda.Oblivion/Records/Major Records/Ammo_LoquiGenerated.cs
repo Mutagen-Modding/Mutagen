@@ -2331,7 +2331,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Ammo_FieldIndex.Enchantment);
                 try
                 {
-                    item.Enchantment_Property.SetToWithDefault(
+                    item.Enchantment_Property.SetLink(
                         rhs: rhs.Enchantment_Property,
                         def: def?.Enchantment_Property,
                         cmds: cmds);

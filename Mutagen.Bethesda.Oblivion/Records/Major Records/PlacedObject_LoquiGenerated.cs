@@ -3806,7 +3806,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)PlacedObject_FieldIndex.Base);
                 try
                 {
-                    item.Base_Property.SetToWithDefault(
+                    item.Base_Property.SetLink(
                         rhs: rhs.Base_Property,
                         def: def?.Base_Property,
                         cmds: cmds);
@@ -3994,7 +3994,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)PlacedObject_FieldIndex.Owner);
                 try
                 {
-                    item.Owner_Property.SetToWithDefault(
+                    item.Owner_Property.SetLink(
                         rhs: rhs.Owner_Property,
                         def: def?.Owner_Property,
                         cmds: cmds);
@@ -4044,7 +4044,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)PlacedObject_FieldIndex.GlobalVariable);
                 try
                 {
-                    item.GlobalVariable_Property.SetToWithDefault(
+                    item.GlobalVariable_Property.SetLink(
                         rhs: rhs.GlobalVariable_Property,
                         def: def?.GlobalVariable_Property,
                         cmds: cmds);
@@ -4118,7 +4118,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)PlacedObject_FieldIndex.Target);
                 try
                 {
-                    item.Target_Property.SetToWithDefault(
+                    item.Target_Property.SetLink(
                         rhs: rhs.Target_Property,
                         def: def?.Target_Property,
                         cmds: cmds);
@@ -4312,7 +4312,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)PlacedObject_FieldIndex.Unknown);
                 try
                 {
-                    item.Unknown_Property.SetToWithDefault(
+                    item.Unknown_Property.SetLink(
                         rhs: rhs.Unknown_Property,
                         def: def?.Unknown_Property,
                         cmds: cmds);
@@ -4523,7 +4523,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)PlacedObject_FieldIndex.ContainedSoul);
                 try
                 {
-                    item.ContainedSoul_Property.SetToWithDefault(
+                    item.ContainedSoul_Property.SetLink(
                         rhs: rhs.ContainedSoul_Property,
                         def: def?.ContainedSoul_Property,
                         cmds: cmds);
