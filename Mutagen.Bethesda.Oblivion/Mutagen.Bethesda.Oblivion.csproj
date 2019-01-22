@@ -84,6 +84,9 @@
     <Compile Include="Records\Common Subrecords\WeatherChance_LoquiGenerated.cs">
       <DependentUpon>WeatherChance.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Header\Header.cs">
+      <DependentUpon>HEDR.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Header\Header_LoquiGenerated.cs">
       <DependentUpon>HEDR.xml</DependentUpon>
     </Compile>
