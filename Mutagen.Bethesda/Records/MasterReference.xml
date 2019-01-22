@@ -2,7 +2,7 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="MasterReference" objType="Subrecord" GUID="f1785555-cc72-4e7c-91b3-342cee7a1068" ID="3">
     <Fields>
-      <ModKey name="Master" recordType="MAST" />
+      <ModKey name="Master" recordType="MAST" hasBeenSet="False" />
       <UInt64 name="FileSize" recordType="DATA" />
     </Fields>
   </Object>

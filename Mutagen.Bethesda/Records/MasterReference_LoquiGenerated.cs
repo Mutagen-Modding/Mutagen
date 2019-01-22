@@ -49,29 +49,11 @@ namespace Mutagen.Bethesda
         #endregion
 
         #region Master
-        public bool Master_IsSet
-        {
-            get => _hasBeenSetTracker[(int)MasterReference_FieldIndex.Master];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)MasterReference_FieldIndex.Master, nameof(Master_IsSet));
-        }
-        bool IMasterReferenceGetter.Master_IsSet => Master_IsSet;
         private ModKey _Master;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public ModKey Master
         {
             get => this._Master;
-            set => Master_Set(value);
-        }
-        ModKey IMasterReferenceGetter.Master => this.Master;
-        public void Master_Set(
-            ModKey value,
-            bool markSet = true)
-        {
-            this.RaiseAndSetIfChanged(ref _Master, value, _hasBeenSetTracker, markSet, (int)MasterReference_FieldIndex.Master, nameof(Master), nameof(Master_IsSet));
-        }
-        public void Master_Unset()
-        {
-            this.Master_Set(default(ModKey), false);
+            set => this.RaiseAndSetIfChanged(ref this._Master, value, nameof(Master));
         }
         #endregion
         #region FileSize
@@ -157,11 +139,7 @@ namespace Mutagen.Bethesda
         public bool Equals(MasterReference rhs)
         {
             if (rhs == null) return false;
-            if (Master_IsSet != rhs.Master_IsSet) return false;
-            if (Master_IsSet)
-            {
-                if (this.Master != rhs.Master) return false;
-            }
+            if (this.Master != rhs.Master) return false;
             if (FileSize_IsSet != rhs.FileSize_IsSet) return false;
             if (FileSize_IsSet)
             {
@@ -173,10 +151,7 @@ namespace Mutagen.Bethesda
         public override int GetHashCode()
         {
             int ret = 0;
-            if (Master_IsSet)
-            {
-                ret = HashHelper.GetHashCode(Master).CombineHashCode(ret);
-            }
+            ret = HashHelper.GetHashCode(Master).CombineHashCode(ret);
             if (FileSize_IsSet)
             {
                 ret = HashHelper.GetHashCode(FileSize).CombineHashCode(ret);
@@ -590,13 +565,18 @@ namespace Mutagen.Bethesda
         {
             switch ((MasterReference_FieldIndex)index)
             {
-                case MasterReference_FieldIndex.Master:
                 case MasterReference_FieldIndex.FileSize:
                     return _hasBeenSetTracker[index];
+                case MasterReference_FieldIndex.Master:
+                    return true;
                 default:
                     throw new ArgumentException($"Unknown field index: {index}");
             }
         }
+
+        #region Mutagen
+        public new static readonly RecordType GRUP_RECORD_TYPE = MasterReference_Registration.TRIGGERING_RECORD_TYPE;
+        #endregion
 
         #region Binary Translation
         #region Binary Create
@@ -931,7 +911,6 @@ namespace Mutagen.Bethesda
                     }
                     return TryGet<int?>.Succeed((int)MasterReference_FieldIndex.Master);
                 case 0x41544144: // DATA
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)MasterReference_FieldIndex.FileSize) return TryGet<int?>.Failure;
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     try
                     {
@@ -1152,9 +1131,6 @@ namespace Mutagen.Bethesda
     public partial interface IMasterReference : IMasterReferenceGetter, ILoquiClass<IMasterReference, IMasterReferenceGetter>, ILoquiClass<MasterReference, IMasterReferenceGetter>
     {
         new ModKey Master { get; set; }
-        new bool Master_IsSet { get; set; }
-        void Master_Set(ModKey item, bool hasBeenSet = true);
-        void Master_Unset();
 
         new UInt64 FileSize { get; set; }
         new bool FileSize_IsSet { get; set; }
@@ -1167,7 +1143,6 @@ namespace Mutagen.Bethesda
     {
         #region Master
         ModKey Master { get; }
-        bool Master_IsSet { get; }
 
         #endregion
         #region FileSize
@@ -1340,18 +1315,7 @@ namespace Mutagen.Bethesda.Internals
 
         public static readonly RecordType MAST_HEADER = new RecordType("MAST");
         public static readonly RecordType DATA_HEADER = new RecordType("DATA");
-        public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
-        private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
-        {
-            return new CollectionGetterWrapper<RecordType>(
-                new HashSet<RecordType>(
-                    new RecordType[]
-                    {
-                        MAST_HEADER,
-                        DATA_HEADER
-                    })
-            );
-        });
+        public static readonly RecordType TRIGGERING_RECORD_TYPE = MAST_HEADER;
         public const int NumStructFields = 0;
         public const int NumTypedFields = 2;
         #region Interface
@@ -1401,20 +1365,7 @@ namespace Mutagen.Bethesda.Internals
                 errorMask?.PushIndex((int)MasterReference_FieldIndex.Master);
                 try
                 {
-                    if (LoquiHelper.DefaultSwitch(
-                        rhsItem: rhs.Master,
-                        rhsHasBeenSet: rhs.Master_IsSet,
-                        defItem: def?.Master ?? default(ModKey),
-                        defHasBeenSet: def?.Master_IsSet ?? false,
-                        outRhsItem: out var rhsMasterItem,
-                        outDefItem: out var defMasterItem))
-                    {
-                        item.Master = rhsMasterItem;
-                    }
-                    else
-                    {
-                        item.Master_Unset();
-                    }
+                    item.Master = rhs.Master;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1470,8 +1421,8 @@ namespace Mutagen.Bethesda.Internals
             switch (enu)
             {
                 case MasterReference_FieldIndex.Master:
-                    obj.Master_IsSet = on;
-                    break;
+                    if (on) break;
+                    throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
                 case MasterReference_FieldIndex.FileSize:
                     obj.FileSize_IsSet = on;
                     break;
@@ -1489,7 +1440,7 @@ namespace Mutagen.Bethesda.Internals
             switch (enu)
             {
                 case MasterReference_FieldIndex.Master:
-                    obj.Master_Unset();
+                    obj.Master = default(ModKey);
                     break;
                 case MasterReference_FieldIndex.FileSize:
                     obj.FileSize_Unset();
@@ -1507,7 +1458,7 @@ namespace Mutagen.Bethesda.Internals
             switch (enu)
             {
                 case MasterReference_FieldIndex.Master:
-                    return obj.Master_IsSet;
+                    return true;
                 case MasterReference_FieldIndex.FileSize:
                     return obj.FileSize_IsSet;
                 default:
@@ -1535,7 +1486,7 @@ namespace Mutagen.Bethesda.Internals
             IMasterReference item,
             NotifyingUnsetParameters cmds = null)
         {
-            item.Master_Unset();
+            item.Master = default(ModKey);
             item.FileSize_Unset();
         }
 
@@ -1554,7 +1505,7 @@ namespace Mutagen.Bethesda.Internals
             MasterReference_Mask<bool> ret)
         {
             if (rhs == null) return;
-            ret.Master = item.Master_IsSet == rhs.Master_IsSet && item.Master == rhs.Master;
+            ret.Master = item.Master == rhs.Master;
             ret.FileSize = item.FileSize_IsSet == rhs.FileSize_IsSet && item.FileSize == rhs.FileSize;
         }
 
@@ -1601,7 +1552,6 @@ namespace Mutagen.Bethesda.Internals
             this IMasterReferenceGetter item,
             MasterReference_Mask<bool?> checkMask)
         {
-            if (checkMask.Master.HasValue && checkMask.Master.Value != item.Master_IsSet) return false;
             if (checkMask.FileSize.HasValue && checkMask.FileSize.Value != item.FileSize_IsSet) return false;
             return true;
         }
@@ -1609,7 +1559,7 @@ namespace Mutagen.Bethesda.Internals
         public static MasterReference_Mask<bool> GetHasBeenSetMask(IMasterReferenceGetter item)
         {
             var ret = new MasterReference_Mask<bool>();
-            ret.Master = item.Master_IsSet;
+            ret.Master = true;
             ret.FileSize = item.FileSize_IsSet;
             return ret;
         }
@@ -1647,8 +1597,7 @@ namespace Mutagen.Bethesda.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.MasterReference");
             }
-            if (item.Master_IsSet
-                && (translationMask?.GetShouldTranslate((int)MasterReference_FieldIndex.Master) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)MasterReference_FieldIndex.Master) ?? true))
             {
                 ModKeyXmlTranslation.Instance.Write(
                     node: elem,
@@ -1715,16 +1664,13 @@ namespace Mutagen.Bethesda.Internals
             ErrorMaskBuilder errorMask,
             MasterReferences masterReferences)
         {
-            if (item.Master_IsSet)
-            {
-                Mutagen.Bethesda.Binary.ModKeyBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Master,
-                    fieldIndex: (int)MasterReference_FieldIndex.Master,
-                    errorMask: errorMask,
-                    header: recordTypeConverter.ConvertToCustom(MasterReference_Registration.MAST_HEADER),
-                    nullable: false);
-            }
+            Mutagen.Bethesda.Binary.ModKeyBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.Master,
+                fieldIndex: (int)MasterReference_FieldIndex.Master,
+                errorMask: errorMask,
+                header: recordTypeConverter.ConvertToCustom(MasterReference_Registration.MAST_HEADER),
+                nullable: false);
             if (item.FileSize_IsSet)
             {
                 Mutagen.Bethesda.Binary.UInt64BinaryTranslation.Instance.Write(
