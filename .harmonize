@@ -2,10 +2,10 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>53d5abc81d3f30af50184b6b6bc24f0eac57b896</Sha>
+         <Sha>9281f5e7e8ccace965a83afa8eb6cd32023f0a6c</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>01-15-2019 22:25:11</CommitDate>
-         <Description>ObservableExt.WithPrevious</Description>
+         <CommitDate>01-30-2019 21:53:30</CommitDate>
+         <Description>Bugfix for SourceSetCache Set(IEnumerable)</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>

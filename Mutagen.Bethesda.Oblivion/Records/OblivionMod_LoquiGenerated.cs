@@ -3484,10 +3484,16 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 foreach (var link in rec.Links)
                 {
-                    if (link.FormKey.ModKey == rhs.ModKey
-                        && router.TryGetValue(link.FormKey, out var duppedRecord))
+                    if (link.FormKey.ModKey == rhs.ModKey)
                     {
-                        link.FormKey = duppedRecord.FormKey;
+                        if (router.TryGetValue(link.FormKey, out var duppedRecord))
+                        {
+                            link.FormKey = duppedRecord.FormKey;
+                        }
+                        else
+                        {
+                            link.FormKey = FormKey.NULL;
+                        }
                     }
                 }
             }
