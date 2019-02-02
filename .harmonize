@@ -2,18 +2,18 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>9281f5e7e8ccace965a83afa8eb6cd32023f0a6c</Sha>
+         <Sha>15d211f9066acc5f00155780d1239ffe31eafdf4</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>01-30-2019 21:53:30</CommitDate>
-         <Description>Bugfix for SourceSetCache Set(IEnumerable)</Description>
+         <CommitDate>02-02-2019 14:45:42</CommitDate>
+         <Description>Merge branch 'master' of https://github.com/Noggog/CSharpExt</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>a7f591e2ad0c834535b3cea8574fd12e5ca1aa78</Sha>
+         <Sha>8f830ae13ce96c4b89b5c6c2f0e46443b7c41fad</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>01-21-2019 01:38:09</CommitDate>
-         <Description>Bugfix for XSD generation</Description>
+         <CommitDate>02-02-2019 14:45:59</CommitDate>
+         <Description>Merge branch 'master' of https://github.com/Noggog/Loqui</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>

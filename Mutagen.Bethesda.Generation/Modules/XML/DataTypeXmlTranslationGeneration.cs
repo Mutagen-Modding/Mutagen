@@ -16,12 +16,12 @@ namespace Mutagen.Bethesda.Generation
             return true;
         }
 
-        public override void GenerateCopyIn(FileGeneration fg, TypeGeneration typeGen, string nodeAccessor, Accessor itemAccessor, string maskAccessor, string translationMaskAccessor)
+        public override void GenerateCopyIn(FileGeneration fg, ObjectGeneration objGen, TypeGeneration typeGen, string nodeAccessor, Accessor itemAccessor, string maskAccessor, string translationMaskAccessor)
         {
             throw new NotImplementedException();
         }
 
-        public override void GenerateCopyInRet(FileGeneration fg, TypeGeneration typeGen, string nodeAccessor, Accessor retAccessor, string indexAccessor, string maskAccessor, string translationMaskAccessor)
+        public override void GenerateCopyInRet(FileGeneration fg, ObjectGeneration objGen, TypeGeneration typeGen, string nodeAccessor, Accessor retAccessor, string indexAccessor, string maskAccessor, string translationMaskAccessor)
         {
             throw new NotImplementedException();
         }

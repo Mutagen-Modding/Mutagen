@@ -1007,25 +1007,25 @@ namespace Mutagen.Bethesda.Oblivion
         #region Xml Create
         [DebuggerStepThrough]
         public new static EffectShader Create_Xml(
-            XElement root,
+            XElement node,
             EffectShader_TranslationMask translationMask = null)
         {
             return Create_Xml(
-                root: root,
+                node: node,
                 errorMask: null,
                 translationMask: translationMask?.GetCrystal());
         }
 
         [DebuggerStepThrough]
         public static EffectShader Create_Xml(
-            XElement root,
+            XElement node,
             out EffectShader_ErrorMask errorMask,
             bool doMasks = true,
             EffectShader_TranslationMask translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             var ret = Create_Xml(
-                root: root,
+                node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask.GetCrystal());
             errorMask = EffectShader_ErrorMask.Factory(errorMaskBuilder);
@@ -1033,18 +1033,18 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static EffectShader Create_Xml(
-            XElement root,
+            XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
         {
             var ret = new EffectShader();
             try
             {
-                foreach (var elem in root.Elements())
+                foreach (var elem in node.Elements())
                 {
                     Fill_Xml_Internal(
                         item: ret,
-                        root: elem,
+                        node: elem,
                         name: elem.Name.LocalName,
                         errorMask: errorMask,
                         translationMask: translationMask);
@@ -1062,9 +1062,9 @@ namespace Mutagen.Bethesda.Oblivion
             string path,
             EffectShader_TranslationMask translationMask = null)
         {
-            var root = XDocument.Load(path).Root;
+            var node = XDocument.Load(path).Root;
             return Create_Xml(
-                root: root,
+                node: node,
                 translationMask: translationMask);
         }
 
@@ -1073,20 +1073,32 @@ namespace Mutagen.Bethesda.Oblivion
             out EffectShader_ErrorMask errorMask,
             EffectShader_TranslationMask translationMask = null)
         {
-            var root = XDocument.Load(path).Root;
+            var node = XDocument.Load(path).Root;
             return Create_Xml(
-                root: root,
+                node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
+        }
+
+        public static EffectShader Create_Xml(
+            string path,
+            ErrorMaskBuilder errorMask,
+            EffectShader_TranslationMask translationMask = null)
+        {
+            var node = XDocument.Load(path).Root;
+            return Create_Xml(
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask?.GetCrystal());
         }
 
         public static EffectShader Create_Xml(
             Stream stream,
             EffectShader_TranslationMask translationMask = null)
         {
-            var root = XDocument.Load(stream).Root;
+            var node = XDocument.Load(stream).Root;
             return Create_Xml(
-                root: root,
+                node: node,
                 translationMask: translationMask);
         }
 
@@ -1095,29 +1107,41 @@ namespace Mutagen.Bethesda.Oblivion
             out EffectShader_ErrorMask errorMask,
             EffectShader_TranslationMask translationMask = null)
         {
-            var root = XDocument.Load(stream).Root;
+            var node = XDocument.Load(stream).Root;
             return Create_Xml(
-                root: root,
+                node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
+        }
+
+        public static EffectShader Create_Xml(
+            Stream stream,
+            ErrorMaskBuilder errorMask,
+            EffectShader_TranslationMask translationMask = null)
+        {
+            var node = XDocument.Load(stream).Root;
+            return Create_Xml(
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask?.GetCrystal());
         }
 
         #endregion
 
         #region Xml Copy In
         public override void CopyIn_Xml(
-            XElement root,
+            XElement node,
             NotifyingFireParameters cmds = null)
         {
             CopyIn_Xml_Internal(
-                root: root,
+                node: node,
                 errorMask: null,
                 translationMask: null,
                 cmds: cmds);
         }
 
         public virtual void CopyIn_Xml(
-            XElement root,
+            XElement node,
             out EffectShader_ErrorMask errorMask,
             EffectShader_TranslationMask translationMask = null,
             bool doMasks = true,
@@ -1125,7 +1149,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             CopyIn_Xml_Internal(
-                root: root,
+                node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal(),
                 cmds: cmds);
@@ -1133,13 +1157,13 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         protected override void CopyIn_Xml_Internal(
-            XElement root,
+            XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask,
             NotifyingFireParameters cmds = null)
         {
             LoquiXmlTranslation<EffectShader>.Instance.CopyIn(
-                root: root,
+                node: node,
                 item: this,
                 skipProtected: true,
                 errorMask: errorMask,
@@ -1151,9 +1175,9 @@ namespace Mutagen.Bethesda.Oblivion
             string path,
             NotifyingFireParameters cmds = null)
         {
-            var root = XDocument.Load(path).Root;
+            var node = XDocument.Load(path).Root;
             this.CopyIn_Xml(
-                root: root,
+                node: node,
                 cmds: cmds);
         }
 
@@ -1164,9 +1188,9 @@ namespace Mutagen.Bethesda.Oblivion
             NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
-            var root = XDocument.Load(path).Root;
+            var node = XDocument.Load(path).Root;
             this.CopyIn_Xml(
-                root: root,
+                node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask,
                 cmds: cmds,
@@ -1177,9 +1201,9 @@ namespace Mutagen.Bethesda.Oblivion
             Stream stream,
             NotifyingFireParameters cmds = null)
         {
-            var root = XDocument.Load(stream).Root;
+            var node = XDocument.Load(stream).Root;
             this.CopyIn_Xml(
-                root: root,
+                node: node,
                 cmds: cmds);
         }
 
@@ -1190,9 +1214,9 @@ namespace Mutagen.Bethesda.Oblivion
             NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
-            var root = XDocument.Load(stream).Root;
+            var node = XDocument.Load(stream).Root;
             this.CopyIn_Xml(
-                root: root,
+                node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask,
                 cmds: cmds,
@@ -1200,7 +1224,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public override void CopyIn_Xml(
-            XElement root,
+            XElement node,
             out MajorRecord_ErrorMask errorMask,
             MajorRecord_TranslationMask translationMask = null,
             bool doMasks = true,
@@ -1208,7 +1232,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             CopyIn_Xml_Internal(
-                root: root,
+                node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal(),
                 cmds: cmds);
@@ -1227,8 +1251,8 @@ namespace Mutagen.Bethesda.Oblivion
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             this.Write_Xml(
-                node: node,
                 name: name,
+                node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
             errorMask = EffectShader_ErrorMask.Factory(errorMaskBuilder);
@@ -1241,14 +1265,14 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true,
             string name = null)
         {
-            XElement topNode = new XElement("topnode");
+            var node = new XElement("topnode");
             Write_Xml(
-                node: topNode,
                 name: name,
+                node: node,
                 errorMask: out errorMask,
                 doMasks: doMasks,
                 translationMask: translationMask);
-            topNode.Elements().First().SaveIfChanged(path);
+            node.Elements().First().SaveIfChanged(path);
         }
 
         public override void Write_Xml(
@@ -1257,13 +1281,13 @@ namespace Mutagen.Bethesda.Oblivion
             TranslationCrystal translationMask,
             string name = null)
         {
-            XElement topNode = new XElement("topnode");
+            var node = new XElement("topnode");
             Write_Xml(
-                node: topNode,
                 name: name,
+                node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
-            topNode.Elements().First().SaveIfChanged(path);
+            node.Elements().First().SaveIfChanged(path);
         }
         public virtual void Write_Xml(
             Stream stream,
@@ -1272,14 +1296,14 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true,
             string name = null)
         {
-            XElement topNode = new XElement("topnode");
+            var node = new XElement("topnode");
             Write_Xml(
-                node: topNode,
                 name: name,
+                node: node,
                 errorMask: out errorMask,
                 doMasks: doMasks,
                 translationMask: translationMask);
-            topNode.Elements().First().Save(stream);
+            node.Elements().First().Save(stream);
         }
 
         public override void Write_Xml(
@@ -1288,13 +1312,13 @@ namespace Mutagen.Bethesda.Oblivion
             TranslationCrystal translationMask,
             string name = null)
         {
-            XElement topNode = new XElement("topnode");
+            var node = new XElement("topnode");
             Write_Xml(
-                node: topNode,
                 name: name,
+                node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
-            topNode.Elements().First().Save(stream);
+            node.Elements().First().Save(stream);
         }
         #region Base Class Trickdown Overrides
         public override void Write_Xml(
@@ -1306,8 +1330,8 @@ namespace Mutagen.Bethesda.Oblivion
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             this.Write_Xml(
-                node: node,
                 name: name,
+                node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
             errorMask = EffectShader_ErrorMask.Factory(errorMaskBuilder);
@@ -1323,8 +1347,8 @@ namespace Mutagen.Bethesda.Oblivion
         {
             EffectShaderCommon.Write_Xml(
                 item: this,
-                node: node,
                 name: name,
+                node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
@@ -1332,7 +1356,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         protected static void Fill_Xml_Internal(
             EffectShader item,
-            XElement root,
+            XElement node,
             string name,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1344,7 +1368,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)EffectShader_FieldIndex.FillTexture);
                         if (StringXmlTranslation.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out String FillTextureParse,
                             errorMask: errorMask))
                         {
@@ -1370,7 +1394,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)EffectShader_FieldIndex.ParticleShaderTexture);
                         if (StringXmlTranslation.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out String ParticleShaderTextureParse,
                             errorMask: errorMask))
                         {
@@ -1396,7 +1420,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)EffectShader_FieldIndex.Flags);
                         if (EnumXmlTranslation<EffectShader.Flag>.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out EffectShader.Flag FlagsParse,
                             errorMask: errorMask))
                         {
@@ -1422,7 +1446,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)EffectShader_FieldIndex.MembraneShaderSourceBlendMode);
                         if (EnumXmlTranslation<EffectShader.SourceBlendMode>.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out EffectShader.SourceBlendMode MembraneShaderSourceBlendModeParse,
                             errorMask: errorMask))
                         {
@@ -1448,7 +1472,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)EffectShader_FieldIndex.MembraneShaderBlendOperation);
                         if (EnumXmlTranslation<EffectShader.BlendOperation>.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out EffectShader.BlendOperation MembraneShaderBlendOperationParse,
                             errorMask: errorMask))
                         {
@@ -1474,7 +1498,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)EffectShader_FieldIndex.MembraneShaderZTestFunction);
                         if (EnumXmlTranslation<EffectShader.ZTestFunction>.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out EffectShader.ZTestFunction MembraneShaderZTestFunctionParse,
                             errorMask: errorMask))
                         {
@@ -1500,7 +1524,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)EffectShader_FieldIndex.FillTextureEffectColor);
                         if (ColorXmlTranslation.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out Color FillTextureEffectColorParse,
                             errorMask: errorMask))
                         {
@@ -1526,7 +1550,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)EffectShader_FieldIndex.FillTextureEffectAlphaFadeInTime);
                         if (FloatXmlTranslation.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out Single FillTextureEffectAlphaFadeInTimeParse,
                             errorMask: errorMask))
                         {
@@ -1552,7 +1576,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)EffectShader_FieldIndex.FillTextureEffectFullAlphaTime);
                         if (FloatXmlTranslation.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out Single FillTextureEffectFullAlphaTimeParse,
                             errorMask: errorMask))
                         {
@@ -1578,7 +1602,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)EffectShader_FieldIndex.FillTextureEffectAlphaFadeOutTime);
                         if (FloatXmlTranslation.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out Single FillTextureEffectAlphaFadeOutTimeParse,
                             errorMask: errorMask))
                         {
@@ -1604,7 +1628,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)EffectShader_FieldIndex.FillTextureEffectPersistentAlphaRatio);
                         if (FloatXmlTranslation.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out Single FillTextureEffectPersistentAlphaRatioParse,
                             errorMask: errorMask))
                         {
@@ -1630,7 +1654,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)EffectShader_FieldIndex.FillTextureEffectAlphaPulseAmplitude);
                         if (FloatXmlTranslation.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out Single FillTextureEffectAlphaPulseAmplitudeParse,
                             errorMask: errorMask))
                         {
@@ -1656,7 +1680,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)EffectShader_FieldIndex.FillTextureEffectAlphaPulseFrequency);
                         if (FloatXmlTranslation.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out Single FillTextureEffectAlphaPulseFrequencyParse,
                             errorMask: errorMask))
                         {
@@ -1682,7 +1706,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)EffectShader_FieldIndex.FillTextureEffectTextureAnimationSpeedU);
                         if (FloatXmlTranslation.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out Single FillTextureEffectTextureAnimationSpeedUParse,
                             errorMask: errorMask))
                         {
@@ -1708,7 +1732,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)EffectShader_FieldIndex.FillTextureEffectTextureAnimationSpeedV);
                         if (FloatXmlTranslation.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out Single FillTextureEffectTextureAnimationSpeedVParse,
                             errorMask: errorMask))
                         {
@@ -1734,7 +1758,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)EffectShader_FieldIndex.EdgeEffectFallOff);
                         if (FloatXmlTranslation.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out Single EdgeEffectFallOffParse,
                             errorMask: errorMask))
                         {
@@ -1760,7 +1784,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)EffectShader_FieldIndex.EdgeEffectColor);
                         if (ColorXmlTranslation.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out Color EdgeEffectColorParse,
                             errorMask: errorMask))
                         {
@@ -1786,7 +1810,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)EffectShader_FieldIndex.EdgeEffectAlphaFadeInTime);
                         if (FloatXmlTranslation.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out Single EdgeEffectAlphaFadeInTimeParse,
                             errorMask: errorMask))
                         {
@@ -1812,7 +1836,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)EffectShader_FieldIndex.EdgeEffectFullAlphaTime);
                         if (FloatXmlTranslation.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out Single EdgeEffectFullAlphaTimeParse,
                             errorMask: errorMask))
                         {
@@ -1838,7 +1862,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)EffectShader_FieldIndex.EdgeEffectAlphaFadeOutTime);
                         if (FloatXmlTranslation.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out Single EdgeEffectAlphaFadeOutTimeParse,
                             errorMask: errorMask))
                         {
@@ -1864,7 +1888,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)EffectShader_FieldIndex.EdgeEffectPersistentAlphaRatio);
                         if (FloatXmlTranslation.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out Single EdgeEffectPersistentAlphaRatioParse,
                             errorMask: errorMask))
                         {
@@ -1890,7 +1914,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)EffectShader_FieldIndex.EdgeEffectAlphaPulseAmplitude);
                         if (FloatXmlTranslation.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out Single EdgeEffectAlphaPulseAmplitudeParse,
                             errorMask: errorMask))
                         {
@@ -1916,7 +1940,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)EffectShader_FieldIndex.EdgeEffectAlphaPulseFrequency);
                         if (FloatXmlTranslation.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out Single EdgeEffectAlphaPulseFrequencyParse,
                             errorMask: errorMask))
                         {
@@ -1942,7 +1966,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)EffectShader_FieldIndex.FillTextureEffectFullAlphaRatio);
                         if (FloatXmlTranslation.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out Single FillTextureEffectFullAlphaRatioParse,
                             errorMask: errorMask))
                         {
@@ -1968,7 +1992,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)EffectShader_FieldIndex.EdgeEffectFullAlphaRatio);
                         if (FloatXmlTranslation.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out Single EdgeEffectFullAlphaRatioParse,
                             errorMask: errorMask))
                         {
@@ -1994,7 +2018,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)EffectShader_FieldIndex.MembraneShaderDestBlendMode);
                         if (EnumXmlTranslation<EffectShader.SourceBlendMode>.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out EffectShader.SourceBlendMode MembraneShaderDestBlendModeParse,
                             errorMask: errorMask))
                         {
@@ -2020,7 +2044,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)EffectShader_FieldIndex.ParticleShaderSourceBlendMode);
                         if (EnumXmlTranslation<EffectShader.SourceBlendMode>.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out EffectShader.SourceBlendMode ParticleShaderSourceBlendModeParse,
                             errorMask: errorMask))
                         {
@@ -2046,7 +2070,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)EffectShader_FieldIndex.ParticleShaderBlendOperation);
                         if (EnumXmlTranslation<EffectShader.BlendOperation>.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out EffectShader.BlendOperation ParticleShaderBlendOperationParse,
                             errorMask: errorMask))
                         {
@@ -2072,7 +2096,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)EffectShader_FieldIndex.ParticleShaderZTestFunction);
                         if (EnumXmlTranslation<EffectShader.ZTestFunction>.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out EffectShader.ZTestFunction ParticleShaderZTestFunctionParse,
                             errorMask: errorMask))
                         {
@@ -2098,7 +2122,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)EffectShader_FieldIndex.ParticleShaderDestBlendMode);
                         if (EnumXmlTranslation<EffectShader.SourceBlendMode>.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out EffectShader.SourceBlendMode ParticleShaderDestBlendModeParse,
                             errorMask: errorMask))
                         {
@@ -2124,7 +2148,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)EffectShader_FieldIndex.ParticleShaderParticleBirthRampUpTime);
                         if (FloatXmlTranslation.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out Single ParticleShaderParticleBirthRampUpTimeParse,
                             errorMask: errorMask))
                         {
@@ -2150,7 +2174,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)EffectShader_FieldIndex.ParticleShaderFullParticleBirthTime);
                         if (FloatXmlTranslation.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out Single ParticleShaderFullParticleBirthTimeParse,
                             errorMask: errorMask))
                         {
@@ -2176,7 +2200,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)EffectShader_FieldIndex.ParticleShaderParticleBirthRampDownTime);
                         if (FloatXmlTranslation.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out Single ParticleShaderParticleBirthRampDownTimeParse,
                             errorMask: errorMask))
                         {
@@ -2202,7 +2226,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)EffectShader_FieldIndex.ParticleShaderFullParticleBirthRatio);
                         if (FloatXmlTranslation.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out Single ParticleShaderFullParticleBirthRatioParse,
                             errorMask: errorMask))
                         {
@@ -2228,7 +2252,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)EffectShader_FieldIndex.ParticleShaderPersistentParticleBirthRatio);
                         if (FloatXmlTranslation.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out Single ParticleShaderPersistentParticleBirthRatioParse,
                             errorMask: errorMask))
                         {
@@ -2254,7 +2278,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)EffectShader_FieldIndex.ParticleShaderParticleLifetime);
                         if (FloatXmlTranslation.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out Single ParticleShaderParticleLifetimeParse,
                             errorMask: errorMask))
                         {
@@ -2280,7 +2304,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)EffectShader_FieldIndex.ParticleShaderParticleLifetimePlusMinus);
                         if (FloatXmlTranslation.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out Single ParticleShaderParticleLifetimePlusMinusParse,
                             errorMask: errorMask))
                         {
@@ -2306,7 +2330,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)EffectShader_FieldIndex.ParticleShaderInitialSpeedAlongNormal);
                         if (FloatXmlTranslation.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out Single ParticleShaderInitialSpeedAlongNormalParse,
                             errorMask: errorMask))
                         {
@@ -2332,7 +2356,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)EffectShader_FieldIndex.ParticleShaderAccelerationAlongNormal);
                         if (FloatXmlTranslation.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out Single ParticleShaderAccelerationAlongNormalParse,
                             errorMask: errorMask))
                         {
@@ -2358,7 +2382,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)EffectShader_FieldIndex.ParticleShaderInitialVelocity1);
                         if (FloatXmlTranslation.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out Single ParticleShaderInitialVelocity1Parse,
                             errorMask: errorMask))
                         {
@@ -2384,7 +2408,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)EffectShader_FieldIndex.ParticleShaderInitialVelocity2);
                         if (FloatXmlTranslation.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out Single ParticleShaderInitialVelocity2Parse,
                             errorMask: errorMask))
                         {
@@ -2410,7 +2434,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)EffectShader_FieldIndex.ParticleShaderInitialVelocity3);
                         if (FloatXmlTranslation.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out Single ParticleShaderInitialVelocity3Parse,
                             errorMask: errorMask))
                         {
@@ -2436,7 +2460,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)EffectShader_FieldIndex.ParticleShaderAcceleration1);
                         if (FloatXmlTranslation.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out Single ParticleShaderAcceleration1Parse,
                             errorMask: errorMask))
                         {
@@ -2462,7 +2486,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)EffectShader_FieldIndex.ParticleShaderAcceleration2);
                         if (FloatXmlTranslation.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out Single ParticleShaderAcceleration2Parse,
                             errorMask: errorMask))
                         {
@@ -2488,7 +2512,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)EffectShader_FieldIndex.ParticleShaderAcceleration3);
                         if (FloatXmlTranslation.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out Single ParticleShaderAcceleration3Parse,
                             errorMask: errorMask))
                         {
@@ -2514,7 +2538,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)EffectShader_FieldIndex.ParticleShaderScaleKey1);
                         if (FloatXmlTranslation.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out Single ParticleShaderScaleKey1Parse,
                             errorMask: errorMask))
                         {
@@ -2540,7 +2564,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)EffectShader_FieldIndex.ParticleShaderScaleKey2);
                         if (FloatXmlTranslation.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out Single ParticleShaderScaleKey2Parse,
                             errorMask: errorMask))
                         {
@@ -2566,7 +2590,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)EffectShader_FieldIndex.ParticleShaderScaleKey1Time);
                         if (FloatXmlTranslation.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out Single ParticleShaderScaleKey1TimeParse,
                             errorMask: errorMask))
                         {
@@ -2592,7 +2616,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)EffectShader_FieldIndex.ParticleShaderScaleKey2Time);
                         if (FloatXmlTranslation.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out Single ParticleShaderScaleKey2TimeParse,
                             errorMask: errorMask))
                         {
@@ -2618,7 +2642,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)EffectShader_FieldIndex.ColorKey1Color);
                         if (ColorXmlTranslation.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out Color ColorKey1ColorParse,
                             errorMask: errorMask))
                         {
@@ -2644,7 +2668,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)EffectShader_FieldIndex.ColorKey2Color);
                         if (ColorXmlTranslation.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out Color ColorKey2ColorParse,
                             errorMask: errorMask))
                         {
@@ -2670,7 +2694,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)EffectShader_FieldIndex.ColorKey3Color);
                         if (ColorXmlTranslation.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out Color ColorKey3ColorParse,
                             errorMask: errorMask))
                         {
@@ -2696,7 +2720,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)EffectShader_FieldIndex.ColorKey1ColorAlpha);
                         if (FloatXmlTranslation.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out Single ColorKey1ColorAlphaParse,
                             errorMask: errorMask))
                         {
@@ -2722,7 +2746,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)EffectShader_FieldIndex.ColorKey2ColorAlpha);
                         if (FloatXmlTranslation.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out Single ColorKey2ColorAlphaParse,
                             errorMask: errorMask))
                         {
@@ -2748,7 +2772,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)EffectShader_FieldIndex.ColorKey3ColorAlpha);
                         if (FloatXmlTranslation.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out Single ColorKey3ColorAlphaParse,
                             errorMask: errorMask))
                         {
@@ -2774,7 +2798,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)EffectShader_FieldIndex.ColorKey1ColorKeyTime);
                         if (FloatXmlTranslation.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out Single ColorKey1ColorKeyTimeParse,
                             errorMask: errorMask))
                         {
@@ -2800,7 +2824,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)EffectShader_FieldIndex.ColorKey2ColorKeyTime);
                         if (FloatXmlTranslation.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out Single ColorKey2ColorKeyTimeParse,
                             errorMask: errorMask))
                         {
@@ -2826,7 +2850,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)EffectShader_FieldIndex.ColorKey3ColorKeyTime);
                         if (FloatXmlTranslation.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out Single ColorKey3ColorKeyTimeParse,
                             errorMask: errorMask))
                         {
@@ -2850,7 +2874,7 @@ namespace Mutagen.Bethesda.Oblivion
                 default:
                     MajorRecord.Fill_Xml_Internal(
                         item: item,
-                        root: root,
+                        node: node,
                         name: name,
                         errorMask: errorMask,
                         translationMask: translationMask);
@@ -2965,8 +2989,8 @@ namespace Mutagen.Bethesda.Oblivion
             MasterReferences masterReferences)
         {
             return Create_Binary(
-                frame: frame,
                 masterReferences: masterReferences,
+                frame: frame,
                 recordTypeConverter: null,
                 errorMask: null);
         }
@@ -2980,8 +3004,8 @@ namespace Mutagen.Bethesda.Oblivion
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             var ret = Create_Binary(
-                frame: frame,
                 masterReferences: masterReferences,
+                frame: frame,
                 recordTypeConverter: null,
                 errorMask: errorMaskBuilder);
             errorMask = EffectShader_ErrorMask.Factory(errorMaskBuilder);
@@ -3013,8 +3037,8 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 var frame = new MutagenFrame(reader);
                 return Create_Binary(
-                    frame: frame,
-                    masterReferences: masterReferences);
+                    masterReferences: masterReferences,
+                    frame: frame);
             }
         }
 
@@ -3027,9 +3051,25 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 var frame = new MutagenFrame(reader);
                 return Create_Binary(
-                    frame: frame,
                     masterReferences: masterReferences,
+                    frame: frame,
                     errorMask: out errorMask);
+            }
+        }
+
+        public static EffectShader Create_Binary(
+            string path,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask)
+        {
+            using (var reader = new BinaryReadStream(path))
+            {
+                var frame = new MutagenFrame(reader);
+                return Create_Binary(
+                    masterReferences: masterReferences,
+                    frame: frame,
+                    recordTypeConverter: null,
+                    errorMask: errorMask);
             }
         }
 
@@ -3041,8 +3081,8 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 var frame = new MutagenFrame(reader);
                 return Create_Binary(
-                    frame: frame,
-                    masterReferences: masterReferences);
+                    masterReferences: masterReferences,
+                    frame: frame);
             }
         }
 
@@ -3055,9 +3095,25 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 var frame = new MutagenFrame(reader);
                 return Create_Binary(
-                    frame: frame,
                     masterReferences: masterReferences,
+                    frame: frame,
                     errorMask: out errorMask);
+            }
+        }
+
+        public static EffectShader Create_Binary(
+            Stream stream,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask)
+        {
+            using (var reader = new BinaryReadStream(stream))
+            {
+                var frame = new MutagenFrame(reader);
+                return Create_Binary(
+                    masterReferences: masterReferences,
+                    frame: frame,
+                    recordTypeConverter: null,
+                    errorMask: errorMask);
             }
         }
 
@@ -3072,8 +3128,8 @@ namespace Mutagen.Bethesda.Oblivion
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             this.Write_Binary(
-                writer: writer,
                 masterReferences: masterReferences,
+                writer: writer,
                 recordTypeConverter: null,
                 errorMask: errorMaskBuilder);
             errorMask = EffectShader_ErrorMask.Factory(errorMaskBuilder);
@@ -3090,8 +3146,8 @@ namespace Mutagen.Bethesda.Oblivion
                 using (var writer = new MutagenWriter(memStream, dispose: false))
                 {
                     Write_Binary(
-                        writer: writer,
                         masterReferences: masterReferences,
+                        writer: writer,
                         errorMask: out errorMask,
                         doMasks: doMasks);
                 }
@@ -3113,8 +3169,8 @@ namespace Mutagen.Bethesda.Oblivion
                 using (var writer = new MutagenWriter(memStream, dispose: false))
                 {
                     Write_Binary(
-                        writer: writer,
                         masterReferences: masterReferences,
+                        writer: writer,
                         recordTypeConverter: null,
                         errorMask: errorMask);
                 }
@@ -3134,8 +3190,8 @@ namespace Mutagen.Bethesda.Oblivion
             using (var writer = new MutagenWriter(stream))
             {
                 Write_Binary(
-                    writer: writer,
                     masterReferences: masterReferences,
+                    writer: writer,
                     errorMask: out errorMask,
                     doMasks: doMasks);
             }
@@ -3149,8 +3205,8 @@ namespace Mutagen.Bethesda.Oblivion
             using (var writer = new MutagenWriter(stream))
             {
                 Write_Binary(
-                    writer: writer,
                     masterReferences: masterReferences,
+                    writer: writer,
                     recordTypeConverter: null,
                     errorMask: errorMask);
             }
@@ -3164,8 +3220,8 @@ namespace Mutagen.Bethesda.Oblivion
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             this.Write_Binary(
-                writer: writer,
                 masterReferences: masterReferences,
+                writer: writer,
                 errorMask: errorMaskBuilder,
                 recordTypeConverter: null);
             errorMask = EffectShader_ErrorMask.Factory(errorMaskBuilder);
@@ -3181,8 +3237,8 @@ namespace Mutagen.Bethesda.Oblivion
         {
             EffectShaderCommon.Write_Binary(
                 item: this,
-                writer: writer,
                 masterReferences: masterReferences,
+                writer: writer,
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
         }
@@ -8414,8 +8470,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             Write_Xml(
-                node: node,
                 name: name,
+                node: node,
                 item: item,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
@@ -8435,11 +8491,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.EffectShader");
             }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        #endregion
+
+        public static void WriteToNode_Xml(
+            IEffectShaderGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            MajorRecordCommon.WriteToNode_Xml(
+                item: item,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
             if (item.FillTexture_IsSet
                 && (translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.FillTexture) ?? true))
             {
                 StringXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.FillTexture),
                     item: item.FillTexture,
                     fieldIndex: (int)EffectShader_FieldIndex.FillTexture,
@@ -8449,7 +8524,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleShaderTexture) ?? true))
             {
                 StringXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.ParticleShaderTexture),
                     item: item.ParticleShaderTexture,
                     fieldIndex: (int)EffectShader_FieldIndex.ParticleShaderTexture,
@@ -8458,7 +8533,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.Flags) ?? true))
             {
                 EnumXmlTranslation<EffectShader.Flag>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Flags),
                     item: item.Flags,
                     fieldIndex: (int)EffectShader_FieldIndex.Flags,
@@ -8467,7 +8542,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.MembraneShaderSourceBlendMode) ?? true))
             {
                 EnumXmlTranslation<EffectShader.SourceBlendMode>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.MembraneShaderSourceBlendMode),
                     item: item.MembraneShaderSourceBlendMode,
                     fieldIndex: (int)EffectShader_FieldIndex.MembraneShaderSourceBlendMode,
@@ -8476,7 +8551,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.MembraneShaderBlendOperation) ?? true))
             {
                 EnumXmlTranslation<EffectShader.BlendOperation>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.MembraneShaderBlendOperation),
                     item: item.MembraneShaderBlendOperation,
                     fieldIndex: (int)EffectShader_FieldIndex.MembraneShaderBlendOperation,
@@ -8485,7 +8560,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.MembraneShaderZTestFunction) ?? true))
             {
                 EnumXmlTranslation<EffectShader.ZTestFunction>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.MembraneShaderZTestFunction),
                     item: item.MembraneShaderZTestFunction,
                     fieldIndex: (int)EffectShader_FieldIndex.MembraneShaderZTestFunction,
@@ -8494,7 +8569,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.FillTextureEffectColor) ?? true))
             {
                 ColorXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.FillTextureEffectColor),
                     item: item.FillTextureEffectColor,
                     fieldIndex: (int)EffectShader_FieldIndex.FillTextureEffectColor,
@@ -8503,7 +8578,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.FillTextureEffectAlphaFadeInTime) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.FillTextureEffectAlphaFadeInTime),
                     item: item.FillTextureEffectAlphaFadeInTime,
                     fieldIndex: (int)EffectShader_FieldIndex.FillTextureEffectAlphaFadeInTime,
@@ -8512,7 +8587,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.FillTextureEffectFullAlphaTime) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.FillTextureEffectFullAlphaTime),
                     item: item.FillTextureEffectFullAlphaTime,
                     fieldIndex: (int)EffectShader_FieldIndex.FillTextureEffectFullAlphaTime,
@@ -8521,7 +8596,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.FillTextureEffectAlphaFadeOutTime) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.FillTextureEffectAlphaFadeOutTime),
                     item: item.FillTextureEffectAlphaFadeOutTime,
                     fieldIndex: (int)EffectShader_FieldIndex.FillTextureEffectAlphaFadeOutTime,
@@ -8530,7 +8605,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.FillTextureEffectPersistentAlphaRatio) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.FillTextureEffectPersistentAlphaRatio),
                     item: item.FillTextureEffectPersistentAlphaRatio,
                     fieldIndex: (int)EffectShader_FieldIndex.FillTextureEffectPersistentAlphaRatio,
@@ -8539,7 +8614,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.FillTextureEffectAlphaPulseAmplitude) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.FillTextureEffectAlphaPulseAmplitude),
                     item: item.FillTextureEffectAlphaPulseAmplitude,
                     fieldIndex: (int)EffectShader_FieldIndex.FillTextureEffectAlphaPulseAmplitude,
@@ -8548,7 +8623,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.FillTextureEffectAlphaPulseFrequency) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.FillTextureEffectAlphaPulseFrequency),
                     item: item.FillTextureEffectAlphaPulseFrequency,
                     fieldIndex: (int)EffectShader_FieldIndex.FillTextureEffectAlphaPulseFrequency,
@@ -8557,7 +8632,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.FillTextureEffectTextureAnimationSpeedU) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.FillTextureEffectTextureAnimationSpeedU),
                     item: item.FillTextureEffectTextureAnimationSpeedU,
                     fieldIndex: (int)EffectShader_FieldIndex.FillTextureEffectTextureAnimationSpeedU,
@@ -8566,7 +8641,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.FillTextureEffectTextureAnimationSpeedV) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.FillTextureEffectTextureAnimationSpeedV),
                     item: item.FillTextureEffectTextureAnimationSpeedV,
                     fieldIndex: (int)EffectShader_FieldIndex.FillTextureEffectTextureAnimationSpeedV,
@@ -8575,7 +8650,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.EdgeEffectFallOff) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.EdgeEffectFallOff),
                     item: item.EdgeEffectFallOff,
                     fieldIndex: (int)EffectShader_FieldIndex.EdgeEffectFallOff,
@@ -8584,7 +8659,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.EdgeEffectColor) ?? true))
             {
                 ColorXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.EdgeEffectColor),
                     item: item.EdgeEffectColor,
                     fieldIndex: (int)EffectShader_FieldIndex.EdgeEffectColor,
@@ -8593,7 +8668,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.EdgeEffectAlphaFadeInTime) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.EdgeEffectAlphaFadeInTime),
                     item: item.EdgeEffectAlphaFadeInTime,
                     fieldIndex: (int)EffectShader_FieldIndex.EdgeEffectAlphaFadeInTime,
@@ -8602,7 +8677,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.EdgeEffectFullAlphaTime) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.EdgeEffectFullAlphaTime),
                     item: item.EdgeEffectFullAlphaTime,
                     fieldIndex: (int)EffectShader_FieldIndex.EdgeEffectFullAlphaTime,
@@ -8611,7 +8686,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.EdgeEffectAlphaFadeOutTime) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.EdgeEffectAlphaFadeOutTime),
                     item: item.EdgeEffectAlphaFadeOutTime,
                     fieldIndex: (int)EffectShader_FieldIndex.EdgeEffectAlphaFadeOutTime,
@@ -8620,7 +8695,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.EdgeEffectPersistentAlphaRatio) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.EdgeEffectPersistentAlphaRatio),
                     item: item.EdgeEffectPersistentAlphaRatio,
                     fieldIndex: (int)EffectShader_FieldIndex.EdgeEffectPersistentAlphaRatio,
@@ -8629,7 +8704,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.EdgeEffectAlphaPulseAmplitude) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.EdgeEffectAlphaPulseAmplitude),
                     item: item.EdgeEffectAlphaPulseAmplitude,
                     fieldIndex: (int)EffectShader_FieldIndex.EdgeEffectAlphaPulseAmplitude,
@@ -8638,7 +8713,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.EdgeEffectAlphaPulseFrequency) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.EdgeEffectAlphaPulseFrequency),
                     item: item.EdgeEffectAlphaPulseFrequency,
                     fieldIndex: (int)EffectShader_FieldIndex.EdgeEffectAlphaPulseFrequency,
@@ -8647,7 +8722,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.FillTextureEffectFullAlphaRatio) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.FillTextureEffectFullAlphaRatio),
                     item: item.FillTextureEffectFullAlphaRatio,
                     fieldIndex: (int)EffectShader_FieldIndex.FillTextureEffectFullAlphaRatio,
@@ -8656,7 +8731,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.EdgeEffectFullAlphaRatio) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.EdgeEffectFullAlphaRatio),
                     item: item.EdgeEffectFullAlphaRatio,
                     fieldIndex: (int)EffectShader_FieldIndex.EdgeEffectFullAlphaRatio,
@@ -8665,7 +8740,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.MembraneShaderDestBlendMode) ?? true))
             {
                 EnumXmlTranslation<EffectShader.SourceBlendMode>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.MembraneShaderDestBlendMode),
                     item: item.MembraneShaderDestBlendMode,
                     fieldIndex: (int)EffectShader_FieldIndex.MembraneShaderDestBlendMode,
@@ -8674,7 +8749,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleShaderSourceBlendMode) ?? true))
             {
                 EnumXmlTranslation<EffectShader.SourceBlendMode>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.ParticleShaderSourceBlendMode),
                     item: item.ParticleShaderSourceBlendMode,
                     fieldIndex: (int)EffectShader_FieldIndex.ParticleShaderSourceBlendMode,
@@ -8683,7 +8758,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleShaderBlendOperation) ?? true))
             {
                 EnumXmlTranslation<EffectShader.BlendOperation>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.ParticleShaderBlendOperation),
                     item: item.ParticleShaderBlendOperation,
                     fieldIndex: (int)EffectShader_FieldIndex.ParticleShaderBlendOperation,
@@ -8692,7 +8767,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleShaderZTestFunction) ?? true))
             {
                 EnumXmlTranslation<EffectShader.ZTestFunction>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.ParticleShaderZTestFunction),
                     item: item.ParticleShaderZTestFunction,
                     fieldIndex: (int)EffectShader_FieldIndex.ParticleShaderZTestFunction,
@@ -8701,7 +8776,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleShaderDestBlendMode) ?? true))
             {
                 EnumXmlTranslation<EffectShader.SourceBlendMode>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.ParticleShaderDestBlendMode),
                     item: item.ParticleShaderDestBlendMode,
                     fieldIndex: (int)EffectShader_FieldIndex.ParticleShaderDestBlendMode,
@@ -8710,7 +8785,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleShaderParticleBirthRampUpTime) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.ParticleShaderParticleBirthRampUpTime),
                     item: item.ParticleShaderParticleBirthRampUpTime,
                     fieldIndex: (int)EffectShader_FieldIndex.ParticleShaderParticleBirthRampUpTime,
@@ -8719,7 +8794,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleShaderFullParticleBirthTime) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.ParticleShaderFullParticleBirthTime),
                     item: item.ParticleShaderFullParticleBirthTime,
                     fieldIndex: (int)EffectShader_FieldIndex.ParticleShaderFullParticleBirthTime,
@@ -8728,7 +8803,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleShaderParticleBirthRampDownTime) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.ParticleShaderParticleBirthRampDownTime),
                     item: item.ParticleShaderParticleBirthRampDownTime,
                     fieldIndex: (int)EffectShader_FieldIndex.ParticleShaderParticleBirthRampDownTime,
@@ -8737,7 +8812,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleShaderFullParticleBirthRatio) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.ParticleShaderFullParticleBirthRatio),
                     item: item.ParticleShaderFullParticleBirthRatio,
                     fieldIndex: (int)EffectShader_FieldIndex.ParticleShaderFullParticleBirthRatio,
@@ -8746,7 +8821,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleShaderPersistentParticleBirthRatio) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.ParticleShaderPersistentParticleBirthRatio),
                     item: item.ParticleShaderPersistentParticleBirthRatio,
                     fieldIndex: (int)EffectShader_FieldIndex.ParticleShaderPersistentParticleBirthRatio,
@@ -8755,7 +8830,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleShaderParticleLifetime) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.ParticleShaderParticleLifetime),
                     item: item.ParticleShaderParticleLifetime,
                     fieldIndex: (int)EffectShader_FieldIndex.ParticleShaderParticleLifetime,
@@ -8764,7 +8839,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleShaderParticleLifetimePlusMinus) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.ParticleShaderParticleLifetimePlusMinus),
                     item: item.ParticleShaderParticleLifetimePlusMinus,
                     fieldIndex: (int)EffectShader_FieldIndex.ParticleShaderParticleLifetimePlusMinus,
@@ -8773,7 +8848,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleShaderInitialSpeedAlongNormal) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.ParticleShaderInitialSpeedAlongNormal),
                     item: item.ParticleShaderInitialSpeedAlongNormal,
                     fieldIndex: (int)EffectShader_FieldIndex.ParticleShaderInitialSpeedAlongNormal,
@@ -8782,7 +8857,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleShaderAccelerationAlongNormal) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.ParticleShaderAccelerationAlongNormal),
                     item: item.ParticleShaderAccelerationAlongNormal,
                     fieldIndex: (int)EffectShader_FieldIndex.ParticleShaderAccelerationAlongNormal,
@@ -8791,7 +8866,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleShaderInitialVelocity1) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.ParticleShaderInitialVelocity1),
                     item: item.ParticleShaderInitialVelocity1,
                     fieldIndex: (int)EffectShader_FieldIndex.ParticleShaderInitialVelocity1,
@@ -8800,7 +8875,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleShaderInitialVelocity2) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.ParticleShaderInitialVelocity2),
                     item: item.ParticleShaderInitialVelocity2,
                     fieldIndex: (int)EffectShader_FieldIndex.ParticleShaderInitialVelocity2,
@@ -8809,7 +8884,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleShaderInitialVelocity3) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.ParticleShaderInitialVelocity3),
                     item: item.ParticleShaderInitialVelocity3,
                     fieldIndex: (int)EffectShader_FieldIndex.ParticleShaderInitialVelocity3,
@@ -8818,7 +8893,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleShaderAcceleration1) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.ParticleShaderAcceleration1),
                     item: item.ParticleShaderAcceleration1,
                     fieldIndex: (int)EffectShader_FieldIndex.ParticleShaderAcceleration1,
@@ -8827,7 +8902,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleShaderAcceleration2) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.ParticleShaderAcceleration2),
                     item: item.ParticleShaderAcceleration2,
                     fieldIndex: (int)EffectShader_FieldIndex.ParticleShaderAcceleration2,
@@ -8836,7 +8911,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleShaderAcceleration3) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.ParticleShaderAcceleration3),
                     item: item.ParticleShaderAcceleration3,
                     fieldIndex: (int)EffectShader_FieldIndex.ParticleShaderAcceleration3,
@@ -8845,7 +8920,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleShaderScaleKey1) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.ParticleShaderScaleKey1),
                     item: item.ParticleShaderScaleKey1,
                     fieldIndex: (int)EffectShader_FieldIndex.ParticleShaderScaleKey1,
@@ -8854,7 +8929,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleShaderScaleKey2) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.ParticleShaderScaleKey2),
                     item: item.ParticleShaderScaleKey2,
                     fieldIndex: (int)EffectShader_FieldIndex.ParticleShaderScaleKey2,
@@ -8863,7 +8938,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleShaderScaleKey1Time) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.ParticleShaderScaleKey1Time),
                     item: item.ParticleShaderScaleKey1Time,
                     fieldIndex: (int)EffectShader_FieldIndex.ParticleShaderScaleKey1Time,
@@ -8872,7 +8947,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleShaderScaleKey2Time) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.ParticleShaderScaleKey2Time),
                     item: item.ParticleShaderScaleKey2Time,
                     fieldIndex: (int)EffectShader_FieldIndex.ParticleShaderScaleKey2Time,
@@ -8881,7 +8956,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ColorKey1Color) ?? true))
             {
                 ColorXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.ColorKey1Color),
                     item: item.ColorKey1Color,
                     fieldIndex: (int)EffectShader_FieldIndex.ColorKey1Color,
@@ -8890,7 +8965,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ColorKey2Color) ?? true))
             {
                 ColorXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.ColorKey2Color),
                     item: item.ColorKey2Color,
                     fieldIndex: (int)EffectShader_FieldIndex.ColorKey2Color,
@@ -8899,7 +8974,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ColorKey3Color) ?? true))
             {
                 ColorXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.ColorKey3Color),
                     item: item.ColorKey3Color,
                     fieldIndex: (int)EffectShader_FieldIndex.ColorKey3Color,
@@ -8908,7 +8983,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ColorKey1ColorAlpha) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.ColorKey1ColorAlpha),
                     item: item.ColorKey1ColorAlpha,
                     fieldIndex: (int)EffectShader_FieldIndex.ColorKey1ColorAlpha,
@@ -8917,7 +8992,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ColorKey2ColorAlpha) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.ColorKey2ColorAlpha),
                     item: item.ColorKey2ColorAlpha,
                     fieldIndex: (int)EffectShader_FieldIndex.ColorKey2ColorAlpha,
@@ -8926,7 +9001,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ColorKey3ColorAlpha) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.ColorKey3ColorAlpha),
                     item: item.ColorKey3ColorAlpha,
                     fieldIndex: (int)EffectShader_FieldIndex.ColorKey3ColorAlpha,
@@ -8935,7 +9010,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ColorKey1ColorKeyTime) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.ColorKey1ColorKeyTime),
                     item: item.ColorKey1ColorKeyTime,
                     fieldIndex: (int)EffectShader_FieldIndex.ColorKey1ColorKeyTime,
@@ -8944,7 +9019,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ColorKey2ColorKeyTime) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.ColorKey2ColorKeyTime),
                     item: item.ColorKey2ColorKeyTime,
                     fieldIndex: (int)EffectShader_FieldIndex.ColorKey2ColorKeyTime,
@@ -8953,14 +9028,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ColorKey3ColorKeyTime) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.ColorKey3ColorKeyTime),
                     item: item.ColorKey3ColorKeyTime,
                     fieldIndex: (int)EffectShader_FieldIndex.ColorKey3ColorKeyTime,
                     errorMask: errorMask);
             }
         }
-        #endregion
 
         #endregion
 
@@ -8976,8 +9050,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             Write_Binary(
-                writer: writer,
                 masterReferences: masterReferences,
+                writer: writer,
                 item: item,
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMaskBuilder);

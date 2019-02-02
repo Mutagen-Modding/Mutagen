@@ -8,7 +8,7 @@ using System.IO;
 namespace Mutagen.Bethesda.Binary
 {
     public class EnumBinaryTranslation<E> : IBinaryTranslation<E>, IBinaryTranslation<E?>
-        where E : struct, IComparable, IConvertible
+        where E : struct, Enum, IConvertible
     {
         public readonly static EnumBinaryTranslation<E> Instance = new EnumBinaryTranslation<E>();
 

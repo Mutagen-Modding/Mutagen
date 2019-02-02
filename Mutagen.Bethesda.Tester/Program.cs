@@ -20,8 +20,6 @@ namespace Mutagen.Bethesda.Tester
     {
         static async Task Main(string[] args)
         {
-            LoquiRegistrationSettings.AutomaticRegistration = false;
-
             FilePath settingsFile = new FilePath("../../TestingSettings.xml");
             if (!settingsFile.Exists)
             {

@@ -16,7 +16,8 @@ namespace Mutagen.Bethesda.Generation
         }
 
         public override void GenerateCopyInRet(
-            FileGeneration fg, 
+            FileGeneration fg,
+            ObjectGeneration objGen,
             TypeGeneration typeGen,
             string nodeAccessor,
             Accessor retAccessor, 
@@ -38,6 +39,7 @@ namespace Mutagen.Bethesda.Generation
 
         public override void GenerateCopyIn(
             FileGeneration fg,
+            ObjectGeneration objGen,
             TypeGeneration typeGen, 
             string frameAccessor, 
             Accessor itemAccessor,
@@ -53,7 +55,7 @@ namespace Mutagen.Bethesda.Generation
                     MaskAccessor = maskAccessor,
                     ItemAccessor = itemAccessor,
                     IndexAccessor = typeGen.HasIndex ? typeGen.IndexEnumInt : null,
-                    ExtraArgs = $"root: {frameAccessor}".Single(),
+                    ExtraArgs = $"{XmlTranslationModule.XElementLine.GetParameterName(objGen)}: {frameAccessor}".Single(),
                 });
         }
     }

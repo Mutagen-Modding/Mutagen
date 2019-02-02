@@ -14,6 +14,7 @@ using Noggog.Utility;
 using Mutagen.Bethesda.Folder;
 using System.Xml.Linq;
 using DynamicData;
+using Loqui.Xml;
 
 namespace Mutagen.Bethesda
 {
@@ -77,47 +78,45 @@ namespace Mutagen.Bethesda
         public static async Task Create_Xml_Folder<T>(
             this Group<T> group,
             DirectoryPath dir,
+            string name,
             ErrorMaskBuilder errorMask,
             int index)
             where T : MajorRecord, ILoquiObject<T>, IFormKey
         {
-            try
+            using (errorMask?.PushIndex(index))
             {
-                errorMask?.PushIndex(index);
-                try
+                using (errorMask?.PushIndex((int)Group_FieldIndex.Items))
                 {
-                    errorMask?.PushIndex((int)Group_FieldIndex.Items);
-                    foreach (var item in dir.EnumerateFiles())
+                    try
                     {
-                        if (!item.Info.Extension.Equals(".xml"))
+                        var path = Path.Combine(dir.Path, $"{name}.xml");
+                        if (!File.Exists(path))
                         {
-                            continue;
+                            group.Clear();
+                            return;
                         }
-
-                        var val = LoquiXmlFolderTranslation<T>.CREATE.Value(
-                            item.Path,
-                            null);
-                        group.Items.Set(val);
+                        XElement elem = XElement.Load(path);
+                        if (elem.Name != "Group")
+                        {
+                            throw new ArgumentException("XML file did not have \"Group\" top node.");
+                        }
+                        ushort i = 0;
+                        foreach (var item in elem.Elements())
+                        {
+                            var val = LoquiXmlTranslation<T>.GetCreateFunc()(
+                                item,
+                                errorMask,
+                                translationMask: null);
+                            group.Items.Set(val);
+                            i++;
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
                     }
                 }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
             }
         }
 
@@ -130,14 +129,11 @@ namespace Mutagen.Bethesda
             where T : MajorRecord, ILoquiObject<T>, IFormKey
             where T_ErrMask : MajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
         {
-            try
+            using (errorMask?.PushIndex(index))
             {
-                errorMask?.PushIndex(index);
-                try
+                using (errorMask?.PushIndex((int)Group_FieldIndex.Items))
                 {
-                    errorMask?.PushIndex((int)Group_FieldIndex.Items);
-                    dir.Create();
-                    XElement topNode = new XElement("topnode");
+                    XElement topNode = new XElement("Group");
                     int counter = 0;
                     foreach (var item in group.Items.Items)
                     {
@@ -162,27 +158,10 @@ namespace Mutagen.Bethesda
                     }
                     if (topNode.HasElements)
                     {
+                        dir.Create();
                         topNode.SaveIfChanged(Path.Combine(dir.Path, $"{name}.xml"));
                     }
                 }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
             }
         }
     }

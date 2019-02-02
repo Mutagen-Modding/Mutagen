@@ -305,25 +305,25 @@ namespace Mutagen.Bethesda.Oblivion
         #region Xml Create
         [DebuggerStepThrough]
         public static RegionDataObject Create_Xml(
-            XElement root,
+            XElement node,
             RegionDataObject_TranslationMask translationMask = null)
         {
             return Create_Xml(
-                root: root,
+                node: node,
                 errorMask: null,
                 translationMask: translationMask?.GetCrystal());
         }
 
         [DebuggerStepThrough]
         public static RegionDataObject Create_Xml(
-            XElement root,
+            XElement node,
             out RegionDataObject_ErrorMask errorMask,
             bool doMasks = true,
             RegionDataObject_TranslationMask translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             var ret = Create_Xml(
-                root: root,
+                node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask.GetCrystal());
             errorMask = RegionDataObject_ErrorMask.Factory(errorMaskBuilder);
@@ -331,18 +331,18 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static RegionDataObject Create_Xml(
-            XElement root,
+            XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
         {
             var ret = new RegionDataObject();
             try
             {
-                foreach (var elem in root.Elements())
+                foreach (var elem in node.Elements())
                 {
                     Fill_Xml_Internal(
                         item: ret,
-                        root: elem,
+                        node: elem,
                         name: elem.Name.LocalName,
                         errorMask: errorMask,
                         translationMask: translationMask);
@@ -360,9 +360,9 @@ namespace Mutagen.Bethesda.Oblivion
             string path,
             RegionDataObject_TranslationMask translationMask = null)
         {
-            var root = XDocument.Load(path).Root;
+            var node = XDocument.Load(path).Root;
             return Create_Xml(
-                root: root,
+                node: node,
                 translationMask: translationMask);
         }
 
@@ -371,20 +371,32 @@ namespace Mutagen.Bethesda.Oblivion
             out RegionDataObject_ErrorMask errorMask,
             RegionDataObject_TranslationMask translationMask = null)
         {
-            var root = XDocument.Load(path).Root;
+            var node = XDocument.Load(path).Root;
             return Create_Xml(
-                root: root,
+                node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
+        }
+
+        public static RegionDataObject Create_Xml(
+            string path,
+            ErrorMaskBuilder errorMask,
+            RegionDataObject_TranslationMask translationMask = null)
+        {
+            var node = XDocument.Load(path).Root;
+            return Create_Xml(
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask?.GetCrystal());
         }
 
         public static RegionDataObject Create_Xml(
             Stream stream,
             RegionDataObject_TranslationMask translationMask = null)
         {
-            var root = XDocument.Load(stream).Root;
+            var node = XDocument.Load(stream).Root;
             return Create_Xml(
-                root: root,
+                node: node,
                 translationMask: translationMask);
         }
 
@@ -393,29 +405,41 @@ namespace Mutagen.Bethesda.Oblivion
             out RegionDataObject_ErrorMask errorMask,
             RegionDataObject_TranslationMask translationMask = null)
         {
-            var root = XDocument.Load(stream).Root;
+            var node = XDocument.Load(stream).Root;
             return Create_Xml(
-                root: root,
+                node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
+        }
+
+        public static RegionDataObject Create_Xml(
+            Stream stream,
+            ErrorMaskBuilder errorMask,
+            RegionDataObject_TranslationMask translationMask = null)
+        {
+            var node = XDocument.Load(stream).Root;
+            return Create_Xml(
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask?.GetCrystal());
         }
 
         #endregion
 
         #region Xml Copy In
         public void CopyIn_Xml(
-            XElement root,
+            XElement node,
             NotifyingFireParameters cmds = null)
         {
             CopyIn_Xml_Internal(
-                root: root,
+                node: node,
                 errorMask: null,
                 translationMask: null,
                 cmds: cmds);
         }
 
         public virtual void CopyIn_Xml(
-            XElement root,
+            XElement node,
             out RegionDataObject_ErrorMask errorMask,
             RegionDataObject_TranslationMask translationMask = null,
             bool doMasks = true,
@@ -423,7 +447,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             CopyIn_Xml_Internal(
-                root: root,
+                node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal(),
                 cmds: cmds);
@@ -431,13 +455,13 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         protected void CopyIn_Xml_Internal(
-            XElement root,
+            XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask,
             NotifyingFireParameters cmds = null)
         {
             LoquiXmlTranslation<RegionDataObject>.Instance.CopyIn(
-                root: root,
+                node: node,
                 item: this,
                 skipProtected: true,
                 errorMask: errorMask,
@@ -449,9 +473,9 @@ namespace Mutagen.Bethesda.Oblivion
             string path,
             NotifyingFireParameters cmds = null)
         {
-            var root = XDocument.Load(path).Root;
+            var node = XDocument.Load(path).Root;
             this.CopyIn_Xml(
-                root: root,
+                node: node,
                 cmds: cmds);
         }
 
@@ -462,9 +486,9 @@ namespace Mutagen.Bethesda.Oblivion
             NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
-            var root = XDocument.Load(path).Root;
+            var node = XDocument.Load(path).Root;
             this.CopyIn_Xml(
-                root: root,
+                node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask,
                 cmds: cmds,
@@ -475,9 +499,9 @@ namespace Mutagen.Bethesda.Oblivion
             Stream stream,
             NotifyingFireParameters cmds = null)
         {
-            var root = XDocument.Load(stream).Root;
+            var node = XDocument.Load(stream).Root;
             this.CopyIn_Xml(
-                root: root,
+                node: node,
                 cmds: cmds);
         }
 
@@ -488,9 +512,9 @@ namespace Mutagen.Bethesda.Oblivion
             NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
-            var root = XDocument.Load(stream).Root;
+            var node = XDocument.Load(stream).Root;
             this.CopyIn_Xml(
-                root: root,
+                node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask,
                 cmds: cmds,
@@ -509,8 +533,8 @@ namespace Mutagen.Bethesda.Oblivion
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             this.Write_Xml(
-                node: node,
                 name: name,
+                node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
             errorMask = RegionDataObject_ErrorMask.Factory(errorMaskBuilder);
@@ -523,14 +547,14 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true,
             string name = null)
         {
-            XElement topNode = new XElement("topnode");
+            var node = new XElement("topnode");
             Write_Xml(
-                node: topNode,
                 name: name,
+                node: node,
                 errorMask: out errorMask,
                 doMasks: doMasks,
                 translationMask: translationMask);
-            topNode.Elements().First().SaveIfChanged(path);
+            node.Elements().First().SaveIfChanged(path);
         }
 
         public void Write_Xml(
@@ -539,13 +563,13 @@ namespace Mutagen.Bethesda.Oblivion
             TranslationCrystal translationMask,
             string name = null)
         {
-            XElement topNode = new XElement("topnode");
+            var node = new XElement("topnode");
             Write_Xml(
-                node: topNode,
                 name: name,
+                node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
-            topNode.Elements().First().SaveIfChanged(path);
+            node.Elements().First().SaveIfChanged(path);
         }
         public virtual void Write_Xml(
             Stream stream,
@@ -554,14 +578,14 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true,
             string name = null)
         {
-            XElement topNode = new XElement("topnode");
+            var node = new XElement("topnode");
             Write_Xml(
-                node: topNode,
                 name: name,
+                node: node,
                 errorMask: out errorMask,
                 doMasks: doMasks,
                 translationMask: translationMask);
-            topNode.Elements().First().Save(stream);
+            node.Elements().First().Save(stream);
         }
 
         public void Write_Xml(
@@ -570,13 +594,13 @@ namespace Mutagen.Bethesda.Oblivion
             TranslationCrystal translationMask,
             string name = null)
         {
-            XElement topNode = new XElement("topnode");
+            var node = new XElement("topnode");
             Write_Xml(
-                node: topNode,
                 name: name,
+                node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
-            topNode.Elements().First().Save(stream);
+            node.Elements().First().Save(stream);
         }
         public void Write_Xml(
             XElement node,
@@ -584,8 +608,8 @@ namespace Mutagen.Bethesda.Oblivion
             RegionDataObject_TranslationMask translationMask = null)
         {
             this.Write_Xml(
-                node: node,
                 name: name,
+                node: node,
                 errorMask: null,
                 translationMask: translationMask.GetCrystal());
         }
@@ -594,26 +618,26 @@ namespace Mutagen.Bethesda.Oblivion
             string path,
             string name = null)
         {
-            XElement topNode = new XElement("topnode");
+            var node = new XElement("topnode");
             Write_Xml(
-                node: topNode,
                 name: name,
+                node: node,
                 errorMask: null,
                 translationMask: null);
-            topNode.Elements().First().SaveIfChanged(path);
+            node.Elements().First().SaveIfChanged(path);
         }
 
         public void Write_Xml(
             Stream stream,
             string name = null)
         {
-            XElement topNode = new XElement("topnode");
+            var node = new XElement("topnode");
             Write_Xml(
-                node: topNode,
                 name: name,
+                node: node,
                 errorMask: null,
                 translationMask: null);
-            topNode.Elements().First().Save(stream);
+            node.Elements().First().Save(stream);
         }
 
         public void Write_Xml(
@@ -624,8 +648,8 @@ namespace Mutagen.Bethesda.Oblivion
         {
             RegionDataObjectCommon.Write_Xml(
                 item: this,
-                node: node,
                 name: name,
+                node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
@@ -633,7 +657,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         protected static void Fill_Xml_Internal(
             RegionDataObject item,
-            XElement root,
+            XElement node,
             string name,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -642,7 +666,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case "Object":
                     FormKeyXmlTranslation.Instance.ParseInto(
-                        root: root,
+                        node: node,
                         item: item.Object_Property,
                         fieldIndex: (int)RegionDataObject_FieldIndex.Object,
                         errorMask: errorMask);
@@ -652,7 +676,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)RegionDataObject_FieldIndex.ParentIndex);
                         if (UInt16XmlTranslation.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out UInt16 ParentIndexParse,
                             errorMask: errorMask))
                         {
@@ -678,7 +702,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)RegionDataObject_FieldIndex.Unknown1);
                         if (ByteArrayXmlTranslation.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out Byte[] Unknown1Parse,
                             errorMask: errorMask))
                         {
@@ -704,7 +728,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)RegionDataObject_FieldIndex.Density);
                         if (FloatXmlTranslation.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out Single DensityParse,
                             errorMask: errorMask))
                         {
@@ -730,7 +754,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)RegionDataObject_FieldIndex.Clustering);
                         if (ByteXmlTranslation.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out Byte ClusteringParse,
                             errorMask: errorMask))
                         {
@@ -756,7 +780,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)RegionDataObject_FieldIndex.MinSlope);
                         if (ByteXmlTranslation.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out Byte MinSlopeParse,
                             errorMask: errorMask))
                         {
@@ -782,7 +806,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)RegionDataObject_FieldIndex.MaxSlope);
                         if (ByteXmlTranslation.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out Byte MaxSlopeParse,
                             errorMask: errorMask))
                         {
@@ -808,7 +832,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)RegionDataObject_FieldIndex.Flags);
                         if (EnumXmlTranslation<RegionDataObject.Flag>.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out RegionDataObject.Flag FlagsParse,
                             errorMask: errorMask))
                         {
@@ -834,7 +858,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)RegionDataObject_FieldIndex.RadiusWrtPercent);
                         if (UInt16XmlTranslation.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out UInt16 RadiusWrtPercentParse,
                             errorMask: errorMask))
                         {
@@ -860,7 +884,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)RegionDataObject_FieldIndex.Radius);
                         if (UInt16XmlTranslation.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out UInt16 RadiusParse,
                             errorMask: errorMask))
                         {
@@ -886,7 +910,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)RegionDataObject_FieldIndex.MinHeight);
                         if (FloatXmlTranslation.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out Single MinHeightParse,
                             errorMask: errorMask))
                         {
@@ -912,7 +936,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)RegionDataObject_FieldIndex.MaxHeight);
                         if (FloatXmlTranslation.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out Single MaxHeightParse,
                             errorMask: errorMask))
                         {
@@ -938,7 +962,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)RegionDataObject_FieldIndex.Sink);
                         if (FloatXmlTranslation.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out Single SinkParse,
                             errorMask: errorMask))
                         {
@@ -964,7 +988,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)RegionDataObject_FieldIndex.SinkVariance);
                         if (FloatXmlTranslation.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out Single SinkVarianceParse,
                             errorMask: errorMask))
                         {
@@ -990,7 +1014,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)RegionDataObject_FieldIndex.SizeVariance);
                         if (FloatXmlTranslation.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out Single SizeVarianceParse,
                             errorMask: errorMask))
                         {
@@ -1016,7 +1040,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)RegionDataObject_FieldIndex.AngleVariance);
                         if (P3UInt16XmlTranslation.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out P3UInt16 AngleVarianceParse,
                             errorMask: errorMask))
                         {
@@ -1042,7 +1066,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)RegionDataObject_FieldIndex.Unknow2n);
                         if (ByteArrayXmlTranslation.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out Byte[] Unknow2nParse,
                             errorMask: errorMask))
                         {
@@ -1128,8 +1152,8 @@ namespace Mutagen.Bethesda.Oblivion
             MasterReferences masterReferences)
         {
             return Create_Binary(
-                frame: frame,
                 masterReferences: masterReferences,
+                frame: frame,
                 recordTypeConverter: null,
                 errorMask: null);
         }
@@ -1143,8 +1167,8 @@ namespace Mutagen.Bethesda.Oblivion
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             var ret = Create_Binary(
-                frame: frame,
                 masterReferences: masterReferences,
+                frame: frame,
                 recordTypeConverter: null,
                 errorMask: errorMaskBuilder);
             errorMask = RegionDataObject_ErrorMask.Factory(errorMaskBuilder);
@@ -1185,8 +1209,8 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 var frame = new MutagenFrame(reader);
                 return Create_Binary(
-                    frame: frame,
-                    masterReferences: masterReferences);
+                    masterReferences: masterReferences,
+                    frame: frame);
             }
         }
 
@@ -1199,9 +1223,25 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 var frame = new MutagenFrame(reader);
                 return Create_Binary(
-                    frame: frame,
                     masterReferences: masterReferences,
+                    frame: frame,
                     errorMask: out errorMask);
+            }
+        }
+
+        public static RegionDataObject Create_Binary(
+            string path,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask)
+        {
+            using (var reader = new BinaryReadStream(path))
+            {
+                var frame = new MutagenFrame(reader);
+                return Create_Binary(
+                    masterReferences: masterReferences,
+                    frame: frame,
+                    recordTypeConverter: null,
+                    errorMask: errorMask);
             }
         }
 
@@ -1213,8 +1253,8 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 var frame = new MutagenFrame(reader);
                 return Create_Binary(
-                    frame: frame,
-                    masterReferences: masterReferences);
+                    masterReferences: masterReferences,
+                    frame: frame);
             }
         }
 
@@ -1227,9 +1267,25 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 var frame = new MutagenFrame(reader);
                 return Create_Binary(
-                    frame: frame,
                     masterReferences: masterReferences,
+                    frame: frame,
                     errorMask: out errorMask);
+            }
+        }
+
+        public static RegionDataObject Create_Binary(
+            Stream stream,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask)
+        {
+            using (var reader = new BinaryReadStream(stream))
+            {
+                var frame = new MutagenFrame(reader);
+                return Create_Binary(
+                    masterReferences: masterReferences,
+                    frame: frame,
+                    recordTypeConverter: null,
+                    errorMask: errorMask);
             }
         }
 
@@ -1244,8 +1300,8 @@ namespace Mutagen.Bethesda.Oblivion
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             this.Write_Binary(
-                writer: writer,
                 masterReferences: masterReferences,
+                writer: writer,
                 recordTypeConverter: null,
                 errorMask: errorMaskBuilder);
             errorMask = RegionDataObject_ErrorMask.Factory(errorMaskBuilder);
@@ -1262,8 +1318,8 @@ namespace Mutagen.Bethesda.Oblivion
                 using (var writer = new MutagenWriter(memStream, dispose: false))
                 {
                     Write_Binary(
-                        writer: writer,
                         masterReferences: masterReferences,
+                        writer: writer,
                         errorMask: out errorMask,
                         doMasks: doMasks);
                 }
@@ -1285,8 +1341,8 @@ namespace Mutagen.Bethesda.Oblivion
                 using (var writer = new MutagenWriter(memStream, dispose: false))
                 {
                     Write_Binary(
-                        writer: writer,
                         masterReferences: masterReferences,
+                        writer: writer,
                         recordTypeConverter: null,
                         errorMask: errorMask);
                 }
@@ -1306,8 +1362,8 @@ namespace Mutagen.Bethesda.Oblivion
             using (var writer = new MutagenWriter(stream))
             {
                 Write_Binary(
-                    writer: writer,
                     masterReferences: masterReferences,
+                    writer: writer,
                     errorMask: out errorMask,
                     doMasks: doMasks);
             }
@@ -1321,8 +1377,8 @@ namespace Mutagen.Bethesda.Oblivion
             using (var writer = new MutagenWriter(stream))
             {
                 Write_Binary(
-                    writer: writer,
                     masterReferences: masterReferences,
+                    writer: writer,
                     recordTypeConverter: null,
                     errorMask: errorMask);
             }
@@ -1332,8 +1388,8 @@ namespace Mutagen.Bethesda.Oblivion
             MasterReferences masterReferences)
         {
             this.Write_Binary(
-                writer: writer,
                 masterReferences: masterReferences,
+                writer: writer,
                 recordTypeConverter: null,
                 errorMask: null);
         }
@@ -1347,8 +1403,8 @@ namespace Mutagen.Bethesda.Oblivion
                 using (var writer = new MutagenWriter(memStream, dispose: false))
                 {
                     Write_Binary(
-                        writer: writer,
                         masterReferences: masterReferences,
+                        writer: writer,
                         recordTypeConverter: null,
                         errorMask: null);
                 }
@@ -1367,8 +1423,8 @@ namespace Mutagen.Bethesda.Oblivion
             using (var writer = new MutagenWriter(stream))
             {
                 Write_Binary(
-                    writer: writer,
                     masterReferences: masterReferences,
+                    writer: writer,
                     recordTypeConverter: null,
                     errorMask: null);
             }
@@ -1382,8 +1438,8 @@ namespace Mutagen.Bethesda.Oblivion
         {
             RegionDataObjectCommon.Write_Binary(
                 item: this,
-                writer: writer,
                 masterReferences: masterReferences,
+                writer: writer,
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
         }
@@ -3068,7 +3124,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RegionDataObject_Mask<bool> ret)
         {
             if (rhs == null) return;
-            ret.Object = item.Object == rhs.Object;
+            ret.Object = item.Object_Property.FormKey == rhs.Object_Property.FormKey;
             ret.ParentIndex = item.ParentIndex == rhs.ParentIndex;
             ret.Unknown1 = item.Unknown1.EqualsFast(rhs.Unknown1);
             ret.Density = item.Density == rhs.Density;
@@ -3228,8 +3284,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             Write_Xml(
-                node: node,
                 name: name,
+                node: node,
                 item: item,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
@@ -3249,10 +3305,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.RegionDataObject");
             }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        #endregion
+
+        public static void WriteToNode_Xml(
+            IRegionDataObjectGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
             if ((translationMask?.GetShouldTranslate((int)RegionDataObject_FieldIndex.Object) ?? true))
             {
                 FormKeyXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Object),
                     item: item.Object_Property?.FormKey,
                     fieldIndex: (int)RegionDataObject_FieldIndex.Object,
@@ -3261,7 +3331,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)RegionDataObject_FieldIndex.ParentIndex) ?? true))
             {
                 UInt16XmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.ParentIndex),
                     item: item.ParentIndex,
                     fieldIndex: (int)RegionDataObject_FieldIndex.ParentIndex,
@@ -3270,7 +3340,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)RegionDataObject_FieldIndex.Unknown1) ?? true))
             {
                 ByteArrayXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Unknown1),
                     item: item.Unknown1,
                     fieldIndex: (int)RegionDataObject_FieldIndex.Unknown1,
@@ -3279,7 +3349,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)RegionDataObject_FieldIndex.Density) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Density),
                     item: item.Density,
                     fieldIndex: (int)RegionDataObject_FieldIndex.Density,
@@ -3288,7 +3358,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)RegionDataObject_FieldIndex.Clustering) ?? true))
             {
                 ByteXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Clustering),
                     item: item.Clustering,
                     fieldIndex: (int)RegionDataObject_FieldIndex.Clustering,
@@ -3297,7 +3367,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)RegionDataObject_FieldIndex.MinSlope) ?? true))
             {
                 ByteXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.MinSlope),
                     item: item.MinSlope,
                     fieldIndex: (int)RegionDataObject_FieldIndex.MinSlope,
@@ -3306,7 +3376,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)RegionDataObject_FieldIndex.MaxSlope) ?? true))
             {
                 ByteXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.MaxSlope),
                     item: item.MaxSlope,
                     fieldIndex: (int)RegionDataObject_FieldIndex.MaxSlope,
@@ -3315,7 +3385,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)RegionDataObject_FieldIndex.Flags) ?? true))
             {
                 EnumXmlTranslation<RegionDataObject.Flag>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Flags),
                     item: item.Flags,
                     fieldIndex: (int)RegionDataObject_FieldIndex.Flags,
@@ -3324,7 +3394,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)RegionDataObject_FieldIndex.RadiusWrtPercent) ?? true))
             {
                 UInt16XmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.RadiusWrtPercent),
                     item: item.RadiusWrtPercent,
                     fieldIndex: (int)RegionDataObject_FieldIndex.RadiusWrtPercent,
@@ -3333,7 +3403,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)RegionDataObject_FieldIndex.Radius) ?? true))
             {
                 UInt16XmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Radius),
                     item: item.Radius,
                     fieldIndex: (int)RegionDataObject_FieldIndex.Radius,
@@ -3342,7 +3412,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)RegionDataObject_FieldIndex.MinHeight) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.MinHeight),
                     item: item.MinHeight,
                     fieldIndex: (int)RegionDataObject_FieldIndex.MinHeight,
@@ -3351,7 +3421,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)RegionDataObject_FieldIndex.MaxHeight) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.MaxHeight),
                     item: item.MaxHeight,
                     fieldIndex: (int)RegionDataObject_FieldIndex.MaxHeight,
@@ -3360,7 +3430,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)RegionDataObject_FieldIndex.Sink) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Sink),
                     item: item.Sink,
                     fieldIndex: (int)RegionDataObject_FieldIndex.Sink,
@@ -3369,7 +3439,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)RegionDataObject_FieldIndex.SinkVariance) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.SinkVariance),
                     item: item.SinkVariance,
                     fieldIndex: (int)RegionDataObject_FieldIndex.SinkVariance,
@@ -3378,7 +3448,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)RegionDataObject_FieldIndex.SizeVariance) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.SizeVariance),
                     item: item.SizeVariance,
                     fieldIndex: (int)RegionDataObject_FieldIndex.SizeVariance,
@@ -3387,7 +3457,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)RegionDataObject_FieldIndex.AngleVariance) ?? true))
             {
                 P3UInt16XmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.AngleVariance),
                     item: item.AngleVariance,
                     fieldIndex: (int)RegionDataObject_FieldIndex.AngleVariance,
@@ -3396,14 +3466,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)RegionDataObject_FieldIndex.Unknow2n) ?? true))
             {
                 ByteArrayXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Unknow2n),
                     item: item.Unknow2n,
                     fieldIndex: (int)RegionDataObject_FieldIndex.Unknow2n,
                     errorMask: errorMask);
             }
         }
-        #endregion
 
         #endregion
 
@@ -3419,8 +3488,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             Write_Binary(
-                writer: writer,
                 masterReferences: masterReferences,
+                writer: writer,
                 item: item,
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMaskBuilder);

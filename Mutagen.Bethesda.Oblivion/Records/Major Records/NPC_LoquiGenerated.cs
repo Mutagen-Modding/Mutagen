@@ -1301,25 +1301,25 @@ namespace Mutagen.Bethesda.Oblivion
         #region Xml Create
         [DebuggerStepThrough]
         public new static NPC Create_Xml(
-            XElement root,
+            XElement node,
             NPC_TranslationMask translationMask = null)
         {
             return Create_Xml(
-                root: root,
+                node: node,
                 errorMask: null,
                 translationMask: translationMask?.GetCrystal());
         }
 
         [DebuggerStepThrough]
         public static NPC Create_Xml(
-            XElement root,
+            XElement node,
             out NPC_ErrorMask errorMask,
             bool doMasks = true,
             NPC_TranslationMask translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             var ret = Create_Xml(
-                root: root,
+                node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask.GetCrystal());
             errorMask = NPC_ErrorMask.Factory(errorMaskBuilder);
@@ -1327,18 +1327,18 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static NPC Create_Xml(
-            XElement root,
+            XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
         {
             var ret = new NPC();
             try
             {
-                foreach (var elem in root.Elements())
+                foreach (var elem in node.Elements())
                 {
                     Fill_Xml_Internal(
                         item: ret,
-                        root: elem,
+                        node: elem,
                         name: elem.Name.LocalName,
                         errorMask: errorMask,
                         translationMask: translationMask);
@@ -1356,9 +1356,9 @@ namespace Mutagen.Bethesda.Oblivion
             string path,
             NPC_TranslationMask translationMask = null)
         {
-            var root = XDocument.Load(path).Root;
+            var node = XDocument.Load(path).Root;
             return Create_Xml(
-                root: root,
+                node: node,
                 translationMask: translationMask);
         }
 
@@ -1367,20 +1367,32 @@ namespace Mutagen.Bethesda.Oblivion
             out NPC_ErrorMask errorMask,
             NPC_TranslationMask translationMask = null)
         {
-            var root = XDocument.Load(path).Root;
+            var node = XDocument.Load(path).Root;
             return Create_Xml(
-                root: root,
+                node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
+        }
+
+        public static NPC Create_Xml(
+            string path,
+            ErrorMaskBuilder errorMask,
+            NPC_TranslationMask translationMask = null)
+        {
+            var node = XDocument.Load(path).Root;
+            return Create_Xml(
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask?.GetCrystal());
         }
 
         public static NPC Create_Xml(
             Stream stream,
             NPC_TranslationMask translationMask = null)
         {
-            var root = XDocument.Load(stream).Root;
+            var node = XDocument.Load(stream).Root;
             return Create_Xml(
-                root: root,
+                node: node,
                 translationMask: translationMask);
         }
 
@@ -1389,29 +1401,41 @@ namespace Mutagen.Bethesda.Oblivion
             out NPC_ErrorMask errorMask,
             NPC_TranslationMask translationMask = null)
         {
-            var root = XDocument.Load(stream).Root;
+            var node = XDocument.Load(stream).Root;
             return Create_Xml(
-                root: root,
+                node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
+        }
+
+        public static NPC Create_Xml(
+            Stream stream,
+            ErrorMaskBuilder errorMask,
+            NPC_TranslationMask translationMask = null)
+        {
+            var node = XDocument.Load(stream).Root;
+            return Create_Xml(
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask?.GetCrystal());
         }
 
         #endregion
 
         #region Xml Copy In
         public override void CopyIn_Xml(
-            XElement root,
+            XElement node,
             NotifyingFireParameters cmds = null)
         {
             CopyIn_Xml_Internal(
-                root: root,
+                node: node,
                 errorMask: null,
                 translationMask: null,
                 cmds: cmds);
         }
 
         public virtual void CopyIn_Xml(
-            XElement root,
+            XElement node,
             out NPC_ErrorMask errorMask,
             NPC_TranslationMask translationMask = null,
             bool doMasks = true,
@@ -1419,7 +1443,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             CopyIn_Xml_Internal(
-                root: root,
+                node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal(),
                 cmds: cmds);
@@ -1427,13 +1451,13 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         protected override void CopyIn_Xml_Internal(
-            XElement root,
+            XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask,
             NotifyingFireParameters cmds = null)
         {
             LoquiXmlTranslation<NPC>.Instance.CopyIn(
-                root: root,
+                node: node,
                 item: this,
                 skipProtected: true,
                 errorMask: errorMask,
@@ -1445,9 +1469,9 @@ namespace Mutagen.Bethesda.Oblivion
             string path,
             NotifyingFireParameters cmds = null)
         {
-            var root = XDocument.Load(path).Root;
+            var node = XDocument.Load(path).Root;
             this.CopyIn_Xml(
-                root: root,
+                node: node,
                 cmds: cmds);
         }
 
@@ -1458,9 +1482,9 @@ namespace Mutagen.Bethesda.Oblivion
             NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
-            var root = XDocument.Load(path).Root;
+            var node = XDocument.Load(path).Root;
             this.CopyIn_Xml(
-                root: root,
+                node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask,
                 cmds: cmds,
@@ -1471,9 +1495,9 @@ namespace Mutagen.Bethesda.Oblivion
             Stream stream,
             NotifyingFireParameters cmds = null)
         {
-            var root = XDocument.Load(stream).Root;
+            var node = XDocument.Load(stream).Root;
             this.CopyIn_Xml(
-                root: root,
+                node: node,
                 cmds: cmds);
         }
 
@@ -1484,9 +1508,9 @@ namespace Mutagen.Bethesda.Oblivion
             NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
-            var root = XDocument.Load(stream).Root;
+            var node = XDocument.Load(stream).Root;
             this.CopyIn_Xml(
-                root: root,
+                node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask,
                 cmds: cmds,
@@ -1494,7 +1518,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public override void CopyIn_Xml(
-            XElement root,
+            XElement node,
             out NPCAbstract_ErrorMask errorMask,
             NPCAbstract_TranslationMask translationMask = null,
             bool doMasks = true,
@@ -1502,7 +1526,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             CopyIn_Xml_Internal(
-                root: root,
+                node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal(),
                 cmds: cmds);
@@ -1510,7 +1534,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public override void CopyIn_Xml(
-            XElement root,
+            XElement node,
             out NPCSpawn_ErrorMask errorMask,
             NPCSpawn_TranslationMask translationMask = null,
             bool doMasks = true,
@@ -1518,7 +1542,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             CopyIn_Xml_Internal(
-                root: root,
+                node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal(),
                 cmds: cmds);
@@ -1526,7 +1550,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public override void CopyIn_Xml(
-            XElement root,
+            XElement node,
             out MajorRecord_ErrorMask errorMask,
             MajorRecord_TranslationMask translationMask = null,
             bool doMasks = true,
@@ -1534,7 +1558,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             CopyIn_Xml_Internal(
-                root: root,
+                node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal(),
                 cmds: cmds);
@@ -1553,8 +1577,8 @@ namespace Mutagen.Bethesda.Oblivion
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             this.Write_Xml(
-                node: node,
                 name: name,
+                node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
             errorMask = NPC_ErrorMask.Factory(errorMaskBuilder);
@@ -1567,14 +1591,14 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true,
             string name = null)
         {
-            XElement topNode = new XElement("topnode");
+            var node = new XElement("topnode");
             Write_Xml(
-                node: topNode,
                 name: name,
+                node: node,
                 errorMask: out errorMask,
                 doMasks: doMasks,
                 translationMask: translationMask);
-            topNode.Elements().First().SaveIfChanged(path);
+            node.Elements().First().SaveIfChanged(path);
         }
 
         public override void Write_Xml(
@@ -1583,13 +1607,13 @@ namespace Mutagen.Bethesda.Oblivion
             TranslationCrystal translationMask,
             string name = null)
         {
-            XElement topNode = new XElement("topnode");
+            var node = new XElement("topnode");
             Write_Xml(
-                node: topNode,
                 name: name,
+                node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
-            topNode.Elements().First().SaveIfChanged(path);
+            node.Elements().First().SaveIfChanged(path);
         }
         public virtual void Write_Xml(
             Stream stream,
@@ -1598,14 +1622,14 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true,
             string name = null)
         {
-            XElement topNode = new XElement("topnode");
+            var node = new XElement("topnode");
             Write_Xml(
-                node: topNode,
                 name: name,
+                node: node,
                 errorMask: out errorMask,
                 doMasks: doMasks,
                 translationMask: translationMask);
-            topNode.Elements().First().Save(stream);
+            node.Elements().First().Save(stream);
         }
 
         public override void Write_Xml(
@@ -1614,13 +1638,13 @@ namespace Mutagen.Bethesda.Oblivion
             TranslationCrystal translationMask,
             string name = null)
         {
-            XElement topNode = new XElement("topnode");
+            var node = new XElement("topnode");
             Write_Xml(
-                node: topNode,
                 name: name,
+                node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
-            topNode.Elements().First().Save(stream);
+            node.Elements().First().Save(stream);
         }
         #region Base Class Trickdown Overrides
         public override void Write_Xml(
@@ -1632,8 +1656,8 @@ namespace Mutagen.Bethesda.Oblivion
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             this.Write_Xml(
-                node: node,
                 name: name,
+                node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
             errorMask = NPC_ErrorMask.Factory(errorMaskBuilder);
@@ -1648,8 +1672,8 @@ namespace Mutagen.Bethesda.Oblivion
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             this.Write_Xml(
-                node: node,
                 name: name,
+                node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
             errorMask = NPC_ErrorMask.Factory(errorMaskBuilder);
@@ -1664,8 +1688,8 @@ namespace Mutagen.Bethesda.Oblivion
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             this.Write_Xml(
-                node: node,
                 name: name,
+                node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
             errorMask = NPC_ErrorMask.Factory(errorMaskBuilder);
@@ -1681,8 +1705,8 @@ namespace Mutagen.Bethesda.Oblivion
         {
             NPCCommon.Write_Xml(
                 item: this,
-                node: node,
                 name: name,
+                node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
@@ -1690,7 +1714,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         protected static void Fill_Xml_Internal(
             NPC item,
-            XElement root,
+            XElement node,
             string name,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1702,7 +1726,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)NPC_FieldIndex.Name);
                         if (StringXmlTranslation.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out String NameParse,
                             errorMask: errorMask))
                         {
@@ -1728,7 +1752,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)NPC_FieldIndex.Model);
                         if (LoquiXmlTranslation<Model>.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out Model ModelParse,
                             errorMask: errorMask,
                             translationMask: translationMask?.GetSubCrystal((int)NPC_FieldIndex.Model)))
@@ -1755,7 +1779,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)NPC_FieldIndex.Flags);
                         if (EnumXmlTranslation<NPC.NPCFlag>.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out NPC.NPCFlag FlagsParse,
                             errorMask: errorMask))
                         {
@@ -1781,7 +1805,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)NPC_FieldIndex.BaseSpellPoints);
                         if (UInt16XmlTranslation.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out UInt16 BaseSpellPointsParse,
                             errorMask: errorMask))
                         {
@@ -1807,7 +1831,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)NPC_FieldIndex.Fatigue);
                         if (UInt16XmlTranslation.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out UInt16 FatigueParse,
                             errorMask: errorMask))
                         {
@@ -1833,7 +1857,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)NPC_FieldIndex.BarterGold);
                         if (UInt16XmlTranslation.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out UInt16 BarterGoldParse,
                             errorMask: errorMask))
                         {
@@ -1859,7 +1883,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)NPC_FieldIndex.LevelOffset);
                         if (Int16XmlTranslation.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out Int16 LevelOffsetParse,
                             errorMask: errorMask))
                         {
@@ -1885,7 +1909,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)NPC_FieldIndex.CalcMin);
                         if (UInt16XmlTranslation.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out UInt16 CalcMinParse,
                             errorMask: errorMask))
                         {
@@ -1911,7 +1935,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)NPC_FieldIndex.CalcMax);
                         if (UInt16XmlTranslation.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out UInt16 CalcMaxParse,
                             errorMask: errorMask))
                         {
@@ -1937,7 +1961,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)NPC_FieldIndex.Factions);
                         if (ListXmlTranslation<RankPlacement>.Instance.Parse(
-                            root: root,
+                            node: node,
                             enumer: out var FactionsItem,
                             transl: LoquiXmlTranslation<RankPlacement>.Instance.Parse,
                             errorMask: errorMask,
@@ -1962,14 +1986,14 @@ namespace Mutagen.Bethesda.Oblivion
                     break;
                 case "DeathItem":
                     FormKeyXmlTranslation.Instance.ParseInto(
-                        root: root,
+                        node: node,
                         item: item.DeathItem_Property,
                         fieldIndex: (int)NPC_FieldIndex.DeathItem,
                         errorMask: errorMask);
                     break;
                 case "Race":
                     FormKeyXmlTranslation.Instance.ParseInto(
-                        root: root,
+                        node: node,
                         item: item.Race_Property,
                         fieldIndex: (int)NPC_FieldIndex.Race,
                         errorMask: errorMask);
@@ -1979,7 +2003,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)NPC_FieldIndex.Spells);
                         if (ListXmlTranslation<FormIDSetLink<SpellAbstract>>.Instance.Parse(
-                            root: root,
+                            node: node,
                             enumer: out var SpellsItem,
                             transl: FormKeyXmlTranslation.Instance.Parse,
                             errorMask: errorMask,
@@ -2004,7 +2028,7 @@ namespace Mutagen.Bethesda.Oblivion
                     break;
                 case "Script":
                     FormKeyXmlTranslation.Instance.ParseInto(
-                        root: root,
+                        node: node,
                         item: item.Script_Property,
                         fieldIndex: (int)NPC_FieldIndex.Script,
                         errorMask: errorMask);
@@ -2014,7 +2038,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)NPC_FieldIndex.Items);
                         if (ListXmlTranslation<ItemEntry>.Instance.Parse(
-                            root: root,
+                            node: node,
                             enumer: out var ItemsItem,
                             transl: LoquiXmlTranslation<ItemEntry>.Instance.Parse,
                             errorMask: errorMask,
@@ -2042,7 +2066,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)NPC_FieldIndex.Aggression);
                         if (ByteXmlTranslation.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out Byte AggressionParse,
                             errorMask: errorMask))
                         {
@@ -2068,7 +2092,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)NPC_FieldIndex.Confidence);
                         if (ByteXmlTranslation.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out Byte ConfidenceParse,
                             errorMask: errorMask))
                         {
@@ -2094,7 +2118,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)NPC_FieldIndex.EnergyLevel);
                         if (ByteXmlTranslation.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out Byte EnergyLevelParse,
                             errorMask: errorMask))
                         {
@@ -2120,7 +2144,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)NPC_FieldIndex.Responsibility);
                         if (ByteXmlTranslation.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out Byte ResponsibilityParse,
                             errorMask: errorMask))
                         {
@@ -2146,7 +2170,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)NPC_FieldIndex.BuySellServices);
                         if (EnumXmlTranslation<NPC.BuySellServiceFlag>.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out NPC.BuySellServiceFlag BuySellServicesParse,
                             errorMask: errorMask))
                         {
@@ -2172,7 +2196,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)NPC_FieldIndex.Teaches);
                         if (EnumXmlTranslation<Skill>.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out Skill TeachesParse,
                             errorMask: errorMask))
                         {
@@ -2198,7 +2222,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)NPC_FieldIndex.MaximumTrainingLevel);
                         if (ByteXmlTranslation.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out Byte MaximumTrainingLevelParse,
                             errorMask: errorMask))
                         {
@@ -2224,7 +2248,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)NPC_FieldIndex.Fluff);
                         if (ByteArrayXmlTranslation.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out Byte[] FluffParse,
                             errorMask: errorMask))
                         {
@@ -2250,7 +2274,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)NPC_FieldIndex.AIPackages);
                         if (ListXmlTranslation<FormIDSetLink<AIPackage>>.Instance.Parse(
-                            root: root,
+                            node: node,
                             enumer: out var AIPackagesItem,
                             transl: FormKeyXmlTranslation.Instance.Parse,
                             errorMask: errorMask,
@@ -2278,7 +2302,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)NPC_FieldIndex.Animations);
                         if (ListXmlTranslation<String>.Instance.Parse(
-                            root: root,
+                            node: node,
                             enumer: out var AnimationsItem,
                             transl: StringXmlTranslation.Instance.Parse,
                             errorMask: errorMask,
@@ -2303,7 +2327,7 @@ namespace Mutagen.Bethesda.Oblivion
                     break;
                 case "Class":
                     FormKeyXmlTranslation.Instance.ParseInto(
-                        root: root,
+                        node: node,
                         item: item.Class_Property,
                         fieldIndex: (int)NPC_FieldIndex.Class,
                         errorMask: errorMask);
@@ -2313,7 +2337,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)NPC_FieldIndex.Armorer);
                         if (ByteXmlTranslation.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out Byte ArmorerParse,
                             errorMask: errorMask))
                         {
@@ -2339,7 +2363,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)NPC_FieldIndex.Athletics);
                         if (ByteXmlTranslation.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out Byte AthleticsParse,
                             errorMask: errorMask))
                         {
@@ -2365,7 +2389,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)NPC_FieldIndex.Blade);
                         if (ByteXmlTranslation.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out Byte BladeParse,
                             errorMask: errorMask))
                         {
@@ -2391,7 +2415,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)NPC_FieldIndex.Block);
                         if (ByteXmlTranslation.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out Byte BlockParse,
                             errorMask: errorMask))
                         {
@@ -2417,7 +2441,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)NPC_FieldIndex.Blunt);
                         if (ByteXmlTranslation.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out Byte BluntParse,
                             errorMask: errorMask))
                         {
@@ -2443,7 +2467,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)NPC_FieldIndex.HandToHand);
                         if (ByteXmlTranslation.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out Byte HandToHandParse,
                             errorMask: errorMask))
                         {
@@ -2469,7 +2493,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)NPC_FieldIndex.HeavyArmor);
                         if (ByteXmlTranslation.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out Byte HeavyArmorParse,
                             errorMask: errorMask))
                         {
@@ -2495,7 +2519,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)NPC_FieldIndex.Alchemy);
                         if (ByteXmlTranslation.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out Byte AlchemyParse,
                             errorMask: errorMask))
                         {
@@ -2521,7 +2545,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)NPC_FieldIndex.Alteration);
                         if (ByteXmlTranslation.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out Byte AlterationParse,
                             errorMask: errorMask))
                         {
@@ -2547,7 +2571,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)NPC_FieldIndex.Conjuration);
                         if (ByteXmlTranslation.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out Byte ConjurationParse,
                             errorMask: errorMask))
                         {
@@ -2573,7 +2597,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)NPC_FieldIndex.Destruction);
                         if (ByteXmlTranslation.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out Byte DestructionParse,
                             errorMask: errorMask))
                         {
@@ -2599,7 +2623,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)NPC_FieldIndex.Illusion);
                         if (ByteXmlTranslation.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out Byte IllusionParse,
                             errorMask: errorMask))
                         {
@@ -2625,7 +2649,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)NPC_FieldIndex.Mysticism);
                         if (ByteXmlTranslation.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out Byte MysticismParse,
                             errorMask: errorMask))
                         {
@@ -2651,7 +2675,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)NPC_FieldIndex.Restoration);
                         if (ByteXmlTranslation.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out Byte RestorationParse,
                             errorMask: errorMask))
                         {
@@ -2677,7 +2701,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)NPC_FieldIndex.Acrobatics);
                         if (ByteXmlTranslation.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out Byte AcrobaticsParse,
                             errorMask: errorMask))
                         {
@@ -2703,7 +2727,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)NPC_FieldIndex.LightArmor);
                         if (ByteXmlTranslation.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out Byte LightArmorParse,
                             errorMask: errorMask))
                         {
@@ -2729,7 +2753,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)NPC_FieldIndex.Marksman);
                         if (ByteXmlTranslation.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out Byte MarksmanParse,
                             errorMask: errorMask))
                         {
@@ -2755,7 +2779,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)NPC_FieldIndex.Mercantile);
                         if (ByteXmlTranslation.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out Byte MercantileParse,
                             errorMask: errorMask))
                         {
@@ -2781,7 +2805,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)NPC_FieldIndex.Security);
                         if (ByteXmlTranslation.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out Byte SecurityParse,
                             errorMask: errorMask))
                         {
@@ -2807,7 +2831,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)NPC_FieldIndex.Sneak);
                         if (ByteXmlTranslation.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out Byte SneakParse,
                             errorMask: errorMask))
                         {
@@ -2833,7 +2857,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)NPC_FieldIndex.Speechcraft);
                         if (ByteXmlTranslation.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out Byte SpeechcraftParse,
                             errorMask: errorMask))
                         {
@@ -2859,7 +2883,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)NPC_FieldIndex.Health);
                         if (UInt32XmlTranslation.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out UInt32 HealthParse,
                             errorMask: errorMask))
                         {
@@ -2885,7 +2909,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)NPC_FieldIndex.Strength);
                         if (ByteXmlTranslation.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out Byte StrengthParse,
                             errorMask: errorMask))
                         {
@@ -2911,7 +2935,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)NPC_FieldIndex.Intelligence);
                         if (ByteXmlTranslation.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out Byte IntelligenceParse,
                             errorMask: errorMask))
                         {
@@ -2937,7 +2961,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)NPC_FieldIndex.Willpower);
                         if (ByteXmlTranslation.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out Byte WillpowerParse,
                             errorMask: errorMask))
                         {
@@ -2963,7 +2987,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)NPC_FieldIndex.Agility);
                         if (ByteXmlTranslation.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out Byte AgilityParse,
                             errorMask: errorMask))
                         {
@@ -2989,7 +3013,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)NPC_FieldIndex.Speed);
                         if (ByteXmlTranslation.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out Byte SpeedParse,
                             errorMask: errorMask))
                         {
@@ -3015,7 +3039,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)NPC_FieldIndex.Endurance);
                         if (ByteXmlTranslation.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out Byte EnduranceParse,
                             errorMask: errorMask))
                         {
@@ -3041,7 +3065,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)NPC_FieldIndex.Personality);
                         if (ByteXmlTranslation.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out Byte PersonalityParse,
                             errorMask: errorMask))
                         {
@@ -3067,7 +3091,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)NPC_FieldIndex.Luck);
                         if (ByteXmlTranslation.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out Byte LuckParse,
                             errorMask: errorMask))
                         {
@@ -3090,7 +3114,7 @@ namespace Mutagen.Bethesda.Oblivion
                     break;
                 case "Hair":
                     FormKeyXmlTranslation.Instance.ParseInto(
-                        root: root,
+                        node: node,
                         item: item.Hair_Property,
                         fieldIndex: (int)NPC_FieldIndex.Hair,
                         errorMask: errorMask);
@@ -3100,7 +3124,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)NPC_FieldIndex.HairLength);
                         if (FloatXmlTranslation.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out Single HairLengthParse,
                             errorMask: errorMask))
                         {
@@ -3126,7 +3150,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)NPC_FieldIndex.Eyes);
                         if (ListXmlTranslation<FormIDLink<Eye>>.Instance.Parse(
-                            root: root,
+                            node: node,
                             enumer: out var EyesItem,
                             transl: FormKeyXmlTranslation.Instance.Parse,
                             errorMask: errorMask,
@@ -3154,7 +3178,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)NPC_FieldIndex.HairColor);
                         if (ColorXmlTranslation.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out Color HairColorParse,
                             errorMask: errorMask))
                         {
@@ -3177,7 +3201,7 @@ namespace Mutagen.Bethesda.Oblivion
                     break;
                 case "CombatStyle":
                     FormKeyXmlTranslation.Instance.ParseInto(
-                        root: root,
+                        node: node,
                         item: item.CombatStyle_Property,
                         fieldIndex: (int)NPC_FieldIndex.CombatStyle,
                         errorMask: errorMask);
@@ -3187,7 +3211,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)NPC_FieldIndex.FaceGenGeometrySymmetric);
                         if (ByteArrayXmlTranslation.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out Byte[] FaceGenGeometrySymmetricParse,
                             errorMask: errorMask))
                         {
@@ -3213,7 +3237,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)NPC_FieldIndex.FaceGenGeometryAsymmetric);
                         if (ByteArrayXmlTranslation.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out Byte[] FaceGenGeometryAsymmetricParse,
                             errorMask: errorMask))
                         {
@@ -3239,7 +3263,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)NPC_FieldIndex.FaceGenTextureSymmetric);
                         if (ByteArrayXmlTranslation.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out Byte[] FaceGenTextureSymmetricParse,
                             errorMask: errorMask))
                         {
@@ -3265,7 +3289,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)NPC_FieldIndex.Unknown);
                         if (ByteArrayXmlTranslation.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out Byte[] UnknownParse,
                             errorMask: errorMask))
                         {
@@ -3289,7 +3313,7 @@ namespace Mutagen.Bethesda.Oblivion
                 default:
                     NPCAbstract.Fill_Xml_Internal(
                         item: item,
-                        root: root,
+                        node: node,
                         name: name,
                         errorMask: errorMask,
                         translationMask: translationMask);
@@ -3541,8 +3565,8 @@ namespace Mutagen.Bethesda.Oblivion
             MasterReferences masterReferences)
         {
             return Create_Binary(
-                frame: frame,
                 masterReferences: masterReferences,
+                frame: frame,
                 recordTypeConverter: null,
                 errorMask: null);
         }
@@ -3556,8 +3580,8 @@ namespace Mutagen.Bethesda.Oblivion
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             var ret = Create_Binary(
-                frame: frame,
                 masterReferences: masterReferences,
+                frame: frame,
                 recordTypeConverter: null,
                 errorMask: errorMaskBuilder);
             errorMask = NPC_ErrorMask.Factory(errorMaskBuilder);
@@ -3589,8 +3613,8 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 var frame = new MutagenFrame(reader);
                 return Create_Binary(
-                    frame: frame,
-                    masterReferences: masterReferences);
+                    masterReferences: masterReferences,
+                    frame: frame);
             }
         }
 
@@ -3603,9 +3627,25 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 var frame = new MutagenFrame(reader);
                 return Create_Binary(
-                    frame: frame,
                     masterReferences: masterReferences,
+                    frame: frame,
                     errorMask: out errorMask);
+            }
+        }
+
+        public static NPC Create_Binary(
+            string path,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask)
+        {
+            using (var reader = new BinaryReadStream(path))
+            {
+                var frame = new MutagenFrame(reader);
+                return Create_Binary(
+                    masterReferences: masterReferences,
+                    frame: frame,
+                    recordTypeConverter: null,
+                    errorMask: errorMask);
             }
         }
 
@@ -3617,8 +3657,8 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 var frame = new MutagenFrame(reader);
                 return Create_Binary(
-                    frame: frame,
-                    masterReferences: masterReferences);
+                    masterReferences: masterReferences,
+                    frame: frame);
             }
         }
 
@@ -3631,9 +3671,25 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 var frame = new MutagenFrame(reader);
                 return Create_Binary(
-                    frame: frame,
                     masterReferences: masterReferences,
+                    frame: frame,
                     errorMask: out errorMask);
+            }
+        }
+
+        public static NPC Create_Binary(
+            Stream stream,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask)
+        {
+            using (var reader = new BinaryReadStream(stream))
+            {
+                var frame = new MutagenFrame(reader);
+                return Create_Binary(
+                    masterReferences: masterReferences,
+                    frame: frame,
+                    recordTypeConverter: null,
+                    errorMask: errorMask);
             }
         }
 
@@ -3648,8 +3704,8 @@ namespace Mutagen.Bethesda.Oblivion
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             this.Write_Binary(
-                writer: writer,
                 masterReferences: masterReferences,
+                writer: writer,
                 recordTypeConverter: null,
                 errorMask: errorMaskBuilder);
             errorMask = NPC_ErrorMask.Factory(errorMaskBuilder);
@@ -3666,8 +3722,8 @@ namespace Mutagen.Bethesda.Oblivion
                 using (var writer = new MutagenWriter(memStream, dispose: false))
                 {
                     Write_Binary(
-                        writer: writer,
                         masterReferences: masterReferences,
+                        writer: writer,
                         errorMask: out errorMask,
                         doMasks: doMasks);
                 }
@@ -3689,8 +3745,8 @@ namespace Mutagen.Bethesda.Oblivion
                 using (var writer = new MutagenWriter(memStream, dispose: false))
                 {
                     Write_Binary(
-                        writer: writer,
                         masterReferences: masterReferences,
+                        writer: writer,
                         recordTypeConverter: null,
                         errorMask: errorMask);
                 }
@@ -3710,8 +3766,8 @@ namespace Mutagen.Bethesda.Oblivion
             using (var writer = new MutagenWriter(stream))
             {
                 Write_Binary(
-                    writer: writer,
                     masterReferences: masterReferences,
+                    writer: writer,
                     errorMask: out errorMask,
                     doMasks: doMasks);
             }
@@ -3725,8 +3781,8 @@ namespace Mutagen.Bethesda.Oblivion
             using (var writer = new MutagenWriter(stream))
             {
                 Write_Binary(
-                    writer: writer,
                     masterReferences: masterReferences,
+                    writer: writer,
                     recordTypeConverter: null,
                     errorMask: errorMask);
             }
@@ -3740,8 +3796,8 @@ namespace Mutagen.Bethesda.Oblivion
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             this.Write_Binary(
-                writer: writer,
                 masterReferences: masterReferences,
+                writer: writer,
                 errorMask: errorMaskBuilder,
                 recordTypeConverter: null);
             errorMask = NPC_ErrorMask.Factory(errorMaskBuilder);
@@ -3755,8 +3811,8 @@ namespace Mutagen.Bethesda.Oblivion
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             this.Write_Binary(
-                writer: writer,
                 masterReferences: masterReferences,
+                writer: writer,
                 errorMask: errorMaskBuilder,
                 recordTypeConverter: null);
             errorMask = NPC_ErrorMask.Factory(errorMaskBuilder);
@@ -3770,8 +3826,8 @@ namespace Mutagen.Bethesda.Oblivion
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             this.Write_Binary(
-                writer: writer,
                 masterReferences: masterReferences,
+                writer: writer,
                 errorMask: errorMaskBuilder,
                 recordTypeConverter: null);
             errorMask = NPC_ErrorMask.Factory(errorMaskBuilder);
@@ -3787,8 +3843,8 @@ namespace Mutagen.Bethesda.Oblivion
         {
             NPCCommon.Write_Binary(
                 item: this,
-                writer: writer,
                 masterReferences: masterReferences,
+                writer: writer,
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
         }
@@ -9288,8 +9344,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 ret.Factions = new MaskItem<bool, IEnumerable<MaskItem<bool, RankPlacement_Mask<bool>>>>();
                 ret.Factions.Overall = false;
             }
-            ret.DeathItem = item.DeathItem_Property.Equals(rhs.DeathItem_Property, (l, r) => l == r);
-            ret.Race = item.Race_Property.Equals(rhs.Race_Property, (l, r) => l == r);
+            ret.DeathItem = item.DeathItem_Property.FormKey == rhs.DeathItem_Property.FormKey;
+            ret.Race = item.Race_Property.FormKey == rhs.Race_Property.FormKey;
             if (item.Spells.HasBeenSet == rhs.Spells.HasBeenSet)
             {
                 if (item.Spells.HasBeenSet)
@@ -9309,7 +9365,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 ret.Spells = new MaskItem<bool, IEnumerable<bool>>();
                 ret.Spells.Overall = false;
             }
-            ret.Script = item.Script_Property.Equals(rhs.Script_Property, (l, r) => l == r);
+            ret.Script = item.Script_Property.FormKey == rhs.Script_Property.FormKey;
             if (item.Items.HasBeenSet == rhs.Items.HasBeenSet)
             {
                 if (item.Items.HasBeenSet)
@@ -9381,7 +9437,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 ret.Animations = new MaskItem<bool, IEnumerable<bool>>();
                 ret.Animations.Overall = false;
             }
-            ret.Class = item.Class_Property.Equals(rhs.Class_Property, (l, r) => l == r);
+            ret.Class = item.Class_Property.FormKey == rhs.Class_Property.FormKey;
             ret.Armorer = item.Armorer == rhs.Armorer;
             ret.Athletics = item.Athletics == rhs.Athletics;
             ret.Blade = item.Blade == rhs.Blade;
@@ -9412,7 +9468,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Endurance = item.Endurance == rhs.Endurance;
             ret.Personality = item.Personality == rhs.Personality;
             ret.Luck = item.Luck == rhs.Luck;
-            ret.Hair = item.Hair_Property.Equals(rhs.Hair_Property, (l, r) => l == r);
+            ret.Hair = item.Hair_Property.FormKey == rhs.Hair_Property.FormKey;
             ret.HairLength = item.HairLength_IsSet == rhs.HairLength_IsSet && item.HairLength == rhs.HairLength;
             if (item.Eyes.HasBeenSet == rhs.Eyes.HasBeenSet)
             {
@@ -9434,7 +9490,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 ret.Eyes.Overall = false;
             }
             ret.HairColor = item.HairColor_IsSet == rhs.HairColor_IsSet && item.HairColor == rhs.HairColor;
-            ret.CombatStyle = item.CombatStyle_Property.Equals(rhs.CombatStyle_Property, (l, r) => l == r);
+            ret.CombatStyle = item.CombatStyle_Property.FormKey == rhs.CombatStyle_Property.FormKey;
             ret.FaceGenGeometrySymmetric = item.FaceGenGeometrySymmetric_IsSet == rhs.FaceGenGeometrySymmetric_IsSet && item.FaceGenGeometrySymmetric.EqualsFast(rhs.FaceGenGeometrySymmetric);
             ret.FaceGenGeometryAsymmetric = item.FaceGenGeometryAsymmetric_IsSet == rhs.FaceGenGeometryAsymmetric_IsSet && item.FaceGenGeometryAsymmetric.EqualsFast(rhs.FaceGenGeometryAsymmetric);
             ret.FaceGenTextureSymmetric = item.FaceGenTextureSymmetric_IsSet == rhs.FaceGenTextureSymmetric_IsSet && item.FaceGenTextureSymmetric.EqualsFast(rhs.FaceGenTextureSymmetric);
@@ -10003,8 +10059,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             Write_Xml(
-                node: node,
                 name: name,
+                node: node,
                 item: item,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
@@ -10024,11 +10080,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.NPC");
             }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        #endregion
+
+        public static void WriteToNode_Xml(
+            INPCGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            NPCAbstractCommon.WriteToNode_Xml(
+                item: item,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
             if (item.Name_IsSet
                 && (translationMask?.GetShouldTranslate((int)NPC_FieldIndex.Name) ?? true))
             {
                 StringXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Name),
                     item: item.Name,
                     fieldIndex: (int)NPC_FieldIndex.Name,
@@ -10038,7 +10113,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)NPC_FieldIndex.Model) ?? true))
             {
                 LoquiXmlTranslation<Model>.Instance.Write(
-                    node: elem,
+                    node: node,
                     item: item.Model,
                     name: nameof(item.Model),
                     fieldIndex: (int)NPC_FieldIndex.Model,
@@ -10048,7 +10123,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)NPC_FieldIndex.Flags) ?? true))
             {
                 EnumXmlTranslation<NPC.NPCFlag>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Flags),
                     item: item.Flags,
                     fieldIndex: (int)NPC_FieldIndex.Flags,
@@ -10057,7 +10132,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)NPC_FieldIndex.BaseSpellPoints) ?? true))
             {
                 UInt16XmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.BaseSpellPoints),
                     item: item.BaseSpellPoints,
                     fieldIndex: (int)NPC_FieldIndex.BaseSpellPoints,
@@ -10066,7 +10141,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)NPC_FieldIndex.Fatigue) ?? true))
             {
                 UInt16XmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Fatigue),
                     item: item.Fatigue,
                     fieldIndex: (int)NPC_FieldIndex.Fatigue,
@@ -10075,7 +10150,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)NPC_FieldIndex.BarterGold) ?? true))
             {
                 UInt16XmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.BarterGold),
                     item: item.BarterGold,
                     fieldIndex: (int)NPC_FieldIndex.BarterGold,
@@ -10084,7 +10159,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)NPC_FieldIndex.LevelOffset) ?? true))
             {
                 Int16XmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.LevelOffset),
                     item: item.LevelOffset,
                     fieldIndex: (int)NPC_FieldIndex.LevelOffset,
@@ -10093,7 +10168,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)NPC_FieldIndex.CalcMin) ?? true))
             {
                 UInt16XmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.CalcMin),
                     item: item.CalcMin,
                     fieldIndex: (int)NPC_FieldIndex.CalcMin,
@@ -10102,7 +10177,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)NPC_FieldIndex.CalcMax) ?? true))
             {
                 UInt16XmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.CalcMax),
                     item: item.CalcMax,
                     fieldIndex: (int)NPC_FieldIndex.CalcMax,
@@ -10112,7 +10187,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)NPC_FieldIndex.Factions) ?? true))
             {
                 ListXmlTranslation<RankPlacement>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Factions),
                     item: item.Factions,
                     fieldIndex: (int)NPC_FieldIndex.Factions,
@@ -10133,7 +10208,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)NPC_FieldIndex.DeathItem) ?? true))
             {
                 FormKeyXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.DeathItem),
                     item: item.DeathItem_Property?.FormKey,
                     fieldIndex: (int)NPC_FieldIndex.DeathItem,
@@ -10143,7 +10218,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)NPC_FieldIndex.Race) ?? true))
             {
                 FormKeyXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Race),
                     item: item.Race_Property?.FormKey,
                     fieldIndex: (int)NPC_FieldIndex.Race,
@@ -10153,7 +10228,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)NPC_FieldIndex.Spells) ?? true))
             {
                 ListXmlTranslation<FormIDSetLink<SpellAbstract>>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Spells),
                     item: item.Spells,
                     fieldIndex: (int)NPC_FieldIndex.Spells,
@@ -10173,7 +10248,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)NPC_FieldIndex.Script) ?? true))
             {
                 FormKeyXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Script),
                     item: item.Script_Property?.FormKey,
                     fieldIndex: (int)NPC_FieldIndex.Script,
@@ -10183,7 +10258,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)NPC_FieldIndex.Items) ?? true))
             {
                 ListXmlTranslation<ItemEntry>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Items),
                     item: item.Items,
                     fieldIndex: (int)NPC_FieldIndex.Items,
@@ -10203,7 +10278,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)NPC_FieldIndex.Aggression) ?? true))
             {
                 ByteXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Aggression),
                     item: item.Aggression,
                     fieldIndex: (int)NPC_FieldIndex.Aggression,
@@ -10212,7 +10287,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)NPC_FieldIndex.Confidence) ?? true))
             {
                 ByteXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Confidence),
                     item: item.Confidence,
                     fieldIndex: (int)NPC_FieldIndex.Confidence,
@@ -10221,7 +10296,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)NPC_FieldIndex.EnergyLevel) ?? true))
             {
                 ByteXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.EnergyLevel),
                     item: item.EnergyLevel,
                     fieldIndex: (int)NPC_FieldIndex.EnergyLevel,
@@ -10230,7 +10305,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)NPC_FieldIndex.Responsibility) ?? true))
             {
                 ByteXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Responsibility),
                     item: item.Responsibility,
                     fieldIndex: (int)NPC_FieldIndex.Responsibility,
@@ -10239,7 +10314,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)NPC_FieldIndex.BuySellServices) ?? true))
             {
                 EnumXmlTranslation<NPC.BuySellServiceFlag>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.BuySellServices),
                     item: item.BuySellServices,
                     fieldIndex: (int)NPC_FieldIndex.BuySellServices,
@@ -10248,7 +10323,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)NPC_FieldIndex.Teaches) ?? true))
             {
                 EnumXmlTranslation<Skill>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Teaches),
                     item: item.Teaches,
                     fieldIndex: (int)NPC_FieldIndex.Teaches,
@@ -10257,7 +10332,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)NPC_FieldIndex.MaximumTrainingLevel) ?? true))
             {
                 ByteXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.MaximumTrainingLevel),
                     item: item.MaximumTrainingLevel,
                     fieldIndex: (int)NPC_FieldIndex.MaximumTrainingLevel,
@@ -10266,7 +10341,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)NPC_FieldIndex.Fluff) ?? true))
             {
                 ByteArrayXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Fluff),
                     item: item.Fluff,
                     fieldIndex: (int)NPC_FieldIndex.Fluff,
@@ -10276,7 +10351,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)NPC_FieldIndex.AIPackages) ?? true))
             {
                 ListXmlTranslation<FormIDSetLink<AIPackage>>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.AIPackages),
                     item: item.AIPackages,
                     fieldIndex: (int)NPC_FieldIndex.AIPackages,
@@ -10296,7 +10371,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)NPC_FieldIndex.Animations) ?? true))
             {
                 ListXmlTranslation<String>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Animations),
                     item: item.Animations,
                     fieldIndex: (int)NPC_FieldIndex.Animations,
@@ -10316,7 +10391,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)NPC_FieldIndex.Class) ?? true))
             {
                 FormKeyXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Class),
                     item: item.Class_Property?.FormKey,
                     fieldIndex: (int)NPC_FieldIndex.Class,
@@ -10325,7 +10400,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)NPC_FieldIndex.Armorer) ?? true))
             {
                 ByteXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Armorer),
                     item: item.Armorer,
                     fieldIndex: (int)NPC_FieldIndex.Armorer,
@@ -10334,7 +10409,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)NPC_FieldIndex.Athletics) ?? true))
             {
                 ByteXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Athletics),
                     item: item.Athletics,
                     fieldIndex: (int)NPC_FieldIndex.Athletics,
@@ -10343,7 +10418,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)NPC_FieldIndex.Blade) ?? true))
             {
                 ByteXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Blade),
                     item: item.Blade,
                     fieldIndex: (int)NPC_FieldIndex.Blade,
@@ -10352,7 +10427,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)NPC_FieldIndex.Block) ?? true))
             {
                 ByteXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Block),
                     item: item.Block,
                     fieldIndex: (int)NPC_FieldIndex.Block,
@@ -10361,7 +10436,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)NPC_FieldIndex.Blunt) ?? true))
             {
                 ByteXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Blunt),
                     item: item.Blunt,
                     fieldIndex: (int)NPC_FieldIndex.Blunt,
@@ -10370,7 +10445,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)NPC_FieldIndex.HandToHand) ?? true))
             {
                 ByteXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.HandToHand),
                     item: item.HandToHand,
                     fieldIndex: (int)NPC_FieldIndex.HandToHand,
@@ -10379,7 +10454,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)NPC_FieldIndex.HeavyArmor) ?? true))
             {
                 ByteXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.HeavyArmor),
                     item: item.HeavyArmor,
                     fieldIndex: (int)NPC_FieldIndex.HeavyArmor,
@@ -10388,7 +10463,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)NPC_FieldIndex.Alchemy) ?? true))
             {
                 ByteXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Alchemy),
                     item: item.Alchemy,
                     fieldIndex: (int)NPC_FieldIndex.Alchemy,
@@ -10397,7 +10472,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)NPC_FieldIndex.Alteration) ?? true))
             {
                 ByteXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Alteration),
                     item: item.Alteration,
                     fieldIndex: (int)NPC_FieldIndex.Alteration,
@@ -10406,7 +10481,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)NPC_FieldIndex.Conjuration) ?? true))
             {
                 ByteXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Conjuration),
                     item: item.Conjuration,
                     fieldIndex: (int)NPC_FieldIndex.Conjuration,
@@ -10415,7 +10490,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)NPC_FieldIndex.Destruction) ?? true))
             {
                 ByteXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Destruction),
                     item: item.Destruction,
                     fieldIndex: (int)NPC_FieldIndex.Destruction,
@@ -10424,7 +10499,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)NPC_FieldIndex.Illusion) ?? true))
             {
                 ByteXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Illusion),
                     item: item.Illusion,
                     fieldIndex: (int)NPC_FieldIndex.Illusion,
@@ -10433,7 +10508,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)NPC_FieldIndex.Mysticism) ?? true))
             {
                 ByteXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Mysticism),
                     item: item.Mysticism,
                     fieldIndex: (int)NPC_FieldIndex.Mysticism,
@@ -10442,7 +10517,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)NPC_FieldIndex.Restoration) ?? true))
             {
                 ByteXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Restoration),
                     item: item.Restoration,
                     fieldIndex: (int)NPC_FieldIndex.Restoration,
@@ -10451,7 +10526,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)NPC_FieldIndex.Acrobatics) ?? true))
             {
                 ByteXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Acrobatics),
                     item: item.Acrobatics,
                     fieldIndex: (int)NPC_FieldIndex.Acrobatics,
@@ -10460,7 +10535,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)NPC_FieldIndex.LightArmor) ?? true))
             {
                 ByteXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.LightArmor),
                     item: item.LightArmor,
                     fieldIndex: (int)NPC_FieldIndex.LightArmor,
@@ -10469,7 +10544,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)NPC_FieldIndex.Marksman) ?? true))
             {
                 ByteXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Marksman),
                     item: item.Marksman,
                     fieldIndex: (int)NPC_FieldIndex.Marksman,
@@ -10478,7 +10553,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)NPC_FieldIndex.Mercantile) ?? true))
             {
                 ByteXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Mercantile),
                     item: item.Mercantile,
                     fieldIndex: (int)NPC_FieldIndex.Mercantile,
@@ -10487,7 +10562,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)NPC_FieldIndex.Security) ?? true))
             {
                 ByteXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Security),
                     item: item.Security,
                     fieldIndex: (int)NPC_FieldIndex.Security,
@@ -10496,7 +10571,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)NPC_FieldIndex.Sneak) ?? true))
             {
                 ByteXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Sneak),
                     item: item.Sneak,
                     fieldIndex: (int)NPC_FieldIndex.Sneak,
@@ -10505,7 +10580,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)NPC_FieldIndex.Speechcraft) ?? true))
             {
                 ByteXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Speechcraft),
                     item: item.Speechcraft,
                     fieldIndex: (int)NPC_FieldIndex.Speechcraft,
@@ -10514,7 +10589,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)NPC_FieldIndex.Health) ?? true))
             {
                 UInt32XmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Health),
                     item: item.Health,
                     fieldIndex: (int)NPC_FieldIndex.Health,
@@ -10523,7 +10598,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)NPC_FieldIndex.Strength) ?? true))
             {
                 ByteXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Strength),
                     item: item.Strength,
                     fieldIndex: (int)NPC_FieldIndex.Strength,
@@ -10532,7 +10607,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)NPC_FieldIndex.Intelligence) ?? true))
             {
                 ByteXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Intelligence),
                     item: item.Intelligence,
                     fieldIndex: (int)NPC_FieldIndex.Intelligence,
@@ -10541,7 +10616,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)NPC_FieldIndex.Willpower) ?? true))
             {
                 ByteXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Willpower),
                     item: item.Willpower,
                     fieldIndex: (int)NPC_FieldIndex.Willpower,
@@ -10550,7 +10625,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)NPC_FieldIndex.Agility) ?? true))
             {
                 ByteXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Agility),
                     item: item.Agility,
                     fieldIndex: (int)NPC_FieldIndex.Agility,
@@ -10559,7 +10634,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)NPC_FieldIndex.Speed) ?? true))
             {
                 ByteXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Speed),
                     item: item.Speed,
                     fieldIndex: (int)NPC_FieldIndex.Speed,
@@ -10568,7 +10643,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)NPC_FieldIndex.Endurance) ?? true))
             {
                 ByteXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Endurance),
                     item: item.Endurance,
                     fieldIndex: (int)NPC_FieldIndex.Endurance,
@@ -10577,7 +10652,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)NPC_FieldIndex.Personality) ?? true))
             {
                 ByteXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Personality),
                     item: item.Personality,
                     fieldIndex: (int)NPC_FieldIndex.Personality,
@@ -10586,7 +10661,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)NPC_FieldIndex.Luck) ?? true))
             {
                 ByteXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Luck),
                     item: item.Luck,
                     fieldIndex: (int)NPC_FieldIndex.Luck,
@@ -10596,7 +10671,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)NPC_FieldIndex.Hair) ?? true))
             {
                 FormKeyXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Hair),
                     item: item.Hair_Property?.FormKey,
                     fieldIndex: (int)NPC_FieldIndex.Hair,
@@ -10606,7 +10681,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)NPC_FieldIndex.HairLength) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.HairLength),
                     item: item.HairLength,
                     fieldIndex: (int)NPC_FieldIndex.HairLength,
@@ -10616,7 +10691,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)NPC_FieldIndex.Eyes) ?? true))
             {
                 ListXmlTranslation<FormIDLink<Eye>>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Eyes),
                     item: item.Eyes,
                     fieldIndex: (int)NPC_FieldIndex.Eyes,
@@ -10636,7 +10711,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)NPC_FieldIndex.HairColor) ?? true))
             {
                 ColorXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.HairColor),
                     item: item.HairColor,
                     fieldIndex: (int)NPC_FieldIndex.HairColor,
@@ -10646,7 +10721,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)NPC_FieldIndex.CombatStyle) ?? true))
             {
                 FormKeyXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.CombatStyle),
                     item: item.CombatStyle_Property?.FormKey,
                     fieldIndex: (int)NPC_FieldIndex.CombatStyle,
@@ -10656,7 +10731,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)NPC_FieldIndex.FaceGenGeometrySymmetric) ?? true))
             {
                 ByteArrayXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.FaceGenGeometrySymmetric),
                     item: item.FaceGenGeometrySymmetric,
                     fieldIndex: (int)NPC_FieldIndex.FaceGenGeometrySymmetric,
@@ -10666,7 +10741,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)NPC_FieldIndex.FaceGenGeometryAsymmetric) ?? true))
             {
                 ByteArrayXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.FaceGenGeometryAsymmetric),
                     item: item.FaceGenGeometryAsymmetric,
                     fieldIndex: (int)NPC_FieldIndex.FaceGenGeometryAsymmetric,
@@ -10676,7 +10751,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)NPC_FieldIndex.FaceGenTextureSymmetric) ?? true))
             {
                 ByteArrayXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.FaceGenTextureSymmetric),
                     item: item.FaceGenTextureSymmetric,
                     fieldIndex: (int)NPC_FieldIndex.FaceGenTextureSymmetric,
@@ -10686,14 +10761,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)NPC_FieldIndex.Unknown) ?? true))
             {
                 ByteArrayXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Unknown),
                     item: item.Unknown,
                     fieldIndex: (int)NPC_FieldIndex.Unknown,
                     errorMask: errorMask);
             }
         }
-        #endregion
 
         #endregion
 
@@ -10709,8 +10783,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             Write_Binary(
-                writer: writer,
                 masterReferences: masterReferences,
+                writer: writer,
                 item: item,
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMaskBuilder);

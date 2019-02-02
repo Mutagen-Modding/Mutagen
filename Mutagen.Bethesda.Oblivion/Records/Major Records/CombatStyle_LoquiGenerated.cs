@@ -679,25 +679,25 @@ namespace Mutagen.Bethesda.Oblivion
         #region Xml Create
         [DebuggerStepThrough]
         public new static CombatStyle Create_Xml(
-            XElement root,
+            XElement node,
             CombatStyle_TranslationMask translationMask = null)
         {
             return Create_Xml(
-                root: root,
+                node: node,
                 errorMask: null,
                 translationMask: translationMask?.GetCrystal());
         }
 
         [DebuggerStepThrough]
         public static CombatStyle Create_Xml(
-            XElement root,
+            XElement node,
             out CombatStyle_ErrorMask errorMask,
             bool doMasks = true,
             CombatStyle_TranslationMask translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             var ret = Create_Xml(
-                root: root,
+                node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask.GetCrystal());
             errorMask = CombatStyle_ErrorMask.Factory(errorMaskBuilder);
@@ -705,18 +705,18 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static CombatStyle Create_Xml(
-            XElement root,
+            XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
         {
             var ret = new CombatStyle();
             try
             {
-                foreach (var elem in root.Elements())
+                foreach (var elem in node.Elements())
                 {
                     Fill_Xml_Internal(
                         item: ret,
-                        root: elem,
+                        node: elem,
                         name: elem.Name.LocalName,
                         errorMask: errorMask,
                         translationMask: translationMask);
@@ -734,9 +734,9 @@ namespace Mutagen.Bethesda.Oblivion
             string path,
             CombatStyle_TranslationMask translationMask = null)
         {
-            var root = XDocument.Load(path).Root;
+            var node = XDocument.Load(path).Root;
             return Create_Xml(
-                root: root,
+                node: node,
                 translationMask: translationMask);
         }
 
@@ -745,20 +745,32 @@ namespace Mutagen.Bethesda.Oblivion
             out CombatStyle_ErrorMask errorMask,
             CombatStyle_TranslationMask translationMask = null)
         {
-            var root = XDocument.Load(path).Root;
+            var node = XDocument.Load(path).Root;
             return Create_Xml(
-                root: root,
+                node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
+        }
+
+        public static CombatStyle Create_Xml(
+            string path,
+            ErrorMaskBuilder errorMask,
+            CombatStyle_TranslationMask translationMask = null)
+        {
+            var node = XDocument.Load(path).Root;
+            return Create_Xml(
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask?.GetCrystal());
         }
 
         public static CombatStyle Create_Xml(
             Stream stream,
             CombatStyle_TranslationMask translationMask = null)
         {
-            var root = XDocument.Load(stream).Root;
+            var node = XDocument.Load(stream).Root;
             return Create_Xml(
-                root: root,
+                node: node,
                 translationMask: translationMask);
         }
 
@@ -767,29 +779,41 @@ namespace Mutagen.Bethesda.Oblivion
             out CombatStyle_ErrorMask errorMask,
             CombatStyle_TranslationMask translationMask = null)
         {
-            var root = XDocument.Load(stream).Root;
+            var node = XDocument.Load(stream).Root;
             return Create_Xml(
-                root: root,
+                node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
+        }
+
+        public static CombatStyle Create_Xml(
+            Stream stream,
+            ErrorMaskBuilder errorMask,
+            CombatStyle_TranslationMask translationMask = null)
+        {
+            var node = XDocument.Load(stream).Root;
+            return Create_Xml(
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask?.GetCrystal());
         }
 
         #endregion
 
         #region Xml Copy In
         public override void CopyIn_Xml(
-            XElement root,
+            XElement node,
             NotifyingFireParameters cmds = null)
         {
             CopyIn_Xml_Internal(
-                root: root,
+                node: node,
                 errorMask: null,
                 translationMask: null,
                 cmds: cmds);
         }
 
         public virtual void CopyIn_Xml(
-            XElement root,
+            XElement node,
             out CombatStyle_ErrorMask errorMask,
             CombatStyle_TranslationMask translationMask = null,
             bool doMasks = true,
@@ -797,7 +821,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             CopyIn_Xml_Internal(
-                root: root,
+                node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal(),
                 cmds: cmds);
@@ -805,13 +829,13 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         protected override void CopyIn_Xml_Internal(
-            XElement root,
+            XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask,
             NotifyingFireParameters cmds = null)
         {
             LoquiXmlTranslation<CombatStyle>.Instance.CopyIn(
-                root: root,
+                node: node,
                 item: this,
                 skipProtected: true,
                 errorMask: errorMask,
@@ -823,9 +847,9 @@ namespace Mutagen.Bethesda.Oblivion
             string path,
             NotifyingFireParameters cmds = null)
         {
-            var root = XDocument.Load(path).Root;
+            var node = XDocument.Load(path).Root;
             this.CopyIn_Xml(
-                root: root,
+                node: node,
                 cmds: cmds);
         }
 
@@ -836,9 +860,9 @@ namespace Mutagen.Bethesda.Oblivion
             NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
-            var root = XDocument.Load(path).Root;
+            var node = XDocument.Load(path).Root;
             this.CopyIn_Xml(
-                root: root,
+                node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask,
                 cmds: cmds,
@@ -849,9 +873,9 @@ namespace Mutagen.Bethesda.Oblivion
             Stream stream,
             NotifyingFireParameters cmds = null)
         {
-            var root = XDocument.Load(stream).Root;
+            var node = XDocument.Load(stream).Root;
             this.CopyIn_Xml(
-                root: root,
+                node: node,
                 cmds: cmds);
         }
 
@@ -862,9 +886,9 @@ namespace Mutagen.Bethesda.Oblivion
             NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
-            var root = XDocument.Load(stream).Root;
+            var node = XDocument.Load(stream).Root;
             this.CopyIn_Xml(
-                root: root,
+                node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask,
                 cmds: cmds,
@@ -872,7 +896,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public override void CopyIn_Xml(
-            XElement root,
+            XElement node,
             out MajorRecord_ErrorMask errorMask,
             MajorRecord_TranslationMask translationMask = null,
             bool doMasks = true,
@@ -880,7 +904,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             CopyIn_Xml_Internal(
-                root: root,
+                node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal(),
                 cmds: cmds);
@@ -899,8 +923,8 @@ namespace Mutagen.Bethesda.Oblivion
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             this.Write_Xml(
-                node: node,
                 name: name,
+                node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
             errorMask = CombatStyle_ErrorMask.Factory(errorMaskBuilder);
@@ -913,14 +937,14 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true,
             string name = null)
         {
-            XElement topNode = new XElement("topnode");
+            var node = new XElement("topnode");
             Write_Xml(
-                node: topNode,
                 name: name,
+                node: node,
                 errorMask: out errorMask,
                 doMasks: doMasks,
                 translationMask: translationMask);
-            topNode.Elements().First().SaveIfChanged(path);
+            node.Elements().First().SaveIfChanged(path);
         }
 
         public override void Write_Xml(
@@ -929,13 +953,13 @@ namespace Mutagen.Bethesda.Oblivion
             TranslationCrystal translationMask,
             string name = null)
         {
-            XElement topNode = new XElement("topnode");
+            var node = new XElement("topnode");
             Write_Xml(
-                node: topNode,
                 name: name,
+                node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
-            topNode.Elements().First().SaveIfChanged(path);
+            node.Elements().First().SaveIfChanged(path);
         }
         public virtual void Write_Xml(
             Stream stream,
@@ -944,14 +968,14 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true,
             string name = null)
         {
-            XElement topNode = new XElement("topnode");
+            var node = new XElement("topnode");
             Write_Xml(
-                node: topNode,
                 name: name,
+                node: node,
                 errorMask: out errorMask,
                 doMasks: doMasks,
                 translationMask: translationMask);
-            topNode.Elements().First().Save(stream);
+            node.Elements().First().Save(stream);
         }
 
         public override void Write_Xml(
@@ -960,13 +984,13 @@ namespace Mutagen.Bethesda.Oblivion
             TranslationCrystal translationMask,
             string name = null)
         {
-            XElement topNode = new XElement("topnode");
+            var node = new XElement("topnode");
             Write_Xml(
-                node: topNode,
                 name: name,
+                node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
-            topNode.Elements().First().Save(stream);
+            node.Elements().First().Save(stream);
         }
         #region Base Class Trickdown Overrides
         public override void Write_Xml(
@@ -978,8 +1002,8 @@ namespace Mutagen.Bethesda.Oblivion
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             this.Write_Xml(
-                node: node,
                 name: name,
+                node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
             errorMask = CombatStyle_ErrorMask.Factory(errorMaskBuilder);
@@ -995,8 +1019,8 @@ namespace Mutagen.Bethesda.Oblivion
         {
             CombatStyleCommon.Write_Xml(
                 item: this,
-                node: node,
                 name: name,
+                node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
@@ -1004,7 +1028,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         protected static void Fill_Xml_Internal(
             CombatStyle item,
-            XElement root,
+            XElement node,
             string name,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1016,7 +1040,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)CombatStyle_FieldIndex.DodgePercentChance);
                         if (ByteXmlTranslation.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out Byte DodgePercentChanceParse,
                             errorMask: errorMask))
                         {
@@ -1042,7 +1066,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)CombatStyle_FieldIndex.LeftRightPercentChance);
                         if (ByteXmlTranslation.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out Byte LeftRightPercentChanceParse,
                             errorMask: errorMask))
                         {
@@ -1068,7 +1092,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)CombatStyle_FieldIndex.DodgeLeftRightTimerMin);
                         if (FloatXmlTranslation.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out Single DodgeLeftRightTimerMinParse,
                             errorMask: errorMask))
                         {
@@ -1094,7 +1118,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)CombatStyle_FieldIndex.DodgeLeftRightTimerMax);
                         if (FloatXmlTranslation.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out Single DodgeLeftRightTimerMaxParse,
                             errorMask: errorMask))
                         {
@@ -1120,7 +1144,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)CombatStyle_FieldIndex.DodgeForwardTimerMin);
                         if (FloatXmlTranslation.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out Single DodgeForwardTimerMinParse,
                             errorMask: errorMask))
                         {
@@ -1146,7 +1170,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)CombatStyle_FieldIndex.DodgeForwardTimerMax);
                         if (FloatXmlTranslation.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out Single DodgeForwardTimerMaxParse,
                             errorMask: errorMask))
                         {
@@ -1172,7 +1196,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)CombatStyle_FieldIndex.DodgeBackTimerMin);
                         if (FloatXmlTranslation.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out Single DodgeBackTimerMinParse,
                             errorMask: errorMask))
                         {
@@ -1198,7 +1222,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)CombatStyle_FieldIndex.DodgeBackTimerMax);
                         if (FloatXmlTranslation.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out Single DodgeBackTimerMaxParse,
                             errorMask: errorMask))
                         {
@@ -1224,7 +1248,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)CombatStyle_FieldIndex.IdleTimerMin);
                         if (FloatXmlTranslation.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out Single IdleTimerMinParse,
                             errorMask: errorMask))
                         {
@@ -1250,7 +1274,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)CombatStyle_FieldIndex.IdleTimerMax);
                         if (FloatXmlTranslation.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out Single IdleTimerMaxParse,
                             errorMask: errorMask))
                         {
@@ -1276,7 +1300,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)CombatStyle_FieldIndex.BlockPercentChance);
                         if (ByteXmlTranslation.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out Byte BlockPercentChanceParse,
                             errorMask: errorMask))
                         {
@@ -1302,7 +1326,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)CombatStyle_FieldIndex.AttackPercentChance);
                         if (ByteXmlTranslation.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out Byte AttackPercentChanceParse,
                             errorMask: errorMask))
                         {
@@ -1328,7 +1352,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)CombatStyle_FieldIndex.RecoilStaggerBonusToAttack);
                         if (FloatXmlTranslation.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out Single RecoilStaggerBonusToAttackParse,
                             errorMask: errorMask))
                         {
@@ -1354,7 +1378,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)CombatStyle_FieldIndex.UnconsciousBonusToAttack);
                         if (FloatXmlTranslation.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out Single UnconsciousBonusToAttackParse,
                             errorMask: errorMask))
                         {
@@ -1380,7 +1404,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)CombatStyle_FieldIndex.HandToHandBonusToAttack);
                         if (FloatXmlTranslation.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out Single HandToHandBonusToAttackParse,
                             errorMask: errorMask))
                         {
@@ -1406,7 +1430,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)CombatStyle_FieldIndex.PowerAttackPercentChance);
                         if (ByteXmlTranslation.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out Byte PowerAttackPercentChanceParse,
                             errorMask: errorMask))
                         {
@@ -1432,7 +1456,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)CombatStyle_FieldIndex.RecoilStaggerBonusToPowerAttack);
                         if (FloatXmlTranslation.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out Single RecoilStaggerBonusToPowerAttackParse,
                             errorMask: errorMask))
                         {
@@ -1458,7 +1482,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)CombatStyle_FieldIndex.UnconsciousBonusToPowerAttack);
                         if (FloatXmlTranslation.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out Single UnconsciousBonusToPowerAttackParse,
                             errorMask: errorMask))
                         {
@@ -1484,7 +1508,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)CombatStyle_FieldIndex.PowerAttackNormal);
                         if (ByteXmlTranslation.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out Byte PowerAttackNormalParse,
                             errorMask: errorMask))
                         {
@@ -1510,7 +1534,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)CombatStyle_FieldIndex.PowerAttackForward);
                         if (ByteXmlTranslation.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out Byte PowerAttackForwardParse,
                             errorMask: errorMask))
                         {
@@ -1536,7 +1560,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)CombatStyle_FieldIndex.PowerAttackBack);
                         if (ByteXmlTranslation.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out Byte PowerAttackBackParse,
                             errorMask: errorMask))
                         {
@@ -1562,7 +1586,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)CombatStyle_FieldIndex.PowerAttackLeft);
                         if (ByteXmlTranslation.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out Byte PowerAttackLeftParse,
                             errorMask: errorMask))
                         {
@@ -1588,7 +1612,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)CombatStyle_FieldIndex.PowerAttackRight);
                         if (ByteXmlTranslation.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out Byte PowerAttackRightParse,
                             errorMask: errorMask))
                         {
@@ -1614,7 +1638,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)CombatStyle_FieldIndex.HoldTimerMin);
                         if (FloatXmlTranslation.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out Single HoldTimerMinParse,
                             errorMask: errorMask))
                         {
@@ -1640,7 +1664,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)CombatStyle_FieldIndex.HoldTimerMax);
                         if (FloatXmlTranslation.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out Single HoldTimerMaxParse,
                             errorMask: errorMask))
                         {
@@ -1666,7 +1690,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)CombatStyle_FieldIndex.Flags);
                         if (EnumXmlTranslation<CombatStyle.Flag>.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out CombatStyle.Flag FlagsParse,
                             errorMask: errorMask))
                         {
@@ -1692,7 +1716,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)CombatStyle_FieldIndex.AcrobaticDodgePercentChance);
                         if (ByteXmlTranslation.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out Byte AcrobaticDodgePercentChanceParse,
                             errorMask: errorMask))
                         {
@@ -1718,7 +1742,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)CombatStyle_FieldIndex.RangeMultOptimal);
                         if (FloatXmlTranslation.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out Single RangeMultOptimalParse,
                             errorMask: errorMask))
                         {
@@ -1744,7 +1768,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)CombatStyle_FieldIndex.RangeMultMax);
                         if (FloatXmlTranslation.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out Single RangeMultMaxParse,
                             errorMask: errorMask))
                         {
@@ -1770,7 +1794,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)CombatStyle_FieldIndex.SwitchDistanceMelee);
                         if (FloatXmlTranslation.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out Single SwitchDistanceMeleeParse,
                             errorMask: errorMask))
                         {
@@ -1796,7 +1820,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)CombatStyle_FieldIndex.SwitchDistanceRanged);
                         if (FloatXmlTranslation.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out Single SwitchDistanceRangedParse,
                             errorMask: errorMask))
                         {
@@ -1822,7 +1846,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)CombatStyle_FieldIndex.BuffStandoffDistance);
                         if (FloatXmlTranslation.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out Single BuffStandoffDistanceParse,
                             errorMask: errorMask))
                         {
@@ -1848,7 +1872,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)CombatStyle_FieldIndex.RangedStandoffDistance);
                         if (FloatXmlTranslation.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out Single RangedStandoffDistanceParse,
                             errorMask: errorMask))
                         {
@@ -1874,7 +1898,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)CombatStyle_FieldIndex.GroupStandoffDistance);
                         if (FloatXmlTranslation.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out Single GroupStandoffDistanceParse,
                             errorMask: errorMask))
                         {
@@ -1900,7 +1924,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)CombatStyle_FieldIndex.RushingAttackPercentChance);
                         if (ByteXmlTranslation.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out Byte RushingAttackPercentChanceParse,
                             errorMask: errorMask))
                         {
@@ -1926,7 +1950,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)CombatStyle_FieldIndex.RushingAttackDistanceMult);
                         if (FloatXmlTranslation.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out Single RushingAttackDistanceMultParse,
                             errorMask: errorMask))
                         {
@@ -1952,7 +1976,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PushIndex((int)CombatStyle_FieldIndex.Advanced);
                         if (LoquiXmlTranslation<CombatStyleAdvanced>.Instance.Parse(
-                            root: root,
+                            node: node,
                             item: out CombatStyleAdvanced AdvancedParse,
                             errorMask: errorMask,
                             translationMask: translationMask?.GetSubCrystal((int)CombatStyle_FieldIndex.Advanced)))
@@ -1977,7 +2001,7 @@ namespace Mutagen.Bethesda.Oblivion
                 default:
                     MajorRecord.Fill_Xml_Internal(
                         item: item,
-                        root: root,
+                        node: node,
                         name: name,
                         errorMask: errorMask,
                         translationMask: translationMask);
@@ -2075,8 +2099,8 @@ namespace Mutagen.Bethesda.Oblivion
             MasterReferences masterReferences)
         {
             return Create_Binary(
-                frame: frame,
                 masterReferences: masterReferences,
+                frame: frame,
                 recordTypeConverter: null,
                 errorMask: null);
         }
@@ -2090,8 +2114,8 @@ namespace Mutagen.Bethesda.Oblivion
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             var ret = Create_Binary(
-                frame: frame,
                 masterReferences: masterReferences,
+                frame: frame,
                 recordTypeConverter: null,
                 errorMask: errorMaskBuilder);
             errorMask = CombatStyle_ErrorMask.Factory(errorMaskBuilder);
@@ -2123,8 +2147,8 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 var frame = new MutagenFrame(reader);
                 return Create_Binary(
-                    frame: frame,
-                    masterReferences: masterReferences);
+                    masterReferences: masterReferences,
+                    frame: frame);
             }
         }
 
@@ -2137,9 +2161,25 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 var frame = new MutagenFrame(reader);
                 return Create_Binary(
-                    frame: frame,
                     masterReferences: masterReferences,
+                    frame: frame,
                     errorMask: out errorMask);
+            }
+        }
+
+        public static CombatStyle Create_Binary(
+            string path,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask)
+        {
+            using (var reader = new BinaryReadStream(path))
+            {
+                var frame = new MutagenFrame(reader);
+                return Create_Binary(
+                    masterReferences: masterReferences,
+                    frame: frame,
+                    recordTypeConverter: null,
+                    errorMask: errorMask);
             }
         }
 
@@ -2151,8 +2191,8 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 var frame = new MutagenFrame(reader);
                 return Create_Binary(
-                    frame: frame,
-                    masterReferences: masterReferences);
+                    masterReferences: masterReferences,
+                    frame: frame);
             }
         }
 
@@ -2165,9 +2205,25 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 var frame = new MutagenFrame(reader);
                 return Create_Binary(
-                    frame: frame,
                     masterReferences: masterReferences,
+                    frame: frame,
                     errorMask: out errorMask);
+            }
+        }
+
+        public static CombatStyle Create_Binary(
+            Stream stream,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask)
+        {
+            using (var reader = new BinaryReadStream(stream))
+            {
+                var frame = new MutagenFrame(reader);
+                return Create_Binary(
+                    masterReferences: masterReferences,
+                    frame: frame,
+                    recordTypeConverter: null,
+                    errorMask: errorMask);
             }
         }
 
@@ -2182,8 +2238,8 @@ namespace Mutagen.Bethesda.Oblivion
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             this.Write_Binary(
-                writer: writer,
                 masterReferences: masterReferences,
+                writer: writer,
                 recordTypeConverter: null,
                 errorMask: errorMaskBuilder);
             errorMask = CombatStyle_ErrorMask.Factory(errorMaskBuilder);
@@ -2200,8 +2256,8 @@ namespace Mutagen.Bethesda.Oblivion
                 using (var writer = new MutagenWriter(memStream, dispose: false))
                 {
                     Write_Binary(
-                        writer: writer,
                         masterReferences: masterReferences,
+                        writer: writer,
                         errorMask: out errorMask,
                         doMasks: doMasks);
                 }
@@ -2223,8 +2279,8 @@ namespace Mutagen.Bethesda.Oblivion
                 using (var writer = new MutagenWriter(memStream, dispose: false))
                 {
                     Write_Binary(
-                        writer: writer,
                         masterReferences: masterReferences,
+                        writer: writer,
                         recordTypeConverter: null,
                         errorMask: errorMask);
                 }
@@ -2244,8 +2300,8 @@ namespace Mutagen.Bethesda.Oblivion
             using (var writer = new MutagenWriter(stream))
             {
                 Write_Binary(
-                    writer: writer,
                     masterReferences: masterReferences,
+                    writer: writer,
                     errorMask: out errorMask,
                     doMasks: doMasks);
             }
@@ -2259,8 +2315,8 @@ namespace Mutagen.Bethesda.Oblivion
             using (var writer = new MutagenWriter(stream))
             {
                 Write_Binary(
-                    writer: writer,
                     masterReferences: masterReferences,
+                    writer: writer,
                     recordTypeConverter: null,
                     errorMask: errorMask);
             }
@@ -2274,8 +2330,8 @@ namespace Mutagen.Bethesda.Oblivion
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             this.Write_Binary(
-                writer: writer,
                 masterReferences: masterReferences,
+                writer: writer,
                 errorMask: errorMaskBuilder,
                 recordTypeConverter: null);
             errorMask = CombatStyle_ErrorMask.Factory(errorMaskBuilder);
@@ -2291,8 +2347,8 @@ namespace Mutagen.Bethesda.Oblivion
         {
             CombatStyleCommon.Write_Binary(
                 item: this,
-                writer: writer,
                 masterReferences: masterReferences,
+                writer: writer,
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
         }
@@ -5915,8 +5971,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             Write_Xml(
-                node: node,
                 name: name,
+                node: node,
                 item: item,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
@@ -5936,10 +5992,29 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.CombatStyle");
             }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        #endregion
+
+        public static void WriteToNode_Xml(
+            ICombatStyleGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            MajorRecordCommon.WriteToNode_Xml(
+                item: item,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
             if ((translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.DodgePercentChance) ?? true))
             {
                 ByteXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.DodgePercentChance),
                     item: item.DodgePercentChance,
                     fieldIndex: (int)CombatStyle_FieldIndex.DodgePercentChance,
@@ -5948,7 +6023,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.LeftRightPercentChance) ?? true))
             {
                 ByteXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.LeftRightPercentChance),
                     item: item.LeftRightPercentChance,
                     fieldIndex: (int)CombatStyle_FieldIndex.LeftRightPercentChance,
@@ -5957,7 +6032,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.DodgeLeftRightTimerMin) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.DodgeLeftRightTimerMin),
                     item: item.DodgeLeftRightTimerMin,
                     fieldIndex: (int)CombatStyle_FieldIndex.DodgeLeftRightTimerMin,
@@ -5966,7 +6041,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.DodgeLeftRightTimerMax) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.DodgeLeftRightTimerMax),
                     item: item.DodgeLeftRightTimerMax,
                     fieldIndex: (int)CombatStyle_FieldIndex.DodgeLeftRightTimerMax,
@@ -5975,7 +6050,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.DodgeForwardTimerMin) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.DodgeForwardTimerMin),
                     item: item.DodgeForwardTimerMin,
                     fieldIndex: (int)CombatStyle_FieldIndex.DodgeForwardTimerMin,
@@ -5984,7 +6059,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.DodgeForwardTimerMax) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.DodgeForwardTimerMax),
                     item: item.DodgeForwardTimerMax,
                     fieldIndex: (int)CombatStyle_FieldIndex.DodgeForwardTimerMax,
@@ -5993,7 +6068,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.DodgeBackTimerMin) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.DodgeBackTimerMin),
                     item: item.DodgeBackTimerMin,
                     fieldIndex: (int)CombatStyle_FieldIndex.DodgeBackTimerMin,
@@ -6002,7 +6077,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.DodgeBackTimerMax) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.DodgeBackTimerMax),
                     item: item.DodgeBackTimerMax,
                     fieldIndex: (int)CombatStyle_FieldIndex.DodgeBackTimerMax,
@@ -6011,7 +6086,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.IdleTimerMin) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.IdleTimerMin),
                     item: item.IdleTimerMin,
                     fieldIndex: (int)CombatStyle_FieldIndex.IdleTimerMin,
@@ -6020,7 +6095,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.IdleTimerMax) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.IdleTimerMax),
                     item: item.IdleTimerMax,
                     fieldIndex: (int)CombatStyle_FieldIndex.IdleTimerMax,
@@ -6029,7 +6104,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.BlockPercentChance) ?? true))
             {
                 ByteXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.BlockPercentChance),
                     item: item.BlockPercentChance,
                     fieldIndex: (int)CombatStyle_FieldIndex.BlockPercentChance,
@@ -6038,7 +6113,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.AttackPercentChance) ?? true))
             {
                 ByteXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.AttackPercentChance),
                     item: item.AttackPercentChance,
                     fieldIndex: (int)CombatStyle_FieldIndex.AttackPercentChance,
@@ -6047,7 +6122,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.RecoilStaggerBonusToAttack) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.RecoilStaggerBonusToAttack),
                     item: item.RecoilStaggerBonusToAttack,
                     fieldIndex: (int)CombatStyle_FieldIndex.RecoilStaggerBonusToAttack,
@@ -6056,7 +6131,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.UnconsciousBonusToAttack) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.UnconsciousBonusToAttack),
                     item: item.UnconsciousBonusToAttack,
                     fieldIndex: (int)CombatStyle_FieldIndex.UnconsciousBonusToAttack,
@@ -6065,7 +6140,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.HandToHandBonusToAttack) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.HandToHandBonusToAttack),
                     item: item.HandToHandBonusToAttack,
                     fieldIndex: (int)CombatStyle_FieldIndex.HandToHandBonusToAttack,
@@ -6074,7 +6149,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.PowerAttackPercentChance) ?? true))
             {
                 ByteXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.PowerAttackPercentChance),
                     item: item.PowerAttackPercentChance,
                     fieldIndex: (int)CombatStyle_FieldIndex.PowerAttackPercentChance,
@@ -6083,7 +6158,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.RecoilStaggerBonusToPowerAttack) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.RecoilStaggerBonusToPowerAttack),
                     item: item.RecoilStaggerBonusToPowerAttack,
                     fieldIndex: (int)CombatStyle_FieldIndex.RecoilStaggerBonusToPowerAttack,
@@ -6092,7 +6167,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.UnconsciousBonusToPowerAttack) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.UnconsciousBonusToPowerAttack),
                     item: item.UnconsciousBonusToPowerAttack,
                     fieldIndex: (int)CombatStyle_FieldIndex.UnconsciousBonusToPowerAttack,
@@ -6101,7 +6176,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.PowerAttackNormal) ?? true))
             {
                 ByteXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.PowerAttackNormal),
                     item: item.PowerAttackNormal,
                     fieldIndex: (int)CombatStyle_FieldIndex.PowerAttackNormal,
@@ -6110,7 +6185,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.PowerAttackForward) ?? true))
             {
                 ByteXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.PowerAttackForward),
                     item: item.PowerAttackForward,
                     fieldIndex: (int)CombatStyle_FieldIndex.PowerAttackForward,
@@ -6119,7 +6194,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.PowerAttackBack) ?? true))
             {
                 ByteXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.PowerAttackBack),
                     item: item.PowerAttackBack,
                     fieldIndex: (int)CombatStyle_FieldIndex.PowerAttackBack,
@@ -6128,7 +6203,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.PowerAttackLeft) ?? true))
             {
                 ByteXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.PowerAttackLeft),
                     item: item.PowerAttackLeft,
                     fieldIndex: (int)CombatStyle_FieldIndex.PowerAttackLeft,
@@ -6137,7 +6212,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.PowerAttackRight) ?? true))
             {
                 ByteXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.PowerAttackRight),
                     item: item.PowerAttackRight,
                     fieldIndex: (int)CombatStyle_FieldIndex.PowerAttackRight,
@@ -6146,7 +6221,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.HoldTimerMin) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.HoldTimerMin),
                     item: item.HoldTimerMin,
                     fieldIndex: (int)CombatStyle_FieldIndex.HoldTimerMin,
@@ -6155,7 +6230,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.HoldTimerMax) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.HoldTimerMax),
                     item: item.HoldTimerMax,
                     fieldIndex: (int)CombatStyle_FieldIndex.HoldTimerMax,
@@ -6164,7 +6239,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.Flags) ?? true))
             {
                 EnumXmlTranslation<CombatStyle.Flag>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Flags),
                     item: item.Flags,
                     fieldIndex: (int)CombatStyle_FieldIndex.Flags,
@@ -6173,7 +6248,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.AcrobaticDodgePercentChance) ?? true))
             {
                 ByteXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.AcrobaticDodgePercentChance),
                     item: item.AcrobaticDodgePercentChance,
                     fieldIndex: (int)CombatStyle_FieldIndex.AcrobaticDodgePercentChance,
@@ -6182,7 +6257,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.RangeMultOptimal) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.RangeMultOptimal),
                     item: item.RangeMultOptimal,
                     fieldIndex: (int)CombatStyle_FieldIndex.RangeMultOptimal,
@@ -6191,7 +6266,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.RangeMultMax) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.RangeMultMax),
                     item: item.RangeMultMax,
                     fieldIndex: (int)CombatStyle_FieldIndex.RangeMultMax,
@@ -6200,7 +6275,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.SwitchDistanceMelee) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.SwitchDistanceMelee),
                     item: item.SwitchDistanceMelee,
                     fieldIndex: (int)CombatStyle_FieldIndex.SwitchDistanceMelee,
@@ -6209,7 +6284,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.SwitchDistanceRanged) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.SwitchDistanceRanged),
                     item: item.SwitchDistanceRanged,
                     fieldIndex: (int)CombatStyle_FieldIndex.SwitchDistanceRanged,
@@ -6218,7 +6293,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.BuffStandoffDistance) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.BuffStandoffDistance),
                     item: item.BuffStandoffDistance,
                     fieldIndex: (int)CombatStyle_FieldIndex.BuffStandoffDistance,
@@ -6227,7 +6302,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.RangedStandoffDistance) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.RangedStandoffDistance),
                     item: item.RangedStandoffDistance,
                     fieldIndex: (int)CombatStyle_FieldIndex.RangedStandoffDistance,
@@ -6236,7 +6311,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.GroupStandoffDistance) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.GroupStandoffDistance),
                     item: item.GroupStandoffDistance,
                     fieldIndex: (int)CombatStyle_FieldIndex.GroupStandoffDistance,
@@ -6245,7 +6320,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.RushingAttackPercentChance) ?? true))
             {
                 ByteXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.RushingAttackPercentChance),
                     item: item.RushingAttackPercentChance,
                     fieldIndex: (int)CombatStyle_FieldIndex.RushingAttackPercentChance,
@@ -6254,7 +6329,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.RushingAttackDistanceMult) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.RushingAttackDistanceMult),
                     item: item.RushingAttackDistanceMult,
                     fieldIndex: (int)CombatStyle_FieldIndex.RushingAttackDistanceMult,
@@ -6264,7 +6339,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.Advanced) ?? true))
             {
                 LoquiXmlTranslation<CombatStyleAdvanced>.Instance.Write(
-                    node: elem,
+                    node: node,
                     item: item.Advanced,
                     name: nameof(item.Advanced),
                     fieldIndex: (int)CombatStyle_FieldIndex.Advanced,
@@ -6272,7 +6347,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     translationMask: translationMask?.GetSubCrystal((int)CombatStyle_FieldIndex.Advanced));
             }
         }
-        #endregion
 
         #endregion
 
@@ -6288,8 +6362,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             Write_Binary(
-                writer: writer,
                 masterReferences: masterReferences,
+                writer: writer,
                 item: item,
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMaskBuilder);
