@@ -2178,7 +2178,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Effect_Mask<bool> ret)
         {
             if (rhs == null) return;
-            ret.MagicEffect = item.MagicEffect == rhs.MagicEffect;
+            ret.MagicEffect = item.MagicEffect_Property.FormKey == rhs.MagicEffect_Property.FormKey;
             ret.Magnitude = item.Magnitude == rhs.Magnitude;
             ret.Area = item.Area == rhs.Area;
             ret.Duration = item.Duration == rhs.Duration;
@@ -2301,10 +2301,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.Effect");
             }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        #endregion
+
+        public static void WriteToNode_Xml(
+            IEffectGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
             if ((translationMask?.GetShouldTranslate((int)Effect_FieldIndex.MagicEffect) ?? true))
             {
                 FormKeyXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.MagicEffect),
                     item: item.MagicEffect_Property?.FormKey,
                     fieldIndex: (int)Effect_FieldIndex.MagicEffect,
@@ -2313,7 +2327,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)Effect_FieldIndex.Magnitude) ?? true))
             {
                 UInt32XmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Magnitude),
                     item: item.Magnitude,
                     fieldIndex: (int)Effect_FieldIndex.Magnitude,
@@ -2322,7 +2336,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)Effect_FieldIndex.Area) ?? true))
             {
                 UInt32XmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Area),
                     item: item.Area,
                     fieldIndex: (int)Effect_FieldIndex.Area,
@@ -2331,7 +2345,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)Effect_FieldIndex.Duration) ?? true))
             {
                 UInt32XmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Duration),
                     item: item.Duration,
                     fieldIndex: (int)Effect_FieldIndex.Duration,
@@ -2340,7 +2354,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)Effect_FieldIndex.Type) ?? true))
             {
                 EnumXmlTranslation<Effect.EffectType>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Type),
                     item: item.Type,
                     fieldIndex: (int)Effect_FieldIndex.Type,
@@ -2349,7 +2363,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)Effect_FieldIndex.ActorValue) ?? true))
             {
                 EnumXmlTranslation<ActorValueExtended>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.ActorValue),
                     item: item.ActorValue,
                     fieldIndex: (int)Effect_FieldIndex.ActorValue,
@@ -2359,7 +2373,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)Effect_FieldIndex.ScriptEffect) ?? true))
             {
                 LoquiXmlTranslation<ScriptEffect>.Instance.Write(
-                    node: elem,
+                    node: node,
                     item: item.ScriptEffect,
                     name: nameof(item.ScriptEffect),
                     fieldIndex: (int)Effect_FieldIndex.ScriptEffect,
@@ -2367,7 +2381,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     translationMask: translationMask?.GetSubCrystal((int)Effect_FieldIndex.ScriptEffect));
             }
         }
-        #endregion
 
         #endregion
 

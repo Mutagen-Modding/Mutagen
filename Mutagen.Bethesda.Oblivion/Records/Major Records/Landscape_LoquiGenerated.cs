@@ -2456,11 +2456,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.Landscape");
             }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        #endregion
+
+        public static void WriteToNode_Xml(
+            ILandscapeGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            MajorRecordCommon.WriteToNode_Xml(
+                item: item,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
             if (item.Unknown_IsSet
                 && (translationMask?.GetShouldTranslate((int)Landscape_FieldIndex.Unknown) ?? true))
             {
                 ByteArrayXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Unknown),
                     item: item.Unknown,
                     fieldIndex: (int)Landscape_FieldIndex.Unknown,
@@ -2470,7 +2489,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)Landscape_FieldIndex.VertexNormals) ?? true))
             {
                 ByteArrayXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.VertexNormals),
                     item: item.VertexNormals,
                     fieldIndex: (int)Landscape_FieldIndex.VertexNormals,
@@ -2480,7 +2499,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)Landscape_FieldIndex.VertexHeightMap) ?? true))
             {
                 ByteArrayXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.VertexHeightMap),
                     item: item.VertexHeightMap,
                     fieldIndex: (int)Landscape_FieldIndex.VertexHeightMap,
@@ -2490,7 +2509,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)Landscape_FieldIndex.VertexColors) ?? true))
             {
                 ByteArrayXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.VertexColors),
                     item: item.VertexColors,
                     fieldIndex: (int)Landscape_FieldIndex.VertexColors,
@@ -2500,7 +2519,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)Landscape_FieldIndex.Layers) ?? true))
             {
                 ListXmlTranslation<BaseLayer>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Layers),
                     item: item.Layers,
                     fieldIndex: (int)Landscape_FieldIndex.Layers,
@@ -2521,7 +2540,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)Landscape_FieldIndex.Textures) ?? true))
             {
                 ListXmlTranslation<FormIDLink<LandTexture>>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Textures),
                     item: item.Textures,
                     fieldIndex: (int)Landscape_FieldIndex.Textures,
@@ -2538,7 +2557,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     );
             }
         }
-        #endregion
 
         #endregion
 

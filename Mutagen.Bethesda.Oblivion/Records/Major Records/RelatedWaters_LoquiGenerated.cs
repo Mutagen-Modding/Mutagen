@@ -1505,9 +1505,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RelatedWaters_Mask<bool> ret)
         {
             if (rhs == null) return;
-            ret.RelatedWaterDaytime = item.RelatedWaterDaytime == rhs.RelatedWaterDaytime;
-            ret.RelatedWaterNighttime = item.RelatedWaterNighttime == rhs.RelatedWaterNighttime;
-            ret.RelatedWaterUnderwater = item.RelatedWaterUnderwater == rhs.RelatedWaterUnderwater;
+            ret.RelatedWaterDaytime = item.RelatedWaterDaytime_Property.FormKey == rhs.RelatedWaterDaytime_Property.FormKey;
+            ret.RelatedWaterNighttime = item.RelatedWaterNighttime_Property.FormKey == rhs.RelatedWaterNighttime_Property.FormKey;
+            ret.RelatedWaterUnderwater = item.RelatedWaterUnderwater_Property.FormKey == rhs.RelatedWaterUnderwater_Property.FormKey;
         }
 
         public static string ToString(
@@ -1602,10 +1602,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.RelatedWaters");
             }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        #endregion
+
+        public static void WriteToNode_Xml(
+            IRelatedWatersGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
             if ((translationMask?.GetShouldTranslate((int)RelatedWaters_FieldIndex.RelatedWaterDaytime) ?? true))
             {
                 FormKeyXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.RelatedWaterDaytime),
                     item: item.RelatedWaterDaytime_Property?.FormKey,
                     fieldIndex: (int)RelatedWaters_FieldIndex.RelatedWaterDaytime,
@@ -1614,7 +1628,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)RelatedWaters_FieldIndex.RelatedWaterNighttime) ?? true))
             {
                 FormKeyXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.RelatedWaterNighttime),
                     item: item.RelatedWaterNighttime_Property?.FormKey,
                     fieldIndex: (int)RelatedWaters_FieldIndex.RelatedWaterNighttime,
@@ -1623,14 +1637,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)RelatedWaters_FieldIndex.RelatedWaterUnderwater) ?? true))
             {
                 FormKeyXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.RelatedWaterUnderwater),
                     item: item.RelatedWaterUnderwater_Property?.FormKey,
                     fieldIndex: (int)RelatedWaters_FieldIndex.RelatedWaterUnderwater,
                     errorMask: errorMask);
             }
         }
-        #endregion
 
         #endregion
 

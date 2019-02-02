@@ -101,19 +101,20 @@ namespace Mutagen.Bethesda.Tests
 
         public async Task OblivionESM_Folder_Reimport()
         {
-            var mod = OblivionMod.Create_Binary(
-                this.FilePath,
-                modKey: Mutagen.Bethesda.Oblivion.Constants.Oblivion,
-                errorMask: out var inputErrMask);
-            Assert.False(inputErrMask?.IsInError() ?? false);
             using (var tmp = new TempFolder("Mutagen_Oblivion_XmlFolder", deleteAfter: false))
             {
-                //var exportMask = await mod.Write_XmlFolder(
-                //    tmp.Dir);
-                //Assert.False(exportMask?.IsInError() ?? false);
+                var mod = OblivionMod.Create_Binary(
+                    this.FilePath,
+                    modKey: Mutagen.Bethesda.Oblivion.Constants.Oblivion,
+                    errorMask: out var inputErrMask);
+                var exportMask = await mod.Write_XmlFolder(
+                    tmp.Dir);
+                Assert.False(exportMask?.IsInError() ?? false);
                 var reimport = await OblivionMod.Create_Xml_Folder(
                     tmp.Dir);
-                Assert.Equal(mod, reimport.Mod);
+                Assert.False(inputErrMask?.IsInError() ?? false);
+                var eqMask = reimport.Mod.GetEqualsMask(mod);
+                Assert.True(eqMask.AllEqual(b => b));
             }
         }
     }

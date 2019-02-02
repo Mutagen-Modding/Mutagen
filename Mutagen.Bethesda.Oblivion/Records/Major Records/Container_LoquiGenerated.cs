@@ -2332,7 +2332,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (rhs == null) return;
             ret.Name = item.Name_IsSet == rhs.Name_IsSet && object.Equals(item.Name, rhs.Name);
             ret.Model = IHasBeenSetExt.LoquiEqualsHelper(item.Model_IsSet, rhs.Model_IsSet, item.Model, rhs.Model, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
-            ret.Script = item.Script_Property.Equals(rhs.Script_Property, (l, r) => l == r);
+            ret.Script = item.Script_Property.FormKey == rhs.Script_Property.FormKey;
             if (item.Items.HasBeenSet == rhs.Items.HasBeenSet)
             {
                 if (item.Items.HasBeenSet)
@@ -2360,8 +2360,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             ret.Flags = item.Flags == rhs.Flags;
             ret.Weight = item.Weight == rhs.Weight;
-            ret.OpenSound = item.OpenSound_Property.Equals(rhs.OpenSound_Property, (l, r) => l == r);
-            ret.CloseSound = item.CloseSound_Property.Equals(rhs.CloseSound_Property, (l, r) => l == r);
+            ret.OpenSound = item.OpenSound_Property.FormKey == rhs.OpenSound_Property.FormKey;
+            ret.CloseSound = item.CloseSound_Property.FormKey == rhs.CloseSound_Property.FormKey;
             MajorRecordCommon.FillEqualsMask(item, rhs, ret);
         }
 
@@ -2528,11 +2528,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.Container");
             }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        #endregion
+
+        public static void WriteToNode_Xml(
+            IContainerGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            MajorRecordCommon.WriteToNode_Xml(
+                item: item,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
             if (item.Name_IsSet
                 && (translationMask?.GetShouldTranslate((int)Container_FieldIndex.Name) ?? true))
             {
                 StringXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Name),
                     item: item.Name,
                     fieldIndex: (int)Container_FieldIndex.Name,
@@ -2542,7 +2561,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)Container_FieldIndex.Model) ?? true))
             {
                 LoquiXmlTranslation<Model>.Instance.Write(
-                    node: elem,
+                    node: node,
                     item: item.Model,
                     name: nameof(item.Model),
                     fieldIndex: (int)Container_FieldIndex.Model,
@@ -2553,7 +2572,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)Container_FieldIndex.Script) ?? true))
             {
                 FormKeyXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Script),
                     item: item.Script_Property?.FormKey,
                     fieldIndex: (int)Container_FieldIndex.Script,
@@ -2563,7 +2582,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)Container_FieldIndex.Items) ?? true))
             {
                 ListXmlTranslation<ContainerItem>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Items),
                     item: item.Items,
                     fieldIndex: (int)Container_FieldIndex.Items,
@@ -2583,7 +2602,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)Container_FieldIndex.Flags) ?? true))
             {
                 EnumXmlTranslation<Container.ContainerFlag>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Flags),
                     item: item.Flags,
                     fieldIndex: (int)Container_FieldIndex.Flags,
@@ -2592,7 +2611,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)Container_FieldIndex.Weight) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Weight),
                     item: item.Weight,
                     fieldIndex: (int)Container_FieldIndex.Weight,
@@ -2602,7 +2621,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)Container_FieldIndex.OpenSound) ?? true))
             {
                 FormKeyXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.OpenSound),
                     item: item.OpenSound_Property?.FormKey,
                     fieldIndex: (int)Container_FieldIndex.OpenSound,
@@ -2612,14 +2631,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)Container_FieldIndex.CloseSound) ?? true))
             {
                 FormKeyXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.CloseSound),
                     item: item.CloseSound_Property?.FormKey,
                     fieldIndex: (int)Container_FieldIndex.CloseSound,
                     errorMask: errorMask);
             }
         }
-        #endregion
 
         #endregion
 

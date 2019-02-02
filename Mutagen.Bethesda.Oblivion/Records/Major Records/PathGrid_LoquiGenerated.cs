@@ -2173,11 +2173,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.PathGrid");
             }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        #endregion
+
+        public static void WriteToNode_Xml(
+            IPathGridGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            MajorRecordCommon.WriteToNode_Xml(
+                item: item,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
             if (item.PointToPointConnections.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)PathGrid_FieldIndex.PointToPointConnections) ?? true))
             {
                 ListXmlTranslation<PathGridPoint>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.PointToPointConnections),
                     item: item.PointToPointConnections,
                     fieldIndex: (int)PathGrid_FieldIndex.PointToPointConnections,
@@ -2198,7 +2217,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)PathGrid_FieldIndex.Unknown) ?? true))
             {
                 ByteArrayXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Unknown),
                     item: item.Unknown,
                     fieldIndex: (int)PathGrid_FieldIndex.Unknown,
@@ -2208,7 +2227,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)PathGrid_FieldIndex.InterCellConnections) ?? true))
             {
                 ListXmlTranslation<InterCellPoint>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.InterCellConnections),
                     item: item.InterCellConnections,
                     fieldIndex: (int)PathGrid_FieldIndex.InterCellConnections,
@@ -2229,7 +2248,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)PathGrid_FieldIndex.PointToReferenceMappings) ?? true))
             {
                 ListXmlTranslation<PointToReferenceMapping>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.PointToReferenceMappings),
                     item: item.PointToReferenceMappings,
                     fieldIndex: (int)PathGrid_FieldIndex.PointToReferenceMappings,
@@ -2247,7 +2266,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     );
             }
         }
-        #endregion
 
         #endregion
 

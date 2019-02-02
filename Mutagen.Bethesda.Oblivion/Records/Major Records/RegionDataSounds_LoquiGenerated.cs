@@ -1762,11 +1762,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.RegionDataSounds");
             }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        #endregion
+
+        public static void WriteToNode_Xml(
+            IRegionDataSoundsGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            RegionDataCommon.WriteToNode_Xml(
+                item: item,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
             if (item.MusicType_IsSet
                 && (translationMask?.GetShouldTranslate((int)RegionDataSounds_FieldIndex.MusicType) ?? true))
             {
                 EnumXmlTranslation<MusicType>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.MusicType),
                     item: item.MusicType,
                     fieldIndex: (int)RegionDataSounds_FieldIndex.MusicType,
@@ -1776,7 +1795,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)RegionDataSounds_FieldIndex.Sounds) ?? true))
             {
                 ListXmlTranslation<RegionSound>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Sounds),
                     item: item.Sounds,
                     fieldIndex: (int)RegionDataSounds_FieldIndex.Sounds,
@@ -1794,7 +1813,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     );
             }
         }
-        #endregion
 
         #endregion
 

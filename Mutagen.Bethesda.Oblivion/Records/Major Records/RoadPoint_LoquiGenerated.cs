@@ -1699,10 +1699,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.RoadPoint");
             }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        #endregion
+
+        public static void WriteToNode_Xml(
+            IRoadPointGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
             if ((translationMask?.GetShouldTranslate((int)RoadPoint_FieldIndex.Point) ?? true))
             {
                 P3FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Point),
                     item: item.Point,
                     fieldIndex: (int)RoadPoint_FieldIndex.Point,
@@ -1711,7 +1725,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)RoadPoint_FieldIndex.NumConnectionsFluffBytes) ?? true))
             {
                 ByteArrayXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.NumConnectionsFluffBytes),
                     item: item.NumConnectionsFluffBytes,
                     fieldIndex: (int)RoadPoint_FieldIndex.NumConnectionsFluffBytes,
@@ -1720,7 +1734,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)RoadPoint_FieldIndex.Connections) ?? true))
             {
                 ListXmlTranslation<P3Float>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Connections),
                     item: item.Connections,
                     fieldIndex: (int)RoadPoint_FieldIndex.Connections,
@@ -1737,7 +1751,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     );
             }
         }
-        #endregion
 
         #endregion
 

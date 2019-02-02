@@ -1932,11 +1932,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.LoadScreen");
             }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        #endregion
+
+        public static void WriteToNode_Xml(
+            ILoadScreenGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            MajorRecordCommon.WriteToNode_Xml(
+                item: item,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
             if (item.Icon_IsSet
                 && (translationMask?.GetShouldTranslate((int)LoadScreen_FieldIndex.Icon) ?? true))
             {
                 StringXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Icon),
                     item: item.Icon,
                     fieldIndex: (int)LoadScreen_FieldIndex.Icon,
@@ -1946,7 +1965,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)LoadScreen_FieldIndex.Description) ?? true))
             {
                 StringXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Description),
                     item: item.Description,
                     fieldIndex: (int)LoadScreen_FieldIndex.Description,
@@ -1956,7 +1975,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)LoadScreen_FieldIndex.Locations) ?? true))
             {
                 ListXmlTranslation<LoadScreenLocation>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Locations),
                     item: item.Locations,
                     fieldIndex: (int)LoadScreen_FieldIndex.Locations,
@@ -1974,7 +1993,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     );
             }
         }
-        #endregion
 
         #endregion
 

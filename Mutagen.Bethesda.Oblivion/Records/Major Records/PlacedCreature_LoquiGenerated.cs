@@ -2505,10 +2505,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             PlacedCreature_Mask<bool> ret)
         {
             if (rhs == null) return;
-            ret.Base = item.Base_Property.Equals(rhs.Base_Property, (l, r) => l == r);
-            ret.Owner = item.Owner_Property.Equals(rhs.Owner_Property, (l, r) => l == r);
+            ret.Base = item.Base_Property.FormKey == rhs.Base_Property.FormKey;
+            ret.Owner = item.Owner_Property.FormKey == rhs.Owner_Property.FormKey;
             ret.FactionRank = item.FactionRank_IsSet == rhs.FactionRank_IsSet && item.FactionRank == rhs.FactionRank;
-            ret.GlobalVariable = item.GlobalVariable_Property.Equals(rhs.GlobalVariable_Property, (l, r) => l == r);
+            ret.GlobalVariable = item.GlobalVariable_Property.FormKey == rhs.GlobalVariable_Property.FormKey;
             ret.EnableParent = IHasBeenSetExt.LoquiEqualsHelper(item.EnableParent_IsSet, rhs.EnableParent_IsSet, item.EnableParent, rhs.EnableParent, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
             ret.RagdollData = item.RagdollData_IsSet == rhs.RagdollData_IsSet && item.RagdollData.EqualsFast(rhs.RagdollData);
             ret.Scale = item.Scale_IsSet == rhs.Scale_IsSet && item.Scale == rhs.Scale;
@@ -2672,11 +2672,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.PlacedCreature");
             }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        #endregion
+
+        public static void WriteToNode_Xml(
+            IPlacedCreatureGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            MajorRecordCommon.WriteToNode_Xml(
+                item: item,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
             if (item.Base_Property.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)PlacedCreature_FieldIndex.Base) ?? true))
             {
                 FormKeyXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Base),
                     item: item.Base_Property?.FormKey,
                     fieldIndex: (int)PlacedCreature_FieldIndex.Base,
@@ -2686,7 +2705,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)PlacedCreature_FieldIndex.Owner) ?? true))
             {
                 FormKeyXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Owner),
                     item: item.Owner_Property?.FormKey,
                     fieldIndex: (int)PlacedCreature_FieldIndex.Owner,
@@ -2696,7 +2715,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)PlacedCreature_FieldIndex.FactionRank) ?? true))
             {
                 Int32XmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.FactionRank),
                     item: item.FactionRank,
                     fieldIndex: (int)PlacedCreature_FieldIndex.FactionRank,
@@ -2706,7 +2725,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)PlacedCreature_FieldIndex.GlobalVariable) ?? true))
             {
                 FormKeyXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.GlobalVariable),
                     item: item.GlobalVariable_Property?.FormKey,
                     fieldIndex: (int)PlacedCreature_FieldIndex.GlobalVariable,
@@ -2716,7 +2735,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)PlacedCreature_FieldIndex.EnableParent) ?? true))
             {
                 LoquiXmlTranslation<EnableParent>.Instance.Write(
-                    node: elem,
+                    node: node,
                     item: item.EnableParent,
                     name: nameof(item.EnableParent),
                     fieldIndex: (int)PlacedCreature_FieldIndex.EnableParent,
@@ -2727,7 +2746,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)PlacedCreature_FieldIndex.RagdollData) ?? true))
             {
                 ByteArrayXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.RagdollData),
                     item: item.RagdollData,
                     fieldIndex: (int)PlacedCreature_FieldIndex.RagdollData,
@@ -2737,7 +2756,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)PlacedCreature_FieldIndex.Scale) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Scale),
                     item: item.Scale,
                     fieldIndex: (int)PlacedCreature_FieldIndex.Scale,
@@ -2746,7 +2765,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)PlacedCreature_FieldIndex.Position) ?? true))
             {
                 P3FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Position),
                     item: item.Position,
                     fieldIndex: (int)PlacedCreature_FieldIndex.Position,
@@ -2755,14 +2774,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)PlacedCreature_FieldIndex.Rotation) ?? true))
             {
                 P3FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Rotation),
                     item: item.Rotation,
                     fieldIndex: (int)PlacedCreature_FieldIndex.Rotation,
                     errorMask: errorMask);
             }
         }
-        #endregion
 
         #endregion
 

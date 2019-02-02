@@ -1877,11 +1877,25 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.MapMarker");
             }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        #endregion
+
+        public static void WriteToNode_Xml(
+            IMapMarkerGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
             if (item.Flags_IsSet
                 && (translationMask?.GetShouldTranslate((int)MapMarker_FieldIndex.Flags) ?? true))
             {
                 EnumXmlTranslation<MapMarker.Flag>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Flags),
                     item: item.Flags,
                     fieldIndex: (int)MapMarker_FieldIndex.Flags,
@@ -1891,7 +1905,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)MapMarker_FieldIndex.Name) ?? true))
             {
                 StringXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Name),
                     item: item.Name,
                     fieldIndex: (int)MapMarker_FieldIndex.Name,
@@ -1901,7 +1915,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)MapMarker_FieldIndex.Types) ?? true))
             {
                 ListXmlTranslation<MapMarker.Type>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Types),
                     item: item.Types,
                     fieldIndex: (int)MapMarker_FieldIndex.Types,
@@ -1918,7 +1932,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     );
             }
         }
-        #endregion
 
         #endregion
 

@@ -1686,10 +1686,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.MapData");
             }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        #endregion
+
+        public static void WriteToNode_Xml(
+            IMapDataGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
             if ((translationMask?.GetShouldTranslate((int)MapData_FieldIndex.UsableDimensions) ?? true))
             {
                 P2IntXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.UsableDimensions),
                     item: item.UsableDimensions,
                     fieldIndex: (int)MapData_FieldIndex.UsableDimensions,
@@ -1698,7 +1712,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)MapData_FieldIndex.CellCoordinatesNWCell) ?? true))
             {
                 P2Int16XmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.CellCoordinatesNWCell),
                     item: item.CellCoordinatesNWCell,
                     fieldIndex: (int)MapData_FieldIndex.CellCoordinatesNWCell,
@@ -1707,14 +1721,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)MapData_FieldIndex.CellCoordinatesSECell) ?? true))
             {
                 P2Int16XmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.CellCoordinatesSECell),
                     item: item.CellCoordinatesSECell,
                     fieldIndex: (int)MapData_FieldIndex.CellCoordinatesSECell,
                     errorMask: errorMask);
             }
         }
-        #endregion
 
         #endregion
 

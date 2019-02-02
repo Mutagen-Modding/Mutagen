@@ -2230,10 +2230,29 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.SpellUnleveled");
             }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        #endregion
+
+        public static void WriteToNode_Xml(
+            ISpellUnleveledGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            SpellCommon.WriteToNode_Xml(
+                item: item,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
             if ((translationMask?.GetShouldTranslate((int)SpellUnleveled_FieldIndex.Type) ?? true))
             {
                 EnumXmlTranslation<Spell.SpellType>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Type),
                     item: item.Type,
                     fieldIndex: (int)SpellUnleveled_FieldIndex.Type,
@@ -2242,7 +2261,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)SpellUnleveled_FieldIndex.Cost) ?? true))
             {
                 UInt32XmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Cost),
                     item: item.Cost,
                     fieldIndex: (int)SpellUnleveled_FieldIndex.Cost,
@@ -2251,7 +2270,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)SpellUnleveled_FieldIndex.Level) ?? true))
             {
                 EnumXmlTranslation<Spell.SpellLevel>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Level),
                     item: item.Level,
                     fieldIndex: (int)SpellUnleveled_FieldIndex.Level,
@@ -2260,7 +2279,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)SpellUnleveled_FieldIndex.Flag) ?? true))
             {
                 EnumXmlTranslation<Spell.SpellFlag>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Flag),
                     item: item.Flag,
                     fieldIndex: (int)SpellUnleveled_FieldIndex.Flag,
@@ -2270,7 +2289,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)SpellUnleveled_FieldIndex.Effects) ?? true))
             {
                 ListXmlTranslation<Effect>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Effects),
                     item: item.Effects,
                     fieldIndex: (int)SpellUnleveled_FieldIndex.Effects,
@@ -2288,7 +2307,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     );
             }
         }
-        #endregion
 
         #endregion
 

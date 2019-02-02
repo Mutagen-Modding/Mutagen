@@ -2569,8 +2569,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (rhs == null) return;
             ret.DialogType = item.DialogType == rhs.DialogType;
             ret.Flags = item.Flags == rhs.Flags;
-            ret.Quest = item.Quest_Property.Equals(rhs.Quest_Property, (l, r) => l == r);
-            ret.PreviousTopic = item.PreviousTopic_Property.Equals(rhs.PreviousTopic_Property, (l, r) => l == r);
+            ret.Quest = item.Quest_Property.FormKey == rhs.Quest_Property.FormKey;
+            ret.PreviousTopic = item.PreviousTopic_Property.FormKey == rhs.PreviousTopic_Property.FormKey;
             if (item.Topics.HasBeenSet == rhs.Topics.HasBeenSet)
             {
                 if (item.Topics.HasBeenSet)
@@ -2913,10 +2913,29 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.DialogItem");
             }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        #endregion
+
+        public static void WriteToNode_Xml(
+            IDialogItemGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            MajorRecordCommon.WriteToNode_Xml(
+                item: item,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
             if ((translationMask?.GetShouldTranslate((int)DialogItem_FieldIndex.DialogType) ?? true))
             {
                 EnumXmlTranslation<DialogType>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.DialogType),
                     item: item.DialogType,
                     fieldIndex: (int)DialogItem_FieldIndex.DialogType,
@@ -2925,7 +2944,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)DialogItem_FieldIndex.Flags) ?? true))
             {
                 EnumXmlTranslation<DialogItem.Flag>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Flags),
                     item: item.Flags,
                     fieldIndex: (int)DialogItem_FieldIndex.Flags,
@@ -2935,7 +2954,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)DialogItem_FieldIndex.Quest) ?? true))
             {
                 FormKeyXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Quest),
                     item: item.Quest_Property?.FormKey,
                     fieldIndex: (int)DialogItem_FieldIndex.Quest,
@@ -2945,7 +2964,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)DialogItem_FieldIndex.PreviousTopic) ?? true))
             {
                 FormKeyXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.PreviousTopic),
                     item: item.PreviousTopic_Property?.FormKey,
                     fieldIndex: (int)DialogItem_FieldIndex.PreviousTopic,
@@ -2955,7 +2974,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)DialogItem_FieldIndex.Topics) ?? true))
             {
                 ListXmlTranslation<FormIDSetLink<DialogTopic>>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Topics),
                     item: item.Topics,
                     fieldIndex: (int)DialogItem_FieldIndex.Topics,
@@ -2975,7 +2994,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)DialogItem_FieldIndex.Responses) ?? true))
             {
                 ListXmlTranslation<DialogResponse>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Responses),
                     item: item.Responses,
                     fieldIndex: (int)DialogItem_FieldIndex.Responses,
@@ -2996,7 +3015,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)DialogItem_FieldIndex.Conditions) ?? true))
             {
                 ListXmlTranslation<Condition>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Conditions),
                     item: item.Conditions,
                     fieldIndex: (int)DialogItem_FieldIndex.Conditions,
@@ -3017,7 +3036,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)DialogItem_FieldIndex.Choices) ?? true))
             {
                 ListXmlTranslation<FormIDSetLink<DialogTopic>>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Choices),
                     item: item.Choices,
                     fieldIndex: (int)DialogItem_FieldIndex.Choices,
@@ -3037,7 +3056,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)DialogItem_FieldIndex.LinkFrom) ?? true))
             {
                 ListXmlTranslation<FormIDSetLink<DialogTopic>>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.LinkFrom),
                     item: item.LinkFrom,
                     fieldIndex: (int)DialogItem_FieldIndex.LinkFrom,
@@ -3057,7 +3076,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)DialogItem_FieldIndex.Script) ?? true))
             {
                 LoquiXmlTranslation<ScriptFields>.Instance.Write(
-                    node: elem,
+                    node: node,
                     item: item.Script,
                     name: nameof(item.Script),
                     fieldIndex: (int)DialogItem_FieldIndex.Script,
@@ -3065,7 +3084,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     translationMask: translationMask?.GetSubCrystal((int)DialogItem_FieldIndex.Script));
             }
         }
-        #endregion
 
         #endregion
 

@@ -2120,11 +2120,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.IdleAnimation");
             }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        #endregion
+
+        public static void WriteToNode_Xml(
+            IIdleAnimationGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            MajorRecordCommon.WriteToNode_Xml(
+                item: item,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
             if (item.Model_IsSet
                 && (translationMask?.GetShouldTranslate((int)IdleAnimation_FieldIndex.Model) ?? true))
             {
                 LoquiXmlTranslation<Model>.Instance.Write(
-                    node: elem,
+                    node: node,
                     item: item.Model,
                     name: nameof(item.Model),
                     fieldIndex: (int)IdleAnimation_FieldIndex.Model,
@@ -2135,7 +2154,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)IdleAnimation_FieldIndex.Conditions) ?? true))
             {
                 ListXmlTranslation<Condition>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Conditions),
                     item: item.Conditions,
                     fieldIndex: (int)IdleAnimation_FieldIndex.Conditions,
@@ -2156,7 +2175,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)IdleAnimation_FieldIndex.AnimationGroupSection) ?? true))
             {
                 EnumXmlTranslation<IdleAnimation.AnimationGroupSectionEnum>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.AnimationGroupSection),
                     item: item.AnimationGroupSection,
                     fieldIndex: (int)IdleAnimation_FieldIndex.AnimationGroupSection,
@@ -2166,7 +2185,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)IdleAnimation_FieldIndex.RelatedIdleAnimations) ?? true))
             {
                 ListXmlTranslation<FormIDLink<IdleAnimation>>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.RelatedIdleAnimations),
                     item: item.RelatedIdleAnimations,
                     fieldIndex: (int)IdleAnimation_FieldIndex.RelatedIdleAnimations,
@@ -2183,7 +2202,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     );
             }
         }
-        #endregion
 
         #endregion
 

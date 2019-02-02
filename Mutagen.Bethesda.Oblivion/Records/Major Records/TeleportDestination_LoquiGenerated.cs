@@ -1576,7 +1576,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TeleportDestination_Mask<bool> ret)
         {
             if (rhs == null) return;
-            ret.Destination = item.Destination == rhs.Destination;
+            ret.Destination = item.Destination_Property.FormKey == rhs.Destination_Property.FormKey;
             ret.Position = item.Position == rhs.Position;
             ret.Rotation = item.Rotation == rhs.Rotation;
         }
@@ -1673,10 +1673,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.TeleportDestination");
             }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        #endregion
+
+        public static void WriteToNode_Xml(
+            ITeleportDestinationGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
             if ((translationMask?.GetShouldTranslate((int)TeleportDestination_FieldIndex.Destination) ?? true))
             {
                 FormKeyXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Destination),
                     item: item.Destination_Property?.FormKey,
                     fieldIndex: (int)TeleportDestination_FieldIndex.Destination,
@@ -1685,7 +1699,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)TeleportDestination_FieldIndex.Position) ?? true))
             {
                 P3FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Position),
                     item: item.Position,
                     fieldIndex: (int)TeleportDestination_FieldIndex.Position,
@@ -1694,14 +1708,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)TeleportDestination_FieldIndex.Rotation) ?? true))
             {
                 P3FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Rotation),
                     item: item.Rotation,
                     fieldIndex: (int)TeleportDestination_FieldIndex.Rotation,
                     errorMask: errorMask);
             }
         }
-        #endregion
 
         #endregion
 

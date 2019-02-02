@@ -1763,11 +1763,25 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.CreatureSound");
             }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        #endregion
+
+        public static void WriteToNode_Xml(
+            ICreatureSoundGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
             if (item.SoundType_IsSet
                 && (translationMask?.GetShouldTranslate((int)CreatureSound_FieldIndex.SoundType) ?? true))
             {
                 EnumXmlTranslation<CreatureSound.CreatureSoundType>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.SoundType),
                     item: item.SoundType,
                     fieldIndex: (int)CreatureSound_FieldIndex.SoundType,
@@ -1777,7 +1791,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)CreatureSound_FieldIndex.Sounds) ?? true))
             {
                 ListXmlTranslation<SoundItem>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Sounds),
                     item: item.Sounds,
                     fieldIndex: (int)CreatureSound_FieldIndex.Sounds,
@@ -1795,7 +1809,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     );
             }
         }
-        #endregion
 
         #endregion
 

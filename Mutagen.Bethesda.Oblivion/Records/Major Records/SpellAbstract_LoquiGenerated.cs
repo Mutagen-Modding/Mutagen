@@ -118,6 +118,117 @@ namespace Mutagen.Bethesda.Oblivion
 
 
         #region Xml Translation
+        #region Xml Create
+        [DebuggerStepThrough]
+        public new static SpellAbstract Create_Xml(
+            XElement node,
+            SpellAbstract_TranslationMask translationMask = null)
+        {
+            return Create_Xml(
+                node: node,
+                errorMask: null,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        [DebuggerStepThrough]
+        public static SpellAbstract Create_Xml(
+            XElement node,
+            out SpellAbstract_ErrorMask errorMask,
+            bool doMasks = true,
+            SpellAbstract_TranslationMask translationMask = null)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            var ret = Create_Xml(
+                node: node,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask.GetCrystal());
+            errorMask = SpellAbstract_ErrorMask.Factory(errorMaskBuilder);
+            return ret;
+        }
+
+        public static SpellAbstract Create_Xml(
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            SpellAbstract ret;
+            if (!LoquiXmlTranslation.Instance.TryCreate(node, out ret, errorMask, translationMask))
+            {
+                throw new ArgumentException($"Unknown SpellAbstract subclass: {node.Name.LocalName}");
+            }
+            return ret;
+        }
+
+        public static SpellAbstract Create_Xml(
+            string path,
+            SpellAbstract_TranslationMask translationMask = null)
+        {
+            var node = XDocument.Load(path).Root;
+            return Create_Xml(
+                node: node,
+                translationMask: translationMask);
+        }
+
+        public static SpellAbstract Create_Xml(
+            string path,
+            out SpellAbstract_ErrorMask errorMask,
+            SpellAbstract_TranslationMask translationMask = null)
+        {
+            var node = XDocument.Load(path).Root;
+            return Create_Xml(
+                node: node,
+                errorMask: out errorMask,
+                translationMask: translationMask);
+        }
+
+        public static SpellAbstract Create_Xml(
+            string path,
+            ErrorMaskBuilder errorMask,
+            SpellAbstract_TranslationMask translationMask = null)
+        {
+            var node = XDocument.Load(path).Root;
+            return Create_Xml(
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        public static SpellAbstract Create_Xml(
+            Stream stream,
+            SpellAbstract_TranslationMask translationMask = null)
+        {
+            var node = XDocument.Load(stream).Root;
+            return Create_Xml(
+                node: node,
+                translationMask: translationMask);
+        }
+
+        public static SpellAbstract Create_Xml(
+            Stream stream,
+            out SpellAbstract_ErrorMask errorMask,
+            SpellAbstract_TranslationMask translationMask = null)
+        {
+            var node = XDocument.Load(stream).Root;
+            return Create_Xml(
+                node: node,
+                errorMask: out errorMask,
+                translationMask: translationMask);
+        }
+
+        public static SpellAbstract Create_Xml(
+            Stream stream,
+            ErrorMaskBuilder errorMask,
+            SpellAbstract_TranslationMask translationMask = null)
+        {
+            var node = XDocument.Load(stream).Root;
+            return Create_Xml(
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        #endregion
+
         #region Xml Copy In
         public override void CopyIn_Xml(
             XElement node,
@@ -1058,8 +1169,26 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.SpellAbstract");
             }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
         }
         #endregion
+
+        public static void WriteToNode_Xml(
+            ISpellAbstractGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            MajorRecordCommon.WriteToNode_Xml(
+                item: item,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
 
         #endregion
 

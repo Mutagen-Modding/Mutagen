@@ -2523,10 +2523,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.TES4");
             }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        #endregion
+
+        public static void WriteToNode_Xml(
+            ITES4Getter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
             if ((translationMask?.GetShouldTranslate((int)TES4_FieldIndex.Fluff) ?? true))
             {
                 ByteArrayXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Fluff),
                     item: item.Fluff,
                     fieldIndex: (int)TES4_FieldIndex.Fluff,
@@ -2535,7 +2549,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)TES4_FieldIndex.Header) ?? true))
             {
                 LoquiXmlTranslation<Header>.Instance.Write(
-                    node: elem,
+                    node: node,
                     item: item.Header,
                     name: nameof(item.Header),
                     fieldIndex: (int)TES4_FieldIndex.Header,
@@ -2546,7 +2560,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)TES4_FieldIndex.TypeOffsets) ?? true))
             {
                 ByteArrayXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.TypeOffsets),
                     item: item.TypeOffsets,
                     fieldIndex: (int)TES4_FieldIndex.TypeOffsets,
@@ -2556,7 +2570,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)TES4_FieldIndex.Deleted) ?? true))
             {
                 ByteArrayXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Deleted),
                     item: item.Deleted,
                     fieldIndex: (int)TES4_FieldIndex.Deleted,
@@ -2566,7 +2580,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)TES4_FieldIndex.Author) ?? true))
             {
                 StringXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Author),
                     item: item.Author,
                     fieldIndex: (int)TES4_FieldIndex.Author,
@@ -2576,7 +2590,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)TES4_FieldIndex.Description) ?? true))
             {
                 StringXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Description),
                     item: item.Description,
                     fieldIndex: (int)TES4_FieldIndex.Description,
@@ -2586,7 +2600,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)TES4_FieldIndex.MasterReferences) ?? true))
             {
                 ListXmlTranslation<MasterReference>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.MasterReferences),
                     item: item.MasterReferences,
                     fieldIndex: (int)TES4_FieldIndex.MasterReferences,
@@ -2604,7 +2618,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     );
             }
         }
-        #endregion
 
         #endregion
 

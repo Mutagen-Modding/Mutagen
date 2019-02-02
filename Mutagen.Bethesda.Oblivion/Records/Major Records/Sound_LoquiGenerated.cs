@@ -1761,11 +1761,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.Sound");
             }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        #endregion
+
+        public static void WriteToNode_Xml(
+            ISoundGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            MajorRecordCommon.WriteToNode_Xml(
+                item: item,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
             if (item.File_IsSet
                 && (translationMask?.GetShouldTranslate((int)Sound_FieldIndex.File) ?? true))
             {
                 StringXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.File),
                     item: item.File,
                     fieldIndex: (int)Sound_FieldIndex.File,
@@ -1775,7 +1794,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)Sound_FieldIndex.Data) ?? true))
             {
                 LoquiXmlTranslation<SoundData>.Instance.Write(
-                    node: elem,
+                    node: node,
                     item: item.Data,
                     name: nameof(item.Data),
                     fieldIndex: (int)Sound_FieldIndex.Data,
@@ -1783,7 +1802,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     translationMask: translationMask?.GetSubCrystal((int)Sound_FieldIndex.Data));
             }
         }
-        #endregion
 
         #endregion
 

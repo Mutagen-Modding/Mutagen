@@ -1846,10 +1846,25 @@ namespace Mutagen.Bethesda.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.ListGroup");
             }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        #endregion
+
+        public static void WriteToNode_Xml<T>(
+            IListGroupGetter<T> item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+            where T : ILoquiObject<T>
+        {
             if ((translationMask?.GetShouldTranslate((int)ListGroup_FieldIndex.GroupType) ?? true))
             {
                 EnumXmlTranslation<GroupTypeEnum>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.GroupType),
                     item: item.GroupType,
                     fieldIndex: (int)ListGroup_FieldIndex.GroupType,
@@ -1858,7 +1873,7 @@ namespace Mutagen.Bethesda.Internals
             if ((translationMask?.GetShouldTranslate((int)ListGroup_FieldIndex.LastModified) ?? true))
             {
                 ByteArrayXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.LastModified),
                     item: item.LastModified,
                     fieldIndex: (int)ListGroup_FieldIndex.LastModified,
@@ -1867,7 +1882,7 @@ namespace Mutagen.Bethesda.Internals
             if ((translationMask?.GetShouldTranslate((int)ListGroup_FieldIndex.Items) ?? true))
             {
                 ListXmlTranslation<T>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Items),
                     item: item.Items,
                     fieldIndex: (int)ListGroup_FieldIndex.Items,
@@ -1885,7 +1900,6 @@ namespace Mutagen.Bethesda.Internals
                     );
             }
         }
-        #endregion
 
         #endregion
 

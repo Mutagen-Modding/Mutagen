@@ -2096,11 +2096,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.LandTexture");
             }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        #endregion
+
+        public static void WriteToNode_Xml(
+            ILandTextureGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            MajorRecordCommon.WriteToNode_Xml(
+                item: item,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
             if (item.Icon_IsSet
                 && (translationMask?.GetShouldTranslate((int)LandTexture_FieldIndex.Icon) ?? true))
             {
                 StringXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Icon),
                     item: item.Icon,
                     fieldIndex: (int)LandTexture_FieldIndex.Icon,
@@ -2110,7 +2129,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)LandTexture_FieldIndex.Havok) ?? true))
             {
                 LoquiXmlTranslation<HavokData>.Instance.Write(
-                    node: elem,
+                    node: node,
                     item: item.Havok,
                     name: nameof(item.Havok),
                     fieldIndex: (int)LandTexture_FieldIndex.Havok,
@@ -2121,7 +2140,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)LandTexture_FieldIndex.TextureSpecularExponent) ?? true))
             {
                 ByteXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.TextureSpecularExponent),
                     item: item.TextureSpecularExponent,
                     fieldIndex: (int)LandTexture_FieldIndex.TextureSpecularExponent,
@@ -2131,7 +2150,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)LandTexture_FieldIndex.PotentialGrass) ?? true))
             {
                 ListXmlTranslation<FormIDSetLink<Grass>>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.PotentialGrass),
                     item: item.PotentialGrass,
                     fieldIndex: (int)LandTexture_FieldIndex.PotentialGrass,
@@ -2148,7 +2167,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     );
             }
         }
-        #endregion
 
         #endregion
 

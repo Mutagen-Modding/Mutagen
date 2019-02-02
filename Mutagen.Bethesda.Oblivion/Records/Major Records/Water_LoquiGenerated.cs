@@ -5260,7 +5260,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Opacity = item.Opacity_IsSet == rhs.Opacity_IsSet && item.Opacity == rhs.Opacity;
             ret.Flags = item.Flags_IsSet == rhs.Flags_IsSet && item.Flags == rhs.Flags;
             ret.MaterialID = item.MaterialID_IsSet == rhs.MaterialID_IsSet && object.Equals(item.MaterialID, rhs.MaterialID);
-            ret.Sound = item.Sound_Property.Equals(rhs.Sound_Property, (l, r) => l == r);
+            ret.Sound = item.Sound_Property.FormKey == rhs.Sound_Property.FormKey;
             ret.WindVelocity = item.WindVelocity == rhs.WindVelocity;
             ret.WindDirection = item.WindDirection == rhs.WindDirection;
             ret.WaveAmplitude = item.WaveAmplitude == rhs.WaveAmplitude;
@@ -5560,11 +5560,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.Water");
             }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        #endregion
+
+        public static void WriteToNode_Xml(
+            IWaterGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            MajorRecordCommon.WriteToNode_Xml(
+                item: item,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
             if (item.Texture_IsSet
                 && (translationMask?.GetShouldTranslate((int)Water_FieldIndex.Texture) ?? true))
             {
                 StringXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Texture),
                     item: item.Texture,
                     fieldIndex: (int)Water_FieldIndex.Texture,
@@ -5574,7 +5593,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)Water_FieldIndex.Opacity) ?? true))
             {
                 ByteXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Opacity),
                     item: item.Opacity,
                     fieldIndex: (int)Water_FieldIndex.Opacity,
@@ -5584,7 +5603,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)Water_FieldIndex.Flags) ?? true))
             {
                 EnumXmlTranslation<Water.Flag>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Flags),
                     item: item.Flags,
                     fieldIndex: (int)Water_FieldIndex.Flags,
@@ -5594,7 +5613,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)Water_FieldIndex.MaterialID) ?? true))
             {
                 StringXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.MaterialID),
                     item: item.MaterialID,
                     fieldIndex: (int)Water_FieldIndex.MaterialID,
@@ -5604,7 +5623,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)Water_FieldIndex.Sound) ?? true))
             {
                 FormKeyXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Sound),
                     item: item.Sound_Property?.FormKey,
                     fieldIndex: (int)Water_FieldIndex.Sound,
@@ -5613,7 +5632,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.WindVelocity) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.WindVelocity),
                     item: item.WindVelocity,
                     fieldIndex: (int)Water_FieldIndex.WindVelocity,
@@ -5622,7 +5641,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.WindDirection) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.WindDirection),
                     item: item.WindDirection,
                     fieldIndex: (int)Water_FieldIndex.WindDirection,
@@ -5631,7 +5650,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.WaveAmplitude) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.WaveAmplitude),
                     item: item.WaveAmplitude,
                     fieldIndex: (int)Water_FieldIndex.WaveAmplitude,
@@ -5640,7 +5659,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.WaveFrequency) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.WaveFrequency),
                     item: item.WaveFrequency,
                     fieldIndex: (int)Water_FieldIndex.WaveFrequency,
@@ -5649,7 +5668,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.SunPower) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.SunPower),
                     item: item.SunPower,
                     fieldIndex: (int)Water_FieldIndex.SunPower,
@@ -5658,7 +5677,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.ReflectivityAmount) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.ReflectivityAmount),
                     item: item.ReflectivityAmount,
                     fieldIndex: (int)Water_FieldIndex.ReflectivityAmount,
@@ -5667,7 +5686,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.FresnelAmount) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.FresnelAmount),
                     item: item.FresnelAmount,
                     fieldIndex: (int)Water_FieldIndex.FresnelAmount,
@@ -5676,7 +5695,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.ScrollXSpeed) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.ScrollXSpeed),
                     item: item.ScrollXSpeed,
                     fieldIndex: (int)Water_FieldIndex.ScrollXSpeed,
@@ -5685,7 +5704,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.ScrollYSpeed) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.ScrollYSpeed),
                     item: item.ScrollYSpeed,
                     fieldIndex: (int)Water_FieldIndex.ScrollYSpeed,
@@ -5694,7 +5713,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.FogDistanceNearPlane) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.FogDistanceNearPlane),
                     item: item.FogDistanceNearPlane,
                     fieldIndex: (int)Water_FieldIndex.FogDistanceNearPlane,
@@ -5703,7 +5722,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.FogDistanceFarPlane) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.FogDistanceFarPlane),
                     item: item.FogDistanceFarPlane,
                     fieldIndex: (int)Water_FieldIndex.FogDistanceFarPlane,
@@ -5712,7 +5731,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.ShallowColor) ?? true))
             {
                 ColorXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.ShallowColor),
                     item: item.ShallowColor,
                     fieldIndex: (int)Water_FieldIndex.ShallowColor,
@@ -5721,7 +5740,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.DeepColor) ?? true))
             {
                 ColorXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.DeepColor),
                     item: item.DeepColor,
                     fieldIndex: (int)Water_FieldIndex.DeepColor,
@@ -5730,7 +5749,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.ReflectionColor) ?? true))
             {
                 ColorXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.ReflectionColor),
                     item: item.ReflectionColor,
                     fieldIndex: (int)Water_FieldIndex.ReflectionColor,
@@ -5739,7 +5758,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.TextureBlend) ?? true))
             {
                 ByteXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.TextureBlend),
                     item: item.TextureBlend,
                     fieldIndex: (int)Water_FieldIndex.TextureBlend,
@@ -5748,7 +5767,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.RainSimulatorForce) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.RainSimulatorForce),
                     item: item.RainSimulatorForce,
                     fieldIndex: (int)Water_FieldIndex.RainSimulatorForce,
@@ -5757,7 +5776,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.RainSimulatorVelocity) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.RainSimulatorVelocity),
                     item: item.RainSimulatorVelocity,
                     fieldIndex: (int)Water_FieldIndex.RainSimulatorVelocity,
@@ -5766,7 +5785,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.RainSimulatorFalloff) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.RainSimulatorFalloff),
                     item: item.RainSimulatorFalloff,
                     fieldIndex: (int)Water_FieldIndex.RainSimulatorFalloff,
@@ -5775,7 +5794,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.RainSimulatorDampner) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.RainSimulatorDampner),
                     item: item.RainSimulatorDampner,
                     fieldIndex: (int)Water_FieldIndex.RainSimulatorDampner,
@@ -5784,7 +5803,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.RainSimulatorStartingSize) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.RainSimulatorStartingSize),
                     item: item.RainSimulatorStartingSize,
                     fieldIndex: (int)Water_FieldIndex.RainSimulatorStartingSize,
@@ -5793,7 +5812,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.DisplacementSimulatorForce) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.DisplacementSimulatorForce),
                     item: item.DisplacementSimulatorForce,
                     fieldIndex: (int)Water_FieldIndex.DisplacementSimulatorForce,
@@ -5802,7 +5821,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.DisplacementSimulatorVelocity) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.DisplacementSimulatorVelocity),
                     item: item.DisplacementSimulatorVelocity,
                     fieldIndex: (int)Water_FieldIndex.DisplacementSimulatorVelocity,
@@ -5811,7 +5830,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.DisplacementSimulatorFalloff) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.DisplacementSimulatorFalloff),
                     item: item.DisplacementSimulatorFalloff,
                     fieldIndex: (int)Water_FieldIndex.DisplacementSimulatorFalloff,
@@ -5820,7 +5839,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.DisplacementSimulatorDampner) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.DisplacementSimulatorDampner),
                     item: item.DisplacementSimulatorDampner,
                     fieldIndex: (int)Water_FieldIndex.DisplacementSimulatorDampner,
@@ -5829,7 +5848,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.DisplacementSimulatorStartingSize) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.DisplacementSimulatorStartingSize),
                     item: item.DisplacementSimulatorStartingSize,
                     fieldIndex: (int)Water_FieldIndex.DisplacementSimulatorStartingSize,
@@ -5838,7 +5857,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.Damage) ?? true))
             {
                 UInt16XmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Damage),
                     item: item.Damage,
                     fieldIndex: (int)Water_FieldIndex.Damage,
@@ -5848,7 +5867,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)Water_FieldIndex.RelatedWaters) ?? true))
             {
                 LoquiXmlTranslation<RelatedWaters>.Instance.Write(
-                    node: elem,
+                    node: node,
                     item: item.RelatedWaters,
                     name: nameof(item.RelatedWaters),
                     fieldIndex: (int)Water_FieldIndex.RelatedWaters,
@@ -5856,7 +5875,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     translationMask: translationMask?.GetSubCrystal((int)Water_FieldIndex.RelatedWaters));
             }
         }
-        #endregion
 
         #endregion
 

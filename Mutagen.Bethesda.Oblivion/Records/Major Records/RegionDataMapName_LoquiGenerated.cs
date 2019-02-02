@@ -1534,18 +1534,36 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.RegionDataMapName");
             }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        #endregion
+
+        public static void WriteToNode_Xml(
+            IRegionDataMapNameGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            RegionDataCommon.WriteToNode_Xml(
+                item: item,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
             if (item.MapName_IsSet
                 && (translationMask?.GetShouldTranslate((int)RegionDataMapName_FieldIndex.MapName) ?? true))
             {
                 StringXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.MapName),
                     item: item.MapName,
                     fieldIndex: (int)RegionDataMapName_FieldIndex.MapName,
                     errorMask: errorMask);
             }
         }
-        #endregion
 
         #endregion
 

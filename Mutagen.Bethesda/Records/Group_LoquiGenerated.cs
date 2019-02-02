@@ -1826,10 +1826,25 @@ namespace Mutagen.Bethesda.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Group");
             }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        #endregion
+
+        public static void WriteToNode_Xml<T>(
+            IGroupGetter<T> item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+            where T : IMajorRecord, ILoquiObject<T>
+        {
             if ((translationMask?.GetShouldTranslate((int)Group_FieldIndex.GroupType) ?? true))
             {
                 EnumXmlTranslation<GroupTypeEnum>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.GroupType),
                     item: item.GroupType,
                     fieldIndex: (int)Group_FieldIndex.GroupType,
@@ -1838,7 +1853,7 @@ namespace Mutagen.Bethesda.Internals
             if ((translationMask?.GetShouldTranslate((int)Group_FieldIndex.LastModified) ?? true))
             {
                 ByteArrayXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.LastModified),
                     item: item.LastModified,
                     fieldIndex: (int)Group_FieldIndex.LastModified,
@@ -1851,7 +1866,7 @@ namespace Mutagen.Bethesda.Internals
                 {
                     errorMask?.PushIndex((int)Group_FieldIndex.Items);
                     KeyedDictXmlTranslation<FormKey, T>.Instance.Write(
-                        node: elem,
+                        node: node,
                         name: nameof(item.Items),
                         items: item.Items.Items,
                         translationMask: translationMask,
@@ -1878,7 +1893,6 @@ namespace Mutagen.Bethesda.Internals
                 }
             }
         }
-        #endregion
 
         #endregion
 

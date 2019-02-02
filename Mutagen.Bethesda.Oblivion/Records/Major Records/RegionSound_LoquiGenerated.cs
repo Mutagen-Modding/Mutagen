@@ -1574,7 +1574,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RegionSound_Mask<bool> ret)
         {
             if (rhs == null) return;
-            ret.Sound = item.Sound == rhs.Sound;
+            ret.Sound = item.Sound_Property.FormKey == rhs.Sound_Property.FormKey;
             ret.Flags = item.Flags == rhs.Flags;
             ret.Chance = item.Chance == rhs.Chance;
         }
@@ -1671,10 +1671,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.RegionSound");
             }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        #endregion
+
+        public static void WriteToNode_Xml(
+            IRegionSoundGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
             if ((translationMask?.GetShouldTranslate((int)RegionSound_FieldIndex.Sound) ?? true))
             {
                 FormKeyXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Sound),
                     item: item.Sound_Property?.FormKey,
                     fieldIndex: (int)RegionSound_FieldIndex.Sound,
@@ -1683,7 +1697,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)RegionSound_FieldIndex.Flags) ?? true))
             {
                 EnumXmlTranslation<RegionSound.Flag>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Flags),
                     item: item.Flags,
                     fieldIndex: (int)RegionSound_FieldIndex.Flags,
@@ -1692,14 +1706,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)RegionSound_FieldIndex.Chance) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Chance),
                     item: item.Chance,
                     fieldIndex: (int)RegionSound_FieldIndex.Chance,
                     errorMask: errorMask);
             }
         }
-        #endregion
 
         #endregion
 

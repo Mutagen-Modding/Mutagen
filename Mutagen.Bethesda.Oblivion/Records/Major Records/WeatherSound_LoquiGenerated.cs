@@ -1466,7 +1466,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             WeatherSound_Mask<bool> ret)
         {
             if (rhs == null) return;
-            ret.Sound = item.Sound == rhs.Sound;
+            ret.Sound = item.Sound_Property.FormKey == rhs.Sound_Property.FormKey;
             ret.Type = item.Type == rhs.Type;
         }
 
@@ -1557,10 +1557,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.WeatherSound");
             }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        #endregion
+
+        public static void WriteToNode_Xml(
+            IWeatherSoundGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
             if ((translationMask?.GetShouldTranslate((int)WeatherSound_FieldIndex.Sound) ?? true))
             {
                 FormKeyXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Sound),
                     item: item.Sound_Property?.FormKey,
                     fieldIndex: (int)WeatherSound_FieldIndex.Sound,
@@ -1569,14 +1583,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)WeatherSound_FieldIndex.Type) ?? true))
             {
                 EnumXmlTranslation<WeatherSound.SoundType>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Type),
                     item: item.Type,
                     fieldIndex: (int)WeatherSound_FieldIndex.Type,
                     errorMask: errorMask);
             }
         }
-        #endregion
 
         #endregion
 

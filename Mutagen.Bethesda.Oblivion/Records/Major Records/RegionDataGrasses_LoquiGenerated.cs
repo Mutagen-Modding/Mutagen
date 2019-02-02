@@ -1551,11 +1551,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.RegionDataGrasses");
             }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        #endregion
+
+        public static void WriteToNode_Xml(
+            IRegionDataGrassesGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            RegionDataCommon.WriteToNode_Xml(
+                item: item,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
             if (item.Grasses.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)RegionDataGrasses_FieldIndex.Grasses) ?? true))
             {
                 ListXmlTranslation<FormIDLink<Grass>>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Grasses),
                     item: item.Grasses,
                     fieldIndex: (int)RegionDataGrasses_FieldIndex.Grasses,
@@ -1572,7 +1591,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     );
             }
         }
-        #endregion
 
         #endregion
 

@@ -1613,7 +1613,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             BaseLayer_Mask<bool> ret)
         {
             if (rhs == null) return;
-            ret.Texture = item.Texture == rhs.Texture;
+            ret.Texture = item.Texture_Property.FormKey == rhs.Texture_Property.FormKey;
             ret.Quadrant = item.Quadrant == rhs.Quadrant;
             ret.LayerNumber = item.LayerNumber == rhs.LayerNumber;
         }
@@ -1710,10 +1710,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.BaseLayer");
             }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        #endregion
+
+        public static void WriteToNode_Xml(
+            IBaseLayerGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
             if ((translationMask?.GetShouldTranslate((int)BaseLayer_FieldIndex.Texture) ?? true))
             {
                 FormKeyXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Texture),
                     item: item.Texture_Property?.FormKey,
                     fieldIndex: (int)BaseLayer_FieldIndex.Texture,
@@ -1722,7 +1736,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)BaseLayer_FieldIndex.Quadrant) ?? true))
             {
                 EnumXmlTranslation<AlphaLayer.QuadrantEnum>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Quadrant),
                     item: item.Quadrant,
                     fieldIndex: (int)BaseLayer_FieldIndex.Quadrant,
@@ -1731,14 +1745,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)BaseLayer_FieldIndex.LayerNumber) ?? true))
             {
                 UInt16XmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.LayerNumber),
                     item: item.LayerNumber,
                     fieldIndex: (int)BaseLayer_FieldIndex.LayerNumber,
                     errorMask: errorMask);
             }
         }
-        #endregion
 
         #endregion
 

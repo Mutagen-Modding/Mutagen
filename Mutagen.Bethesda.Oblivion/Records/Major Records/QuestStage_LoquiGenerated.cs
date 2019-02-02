@@ -1727,10 +1727,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.QuestStage");
             }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        #endregion
+
+        public static void WriteToNode_Xml(
+            IQuestStageGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
             if ((translationMask?.GetShouldTranslate((int)QuestStage_FieldIndex.Stage) ?? true))
             {
                 UInt16XmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Stage),
                     item: item.Stage,
                     fieldIndex: (int)QuestStage_FieldIndex.Stage,
@@ -1740,7 +1754,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)QuestStage_FieldIndex.LogEntries) ?? true))
             {
                 ListXmlTranslation<LogEntry>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.LogEntries),
                     item: item.LogEntries,
                     fieldIndex: (int)QuestStage_FieldIndex.LogEntries,
@@ -1758,7 +1772,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     );
             }
         }
-        #endregion
 
         #endregion
 

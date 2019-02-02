@@ -50,43 +50,40 @@ namespace Mutagen.Bethesda.Generation
             {
                 fg.AppendLine($"ErrorMaskBuilder errorMaskBuilder = null;");
                 fg.AppendLine($"var ret = new {obj.Name}();");
-                fg.AppendLine("using (new FolderCleaner(dir, FolderCleaner.CleanType.AccessTime))");
-                using (new BraceWrapper(fg))
+                foreach (var field in obj.IterateFields())
                 {
-                    foreach (var field in obj.IterateFields())
+                    if (!(field is LoquiType loqui))
                     {
-                        if (!(field is LoquiType loqui))
-                        {
-                            throw new ArgumentException();
-                        }
-                        switch (loqui.TargetObjectGeneration.GetObjectType())
-                        {
-                            case ObjectType.Record:
-                                using (var args = new ArgsWrapper(fg,
-                                    $"ret.{field.Name}.CopyFieldsFrom({loqui.TypeName}.Create_Xml",
-                                    suffixLine: ");")
-                                {
-                                    SemiColon = false
-                                })
-                                {
-                                    args.Add($"path: Path.Combine(dir.Path, \"{field.Name}.xml\")");
-                                    args.Add($"errorMask: errorMaskBuilder");
-                                    args.Add($"translationMask: null");
-                                }
-                                break;
-                            case ObjectType.Group:
-                                if (!loqui.TryGetSpecificationAsObject("T", out var subObj)) continue;
-                                using (var args = new ArgsWrapper(fg,
-                                    $"await ret.{field.Name}.Create_Xml_Folder<{subObj.Name}>"))
-                                {
-                                    args.Add($"dir: new DirectoryPath(Path.Combine(dir.Path, nameof({field.Name})))");
-                                    args.Add($"errorMask: errorMaskBuilder");
-                                    args.Add($"index: (int){field.IndexEnumName}");
-                                }
-                                break;
-                            default:
-                                break;
-                        }
+                        throw new ArgumentException();
+                    }
+                    switch (loqui.TargetObjectGeneration.GetObjectType())
+                    {
+                        case ObjectType.Record:
+                            using (var args = new ArgsWrapper(fg,
+                                $"ret.{field.Name}.CopyFieldsFrom({loqui.TypeName}.Create_Xml",
+                                suffixLine: ");")
+                            {
+                                SemiColon = false
+                            })
+                            {
+                                args.Add($"path: Path.Combine(dir.Path, \"{field.Name}.xml\")");
+                                args.Add($"errorMask: errorMaskBuilder");
+                                args.Add($"translationMask: null");
+                            }
+                            break;
+                        case ObjectType.Group:
+                            if (!loqui.TryGetSpecificationAsObject("T", out var subObj)) continue;
+                            using (var args = new ArgsWrapper(fg,
+                                $"await ret.{field.Name}.Create_Xml_Folder<{subObj.Name}>"))
+                            {
+                                args.Add($"dir: dir");
+                                args.Add($"name: nameof({field.Name})");
+                                args.Add($"errorMask: errorMaskBuilder");
+                                args.Add($"index: (int){field.IndexEnumName}");
+                            }
+                            break;
+                        default:
+                            break;
                     }
                 }
                 fg.AppendLine("return (ret, null);");

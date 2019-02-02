@@ -1466,7 +1466,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Relation_Mask<bool> ret)
         {
             if (rhs == null) return;
-            ret.Faction = item.Faction == rhs.Faction;
+            ret.Faction = item.Faction_Property.FormKey == rhs.Faction_Property.FormKey;
             ret.Modifier = item.Modifier == rhs.Modifier;
         }
 
@@ -1557,10 +1557,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.Relation");
             }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        #endregion
+
+        public static void WriteToNode_Xml(
+            IRelationGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
             if ((translationMask?.GetShouldTranslate((int)Relation_FieldIndex.Faction) ?? true))
             {
                 FormKeyXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Faction),
                     item: item.Faction_Property?.FormKey,
                     fieldIndex: (int)Relation_FieldIndex.Faction,
@@ -1569,14 +1583,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)Relation_FieldIndex.Modifier) ?? true))
             {
                 Int32XmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Modifier),
                     item: item.Modifier,
                     fieldIndex: (int)Relation_FieldIndex.Modifier,
                     errorMask: errorMask);
             }
         }
-        #endregion
 
         #endregion
 

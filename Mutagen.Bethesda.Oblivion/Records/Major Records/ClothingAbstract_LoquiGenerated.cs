@@ -454,6 +454,117 @@ namespace Mutagen.Bethesda.Oblivion
 
 
         #region Xml Translation
+        #region Xml Create
+        [DebuggerStepThrough]
+        public new static ClothingAbstract Create_Xml(
+            XElement node,
+            ClothingAbstract_TranslationMask translationMask = null)
+        {
+            return Create_Xml(
+                node: node,
+                errorMask: null,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        [DebuggerStepThrough]
+        public static ClothingAbstract Create_Xml(
+            XElement node,
+            out ClothingAbstract_ErrorMask errorMask,
+            bool doMasks = true,
+            ClothingAbstract_TranslationMask translationMask = null)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            var ret = Create_Xml(
+                node: node,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask.GetCrystal());
+            errorMask = ClothingAbstract_ErrorMask.Factory(errorMaskBuilder);
+            return ret;
+        }
+
+        public static ClothingAbstract Create_Xml(
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            ClothingAbstract ret;
+            if (!LoquiXmlTranslation.Instance.TryCreate(node, out ret, errorMask, translationMask))
+            {
+                throw new ArgumentException($"Unknown ClothingAbstract subclass: {node.Name.LocalName}");
+            }
+            return ret;
+        }
+
+        public static ClothingAbstract Create_Xml(
+            string path,
+            ClothingAbstract_TranslationMask translationMask = null)
+        {
+            var node = XDocument.Load(path).Root;
+            return Create_Xml(
+                node: node,
+                translationMask: translationMask);
+        }
+
+        public static ClothingAbstract Create_Xml(
+            string path,
+            out ClothingAbstract_ErrorMask errorMask,
+            ClothingAbstract_TranslationMask translationMask = null)
+        {
+            var node = XDocument.Load(path).Root;
+            return Create_Xml(
+                node: node,
+                errorMask: out errorMask,
+                translationMask: translationMask);
+        }
+
+        public static ClothingAbstract Create_Xml(
+            string path,
+            ErrorMaskBuilder errorMask,
+            ClothingAbstract_TranslationMask translationMask = null)
+        {
+            var node = XDocument.Load(path).Root;
+            return Create_Xml(
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        public static ClothingAbstract Create_Xml(
+            Stream stream,
+            ClothingAbstract_TranslationMask translationMask = null)
+        {
+            var node = XDocument.Load(stream).Root;
+            return Create_Xml(
+                node: node,
+                translationMask: translationMask);
+        }
+
+        public static ClothingAbstract Create_Xml(
+            Stream stream,
+            out ClothingAbstract_ErrorMask errorMask,
+            ClothingAbstract_TranslationMask translationMask = null)
+        {
+            var node = XDocument.Load(stream).Root;
+            return Create_Xml(
+                node: node,
+                errorMask: out errorMask,
+                translationMask: translationMask);
+        }
+
+        public static ClothingAbstract Create_Xml(
+            Stream stream,
+            ErrorMaskBuilder errorMask,
+            ClothingAbstract_TranslationMask translationMask = null)
+        {
+            var node = XDocument.Load(stream).Root;
+            return Create_Xml(
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        #endregion
+
         #region Xml Copy In
         public override void CopyIn_Xml(
             XElement node,
@@ -2903,8 +3014,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (rhs == null) return;
             ret.Name = item.Name_IsSet == rhs.Name_IsSet && object.Equals(item.Name, rhs.Name);
-            ret.Script = item.Script_Property.Equals(rhs.Script_Property, (l, r) => l == r);
-            ret.Enchantment = item.Enchantment_Property.Equals(rhs.Enchantment_Property, (l, r) => l == r);
+            ret.Script = item.Script_Property.FormKey == rhs.Script_Property.FormKey;
+            ret.Enchantment = item.Enchantment_Property.FormKey == rhs.Enchantment_Property.FormKey;
             ret.EnchantmentPoints = item.EnchantmentPoints_IsSet == rhs.EnchantmentPoints_IsSet && item.EnchantmentPoints == rhs.EnchantmentPoints;
             ret.BipedFlags = item.BipedFlags == rhs.BipedFlags;
             ret.Flags = item.Flags == rhs.Flags;
@@ -3118,11 +3229,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.ClothingAbstract");
             }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        #endregion
+
+        public static void WriteToNode_Xml(
+            IClothingAbstractGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            ItemAbstractCommon.WriteToNode_Xml(
+                item: item,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
             if (item.Name_IsSet
                 && (translationMask?.GetShouldTranslate((int)ClothingAbstract_FieldIndex.Name) ?? true))
             {
                 StringXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Name),
                     item: item.Name,
                     fieldIndex: (int)ClothingAbstract_FieldIndex.Name,
@@ -3132,7 +3262,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)ClothingAbstract_FieldIndex.Script) ?? true))
             {
                 FormKeyXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Script),
                     item: item.Script_Property?.FormKey,
                     fieldIndex: (int)ClothingAbstract_FieldIndex.Script,
@@ -3142,7 +3272,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)ClothingAbstract_FieldIndex.Enchantment) ?? true))
             {
                 FormKeyXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Enchantment),
                     item: item.Enchantment_Property?.FormKey,
                     fieldIndex: (int)ClothingAbstract_FieldIndex.Enchantment,
@@ -3152,7 +3282,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)ClothingAbstract_FieldIndex.EnchantmentPoints) ?? true))
             {
                 UInt16XmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.EnchantmentPoints),
                     item: item.EnchantmentPoints,
                     fieldIndex: (int)ClothingAbstract_FieldIndex.EnchantmentPoints,
@@ -3161,7 +3291,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)ClothingAbstract_FieldIndex.BipedFlags) ?? true))
             {
                 EnumXmlTranslation<BipedFlag>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.BipedFlags),
                     item: item.BipedFlags,
                     fieldIndex: (int)ClothingAbstract_FieldIndex.BipedFlags,
@@ -3170,7 +3300,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)ClothingAbstract_FieldIndex.Flags) ?? true))
             {
                 EnumXmlTranslation<EquipmentFlag>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Flags),
                     item: item.Flags,
                     fieldIndex: (int)ClothingAbstract_FieldIndex.Flags,
@@ -3180,7 +3310,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)ClothingAbstract_FieldIndex.MaleBipedModel) ?? true))
             {
                 LoquiXmlTranslation<Model>.Instance.Write(
-                    node: elem,
+                    node: node,
                     item: item.MaleBipedModel,
                     name: nameof(item.MaleBipedModel),
                     fieldIndex: (int)ClothingAbstract_FieldIndex.MaleBipedModel,
@@ -3191,7 +3321,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)ClothingAbstract_FieldIndex.MaleWorldModel) ?? true))
             {
                 LoquiXmlTranslation<Model>.Instance.Write(
-                    node: elem,
+                    node: node,
                     item: item.MaleWorldModel,
                     name: nameof(item.MaleWorldModel),
                     fieldIndex: (int)ClothingAbstract_FieldIndex.MaleWorldModel,
@@ -3202,7 +3332,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)ClothingAbstract_FieldIndex.MaleIcon) ?? true))
             {
                 StringXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.MaleIcon),
                     item: item.MaleIcon,
                     fieldIndex: (int)ClothingAbstract_FieldIndex.MaleIcon,
@@ -3212,7 +3342,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)ClothingAbstract_FieldIndex.FemaleBipedModel) ?? true))
             {
                 LoquiXmlTranslation<Model>.Instance.Write(
-                    node: elem,
+                    node: node,
                     item: item.FemaleBipedModel,
                     name: nameof(item.FemaleBipedModel),
                     fieldIndex: (int)ClothingAbstract_FieldIndex.FemaleBipedModel,
@@ -3223,7 +3353,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)ClothingAbstract_FieldIndex.FemaleWorldModel) ?? true))
             {
                 LoquiXmlTranslation<Model>.Instance.Write(
-                    node: elem,
+                    node: node,
                     item: item.FemaleWorldModel,
                     name: nameof(item.FemaleWorldModel),
                     fieldIndex: (int)ClothingAbstract_FieldIndex.FemaleWorldModel,
@@ -3234,14 +3364,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)ClothingAbstract_FieldIndex.FemaleIcon) ?? true))
             {
                 StringXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.FemaleIcon),
                     item: item.FemaleIcon,
                     fieldIndex: (int)ClothingAbstract_FieldIndex.FemaleIcon,
                     errorMask: errorMask);
             }
         }
-        #endregion
 
         #endregion
 

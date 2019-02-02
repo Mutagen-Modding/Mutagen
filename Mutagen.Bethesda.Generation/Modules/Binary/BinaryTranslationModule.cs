@@ -16,8 +16,8 @@ namespace Mutagen.Bethesda.Generation
     public class BinaryTranslationModule : TranslationModule<BinaryTranslationGeneration>
     {
         public override string Namespace => "Mutagen.Bethesda.Binary.";
-
         public override string ModuleNickname => "Binary";
+        public override bool GenerateAbstractCreates => false;
 
         public BinaryTranslationModule(LoquiGenerator gen)
             : base(gen)

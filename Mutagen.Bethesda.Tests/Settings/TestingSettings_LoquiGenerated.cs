@@ -1915,10 +1915,24 @@ namespace Mutagen.Bethesda.Tests.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Tests.TestingSettings");
             }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        #endregion
+
+        public static void WriteToNode_Xml(
+            ITestingSettingsGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
             if ((translationMask?.GetShouldTranslate((int)TestingSettings_FieldIndex.TestNormal) ?? true))
             {
                 BooleanXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.TestNormal),
                     item: item.TestNormal,
                     fieldIndex: (int)TestingSettings_FieldIndex.TestNormal,
@@ -1927,7 +1941,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             if ((translationMask?.GetShouldTranslate((int)TestingSettings_FieldIndex.TestObservable) ?? true))
             {
                 BooleanXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.TestObservable),
                     item: item.TestObservable,
                     fieldIndex: (int)TestingSettings_FieldIndex.TestObservable,
@@ -1936,7 +1950,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             if ((translationMask?.GetShouldTranslate((int)TestingSettings_FieldIndex.TestFolder) ?? true))
             {
                 BooleanXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.TestFolder),
                     item: item.TestFolder,
                     fieldIndex: (int)TestingSettings_FieldIndex.TestFolder,
@@ -1945,7 +1959,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             if ((translationMask?.GetShouldTranslate((int)TestingSettings_FieldIndex.ReuseCaches) ?? true))
             {
                 BooleanXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.ReuseCaches),
                     item: item.ReuseCaches,
                     fieldIndex: (int)TestingSettings_FieldIndex.ReuseCaches,
@@ -1954,7 +1968,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             if ((translationMask?.GetShouldTranslate((int)TestingSettings_FieldIndex.DeleteCachesAfter) ?? true))
             {
                 BooleanXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.DeleteCachesAfter),
                     item: item.DeleteCachesAfter,
                     fieldIndex: (int)TestingSettings_FieldIndex.DeleteCachesAfter,
@@ -1963,7 +1977,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             if ((translationMask?.GetShouldTranslate((int)TestingSettings_FieldIndex.TestGroupMasks) ?? true))
             {
                 BooleanXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.TestGroupMasks),
                     item: item.TestGroupMasks,
                     fieldIndex: (int)TestingSettings_FieldIndex.TestGroupMasks,
@@ -1972,7 +1986,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             if ((translationMask?.GetShouldTranslate((int)TestingSettings_FieldIndex.TestModList) ?? true))
             {
                 BooleanXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.TestModList),
                     item: item.TestModList,
                     fieldIndex: (int)TestingSettings_FieldIndex.TestModList,
@@ -1981,7 +1995,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             if ((translationMask?.GetShouldTranslate((int)TestingSettings_FieldIndex.TestFlattenedMod) ?? true))
             {
                 BooleanXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.TestFlattenedMod),
                     item: item.TestFlattenedMod,
                     fieldIndex: (int)TestingSettings_FieldIndex.TestFlattenedMod,
@@ -1990,7 +2004,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             if ((translationMask?.GetShouldTranslate((int)TestingSettings_FieldIndex.DataFolder) ?? true))
             {
                 StringXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.DataFolder),
                     item: item.DataFolder,
                     fieldIndex: (int)TestingSettings_FieldIndex.DataFolder,
@@ -1999,7 +2013,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             if ((translationMask?.GetShouldTranslate((int)TestingSettings_FieldIndex.OblivionESM) ?? true))
             {
                 LoquiXmlTranslation<Passthrough>.Instance.Write(
-                    node: elem,
+                    node: node,
                     item: item.OblivionESM,
                     name: nameof(item.OblivionESM),
                     fieldIndex: (int)TestingSettings_FieldIndex.OblivionESM,
@@ -2009,7 +2023,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             if ((translationMask?.GetShouldTranslate((int)TestingSettings_FieldIndex.KnightsESP) ?? true))
             {
                 LoquiXmlTranslation<Passthrough>.Instance.Write(
-                    node: elem,
+                    node: node,
                     item: item.KnightsESP,
                     name: nameof(item.KnightsESP),
                     fieldIndex: (int)TestingSettings_FieldIndex.KnightsESP,
@@ -2017,7 +2031,6 @@ namespace Mutagen.Bethesda.Tests.Internals
                     translationMask: translationMask?.GetSubCrystal((int)TestingSettings_FieldIndex.KnightsESP));
             }
         }
-        #endregion
 
         #endregion
 

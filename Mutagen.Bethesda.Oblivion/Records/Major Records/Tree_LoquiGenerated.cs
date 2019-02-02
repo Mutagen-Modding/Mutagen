@@ -3093,11 +3093,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.Tree");
             }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        #endregion
+
+        public static void WriteToNode_Xml(
+            ITreeGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            MajorRecordCommon.WriteToNode_Xml(
+                item: item,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
             if (item.Model_IsSet
                 && (translationMask?.GetShouldTranslate((int)Tree_FieldIndex.Model) ?? true))
             {
                 LoquiXmlTranslation<Model>.Instance.Write(
-                    node: elem,
+                    node: node,
                     item: item.Model,
                     name: nameof(item.Model),
                     fieldIndex: (int)Tree_FieldIndex.Model,
@@ -3108,7 +3127,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)Tree_FieldIndex.Icon) ?? true))
             {
                 StringXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Icon),
                     item: item.Icon,
                     fieldIndex: (int)Tree_FieldIndex.Icon,
@@ -3118,7 +3137,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)Tree_FieldIndex.SpeedTreeSeeds) ?? true))
             {
                 ListXmlTranslation<UInt32>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.SpeedTreeSeeds),
                     item: item.SpeedTreeSeeds,
                     fieldIndex: (int)Tree_FieldIndex.SpeedTreeSeeds,
@@ -3137,7 +3156,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)Tree_FieldIndex.LeafCurvature) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.LeafCurvature),
                     item: item.LeafCurvature,
                     fieldIndex: (int)Tree_FieldIndex.LeafCurvature,
@@ -3146,7 +3165,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)Tree_FieldIndex.MinimumLeafAngle) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.MinimumLeafAngle),
                     item: item.MinimumLeafAngle,
                     fieldIndex: (int)Tree_FieldIndex.MinimumLeafAngle,
@@ -3155,7 +3174,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)Tree_FieldIndex.MaximumLeafAngle) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.MaximumLeafAngle),
                     item: item.MaximumLeafAngle,
                     fieldIndex: (int)Tree_FieldIndex.MaximumLeafAngle,
@@ -3164,7 +3183,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)Tree_FieldIndex.BranchDimmingValue) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.BranchDimmingValue),
                     item: item.BranchDimmingValue,
                     fieldIndex: (int)Tree_FieldIndex.BranchDimmingValue,
@@ -3173,7 +3192,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)Tree_FieldIndex.LeafDimmingValue) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.LeafDimmingValue),
                     item: item.LeafDimmingValue,
                     fieldIndex: (int)Tree_FieldIndex.LeafDimmingValue,
@@ -3182,7 +3201,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)Tree_FieldIndex.ShadowRadius) ?? true))
             {
                 Int32XmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.ShadowRadius),
                     item: item.ShadowRadius,
                     fieldIndex: (int)Tree_FieldIndex.ShadowRadius,
@@ -3191,7 +3210,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)Tree_FieldIndex.RockingSpeed) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.RockingSpeed),
                     item: item.RockingSpeed,
                     fieldIndex: (int)Tree_FieldIndex.RockingSpeed,
@@ -3200,7 +3219,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)Tree_FieldIndex.RustleSpeed) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.RustleSpeed),
                     item: item.RustleSpeed,
                     fieldIndex: (int)Tree_FieldIndex.RustleSpeed,
@@ -3209,7 +3228,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)Tree_FieldIndex.BillboardWidth) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.BillboardWidth),
                     item: item.BillboardWidth,
                     fieldIndex: (int)Tree_FieldIndex.BillboardWidth,
@@ -3218,14 +3237,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)Tree_FieldIndex.BillboardHeight) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.BillboardHeight),
                     item: item.BillboardHeight,
                     fieldIndex: (int)Tree_FieldIndex.BillboardHeight,
                     errorMask: errorMask);
             }
         }
-        #endregion
 
         #endregion
 

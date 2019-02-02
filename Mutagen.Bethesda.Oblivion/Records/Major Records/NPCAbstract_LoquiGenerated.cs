@@ -119,6 +119,117 @@ namespace Mutagen.Bethesda.Oblivion
 
 
         #region Xml Translation
+        #region Xml Create
+        [DebuggerStepThrough]
+        public new static NPCAbstract Create_Xml(
+            XElement node,
+            NPCAbstract_TranslationMask translationMask = null)
+        {
+            return Create_Xml(
+                node: node,
+                errorMask: null,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        [DebuggerStepThrough]
+        public static NPCAbstract Create_Xml(
+            XElement node,
+            out NPCAbstract_ErrorMask errorMask,
+            bool doMasks = true,
+            NPCAbstract_TranslationMask translationMask = null)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            var ret = Create_Xml(
+                node: node,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask.GetCrystal());
+            errorMask = NPCAbstract_ErrorMask.Factory(errorMaskBuilder);
+            return ret;
+        }
+
+        public static NPCAbstract Create_Xml(
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            NPCAbstract ret;
+            if (!LoquiXmlTranslation.Instance.TryCreate(node, out ret, errorMask, translationMask))
+            {
+                throw new ArgumentException($"Unknown NPCAbstract subclass: {node.Name.LocalName}");
+            }
+            return ret;
+        }
+
+        public static NPCAbstract Create_Xml(
+            string path,
+            NPCAbstract_TranslationMask translationMask = null)
+        {
+            var node = XDocument.Load(path).Root;
+            return Create_Xml(
+                node: node,
+                translationMask: translationMask);
+        }
+
+        public static NPCAbstract Create_Xml(
+            string path,
+            out NPCAbstract_ErrorMask errorMask,
+            NPCAbstract_TranslationMask translationMask = null)
+        {
+            var node = XDocument.Load(path).Root;
+            return Create_Xml(
+                node: node,
+                errorMask: out errorMask,
+                translationMask: translationMask);
+        }
+
+        public static NPCAbstract Create_Xml(
+            string path,
+            ErrorMaskBuilder errorMask,
+            NPCAbstract_TranslationMask translationMask = null)
+        {
+            var node = XDocument.Load(path).Root;
+            return Create_Xml(
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        public static NPCAbstract Create_Xml(
+            Stream stream,
+            NPCAbstract_TranslationMask translationMask = null)
+        {
+            var node = XDocument.Load(stream).Root;
+            return Create_Xml(
+                node: node,
+                translationMask: translationMask);
+        }
+
+        public static NPCAbstract Create_Xml(
+            Stream stream,
+            out NPCAbstract_ErrorMask errorMask,
+            NPCAbstract_TranslationMask translationMask = null)
+        {
+            var node = XDocument.Load(stream).Root;
+            return Create_Xml(
+                node: node,
+                errorMask: out errorMask,
+                translationMask: translationMask);
+        }
+
+        public static NPCAbstract Create_Xml(
+            Stream stream,
+            ErrorMaskBuilder errorMask,
+            NPCAbstract_TranslationMask translationMask = null)
+        {
+            var node = XDocument.Load(stream).Root;
+            return Create_Xml(
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        #endregion
+
         #region Xml Copy In
         public override void CopyIn_Xml(
             XElement node,
@@ -1129,8 +1240,26 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.NPCAbstract");
             }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
         }
         #endregion
+
+        public static void WriteToNode_Xml(
+            INPCAbstractGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            NPCSpawnCommon.WriteToNode_Xml(
+                item: item,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
 
         #endregion
 

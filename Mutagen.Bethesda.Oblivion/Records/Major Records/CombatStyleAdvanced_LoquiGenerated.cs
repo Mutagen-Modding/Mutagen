@@ -3774,10 +3774,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.CombatStyleAdvanced");
             }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        #endregion
+
+        public static void WriteToNode_Xml(
+            ICombatStyleAdvancedGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
             if ((translationMask?.GetShouldTranslate((int)CombatStyleAdvanced_FieldIndex.DodgeFatigueModMult) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.DodgeFatigueModMult),
                     item: item.DodgeFatigueModMult,
                     fieldIndex: (int)CombatStyleAdvanced_FieldIndex.DodgeFatigueModMult,
@@ -3786,7 +3800,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)CombatStyleAdvanced_FieldIndex.DodgeFatigueModBase) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.DodgeFatigueModBase),
                     item: item.DodgeFatigueModBase,
                     fieldIndex: (int)CombatStyleAdvanced_FieldIndex.DodgeFatigueModBase,
@@ -3795,7 +3809,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)CombatStyleAdvanced_FieldIndex.EncumbSpeedModBase) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.EncumbSpeedModBase),
                     item: item.EncumbSpeedModBase,
                     fieldIndex: (int)CombatStyleAdvanced_FieldIndex.EncumbSpeedModBase,
@@ -3804,7 +3818,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)CombatStyleAdvanced_FieldIndex.EncumbSpeedModMult) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.EncumbSpeedModMult),
                     item: item.EncumbSpeedModMult,
                     fieldIndex: (int)CombatStyleAdvanced_FieldIndex.EncumbSpeedModMult,
@@ -3813,7 +3827,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)CombatStyleAdvanced_FieldIndex.DodgeWhileUnderAttackMult) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.DodgeWhileUnderAttackMult),
                     item: item.DodgeWhileUnderAttackMult,
                     fieldIndex: (int)CombatStyleAdvanced_FieldIndex.DodgeWhileUnderAttackMult,
@@ -3822,7 +3836,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)CombatStyleAdvanced_FieldIndex.DodgeNotUnderAttackMult) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.DodgeNotUnderAttackMult),
                     item: item.DodgeNotUnderAttackMult,
                     fieldIndex: (int)CombatStyleAdvanced_FieldIndex.DodgeNotUnderAttackMult,
@@ -3831,7 +3845,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)CombatStyleAdvanced_FieldIndex.DodgeBackWhileUnderAttackMult) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.DodgeBackWhileUnderAttackMult),
                     item: item.DodgeBackWhileUnderAttackMult,
                     fieldIndex: (int)CombatStyleAdvanced_FieldIndex.DodgeBackWhileUnderAttackMult,
@@ -3840,7 +3854,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)CombatStyleAdvanced_FieldIndex.DodgeBackNotUnderAttackMult) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.DodgeBackNotUnderAttackMult),
                     item: item.DodgeBackNotUnderAttackMult,
                     fieldIndex: (int)CombatStyleAdvanced_FieldIndex.DodgeBackNotUnderAttackMult,
@@ -3849,7 +3863,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)CombatStyleAdvanced_FieldIndex.DodgeForwardWhileUnderAttackMult) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.DodgeForwardWhileUnderAttackMult),
                     item: item.DodgeForwardWhileUnderAttackMult,
                     fieldIndex: (int)CombatStyleAdvanced_FieldIndex.DodgeForwardWhileUnderAttackMult,
@@ -3858,7 +3872,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)CombatStyleAdvanced_FieldIndex.DodgeForwardNotUnderAttackMult) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.DodgeForwardNotUnderAttackMult),
                     item: item.DodgeForwardNotUnderAttackMult,
                     fieldIndex: (int)CombatStyleAdvanced_FieldIndex.DodgeForwardNotUnderAttackMult,
@@ -3867,7 +3881,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)CombatStyleAdvanced_FieldIndex.BlockSkillModifierMult) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.BlockSkillModifierMult),
                     item: item.BlockSkillModifierMult,
                     fieldIndex: (int)CombatStyleAdvanced_FieldIndex.BlockSkillModifierMult,
@@ -3876,7 +3890,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)CombatStyleAdvanced_FieldIndex.BlockSkillModifierBase) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.BlockSkillModifierBase),
                     item: item.BlockSkillModifierBase,
                     fieldIndex: (int)CombatStyleAdvanced_FieldIndex.BlockSkillModifierBase,
@@ -3885,7 +3899,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)CombatStyleAdvanced_FieldIndex.BlockWhileUnderAttackMult) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.BlockWhileUnderAttackMult),
                     item: item.BlockWhileUnderAttackMult,
                     fieldIndex: (int)CombatStyleAdvanced_FieldIndex.BlockWhileUnderAttackMult,
@@ -3894,7 +3908,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)CombatStyleAdvanced_FieldIndex.BlockNotUnderAttackMult) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.BlockNotUnderAttackMult),
                     item: item.BlockNotUnderAttackMult,
                     fieldIndex: (int)CombatStyleAdvanced_FieldIndex.BlockNotUnderAttackMult,
@@ -3903,7 +3917,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)CombatStyleAdvanced_FieldIndex.AttackSkillModifierMult) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.AttackSkillModifierMult),
                     item: item.AttackSkillModifierMult,
                     fieldIndex: (int)CombatStyleAdvanced_FieldIndex.AttackSkillModifierMult,
@@ -3912,7 +3926,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)CombatStyleAdvanced_FieldIndex.AttackSkillModifierBase) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.AttackSkillModifierBase),
                     item: item.AttackSkillModifierBase,
                     fieldIndex: (int)CombatStyleAdvanced_FieldIndex.AttackSkillModifierBase,
@@ -3921,7 +3935,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)CombatStyleAdvanced_FieldIndex.AttackWhileUnderAttackMult) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.AttackWhileUnderAttackMult),
                     item: item.AttackWhileUnderAttackMult,
                     fieldIndex: (int)CombatStyleAdvanced_FieldIndex.AttackWhileUnderAttackMult,
@@ -3930,7 +3944,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)CombatStyleAdvanced_FieldIndex.AttackNotUnderAttackMult) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.AttackNotUnderAttackMult),
                     item: item.AttackNotUnderAttackMult,
                     fieldIndex: (int)CombatStyleAdvanced_FieldIndex.AttackNotUnderAttackMult,
@@ -3939,7 +3953,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)CombatStyleAdvanced_FieldIndex.AttackDuringBlockMult) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.AttackDuringBlockMult),
                     item: item.AttackDuringBlockMult,
                     fieldIndex: (int)CombatStyleAdvanced_FieldIndex.AttackDuringBlockMult,
@@ -3948,7 +3962,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)CombatStyleAdvanced_FieldIndex.PowerAttackFatigueModBase) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.PowerAttackFatigueModBase),
                     item: item.PowerAttackFatigueModBase,
                     fieldIndex: (int)CombatStyleAdvanced_FieldIndex.PowerAttackFatigueModBase,
@@ -3957,14 +3971,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)CombatStyleAdvanced_FieldIndex.PowerAttackFatigueModMult) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.PowerAttackFatigueModMult),
                     item: item.PowerAttackFatigueModMult,
                     fieldIndex: (int)CombatStyleAdvanced_FieldIndex.PowerAttackFatigueModMult,
                     errorMask: errorMask);
             }
         }
-        #endregion
 
         #endregion
 

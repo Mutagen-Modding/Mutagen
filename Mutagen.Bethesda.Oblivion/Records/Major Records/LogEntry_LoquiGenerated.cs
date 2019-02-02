@@ -2149,11 +2149,25 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.LogEntry");
             }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        #endregion
+
+        public static void WriteToNode_Xml(
+            ILogEntryGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
             if (item.Flags_IsSet
                 && (translationMask?.GetShouldTranslate((int)LogEntry_FieldIndex.Flags) ?? true))
             {
                 EnumXmlTranslation<LogEntry.Flag>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Flags),
                     item: item.Flags,
                     fieldIndex: (int)LogEntry_FieldIndex.Flags,
@@ -2163,7 +2177,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)LogEntry_FieldIndex.Conditions) ?? true))
             {
                 ListXmlTranslation<Condition>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Conditions),
                     item: item.Conditions,
                     fieldIndex: (int)LogEntry_FieldIndex.Conditions,
@@ -2184,7 +2198,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)LogEntry_FieldIndex.Entry) ?? true))
             {
                 StringXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Entry),
                     item: item.Entry,
                     fieldIndex: (int)LogEntry_FieldIndex.Entry,
@@ -2194,7 +2208,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)LogEntry_FieldIndex.ResultScript) ?? true))
             {
                 LoquiXmlTranslation<ScriptFields>.Instance.Write(
-                    node: elem,
+                    node: node,
                     item: item.ResultScript,
                     name: nameof(item.ResultScript),
                     fieldIndex: (int)LogEntry_FieldIndex.ResultScript,
@@ -2202,7 +2216,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     translationMask: translationMask?.GetSubCrystal((int)LogEntry_FieldIndex.ResultScript));
             }
         }
-        #endregion
 
         #endregion
 

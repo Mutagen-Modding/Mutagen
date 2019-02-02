@@ -3817,11 +3817,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             ret.MusicType = item.MusicType_IsSet == rhs.MusicType_IsSet && item.MusicType == rhs.MusicType;
             ret.WaterHeight = item.WaterHeight_IsSet == rhs.WaterHeight_IsSet && item.WaterHeight == rhs.WaterHeight;
-            ret.Climate = item.Climate_Property.Equals(rhs.Climate_Property, (l, r) => l == r);
-            ret.Water = item.Water_Property.Equals(rhs.Water_Property, (l, r) => l == r);
-            ret.Owner = item.Owner_Property.Equals(rhs.Owner_Property, (l, r) => l == r);
+            ret.Climate = item.Climate_Property.FormKey == rhs.Climate_Property.FormKey;
+            ret.Water = item.Water_Property.FormKey == rhs.Water_Property.FormKey;
+            ret.Owner = item.Owner_Property.FormKey == rhs.Owner_Property.FormKey;
             ret.FactionRank = item.FactionRank_IsSet == rhs.FactionRank_IsSet && item.FactionRank == rhs.FactionRank;
-            ret.GlobalVariable = item.GlobalVariable_Property.Equals(rhs.GlobalVariable_Property, (l, r) => l == r);
+            ret.GlobalVariable = item.GlobalVariable_Property.FormKey == rhs.GlobalVariable_Property.FormKey;
             ret.PathGrid = IHasBeenSetExt.LoquiEqualsHelper(item.PathGrid_IsSet, rhs.PathGrid_IsSet, item.PathGrid, rhs.PathGrid, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
             ret.Landscape = IHasBeenSetExt.LoquiEqualsHelper(item.Landscape_IsSet, rhs.Landscape_IsSet, item.Landscape, rhs.Landscape, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
             if (item.Persistent.HasBeenSet == rhs.Persistent.HasBeenSet)
@@ -4190,11 +4190,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.Cell");
             }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        #endregion
+
+        public static void WriteToNode_Xml(
+            ICellGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            PlaceCommon.WriteToNode_Xml(
+                item: item,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
             if (item.Name_IsSet
                 && (translationMask?.GetShouldTranslate((int)Cell_FieldIndex.Name) ?? true))
             {
                 StringXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Name),
                     item: item.Name,
                     fieldIndex: (int)Cell_FieldIndex.Name,
@@ -4204,7 +4223,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)Cell_FieldIndex.Flags) ?? true))
             {
                 EnumXmlTranslation<Cell.Flag>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Flags),
                     item: item.Flags,
                     fieldIndex: (int)Cell_FieldIndex.Flags,
@@ -4214,7 +4233,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)Cell_FieldIndex.Grid) ?? true))
             {
                 P2IntXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Grid),
                     item: item.Grid,
                     fieldIndex: (int)Cell_FieldIndex.Grid,
@@ -4224,7 +4243,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)Cell_FieldIndex.Lighting) ?? true))
             {
                 LoquiXmlTranslation<CellLighting>.Instance.Write(
-                    node: elem,
+                    node: node,
                     item: item.Lighting,
                     name: nameof(item.Lighting),
                     fieldIndex: (int)Cell_FieldIndex.Lighting,
@@ -4235,7 +4254,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)Cell_FieldIndex.Regions) ?? true))
             {
                 ListXmlTranslation<FormIDLink<Region>>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Regions),
                     item: item.Regions,
                     fieldIndex: (int)Cell_FieldIndex.Regions,
@@ -4255,7 +4274,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)Cell_FieldIndex.MusicType) ?? true))
             {
                 EnumXmlTranslation<MusicType>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.MusicType),
                     item: item.MusicType,
                     fieldIndex: (int)Cell_FieldIndex.MusicType,
@@ -4265,7 +4284,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)Cell_FieldIndex.WaterHeight) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.WaterHeight),
                     item: item.WaterHeight,
                     fieldIndex: (int)Cell_FieldIndex.WaterHeight,
@@ -4275,7 +4294,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)Cell_FieldIndex.Climate) ?? true))
             {
                 FormKeyXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Climate),
                     item: item.Climate_Property?.FormKey,
                     fieldIndex: (int)Cell_FieldIndex.Climate,
@@ -4285,7 +4304,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)Cell_FieldIndex.Water) ?? true))
             {
                 FormKeyXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Water),
                     item: item.Water_Property?.FormKey,
                     fieldIndex: (int)Cell_FieldIndex.Water,
@@ -4295,7 +4314,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)Cell_FieldIndex.Owner) ?? true))
             {
                 FormKeyXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Owner),
                     item: item.Owner_Property?.FormKey,
                     fieldIndex: (int)Cell_FieldIndex.Owner,
@@ -4305,7 +4324,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)Cell_FieldIndex.FactionRank) ?? true))
             {
                 Int32XmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.FactionRank),
                     item: item.FactionRank,
                     fieldIndex: (int)Cell_FieldIndex.FactionRank,
@@ -4315,7 +4334,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)Cell_FieldIndex.GlobalVariable) ?? true))
             {
                 FormKeyXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.GlobalVariable),
                     item: item.GlobalVariable_Property?.FormKey,
                     fieldIndex: (int)Cell_FieldIndex.GlobalVariable,
@@ -4325,7 +4344,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)Cell_FieldIndex.PathGrid) ?? true))
             {
                 LoquiXmlTranslation<PathGrid>.Instance.Write(
-                    node: elem,
+                    node: node,
                     item: item.PathGrid,
                     name: nameof(item.PathGrid),
                     fieldIndex: (int)Cell_FieldIndex.PathGrid,
@@ -4336,7 +4355,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)Cell_FieldIndex.Landscape) ?? true))
             {
                 LoquiXmlTranslation<Landscape>.Instance.Write(
-                    node: elem,
+                    node: node,
                     item: item.Landscape,
                     name: nameof(item.Landscape),
                     fieldIndex: (int)Cell_FieldIndex.Landscape,
@@ -4347,7 +4366,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)Cell_FieldIndex.Persistent) ?? true))
             {
                 ListXmlTranslation<IPlaced>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Persistent),
                     item: item.Persistent,
                     fieldIndex: (int)Cell_FieldIndex.Persistent,
@@ -4368,7 +4387,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)Cell_FieldIndex.Temporary) ?? true))
             {
                 ListXmlTranslation<IPlaced>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Temporary),
                     item: item.Temporary,
                     fieldIndex: (int)Cell_FieldIndex.Temporary,
@@ -4389,7 +4408,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)Cell_FieldIndex.VisibleWhenDistant) ?? true))
             {
                 ListXmlTranslation<IPlaced>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.VisibleWhenDistant),
                     item: item.VisibleWhenDistant,
                     fieldIndex: (int)Cell_FieldIndex.VisibleWhenDistant,
@@ -4407,7 +4426,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     );
             }
         }
-        #endregion
 
         #endregion
 

@@ -5969,11 +5969,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.Weather");
             }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        #endregion
+
+        public static void WriteToNode_Xml(
+            IWeatherGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            MajorRecordCommon.WriteToNode_Xml(
+                item: item,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
             if (item.TextureLowerLayer_IsSet
                 && (translationMask?.GetShouldTranslate((int)Weather_FieldIndex.TextureLowerLayer) ?? true))
             {
                 StringXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.TextureLowerLayer),
                     item: item.TextureLowerLayer,
                     fieldIndex: (int)Weather_FieldIndex.TextureLowerLayer,
@@ -5983,7 +6002,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)Weather_FieldIndex.TextureUpperLayer) ?? true))
             {
                 StringXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.TextureUpperLayer),
                     item: item.TextureUpperLayer,
                     fieldIndex: (int)Weather_FieldIndex.TextureUpperLayer,
@@ -5993,7 +6012,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)Weather_FieldIndex.Model) ?? true))
             {
                 LoquiXmlTranslation<Model>.Instance.Write(
-                    node: elem,
+                    node: node,
                     item: item.Model,
                     name: nameof(item.Model),
                     fieldIndex: (int)Weather_FieldIndex.Model,
@@ -6004,7 +6023,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)Weather_FieldIndex.WeatherTypes) ?? true))
             {
                 ListXmlTranslation<WeatherType>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.WeatherTypes),
                     item: item.WeatherTypes,
                     fieldIndex: (int)Weather_FieldIndex.WeatherTypes,
@@ -6024,7 +6043,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.FogDayNear) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.FogDayNear),
                     item: item.FogDayNear,
                     fieldIndex: (int)Weather_FieldIndex.FogDayNear,
@@ -6033,7 +6052,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.FogDayFar) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.FogDayFar),
                     item: item.FogDayFar,
                     fieldIndex: (int)Weather_FieldIndex.FogDayFar,
@@ -6042,7 +6061,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.FogNightNear) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.FogNightNear),
                     item: item.FogNightNear,
                     fieldIndex: (int)Weather_FieldIndex.FogNightNear,
@@ -6051,7 +6070,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.FogNightFar) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.FogNightFar),
                     item: item.FogNightFar,
                     fieldIndex: (int)Weather_FieldIndex.FogNightFar,
@@ -6060,7 +6079,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.HdrEyeAdaptSpeed) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.HdrEyeAdaptSpeed),
                     item: item.HdrEyeAdaptSpeed,
                     fieldIndex: (int)Weather_FieldIndex.HdrEyeAdaptSpeed,
@@ -6069,7 +6088,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.HdrBlurRadius) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.HdrBlurRadius),
                     item: item.HdrBlurRadius,
                     fieldIndex: (int)Weather_FieldIndex.HdrBlurRadius,
@@ -6078,7 +6097,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.HdrBlurPasses) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.HdrBlurPasses),
                     item: item.HdrBlurPasses,
                     fieldIndex: (int)Weather_FieldIndex.HdrBlurPasses,
@@ -6087,7 +6106,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.HdrEmissiveMult) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.HdrEmissiveMult),
                     item: item.HdrEmissiveMult,
                     fieldIndex: (int)Weather_FieldIndex.HdrEmissiveMult,
@@ -6096,7 +6115,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.HdrTargetLum) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.HdrTargetLum),
                     item: item.HdrTargetLum,
                     fieldIndex: (int)Weather_FieldIndex.HdrTargetLum,
@@ -6105,7 +6124,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.HdrUpperLumClamp) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.HdrUpperLumClamp),
                     item: item.HdrUpperLumClamp,
                     fieldIndex: (int)Weather_FieldIndex.HdrUpperLumClamp,
@@ -6114,7 +6133,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.HdrBrightScale) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.HdrBrightScale),
                     item: item.HdrBrightScale,
                     fieldIndex: (int)Weather_FieldIndex.HdrBrightScale,
@@ -6123,7 +6142,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.HdrBrightClamp) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.HdrBrightClamp),
                     item: item.HdrBrightClamp,
                     fieldIndex: (int)Weather_FieldIndex.HdrBrightClamp,
@@ -6132,7 +6151,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.HdrLumRampNoTex) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.HdrLumRampNoTex),
                     item: item.HdrLumRampNoTex,
                     fieldIndex: (int)Weather_FieldIndex.HdrLumRampNoTex,
@@ -6141,7 +6160,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.HdrLumRampMin) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.HdrLumRampMin),
                     item: item.HdrLumRampMin,
                     fieldIndex: (int)Weather_FieldIndex.HdrLumRampMin,
@@ -6150,7 +6169,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.HdrLumRampMax) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.HdrLumRampMax),
                     item: item.HdrLumRampMax,
                     fieldIndex: (int)Weather_FieldIndex.HdrLumRampMax,
@@ -6159,7 +6178,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.HdrSunlightDimmer) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.HdrSunlightDimmer),
                     item: item.HdrSunlightDimmer,
                     fieldIndex: (int)Weather_FieldIndex.HdrSunlightDimmer,
@@ -6168,7 +6187,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.HdrGrassDimmer) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.HdrGrassDimmer),
                     item: item.HdrGrassDimmer,
                     fieldIndex: (int)Weather_FieldIndex.HdrGrassDimmer,
@@ -6177,7 +6196,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.HdrTreeDimmer) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.HdrTreeDimmer),
                     item: item.HdrTreeDimmer,
                     fieldIndex: (int)Weather_FieldIndex.HdrTreeDimmer,
@@ -6186,7 +6205,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.WindSpeed) ?? true))
             {
                 ByteXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.WindSpeed),
                     item: item.WindSpeed,
                     fieldIndex: (int)Weather_FieldIndex.WindSpeed,
@@ -6195,7 +6214,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.CloudSpeedLower) ?? true))
             {
                 ByteXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.CloudSpeedLower),
                     item: item.CloudSpeedLower,
                     fieldIndex: (int)Weather_FieldIndex.CloudSpeedLower,
@@ -6204,7 +6223,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.CloudSpeedUpper) ?? true))
             {
                 ByteXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.CloudSpeedUpper),
                     item: item.CloudSpeedUpper,
                     fieldIndex: (int)Weather_FieldIndex.CloudSpeedUpper,
@@ -6213,7 +6232,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.TransDelta) ?? true))
             {
                 ByteXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.TransDelta),
                     item: item.TransDelta,
                     fieldIndex: (int)Weather_FieldIndex.TransDelta,
@@ -6222,7 +6241,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.SunGlare) ?? true))
             {
                 ByteXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.SunGlare),
                     item: item.SunGlare,
                     fieldIndex: (int)Weather_FieldIndex.SunGlare,
@@ -6231,7 +6250,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.SunDamage) ?? true))
             {
                 ByteXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.SunDamage),
                     item: item.SunDamage,
                     fieldIndex: (int)Weather_FieldIndex.SunDamage,
@@ -6240,7 +6259,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.PrecipitationBeginFadeIn) ?? true))
             {
                 ByteXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.PrecipitationBeginFadeIn),
                     item: item.PrecipitationBeginFadeIn,
                     fieldIndex: (int)Weather_FieldIndex.PrecipitationBeginFadeIn,
@@ -6249,7 +6268,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.PrecipitationEndFadeOut) ?? true))
             {
                 ByteXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.PrecipitationEndFadeOut),
                     item: item.PrecipitationEndFadeOut,
                     fieldIndex: (int)Weather_FieldIndex.PrecipitationEndFadeOut,
@@ -6258,7 +6277,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.ThunderLightningBeginFadeIn) ?? true))
             {
                 ByteXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.ThunderLightningBeginFadeIn),
                     item: item.ThunderLightningBeginFadeIn,
                     fieldIndex: (int)Weather_FieldIndex.ThunderLightningBeginFadeIn,
@@ -6267,7 +6286,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.ThunderLightningEndFadeOut) ?? true))
             {
                 ByteXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.ThunderLightningEndFadeOut),
                     item: item.ThunderLightningEndFadeOut,
                     fieldIndex: (int)Weather_FieldIndex.ThunderLightningEndFadeOut,
@@ -6276,7 +6295,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.ThunderLightningFrequency) ?? true))
             {
                 ByteXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.ThunderLightningFrequency),
                     item: item.ThunderLightningFrequency,
                     fieldIndex: (int)Weather_FieldIndex.ThunderLightningFrequency,
@@ -6285,7 +6304,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.Classification) ?? true))
             {
                 EnumXmlTranslation<Weather.WeatherClassification>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Classification),
                     item: item.Classification,
                     fieldIndex: (int)Weather_FieldIndex.Classification,
@@ -6294,7 +6313,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.LightningColor) ?? true))
             {
                 ColorXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.LightningColor),
                     item: item.LightningColor,
                     fieldIndex: (int)Weather_FieldIndex.LightningColor,
@@ -6304,7 +6323,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)Weather_FieldIndex.Sounds) ?? true))
             {
                 ListXmlTranslation<WeatherSound>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Sounds),
                     item: item.Sounds,
                     fieldIndex: (int)Weather_FieldIndex.Sounds,
@@ -6322,7 +6341,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     );
             }
         }
-        #endregion
 
         #endregion
 

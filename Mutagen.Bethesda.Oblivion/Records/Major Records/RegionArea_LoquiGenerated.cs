@@ -1700,11 +1700,25 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.RegionArea");
             }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        #endregion
+
+        public static void WriteToNode_Xml(
+            IRegionAreaGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
             if (item.EdgeFallOff_IsSet
                 && (translationMask?.GetShouldTranslate((int)RegionArea_FieldIndex.EdgeFallOff) ?? true))
             {
                 UInt32XmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.EdgeFallOff),
                     item: item.EdgeFallOff,
                     fieldIndex: (int)RegionArea_FieldIndex.EdgeFallOff,
@@ -1714,7 +1728,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)RegionArea_FieldIndex.RegionPoints) ?? true))
             {
                 ListXmlTranslation<P2Float>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.RegionPoints),
                     item: item.RegionPoints,
                     fieldIndex: (int)RegionArea_FieldIndex.RegionPoints,
@@ -1731,7 +1745,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     );
             }
         }
-        #endregion
 
         #endregion
 

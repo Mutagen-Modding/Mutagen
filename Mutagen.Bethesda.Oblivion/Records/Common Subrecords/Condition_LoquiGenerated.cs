@@ -2313,10 +2313,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.Condition");
             }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        #endregion
+
+        public static void WriteToNode_Xml(
+            IConditionGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
             if ((translationMask?.GetShouldTranslate((int)Condition_FieldIndex.CompareOperator) ?? true))
             {
                 EnumXmlTranslation<CompareOperator>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.CompareOperator),
                     item: item.CompareOperator,
                     fieldIndex: (int)Condition_FieldIndex.CompareOperator,
@@ -2325,7 +2339,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)Condition_FieldIndex.Flags) ?? true))
             {
                 EnumXmlTranslation<Condition.Flag>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Flags),
                     item: item.Flags,
                     fieldIndex: (int)Condition_FieldIndex.Flags,
@@ -2334,7 +2348,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)Condition_FieldIndex.Fluff) ?? true))
             {
                 ByteArrayXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Fluff),
                     item: item.Fluff,
                     fieldIndex: (int)Condition_FieldIndex.Fluff,
@@ -2343,7 +2357,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)Condition_FieldIndex.ComparisonValue) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.ComparisonValue),
                     item: item.ComparisonValue,
                     fieldIndex: (int)Condition_FieldIndex.ComparisonValue,
@@ -2352,7 +2366,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)Condition_FieldIndex.Function) ?? true))
             {
                 EnumXmlTranslation<Function>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Function),
                     item: item.Function,
                     fieldIndex: (int)Condition_FieldIndex.Function,
@@ -2361,7 +2375,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)Condition_FieldIndex.FirstParameter) ?? true))
             {
                 Int32XmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.FirstParameter),
                     item: item.FirstParameter,
                     fieldIndex: (int)Condition_FieldIndex.FirstParameter,
@@ -2370,7 +2384,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)Condition_FieldIndex.SecondParameter) ?? true))
             {
                 Int32XmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.SecondParameter),
                     item: item.SecondParameter,
                     fieldIndex: (int)Condition_FieldIndex.SecondParameter,
@@ -2379,14 +2393,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)Condition_FieldIndex.ThirdParameter) ?? true))
             {
                 Int32XmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.ThirdParameter),
                     item: item.ThirdParameter,
                     fieldIndex: (int)Condition_FieldIndex.ThirdParameter,
                     errorMask: errorMask);
             }
         }
-        #endregion
 
         #endregion
 

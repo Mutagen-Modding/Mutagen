@@ -1548,8 +1548,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             LoadScreenLocation_Mask<bool> ret)
         {
             if (rhs == null) return;
-            ret.Direct = item.Direct == rhs.Direct;
-            ret.Indirect = item.Indirect == rhs.Indirect;
+            ret.Direct = item.Direct_Property.FormKey == rhs.Direct_Property.FormKey;
+            ret.Indirect = item.Indirect_Property.FormKey == rhs.Indirect_Property.FormKey;
             ret.GridPoint = item.GridPoint == rhs.GridPoint;
         }
 
@@ -1645,10 +1645,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.LoadScreenLocation");
             }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        #endregion
+
+        public static void WriteToNode_Xml(
+            ILoadScreenLocationGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
             if ((translationMask?.GetShouldTranslate((int)LoadScreenLocation_FieldIndex.Direct) ?? true))
             {
                 FormKeyXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Direct),
                     item: item.Direct_Property?.FormKey,
                     fieldIndex: (int)LoadScreenLocation_FieldIndex.Direct,
@@ -1657,7 +1671,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)LoadScreenLocation_FieldIndex.Indirect) ?? true))
             {
                 FormKeyXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Indirect),
                     item: item.Indirect_Property?.FormKey,
                     fieldIndex: (int)LoadScreenLocation_FieldIndex.Indirect,
@@ -1666,14 +1680,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)LoadScreenLocation_FieldIndex.GridPoint) ?? true))
             {
                 P2Int16XmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.GridPoint),
                     item: item.GridPoint,
                     fieldIndex: (int)LoadScreenLocation_FieldIndex.GridPoint,
                     errorMask: errorMask);
             }
         }
-        #endregion
 
         #endregion
 

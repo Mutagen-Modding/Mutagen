@@ -2056,10 +2056,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.WorldspaceSubBlock");
             }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        #endregion
+
+        public static void WriteToNode_Xml(
+            IWorldspaceSubBlockGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
             if ((translationMask?.GetShouldTranslate((int)WorldspaceSubBlock_FieldIndex.BlockNumberY) ?? true))
             {
                 Int16XmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.BlockNumberY),
                     item: item.BlockNumberY,
                     fieldIndex: (int)WorldspaceSubBlock_FieldIndex.BlockNumberY,
@@ -2068,7 +2082,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)WorldspaceSubBlock_FieldIndex.BlockNumberX) ?? true))
             {
                 Int16XmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.BlockNumberX),
                     item: item.BlockNumberX,
                     fieldIndex: (int)WorldspaceSubBlock_FieldIndex.BlockNumberX,
@@ -2077,7 +2091,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)WorldspaceSubBlock_FieldIndex.GroupType) ?? true))
             {
                 EnumXmlTranslation<GroupTypeEnum>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.GroupType),
                     item: item.GroupType,
                     fieldIndex: (int)WorldspaceSubBlock_FieldIndex.GroupType,
@@ -2086,7 +2100,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)WorldspaceSubBlock_FieldIndex.LastModified) ?? true))
             {
                 ByteArrayXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.LastModified),
                     item: item.LastModified,
                     fieldIndex: (int)WorldspaceSubBlock_FieldIndex.LastModified,
@@ -2096,7 +2110,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)WorldspaceSubBlock_FieldIndex.Items) ?? true))
             {
                 ListXmlTranslation<Cell>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Items),
                     item: item.Items,
                     fieldIndex: (int)WorldspaceSubBlock_FieldIndex.Items,
@@ -2114,7 +2128,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     );
             }
         }
-        #endregion
 
         #endregion
 

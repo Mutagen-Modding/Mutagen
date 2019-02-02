@@ -2673,11 +2673,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.Class");
             }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        #endregion
+
+        public static void WriteToNode_Xml(
+            IClassGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            MajorRecordCommon.WriteToNode_Xml(
+                item: item,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
             if (item.Name_IsSet
                 && (translationMask?.GetShouldTranslate((int)Class_FieldIndex.Name) ?? true))
             {
                 StringXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Name),
                     item: item.Name,
                     fieldIndex: (int)Class_FieldIndex.Name,
@@ -2687,7 +2706,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)Class_FieldIndex.Description) ?? true))
             {
                 StringXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Description),
                     item: item.Description,
                     fieldIndex: (int)Class_FieldIndex.Description,
@@ -2697,7 +2716,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)Class_FieldIndex.Icon) ?? true))
             {
                 StringXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Icon),
                     item: item.Icon,
                     fieldIndex: (int)Class_FieldIndex.Icon,
@@ -2706,7 +2725,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)Class_FieldIndex.PrimaryAttributes) ?? true))
             {
                 ListXmlTranslation<ActorValue>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.PrimaryAttributes),
                     item: item.PrimaryAttributes,
                     fieldIndex: (int)Class_FieldIndex.PrimaryAttributes,
@@ -2725,7 +2744,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)Class_FieldIndex.Specialization) ?? true))
             {
                 EnumXmlTranslation<Class.SpecializationFlag>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Specialization),
                     item: item.Specialization,
                     fieldIndex: (int)Class_FieldIndex.Specialization,
@@ -2734,7 +2753,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)Class_FieldIndex.SecondaryAttributes) ?? true))
             {
                 ListXmlTranslation<ActorValue>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.SecondaryAttributes),
                     item: item.SecondaryAttributes,
                     fieldIndex: (int)Class_FieldIndex.SecondaryAttributes,
@@ -2753,7 +2772,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)Class_FieldIndex.Flags) ?? true))
             {
                 EnumXmlTranslation<ClassFlag>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Flags),
                     item: item.Flags,
                     fieldIndex: (int)Class_FieldIndex.Flags,
@@ -2762,7 +2781,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)Class_FieldIndex.ClassServices) ?? true))
             {
                 EnumXmlTranslation<ClassService>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.ClassServices),
                     item: item.ClassServices,
                     fieldIndex: (int)Class_FieldIndex.ClassServices,
@@ -2771,7 +2790,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)Class_FieldIndex.Training) ?? true))
             {
                 LoquiXmlTranslation<ClassTraining>.Instance.Write(
-                    node: elem,
+                    node: node,
                     item: item.Training,
                     name: nameof(item.Training),
                     fieldIndex: (int)Class_FieldIndex.Training,
@@ -2779,7 +2798,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     translationMask: translationMask?.GetSubCrystal((int)Class_FieldIndex.Training));
             }
         }
-        #endregion
 
         #endregion
 

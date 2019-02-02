@@ -1450,7 +1450,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             PointToReferenceMapping_Mask<bool> ret)
         {
             if (rhs == null) return;
-            ret.Reference = item.Reference == rhs.Reference;
+            ret.Reference = item.Reference_Property.FormKey == rhs.Reference_Property.FormKey;
             ret.Points = new MaskItem<bool, IEnumerable<bool>>();
             ret.Points.Specific = item.Points.SelectAgainst<Int16, bool>(rhs.Points, ((l, r) => object.Equals(l, r)), out ret.Points.Overall);
             ret.Points.Overall = ret.Points.Overall && ret.Points.Specific.All((b) => b);
@@ -1558,10 +1558,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.PointToReferenceMapping");
             }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        #endregion
+
+        public static void WriteToNode_Xml(
+            IPointToReferenceMappingGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
             if ((translationMask?.GetShouldTranslate((int)PointToReferenceMapping_FieldIndex.Reference) ?? true))
             {
                 FormKeyXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Reference),
                     item: item.Reference_Property?.FormKey,
                     fieldIndex: (int)PointToReferenceMapping_FieldIndex.Reference,
@@ -1570,7 +1584,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)PointToReferenceMapping_FieldIndex.Points) ?? true))
             {
                 ListXmlTranslation<Int16>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Points),
                     item: item.Points,
                     fieldIndex: (int)PointToReferenceMapping_FieldIndex.Points,
@@ -1587,7 +1601,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     );
             }
         }
-        #endregion
 
         #endregion
 

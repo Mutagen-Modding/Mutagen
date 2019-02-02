@@ -1898,9 +1898,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ScriptEffect_Mask<bool> ret)
         {
             if (rhs == null) return;
-            ret.Script = item.Script == rhs.Script;
+            ret.Script = item.Script_Property.FormKey == rhs.Script_Property.FormKey;
             ret.MagicSchool = item.MagicSchool == rhs.MagicSchool;
-            ret.VisualEffect = item.VisualEffect == rhs.VisualEffect;
+            ret.VisualEffect = item.VisualEffect_Property.FormKey == rhs.VisualEffect_Property.FormKey;
             ret.Flags = item.Flags == rhs.Flags;
             ret.Name = item.Name_IsSet == rhs.Name_IsSet && object.Equals(item.Name, rhs.Name);
         }
@@ -2008,10 +2008,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.ScriptEffect");
             }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        #endregion
+
+        public static void WriteToNode_Xml(
+            IScriptEffectGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
             if ((translationMask?.GetShouldTranslate((int)ScriptEffect_FieldIndex.Script) ?? true))
             {
                 FormKeyXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Script),
                     item: item.Script_Property?.FormKey,
                     fieldIndex: (int)ScriptEffect_FieldIndex.Script,
@@ -2020,7 +2034,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)ScriptEffect_FieldIndex.MagicSchool) ?? true))
             {
                 EnumXmlTranslation<MagicSchool>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.MagicSchool),
                     item: item.MagicSchool,
                     fieldIndex: (int)ScriptEffect_FieldIndex.MagicSchool,
@@ -2029,7 +2043,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)ScriptEffect_FieldIndex.VisualEffect) ?? true))
             {
                 FormKeyXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.VisualEffect),
                     item: item.VisualEffect_Property?.FormKey,
                     fieldIndex: (int)ScriptEffect_FieldIndex.VisualEffect,
@@ -2038,7 +2052,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)ScriptEffect_FieldIndex.Flags) ?? true))
             {
                 EnumXmlTranslation<ScriptEffect.Flag>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Flags),
                     item: item.Flags,
                     fieldIndex: (int)ScriptEffect_FieldIndex.Flags,
@@ -2048,14 +2062,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)ScriptEffect_FieldIndex.Name) ?? true))
             {
                 StringXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Name),
                     item: item.Name,
                     fieldIndex: (int)ScriptEffect_FieldIndex.Name,
                     errorMask: errorMask);
             }
         }
-        #endregion
 
         #endregion
 

@@ -1823,10 +1823,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.SoundData");
             }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        #endregion
+
+        public static void WriteToNode_Xml(
+            ISoundDataGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
             if ((translationMask?.GetShouldTranslate((int)SoundData_FieldIndex.MinimumAttenuationDistance) ?? true))
             {
                 UInt16XmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.MinimumAttenuationDistance),
                     item: item.MinimumAttenuationDistance,
                     fieldIndex: (int)SoundData_FieldIndex.MinimumAttenuationDistance,
@@ -1835,7 +1849,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)SoundData_FieldIndex.MaximumAttenuationDistance) ?? true))
             {
                 UInt16XmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.MaximumAttenuationDistance),
                     item: item.MaximumAttenuationDistance,
                     fieldIndex: (int)SoundData_FieldIndex.MaximumAttenuationDistance,
@@ -1844,7 +1858,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)SoundData_FieldIndex.FrequencyAdjustment) ?? true))
             {
                 Int8XmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.FrequencyAdjustment),
                     item: item.FrequencyAdjustment,
                     fieldIndex: (int)SoundData_FieldIndex.FrequencyAdjustment,
@@ -1853,14 +1867,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)SoundData_FieldIndex.Flags) ?? true))
             {
                 EnumXmlTranslation<SoundData.Flag>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Flags),
                     item: item.Flags,
                     fieldIndex: (int)SoundData_FieldIndex.Flags,
                     errorMask: errorMask);
             }
         }
-        #endregion
 
         #endregion
 

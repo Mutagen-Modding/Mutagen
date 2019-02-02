@@ -5188,11 +5188,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.Race");
             }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        #endregion
+
+        public static void WriteToNode_Xml(
+            IRaceGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            MajorRecordCommon.WriteToNode_Xml(
+                item: item,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
             if (item.Name_IsSet
                 && (translationMask?.GetShouldTranslate((int)Race_FieldIndex.Name) ?? true))
             {
                 StringXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Name),
                     item: item.Name,
                     fieldIndex: (int)Race_FieldIndex.Name,
@@ -5202,7 +5221,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)Race_FieldIndex.Description) ?? true))
             {
                 StringXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Description),
                     item: item.Description,
                     fieldIndex: (int)Race_FieldIndex.Description,
@@ -5212,7 +5231,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)Race_FieldIndex.Spells) ?? true))
             {
                 ListXmlTranslation<FormIDSetLink<Spell>>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Spells),
                     item: item.Spells,
                     fieldIndex: (int)Race_FieldIndex.Spells,
@@ -5232,7 +5251,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)Race_FieldIndex.Relations) ?? true))
             {
                 ListXmlTranslation<RaceRelation>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Relations),
                     item: item.Relations,
                     fieldIndex: (int)Race_FieldIndex.Relations,
@@ -5252,7 +5271,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)Race_FieldIndex.SkillBoosts) ?? true))
             {
                 ListXmlTranslation<SkillBoost>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.SkillBoosts),
                     item: item.SkillBoosts,
                     fieldIndex: (int)Race_FieldIndex.SkillBoosts,
@@ -5272,7 +5291,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)Race_FieldIndex.Fluff) ?? true))
             {
                 ByteArrayXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Fluff),
                     item: item.Fluff,
                     fieldIndex: (int)Race_FieldIndex.Fluff,
@@ -5281,7 +5300,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)Race_FieldIndex.MaleHeight) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.MaleHeight),
                     item: item.MaleHeight,
                     fieldIndex: (int)Race_FieldIndex.MaleHeight,
@@ -5290,7 +5309,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)Race_FieldIndex.FemaleHeight) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.FemaleHeight),
                     item: item.FemaleHeight,
                     fieldIndex: (int)Race_FieldIndex.FemaleHeight,
@@ -5299,7 +5318,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)Race_FieldIndex.MaleWeight) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.MaleWeight),
                     item: item.MaleWeight,
                     fieldIndex: (int)Race_FieldIndex.MaleWeight,
@@ -5308,7 +5327,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)Race_FieldIndex.FemaleWeight) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.FemaleWeight),
                     item: item.FemaleWeight,
                     fieldIndex: (int)Race_FieldIndex.FemaleWeight,
@@ -5317,7 +5336,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)Race_FieldIndex.Flags) ?? true))
             {
                 EnumXmlTranslation<Race.Flag>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Flags),
                     item: item.Flags,
                     fieldIndex: (int)Race_FieldIndex.Flags,
@@ -5327,7 +5346,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)Race_FieldIndex.Voices) ?? true))
             {
                 LoquiXmlTranslation<RaceVoices>.Instance.Write(
-                    node: elem,
+                    node: node,
                     item: item.Voices,
                     name: nameof(item.Voices),
                     fieldIndex: (int)Race_FieldIndex.Voices,
@@ -5338,7 +5357,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)Race_FieldIndex.DefaultHair) ?? true))
             {
                 LoquiXmlTranslation<RaceHair>.Instance.Write(
-                    node: elem,
+                    node: node,
                     item: item.DefaultHair,
                     name: nameof(item.DefaultHair),
                     fieldIndex: (int)Race_FieldIndex.DefaultHair,
@@ -5349,7 +5368,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)Race_FieldIndex.DefaultHairColor) ?? true))
             {
                 ByteXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.DefaultHairColor),
                     item: item.DefaultHairColor,
                     fieldIndex: (int)Race_FieldIndex.DefaultHairColor,
@@ -5359,7 +5378,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)Race_FieldIndex.FaceGenMainClamp) ?? true))
             {
                 Int32XmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.FaceGenMainClamp),
                     item: item.FaceGenMainClamp,
                     fieldIndex: (int)Race_FieldIndex.FaceGenMainClamp,
@@ -5369,7 +5388,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)Race_FieldIndex.FaceGenFaceClamp) ?? true))
             {
                 Int32XmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.FaceGenFaceClamp),
                     item: item.FaceGenFaceClamp,
                     fieldIndex: (int)Race_FieldIndex.FaceGenFaceClamp,
@@ -5379,7 +5398,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)Race_FieldIndex.RaceStats) ?? true))
             {
                 LoquiXmlTranslation<RaceStatsGendered>.Instance.Write(
-                    node: elem,
+                    node: node,
                     item: item.RaceStats,
                     name: nameof(item.RaceStats),
                     fieldIndex: (int)Race_FieldIndex.RaceStats,
@@ -5390,7 +5409,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)Race_FieldIndex.FaceData) ?? true))
             {
                 ListXmlTranslation<FacePart>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.FaceData),
                     item: item.FaceData,
                     fieldIndex: (int)Race_FieldIndex.FaceData,
@@ -5411,7 +5430,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)Race_FieldIndex.BodyData) ?? true))
             {
                 LoquiXmlTranslation<GenderedBodyData>.Instance.Write(
-                    node: elem,
+                    node: node,
                     item: item.BodyData,
                     name: nameof(item.BodyData),
                     fieldIndex: (int)Race_FieldIndex.BodyData,
@@ -5422,7 +5441,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)Race_FieldIndex.Hairs) ?? true))
             {
                 ListXmlTranslation<FormIDLink<Hair>>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Hairs),
                     item: item.Hairs,
                     fieldIndex: (int)Race_FieldIndex.Hairs,
@@ -5442,7 +5461,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)Race_FieldIndex.Eyes) ?? true))
             {
                 ListXmlTranslation<FormIDLink<Eye>>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Eyes),
                     item: item.Eyes,
                     fieldIndex: (int)Race_FieldIndex.Eyes,
@@ -5462,7 +5481,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)Race_FieldIndex.FaceGenData) ?? true))
             {
                 LoquiXmlTranslation<FaceGenData>.Instance.Write(
-                    node: elem,
+                    node: node,
                     item: item.FaceGenData,
                     name: nameof(item.FaceGenData),
                     fieldIndex: (int)Race_FieldIndex.FaceGenData,
@@ -5473,14 +5492,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)Race_FieldIndex.Unknown) ?? true))
             {
                 ByteArrayXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Unknown),
                     item: item.Unknown,
                     fieldIndex: (int)Race_FieldIndex.Unknown,
                     errorMask: errorMask);
             }
         }
-        #endregion
 
         #endregion
 

@@ -1902,11 +1902,25 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.FacePart");
             }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        #endregion
+
+        public static void WriteToNode_Xml(
+            IFacePartGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
             if (item.Index_IsSet
                 && (translationMask?.GetShouldTranslate((int)FacePart_FieldIndex.Index) ?? true))
             {
                 EnumXmlTranslation<Race.FaceIndex>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Index),
                     item: item.Index,
                     fieldIndex: (int)FacePart_FieldIndex.Index,
@@ -1916,7 +1930,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)FacePart_FieldIndex.Model) ?? true))
             {
                 LoquiXmlTranslation<Model>.Instance.Write(
-                    node: elem,
+                    node: node,
                     item: item.Model,
                     name: nameof(item.Model),
                     fieldIndex: (int)FacePart_FieldIndex.Model,
@@ -1927,14 +1941,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)FacePart_FieldIndex.Icon) ?? true))
             {
                 StringXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Icon),
                     item: item.Icon,
                     fieldIndex: (int)FacePart_FieldIndex.Icon,
                     errorMask: errorMask);
             }
         }
-        #endregion
 
         #endregion
 

@@ -2306,11 +2306,25 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.ScriptFields");
             }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        #endregion
+
+        public static void WriteToNode_Xml(
+            IScriptFieldsGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
             if (item.MetadataSummary_IsSet
                 && (translationMask?.GetShouldTranslate((int)ScriptFields_FieldIndex.MetadataSummary) ?? true))
             {
                 LoquiXmlTranslation<ScriptMetaSummary>.Instance.Write(
-                    node: elem,
+                    node: node,
                     item: item.MetadataSummary,
                     name: nameof(item.MetadataSummary),
                     fieldIndex: (int)ScriptFields_FieldIndex.MetadataSummary,
@@ -2321,7 +2335,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)ScriptFields_FieldIndex.CompiledScript) ?? true))
             {
                 ByteArrayXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.CompiledScript),
                     item: item.CompiledScript,
                     fieldIndex: (int)ScriptFields_FieldIndex.CompiledScript,
@@ -2331,7 +2345,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)ScriptFields_FieldIndex.SourceCode) ?? true))
             {
                 StringXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.SourceCode),
                     item: item.SourceCode,
                     fieldIndex: (int)ScriptFields_FieldIndex.SourceCode,
@@ -2341,7 +2355,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)ScriptFields_FieldIndex.LocalVariables) ?? true))
             {
                 ListXmlTranslation<LocalVariable>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.LocalVariables),
                     item: item.LocalVariables,
                     fieldIndex: (int)ScriptFields_FieldIndex.LocalVariables,
@@ -2362,7 +2376,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)ScriptFields_FieldIndex.References) ?? true))
             {
                 ListXmlTranslation<ScriptReference>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.References),
                     item: item.References,
                     fieldIndex: (int)ScriptFields_FieldIndex.References,
@@ -2380,7 +2394,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     );
             }
         }
-        #endregion
 
         #endregion
 

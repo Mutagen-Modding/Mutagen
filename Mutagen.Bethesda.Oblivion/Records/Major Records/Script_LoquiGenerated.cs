@@ -1545,11 +1545,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.Script");
             }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        #endregion
+
+        public static void WriteToNode_Xml(
+            IScriptGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            MajorRecordCommon.WriteToNode_Xml(
+                item: item,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
             if (item.Fields_IsSet
                 && (translationMask?.GetShouldTranslate((int)Script_FieldIndex.Fields) ?? true))
             {
                 LoquiXmlTranslation<ScriptFields>.Instance.Write(
-                    node: elem,
+                    node: node,
                     item: item.Fields,
                     name: nameof(item.Fields),
                     fieldIndex: (int)Script_FieldIndex.Fields,
@@ -1557,7 +1576,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     translationMask: translationMask?.GetSubCrystal((int)Script_FieldIndex.Fields));
             }
         }
-        #endregion
 
         #endregion
 

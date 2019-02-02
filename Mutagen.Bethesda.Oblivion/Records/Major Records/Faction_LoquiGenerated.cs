@@ -2294,11 +2294,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.Faction");
             }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        #endregion
+
+        public static void WriteToNode_Xml(
+            IFactionGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            MajorRecordCommon.WriteToNode_Xml(
+                item: item,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
             if (item.Name_IsSet
                 && (translationMask?.GetShouldTranslate((int)Faction_FieldIndex.Name) ?? true))
             {
                 StringXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Name),
                     item: item.Name,
                     fieldIndex: (int)Faction_FieldIndex.Name,
@@ -2308,7 +2327,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)Faction_FieldIndex.Relations) ?? true))
             {
                 ListXmlTranslation<Relation>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Relations),
                     item: item.Relations,
                     fieldIndex: (int)Faction_FieldIndex.Relations,
@@ -2329,7 +2348,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)Faction_FieldIndex.Flags) ?? true))
             {
                 EnumXmlTranslation<Faction.FactionFlag>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Flags),
                     item: item.Flags,
                     fieldIndex: (int)Faction_FieldIndex.Flags,
@@ -2339,7 +2358,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)Faction_FieldIndex.CrimeGoldMultiplier) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.CrimeGoldMultiplier),
                     item: item.CrimeGoldMultiplier,
                     fieldIndex: (int)Faction_FieldIndex.CrimeGoldMultiplier,
@@ -2349,7 +2368,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)Faction_FieldIndex.Ranks) ?? true))
             {
                 ListXmlTranslation<Rank>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Ranks),
                     item: item.Ranks,
                     fieldIndex: (int)Faction_FieldIndex.Ranks,
@@ -2367,7 +2386,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     );
             }
         }
-        #endregion
 
         #endregion
 

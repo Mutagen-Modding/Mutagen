@@ -1686,10 +1686,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.AIPackageTarget");
             }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        #endregion
+
+        public static void WriteToNode_Xml(
+            IAIPackageTargetGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
             if ((translationMask?.GetShouldTranslate((int)AIPackageTarget_FieldIndex.ObjectType) ?? true))
             {
                 EnumXmlTranslation<AIPackageTarget.ObjectTypeEnum>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.ObjectType),
                     item: item.ObjectType,
                     fieldIndex: (int)AIPackageTarget_FieldIndex.ObjectType,
@@ -1698,7 +1712,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)AIPackageTarget_FieldIndex.Object) ?? true))
             {
                 Int32XmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Object),
                     item: item.Object,
                     fieldIndex: (int)AIPackageTarget_FieldIndex.Object,
@@ -1707,14 +1721,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)AIPackageTarget_FieldIndex.Count) ?? true))
             {
                 Int32XmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Count),
                     item: item.Count,
                     fieldIndex: (int)AIPackageTarget_FieldIndex.Count,
                     errorMask: errorMask);
             }
         }
-        #endregion
 
         #endregion
 

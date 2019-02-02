@@ -1577,7 +1577,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (rhs == null) return;
             ret.Type = item.Type == rhs.Type;
-            ret.LocationReference = item.LocationReference == rhs.LocationReference;
+            ret.LocationReference = item.LocationReference_Property.FormKey == rhs.LocationReference_Property.FormKey;
             ret.Radius = item.Radius == rhs.Radius;
         }
 
@@ -1673,10 +1673,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.AIPackageLocation");
             }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        #endregion
+
+        public static void WriteToNode_Xml(
+            IAIPackageLocationGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
             if ((translationMask?.GetShouldTranslate((int)AIPackageLocation_FieldIndex.Type) ?? true))
             {
                 EnumXmlTranslation<AIPackageLocation.LocationType>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Type),
                     item: item.Type,
                     fieldIndex: (int)AIPackageLocation_FieldIndex.Type,
@@ -1685,7 +1699,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)AIPackageLocation_FieldIndex.LocationReference) ?? true))
             {
                 FormKeyXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.LocationReference),
                     item: item.LocationReference_Property?.FormKey,
                     fieldIndex: (int)AIPackageLocation_FieldIndex.LocationReference,
@@ -1694,14 +1708,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)AIPackageLocation_FieldIndex.Radius) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Radius),
                     item: item.Radius,
                     fieldIndex: (int)AIPackageLocation_FieldIndex.Radius,
                     errorMask: errorMask);
             }
         }
-        #endregion
 
         #endregion
 

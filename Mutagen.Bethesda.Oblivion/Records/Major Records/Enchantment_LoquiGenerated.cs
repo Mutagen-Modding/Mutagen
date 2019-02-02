@@ -2251,11 +2251,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.Enchantment");
             }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        #endregion
+
+        public static void WriteToNode_Xml(
+            IEnchantmentGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            MajorRecordCommon.WriteToNode_Xml(
+                item: item,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
             if (item.Name_IsSet
                 && (translationMask?.GetShouldTranslate((int)Enchantment_FieldIndex.Name) ?? true))
             {
                 StringXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Name),
                     item: item.Name,
                     fieldIndex: (int)Enchantment_FieldIndex.Name,
@@ -2264,7 +2283,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)Enchantment_FieldIndex.Type) ?? true))
             {
                 EnumXmlTranslation<Enchantment.EnchantmentType>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Type),
                     item: item.Type,
                     fieldIndex: (int)Enchantment_FieldIndex.Type,
@@ -2273,7 +2292,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)Enchantment_FieldIndex.ChargeAmount) ?? true))
             {
                 UInt32XmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.ChargeAmount),
                     item: item.ChargeAmount,
                     fieldIndex: (int)Enchantment_FieldIndex.ChargeAmount,
@@ -2282,7 +2301,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)Enchantment_FieldIndex.EnchantCost) ?? true))
             {
                 UInt32XmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.EnchantCost),
                     item: item.EnchantCost,
                     fieldIndex: (int)Enchantment_FieldIndex.EnchantCost,
@@ -2291,7 +2310,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)Enchantment_FieldIndex.Flags) ?? true))
             {
                 EnumXmlTranslation<Enchantment.Flag>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Flags),
                     item: item.Flags,
                     fieldIndex: (int)Enchantment_FieldIndex.Flags,
@@ -2301,7 +2320,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)Enchantment_FieldIndex.Effects) ?? true))
             {
                 ListXmlTranslation<Effect>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Effects),
                     item: item.Effects,
                     fieldIndex: (int)Enchantment_FieldIndex.Effects,
@@ -2319,7 +2338,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     );
             }
         }
-        #endregion
 
         #endregion
 

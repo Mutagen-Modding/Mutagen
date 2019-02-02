@@ -1883,10 +1883,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.ScriptMetaSummary");
             }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        #endregion
+
+        public static void WriteToNode_Xml(
+            IScriptMetaSummaryGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
             if ((translationMask?.GetShouldTranslate((int)ScriptMetaSummary_FieldIndex.Fluff) ?? true))
             {
                 ByteArrayXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Fluff),
                     item: item.Fluff,
                     fieldIndex: (int)ScriptMetaSummary_FieldIndex.Fluff,
@@ -1895,7 +1909,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)ScriptMetaSummary_FieldIndex.RefCount) ?? true))
             {
                 UInt32XmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.RefCount),
                     item: item.RefCount,
                     fieldIndex: (int)ScriptMetaSummary_FieldIndex.RefCount,
@@ -1904,7 +1918,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)ScriptMetaSummary_FieldIndex.VariableCount) ?? true))
             {
                 UInt32XmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.VariableCount),
                     item: item.VariableCount,
                     fieldIndex: (int)ScriptMetaSummary_FieldIndex.VariableCount,
@@ -1913,14 +1927,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)ScriptMetaSummary_FieldIndex.Type) ?? true))
             {
                 EnumXmlTranslation<ScriptFields.ScriptType>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Type),
                     item: item.Type,
                     fieldIndex: (int)ScriptMetaSummary_FieldIndex.Type,
                     errorMask: errorMask);
             }
         }
-        #endregion
 
         #endregion
 

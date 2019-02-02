@@ -2313,10 +2313,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.DialogResponse");
             }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        #endregion
+
+        public static void WriteToNode_Xml(
+            IDialogResponseGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
             if ((translationMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.Emotion) ?? true))
             {
                 EnumXmlTranslation<EmotionType>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Emotion),
                     item: item.Emotion,
                     fieldIndex: (int)DialogResponse_FieldIndex.Emotion,
@@ -2325,7 +2339,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.EmotionValue) ?? true))
             {
                 Int32XmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.EmotionValue),
                     item: item.EmotionValue,
                     fieldIndex: (int)DialogResponse_FieldIndex.EmotionValue,
@@ -2334,7 +2348,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.Fluff1) ?? true))
             {
                 ByteArrayXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Fluff1),
                     item: item.Fluff1,
                     fieldIndex: (int)DialogResponse_FieldIndex.Fluff1,
@@ -2343,7 +2357,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.ResponseNumber) ?? true))
             {
                 ByteXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.ResponseNumber),
                     item: item.ResponseNumber,
                     fieldIndex: (int)DialogResponse_FieldIndex.ResponseNumber,
@@ -2352,7 +2366,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.Fluff2) ?? true))
             {
                 ByteArrayXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Fluff2),
                     item: item.Fluff2,
                     fieldIndex: (int)DialogResponse_FieldIndex.Fluff2,
@@ -2362,7 +2376,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.ResponseText) ?? true))
             {
                 StringXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.ResponseText),
                     item: item.ResponseText,
                     fieldIndex: (int)DialogResponse_FieldIndex.ResponseText,
@@ -2372,14 +2386,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.ActorNotes) ?? true))
             {
                 StringXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.ActorNotes),
                     item: item.ActorNotes,
                     fieldIndex: (int)DialogResponse_FieldIndex.ActorNotes,
                     errorMask: errorMask);
             }
         }
-        #endregion
 
         #endregion
 

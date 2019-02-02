@@ -1460,7 +1460,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             WeatherChance_Mask<bool> ret)
         {
             if (rhs == null) return;
-            ret.Weather = item.Weather == rhs.Weather;
+            ret.Weather = item.Weather_Property.FormKey == rhs.Weather_Property.FormKey;
             ret.Chance = item.Chance == rhs.Chance;
         }
 
@@ -1551,10 +1551,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.WeatherChance");
             }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        #endregion
+
+        public static void WriteToNode_Xml(
+            IWeatherChanceGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
             if ((translationMask?.GetShouldTranslate((int)WeatherChance_FieldIndex.Weather) ?? true))
             {
                 FormKeyXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Weather),
                     item: item.Weather_Property?.FormKey,
                     fieldIndex: (int)WeatherChance_FieldIndex.Weather,
@@ -1563,14 +1577,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)WeatherChance_FieldIndex.Chance) ?? true))
             {
                 Int32XmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Chance),
                     item: item.Chance,
                     fieldIndex: (int)WeatherChance_FieldIndex.Chance,
                     errorMask: errorMask);
             }
         }
-        #endregion
 
         #endregion
 

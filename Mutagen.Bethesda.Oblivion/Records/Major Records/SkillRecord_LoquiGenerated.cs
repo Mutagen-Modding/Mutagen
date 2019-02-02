@@ -3140,11 +3140,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.SkillRecord");
             }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        #endregion
+
+        public static void WriteToNode_Xml(
+            ISkillRecordGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            MajorRecordCommon.WriteToNode_Xml(
+                item: item,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
             if (item.Skill_IsSet
                 && (translationMask?.GetShouldTranslate((int)SkillRecord_FieldIndex.Skill) ?? true))
             {
                 EnumXmlTranslation<ActorValue>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Skill),
                     item: item.Skill,
                     fieldIndex: (int)SkillRecord_FieldIndex.Skill,
@@ -3154,7 +3173,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)SkillRecord_FieldIndex.Description) ?? true))
             {
                 StringXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Description),
                     item: item.Description,
                     fieldIndex: (int)SkillRecord_FieldIndex.Description,
@@ -3164,7 +3183,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)SkillRecord_FieldIndex.Icon) ?? true))
             {
                 StringXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Icon),
                     item: item.Icon,
                     fieldIndex: (int)SkillRecord_FieldIndex.Icon,
@@ -3173,7 +3192,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)SkillRecord_FieldIndex.Action) ?? true))
             {
                 EnumXmlTranslation<ActorValue>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Action),
                     item: item.Action,
                     fieldIndex: (int)SkillRecord_FieldIndex.Action,
@@ -3182,7 +3201,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)SkillRecord_FieldIndex.Attribute) ?? true))
             {
                 EnumXmlTranslation<ActorValue>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Attribute),
                     item: item.Attribute,
                     fieldIndex: (int)SkillRecord_FieldIndex.Attribute,
@@ -3191,7 +3210,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)SkillRecord_FieldIndex.Specialization) ?? true))
             {
                 EnumXmlTranslation<Specialization>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Specialization),
                     item: item.Specialization,
                     fieldIndex: (int)SkillRecord_FieldIndex.Specialization,
@@ -3200,7 +3219,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)SkillRecord_FieldIndex.UseValueFirst) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.UseValueFirst),
                     item: item.UseValueFirst,
                     fieldIndex: (int)SkillRecord_FieldIndex.UseValueFirst,
@@ -3209,7 +3228,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)SkillRecord_FieldIndex.UseValueSecond) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.UseValueSecond),
                     item: item.UseValueSecond,
                     fieldIndex: (int)SkillRecord_FieldIndex.UseValueSecond,
@@ -3219,7 +3238,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)SkillRecord_FieldIndex.ApprenticeText) ?? true))
             {
                 StringXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.ApprenticeText),
                     item: item.ApprenticeText,
                     fieldIndex: (int)SkillRecord_FieldIndex.ApprenticeText,
@@ -3229,7 +3248,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)SkillRecord_FieldIndex.JourneymanText) ?? true))
             {
                 StringXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.JourneymanText),
                     item: item.JourneymanText,
                     fieldIndex: (int)SkillRecord_FieldIndex.JourneymanText,
@@ -3239,7 +3258,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)SkillRecord_FieldIndex.ExpertText) ?? true))
             {
                 StringXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.ExpertText),
                     item: item.ExpertText,
                     fieldIndex: (int)SkillRecord_FieldIndex.ExpertText,
@@ -3249,14 +3268,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)SkillRecord_FieldIndex.MasterText) ?? true))
             {
                 StringXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.MasterText),
                     item: item.MasterText,
                     fieldIndex: (int)SkillRecord_FieldIndex.MasterText,
                     errorMask: errorMask);
             }
         }
-        #endregion
 
         #endregion
 

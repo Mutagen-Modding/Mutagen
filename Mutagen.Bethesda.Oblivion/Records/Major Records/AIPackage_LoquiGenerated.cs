@@ -2448,10 +2448,29 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.AIPackage");
             }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        #endregion
+
+        public static void WriteToNode_Xml(
+            IAIPackageGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            MajorRecordCommon.WriteToNode_Xml(
+                item: item,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
             if ((translationMask?.GetShouldTranslate((int)AIPackage_FieldIndex.Flags) ?? true))
             {
                 EnumXmlTranslation<AIPackage.Flag>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Flags),
                     item: item.Flags,
                     fieldIndex: (int)AIPackage_FieldIndex.Flags,
@@ -2460,7 +2479,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)AIPackage_FieldIndex.GeneralType) ?? true))
             {
                 EnumXmlTranslation<AIPackage.GeneralTypeEnum>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.GeneralType),
                     item: item.GeneralType,
                     fieldIndex: (int)AIPackage_FieldIndex.GeneralType,
@@ -2470,7 +2489,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)AIPackage_FieldIndex.Location) ?? true))
             {
                 LoquiXmlTranslation<AIPackageLocation>.Instance.Write(
-                    node: elem,
+                    node: node,
                     item: item.Location,
                     name: nameof(item.Location),
                     fieldIndex: (int)AIPackage_FieldIndex.Location,
@@ -2481,7 +2500,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)AIPackage_FieldIndex.Schedule) ?? true))
             {
                 LoquiXmlTranslation<AIPackageSchedule>.Instance.Write(
-                    node: elem,
+                    node: node,
                     item: item.Schedule,
                     name: nameof(item.Schedule),
                     fieldIndex: (int)AIPackage_FieldIndex.Schedule,
@@ -2492,7 +2511,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)AIPackage_FieldIndex.Target) ?? true))
             {
                 LoquiXmlTranslation<AIPackageTarget>.Instance.Write(
-                    node: elem,
+                    node: node,
                     item: item.Target,
                     name: nameof(item.Target),
                     fieldIndex: (int)AIPackage_FieldIndex.Target,
@@ -2503,7 +2522,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)AIPackage_FieldIndex.Conditions) ?? true))
             {
                 ListXmlTranslation<Condition>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Conditions),
                     item: item.Conditions,
                     fieldIndex: (int)AIPackage_FieldIndex.Conditions,
@@ -2521,7 +2540,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     );
             }
         }
-        #endregion
 
         #endregion
 

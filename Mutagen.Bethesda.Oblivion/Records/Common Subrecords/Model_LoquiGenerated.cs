@@ -1777,10 +1777,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.Model");
             }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        #endregion
+
+        public static void WriteToNode_Xml(
+            IModelGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
             if ((translationMask?.GetShouldTranslate((int)Model_FieldIndex.File) ?? true))
             {
                 StringXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.File),
                     item: item.File,
                     fieldIndex: (int)Model_FieldIndex.File,
@@ -1789,7 +1803,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)Model_FieldIndex.BoundRadius) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.BoundRadius),
                     item: item.BoundRadius,
                     fieldIndex: (int)Model_FieldIndex.BoundRadius,
@@ -1799,14 +1813,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)Model_FieldIndex.Hashes) ?? true))
             {
                 ByteArrayXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Hashes),
                     item: item.Hashes,
                     fieldIndex: (int)Model_FieldIndex.Hashes,
                     errorMask: errorMask);
             }
         }
-        #endregion
 
         #endregion
 

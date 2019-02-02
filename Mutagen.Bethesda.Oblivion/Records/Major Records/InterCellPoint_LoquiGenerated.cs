@@ -1561,10 +1561,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.InterCellPoint");
             }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        #endregion
+
+        public static void WriteToNode_Xml(
+            IInterCellPointGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
             if ((translationMask?.GetShouldTranslate((int)InterCellPoint_FieldIndex.PointID) ?? true))
             {
                 Int32XmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.PointID),
                     item: item.PointID,
                     fieldIndex: (int)InterCellPoint_FieldIndex.PointID,
@@ -1573,14 +1587,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)InterCellPoint_FieldIndex.Point) ?? true))
             {
                 P3FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Point),
                     item: item.Point,
                     fieldIndex: (int)InterCellPoint_FieldIndex.Point,
                     errorMask: errorMask);
             }
         }
-        #endregion
 
         #endregion
 

@@ -1878,11 +1878,25 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.FaceGenData");
             }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        #endregion
+
+        public static void WriteToNode_Xml(
+            IFaceGenDataGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
             if (item.SymmetricGeometry_IsSet
                 && (translationMask?.GetShouldTranslate((int)FaceGenData_FieldIndex.SymmetricGeometry) ?? true))
             {
                 ByteArrayXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.SymmetricGeometry),
                     item: item.SymmetricGeometry,
                     fieldIndex: (int)FaceGenData_FieldIndex.SymmetricGeometry,
@@ -1892,7 +1906,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)FaceGenData_FieldIndex.AsymmetricGeometry) ?? true))
             {
                 ByteArrayXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.AsymmetricGeometry),
                     item: item.AsymmetricGeometry,
                     fieldIndex: (int)FaceGenData_FieldIndex.AsymmetricGeometry,
@@ -1902,14 +1916,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)FaceGenData_FieldIndex.SymmetricTexture) ?? true))
             {
                 ByteArrayXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.SymmetricTexture),
                     item: item.SymmetricTexture,
                     fieldIndex: (int)FaceGenData_FieldIndex.SymmetricTexture,
                     errorMask: errorMask);
             }
         }
-        #endregion
 
         #endregion
 

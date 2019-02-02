@@ -1688,10 +1688,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.ClassTraining");
             }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        #endregion
+
+        public static void WriteToNode_Xml(
+            IClassTrainingGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
             if ((translationMask?.GetShouldTranslate((int)ClassTraining_FieldIndex.TrainedSkill) ?? true))
             {
                 EnumXmlTranslation<Skill>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.TrainedSkill),
                     item: item.TrainedSkill,
                     fieldIndex: (int)ClassTraining_FieldIndex.TrainedSkill,
@@ -1700,7 +1714,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)ClassTraining_FieldIndex.MaximumTrainingLevel) ?? true))
             {
                 ByteXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.MaximumTrainingLevel),
                     item: item.MaximumTrainingLevel,
                     fieldIndex: (int)ClassTraining_FieldIndex.MaximumTrainingLevel,
@@ -1709,14 +1723,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)ClassTraining_FieldIndex.Fluff) ?? true))
             {
                 ByteArrayXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Fluff),
                     item: item.Fluff,
                     fieldIndex: (int)ClassTraining_FieldIndex.Fluff,
                     errorMask: errorMask);
             }
         }
-        #endregion
 
         #endregion
 

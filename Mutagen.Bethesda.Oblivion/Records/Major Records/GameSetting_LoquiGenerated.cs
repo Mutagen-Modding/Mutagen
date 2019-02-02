@@ -117,6 +117,117 @@ namespace Mutagen.Bethesda.Oblivion
 
 
         #region Xml Translation
+        #region Xml Create
+        [DebuggerStepThrough]
+        public new static GameSetting Create_Xml(
+            XElement node,
+            GameSetting_TranslationMask translationMask = null)
+        {
+            return Create_Xml(
+                node: node,
+                errorMask: null,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        [DebuggerStepThrough]
+        public static GameSetting Create_Xml(
+            XElement node,
+            out GameSetting_ErrorMask errorMask,
+            bool doMasks = true,
+            GameSetting_TranslationMask translationMask = null)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            var ret = Create_Xml(
+                node: node,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask.GetCrystal());
+            errorMask = GameSetting_ErrorMask.Factory(errorMaskBuilder);
+            return ret;
+        }
+
+        public static GameSetting Create_Xml(
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            GameSetting ret;
+            if (!LoquiXmlTranslation.Instance.TryCreate(node, out ret, errorMask, translationMask))
+            {
+                throw new ArgumentException($"Unknown GameSetting subclass: {node.Name.LocalName}");
+            }
+            return ret;
+        }
+
+        public static GameSetting Create_Xml(
+            string path,
+            GameSetting_TranslationMask translationMask = null)
+        {
+            var node = XDocument.Load(path).Root;
+            return Create_Xml(
+                node: node,
+                translationMask: translationMask);
+        }
+
+        public static GameSetting Create_Xml(
+            string path,
+            out GameSetting_ErrorMask errorMask,
+            GameSetting_TranslationMask translationMask = null)
+        {
+            var node = XDocument.Load(path).Root;
+            return Create_Xml(
+                node: node,
+                errorMask: out errorMask,
+                translationMask: translationMask);
+        }
+
+        public static GameSetting Create_Xml(
+            string path,
+            ErrorMaskBuilder errorMask,
+            GameSetting_TranslationMask translationMask = null)
+        {
+            var node = XDocument.Load(path).Root;
+            return Create_Xml(
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        public static GameSetting Create_Xml(
+            Stream stream,
+            GameSetting_TranslationMask translationMask = null)
+        {
+            var node = XDocument.Load(stream).Root;
+            return Create_Xml(
+                node: node,
+                translationMask: translationMask);
+        }
+
+        public static GameSetting Create_Xml(
+            Stream stream,
+            out GameSetting_ErrorMask errorMask,
+            GameSetting_TranslationMask translationMask = null)
+        {
+            var node = XDocument.Load(stream).Root;
+            return Create_Xml(
+                node: node,
+                errorMask: out errorMask,
+                translationMask: translationMask);
+        }
+
+        public static GameSetting Create_Xml(
+            Stream stream,
+            ErrorMaskBuilder errorMask,
+            GameSetting_TranslationMask translationMask = null)
+        {
+            var node = XDocument.Load(stream).Root;
+            return Create_Xml(
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        #endregion
+
         #region Xml Copy In
         public override void CopyIn_Xml(
             XElement node,
@@ -1022,8 +1133,26 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.GameSetting");
             }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
         }
         #endregion
+
+        public static void WriteToNode_Xml(
+            IGameSettingGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            MajorRecordCommon.WriteToNode_Xml(
+                item: item,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
 
         #endregion
 

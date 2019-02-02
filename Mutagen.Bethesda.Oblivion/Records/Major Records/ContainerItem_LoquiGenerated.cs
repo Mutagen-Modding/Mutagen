@@ -1466,7 +1466,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ContainerItem_Mask<bool> ret)
         {
             if (rhs == null) return;
-            ret.Item = item.Item == rhs.Item;
+            ret.Item = item.Item_Property.FormKey == rhs.Item_Property.FormKey;
             ret.Count = item.Count == rhs.Count;
         }
 
@@ -1557,10 +1557,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.ContainerItem");
             }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        #endregion
+
+        public static void WriteToNode_Xml(
+            IContainerItemGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
             if ((translationMask?.GetShouldTranslate((int)ContainerItem_FieldIndex.Item) ?? true))
             {
                 FormKeyXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Item),
                     item: item.Item_Property?.FormKey,
                     fieldIndex: (int)ContainerItem_FieldIndex.Item,
@@ -1569,14 +1583,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)ContainerItem_FieldIndex.Count) ?? true))
             {
                 UInt32XmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Count),
                     item: item.Count,
                     fieldIndex: (int)ContainerItem_FieldIndex.Count,
                     errorMask: errorMask);
             }
         }
-        #endregion
 
         #endregion
 

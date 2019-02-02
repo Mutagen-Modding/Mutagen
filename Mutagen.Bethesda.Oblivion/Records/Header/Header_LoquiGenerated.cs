@@ -1686,10 +1686,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.Header");
             }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        #endregion
+
+        public static void WriteToNode_Xml(
+            IHeaderGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
             if ((translationMask?.GetShouldTranslate((int)Header_FieldIndex.Version) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Version),
                     item: item.Version,
                     fieldIndex: (int)Header_FieldIndex.Version,
@@ -1698,7 +1712,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)Header_FieldIndex.NumRecords) ?? true))
             {
                 Int32XmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.NumRecords),
                     item: item.NumRecords,
                     fieldIndex: (int)Header_FieldIndex.NumRecords,
@@ -1707,14 +1721,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)Header_FieldIndex.NextObjectID) ?? true))
             {
                 UInt32XmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.NextObjectID),
                     item: item.NextObjectID,
                     fieldIndex: (int)Header_FieldIndex.NextObjectID,
                     errorMask: errorMask);
             }
         }
-        #endregion
 
         #endregion
 

@@ -1583,7 +1583,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RankPlacement_Mask<bool> ret)
         {
             if (rhs == null) return;
-            ret.Faction = item.Faction == rhs.Faction;
+            ret.Faction = item.Faction_Property.FormKey == rhs.Faction_Property.FormKey;
             ret.Rank = item.Rank == rhs.Rank;
             ret.Fluff = item.Fluff.EqualsFast(rhs.Fluff);
         }
@@ -1680,10 +1680,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.RankPlacement");
             }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        #endregion
+
+        public static void WriteToNode_Xml(
+            IRankPlacementGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
             if ((translationMask?.GetShouldTranslate((int)RankPlacement_FieldIndex.Faction) ?? true))
             {
                 FormKeyXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Faction),
                     item: item.Faction_Property?.FormKey,
                     fieldIndex: (int)RankPlacement_FieldIndex.Faction,
@@ -1692,7 +1706,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)RankPlacement_FieldIndex.Rank) ?? true))
             {
                 ByteXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Rank),
                     item: item.Rank,
                     fieldIndex: (int)RankPlacement_FieldIndex.Rank,
@@ -1701,14 +1715,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)RankPlacement_FieldIndex.Fluff) ?? true))
             {
                 ByteArrayXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Fluff),
                     item: item.Fluff,
                     fieldIndex: (int)RankPlacement_FieldIndex.Fluff,
                     errorMask: errorMask);
             }
         }
-        #endregion
 
         #endregion
 

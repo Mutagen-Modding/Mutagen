@@ -1983,7 +1983,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (rhs == null) return;
             ret.Level = item.Level == rhs.Level;
             ret.Fluff = item.Fluff.EqualsFast(rhs.Fluff);
-            ret.Reference = item.Reference == rhs.Reference;
+            ret.Reference = item.Reference_Property.FormKey == rhs.Reference_Property.FormKey;
             ret.Count = item.Count_IsSet == rhs.Count_IsSet && item.Count == rhs.Count;
             ret.Fluff2 = item.Fluff2_IsSet == rhs.Fluff2_IsSet && item.Fluff2.EqualsFast(rhs.Fluff2);
         }
@@ -2100,10 +2100,25 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.LeveledEntry");
             }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        #endregion
+
+        public static void WriteToNode_Xml<T>(
+            ILeveledEntryGetter<T> item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+            where T : Bethesda.MajorRecord, ILoquiObject<T>
+        {
             if ((translationMask?.GetShouldTranslate((int)LeveledEntry_FieldIndex.Level) ?? true))
             {
                 Int16XmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Level),
                     item: item.Level,
                     fieldIndex: (int)LeveledEntry_FieldIndex.Level,
@@ -2112,7 +2127,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)LeveledEntry_FieldIndex.Fluff) ?? true))
             {
                 ByteArrayXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Fluff),
                     item: item.Fluff,
                     fieldIndex: (int)LeveledEntry_FieldIndex.Fluff,
@@ -2121,7 +2136,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)LeveledEntry_FieldIndex.Reference) ?? true))
             {
                 FormKeyXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Reference),
                     item: item.Reference_Property?.FormKey,
                     fieldIndex: (int)LeveledEntry_FieldIndex.Reference,
@@ -2131,7 +2146,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)LeveledEntry_FieldIndex.Count) ?? true))
             {
                 Int16XmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Count),
                     item: item.Count,
                     fieldIndex: (int)LeveledEntry_FieldIndex.Count,
@@ -2141,14 +2156,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)LeveledEntry_FieldIndex.Fluff2) ?? true))
             {
                 ByteArrayXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Fluff2),
                     item: item.Fluff2,
                     fieldIndex: (int)LeveledEntry_FieldIndex.Fluff2,
                     errorMask: errorMask);
             }
         }
-        #endregion
 
         #endregion
 

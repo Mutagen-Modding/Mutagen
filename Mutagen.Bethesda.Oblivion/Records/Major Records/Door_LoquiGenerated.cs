@@ -2325,10 +2325,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (rhs == null) return;
             ret.Name = item.Name_IsSet == rhs.Name_IsSet && object.Equals(item.Name, rhs.Name);
             ret.Model = IHasBeenSetExt.LoquiEqualsHelper(item.Model_IsSet, rhs.Model_IsSet, item.Model, rhs.Model, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
-            ret.Script = item.Script_Property.Equals(rhs.Script_Property, (l, r) => l == r);
-            ret.OpenSound = item.OpenSound_Property.Equals(rhs.OpenSound_Property, (l, r) => l == r);
-            ret.CloseSound = item.CloseSound_Property.Equals(rhs.CloseSound_Property, (l, r) => l == r);
-            ret.LoopSound = item.LoopSound_Property.Equals(rhs.LoopSound_Property, (l, r) => l == r);
+            ret.Script = item.Script_Property.FormKey == rhs.Script_Property.FormKey;
+            ret.OpenSound = item.OpenSound_Property.FormKey == rhs.OpenSound_Property.FormKey;
+            ret.CloseSound = item.CloseSound_Property.FormKey == rhs.CloseSound_Property.FormKey;
+            ret.LoopSound = item.LoopSound_Property.FormKey == rhs.LoopSound_Property.FormKey;
             ret.Flags = item.Flags_IsSet == rhs.Flags_IsSet && item.Flags == rhs.Flags;
             if (item.RandomTeleportDestinations.HasBeenSet == rhs.RandomTeleportDestinations.HasBeenSet)
             {
@@ -2517,11 +2517,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.Door");
             }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        #endregion
+
+        public static void WriteToNode_Xml(
+            IDoorGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            MajorRecordCommon.WriteToNode_Xml(
+                item: item,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
             if (item.Name_IsSet
                 && (translationMask?.GetShouldTranslate((int)Door_FieldIndex.Name) ?? true))
             {
                 StringXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Name),
                     item: item.Name,
                     fieldIndex: (int)Door_FieldIndex.Name,
@@ -2531,7 +2550,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)Door_FieldIndex.Model) ?? true))
             {
                 LoquiXmlTranslation<Model>.Instance.Write(
-                    node: elem,
+                    node: node,
                     item: item.Model,
                     name: nameof(item.Model),
                     fieldIndex: (int)Door_FieldIndex.Model,
@@ -2542,7 +2561,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)Door_FieldIndex.Script) ?? true))
             {
                 FormKeyXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Script),
                     item: item.Script_Property?.FormKey,
                     fieldIndex: (int)Door_FieldIndex.Script,
@@ -2552,7 +2571,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)Door_FieldIndex.OpenSound) ?? true))
             {
                 FormKeyXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.OpenSound),
                     item: item.OpenSound_Property?.FormKey,
                     fieldIndex: (int)Door_FieldIndex.OpenSound,
@@ -2562,7 +2581,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)Door_FieldIndex.CloseSound) ?? true))
             {
                 FormKeyXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.CloseSound),
                     item: item.CloseSound_Property?.FormKey,
                     fieldIndex: (int)Door_FieldIndex.CloseSound,
@@ -2572,7 +2591,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)Door_FieldIndex.LoopSound) ?? true))
             {
                 FormKeyXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.LoopSound),
                     item: item.LoopSound_Property?.FormKey,
                     fieldIndex: (int)Door_FieldIndex.LoopSound,
@@ -2582,7 +2601,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)Door_FieldIndex.Flags) ?? true))
             {
                 EnumXmlTranslation<Door.DoorFlag>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Flags),
                     item: item.Flags,
                     fieldIndex: (int)Door_FieldIndex.Flags,
@@ -2592,7 +2611,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)Door_FieldIndex.RandomTeleportDestinations) ?? true))
             {
                 ListXmlTranslation<FormIDSetLink<Place>>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.RandomTeleportDestinations),
                     item: item.RandomTeleportDestinations,
                     fieldIndex: (int)Door_FieldIndex.RandomTeleportDestinations,
@@ -2609,7 +2628,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     );
             }
         }
-        #endregion
 
         #endregion
 

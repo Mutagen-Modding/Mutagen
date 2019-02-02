@@ -1627,10 +1627,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.RaceStatsGendered");
             }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        #endregion
+
+        public static void WriteToNode_Xml(
+            IRaceStatsGenderedGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
             if ((translationMask?.GetShouldTranslate((int)RaceStatsGendered_FieldIndex.Male) ?? true))
             {
                 LoquiXmlTranslation<RaceStats>.Instance.Write(
-                    node: elem,
+                    node: node,
                     item: item.Male,
                     name: nameof(item.Male),
                     fieldIndex: (int)RaceStatsGendered_FieldIndex.Male,
@@ -1640,7 +1654,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)RaceStatsGendered_FieldIndex.Female) ?? true))
             {
                 LoquiXmlTranslation<RaceStats>.Instance.Write(
-                    node: elem,
+                    node: node,
                     item: item.Female,
                     name: nameof(item.Female),
                     fieldIndex: (int)RaceStatsGendered_FieldIndex.Female,
@@ -1648,7 +1662,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     translationMask: translationMask?.GetSubCrystal((int)RaceStatsGendered_FieldIndex.Female));
             }
         }
-        #endregion
 
         #endregion
 

@@ -3220,9 +3220,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.MagicSchool = item.MagicSchool == rhs.MagicSchool;
             ret.Resistance = item.Resistance == rhs.Resistance;
             ret.CounterEffectCount = item.CounterEffectCount == rhs.CounterEffectCount;
-            ret.Light = item.Light == rhs.Light;
+            ret.Light = item.Light_Property.FormKey == rhs.Light_Property.FormKey;
             ret.ProjectileSpeed = item.ProjectileSpeed == rhs.ProjectileSpeed;
-            ret.EffectShader = item.EffectShader == rhs.EffectShader;
+            ret.EffectShader = item.EffectShader_Property.FormKey == rhs.EffectShader_Property.FormKey;
             ret.SubData = new MaskItem<bool, MagicEffectSubData_Mask<bool>>();
             ret.SubData.Specific = MagicEffectSubDataCommon.GetEqualsMask(item.SubData, rhs.SubData);
             ret.SubData.Overall = ret.SubData.Specific.AllEqual((b) => b);
@@ -3445,11 +3445,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.MagicEffect");
             }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        #endregion
+
+        public static void WriteToNode_Xml(
+            IMagicEffectGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            MajorRecordCommon.WriteToNode_Xml(
+                item: item,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
             if (item.Name_IsSet
                 && (translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.Name) ?? true))
             {
                 StringXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Name),
                     item: item.Name,
                     fieldIndex: (int)MagicEffect_FieldIndex.Name,
@@ -3459,7 +3478,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.Description) ?? true))
             {
                 StringXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Description),
                     item: item.Description,
                     fieldIndex: (int)MagicEffect_FieldIndex.Description,
@@ -3469,7 +3488,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.Icon) ?? true))
             {
                 StringXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Icon),
                     item: item.Icon,
                     fieldIndex: (int)MagicEffect_FieldIndex.Icon,
@@ -3479,7 +3498,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.Model) ?? true))
             {
                 LoquiXmlTranslation<Model>.Instance.Write(
-                    node: elem,
+                    node: node,
                     item: item.Model,
                     name: nameof(item.Model),
                     fieldIndex: (int)MagicEffect_FieldIndex.Model,
@@ -3489,7 +3508,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.Flags) ?? true))
             {
                 EnumXmlTranslation<MagicEffect.MagicFlag>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Flags),
                     item: item.Flags,
                     fieldIndex: (int)MagicEffect_FieldIndex.Flags,
@@ -3498,7 +3517,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.BaseCost) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.BaseCost),
                     item: item.BaseCost,
                     fieldIndex: (int)MagicEffect_FieldIndex.BaseCost,
@@ -3507,7 +3526,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.Unused) ?? true))
             {
                 ByteArrayXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Unused),
                     item: item.Unused,
                     fieldIndex: (int)MagicEffect_FieldIndex.Unused,
@@ -3516,7 +3535,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.MagicSchool) ?? true))
             {
                 EnumXmlTranslation<MagicSchool>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.MagicSchool),
                     item: item.MagicSchool,
                     fieldIndex: (int)MagicEffect_FieldIndex.MagicSchool,
@@ -3525,7 +3544,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.Resistance) ?? true))
             {
                 EnumXmlTranslation<Resistance>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Resistance),
                     item: item.Resistance,
                     fieldIndex: (int)MagicEffect_FieldIndex.Resistance,
@@ -3534,7 +3553,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.CounterEffectCount) ?? true))
             {
                 UInt32XmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.CounterEffectCount),
                     item: item.CounterEffectCount,
                     fieldIndex: (int)MagicEffect_FieldIndex.CounterEffectCount,
@@ -3543,7 +3562,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.Light) ?? true))
             {
                 FormKeyXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Light),
                     item: item.Light_Property?.FormKey,
                     fieldIndex: (int)MagicEffect_FieldIndex.Light,
@@ -3552,7 +3571,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.ProjectileSpeed) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.ProjectileSpeed),
                     item: item.ProjectileSpeed,
                     fieldIndex: (int)MagicEffect_FieldIndex.ProjectileSpeed,
@@ -3561,7 +3580,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.EffectShader) ?? true))
             {
                 FormKeyXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.EffectShader),
                     item: item.EffectShader_Property?.FormKey,
                     fieldIndex: (int)MagicEffect_FieldIndex.EffectShader,
@@ -3570,7 +3589,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.SubData) ?? true))
             {
                 LoquiXmlTranslation<MagicEffectSubData>.Instance.Write(
-                    node: elem,
+                    node: node,
                     item: item.SubData,
                     name: nameof(item.SubData),
                     fieldIndex: (int)MagicEffect_FieldIndex.SubData,
@@ -3581,7 +3600,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.CounterEffects) ?? true))
             {
                 ListXmlTranslation<EDIDLink<MagicEffect>>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.CounterEffects),
                     item: item.CounterEffects,
                     fieldIndex: (int)MagicEffect_FieldIndex.CounterEffects,
@@ -3598,7 +3617,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     );
             }
         }
-        #endregion
 
         #endregion
 

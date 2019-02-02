@@ -1153,10 +1153,24 @@ namespace Mutagen.Bethesda.Tests.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Tests.Passthrough");
             }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        #endregion
+
+        public static void WriteToNode_Xml(
+            IPassthroughGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
             if ((translationMask?.GetShouldTranslate((int)Passthrough_FieldIndex.Do) ?? true))
             {
                 BooleanXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Do),
                     item: item.Do,
                     fieldIndex: (int)Passthrough_FieldIndex.Do,
@@ -1165,14 +1179,13 @@ namespace Mutagen.Bethesda.Tests.Internals
             if ((translationMask?.GetShouldTranslate((int)Passthrough_FieldIndex.Path) ?? true))
             {
                 StringXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Path),
                     item: item.Path,
                     fieldIndex: (int)Passthrough_FieldIndex.Path,
                     errorMask: errorMask);
             }
         }
-        #endregion
 
         #endregion
 

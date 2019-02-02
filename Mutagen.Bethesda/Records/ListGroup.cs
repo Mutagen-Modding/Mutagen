@@ -45,47 +45,42 @@ namespace Mutagen.Bethesda
         public static async Task Create_Xml_Folder<T>(
             this ListGroup<T> group,
             DirectoryPath dir,
+            string name,
             ErrorMaskBuilder errorMask,
             int index)
             where T : ILoquiObject<T>, IXmlFolderItem
         {
-            try
+            using (errorMask?.PushIndex(index))
             {
-                errorMask?.PushIndex(index);
-                try
+                using (errorMask?.PushIndex((int)Group_FieldIndex.Items))
                 {
-                    errorMask?.PushIndex((int)Group_FieldIndex.Items);
-                    foreach (var item in dir.EnumerateFiles())
+                    try
                     {
-                        if (!item.Info.Extension.Equals("xml"))
+                        var path = Path.Combine(dir.Path, $"{name}.xml");
+                        if (!File.Exists(path))
                         {
-                            continue;
+                            group.Clear();
+                            return;
                         }
+                        foreach (var item in dir.EnumerateFiles())
+                        {
+                            if (!item.Info.Extension.Equals("xml"))
+                            {
+                                continue;
+                            }
 
-                        var val = LoquiXmlFolderTranslation<T>.CREATE.Value(
-                            item.Path,
-                            null);
-                        group.Items.Add(val);
+                            var val = LoquiXmlFolderTranslation<T>.CREATE.Value(
+                                item.Path,
+                                null);
+                            group.Items.Add(val);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
                     }
                 }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
             }
         }
 
@@ -97,53 +92,41 @@ namespace Mutagen.Bethesda
             int index)
             where T : ILoquiObject<T>, IXmlFolderItem
         {
-            try
+            using (errorMask?.PushIndex(index))
             {
-                errorMask?.PushIndex(index);
-                try
+                using (errorMask?.PushIndex((int)Group_FieldIndex.Items))
                 {
-                    errorMask?.PushIndex((int)ListGroup_FieldIndex.Items);
-                    int counter = 0;
-                    foreach (var item in list.Items.Items)
+                    try
                     {
-                        using (errorMask.PushIndex(counter))
+                        int counter = 0;
+                        foreach (var item in list.Items.Items)
                         {
-                            try
+                            using (errorMask.PushIndex(counter))
                             {
-                                item.Write_Xml_Folder(
-                                    node: null,
-                                    name: name,
-                                    counter: counter,
-                                    dir: dir,
-                                    errorMask: errorMask);
+                                try
+                                {
+                                    item.Write_Xml_Folder(
+                                        node: null,
+                                        name: name,
+                                        counter: counter,
+                                        dir: dir,
+                                        errorMask: errorMask);
+                                }
+                                catch (Exception ex)
+                                when (errorMask != null)
+                                {
+                                    errorMask.ReportException(ex);
+                                }
                             }
-                            catch (Exception ex)
-                            when (errorMask != null)
-                            {
-                                errorMask.ReportException(ex);
-                            }
+                            counter++;
                         }
-                        counter++;
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
                     }
                 }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
             }
         }
     }

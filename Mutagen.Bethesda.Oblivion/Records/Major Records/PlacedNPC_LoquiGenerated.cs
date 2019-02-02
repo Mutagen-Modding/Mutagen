@@ -2853,13 +2853,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             PlacedNPC_Mask<bool> ret)
         {
             if (rhs == null) return;
-            ret.Base = item.Base_Property.Equals(rhs.Base_Property, (l, r) => l == r);
+            ret.Base = item.Base_Property.FormKey == rhs.Base_Property.FormKey;
             ret.XPCIFluff = item.XPCIFluff_IsSet == rhs.XPCIFluff_IsSet && item.XPCIFluff.EqualsFast(rhs.XPCIFluff);
             ret.FULLFluff = item.FULLFluff_IsSet == rhs.FULLFluff_IsSet && item.FULLFluff.EqualsFast(rhs.FULLFluff);
             ret.DistantLODData = IHasBeenSetExt.LoquiEqualsHelper(item.DistantLODData_IsSet, rhs.DistantLODData_IsSet, item.DistantLODData, rhs.DistantLODData, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
             ret.EnableParent = IHasBeenSetExt.LoquiEqualsHelper(item.EnableParent_IsSet, rhs.EnableParent_IsSet, item.EnableParent, rhs.EnableParent, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
-            ret.MerchantContainer = item.MerchantContainer_Property.Equals(rhs.MerchantContainer_Property, (l, r) => l == r);
-            ret.Horse = item.Horse_Property.Equals(rhs.Horse_Property, (l, r) => l == r);
+            ret.MerchantContainer = item.MerchantContainer_Property.FormKey == rhs.MerchantContainer_Property.FormKey;
+            ret.Horse = item.Horse_Property.FormKey == rhs.Horse_Property.FormKey;
             ret.RagdollData = item.RagdollData_IsSet == rhs.RagdollData_IsSet && item.RagdollData.EqualsFast(rhs.RagdollData);
             ret.Scale = item.Scale_IsSet == rhs.Scale_IsSet && item.Scale == rhs.Scale;
             ret.Position = item.Position == rhs.Position;
@@ -3035,11 +3035,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.PlacedNPC");
             }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        #endregion
+
+        public static void WriteToNode_Xml(
+            IPlacedNPCGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            MajorRecordCommon.WriteToNode_Xml(
+                item: item,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
             if (item.Base_Property.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)PlacedNPC_FieldIndex.Base) ?? true))
             {
                 FormKeyXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Base),
                     item: item.Base_Property?.FormKey,
                     fieldIndex: (int)PlacedNPC_FieldIndex.Base,
@@ -3049,7 +3068,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)PlacedNPC_FieldIndex.XPCIFluff) ?? true))
             {
                 ByteArrayXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.XPCIFluff),
                     item: item.XPCIFluff,
                     fieldIndex: (int)PlacedNPC_FieldIndex.XPCIFluff,
@@ -3059,7 +3078,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)PlacedNPC_FieldIndex.FULLFluff) ?? true))
             {
                 ByteArrayXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.FULLFluff),
                     item: item.FULLFluff,
                     fieldIndex: (int)PlacedNPC_FieldIndex.FULLFluff,
@@ -3069,7 +3088,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)PlacedNPC_FieldIndex.DistantLODData) ?? true))
             {
                 LoquiXmlTranslation<DistantLODData>.Instance.Write(
-                    node: elem,
+                    node: node,
                     item: item.DistantLODData,
                     name: nameof(item.DistantLODData),
                     fieldIndex: (int)PlacedNPC_FieldIndex.DistantLODData,
@@ -3080,7 +3099,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)PlacedNPC_FieldIndex.EnableParent) ?? true))
             {
                 LoquiXmlTranslation<EnableParent>.Instance.Write(
-                    node: elem,
+                    node: node,
                     item: item.EnableParent,
                     name: nameof(item.EnableParent),
                     fieldIndex: (int)PlacedNPC_FieldIndex.EnableParent,
@@ -3091,7 +3110,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)PlacedNPC_FieldIndex.MerchantContainer) ?? true))
             {
                 FormKeyXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.MerchantContainer),
                     item: item.MerchantContainer_Property?.FormKey,
                     fieldIndex: (int)PlacedNPC_FieldIndex.MerchantContainer,
@@ -3101,7 +3120,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)PlacedNPC_FieldIndex.Horse) ?? true))
             {
                 FormKeyXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Horse),
                     item: item.Horse_Property?.FormKey,
                     fieldIndex: (int)PlacedNPC_FieldIndex.Horse,
@@ -3111,7 +3130,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)PlacedNPC_FieldIndex.RagdollData) ?? true))
             {
                 ByteArrayXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.RagdollData),
                     item: item.RagdollData,
                     fieldIndex: (int)PlacedNPC_FieldIndex.RagdollData,
@@ -3121,7 +3140,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)PlacedNPC_FieldIndex.Scale) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Scale),
                     item: item.Scale,
                     fieldIndex: (int)PlacedNPC_FieldIndex.Scale,
@@ -3130,7 +3149,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)PlacedNPC_FieldIndex.Position) ?? true))
             {
                 P3FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Position),
                     item: item.Position,
                     fieldIndex: (int)PlacedNPC_FieldIndex.Position,
@@ -3139,14 +3158,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)PlacedNPC_FieldIndex.Rotation) ?? true))
             {
                 P3FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Rotation),
                     item: item.Rotation,
                     fieldIndex: (int)PlacedNPC_FieldIndex.Rotation,
                     errorMask: errorMask);
             }
         }
-        #endregion
 
         #endregion
 

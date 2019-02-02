@@ -2043,11 +2043,25 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.Rank");
             }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        #endregion
+
+        public static void WriteToNode_Xml(
+            IRankGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
             if (item.RankNumber_IsSet
                 && (translationMask?.GetShouldTranslate((int)Rank_FieldIndex.RankNumber) ?? true))
             {
                 Int32XmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.RankNumber),
                     item: item.RankNumber,
                     fieldIndex: (int)Rank_FieldIndex.RankNumber,
@@ -2057,7 +2071,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)Rank_FieldIndex.MaleName) ?? true))
             {
                 StringXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.MaleName),
                     item: item.MaleName,
                     fieldIndex: (int)Rank_FieldIndex.MaleName,
@@ -2067,7 +2081,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)Rank_FieldIndex.FemaleName) ?? true))
             {
                 StringXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.FemaleName),
                     item: item.FemaleName,
                     fieldIndex: (int)Rank_FieldIndex.FemaleName,
@@ -2077,14 +2091,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)Rank_FieldIndex.Insignia) ?? true))
             {
                 StringXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Insignia),
                     item: item.Insignia,
                     fieldIndex: (int)Rank_FieldIndex.Insignia,
                     errorMask: errorMask);
             }
         }
-        #endregion
 
         #endregion
 

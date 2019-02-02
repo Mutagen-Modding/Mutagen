@@ -1582,11 +1582,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.RegionDataObjects");
             }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        #endregion
+
+        public static void WriteToNode_Xml(
+            IRegionDataObjectsGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            RegionDataCommon.WriteToNode_Xml(
+                item: item,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
             if (item.Objects.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)RegionDataObjects_FieldIndex.Objects) ?? true))
             {
                 ListXmlTranslation<RegionDataObject>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Objects),
                     item: item.Objects,
                     fieldIndex: (int)RegionDataObjects_FieldIndex.Objects,
@@ -1604,7 +1623,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     );
             }
         }
-        #endregion
 
         #endregion
 

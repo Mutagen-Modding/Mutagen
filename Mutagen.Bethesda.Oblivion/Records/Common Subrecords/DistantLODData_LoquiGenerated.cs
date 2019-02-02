@@ -1686,10 +1686,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.DistantLODData");
             }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        #endregion
+
+        public static void WriteToNode_Xml(
+            IDistantLODDataGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
             if ((translationMask?.GetShouldTranslate((int)DistantLODData_FieldIndex.Unknown0) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Unknown0),
                     item: item.Unknown0,
                     fieldIndex: (int)DistantLODData_FieldIndex.Unknown0,
@@ -1698,7 +1712,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)DistantLODData_FieldIndex.Unknown1) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Unknown1),
                     item: item.Unknown1,
                     fieldIndex: (int)DistantLODData_FieldIndex.Unknown1,
@@ -1707,14 +1721,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)DistantLODData_FieldIndex.Unknown2) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Unknown2),
                     item: item.Unknown2,
                     fieldIndex: (int)DistantLODData_FieldIndex.Unknown2,
                     errorMask: errorMask);
             }
         }
-        #endregion
 
         #endregion
 

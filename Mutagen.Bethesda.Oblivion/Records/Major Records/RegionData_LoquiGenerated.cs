@@ -150,6 +150,117 @@ namespace Mutagen.Bethesda.Oblivion
 
 
         #region Xml Translation
+        #region Xml Create
+        [DebuggerStepThrough]
+        public static RegionData Create_Xml(
+            XElement node,
+            RegionData_TranslationMask translationMask = null)
+        {
+            return Create_Xml(
+                node: node,
+                errorMask: null,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        [DebuggerStepThrough]
+        public static RegionData Create_Xml(
+            XElement node,
+            out RegionData_ErrorMask errorMask,
+            bool doMasks = true,
+            RegionData_TranslationMask translationMask = null)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            var ret = Create_Xml(
+                node: node,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask.GetCrystal());
+            errorMask = RegionData_ErrorMask.Factory(errorMaskBuilder);
+            return ret;
+        }
+
+        public static RegionData Create_Xml(
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            RegionData ret;
+            if (!LoquiXmlTranslation.Instance.TryCreate(node, out ret, errorMask, translationMask))
+            {
+                throw new ArgumentException($"Unknown RegionData subclass: {node.Name.LocalName}");
+            }
+            return ret;
+        }
+
+        public static RegionData Create_Xml(
+            string path,
+            RegionData_TranslationMask translationMask = null)
+        {
+            var node = XDocument.Load(path).Root;
+            return Create_Xml(
+                node: node,
+                translationMask: translationMask);
+        }
+
+        public static RegionData Create_Xml(
+            string path,
+            out RegionData_ErrorMask errorMask,
+            RegionData_TranslationMask translationMask = null)
+        {
+            var node = XDocument.Load(path).Root;
+            return Create_Xml(
+                node: node,
+                errorMask: out errorMask,
+                translationMask: translationMask);
+        }
+
+        public static RegionData Create_Xml(
+            string path,
+            ErrorMaskBuilder errorMask,
+            RegionData_TranslationMask translationMask = null)
+        {
+            var node = XDocument.Load(path).Root;
+            return Create_Xml(
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        public static RegionData Create_Xml(
+            Stream stream,
+            RegionData_TranslationMask translationMask = null)
+        {
+            var node = XDocument.Load(stream).Root;
+            return Create_Xml(
+                node: node,
+                translationMask: translationMask);
+        }
+
+        public static RegionData Create_Xml(
+            Stream stream,
+            out RegionData_ErrorMask errorMask,
+            RegionData_TranslationMask translationMask = null)
+        {
+            var node = XDocument.Load(stream).Root;
+            return Create_Xml(
+                node: node,
+                errorMask: out errorMask,
+                translationMask: translationMask);
+        }
+
+        public static RegionData Create_Xml(
+            Stream stream,
+            ErrorMaskBuilder errorMask,
+            RegionData_TranslationMask translationMask = null)
+        {
+            var node = XDocument.Load(stream).Root;
+            return Create_Xml(
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        #endregion
+
         #region Xml Copy In
         public virtual void CopyIn_Xml(
             XElement node,
@@ -1409,10 +1520,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.RegionData");
             }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        #endregion
+
+        public static void WriteToNode_Xml(
+            IRegionDataGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
             if ((translationMask?.GetShouldTranslate((int)RegionData_FieldIndex.DataType) ?? true))
             {
                 EnumXmlTranslation<RegionData.RegionDataType>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.DataType),
                     item: item.DataType,
                     fieldIndex: (int)RegionData_FieldIndex.DataType,
@@ -1421,7 +1546,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)RegionData_FieldIndex.Flags) ?? true))
             {
                 EnumXmlTranslation<RegionData.RegionDataFlag>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Flags),
                     item: item.Flags,
                     fieldIndex: (int)RegionData_FieldIndex.Flags,
@@ -1430,14 +1555,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)RegionData_FieldIndex.Priority) ?? true))
             {
                 ByteXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Priority),
                     item: item.Priority,
                     fieldIndex: (int)RegionData_FieldIndex.Priority,
                     errorMask: errorMask);
             }
         }
-        #endregion
 
         #endregion
 

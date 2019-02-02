@@ -7576,8 +7576,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 ret.Factions = new MaskItem<bool, IEnumerable<MaskItem<bool, RankPlacement_Mask<bool>>>>();
                 ret.Factions.Overall = false;
             }
-            ret.DeathItem = item.DeathItem_Property.Equals(rhs.DeathItem_Property, (l, r) => l == r);
-            ret.Script = item.Script_Property.Equals(rhs.Script_Property, (l, r) => l == r);
+            ret.DeathItem = item.DeathItem_Property.FormKey == rhs.DeathItem_Property.FormKey;
+            ret.Script = item.Script_Property.FormKey == rhs.Script_Property.FormKey;
             ret.Aggression = item.Aggression == rhs.Aggression;
             ret.Confidence = item.Confidence == rhs.Confidence;
             ret.EnergyLevel = item.EnergyLevel == rhs.EnergyLevel;
@@ -7639,13 +7639,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Personality = item.Personality == rhs.Personality;
             ret.Luck = item.Luck == rhs.Luck;
             ret.AttackReach = item.AttackReach_IsSet == rhs.AttackReach_IsSet && item.AttackReach == rhs.AttackReach;
-            ret.CombatStyle = item.CombatStyle_Property.Equals(rhs.CombatStyle_Property, (l, r) => l == r);
+            ret.CombatStyle = item.CombatStyle_Property.FormKey == rhs.CombatStyle_Property.FormKey;
             ret.TurningSpeed = item.TurningSpeed_IsSet == rhs.TurningSpeed_IsSet && item.TurningSpeed == rhs.TurningSpeed;
             ret.BaseScale = item.BaseScale_IsSet == rhs.BaseScale_IsSet && item.BaseScale == rhs.BaseScale;
             ret.FootWeight = item.FootWeight_IsSet == rhs.FootWeight_IsSet && item.FootWeight == rhs.FootWeight;
             ret.BloodSpray = item.BloodSpray_IsSet == rhs.BloodSpray_IsSet && object.Equals(item.BloodSpray, rhs.BloodSpray);
             ret.BloodDecal = item.BloodDecal_IsSet == rhs.BloodDecal_IsSet && object.Equals(item.BloodDecal, rhs.BloodDecal);
-            ret.InheritsSoundFrom = item.InheritsSoundFrom_Property.Equals(rhs.InheritsSoundFrom_Property, (l, r) => l == r);
+            ret.InheritsSoundFrom = item.InheritsSoundFrom_Property.FormKey == rhs.InheritsSoundFrom_Property.FormKey;
             if (item.Sounds.HasBeenSet == rhs.Sounds.HasBeenSet)
             {
                 if (item.Sounds.HasBeenSet)
@@ -8190,11 +8190,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.Creature");
             }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        #endregion
+
+        public static void WriteToNode_Xml(
+            ICreatureGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            NPCAbstractCommon.WriteToNode_Xml(
+                item: item,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
             if (item.Name_IsSet
                 && (translationMask?.GetShouldTranslate((int)Creature_FieldIndex.Name) ?? true))
             {
                 StringXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Name),
                     item: item.Name,
                     fieldIndex: (int)Creature_FieldIndex.Name,
@@ -8204,7 +8223,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)Creature_FieldIndex.Model) ?? true))
             {
                 LoquiXmlTranslation<Model>.Instance.Write(
-                    node: elem,
+                    node: node,
                     item: item.Model,
                     name: nameof(item.Model),
                     fieldIndex: (int)Creature_FieldIndex.Model,
@@ -8215,7 +8234,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)Creature_FieldIndex.Items) ?? true))
             {
                 ListXmlTranslation<ItemEntry>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Items),
                     item: item.Items,
                     fieldIndex: (int)Creature_FieldIndex.Items,
@@ -8236,7 +8255,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)Creature_FieldIndex.Spells) ?? true))
             {
                 ListXmlTranslation<FormIDSetLink<SpellAbstract>>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Spells),
                     item: item.Spells,
                     fieldIndex: (int)Creature_FieldIndex.Spells,
@@ -8256,7 +8275,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)Creature_FieldIndex.Models) ?? true))
             {
                 ListXmlTranslation<String>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Models),
                     item: item.Models,
                     fieldIndex: (int)Creature_FieldIndex.Models,
@@ -8276,7 +8295,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)Creature_FieldIndex.NIFT) ?? true))
             {
                 ByteArrayXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.NIFT),
                     item: item.NIFT,
                     fieldIndex: (int)Creature_FieldIndex.NIFT,
@@ -8285,7 +8304,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)Creature_FieldIndex.Flags) ?? true))
             {
                 EnumXmlTranslation<Creature.CreatureFlag>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Flags),
                     item: item.Flags,
                     fieldIndex: (int)Creature_FieldIndex.Flags,
@@ -8294,7 +8313,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)Creature_FieldIndex.BaseSpellPoints) ?? true))
             {
                 UInt16XmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.BaseSpellPoints),
                     item: item.BaseSpellPoints,
                     fieldIndex: (int)Creature_FieldIndex.BaseSpellPoints,
@@ -8303,7 +8322,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)Creature_FieldIndex.Fatigue) ?? true))
             {
                 UInt16XmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Fatigue),
                     item: item.Fatigue,
                     fieldIndex: (int)Creature_FieldIndex.Fatigue,
@@ -8312,7 +8331,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)Creature_FieldIndex.BarterGold) ?? true))
             {
                 UInt16XmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.BarterGold),
                     item: item.BarterGold,
                     fieldIndex: (int)Creature_FieldIndex.BarterGold,
@@ -8321,7 +8340,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)Creature_FieldIndex.LevelOffset) ?? true))
             {
                 Int16XmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.LevelOffset),
                     item: item.LevelOffset,
                     fieldIndex: (int)Creature_FieldIndex.LevelOffset,
@@ -8330,7 +8349,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)Creature_FieldIndex.CalcMin) ?? true))
             {
                 UInt16XmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.CalcMin),
                     item: item.CalcMin,
                     fieldIndex: (int)Creature_FieldIndex.CalcMin,
@@ -8339,7 +8358,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)Creature_FieldIndex.CalcMax) ?? true))
             {
                 UInt16XmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.CalcMax),
                     item: item.CalcMax,
                     fieldIndex: (int)Creature_FieldIndex.CalcMax,
@@ -8349,7 +8368,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)Creature_FieldIndex.Factions) ?? true))
             {
                 ListXmlTranslation<RankPlacement>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Factions),
                     item: item.Factions,
                     fieldIndex: (int)Creature_FieldIndex.Factions,
@@ -8370,7 +8389,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)Creature_FieldIndex.DeathItem) ?? true))
             {
                 FormKeyXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.DeathItem),
                     item: item.DeathItem_Property?.FormKey,
                     fieldIndex: (int)Creature_FieldIndex.DeathItem,
@@ -8380,7 +8399,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)Creature_FieldIndex.Script) ?? true))
             {
                 FormKeyXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Script),
                     item: item.Script_Property?.FormKey,
                     fieldIndex: (int)Creature_FieldIndex.Script,
@@ -8389,7 +8408,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)Creature_FieldIndex.Aggression) ?? true))
             {
                 ByteXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Aggression),
                     item: item.Aggression,
                     fieldIndex: (int)Creature_FieldIndex.Aggression,
@@ -8398,7 +8417,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)Creature_FieldIndex.Confidence) ?? true))
             {
                 ByteXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Confidence),
                     item: item.Confidence,
                     fieldIndex: (int)Creature_FieldIndex.Confidence,
@@ -8407,7 +8426,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)Creature_FieldIndex.EnergyLevel) ?? true))
             {
                 ByteXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.EnergyLevel),
                     item: item.EnergyLevel,
                     fieldIndex: (int)Creature_FieldIndex.EnergyLevel,
@@ -8416,7 +8435,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)Creature_FieldIndex.Responsibility) ?? true))
             {
                 ByteXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Responsibility),
                     item: item.Responsibility,
                     fieldIndex: (int)Creature_FieldIndex.Responsibility,
@@ -8425,7 +8444,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)Creature_FieldIndex.BuySellServices) ?? true))
             {
                 EnumXmlTranslation<NPC.BuySellServiceFlag>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.BuySellServices),
                     item: item.BuySellServices,
                     fieldIndex: (int)Creature_FieldIndex.BuySellServices,
@@ -8434,7 +8453,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)Creature_FieldIndex.Teaches) ?? true))
             {
                 EnumXmlTranslation<Skill>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Teaches),
                     item: item.Teaches,
                     fieldIndex: (int)Creature_FieldIndex.Teaches,
@@ -8443,7 +8462,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)Creature_FieldIndex.MaximumTrainingLevel) ?? true))
             {
                 ByteXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.MaximumTrainingLevel),
                     item: item.MaximumTrainingLevel,
                     fieldIndex: (int)Creature_FieldIndex.MaximumTrainingLevel,
@@ -8453,7 +8472,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)Creature_FieldIndex.AIPackages) ?? true))
             {
                 ListXmlTranslation<FormIDSetLink<AIPackage>>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.AIPackages),
                     item: item.AIPackages,
                     fieldIndex: (int)Creature_FieldIndex.AIPackages,
@@ -8473,7 +8492,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)Creature_FieldIndex.Animations) ?? true))
             {
                 ListXmlTranslation<String>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Animations),
                     item: item.Animations,
                     fieldIndex: (int)Creature_FieldIndex.Animations,
@@ -8492,7 +8511,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)Creature_FieldIndex.CreatureType) ?? true))
             {
                 EnumXmlTranslation<Creature.CreatureTypeEnum>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.CreatureType),
                     item: item.CreatureType,
                     fieldIndex: (int)Creature_FieldIndex.CreatureType,
@@ -8501,7 +8520,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)Creature_FieldIndex.CombatSkill) ?? true))
             {
                 ByteXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.CombatSkill),
                     item: item.CombatSkill,
                     fieldIndex: (int)Creature_FieldIndex.CombatSkill,
@@ -8510,7 +8529,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)Creature_FieldIndex.MagicSkill) ?? true))
             {
                 ByteXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.MagicSkill),
                     item: item.MagicSkill,
                     fieldIndex: (int)Creature_FieldIndex.MagicSkill,
@@ -8519,7 +8538,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)Creature_FieldIndex.StealthSkill) ?? true))
             {
                 ByteXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.StealthSkill),
                     item: item.StealthSkill,
                     fieldIndex: (int)Creature_FieldIndex.StealthSkill,
@@ -8528,7 +8547,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)Creature_FieldIndex.SoulLevel) ?? true))
             {
                 EnumXmlTranslation<SoulLevel>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.SoulLevel),
                     item: item.SoulLevel,
                     fieldIndex: (int)Creature_FieldIndex.SoulLevel,
@@ -8537,7 +8556,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)Creature_FieldIndex.Health) ?? true))
             {
                 UInt32XmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Health),
                     item: item.Health,
                     fieldIndex: (int)Creature_FieldIndex.Health,
@@ -8546,7 +8565,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)Creature_FieldIndex.AttackDamage) ?? true))
             {
                 UInt16XmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.AttackDamage),
                     item: item.AttackDamage,
                     fieldIndex: (int)Creature_FieldIndex.AttackDamage,
@@ -8555,7 +8574,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)Creature_FieldIndex.Strength) ?? true))
             {
                 ByteXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Strength),
                     item: item.Strength,
                     fieldIndex: (int)Creature_FieldIndex.Strength,
@@ -8564,7 +8583,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)Creature_FieldIndex.Intelligence) ?? true))
             {
                 ByteXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Intelligence),
                     item: item.Intelligence,
                     fieldIndex: (int)Creature_FieldIndex.Intelligence,
@@ -8573,7 +8592,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)Creature_FieldIndex.Willpower) ?? true))
             {
                 ByteXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Willpower),
                     item: item.Willpower,
                     fieldIndex: (int)Creature_FieldIndex.Willpower,
@@ -8582,7 +8601,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)Creature_FieldIndex.Agility) ?? true))
             {
                 ByteXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Agility),
                     item: item.Agility,
                     fieldIndex: (int)Creature_FieldIndex.Agility,
@@ -8591,7 +8610,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)Creature_FieldIndex.Speed) ?? true))
             {
                 ByteXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Speed),
                     item: item.Speed,
                     fieldIndex: (int)Creature_FieldIndex.Speed,
@@ -8600,7 +8619,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)Creature_FieldIndex.Endurance) ?? true))
             {
                 ByteXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Endurance),
                     item: item.Endurance,
                     fieldIndex: (int)Creature_FieldIndex.Endurance,
@@ -8609,7 +8628,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)Creature_FieldIndex.Personality) ?? true))
             {
                 ByteXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Personality),
                     item: item.Personality,
                     fieldIndex: (int)Creature_FieldIndex.Personality,
@@ -8618,7 +8637,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)Creature_FieldIndex.Luck) ?? true))
             {
                 ByteXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Luck),
                     item: item.Luck,
                     fieldIndex: (int)Creature_FieldIndex.Luck,
@@ -8628,7 +8647,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)Creature_FieldIndex.AttackReach) ?? true))
             {
                 ByteXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.AttackReach),
                     item: item.AttackReach,
                     fieldIndex: (int)Creature_FieldIndex.AttackReach,
@@ -8638,7 +8657,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)Creature_FieldIndex.CombatStyle) ?? true))
             {
                 FormKeyXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.CombatStyle),
                     item: item.CombatStyle_Property?.FormKey,
                     fieldIndex: (int)Creature_FieldIndex.CombatStyle,
@@ -8648,7 +8667,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)Creature_FieldIndex.TurningSpeed) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.TurningSpeed),
                     item: item.TurningSpeed,
                     fieldIndex: (int)Creature_FieldIndex.TurningSpeed,
@@ -8658,7 +8677,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)Creature_FieldIndex.BaseScale) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.BaseScale),
                     item: item.BaseScale,
                     fieldIndex: (int)Creature_FieldIndex.BaseScale,
@@ -8668,7 +8687,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)Creature_FieldIndex.FootWeight) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.FootWeight),
                     item: item.FootWeight,
                     fieldIndex: (int)Creature_FieldIndex.FootWeight,
@@ -8678,7 +8697,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)Creature_FieldIndex.BloodSpray) ?? true))
             {
                 StringXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.BloodSpray),
                     item: item.BloodSpray,
                     fieldIndex: (int)Creature_FieldIndex.BloodSpray,
@@ -8688,7 +8707,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)Creature_FieldIndex.BloodDecal) ?? true))
             {
                 StringXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.BloodDecal),
                     item: item.BloodDecal,
                     fieldIndex: (int)Creature_FieldIndex.BloodDecal,
@@ -8698,7 +8717,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)Creature_FieldIndex.InheritsSoundFrom) ?? true))
             {
                 FormKeyXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.InheritsSoundFrom),
                     item: item.InheritsSoundFrom_Property?.FormKey,
                     fieldIndex: (int)Creature_FieldIndex.InheritsSoundFrom,
@@ -8708,7 +8727,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)Creature_FieldIndex.Sounds) ?? true))
             {
                 ListXmlTranslation<CreatureSound>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Sounds),
                     item: item.Sounds,
                     fieldIndex: (int)Creature_FieldIndex.Sounds,
@@ -8726,7 +8745,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     );
             }
         }
-        #endregion
 
         #endregion
 

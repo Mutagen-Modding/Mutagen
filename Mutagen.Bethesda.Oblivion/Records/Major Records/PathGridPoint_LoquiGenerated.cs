@@ -1699,10 +1699,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.PathGridPoint");
             }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        #endregion
+
+        public static void WriteToNode_Xml(
+            IPathGridPointGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
             if ((translationMask?.GetShouldTranslate((int)PathGridPoint_FieldIndex.Point) ?? true))
             {
                 P3FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Point),
                     item: item.Point,
                     fieldIndex: (int)PathGridPoint_FieldIndex.Point,
@@ -1711,7 +1725,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)PathGridPoint_FieldIndex.NumConnectionsFluffBytes) ?? true))
             {
                 ByteArrayXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.NumConnectionsFluffBytes),
                     item: item.NumConnectionsFluffBytes,
                     fieldIndex: (int)PathGridPoint_FieldIndex.NumConnectionsFluffBytes,
@@ -1720,7 +1734,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)PathGridPoint_FieldIndex.Connections) ?? true))
             {
                 ListXmlTranslation<Int16>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Connections),
                     item: item.Connections,
                     fieldIndex: (int)PathGridPoint_FieldIndex.Connections,
@@ -1737,7 +1751,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     );
             }
         }
-        #endregion
 
         #endregion
 

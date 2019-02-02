@@ -1568,7 +1568,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             SoundItem_Mask<bool> ret)
         {
             if (rhs == null) return;
-            ret.Sound = item.Sound_Property.Equals(rhs.Sound_Property, (l, r) => l == r);
+            ret.Sound = item.Sound_Property.FormKey == rhs.Sound_Property.FormKey;
             ret.Chance = item.Chance_IsSet == rhs.Chance_IsSet && item.Chance == rhs.Chance;
         }
 
@@ -1661,11 +1661,25 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.SoundItem");
             }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        #endregion
+
+        public static void WriteToNode_Xml(
+            ISoundItemGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
             if (item.Sound_Property.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)SoundItem_FieldIndex.Sound) ?? true))
             {
                 FormKeyXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Sound),
                     item: item.Sound_Property?.FormKey,
                     fieldIndex: (int)SoundItem_FieldIndex.Sound,
@@ -1675,14 +1689,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)SoundItem_FieldIndex.Chance) ?? true))
             {
                 ByteXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Chance),
                     item: item.Chance,
                     fieldIndex: (int)SoundItem_FieldIndex.Chance,
                     errorMask: errorMask);
             }
         }
-        #endregion
 
         #endregion
 

@@ -3487,9 +3487,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (rhs == null) return;
             ret.Name = item.Name_IsSet == rhs.Name_IsSet && object.Equals(item.Name, rhs.Name);
-            ret.Parent = item.Parent_Property.Equals(rhs.Parent_Property, (l, r) => l == r);
-            ret.Climate = item.Climate_Property.Equals(rhs.Climate_Property, (l, r) => l == r);
-            ret.Water = item.Water_Property.Equals(rhs.Water_Property, (l, r) => l == r);
+            ret.Parent = item.Parent_Property.FormKey == rhs.Parent_Property.FormKey;
+            ret.Climate = item.Climate_Property.FormKey == rhs.Climate_Property.FormKey;
+            ret.Water = item.Water_Property.FormKey == rhs.Water_Property.FormKey;
             ret.Icon = item.Icon_IsSet == rhs.Icon_IsSet && object.Equals(item.Icon, rhs.Icon);
             ret.MapData = IHasBeenSetExt.LoquiEqualsHelper(item.MapData_IsSet, rhs.MapData_IsSet, item.MapData, rhs.MapData, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
             ret.Flags = item.Flags_IsSet == rhs.Flags_IsSet && item.Flags == rhs.Flags;
@@ -3755,11 +3755,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.Worldspace");
             }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        #endregion
+
+        public static void WriteToNode_Xml(
+            IWorldspaceGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            PlaceCommon.WriteToNode_Xml(
+                item: item,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
             if (item.Name_IsSet
                 && (translationMask?.GetShouldTranslate((int)Worldspace_FieldIndex.Name) ?? true))
             {
                 StringXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Name),
                     item: item.Name,
                     fieldIndex: (int)Worldspace_FieldIndex.Name,
@@ -3769,7 +3788,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)Worldspace_FieldIndex.Parent) ?? true))
             {
                 FormKeyXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Parent),
                     item: item.Parent_Property?.FormKey,
                     fieldIndex: (int)Worldspace_FieldIndex.Parent,
@@ -3779,7 +3798,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)Worldspace_FieldIndex.Climate) ?? true))
             {
                 FormKeyXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Climate),
                     item: item.Climate_Property?.FormKey,
                     fieldIndex: (int)Worldspace_FieldIndex.Climate,
@@ -3789,7 +3808,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)Worldspace_FieldIndex.Water) ?? true))
             {
                 FormKeyXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Water),
                     item: item.Water_Property?.FormKey,
                     fieldIndex: (int)Worldspace_FieldIndex.Water,
@@ -3799,7 +3818,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)Worldspace_FieldIndex.Icon) ?? true))
             {
                 StringXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Icon),
                     item: item.Icon,
                     fieldIndex: (int)Worldspace_FieldIndex.Icon,
@@ -3809,7 +3828,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)Worldspace_FieldIndex.MapData) ?? true))
             {
                 LoquiXmlTranslation<MapData>.Instance.Write(
-                    node: elem,
+                    node: node,
                     item: item.MapData,
                     name: nameof(item.MapData),
                     fieldIndex: (int)Worldspace_FieldIndex.MapData,
@@ -3820,7 +3839,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)Worldspace_FieldIndex.Flags) ?? true))
             {
                 EnumXmlTranslation<Worldspace.Flag>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Flags),
                     item: item.Flags,
                     fieldIndex: (int)Worldspace_FieldIndex.Flags,
@@ -3830,7 +3849,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)Worldspace_FieldIndex.ObjectBoundsMin) ?? true))
             {
                 P2FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.ObjectBoundsMin),
                     item: item.ObjectBoundsMin,
                     fieldIndex: (int)Worldspace_FieldIndex.ObjectBoundsMin,
@@ -3840,7 +3859,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)Worldspace_FieldIndex.ObjectBoundsMax) ?? true))
             {
                 P2FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.ObjectBoundsMax),
                     item: item.ObjectBoundsMax,
                     fieldIndex: (int)Worldspace_FieldIndex.ObjectBoundsMax,
@@ -3850,7 +3869,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)Worldspace_FieldIndex.Music) ?? true))
             {
                 EnumXmlTranslation<MusicType>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Music),
                     item: item.Music,
                     fieldIndex: (int)Worldspace_FieldIndex.Music,
@@ -3860,7 +3879,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)Worldspace_FieldIndex.OffsetData) ?? true))
             {
                 ByteArrayXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.OffsetData),
                     item: item.OffsetData,
                     fieldIndex: (int)Worldspace_FieldIndex.OffsetData,
@@ -3870,7 +3889,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)Worldspace_FieldIndex.Road) ?? true))
             {
                 LoquiXmlTranslation<Road>.Instance.Write(
-                    node: elem,
+                    node: node,
                     item: item.Road,
                     name: nameof(item.Road),
                     fieldIndex: (int)Worldspace_FieldIndex.Road,
@@ -3881,7 +3900,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)Worldspace_FieldIndex.TopCell) ?? true))
             {
                 LoquiXmlTranslation<Cell>.Instance.Write(
-                    node: elem,
+                    node: node,
                     item: item.TopCell,
                     name: nameof(item.TopCell),
                     fieldIndex: (int)Worldspace_FieldIndex.TopCell,
@@ -3892,7 +3911,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)Worldspace_FieldIndex.SubCells) ?? true))
             {
                 ListXmlTranslation<WorldspaceBlock>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.SubCells),
                     item: item.SubCells,
                     fieldIndex: (int)Worldspace_FieldIndex.SubCells,
@@ -3910,7 +3929,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     );
             }
         }
-        #endregion
 
         #endregion
 

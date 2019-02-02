@@ -194,6 +194,117 @@ namespace Mutagen.Bethesda
 
 
         #region Xml Translation
+        #region Xml Create
+        [DebuggerStepThrough]
+        public static MajorRecord Create_Xml(
+            XElement node,
+            MajorRecord_TranslationMask translationMask = null)
+        {
+            return Create_Xml(
+                node: node,
+                errorMask: null,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        [DebuggerStepThrough]
+        public static MajorRecord Create_Xml(
+            XElement node,
+            out MajorRecord_ErrorMask errorMask,
+            bool doMasks = true,
+            MajorRecord_TranslationMask translationMask = null)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            var ret = Create_Xml(
+                node: node,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask.GetCrystal());
+            errorMask = MajorRecord_ErrorMask.Factory(errorMaskBuilder);
+            return ret;
+        }
+
+        public static MajorRecord Create_Xml(
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            MajorRecord ret;
+            if (!LoquiXmlTranslation.Instance.TryCreate(node, out ret, errorMask, translationMask))
+            {
+                throw new ArgumentException($"Unknown MajorRecord subclass: {node.Name.LocalName}");
+            }
+            return ret;
+        }
+
+        public static MajorRecord Create_Xml(
+            string path,
+            MajorRecord_TranslationMask translationMask = null)
+        {
+            var node = XDocument.Load(path).Root;
+            return Create_Xml(
+                node: node,
+                translationMask: translationMask);
+        }
+
+        public static MajorRecord Create_Xml(
+            string path,
+            out MajorRecord_ErrorMask errorMask,
+            MajorRecord_TranslationMask translationMask = null)
+        {
+            var node = XDocument.Load(path).Root;
+            return Create_Xml(
+                node: node,
+                errorMask: out errorMask,
+                translationMask: translationMask);
+        }
+
+        public static MajorRecord Create_Xml(
+            string path,
+            ErrorMaskBuilder errorMask,
+            MajorRecord_TranslationMask translationMask = null)
+        {
+            var node = XDocument.Load(path).Root;
+            return Create_Xml(
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        public static MajorRecord Create_Xml(
+            Stream stream,
+            MajorRecord_TranslationMask translationMask = null)
+        {
+            var node = XDocument.Load(stream).Root;
+            return Create_Xml(
+                node: node,
+                translationMask: translationMask);
+        }
+
+        public static MajorRecord Create_Xml(
+            Stream stream,
+            out MajorRecord_ErrorMask errorMask,
+            MajorRecord_TranslationMask translationMask = null)
+        {
+            var node = XDocument.Load(stream).Root;
+            return Create_Xml(
+                node: node,
+                errorMask: out errorMask,
+                translationMask: translationMask);
+        }
+
+        public static MajorRecord Create_Xml(
+            Stream stream,
+            ErrorMaskBuilder errorMask,
+            MajorRecord_TranslationMask translationMask = null)
+        {
+            var node = XDocument.Load(stream).Root;
+            return Create_Xml(
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask?.GetCrystal());
+        }
+
+        #endregion
+
         #region Xml Copy In
         public virtual void CopyIn_Xml(
             XElement node,
@@ -1774,10 +1885,24 @@ namespace Mutagen.Bethesda.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.MajorRecord");
             }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        #endregion
+
+        public static void WriteToNode_Xml(
+            IMajorRecordGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
             if ((translationMask?.GetShouldTranslate((int)MajorRecord_FieldIndex.MajorRecordFlags) ?? true))
             {
                 EnumXmlTranslation<MajorRecord.MajorRecordFlag>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.MajorRecordFlags),
                     item: item.MajorRecordFlags,
                     fieldIndex: (int)MajorRecord_FieldIndex.MajorRecordFlags,
@@ -1786,7 +1911,7 @@ namespace Mutagen.Bethesda.Internals
             if ((translationMask?.GetShouldTranslate((int)MajorRecord_FieldIndex.FormKey) ?? true))
             {
                 FormKeyXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.FormKey),
                     item: item.FormKey,
                     fieldIndex: (int)MajorRecord_FieldIndex.FormKey,
@@ -1795,7 +1920,7 @@ namespace Mutagen.Bethesda.Internals
             if ((translationMask?.GetShouldTranslate((int)MajorRecord_FieldIndex.Version) ?? true))
             {
                 UInt32XmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Version),
                     item: item.Version,
                     fieldIndex: (int)MajorRecord_FieldIndex.Version,
@@ -1805,14 +1930,13 @@ namespace Mutagen.Bethesda.Internals
                 && (translationMask?.GetShouldTranslate((int)MajorRecord_FieldIndex.EditorID) ?? true))
             {
                 StringXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.EditorID),
                     item: item.EditorID,
                     fieldIndex: (int)MajorRecord_FieldIndex.EditorID,
                     errorMask: errorMask);
             }
         }
-        #endregion
 
         #endregion
 

@@ -2037,8 +2037,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 ret.Entries = new MaskItem<bool, IEnumerable<MaskItem<bool, LeveledEntry_Mask<bool>>>>();
                 ret.Entries.Overall = false;
             }
-            ret.Script = item.Script_Property.Equals(rhs.Script_Property, (l, r) => l == r);
-            ret.Template = item.Template_Property.Equals(rhs.Template_Property, (l, r) => l == r);
+            ret.Script = item.Script_Property.FormKey == rhs.Script_Property.FormKey;
+            ret.Template = item.Template_Property.FormKey == rhs.Template_Property.FormKey;
             NPCSpawnCommon.FillEqualsMask(item, rhs, ret);
         }
 
@@ -2213,11 +2213,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.LeveledCreature");
             }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        #endregion
+
+        public static void WriteToNode_Xml(
+            ILeveledCreatureGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            NPCSpawnCommon.WriteToNode_Xml(
+                item: item,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
             if (item.ChanceNone_IsSet
                 && (translationMask?.GetShouldTranslate((int)LeveledCreature_FieldIndex.ChanceNone) ?? true))
             {
                 ByteXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.ChanceNone),
                     item: item.ChanceNone,
                     fieldIndex: (int)LeveledCreature_FieldIndex.ChanceNone,
@@ -2227,7 +2246,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)LeveledCreature_FieldIndex.Flags) ?? true))
             {
                 EnumXmlTranslation<LeveledFlag>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Flags),
                     item: item.Flags,
                     fieldIndex: (int)LeveledCreature_FieldIndex.Flags,
@@ -2237,7 +2256,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)LeveledCreature_FieldIndex.Entries) ?? true))
             {
                 ListXmlTranslation<LeveledEntry<NPCSpawn>>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Entries),
                     item: item.Entries,
                     fieldIndex: (int)LeveledCreature_FieldIndex.Entries,
@@ -2258,7 +2277,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)LeveledCreature_FieldIndex.Script) ?? true))
             {
                 FormKeyXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Script),
                     item: item.Script_Property?.FormKey,
                     fieldIndex: (int)LeveledCreature_FieldIndex.Script,
@@ -2268,14 +2287,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)LeveledCreature_FieldIndex.Template) ?? true))
             {
                 FormKeyXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Template),
                     item: item.Template_Property?.FormKey,
                     fieldIndex: (int)LeveledCreature_FieldIndex.Template,
                     errorMask: errorMask);
             }
         }
-        #endregion
 
         #endregion
 

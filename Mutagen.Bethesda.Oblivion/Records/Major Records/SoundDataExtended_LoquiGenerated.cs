@@ -1722,10 +1722,29 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.SoundDataExtended");
             }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        #endregion
+
+        public static void WriteToNode_Xml(
+            ISoundDataExtendedGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            SoundDataCommon.WriteToNode_Xml(
+                item: item,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
             if ((translationMask?.GetShouldTranslate((int)SoundDataExtended_FieldIndex.StaticAttenuation) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.StaticAttenuation),
                     item: item.StaticAttenuation,
                     fieldIndex: (int)SoundDataExtended_FieldIndex.StaticAttenuation,
@@ -1734,7 +1753,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)SoundDataExtended_FieldIndex.StopTime) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.StopTime),
                     item: item.StopTime,
                     fieldIndex: (int)SoundDataExtended_FieldIndex.StopTime,
@@ -1743,14 +1762,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)SoundDataExtended_FieldIndex.StartTime) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.StartTime),
                     item: item.StartTime,
                     fieldIndex: (int)SoundDataExtended_FieldIndex.StartTime,
                     errorMask: errorMask);
             }
         }
-        #endregion
 
         #endregion
 

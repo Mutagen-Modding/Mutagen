@@ -1569,11 +1569,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.Road");
             }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        #endregion
+
+        public static void WriteToNode_Xml(
+            IRoadGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            MajorRecordCommon.WriteToNode_Xml(
+                item: item,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
             if (item.Points.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)Road_FieldIndex.Points) ?? true))
             {
                 ListXmlTranslation<RoadPoint>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Points),
                     item: item.Points,
                     fieldIndex: (int)Road_FieldIndex.Points,
@@ -1591,7 +1610,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     );
             }
         }
-        #endregion
 
         #endregion
 

@@ -2257,10 +2257,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.RaceStats");
             }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        #endregion
+
+        public static void WriteToNode_Xml(
+            IRaceStatsGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
             if ((translationMask?.GetShouldTranslate((int)RaceStats_FieldIndex.Strength) ?? true))
             {
                 ByteXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Strength),
                     item: item.Strength,
                     fieldIndex: (int)RaceStats_FieldIndex.Strength,
@@ -2269,7 +2283,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)RaceStats_FieldIndex.Intelligence) ?? true))
             {
                 ByteXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Intelligence),
                     item: item.Intelligence,
                     fieldIndex: (int)RaceStats_FieldIndex.Intelligence,
@@ -2278,7 +2292,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)RaceStats_FieldIndex.Willpower) ?? true))
             {
                 ByteXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Willpower),
                     item: item.Willpower,
                     fieldIndex: (int)RaceStats_FieldIndex.Willpower,
@@ -2287,7 +2301,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)RaceStats_FieldIndex.Agility) ?? true))
             {
                 ByteXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Agility),
                     item: item.Agility,
                     fieldIndex: (int)RaceStats_FieldIndex.Agility,
@@ -2296,7 +2310,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)RaceStats_FieldIndex.Speed) ?? true))
             {
                 ByteXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Speed),
                     item: item.Speed,
                     fieldIndex: (int)RaceStats_FieldIndex.Speed,
@@ -2305,7 +2319,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)RaceStats_FieldIndex.Endurance) ?? true))
             {
                 ByteXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Endurance),
                     item: item.Endurance,
                     fieldIndex: (int)RaceStats_FieldIndex.Endurance,
@@ -2314,7 +2328,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)RaceStats_FieldIndex.Personality) ?? true))
             {
                 ByteXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Personality),
                     item: item.Personality,
                     fieldIndex: (int)RaceStats_FieldIndex.Personality,
@@ -2323,14 +2337,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)RaceStats_FieldIndex.Luck) ?? true))
             {
                 ByteXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Luck),
                     item: item.Luck,
                     fieldIndex: (int)RaceStats_FieldIndex.Luck,
                     errorMask: errorMask);
             }
         }
-        #endregion
 
         #endregion
 

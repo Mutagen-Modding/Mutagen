@@ -1703,11 +1703,25 @@ namespace Mutagen.Bethesda.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.MasterReference");
             }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        #endregion
+
+        public static void WriteToNode_Xml(
+            IMasterReferenceGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
             if (item.Master_IsSet
                 && (translationMask?.GetShouldTranslate((int)MasterReference_FieldIndex.Master) ?? true))
             {
                 ModKeyXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Master),
                     item: item.Master,
                     fieldIndex: (int)MasterReference_FieldIndex.Master,
@@ -1717,14 +1731,13 @@ namespace Mutagen.Bethesda.Internals
                 && (translationMask?.GetShouldTranslate((int)MasterReference_FieldIndex.FileSize) ?? true))
             {
                 UInt64XmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.FileSize),
                     item: item.FileSize,
                     fieldIndex: (int)MasterReference_FieldIndex.FileSize,
                     errorMask: errorMask);
             }
         }
-        #endregion
 
         #endregion
 

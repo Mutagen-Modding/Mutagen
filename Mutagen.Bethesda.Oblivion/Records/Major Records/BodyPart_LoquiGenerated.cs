@@ -1705,11 +1705,25 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.BodyPart");
             }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        #endregion
+
+        public static void WriteToNode_Xml(
+            IBodyPartGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
             if (item.Index_IsSet
                 && (translationMask?.GetShouldTranslate((int)BodyPart_FieldIndex.Index) ?? true))
             {
                 EnumXmlTranslation<Race.BodyIndex>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Index),
                     item: item.Index,
                     fieldIndex: (int)BodyPart_FieldIndex.Index,
@@ -1719,14 +1733,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)BodyPart_FieldIndex.Icon) ?? true))
             {
                 StringXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Icon),
                     item: item.Icon,
                     fieldIndex: (int)BodyPart_FieldIndex.Icon,
                     errorMask: errorMask);
             }
         }
-        #endregion
 
         #endregion
 

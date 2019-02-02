@@ -1918,10 +1918,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.AIPackageSchedule");
             }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        #endregion
+
+        public static void WriteToNode_Xml(
+            IAIPackageScheduleGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
             if ((translationMask?.GetShouldTranslate((int)AIPackageSchedule_FieldIndex.Month) ?? true))
             {
                 EnumXmlTranslation<Month>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Month),
                     item: item.Month,
                     fieldIndex: (int)AIPackageSchedule_FieldIndex.Month,
@@ -1930,7 +1944,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)AIPackageSchedule_FieldIndex.DayOfWeek) ?? true))
             {
                 EnumXmlTranslation<Weekday>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.DayOfWeek),
                     item: item.DayOfWeek,
                     fieldIndex: (int)AIPackageSchedule_FieldIndex.DayOfWeek,
@@ -1939,7 +1953,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)AIPackageSchedule_FieldIndex.Day) ?? true))
             {
                 ByteXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Day),
                     item: item.Day,
                     fieldIndex: (int)AIPackageSchedule_FieldIndex.Day,
@@ -1948,7 +1962,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)AIPackageSchedule_FieldIndex.Time) ?? true))
             {
                 ByteXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Time),
                     item: item.Time,
                     fieldIndex: (int)AIPackageSchedule_FieldIndex.Time,
@@ -1957,14 +1971,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)AIPackageSchedule_FieldIndex.Duration) ?? true))
             {
                 Int32XmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Duration),
                     item: item.Duration,
                     fieldIndex: (int)AIPackageSchedule_FieldIndex.Duration,
                     errorMask: errorMask);
             }
         }
-        #endregion
 
         #endregion
 

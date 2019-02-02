@@ -1610,18 +1610,36 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.GameSettingFloat");
             }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        #endregion
+
+        public static void WriteToNode_Xml(
+            IGameSettingFloatGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            GameSettingCommon.WriteToNode_Xml(
+                item: item,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
             if (item.Data_IsSet
                 && (translationMask?.GetShouldTranslate((int)GameSettingFloat_FieldIndex.Data) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Data),
                     item: item.Data,
                     fieldIndex: (int)GameSettingFloat_FieldIndex.Data,
                     errorMask: errorMask);
             }
         }
-        #endregion
 
         #endregion
 

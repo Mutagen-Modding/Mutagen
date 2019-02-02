@@ -2410,7 +2410,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Quest_Mask<bool> ret)
         {
             if (rhs == null) return;
-            ret.Script = item.Script_Property.Equals(rhs.Script_Property, (l, r) => l == r);
+            ret.Script = item.Script_Property.FormKey == rhs.Script_Property.FormKey;
             ret.Name = item.Name_IsSet == rhs.Name_IsSet && object.Equals(item.Name, rhs.Name);
             ret.Icon = item.Icon_IsSet == rhs.Icon_IsSet && object.Equals(item.Icon, rhs.Icon);
             ret.Flags = item.Flags == rhs.Flags;
@@ -2683,11 +2683,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.Quest");
             }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        #endregion
+
+        public static void WriteToNode_Xml(
+            IQuestGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            MajorRecordCommon.WriteToNode_Xml(
+                item: item,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
             if (item.Script_Property.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)Quest_FieldIndex.Script) ?? true))
             {
                 FormKeyXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Script),
                     item: item.Script_Property?.FormKey,
                     fieldIndex: (int)Quest_FieldIndex.Script,
@@ -2697,7 +2716,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)Quest_FieldIndex.Name) ?? true))
             {
                 StringXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Name),
                     item: item.Name,
                     fieldIndex: (int)Quest_FieldIndex.Name,
@@ -2707,7 +2726,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)Quest_FieldIndex.Icon) ?? true))
             {
                 StringXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Icon),
                     item: item.Icon,
                     fieldIndex: (int)Quest_FieldIndex.Icon,
@@ -2716,7 +2735,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)Quest_FieldIndex.Flags) ?? true))
             {
                 EnumXmlTranslation<Quest.Flag>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Flags),
                     item: item.Flags,
                     fieldIndex: (int)Quest_FieldIndex.Flags,
@@ -2725,7 +2744,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)Quest_FieldIndex.Priority) ?? true))
             {
                 ByteXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Priority),
                     item: item.Priority,
                     fieldIndex: (int)Quest_FieldIndex.Priority,
@@ -2735,7 +2754,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)Quest_FieldIndex.Conditions) ?? true))
             {
                 ListXmlTranslation<Condition>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Conditions),
                     item: item.Conditions,
                     fieldIndex: (int)Quest_FieldIndex.Conditions,
@@ -2756,7 +2775,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)Quest_FieldIndex.Stages) ?? true))
             {
                 ListXmlTranslation<QuestStage>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Stages),
                     item: item.Stages,
                     fieldIndex: (int)Quest_FieldIndex.Stages,
@@ -2777,7 +2796,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)Quest_FieldIndex.Targets) ?? true))
             {
                 ListXmlTranslation<QuestTarget>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Targets),
                     item: item.Targets,
                     fieldIndex: (int)Quest_FieldIndex.Targets,
@@ -2795,7 +2814,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     );
             }
         }
-        #endregion
 
         #endregion
 

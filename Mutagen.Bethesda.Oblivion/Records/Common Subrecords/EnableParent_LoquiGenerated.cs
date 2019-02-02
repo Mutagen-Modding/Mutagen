@@ -1466,7 +1466,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EnableParent_Mask<bool> ret)
         {
             if (rhs == null) return;
-            ret.Reference = item.Reference == rhs.Reference;
+            ret.Reference = item.Reference_Property.FormKey == rhs.Reference_Property.FormKey;
             ret.Flags = item.Flags == rhs.Flags;
         }
 
@@ -1557,10 +1557,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.EnableParent");
             }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        #endregion
+
+        public static void WriteToNode_Xml(
+            IEnableParentGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
             if ((translationMask?.GetShouldTranslate((int)EnableParent_FieldIndex.Reference) ?? true))
             {
                 FormKeyXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Reference),
                     item: item.Reference_Property?.FormKey,
                     fieldIndex: (int)EnableParent_FieldIndex.Reference,
@@ -1569,14 +1583,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)EnableParent_FieldIndex.Flags) ?? true))
             {
                 EnumXmlTranslation<EnableParent.Flag>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Flags),
                     item: item.Flags,
                     fieldIndex: (int)EnableParent_FieldIndex.Flags,
                     errorMask: errorMask);
             }
         }
-        #endregion
 
         #endregion
 

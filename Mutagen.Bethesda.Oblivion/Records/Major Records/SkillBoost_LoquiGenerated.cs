@@ -1561,10 +1561,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.SkillBoost");
             }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        #endregion
+
+        public static void WriteToNode_Xml(
+            ISkillBoostGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
             if ((translationMask?.GetShouldTranslate((int)SkillBoost_FieldIndex.Skill) ?? true))
             {
                 EnumXmlTranslation<ActorValue>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Skill),
                     item: item.Skill,
                     fieldIndex: (int)SkillBoost_FieldIndex.Skill,
@@ -1573,14 +1587,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)SkillBoost_FieldIndex.Boost) ?? true))
             {
                 Int8XmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Boost),
                     item: item.Boost,
                     fieldIndex: (int)SkillBoost_FieldIndex.Boost,
                     errorMask: errorMask);
             }
         }
-        #endregion
 
         #endregion
 

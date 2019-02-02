@@ -2738,7 +2738,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (rhs == null) return;
             ret.Icon = item.Icon_IsSet == rhs.Icon_IsSet && object.Equals(item.Icon, rhs.Icon);
             ret.MapColor = item.MapColor_IsSet == rhs.MapColor_IsSet && item.MapColor == rhs.MapColor;
-            ret.Worldspace = item.Worldspace_Property.Equals(rhs.Worldspace_Property, (l, r) => l == r);
+            ret.Worldspace = item.Worldspace_Property.FormKey == rhs.Worldspace_Property.FormKey;
             if (item.Areas.HasBeenSet == rhs.Areas.HasBeenSet)
             {
                 if (item.Areas.HasBeenSet)
@@ -2947,11 +2947,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.Region");
             }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        #endregion
+
+        public static void WriteToNode_Xml(
+            IRegionGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            MajorRecordCommon.WriteToNode_Xml(
+                item: item,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
             if (item.Icon_IsSet
                 && (translationMask?.GetShouldTranslate((int)Region_FieldIndex.Icon) ?? true))
             {
                 StringXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Icon),
                     item: item.Icon,
                     fieldIndex: (int)Region_FieldIndex.Icon,
@@ -2961,7 +2980,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)Region_FieldIndex.MapColor) ?? true))
             {
                 ColorXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.MapColor),
                     item: item.MapColor,
                     fieldIndex: (int)Region_FieldIndex.MapColor,
@@ -2971,7 +2990,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)Region_FieldIndex.Worldspace) ?? true))
             {
                 FormKeyXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Worldspace),
                     item: item.Worldspace_Property?.FormKey,
                     fieldIndex: (int)Region_FieldIndex.Worldspace,
@@ -2981,7 +3000,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)Region_FieldIndex.Areas) ?? true))
             {
                 ListXmlTranslation<RegionArea>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Areas),
                     item: item.Areas,
                     fieldIndex: (int)Region_FieldIndex.Areas,
@@ -3002,7 +3021,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)Region_FieldIndex.Objects) ?? true))
             {
                 LoquiXmlTranslation<RegionDataObjects>.Instance.Write(
-                    node: elem,
+                    node: node,
                     item: item.Objects,
                     name: nameof(item.Objects),
                     fieldIndex: (int)Region_FieldIndex.Objects,
@@ -3013,7 +3032,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)Region_FieldIndex.Weather) ?? true))
             {
                 LoquiXmlTranslation<RegionDataWeather>.Instance.Write(
-                    node: elem,
+                    node: node,
                     item: item.Weather,
                     name: nameof(item.Weather),
                     fieldIndex: (int)Region_FieldIndex.Weather,
@@ -3024,7 +3043,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)Region_FieldIndex.MapName) ?? true))
             {
                 LoquiXmlTranslation<RegionDataMapName>.Instance.Write(
-                    node: elem,
+                    node: node,
                     item: item.MapName,
                     name: nameof(item.MapName),
                     fieldIndex: (int)Region_FieldIndex.MapName,
@@ -3035,7 +3054,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)Region_FieldIndex.Grasses) ?? true))
             {
                 LoquiXmlTranslation<RegionDataGrasses>.Instance.Write(
-                    node: elem,
+                    node: node,
                     item: item.Grasses,
                     name: nameof(item.Grasses),
                     fieldIndex: (int)Region_FieldIndex.Grasses,
@@ -3046,7 +3065,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && (translationMask?.GetShouldTranslate((int)Region_FieldIndex.Sounds) ?? true))
             {
                 LoquiXmlTranslation<RegionDataSounds>.Instance.Write(
-                    node: elem,
+                    node: node,
                     item: item.Sounds,
                     name: nameof(item.Sounds),
                     fieldIndex: (int)Region_FieldIndex.Sounds,
@@ -3054,7 +3073,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     translationMask: translationMask?.GetSubCrystal((int)Region_FieldIndex.Sounds));
             }
         }
-        #endregion
 
         #endregion
 

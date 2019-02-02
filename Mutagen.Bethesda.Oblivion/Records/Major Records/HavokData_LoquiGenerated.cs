@@ -1686,10 +1686,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.HavokData");
             }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        #endregion
+
+        public static void WriteToNode_Xml(
+            IHavokDataGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
             if ((translationMask?.GetShouldTranslate((int)HavokData_FieldIndex.Material) ?? true))
             {
                 EnumXmlTranslation<HavokData.MaterialType>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Material),
                     item: item.Material,
                     fieldIndex: (int)HavokData_FieldIndex.Material,
@@ -1698,7 +1712,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)HavokData_FieldIndex.Friction) ?? true))
             {
                 ByteXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Friction),
                     item: item.Friction,
                     fieldIndex: (int)HavokData_FieldIndex.Friction,
@@ -1707,14 +1721,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)HavokData_FieldIndex.Restitution) ?? true))
             {
                 ByteXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Restitution),
                     item: item.Restitution,
                     fieldIndex: (int)HavokData_FieldIndex.Restitution,
                     errorMask: errorMask);
             }
         }
-        #endregion
 
         #endregion
 

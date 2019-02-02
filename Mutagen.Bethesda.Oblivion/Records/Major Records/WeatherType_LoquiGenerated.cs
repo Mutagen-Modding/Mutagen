@@ -1798,10 +1798,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.WeatherType");
             }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        #endregion
+
+        public static void WriteToNode_Xml(
+            IWeatherTypeGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
             if ((translationMask?.GetShouldTranslate((int)WeatherType_FieldIndex.Sunrise) ?? true))
             {
                 ColorXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Sunrise),
                     item: item.Sunrise,
                     fieldIndex: (int)WeatherType_FieldIndex.Sunrise,
@@ -1810,7 +1824,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)WeatherType_FieldIndex.Day) ?? true))
             {
                 ColorXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Day),
                     item: item.Day,
                     fieldIndex: (int)WeatherType_FieldIndex.Day,
@@ -1819,7 +1833,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)WeatherType_FieldIndex.Sunset) ?? true))
             {
                 ColorXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Sunset),
                     item: item.Sunset,
                     fieldIndex: (int)WeatherType_FieldIndex.Sunset,
@@ -1828,14 +1842,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)WeatherType_FieldIndex.Night) ?? true))
             {
                 ColorXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Night),
                     item: item.Night,
                     fieldIndex: (int)WeatherType_FieldIndex.Night,
                     errorMask: errorMask);
             }
         }
-        #endregion
 
         #endregion
 

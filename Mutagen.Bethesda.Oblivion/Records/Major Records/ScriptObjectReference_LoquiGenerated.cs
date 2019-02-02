@@ -1359,7 +1359,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ScriptObjectReference_Mask<bool> ret)
         {
             if (rhs == null) return;
-            ret.Reference = item.Reference == rhs.Reference;
+            ret.Reference = item.Reference_Property.FormKey == rhs.Reference_Property.FormKey;
             ScriptReferenceCommon.FillEqualsMask(item, rhs, ret);
         }
 
@@ -1460,17 +1460,35 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.ScriptObjectReference");
             }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        #endregion
+
+        public static void WriteToNode_Xml(
+            IScriptObjectReferenceGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            ScriptReferenceCommon.WriteToNode_Xml(
+                item: item,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
             if ((translationMask?.GetShouldTranslate((int)ScriptObjectReference_FieldIndex.Reference) ?? true))
             {
                 FormKeyXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Reference),
                     item: item.Reference_Property?.FormKey,
                     fieldIndex: (int)ScriptObjectReference_FieldIndex.Reference,
                     errorMask: errorMask);
             }
         }
-        #endregion
 
         #endregion
 

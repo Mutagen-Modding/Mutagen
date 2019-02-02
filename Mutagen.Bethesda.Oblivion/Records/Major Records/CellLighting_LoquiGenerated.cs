@@ -2386,10 +2386,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.CellLighting");
             }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        #endregion
+
+        public static void WriteToNode_Xml(
+            ICellLightingGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
             if ((translationMask?.GetShouldTranslate((int)CellLighting_FieldIndex.AmbientColor) ?? true))
             {
                 ColorXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.AmbientColor),
                     item: item.AmbientColor,
                     fieldIndex: (int)CellLighting_FieldIndex.AmbientColor,
@@ -2398,7 +2412,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)CellLighting_FieldIndex.DirectionalColor) ?? true))
             {
                 ColorXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.DirectionalColor),
                     item: item.DirectionalColor,
                     fieldIndex: (int)CellLighting_FieldIndex.DirectionalColor,
@@ -2407,7 +2421,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)CellLighting_FieldIndex.FogColor) ?? true))
             {
                 ColorXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.FogColor),
                     item: item.FogColor,
                     fieldIndex: (int)CellLighting_FieldIndex.FogColor,
@@ -2416,7 +2430,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)CellLighting_FieldIndex.FogNear) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.FogNear),
                     item: item.FogNear,
                     fieldIndex: (int)CellLighting_FieldIndex.FogNear,
@@ -2425,7 +2439,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)CellLighting_FieldIndex.FogFar) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.FogFar),
                     item: item.FogFar,
                     fieldIndex: (int)CellLighting_FieldIndex.FogFar,
@@ -2434,7 +2448,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)CellLighting_FieldIndex.DirectionalRotationXY) ?? true))
             {
                 Int32XmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.DirectionalRotationXY),
                     item: item.DirectionalRotationXY,
                     fieldIndex: (int)CellLighting_FieldIndex.DirectionalRotationXY,
@@ -2443,7 +2457,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)CellLighting_FieldIndex.DirectionalRotationZ) ?? true))
             {
                 Int32XmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.DirectionalRotationZ),
                     item: item.DirectionalRotationZ,
                     fieldIndex: (int)CellLighting_FieldIndex.DirectionalRotationZ,
@@ -2452,7 +2466,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)CellLighting_FieldIndex.DirectionalFade) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.DirectionalFade),
                     item: item.DirectionalFade,
                     fieldIndex: (int)CellLighting_FieldIndex.DirectionalFade,
@@ -2461,14 +2475,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)CellLighting_FieldIndex.FogClipDistance) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.FogClipDistance),
                     item: item.FogClipDistance,
                     fieldIndex: (int)CellLighting_FieldIndex.FogClipDistance,
                     errorMask: errorMask);
             }
         }
-        #endregion
 
         #endregion
 

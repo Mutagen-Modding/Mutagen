@@ -1695,7 +1695,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (rhs == null) return;
             ret.LockLevel = item.LockLevel == rhs.LockLevel;
             ret.Fluff = item.Fluff.EqualsFast(rhs.Fluff);
-            ret.Key = item.Key == rhs.Key;
+            ret.Key = item.Key_Property.FormKey == rhs.Key_Property.FormKey;
             ret.Flags = item.Flags == rhs.Flags;
         }
 
@@ -1796,10 +1796,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.LockInformation");
             }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        #endregion
+
+        public static void WriteToNode_Xml(
+            ILockInformationGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
             if ((translationMask?.GetShouldTranslate((int)LockInformation_FieldIndex.LockLevel) ?? true))
             {
                 ByteXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.LockLevel),
                     item: item.LockLevel,
                     fieldIndex: (int)LockInformation_FieldIndex.LockLevel,
@@ -1808,7 +1822,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)LockInformation_FieldIndex.Fluff) ?? true))
             {
                 ByteArrayXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Fluff),
                     item: item.Fluff,
                     fieldIndex: (int)LockInformation_FieldIndex.Fluff,
@@ -1817,7 +1831,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)LockInformation_FieldIndex.Key) ?? true))
             {
                 FormKeyXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Key),
                     item: item.Key_Property?.FormKey,
                     fieldIndex: (int)LockInformation_FieldIndex.Key,
@@ -1826,14 +1840,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)LockInformation_FieldIndex.Flags) ?? true))
             {
                 EnumXmlTranslation<LockInformation.Flag>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Flags),
                     item: item.Flags,
                     fieldIndex: (int)LockInformation_FieldIndex.Flags,
                     errorMask: errorMask);
             }
         }
-        #endregion
 
         #endregion
 

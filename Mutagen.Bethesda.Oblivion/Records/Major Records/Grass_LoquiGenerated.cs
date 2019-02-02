@@ -2759,11 +2759,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.Grass");
             }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        #endregion
+
+        public static void WriteToNode_Xml(
+            IGrassGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            MajorRecordCommon.WriteToNode_Xml(
+                item: item,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
             if (item.Model_IsSet
                 && (translationMask?.GetShouldTranslate((int)Grass_FieldIndex.Model) ?? true))
             {
                 LoquiXmlTranslation<Model>.Instance.Write(
-                    node: elem,
+                    node: node,
                     item: item.Model,
                     name: nameof(item.Model),
                     fieldIndex: (int)Grass_FieldIndex.Model,
@@ -2773,7 +2792,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)Grass_FieldIndex.Density) ?? true))
             {
                 ByteXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Density),
                     item: item.Density,
                     fieldIndex: (int)Grass_FieldIndex.Density,
@@ -2782,7 +2801,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)Grass_FieldIndex.MinSlope) ?? true))
             {
                 ByteXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.MinSlope),
                     item: item.MinSlope,
                     fieldIndex: (int)Grass_FieldIndex.MinSlope,
@@ -2791,7 +2810,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)Grass_FieldIndex.MaxSlope) ?? true))
             {
                 ByteXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.MaxSlope),
                     item: item.MaxSlope,
                     fieldIndex: (int)Grass_FieldIndex.MaxSlope,
@@ -2800,7 +2819,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)Grass_FieldIndex.UnitFromWaterAmount) ?? true))
             {
                 UInt16XmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.UnitFromWaterAmount),
                     item: item.UnitFromWaterAmount,
                     fieldIndex: (int)Grass_FieldIndex.UnitFromWaterAmount,
@@ -2809,7 +2828,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)Grass_FieldIndex.UnitFromWaterMode) ?? true))
             {
                 EnumXmlTranslation<Grass.UnitFromWaterType>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.UnitFromWaterMode),
                     item: item.UnitFromWaterMode,
                     fieldIndex: (int)Grass_FieldIndex.UnitFromWaterMode,
@@ -2818,7 +2837,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)Grass_FieldIndex.PositionRange) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.PositionRange),
                     item: item.PositionRange,
                     fieldIndex: (int)Grass_FieldIndex.PositionRange,
@@ -2827,7 +2846,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)Grass_FieldIndex.HeightRange) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.HeightRange),
                     item: item.HeightRange,
                     fieldIndex: (int)Grass_FieldIndex.HeightRange,
@@ -2836,7 +2855,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)Grass_FieldIndex.ColorRange) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.ColorRange),
                     item: item.ColorRange,
                     fieldIndex: (int)Grass_FieldIndex.ColorRange,
@@ -2845,7 +2864,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)Grass_FieldIndex.WavePeriod) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.WavePeriod),
                     item: item.WavePeriod,
                     fieldIndex: (int)Grass_FieldIndex.WavePeriod,
@@ -2854,14 +2873,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)Grass_FieldIndex.Flags) ?? true))
             {
                 EnumXmlTranslation<Grass.GrassFlag>.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Flags),
                     item: item.Flags,
                     fieldIndex: (int)Grass_FieldIndex.Flags,
                     errorMask: errorMask);
             }
         }
-        #endregion
 
         #endregion
 

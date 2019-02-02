@@ -1424,8 +1424,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RaceHair_Mask<bool> ret)
         {
             if (rhs == null) return;
-            ret.Male = item.Male == rhs.Male;
-            ret.Female = item.Female == rhs.Female;
+            ret.Male = item.Male_Property.FormKey == rhs.Male_Property.FormKey;
+            ret.Female = item.Female_Property.FormKey == rhs.Female_Property.FormKey;
         }
 
         public static string ToString(
@@ -1515,10 +1515,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.RaceHair");
             }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        #endregion
+
+        public static void WriteToNode_Xml(
+            IRaceHairGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
             if ((translationMask?.GetShouldTranslate((int)RaceHair_FieldIndex.Male) ?? true))
             {
                 FormKeyXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Male),
                     item: item.Male_Property?.FormKey,
                     fieldIndex: (int)RaceHair_FieldIndex.Male,
@@ -1527,14 +1541,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((translationMask?.GetShouldTranslate((int)RaceHair_FieldIndex.Female) ?? true))
             {
                 FormKeyXmlTranslation.Instance.Write(
-                    node: elem,
+                    node: node,
                     name: nameof(item.Female),
                     item: item.Female_Property?.FormKey,
                     fieldIndex: (int)RaceHair_FieldIndex.Female,
                     errorMask: errorMask);
             }
         }
-        #endregion
 
         #endregion
 
