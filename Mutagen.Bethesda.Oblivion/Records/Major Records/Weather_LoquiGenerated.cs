@@ -19,6 +19,7 @@ using Mutagen.Bethesda.Oblivion;
 using DynamicData;
 using CSharpExt.Rx;
 using System.Drawing;
+using Loqui.Presentation;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
 using System.Xml;
@@ -560,8 +561,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> IEqualsMask<Weather>.GetEqualsMask(Weather rhs) => WeatherCommon.GetEqualsMask(this, rhs);
-        IMask<bool> IEqualsMask<IWeatherGetter>.GetEqualsMask(IWeatherGetter rhs) => WeatherCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<Weather>.GetEqualsMask(Weather rhs, EqualsMaskHelper.Include include) => WeatherCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<IWeatherGetter>.GetEqualsMask(IWeatherGetter rhs, EqualsMaskHelper.Include include) => WeatherCommon.GetEqualsMask(this, rhs, include);
         #region To String
         public string ToString(
             string name = null,
@@ -645,7 +646,7 @@ namespace Mutagen.Bethesda.Oblivion
             if (this.ThunderLightningEndFadeOut != rhs.ThunderLightningEndFadeOut) return false;
             if (this.ThunderLightningFrequency != rhs.ThunderLightningFrequency) return false;
             if (this.Classification != rhs.Classification) return false;
-            if (this.LightningColor != rhs.LightningColor) return false;
+            if (!this.LightningColor.ColorOnlyEquals(rhs.LightningColor)) return false;
             if (Sounds.HasBeenSet != rhs.Sounds.HasBeenSet) return false;
             if (Sounds.HasBeenSet)
             {
@@ -754,7 +755,13 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 foreach (var elem in node.Elements())
                 {
-                    Fill_Xml_Internal(
+                    FillPrivateElement_Xml(
+                        item: ret,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                    WeatherCommon.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -1066,7 +1073,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        protected static void Fill_Xml_Internal(
+        protected static void FillPrivateElement_Xml(
             Weather item,
             XElement node,
             string name,
@@ -1075,949 +1082,8 @@ namespace Mutagen.Bethesda.Oblivion
         {
             switch (name)
             {
-                case "TextureLowerLayer":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Weather_FieldIndex.TextureLowerLayer);
-                        if (StringXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out String TextureLowerLayerParse,
-                            errorMask: errorMask))
-                        {
-                            item.TextureLowerLayer = TextureLowerLayerParse;
-                        }
-                        else
-                        {
-                            item.TextureLowerLayer = default(String);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "TextureUpperLayer":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Weather_FieldIndex.TextureUpperLayer);
-                        if (StringXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out String TextureUpperLayerParse,
-                            errorMask: errorMask))
-                        {
-                            item.TextureUpperLayer = TextureUpperLayerParse;
-                        }
-                        else
-                        {
-                            item.TextureUpperLayer = default(String);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Model":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Weather_FieldIndex.Model);
-                        if (LoquiXmlTranslation<Model>.Instance.Parse(
-                            node: node,
-                            item: out Model ModelParse,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Weather_FieldIndex.Model)))
-                        {
-                            item.Model = ModelParse;
-                        }
-                        else
-                        {
-                            item.Model = default(Model);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "WeatherTypes":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Weather_FieldIndex.WeatherTypes);
-                        if (ListXmlTranslation<WeatherType>.Instance.Parse(
-                            node: node,
-                            enumer: out var WeatherTypesItem,
-                            transl: LoquiXmlTranslation<WeatherType>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.WeatherTypes.SetTo(WeatherTypesItem);
-                        }
-                        else
-                        {
-                            item.WeatherTypes.Unset();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "FogDayNear":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Weather_FieldIndex.FogDayNear);
-                        if (FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Single FogDayNearParse,
-                            errorMask: errorMask))
-                        {
-                            item.FogDayNear = FogDayNearParse;
-                        }
-                        else
-                        {
-                            item.FogDayNear = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "FogDayFar":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Weather_FieldIndex.FogDayFar);
-                        if (FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Single FogDayFarParse,
-                            errorMask: errorMask))
-                        {
-                            item.FogDayFar = FogDayFarParse;
-                        }
-                        else
-                        {
-                            item.FogDayFar = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "FogNightNear":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Weather_FieldIndex.FogNightNear);
-                        if (FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Single FogNightNearParse,
-                            errorMask: errorMask))
-                        {
-                            item.FogNightNear = FogNightNearParse;
-                        }
-                        else
-                        {
-                            item.FogNightNear = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "FogNightFar":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Weather_FieldIndex.FogNightFar);
-                        if (FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Single FogNightFarParse,
-                            errorMask: errorMask))
-                        {
-                            item.FogNightFar = FogNightFarParse;
-                        }
-                        else
-                        {
-                            item.FogNightFar = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "HdrEyeAdaptSpeed":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Weather_FieldIndex.HdrEyeAdaptSpeed);
-                        if (FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Single HdrEyeAdaptSpeedParse,
-                            errorMask: errorMask))
-                        {
-                            item.HdrEyeAdaptSpeed = HdrEyeAdaptSpeedParse;
-                        }
-                        else
-                        {
-                            item.HdrEyeAdaptSpeed = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "HdrBlurRadius":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Weather_FieldIndex.HdrBlurRadius);
-                        if (FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Single HdrBlurRadiusParse,
-                            errorMask: errorMask))
-                        {
-                            item.HdrBlurRadius = HdrBlurRadiusParse;
-                        }
-                        else
-                        {
-                            item.HdrBlurRadius = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "HdrBlurPasses":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Weather_FieldIndex.HdrBlurPasses);
-                        if (FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Single HdrBlurPassesParse,
-                            errorMask: errorMask))
-                        {
-                            item.HdrBlurPasses = HdrBlurPassesParse;
-                        }
-                        else
-                        {
-                            item.HdrBlurPasses = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "HdrEmissiveMult":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Weather_FieldIndex.HdrEmissiveMult);
-                        if (FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Single HdrEmissiveMultParse,
-                            errorMask: errorMask))
-                        {
-                            item.HdrEmissiveMult = HdrEmissiveMultParse;
-                        }
-                        else
-                        {
-                            item.HdrEmissiveMult = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "HdrTargetLum":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Weather_FieldIndex.HdrTargetLum);
-                        if (FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Single HdrTargetLumParse,
-                            errorMask: errorMask))
-                        {
-                            item.HdrTargetLum = HdrTargetLumParse;
-                        }
-                        else
-                        {
-                            item.HdrTargetLum = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "HdrUpperLumClamp":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Weather_FieldIndex.HdrUpperLumClamp);
-                        if (FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Single HdrUpperLumClampParse,
-                            errorMask: errorMask))
-                        {
-                            item.HdrUpperLumClamp = HdrUpperLumClampParse;
-                        }
-                        else
-                        {
-                            item.HdrUpperLumClamp = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "HdrBrightScale":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Weather_FieldIndex.HdrBrightScale);
-                        if (FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Single HdrBrightScaleParse,
-                            errorMask: errorMask))
-                        {
-                            item.HdrBrightScale = HdrBrightScaleParse;
-                        }
-                        else
-                        {
-                            item.HdrBrightScale = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "HdrBrightClamp":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Weather_FieldIndex.HdrBrightClamp);
-                        if (FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Single HdrBrightClampParse,
-                            errorMask: errorMask))
-                        {
-                            item.HdrBrightClamp = HdrBrightClampParse;
-                        }
-                        else
-                        {
-                            item.HdrBrightClamp = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "HdrLumRampNoTex":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Weather_FieldIndex.HdrLumRampNoTex);
-                        if (FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Single HdrLumRampNoTexParse,
-                            errorMask: errorMask))
-                        {
-                            item.HdrLumRampNoTex = HdrLumRampNoTexParse;
-                        }
-                        else
-                        {
-                            item.HdrLumRampNoTex = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "HdrLumRampMin":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Weather_FieldIndex.HdrLumRampMin);
-                        if (FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Single HdrLumRampMinParse,
-                            errorMask: errorMask))
-                        {
-                            item.HdrLumRampMin = HdrLumRampMinParse;
-                        }
-                        else
-                        {
-                            item.HdrLumRampMin = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "HdrLumRampMax":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Weather_FieldIndex.HdrLumRampMax);
-                        if (FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Single HdrLumRampMaxParse,
-                            errorMask: errorMask))
-                        {
-                            item.HdrLumRampMax = HdrLumRampMaxParse;
-                        }
-                        else
-                        {
-                            item.HdrLumRampMax = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "HdrSunlightDimmer":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Weather_FieldIndex.HdrSunlightDimmer);
-                        if (FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Single HdrSunlightDimmerParse,
-                            errorMask: errorMask))
-                        {
-                            item.HdrSunlightDimmer = HdrSunlightDimmerParse;
-                        }
-                        else
-                        {
-                            item.HdrSunlightDimmer = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "HdrGrassDimmer":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Weather_FieldIndex.HdrGrassDimmer);
-                        if (FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Single HdrGrassDimmerParse,
-                            errorMask: errorMask))
-                        {
-                            item.HdrGrassDimmer = HdrGrassDimmerParse;
-                        }
-                        else
-                        {
-                            item.HdrGrassDimmer = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "HdrTreeDimmer":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Weather_FieldIndex.HdrTreeDimmer);
-                        if (FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Single HdrTreeDimmerParse,
-                            errorMask: errorMask))
-                        {
-                            item.HdrTreeDimmer = HdrTreeDimmerParse;
-                        }
-                        else
-                        {
-                            item.HdrTreeDimmer = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "WindSpeed":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Weather_FieldIndex.WindSpeed);
-                        if (ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Byte WindSpeedParse,
-                            errorMask: errorMask))
-                        {
-                            item.WindSpeed = WindSpeedParse;
-                        }
-                        else
-                        {
-                            item.WindSpeed = default(Byte);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "CloudSpeedLower":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Weather_FieldIndex.CloudSpeedLower);
-                        if (ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Byte CloudSpeedLowerParse,
-                            errorMask: errorMask))
-                        {
-                            item.CloudSpeedLower = CloudSpeedLowerParse;
-                        }
-                        else
-                        {
-                            item.CloudSpeedLower = default(Byte);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "CloudSpeedUpper":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Weather_FieldIndex.CloudSpeedUpper);
-                        if (ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Byte CloudSpeedUpperParse,
-                            errorMask: errorMask))
-                        {
-                            item.CloudSpeedUpper = CloudSpeedUpperParse;
-                        }
-                        else
-                        {
-                            item.CloudSpeedUpper = default(Byte);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "TransDelta":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Weather_FieldIndex.TransDelta);
-                        if (ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Byte TransDeltaParse,
-                            errorMask: errorMask))
-                        {
-                            item.TransDelta = TransDeltaParse;
-                        }
-                        else
-                        {
-                            item.TransDelta = default(Byte);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "SunGlare":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Weather_FieldIndex.SunGlare);
-                        if (ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Byte SunGlareParse,
-                            errorMask: errorMask))
-                        {
-                            item.SunGlare = SunGlareParse;
-                        }
-                        else
-                        {
-                            item.SunGlare = default(Byte);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "SunDamage":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Weather_FieldIndex.SunDamage);
-                        if (ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Byte SunDamageParse,
-                            errorMask: errorMask))
-                        {
-                            item.SunDamage = SunDamageParse;
-                        }
-                        else
-                        {
-                            item.SunDamage = default(Byte);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "PrecipitationBeginFadeIn":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Weather_FieldIndex.PrecipitationBeginFadeIn);
-                        if (ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Byte PrecipitationBeginFadeInParse,
-                            errorMask: errorMask))
-                        {
-                            item.PrecipitationBeginFadeIn = PrecipitationBeginFadeInParse;
-                        }
-                        else
-                        {
-                            item.PrecipitationBeginFadeIn = default(Byte);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "PrecipitationEndFadeOut":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Weather_FieldIndex.PrecipitationEndFadeOut);
-                        if (ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Byte PrecipitationEndFadeOutParse,
-                            errorMask: errorMask))
-                        {
-                            item.PrecipitationEndFadeOut = PrecipitationEndFadeOutParse;
-                        }
-                        else
-                        {
-                            item.PrecipitationEndFadeOut = default(Byte);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ThunderLightningBeginFadeIn":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Weather_FieldIndex.ThunderLightningBeginFadeIn);
-                        if (ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Byte ThunderLightningBeginFadeInParse,
-                            errorMask: errorMask))
-                        {
-                            item.ThunderLightningBeginFadeIn = ThunderLightningBeginFadeInParse;
-                        }
-                        else
-                        {
-                            item.ThunderLightningBeginFadeIn = default(Byte);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ThunderLightningEndFadeOut":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Weather_FieldIndex.ThunderLightningEndFadeOut);
-                        if (ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Byte ThunderLightningEndFadeOutParse,
-                            errorMask: errorMask))
-                        {
-                            item.ThunderLightningEndFadeOut = ThunderLightningEndFadeOutParse;
-                        }
-                        else
-                        {
-                            item.ThunderLightningEndFadeOut = default(Byte);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ThunderLightningFrequency":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Weather_FieldIndex.ThunderLightningFrequency);
-                        if (ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Byte ThunderLightningFrequencyParse,
-                            errorMask: errorMask))
-                        {
-                            item.ThunderLightningFrequency = ThunderLightningFrequencyParse;
-                        }
-                        else
-                        {
-                            item.ThunderLightningFrequency = default(Byte);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Classification":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Weather_FieldIndex.Classification);
-                        if (EnumXmlTranslation<Weather.WeatherClassification>.Instance.Parse(
-                            node: node,
-                            item: out Weather.WeatherClassification ClassificationParse,
-                            errorMask: errorMask))
-                        {
-                            item.Classification = ClassificationParse;
-                        }
-                        else
-                        {
-                            item.Classification = default(Weather.WeatherClassification);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "LightningColor":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Weather_FieldIndex.LightningColor);
-                        if (ColorXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Color LightningColorParse,
-                            errorMask: errorMask))
-                        {
-                            item.LightningColor = LightningColorParse;
-                        }
-                        else
-                        {
-                            item.LightningColor = default(Color);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Sounds":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Weather_FieldIndex.Sounds);
-                        if (ListXmlTranslation<WeatherSound>.Instance.Parse(
-                            node: node,
-                            enumer: out var SoundsItem,
-                            transl: LoquiXmlTranslation<WeatherSound>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.Sounds.SetTo(SoundsItem);
-                        }
-                        else
-                        {
-                            item.Sounds.Unset();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
                 default:
-                    MajorRecord.Fill_Xml_Internal(
+                    MajorRecord.FillPrivateElement_Xml(
                         item: item,
                         node: node,
                         name: name,
@@ -5676,67 +4742,56 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static Weather_Mask<bool> GetEqualsMask(
             this IWeatherGetter item,
-            IWeatherGetter rhs)
+            IWeatherGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new Weather_Mask<bool>();
-            FillEqualsMask(item, rhs, ret);
+            FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
             return ret;
         }
 
         public static void FillEqualsMask(
             IWeatherGetter item,
             IWeatherGetter rhs,
-            Weather_Mask<bool> ret)
+            Weather_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
             ret.TextureLowerLayer = item.TextureLowerLayer_IsSet == rhs.TextureLowerLayer_IsSet && object.Equals(item.TextureLowerLayer, rhs.TextureLowerLayer);
             ret.TextureUpperLayer = item.TextureUpperLayer_IsSet == rhs.TextureUpperLayer_IsSet && object.Equals(item.TextureUpperLayer, rhs.TextureUpperLayer);
-            ret.Model = IHasBeenSetExt.LoquiEqualsHelper(item.Model_IsSet, rhs.Model_IsSet, item.Model, rhs.Model, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
-            if (item.WeatherTypes.HasBeenSet == rhs.WeatherTypes.HasBeenSet)
-            {
-                if (item.WeatherTypes.HasBeenSet)
-                {
-                    ret.WeatherTypes = new MaskItem<bool, IEnumerable<MaskItem<bool, WeatherType_Mask<bool>>>>();
-                    ret.WeatherTypes.Specific = item.WeatherTypes.SelectAgainst<WeatherType, MaskItem<bool, WeatherType_Mask<bool>>>(rhs.WeatherTypes, ((l, r) =>
-                    {
-                        MaskItem<bool, WeatherType_Mask<bool>> itemRet;
-                        itemRet = new MaskItem<bool, WeatherType_Mask<bool>>();
-                        itemRet.Specific = WeatherTypeCommon.GetEqualsMask(l, r);
-                        itemRet.Overall = itemRet.Specific.AllEqual((b) => b);
-                        return itemRet;
-                    }
-                    ), out ret.WeatherTypes.Overall);
-                    ret.WeatherTypes.Overall = ret.WeatherTypes.Overall && ret.WeatherTypes.Specific.All((b) => b.Overall);
-                }
-                else
-                {
-                    ret.WeatherTypes = new MaskItem<bool, IEnumerable<MaskItem<bool, WeatherType_Mask<bool>>>>();
-                    ret.WeatherTypes.Overall = true;
-                }
-            }
-            else
-            {
-                ret.WeatherTypes = new MaskItem<bool, IEnumerable<MaskItem<bool, WeatherType_Mask<bool>>>>();
-                ret.WeatherTypes.Overall = false;
-            }
-            ret.FogDayNear = item.FogDayNear == rhs.FogDayNear;
-            ret.FogDayFar = item.FogDayFar == rhs.FogDayFar;
-            ret.FogNightNear = item.FogNightNear == rhs.FogNightNear;
-            ret.FogNightFar = item.FogNightFar == rhs.FogNightFar;
-            ret.HdrEyeAdaptSpeed = item.HdrEyeAdaptSpeed == rhs.HdrEyeAdaptSpeed;
-            ret.HdrBlurRadius = item.HdrBlurRadius == rhs.HdrBlurRadius;
-            ret.HdrBlurPasses = item.HdrBlurPasses == rhs.HdrBlurPasses;
-            ret.HdrEmissiveMult = item.HdrEmissiveMult == rhs.HdrEmissiveMult;
-            ret.HdrTargetLum = item.HdrTargetLum == rhs.HdrTargetLum;
-            ret.HdrUpperLumClamp = item.HdrUpperLumClamp == rhs.HdrUpperLumClamp;
-            ret.HdrBrightScale = item.HdrBrightScale == rhs.HdrBrightScale;
-            ret.HdrBrightClamp = item.HdrBrightClamp == rhs.HdrBrightClamp;
-            ret.HdrLumRampNoTex = item.HdrLumRampNoTex == rhs.HdrLumRampNoTex;
-            ret.HdrLumRampMin = item.HdrLumRampMin == rhs.HdrLumRampMin;
-            ret.HdrLumRampMax = item.HdrLumRampMax == rhs.HdrLumRampMax;
-            ret.HdrSunlightDimmer = item.HdrSunlightDimmer == rhs.HdrSunlightDimmer;
-            ret.HdrGrassDimmer = item.HdrGrassDimmer == rhs.HdrGrassDimmer;
-            ret.HdrTreeDimmer = item.HdrTreeDimmer == rhs.HdrTreeDimmer;
+            ret.Model = EqualsMaskHelper.EqualsHelper(
+                item.Model_IsSet,
+                rhs.Model_IsSet,
+                item.Model,
+                rhs.Model,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
+                include);
+            ret.WeatherTypes = item.WeatherTypes.CollectionEqualsHelper(
+                rhs.WeatherTypes,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.FogDayNear = item.FogDayNear.EqualsWithin(rhs.FogDayNear);
+            ret.FogDayFar = item.FogDayFar.EqualsWithin(rhs.FogDayFar);
+            ret.FogNightNear = item.FogNightNear.EqualsWithin(rhs.FogNightNear);
+            ret.FogNightFar = item.FogNightFar.EqualsWithin(rhs.FogNightFar);
+            ret.HdrEyeAdaptSpeed = item.HdrEyeAdaptSpeed.EqualsWithin(rhs.HdrEyeAdaptSpeed);
+            ret.HdrBlurRadius = item.HdrBlurRadius.EqualsWithin(rhs.HdrBlurRadius);
+            ret.HdrBlurPasses = item.HdrBlurPasses.EqualsWithin(rhs.HdrBlurPasses);
+            ret.HdrEmissiveMult = item.HdrEmissiveMult.EqualsWithin(rhs.HdrEmissiveMult);
+            ret.HdrTargetLum = item.HdrTargetLum.EqualsWithin(rhs.HdrTargetLum);
+            ret.HdrUpperLumClamp = item.HdrUpperLumClamp.EqualsWithin(rhs.HdrUpperLumClamp);
+            ret.HdrBrightScale = item.HdrBrightScale.EqualsWithin(rhs.HdrBrightScale);
+            ret.HdrBrightClamp = item.HdrBrightClamp.EqualsWithin(rhs.HdrBrightClamp);
+            ret.HdrLumRampNoTex = item.HdrLumRampNoTex.EqualsWithin(rhs.HdrLumRampNoTex);
+            ret.HdrLumRampMin = item.HdrLumRampMin.EqualsWithin(rhs.HdrLumRampMin);
+            ret.HdrLumRampMax = item.HdrLumRampMax.EqualsWithin(rhs.HdrLumRampMax);
+            ret.HdrSunlightDimmer = item.HdrSunlightDimmer.EqualsWithin(rhs.HdrSunlightDimmer);
+            ret.HdrGrassDimmer = item.HdrGrassDimmer.EqualsWithin(rhs.HdrGrassDimmer);
+            ret.HdrTreeDimmer = item.HdrTreeDimmer.EqualsWithin(rhs.HdrTreeDimmer);
             ret.WindSpeed = item.WindSpeed == rhs.WindSpeed;
             ret.CloudSpeedLower = item.CloudSpeedLower == rhs.CloudSpeedLower;
             ret.CloudSpeedUpper = item.CloudSpeedUpper == rhs.CloudSpeedUpper;
@@ -5749,32 +4804,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.ThunderLightningEndFadeOut = item.ThunderLightningEndFadeOut == rhs.ThunderLightningEndFadeOut;
             ret.ThunderLightningFrequency = item.ThunderLightningFrequency == rhs.ThunderLightningFrequency;
             ret.Classification = item.Classification == rhs.Classification;
-            ret.LightningColor = item.LightningColor == rhs.LightningColor;
-            if (item.Sounds.HasBeenSet == rhs.Sounds.HasBeenSet)
-            {
-                if (item.Sounds.HasBeenSet)
-                {
-                    ret.Sounds = new MaskItem<bool, IEnumerable<MaskItem<bool, WeatherSound_Mask<bool>>>>();
-                    ret.Sounds.Specific = item.Sounds.SelectAgainst<WeatherSound, MaskItem<bool, WeatherSound_Mask<bool>>>(rhs.Sounds, ((l, r) =>
-                    {
-                        MaskItem<bool, WeatherSound_Mask<bool>> itemRet;
-                        itemRet = l.LoquiEqualsHelper(r, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
-                        return itemRet;
-                    }
-                    ), out ret.Sounds.Overall);
-                    ret.Sounds.Overall = ret.Sounds.Overall && ret.Sounds.Specific.All((b) => b.Overall);
-                }
-                else
-                {
-                    ret.Sounds = new MaskItem<bool, IEnumerable<MaskItem<bool, WeatherSound_Mask<bool>>>>();
-                    ret.Sounds.Overall = true;
-                }
-            }
-            else
-            {
-                ret.Sounds = new MaskItem<bool, IEnumerable<MaskItem<bool, WeatherSound_Mask<bool>>>>();
-                ret.Sounds.Overall = false;
-            }
+            ret.LightningColor = item.LightningColor.ColorOnlyEquals(rhs.LightningColor);
+            ret.Sounds = item.Sounds.CollectionEqualsHelper(
+                rhs.Sounds,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
             MajorRecordCommon.FillEqualsMask(item, rhs, ret);
         }
 
@@ -6000,7 +5034,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.TextureLowerLayer = item.TextureLowerLayer_IsSet;
             ret.TextureUpperLayer = item.TextureUpperLayer_IsSet;
             ret.Model = new MaskItem<bool, Model_Mask<bool>>(item.Model_IsSet, ModelCommon.GetHasBeenSetMask(item.Model));
-            ret.WeatherTypes = new MaskItem<bool, IEnumerable<MaskItem<bool, WeatherType_Mask<bool>>>>(item.WeatherTypes.HasBeenSet, item.WeatherTypes.Select((i) => new MaskItem<bool, WeatherType_Mask<bool>>(true, i.GetHasBeenSetMask())));
+            ret.WeatherTypes = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, WeatherType_Mask<bool>>>>(item.WeatherTypes.HasBeenSet, item.WeatherTypes.WithIndex().Select((i) => new MaskItemIndexed<bool, WeatherType_Mask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
             ret.FogDayNear = true;
             ret.FogDayFar = true;
             ret.FogNightNear = true;
@@ -6032,7 +5066,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.ThunderLightningFrequency = true;
             ret.Classification = true;
             ret.LightningColor = true;
-            ret.Sounds = new MaskItem<bool, IEnumerable<MaskItem<bool, WeatherSound_Mask<bool>>>>(item.Sounds.HasBeenSet, item.Sounds.Select((i) => new MaskItem<bool, WeatherSound_Mask<bool>>(true, i.GetHasBeenSetMask())));
+            ret.Sounds = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, WeatherSound_Mask<bool>>>>(item.Sounds.HasBeenSet, item.Sounds.WithIndex().Select((i) => new MaskItemIndexed<bool, WeatherSound_Mask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
             return ret;
         }
 
@@ -6103,7 +5137,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         public static void WriteToNode_Xml(
-            IWeatherGetter item,
+            this IWeatherGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -6467,6 +5501,992 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
+        public static void FillPublic_Xml(
+            this Weather item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    WeatherCommon.FillPublicElement_Xml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+
+        public static void FillPublicElement_Xml(
+            this Weather item,
+            XElement node,
+            string name,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            switch (name)
+            {
+                case "TextureLowerLayer":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Weather_FieldIndex.TextureLowerLayer);
+                        if (StringXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out String TextureLowerLayerParse,
+                            errorMask: errorMask))
+                        {
+                            item.TextureLowerLayer = TextureLowerLayerParse;
+                        }
+                        else
+                        {
+                            item.TextureLowerLayer = default(String);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "TextureUpperLayer":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Weather_FieldIndex.TextureUpperLayer);
+                        if (StringXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out String TextureUpperLayerParse,
+                            errorMask: errorMask))
+                        {
+                            item.TextureUpperLayer = TextureUpperLayerParse;
+                        }
+                        else
+                        {
+                            item.TextureUpperLayer = default(String);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Model":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Weather_FieldIndex.Model);
+                        if (LoquiXmlTranslation<Model>.Instance.Parse(
+                            node: node,
+                            item: out Model ModelParse,
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)Weather_FieldIndex.Model)))
+                        {
+                            item.Model = ModelParse;
+                        }
+                        else
+                        {
+                            item.Model = default(Model);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "WeatherTypes":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Weather_FieldIndex.WeatherTypes);
+                        if (ListXmlTranslation<WeatherType>.Instance.Parse(
+                            node: node,
+                            enumer: out var WeatherTypesItem,
+                            transl: LoquiXmlTranslation<WeatherType>.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.WeatherTypes.SetTo(WeatherTypesItem);
+                        }
+                        else
+                        {
+                            item.WeatherTypes.Unset();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "FogDayNear":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Weather_FieldIndex.FogDayNear);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Single FogDayNearParse,
+                            errorMask: errorMask))
+                        {
+                            item.FogDayNear = FogDayNearParse;
+                        }
+                        else
+                        {
+                            item.FogDayNear = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "FogDayFar":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Weather_FieldIndex.FogDayFar);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Single FogDayFarParse,
+                            errorMask: errorMask))
+                        {
+                            item.FogDayFar = FogDayFarParse;
+                        }
+                        else
+                        {
+                            item.FogDayFar = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "FogNightNear":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Weather_FieldIndex.FogNightNear);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Single FogNightNearParse,
+                            errorMask: errorMask))
+                        {
+                            item.FogNightNear = FogNightNearParse;
+                        }
+                        else
+                        {
+                            item.FogNightNear = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "FogNightFar":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Weather_FieldIndex.FogNightFar);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Single FogNightFarParse,
+                            errorMask: errorMask))
+                        {
+                            item.FogNightFar = FogNightFarParse;
+                        }
+                        else
+                        {
+                            item.FogNightFar = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "HdrEyeAdaptSpeed":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Weather_FieldIndex.HdrEyeAdaptSpeed);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Single HdrEyeAdaptSpeedParse,
+                            errorMask: errorMask))
+                        {
+                            item.HdrEyeAdaptSpeed = HdrEyeAdaptSpeedParse;
+                        }
+                        else
+                        {
+                            item.HdrEyeAdaptSpeed = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "HdrBlurRadius":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Weather_FieldIndex.HdrBlurRadius);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Single HdrBlurRadiusParse,
+                            errorMask: errorMask))
+                        {
+                            item.HdrBlurRadius = HdrBlurRadiusParse;
+                        }
+                        else
+                        {
+                            item.HdrBlurRadius = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "HdrBlurPasses":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Weather_FieldIndex.HdrBlurPasses);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Single HdrBlurPassesParse,
+                            errorMask: errorMask))
+                        {
+                            item.HdrBlurPasses = HdrBlurPassesParse;
+                        }
+                        else
+                        {
+                            item.HdrBlurPasses = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "HdrEmissiveMult":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Weather_FieldIndex.HdrEmissiveMult);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Single HdrEmissiveMultParse,
+                            errorMask: errorMask))
+                        {
+                            item.HdrEmissiveMult = HdrEmissiveMultParse;
+                        }
+                        else
+                        {
+                            item.HdrEmissiveMult = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "HdrTargetLum":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Weather_FieldIndex.HdrTargetLum);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Single HdrTargetLumParse,
+                            errorMask: errorMask))
+                        {
+                            item.HdrTargetLum = HdrTargetLumParse;
+                        }
+                        else
+                        {
+                            item.HdrTargetLum = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "HdrUpperLumClamp":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Weather_FieldIndex.HdrUpperLumClamp);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Single HdrUpperLumClampParse,
+                            errorMask: errorMask))
+                        {
+                            item.HdrUpperLumClamp = HdrUpperLumClampParse;
+                        }
+                        else
+                        {
+                            item.HdrUpperLumClamp = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "HdrBrightScale":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Weather_FieldIndex.HdrBrightScale);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Single HdrBrightScaleParse,
+                            errorMask: errorMask))
+                        {
+                            item.HdrBrightScale = HdrBrightScaleParse;
+                        }
+                        else
+                        {
+                            item.HdrBrightScale = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "HdrBrightClamp":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Weather_FieldIndex.HdrBrightClamp);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Single HdrBrightClampParse,
+                            errorMask: errorMask))
+                        {
+                            item.HdrBrightClamp = HdrBrightClampParse;
+                        }
+                        else
+                        {
+                            item.HdrBrightClamp = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "HdrLumRampNoTex":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Weather_FieldIndex.HdrLumRampNoTex);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Single HdrLumRampNoTexParse,
+                            errorMask: errorMask))
+                        {
+                            item.HdrLumRampNoTex = HdrLumRampNoTexParse;
+                        }
+                        else
+                        {
+                            item.HdrLumRampNoTex = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "HdrLumRampMin":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Weather_FieldIndex.HdrLumRampMin);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Single HdrLumRampMinParse,
+                            errorMask: errorMask))
+                        {
+                            item.HdrLumRampMin = HdrLumRampMinParse;
+                        }
+                        else
+                        {
+                            item.HdrLumRampMin = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "HdrLumRampMax":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Weather_FieldIndex.HdrLumRampMax);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Single HdrLumRampMaxParse,
+                            errorMask: errorMask))
+                        {
+                            item.HdrLumRampMax = HdrLumRampMaxParse;
+                        }
+                        else
+                        {
+                            item.HdrLumRampMax = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "HdrSunlightDimmer":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Weather_FieldIndex.HdrSunlightDimmer);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Single HdrSunlightDimmerParse,
+                            errorMask: errorMask))
+                        {
+                            item.HdrSunlightDimmer = HdrSunlightDimmerParse;
+                        }
+                        else
+                        {
+                            item.HdrSunlightDimmer = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "HdrGrassDimmer":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Weather_FieldIndex.HdrGrassDimmer);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Single HdrGrassDimmerParse,
+                            errorMask: errorMask))
+                        {
+                            item.HdrGrassDimmer = HdrGrassDimmerParse;
+                        }
+                        else
+                        {
+                            item.HdrGrassDimmer = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "HdrTreeDimmer":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Weather_FieldIndex.HdrTreeDimmer);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Single HdrTreeDimmerParse,
+                            errorMask: errorMask))
+                        {
+                            item.HdrTreeDimmer = HdrTreeDimmerParse;
+                        }
+                        else
+                        {
+                            item.HdrTreeDimmer = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "WindSpeed":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Weather_FieldIndex.WindSpeed);
+                        if (ByteXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Byte WindSpeedParse,
+                            errorMask: errorMask))
+                        {
+                            item.WindSpeed = WindSpeedParse;
+                        }
+                        else
+                        {
+                            item.WindSpeed = default(Byte);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "CloudSpeedLower":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Weather_FieldIndex.CloudSpeedLower);
+                        if (ByteXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Byte CloudSpeedLowerParse,
+                            errorMask: errorMask))
+                        {
+                            item.CloudSpeedLower = CloudSpeedLowerParse;
+                        }
+                        else
+                        {
+                            item.CloudSpeedLower = default(Byte);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "CloudSpeedUpper":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Weather_FieldIndex.CloudSpeedUpper);
+                        if (ByteXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Byte CloudSpeedUpperParse,
+                            errorMask: errorMask))
+                        {
+                            item.CloudSpeedUpper = CloudSpeedUpperParse;
+                        }
+                        else
+                        {
+                            item.CloudSpeedUpper = default(Byte);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "TransDelta":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Weather_FieldIndex.TransDelta);
+                        if (ByteXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Byte TransDeltaParse,
+                            errorMask: errorMask))
+                        {
+                            item.TransDelta = TransDeltaParse;
+                        }
+                        else
+                        {
+                            item.TransDelta = default(Byte);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "SunGlare":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Weather_FieldIndex.SunGlare);
+                        if (ByteXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Byte SunGlareParse,
+                            errorMask: errorMask))
+                        {
+                            item.SunGlare = SunGlareParse;
+                        }
+                        else
+                        {
+                            item.SunGlare = default(Byte);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "SunDamage":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Weather_FieldIndex.SunDamage);
+                        if (ByteXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Byte SunDamageParse,
+                            errorMask: errorMask))
+                        {
+                            item.SunDamage = SunDamageParse;
+                        }
+                        else
+                        {
+                            item.SunDamage = default(Byte);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "PrecipitationBeginFadeIn":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Weather_FieldIndex.PrecipitationBeginFadeIn);
+                        if (ByteXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Byte PrecipitationBeginFadeInParse,
+                            errorMask: errorMask))
+                        {
+                            item.PrecipitationBeginFadeIn = PrecipitationBeginFadeInParse;
+                        }
+                        else
+                        {
+                            item.PrecipitationBeginFadeIn = default(Byte);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "PrecipitationEndFadeOut":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Weather_FieldIndex.PrecipitationEndFadeOut);
+                        if (ByteXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Byte PrecipitationEndFadeOutParse,
+                            errorMask: errorMask))
+                        {
+                            item.PrecipitationEndFadeOut = PrecipitationEndFadeOutParse;
+                        }
+                        else
+                        {
+                            item.PrecipitationEndFadeOut = default(Byte);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "ThunderLightningBeginFadeIn":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Weather_FieldIndex.ThunderLightningBeginFadeIn);
+                        if (ByteXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Byte ThunderLightningBeginFadeInParse,
+                            errorMask: errorMask))
+                        {
+                            item.ThunderLightningBeginFadeIn = ThunderLightningBeginFadeInParse;
+                        }
+                        else
+                        {
+                            item.ThunderLightningBeginFadeIn = default(Byte);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "ThunderLightningEndFadeOut":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Weather_FieldIndex.ThunderLightningEndFadeOut);
+                        if (ByteXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Byte ThunderLightningEndFadeOutParse,
+                            errorMask: errorMask))
+                        {
+                            item.ThunderLightningEndFadeOut = ThunderLightningEndFadeOutParse;
+                        }
+                        else
+                        {
+                            item.ThunderLightningEndFadeOut = default(Byte);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "ThunderLightningFrequency":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Weather_FieldIndex.ThunderLightningFrequency);
+                        if (ByteXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Byte ThunderLightningFrequencyParse,
+                            errorMask: errorMask))
+                        {
+                            item.ThunderLightningFrequency = ThunderLightningFrequencyParse;
+                        }
+                        else
+                        {
+                            item.ThunderLightningFrequency = default(Byte);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Classification":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Weather_FieldIndex.Classification);
+                        if (EnumXmlTranslation<Weather.WeatherClassification>.Instance.Parse(
+                            node: node,
+                            item: out Weather.WeatherClassification ClassificationParse,
+                            errorMask: errorMask))
+                        {
+                            item.Classification = ClassificationParse;
+                        }
+                        else
+                        {
+                            item.Classification = default(Weather.WeatherClassification);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "LightningColor":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Weather_FieldIndex.LightningColor);
+                        if (ColorXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Color LightningColorParse,
+                            errorMask: errorMask))
+                        {
+                            item.LightningColor = LightningColorParse;
+                        }
+                        else
+                        {
+                            item.LightningColor = default(Color);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Sounds":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Weather_FieldIndex.Sounds);
+                        if (ListXmlTranslation<WeatherSound>.Instance.Parse(
+                            node: node,
+                            enumer: out var SoundsItem,
+                            transl: LoquiXmlTranslation<WeatherSound>.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.Sounds.SetTo(SoundsItem);
+                        }
+                        else
+                        {
+                            item.Sounds.Unset();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                default:
+                    MajorRecordCommon.FillPublicElement_Xml(
+                        item: item,
+                        node: node,
+                        name: name,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                    break;
+            }
+        }
+
         #endregion
 
         #region Binary Translation
@@ -6788,7 +6808,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.TextureLowerLayer = initialValue;
             this.TextureUpperLayer = initialValue;
             this.Model = new MaskItem<T, Model_Mask<T>>(initialValue, new Model_Mask<T>(initialValue));
-            this.WeatherTypes = new MaskItem<T, IEnumerable<MaskItem<T, WeatherType_Mask<T>>>>(initialValue, null);
+            this.WeatherTypes = new MaskItem<T, IEnumerable<MaskItemIndexed<T, WeatherType_Mask<T>>>>(initialValue, null);
             this.FogDayNear = initialValue;
             this.FogDayFar = initialValue;
             this.FogNightNear = initialValue;
@@ -6820,7 +6840,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.ThunderLightningFrequency = initialValue;
             this.Classification = initialValue;
             this.LightningColor = initialValue;
-            this.Sounds = new MaskItem<T, IEnumerable<MaskItem<T, WeatherSound_Mask<T>>>>(initialValue, null);
+            this.Sounds = new MaskItem<T, IEnumerable<MaskItemIndexed<T, WeatherSound_Mask<T>>>>(initialValue, null);
         }
         #endregion
 
@@ -6828,7 +6848,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public T TextureLowerLayer;
         public T TextureUpperLayer;
         public MaskItem<T, Model_Mask<T>> Model { get; set; }
-        public MaskItem<T, IEnumerable<MaskItem<T, WeatherType_Mask<T>>>> WeatherTypes;
+        public MaskItem<T, IEnumerable<MaskItemIndexed<T, WeatherType_Mask<T>>>> WeatherTypes;
         public T FogDayNear;
         public T FogDayFar;
         public T FogNightNear;
@@ -6860,7 +6880,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public T ThunderLightningFrequency;
         public T Classification;
         public T LightningColor;
-        public MaskItem<T, IEnumerable<MaskItem<T, WeatherSound_Mask<T>>>> Sounds;
+        public MaskItem<T, IEnumerable<MaskItemIndexed<T, WeatherSound_Mask<T>>>> Sounds;
         #endregion
 
         #region Equals
@@ -7051,22 +7071,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (WeatherTypes != null)
             {
-                obj.WeatherTypes = new MaskItem<R, IEnumerable<MaskItem<R, WeatherType_Mask<R>>>>();
+                obj.WeatherTypes = new MaskItem<R, IEnumerable<MaskItemIndexed<R, WeatherType_Mask<R>>>>();
                 obj.WeatherTypes.Overall = eval(this.WeatherTypes.Overall);
                 if (WeatherTypes.Specific != null)
                 {
-                    List<MaskItem<R, WeatherType_Mask<R>>> l = new List<MaskItem<R, WeatherType_Mask<R>>>();
+                    List<MaskItemIndexed<R, WeatherType_Mask<R>>> l = new List<MaskItemIndexed<R, WeatherType_Mask<R>>>();
                     obj.WeatherTypes.Specific = l;
-                    foreach (var item in WeatherTypes.Specific)
+                    foreach (var item in WeatherTypes.Specific.WithIndex())
                     {
-                        MaskItem<R, WeatherType_Mask<R>> mask = default(MaskItem<R, WeatherType_Mask<R>>);
-                        if (item != null)
+                        MaskItemIndexed<R, WeatherType_Mask<R>> mask = default;
+                        mask.Index = item.Index;
+                        if (item.Item != null)
                         {
-                            mask = new MaskItem<R, WeatherType_Mask<R>>();
-                            mask.Overall = eval(item.Overall);
-                            if (item.Specific != null)
+                            mask = new MaskItemIndexed<R, WeatherType_Mask<R>>(item.Item.Index);
+                            mask.Overall = eval(item.Item.Overall);
+                            if (item.Item.Specific != null)
                             {
-                                mask.Specific = item.Specific.Translate(eval);
+                                mask.Specific = item.Item.Specific.Translate(eval);
                             }
                         }
                         l.Add(mask);
@@ -7106,22 +7127,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             obj.LightningColor = eval(this.LightningColor);
             if (Sounds != null)
             {
-                obj.Sounds = new MaskItem<R, IEnumerable<MaskItem<R, WeatherSound_Mask<R>>>>();
+                obj.Sounds = new MaskItem<R, IEnumerable<MaskItemIndexed<R, WeatherSound_Mask<R>>>>();
                 obj.Sounds.Overall = eval(this.Sounds.Overall);
                 if (Sounds.Specific != null)
                 {
-                    List<MaskItem<R, WeatherSound_Mask<R>>> l = new List<MaskItem<R, WeatherSound_Mask<R>>>();
+                    List<MaskItemIndexed<R, WeatherSound_Mask<R>>> l = new List<MaskItemIndexed<R, WeatherSound_Mask<R>>>();
                     obj.Sounds.Specific = l;
-                    foreach (var item in Sounds.Specific)
+                    foreach (var item in Sounds.Specific.WithIndex())
                     {
-                        MaskItem<R, WeatherSound_Mask<R>> mask = default(MaskItem<R, WeatherSound_Mask<R>>);
-                        if (item != null)
+                        MaskItemIndexed<R, WeatherSound_Mask<R>> mask = default;
+                        mask.Index = item.Index;
+                        if (item.Item != null)
                         {
-                            mask = new MaskItem<R, WeatherSound_Mask<R>>();
-                            mask.Overall = eval(item.Overall);
-                            if (item.Specific != null)
+                            mask = new MaskItemIndexed<R, WeatherSound_Mask<R>>(item.Item.Index);
+                            mask.Overall = eval(item.Item.Overall);
+                            if (item.Item.Specific != null)
                             {
-                                mask.Specific = item.Specific.Translate(eval);
+                                mask.Specific = item.Item.Specific.Translate(eval);
                             }
                         }
                         l.Add(mask);

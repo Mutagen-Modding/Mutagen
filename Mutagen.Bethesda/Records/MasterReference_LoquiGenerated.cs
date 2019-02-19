@@ -105,8 +105,8 @@ namespace Mutagen.Bethesda
 
         #endregion
 
-        IMask<bool> IEqualsMask<MasterReference>.GetEqualsMask(MasterReference rhs) => MasterReferenceCommon.GetEqualsMask(this, rhs);
-        IMask<bool> IEqualsMask<IMasterReferenceGetter>.GetEqualsMask(IMasterReferenceGetter rhs) => MasterReferenceCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<MasterReference>.GetEqualsMask(MasterReference rhs, EqualsMaskHelper.Include include) => MasterReferenceCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<IMasterReferenceGetter>.GetEqualsMask(IMasterReferenceGetter rhs, EqualsMaskHelper.Include include) => MasterReferenceCommon.GetEqualsMask(this, rhs, include);
         #region To String
         public string ToString(
             string name = null,
@@ -201,7 +201,7 @@ namespace Mutagen.Bethesda
             {
                 foreach (var elem in node.Elements())
                 {
-                    Fill_Xml_Internal(
+                    MasterReferenceCommon.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -515,72 +515,6 @@ namespace Mutagen.Bethesda
                 translationMask: translationMask);
         }
         #endregion
-
-        protected static void Fill_Xml_Internal(
-            MasterReference item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            switch (name)
-            {
-                case "Master":
-                    try
-                    {
-                        errorMask?.PushIndex((int)MasterReference_FieldIndex.Master);
-                        if (ModKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out ModKey MasterParse,
-                            errorMask: errorMask))
-                        {
-                            item.Master = MasterParse;
-                        }
-                        else
-                        {
-                            item.Master = default(ModKey);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "FileSize":
-                    try
-                    {
-                        errorMask?.PushIndex((int)MasterReference_FieldIndex.FileSize);
-                        if (UInt64XmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out UInt64 FileSizeParse,
-                            errorMask: errorMask))
-                        {
-                            item.FileSize = FileSizeParse;
-                        }
-                        else
-                        {
-                            item.FileSize = default(UInt64);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
 
         #endregion
 
@@ -1548,17 +1482,23 @@ namespace Mutagen.Bethesda.Internals
 
         public static MasterReference_Mask<bool> GetEqualsMask(
             this IMasterReferenceGetter item,
-            IMasterReferenceGetter rhs)
+            IMasterReferenceGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new MasterReference_Mask<bool>();
-            FillEqualsMask(item, rhs, ret);
+            FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
             return ret;
         }
 
         public static void FillEqualsMask(
             IMasterReferenceGetter item,
             IMasterReferenceGetter rhs,
-            MasterReference_Mask<bool> ret)
+            MasterReference_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
             ret.Master = item.Master == rhs.Master;
@@ -1662,7 +1602,7 @@ namespace Mutagen.Bethesda.Internals
         #endregion
 
         public static void WriteToNode_Xml(
-            IMasterReferenceGetter item,
+            this IMasterReferenceGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1685,6 +1625,97 @@ namespace Mutagen.Bethesda.Internals
                     item: item.FileSize,
                     fieldIndex: (int)MasterReference_FieldIndex.FileSize,
                     errorMask: errorMask);
+            }
+        }
+
+        public static void FillPublic_Xml(
+            this MasterReference item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    MasterReferenceCommon.FillPublicElement_Xml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+
+        public static void FillPublicElement_Xml(
+            this MasterReference item,
+            XElement node,
+            string name,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            switch (name)
+            {
+                case "Master":
+                    try
+                    {
+                        errorMask?.PushIndex((int)MasterReference_FieldIndex.Master);
+                        if (ModKeyXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out ModKey MasterParse,
+                            errorMask: errorMask))
+                        {
+                            item.Master = MasterParse;
+                        }
+                        else
+                        {
+                            item.Master = default(ModKey);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "FileSize":
+                    try
+                    {
+                        errorMask?.PushIndex((int)MasterReference_FieldIndex.FileSize);
+                        if (UInt64XmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out UInt64 FileSizeParse,
+                            errorMask: errorMask))
+                        {
+                            item.FileSize = FileSizeParse;
+                        }
+                        else
+                        {
+                            item.FileSize = default(UInt64);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                default:
+                    break;
             }
         }
 

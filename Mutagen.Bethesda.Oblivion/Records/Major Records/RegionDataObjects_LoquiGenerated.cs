@@ -89,8 +89,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> IEqualsMask<RegionDataObjects>.GetEqualsMask(RegionDataObjects rhs) => RegionDataObjectsCommon.GetEqualsMask(this, rhs);
-        IMask<bool> IEqualsMask<IRegionDataObjectsGetter>.GetEqualsMask(IRegionDataObjectsGetter rhs) => RegionDataObjectsCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<RegionDataObjects>.GetEqualsMask(RegionDataObjects rhs, EqualsMaskHelper.Include include) => RegionDataObjectsCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<IRegionDataObjectsGetter>.GetEqualsMask(IRegionDataObjectsGetter rhs, EqualsMaskHelper.Include include) => RegionDataObjectsCommon.GetEqualsMask(this, rhs, include);
         #region To String
         public string ToString(
             string name = null,
@@ -185,7 +185,13 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 foreach (var elem in node.Elements())
                 {
-                    Fill_Xml_Internal(
+                    FillPrivateElement_Xml(
+                        item: ret,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                    RegionDataObjectsCommon.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -497,7 +503,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        protected static void Fill_Xml_Internal(
+        protected static void FillPrivateElement_Xml(
             RegionDataObjects item,
             XElement node,
             string name,
@@ -506,36 +512,8 @@ namespace Mutagen.Bethesda.Oblivion
         {
             switch (name)
             {
-                case "Objects":
-                    try
-                    {
-                        errorMask?.PushIndex((int)RegionDataObjects_FieldIndex.Objects);
-                        if (ListXmlTranslation<RegionDataObject>.Instance.Parse(
-                            node: node,
-                            enumer: out var ObjectsItem,
-                            transl: LoquiXmlTranslation<RegionDataObject>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.Objects.SetTo(ObjectsItem);
-                        }
-                        else
-                        {
-                            item.Objects.Unset();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
                 default:
-                    RegionData.Fill_Xml_Internal(
+                    RegionData.FillPrivateElement_Xml(
                         item: item,
                         node: node,
                         name: name,
@@ -1421,46 +1399,29 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static RegionDataObjects_Mask<bool> GetEqualsMask(
             this IRegionDataObjectsGetter item,
-            IRegionDataObjectsGetter rhs)
+            IRegionDataObjectsGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new RegionDataObjects_Mask<bool>();
-            FillEqualsMask(item, rhs, ret);
+            FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
             return ret;
         }
 
         public static void FillEqualsMask(
             IRegionDataObjectsGetter item,
             IRegionDataObjectsGetter rhs,
-            RegionDataObjects_Mask<bool> ret)
+            RegionDataObjects_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            if (item.Objects.HasBeenSet == rhs.Objects.HasBeenSet)
-            {
-                if (item.Objects.HasBeenSet)
-                {
-                    ret.Objects = new MaskItem<bool, IEnumerable<MaskItem<bool, RegionDataObject_Mask<bool>>>>();
-                    ret.Objects.Specific = item.Objects.SelectAgainst<RegionDataObject, MaskItem<bool, RegionDataObject_Mask<bool>>>(rhs.Objects, ((l, r) =>
-                    {
-                        MaskItem<bool, RegionDataObject_Mask<bool>> itemRet;
-                        itemRet = new MaskItem<bool, RegionDataObject_Mask<bool>>();
-                        itemRet.Specific = RegionDataObjectCommon.GetEqualsMask(l, r);
-                        itemRet.Overall = itemRet.Specific.AllEqual((b) => b);
-                        return itemRet;
-                    }
-                    ), out ret.Objects.Overall);
-                    ret.Objects.Overall = ret.Objects.Overall && ret.Objects.Specific.All((b) => b.Overall);
-                }
-                else
-                {
-                    ret.Objects = new MaskItem<bool, IEnumerable<MaskItem<bool, RegionDataObject_Mask<bool>>>>();
-                    ret.Objects.Overall = true;
-                }
-            }
-            else
-            {
-                ret.Objects = new MaskItem<bool, IEnumerable<MaskItem<bool, RegionDataObject_Mask<bool>>>>();
-                ret.Objects.Overall = false;
-            }
+            ret.Objects = item.Objects.CollectionEqualsHelper(
+                rhs.Objects,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
             RegionDataCommon.FillEqualsMask(item, rhs, ret);
         }
 
@@ -1524,7 +1485,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static RegionDataObjects_Mask<bool> GetHasBeenSetMask(IRegionDataObjectsGetter item)
         {
             var ret = new RegionDataObjects_Mask<bool>();
-            ret.Objects = new MaskItem<bool, IEnumerable<MaskItem<bool, RegionDataObject_Mask<bool>>>>(item.Objects.HasBeenSet, item.Objects.Select((i) => new MaskItem<bool, RegionDataObject_Mask<bool>>(true, i.GetHasBeenSetMask())));
+            ret.Objects = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, RegionDataObject_Mask<bool>>>>(item.Objects.HasBeenSet, item.Objects.WithIndex().Select((i) => new MaskItemIndexed<bool, RegionDataObject_Mask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
             return ret;
         }
 
@@ -1591,7 +1552,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         public static void WriteToNode_Xml(
-            IRegionDataObjectsGetter item,
+            this IRegionDataObjectsGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1621,6 +1582,79 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             translationMask: listTranslMask);
                     }
                     );
+            }
+        }
+
+        public static void FillPublic_Xml(
+            this RegionDataObjects item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    RegionDataObjectsCommon.FillPublicElement_Xml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+
+        public static void FillPublicElement_Xml(
+            this RegionDataObjects item,
+            XElement node,
+            string name,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            switch (name)
+            {
+                case "Objects":
+                    try
+                    {
+                        errorMask?.PushIndex((int)RegionDataObjects_FieldIndex.Objects);
+                        if (ListXmlTranslation<RegionDataObject>.Instance.Parse(
+                            node: node,
+                            enumer: out var ObjectsItem,
+                            transl: LoquiXmlTranslation<RegionDataObject>.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.Objects.SetTo(ObjectsItem);
+                        }
+                        else
+                        {
+                            item.Objects.Unset();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                default:
+                    RegionDataCommon.FillPublicElement_Xml(
+                        item: item,
+                        node: node,
+                        name: name,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                    break;
             }
         }
 
@@ -1711,12 +1745,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public RegionDataObjects_Mask(T initialValue)
         {
-            this.Objects = new MaskItem<T, IEnumerable<MaskItem<T, RegionDataObject_Mask<T>>>>(initialValue, null);
+            this.Objects = new MaskItem<T, IEnumerable<MaskItemIndexed<T, RegionDataObject_Mask<T>>>>(initialValue, null);
         }
         #endregion
 
         #region Members
-        public MaskItem<T, IEnumerable<MaskItem<T, RegionDataObject_Mask<T>>>> Objects;
+        public MaskItem<T, IEnumerable<MaskItemIndexed<T, RegionDataObject_Mask<T>>>> Objects;
         #endregion
 
         #region Equals
@@ -1776,22 +1810,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             base.Translate_InternalFill(obj, eval);
             if (Objects != null)
             {
-                obj.Objects = new MaskItem<R, IEnumerable<MaskItem<R, RegionDataObject_Mask<R>>>>();
+                obj.Objects = new MaskItem<R, IEnumerable<MaskItemIndexed<R, RegionDataObject_Mask<R>>>>();
                 obj.Objects.Overall = eval(this.Objects.Overall);
                 if (Objects.Specific != null)
                 {
-                    List<MaskItem<R, RegionDataObject_Mask<R>>> l = new List<MaskItem<R, RegionDataObject_Mask<R>>>();
+                    List<MaskItemIndexed<R, RegionDataObject_Mask<R>>> l = new List<MaskItemIndexed<R, RegionDataObject_Mask<R>>>();
                     obj.Objects.Specific = l;
-                    foreach (var item in Objects.Specific)
+                    foreach (var item in Objects.Specific.WithIndex())
                     {
-                        MaskItem<R, RegionDataObject_Mask<R>> mask = default(MaskItem<R, RegionDataObject_Mask<R>>);
-                        if (item != null)
+                        MaskItemIndexed<R, RegionDataObject_Mask<R>> mask = default;
+                        mask.Index = item.Index;
+                        if (item.Item != null)
                         {
-                            mask = new MaskItem<R, RegionDataObject_Mask<R>>();
-                            mask.Overall = eval(item.Overall);
-                            if (item.Specific != null)
+                            mask = new MaskItemIndexed<R, RegionDataObject_Mask<R>>(item.Item.Index);
+                            mask.Overall = eval(item.Item.Overall);
+                            if (item.Item.Specific != null)
                             {
-                                mask.Specific = item.Specific.Translate(eval);
+                                mask.Specific = item.Item.Specific.Translate(eval);
                             }
                         }
                         l.Add(mask);

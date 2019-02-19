@@ -84,8 +84,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> IEqualsMask<RaceVoices>.GetEqualsMask(RaceVoices rhs) => RaceVoicesCommon.GetEqualsMask(this, rhs);
-        IMask<bool> IEqualsMask<IRaceVoicesGetter>.GetEqualsMask(IRaceVoicesGetter rhs) => RaceVoicesCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<RaceVoices>.GetEqualsMask(RaceVoices rhs, EqualsMaskHelper.Include include) => RaceVoicesCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<IRaceVoicesGetter>.GetEqualsMask(IRaceVoicesGetter rhs, EqualsMaskHelper.Include include) => RaceVoicesCommon.GetEqualsMask(this, rhs, include);
         #region To String
         public string ToString(
             string name = null,
@@ -173,7 +173,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 foreach (var elem in node.Elements())
                 {
-                    Fill_Xml_Internal(
+                    RaceVoicesCommon.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -487,34 +487,6 @@ namespace Mutagen.Bethesda.Oblivion
                 translationMask: translationMask);
         }
         #endregion
-
-        protected static void Fill_Xml_Internal(
-            RaceVoices item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            switch (name)
-            {
-                case "Male":
-                    FormKeyXmlTranslation.Instance.ParseInto(
-                        node: node,
-                        item: item.Male_Property,
-                        fieldIndex: (int)RaceVoices_FieldIndex.Male,
-                        errorMask: errorMask);
-                    break;
-                case "Female":
-                    FormKeyXmlTranslation.Instance.ParseInto(
-                        node: node,
-                        item: item.Female_Property,
-                        fieldIndex: (int)RaceVoices_FieldIndex.Female,
-                        errorMask: errorMask);
-                    break;
-                default:
-                    break;
-            }
-        }
 
         #endregion
 
@@ -1411,17 +1383,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static RaceVoices_Mask<bool> GetEqualsMask(
             this IRaceVoicesGetter item,
-            IRaceVoicesGetter rhs)
+            IRaceVoicesGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new RaceVoices_Mask<bool>();
-            FillEqualsMask(item, rhs, ret);
+            FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
             return ret;
         }
 
         public static void FillEqualsMask(
             IRaceVoicesGetter item,
             IRaceVoicesGetter rhs,
-            RaceVoices_Mask<bool> ret)
+            RaceVoices_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
             ret.Male = item.Male_Property.FormKey == rhs.Male_Property.FormKey;
@@ -1524,7 +1502,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         public static void WriteToNode_Xml(
-            IRaceVoicesGetter item,
+            this IRaceVoicesGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1546,6 +1524,59 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item.Female_Property?.FormKey,
                     fieldIndex: (int)RaceVoices_FieldIndex.Female,
                     errorMask: errorMask);
+            }
+        }
+
+        public static void FillPublic_Xml(
+            this RaceVoices item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    RaceVoicesCommon.FillPublicElement_Xml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+
+        public static void FillPublicElement_Xml(
+            this RaceVoices item,
+            XElement node,
+            string name,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            switch (name)
+            {
+                case "Male":
+                    FormKeyXmlTranslation.Instance.ParseInto(
+                        node: node,
+                        item: item.Male_Property,
+                        fieldIndex: (int)RaceVoices_FieldIndex.Male,
+                        errorMask: errorMask);
+                    break;
+                case "Female":
+                    FormKeyXmlTranslation.Instance.ParseInto(
+                        node: node,
+                        item: item.Female_Property,
+                        fieldIndex: (int)RaceVoices_FieldIndex.Female,
+                        errorMask: errorMask);
+                    break;
+                default:
+                    break;
             }
         }
 

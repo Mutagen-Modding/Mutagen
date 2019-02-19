@@ -164,8 +164,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> IEqualsMask<Enchantment>.GetEqualsMask(Enchantment rhs) => EnchantmentCommon.GetEqualsMask(this, rhs);
-        IMask<bool> IEqualsMask<IEnchantmentGetter>.GetEqualsMask(IEnchantmentGetter rhs) => EnchantmentCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<Enchantment>.GetEqualsMask(Enchantment rhs, EqualsMaskHelper.Include include) => EnchantmentCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<IEnchantmentGetter>.GetEqualsMask(IEnchantmentGetter rhs, EqualsMaskHelper.Include include) => EnchantmentCommon.GetEqualsMask(this, rhs, include);
         #region To String
         public string ToString(
             string name = null,
@@ -277,7 +277,13 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 foreach (var elem in node.Elements())
                 {
-                    Fill_Xml_Internal(
+                    FillPrivateElement_Xml(
+                        item: ret,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                    EnchantmentCommon.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -589,7 +595,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        protected static void Fill_Xml_Internal(
+        protected static void FillPrivateElement_Xml(
             Enchantment item,
             XElement node,
             string name,
@@ -598,166 +604,8 @@ namespace Mutagen.Bethesda.Oblivion
         {
             switch (name)
             {
-                case "Name":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Enchantment_FieldIndex.Name);
-                        if (StringXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out String NameParse,
-                            errorMask: errorMask))
-                        {
-                            item.Name = NameParse;
-                        }
-                        else
-                        {
-                            item.Name = default(String);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Type":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Enchantment_FieldIndex.Type);
-                        if (EnumXmlTranslation<Enchantment.EnchantmentType>.Instance.Parse(
-                            node: node,
-                            item: out Enchantment.EnchantmentType TypeParse,
-                            errorMask: errorMask))
-                        {
-                            item.Type = TypeParse;
-                        }
-                        else
-                        {
-                            item.Type = default(Enchantment.EnchantmentType);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ChargeAmount":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Enchantment_FieldIndex.ChargeAmount);
-                        if (UInt32XmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out UInt32 ChargeAmountParse,
-                            errorMask: errorMask))
-                        {
-                            item.ChargeAmount = ChargeAmountParse;
-                        }
-                        else
-                        {
-                            item.ChargeAmount = default(UInt32);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "EnchantCost":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Enchantment_FieldIndex.EnchantCost);
-                        if (UInt32XmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out UInt32 EnchantCostParse,
-                            errorMask: errorMask))
-                        {
-                            item.EnchantCost = EnchantCostParse;
-                        }
-                        else
-                        {
-                            item.EnchantCost = default(UInt32);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Flags":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Enchantment_FieldIndex.Flags);
-                        if (EnumXmlTranslation<Enchantment.Flag>.Instance.Parse(
-                            node: node,
-                            item: out Enchantment.Flag FlagsParse,
-                            errorMask: errorMask))
-                        {
-                            item.Flags = FlagsParse;
-                        }
-                        else
-                        {
-                            item.Flags = default(Enchantment.Flag);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Effects":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Enchantment_FieldIndex.Effects);
-                        if (ListXmlTranslation<Effect>.Instance.Parse(
-                            node: node,
-                            enumer: out var EffectsItem,
-                            transl: LoquiXmlTranslation<Effect>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.Effects.SetTo(EffectsItem);
-                        }
-                        else
-                        {
-                            item.Effects.Unset();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
                 default:
-                    MajorRecord.Fill_Xml_Internal(
+                    MajorRecord.FillPrivateElement_Xml(
                         item: item,
                         node: node,
                         name: name,
@@ -2074,17 +1922,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static Enchantment_Mask<bool> GetEqualsMask(
             this IEnchantmentGetter item,
-            IEnchantmentGetter rhs)
+            IEnchantmentGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new Enchantment_Mask<bool>();
-            FillEqualsMask(item, rhs, ret);
+            FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
             return ret;
         }
 
         public static void FillEqualsMask(
             IEnchantmentGetter item,
             IEnchantmentGetter rhs,
-            Enchantment_Mask<bool> ret)
+            Enchantment_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
             ret.Name = item.Name_IsSet == rhs.Name_IsSet && object.Equals(item.Name, rhs.Name);
@@ -2092,31 +1946,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.ChargeAmount = item.ChargeAmount == rhs.ChargeAmount;
             ret.EnchantCost = item.EnchantCost == rhs.EnchantCost;
             ret.Flags = item.Flags == rhs.Flags;
-            if (item.Effects.HasBeenSet == rhs.Effects.HasBeenSet)
-            {
-                if (item.Effects.HasBeenSet)
-                {
-                    ret.Effects = new MaskItem<bool, IEnumerable<MaskItem<bool, Effect_Mask<bool>>>>();
-                    ret.Effects.Specific = item.Effects.SelectAgainst<Effect, MaskItem<bool, Effect_Mask<bool>>>(rhs.Effects, ((l, r) =>
-                    {
-                        MaskItem<bool, Effect_Mask<bool>> itemRet;
-                        itemRet = l.LoquiEqualsHelper(r, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
-                        return itemRet;
-                    }
-                    ), out ret.Effects.Overall);
-                    ret.Effects.Overall = ret.Effects.Overall && ret.Effects.Specific.All((b) => b.Overall);
-                }
-                else
-                {
-                    ret.Effects = new MaskItem<bool, IEnumerable<MaskItem<bool, Effect_Mask<bool>>>>();
-                    ret.Effects.Overall = true;
-                }
-            }
-            else
-            {
-                ret.Effects = new MaskItem<bool, IEnumerable<MaskItem<bool, Effect_Mask<bool>>>>();
-                ret.Effects.Overall = false;
-            }
+            ret.Effects = item.Effects.CollectionEqualsHelper(
+                rhs.Effects,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
             MajorRecordCommon.FillEqualsMask(item, rhs, ret);
         }
 
@@ -2206,7 +2039,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.ChargeAmount = true;
             ret.EnchantCost = true;
             ret.Flags = true;
-            ret.Effects = new MaskItem<bool, IEnumerable<MaskItem<bool, Effect_Mask<bool>>>>(item.Effects.HasBeenSet, item.Effects.Select((i) => new MaskItem<bool, Effect_Mask<bool>>(true, i.GetHasBeenSetMask())));
+            ret.Effects = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Effect_Mask<bool>>>>(item.Effects.HasBeenSet, item.Effects.WithIndex().Select((i) => new MaskItemIndexed<bool, Effect_Mask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
             return ret;
         }
 
@@ -2277,7 +2110,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         public static void WriteToNode_Xml(
-            IEnchantmentGetter item,
+            this IEnchantmentGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -2353,6 +2186,209 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             translationMask: listTranslMask);
                     }
                     );
+            }
+        }
+
+        public static void FillPublic_Xml(
+            this Enchantment item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    EnchantmentCommon.FillPublicElement_Xml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+
+        public static void FillPublicElement_Xml(
+            this Enchantment item,
+            XElement node,
+            string name,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            switch (name)
+            {
+                case "Name":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Enchantment_FieldIndex.Name);
+                        if (StringXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out String NameParse,
+                            errorMask: errorMask))
+                        {
+                            item.Name = NameParse;
+                        }
+                        else
+                        {
+                            item.Name = default(String);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Type":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Enchantment_FieldIndex.Type);
+                        if (EnumXmlTranslation<Enchantment.EnchantmentType>.Instance.Parse(
+                            node: node,
+                            item: out Enchantment.EnchantmentType TypeParse,
+                            errorMask: errorMask))
+                        {
+                            item.Type = TypeParse;
+                        }
+                        else
+                        {
+                            item.Type = default(Enchantment.EnchantmentType);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "ChargeAmount":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Enchantment_FieldIndex.ChargeAmount);
+                        if (UInt32XmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out UInt32 ChargeAmountParse,
+                            errorMask: errorMask))
+                        {
+                            item.ChargeAmount = ChargeAmountParse;
+                        }
+                        else
+                        {
+                            item.ChargeAmount = default(UInt32);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "EnchantCost":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Enchantment_FieldIndex.EnchantCost);
+                        if (UInt32XmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out UInt32 EnchantCostParse,
+                            errorMask: errorMask))
+                        {
+                            item.EnchantCost = EnchantCostParse;
+                        }
+                        else
+                        {
+                            item.EnchantCost = default(UInt32);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Flags":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Enchantment_FieldIndex.Flags);
+                        if (EnumXmlTranslation<Enchantment.Flag>.Instance.Parse(
+                            node: node,
+                            item: out Enchantment.Flag FlagsParse,
+                            errorMask: errorMask))
+                        {
+                            item.Flags = FlagsParse;
+                        }
+                        else
+                        {
+                            item.Flags = default(Enchantment.Flag);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Effects":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Enchantment_FieldIndex.Effects);
+                        if (ListXmlTranslation<Effect>.Instance.Parse(
+                            node: node,
+                            enumer: out var EffectsItem,
+                            transl: LoquiXmlTranslation<Effect>.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.Effects.SetTo(EffectsItem);
+                        }
+                        else
+                        {
+                            item.Effects.Unset();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                default:
+                    MajorRecordCommon.FillPublicElement_Xml(
+                        item: item,
+                        node: node,
+                        name: name,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                    break;
             }
         }
 
@@ -2496,7 +2532,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.ChargeAmount = initialValue;
             this.EnchantCost = initialValue;
             this.Flags = initialValue;
-            this.Effects = new MaskItem<T, IEnumerable<MaskItem<T, Effect_Mask<T>>>>(initialValue, null);
+            this.Effects = new MaskItem<T, IEnumerable<MaskItemIndexed<T, Effect_Mask<T>>>>(initialValue, null);
         }
         #endregion
 
@@ -2506,7 +2542,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public T ChargeAmount;
         public T EnchantCost;
         public T Flags;
-        public MaskItem<T, IEnumerable<MaskItem<T, Effect_Mask<T>>>> Effects;
+        public MaskItem<T, IEnumerable<MaskItemIndexed<T, Effect_Mask<T>>>> Effects;
         #endregion
 
         #region Equals
@@ -2586,22 +2622,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             obj.Flags = eval(this.Flags);
             if (Effects != null)
             {
-                obj.Effects = new MaskItem<R, IEnumerable<MaskItem<R, Effect_Mask<R>>>>();
+                obj.Effects = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Effect_Mask<R>>>>();
                 obj.Effects.Overall = eval(this.Effects.Overall);
                 if (Effects.Specific != null)
                 {
-                    List<MaskItem<R, Effect_Mask<R>>> l = new List<MaskItem<R, Effect_Mask<R>>>();
+                    List<MaskItemIndexed<R, Effect_Mask<R>>> l = new List<MaskItemIndexed<R, Effect_Mask<R>>>();
                     obj.Effects.Specific = l;
-                    foreach (var item in Effects.Specific)
+                    foreach (var item in Effects.Specific.WithIndex())
                     {
-                        MaskItem<R, Effect_Mask<R>> mask = default(MaskItem<R, Effect_Mask<R>>);
-                        if (item != null)
+                        MaskItemIndexed<R, Effect_Mask<R>> mask = default;
+                        mask.Index = item.Index;
+                        if (item.Item != null)
                         {
-                            mask = new MaskItem<R, Effect_Mask<R>>();
-                            mask.Overall = eval(item.Overall);
-                            if (item.Specific != null)
+                            mask = new MaskItemIndexed<R, Effect_Mask<R>>(item.Item.Index);
+                            mask.Overall = eval(item.Item.Overall);
+                            if (item.Item.Specific != null)
                             {
-                                mask.Specific = item.Specific.Translate(eval);
+                                mask.Specific = item.Item.Specific.Translate(eval);
                             }
                         }
                         l.Add(mask);

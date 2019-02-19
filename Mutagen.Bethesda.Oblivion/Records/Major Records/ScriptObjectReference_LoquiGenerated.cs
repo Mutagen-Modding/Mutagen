@@ -75,8 +75,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> IEqualsMask<ScriptObjectReference>.GetEqualsMask(ScriptObjectReference rhs) => ScriptObjectReferenceCommon.GetEqualsMask(this, rhs);
-        IMask<bool> IEqualsMask<IScriptObjectReferenceGetter>.GetEqualsMask(IScriptObjectReferenceGetter rhs) => ScriptObjectReferenceCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<ScriptObjectReference>.GetEqualsMask(ScriptObjectReference rhs, EqualsMaskHelper.Include include) => ScriptObjectReferenceCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<IScriptObjectReferenceGetter>.GetEqualsMask(IScriptObjectReferenceGetter rhs, EqualsMaskHelper.Include include) => ScriptObjectReferenceCommon.GetEqualsMask(this, rhs, include);
         #region To String
         public string ToString(
             string name = null,
@@ -164,7 +164,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 foreach (var elem in node.Elements())
                 {
-                    Fill_Xml_Internal(
+                    ScriptObjectReferenceCommon.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -475,33 +475,6 @@ namespace Mutagen.Bethesda.Oblivion
                 translationMask: translationMask);
         }
         #endregion
-
-        protected static void Fill_Xml_Internal(
-            ScriptObjectReference item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            switch (name)
-            {
-                case "Reference":
-                    FormKeyXmlTranslation.Instance.ParseInto(
-                        node: node,
-                        item: item.Reference_Property,
-                        fieldIndex: (int)ScriptObjectReference_FieldIndex.Reference,
-                        errorMask: errorMask);
-                    break;
-                default:
-                    ScriptReference.Fill_Xml_Internal(
-                        item: item,
-                        node: node,
-                        name: name,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    break;
-            }
-        }
 
         #endregion
 
@@ -1346,17 +1319,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static ScriptObjectReference_Mask<bool> GetEqualsMask(
             this IScriptObjectReferenceGetter item,
-            IScriptObjectReferenceGetter rhs)
+            IScriptObjectReferenceGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new ScriptObjectReference_Mask<bool>();
-            FillEqualsMask(item, rhs, ret);
+            FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
             return ret;
         }
 
         public static void FillEqualsMask(
             IScriptObjectReferenceGetter item,
             IScriptObjectReferenceGetter rhs,
-            ScriptObjectReference_Mask<bool> ret)
+            ScriptObjectReference_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
             ret.Reference = item.Reference_Property.FormKey == rhs.Reference_Property.FormKey;
@@ -1469,7 +1448,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         public static void WriteToNode_Xml(
-            IScriptObjectReferenceGetter item,
+            this IScriptObjectReferenceGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1487,6 +1466,58 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item.Reference_Property?.FormKey,
                     fieldIndex: (int)ScriptObjectReference_FieldIndex.Reference,
                     errorMask: errorMask);
+            }
+        }
+
+        public static void FillPublic_Xml(
+            this ScriptObjectReference item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    ScriptObjectReferenceCommon.FillPublicElement_Xml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+
+        public static void FillPublicElement_Xml(
+            this ScriptObjectReference item,
+            XElement node,
+            string name,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            switch (name)
+            {
+                case "Reference":
+                    FormKeyXmlTranslation.Instance.ParseInto(
+                        node: node,
+                        item: item.Reference_Property,
+                        fieldIndex: (int)ScriptObjectReference_FieldIndex.Reference,
+                        errorMask: errorMask);
+                    break;
+                default:
+                    ScriptReferenceCommon.FillPublicElement_Xml(
+                        item: item,
+                        node: node,
+                        name: name,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                    break;
             }
         }
 

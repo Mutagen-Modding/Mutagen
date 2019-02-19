@@ -122,8 +122,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> IEqualsMask<Sound>.GetEqualsMask(Sound rhs) => SoundCommon.GetEqualsMask(this, rhs);
-        IMask<bool> IEqualsMask<ISoundGetter>.GetEqualsMask(ISoundGetter rhs) => SoundCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<Sound>.GetEqualsMask(Sound rhs, EqualsMaskHelper.Include include) => SoundCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<ISoundGetter>.GetEqualsMask(ISoundGetter rhs, EqualsMaskHelper.Include include) => SoundCommon.GetEqualsMask(this, rhs, include);
         #region To String
         public string ToString(
             string name = null,
@@ -227,7 +227,13 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 foreach (var elem in node.Elements())
                 {
-                    Fill_Xml_Internal(
+                    FillPrivateElement_Xml(
+                        item: ret,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                    SoundCommon.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -539,7 +545,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        protected static void Fill_Xml_Internal(
+        protected static void FillPrivateElement_Xml(
             Sound item,
             XElement node,
             string name,
@@ -548,61 +554,8 @@ namespace Mutagen.Bethesda.Oblivion
         {
             switch (name)
             {
-                case "File":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Sound_FieldIndex.File);
-                        if (StringXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out String FileParse,
-                            errorMask: errorMask))
-                        {
-                            item.File = FileParse;
-                        }
-                        else
-                        {
-                            item.File = default(String);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Data":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Sound_FieldIndex.Data);
-                        if (LoquiXmlTranslation<SoundData>.Instance.Parse(
-                            node: node,
-                            item: out SoundData DataParse,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Sound_FieldIndex.Data)))
-                        {
-                            item.Data = DataParse;
-                        }
-                        else
-                        {
-                            item.Data = default(SoundData);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
                 default:
-                    MajorRecord.Fill_Xml_Internal(
+                    MajorRecord.FillPrivateElement_Xml(
                         item: item,
                         node: node,
                         name: name,
@@ -1629,21 +1582,33 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static Sound_Mask<bool> GetEqualsMask(
             this ISoundGetter item,
-            ISoundGetter rhs)
+            ISoundGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new Sound_Mask<bool>();
-            FillEqualsMask(item, rhs, ret);
+            FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
             return ret;
         }
 
         public static void FillEqualsMask(
             ISoundGetter item,
             ISoundGetter rhs,
-            Sound_Mask<bool> ret)
+            Sound_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
             ret.File = item.File_IsSet == rhs.File_IsSet && object.Equals(item.File, rhs.File);
-            ret.Data = IHasBeenSetExt.LoquiEqualsHelper(item.Data_IsSet, rhs.Data_IsSet, item.Data, rhs.Data, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
+            ret.Data = EqualsMaskHelper.EqualsHelper(
+                item.Data_IsSet,
+                rhs.Data_IsSet,
+                item.Data,
+                rhs.Data,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
+                include);
             MajorRecordCommon.FillEqualsMask(item, rhs, ret);
         }
 
@@ -1771,7 +1736,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         public static void WriteToNode_Xml(
-            ISoundGetter item,
+            this ISoundGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1801,6 +1766,104 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)Sound_FieldIndex.Data,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)Sound_FieldIndex.Data));
+            }
+        }
+
+        public static void FillPublic_Xml(
+            this Sound item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    SoundCommon.FillPublicElement_Xml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+
+        public static void FillPublicElement_Xml(
+            this Sound item,
+            XElement node,
+            string name,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            switch (name)
+            {
+                case "File":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Sound_FieldIndex.File);
+                        if (StringXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out String FileParse,
+                            errorMask: errorMask))
+                        {
+                            item.File = FileParse;
+                        }
+                        else
+                        {
+                            item.File = default(String);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Data":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Sound_FieldIndex.Data);
+                        if (LoquiXmlTranslation<SoundData>.Instance.Parse(
+                            node: node,
+                            item: out SoundData DataParse,
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)Sound_FieldIndex.Data)))
+                        {
+                            item.Data = DataParse;
+                        }
+                        else
+                        {
+                            item.Data = default(SoundData);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                default:
+                    MajorRecordCommon.FillPublicElement_Xml(
+                        item: item,
+                        node: node,
+                        name: name,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                    break;
             }
         }
 

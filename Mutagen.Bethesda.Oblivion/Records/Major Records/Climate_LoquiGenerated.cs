@@ -253,8 +253,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> IEqualsMask<Climate>.GetEqualsMask(Climate rhs) => ClimateCommon.GetEqualsMask(this, rhs);
-        IMask<bool> IEqualsMask<IClimateGetter>.GetEqualsMask(IClimateGetter rhs) => ClimateCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<Climate>.GetEqualsMask(Climate rhs, EqualsMaskHelper.Include include) => ClimateCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<IClimateGetter>.GetEqualsMask(IClimateGetter rhs, EqualsMaskHelper.Include include) => ClimateCommon.GetEqualsMask(this, rhs, include);
         #region To String
         public string ToString(
             string name = null,
@@ -390,7 +390,13 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 foreach (var elem in node.Elements())
                 {
-                    Fill_Xml_Internal(
+                    FillPrivateElement_Xml(
+                        item: ret,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                    ClimateCommon.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -702,7 +708,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        protected static void Fill_Xml_Internal(
+        protected static void FillPrivateElement_Xml(
             Climate item,
             XElement node,
             string name,
@@ -711,297 +717,8 @@ namespace Mutagen.Bethesda.Oblivion
         {
             switch (name)
             {
-                case "Weathers":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Climate_FieldIndex.Weathers);
-                        if (ListXmlTranslation<WeatherChance>.Instance.Parse(
-                            node: node,
-                            enumer: out var WeathersItem,
-                            transl: LoquiXmlTranslation<WeatherChance>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.Weathers.SetTo(WeathersItem);
-                        }
-                        else
-                        {
-                            item.Weathers.Unset();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "SunTexture":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Climate_FieldIndex.SunTexture);
-                        if (StringXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out String SunTextureParse,
-                            errorMask: errorMask))
-                        {
-                            item.SunTexture = SunTextureParse;
-                        }
-                        else
-                        {
-                            item.SunTexture = default(String);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "SunGlareTexture":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Climate_FieldIndex.SunGlareTexture);
-                        if (StringXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out String SunGlareTextureParse,
-                            errorMask: errorMask))
-                        {
-                            item.SunGlareTexture = SunGlareTextureParse;
-                        }
-                        else
-                        {
-                            item.SunGlareTexture = default(String);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Model":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Climate_FieldIndex.Model);
-                        if (LoquiXmlTranslation<Model>.Instance.Parse(
-                            node: node,
-                            item: out Model ModelParse,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Climate_FieldIndex.Model)))
-                        {
-                            item.Model = ModelParse;
-                        }
-                        else
-                        {
-                            item.Model = default(Model);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "SunriseBegin":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Climate_FieldIndex.SunriseBegin);
-                        if (DateTimeXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out DateTime SunriseBeginParse,
-                            errorMask: errorMask))
-                        {
-                            item.SunriseBegin = SunriseBeginParse;
-                        }
-                        else
-                        {
-                            item.SunriseBegin = default(DateTime);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "SunriseEnd":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Climate_FieldIndex.SunriseEnd);
-                        if (DateTimeXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out DateTime SunriseEndParse,
-                            errorMask: errorMask))
-                        {
-                            item.SunriseEnd = SunriseEndParse;
-                        }
-                        else
-                        {
-                            item.SunriseEnd = default(DateTime);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "SunsetBegin":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Climate_FieldIndex.SunsetBegin);
-                        if (DateTimeXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out DateTime SunsetBeginParse,
-                            errorMask: errorMask))
-                        {
-                            item.SunsetBegin = SunsetBeginParse;
-                        }
-                        else
-                        {
-                            item.SunsetBegin = default(DateTime);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "SunsetEnd":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Climate_FieldIndex.SunsetEnd);
-                        if (DateTimeXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out DateTime SunsetEndParse,
-                            errorMask: errorMask))
-                        {
-                            item.SunsetEnd = SunsetEndParse;
-                        }
-                        else
-                        {
-                            item.SunsetEnd = default(DateTime);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Volatility":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Climate_FieldIndex.Volatility);
-                        if (ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Byte VolatilityParse,
-                            errorMask: errorMask))
-                        {
-                            item.Volatility = VolatilityParse;
-                        }
-                        else
-                        {
-                            item.Volatility = default(Byte);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Phase":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Climate_FieldIndex.Phase);
-                        if (EnumXmlTranslation<Climate.MoonPhase>.Instance.Parse(
-                            node: node,
-                            item: out Climate.MoonPhase PhaseParse,
-                            errorMask: errorMask))
-                        {
-                            item.Phase = PhaseParse;
-                        }
-                        else
-                        {
-                            item.Phase = default(Climate.MoonPhase);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "PhaseLength":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Climate_FieldIndex.PhaseLength);
-                        if (ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Byte PhaseLengthParse,
-                            errorMask: errorMask))
-                        {
-                            item.PhaseLength = PhaseLengthParse;
-                        }
-                        else
-                        {
-                            item.PhaseLength = default(Byte);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
                 default:
-                    MajorRecord.Fill_Xml_Internal(
+                    MajorRecord.FillPrivateElement_Xml(
                         item: item,
                         node: node,
                         name: name,
@@ -2797,49 +2514,38 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static Climate_Mask<bool> GetEqualsMask(
             this IClimateGetter item,
-            IClimateGetter rhs)
+            IClimateGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new Climate_Mask<bool>();
-            FillEqualsMask(item, rhs, ret);
+            FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
             return ret;
         }
 
         public static void FillEqualsMask(
             IClimateGetter item,
             IClimateGetter rhs,
-            Climate_Mask<bool> ret)
+            Climate_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            if (item.Weathers.HasBeenSet == rhs.Weathers.HasBeenSet)
-            {
-                if (item.Weathers.HasBeenSet)
-                {
-                    ret.Weathers = new MaskItem<bool, IEnumerable<MaskItem<bool, WeatherChance_Mask<bool>>>>();
-                    ret.Weathers.Specific = item.Weathers.SelectAgainst<WeatherChance, MaskItem<bool, WeatherChance_Mask<bool>>>(rhs.Weathers, ((l, r) =>
-                    {
-                        MaskItem<bool, WeatherChance_Mask<bool>> itemRet;
-                        itemRet = new MaskItem<bool, WeatherChance_Mask<bool>>();
-                        itemRet.Specific = WeatherChanceCommon.GetEqualsMask(l, r);
-                        itemRet.Overall = itemRet.Specific.AllEqual((b) => b);
-                        return itemRet;
-                    }
-                    ), out ret.Weathers.Overall);
-                    ret.Weathers.Overall = ret.Weathers.Overall && ret.Weathers.Specific.All((b) => b.Overall);
-                }
-                else
-                {
-                    ret.Weathers = new MaskItem<bool, IEnumerable<MaskItem<bool, WeatherChance_Mask<bool>>>>();
-                    ret.Weathers.Overall = true;
-                }
-            }
-            else
-            {
-                ret.Weathers = new MaskItem<bool, IEnumerable<MaskItem<bool, WeatherChance_Mask<bool>>>>();
-                ret.Weathers.Overall = false;
-            }
+            ret.Weathers = item.Weathers.CollectionEqualsHelper(
+                rhs.Weathers,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
             ret.SunTexture = item.SunTexture_IsSet == rhs.SunTexture_IsSet && object.Equals(item.SunTexture, rhs.SunTexture);
             ret.SunGlareTexture = item.SunGlareTexture_IsSet == rhs.SunGlareTexture_IsSet && object.Equals(item.SunGlareTexture, rhs.SunGlareTexture);
-            ret.Model = IHasBeenSetExt.LoquiEqualsHelper(item.Model_IsSet, rhs.Model_IsSet, item.Model, rhs.Model, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
+            ret.Model = EqualsMaskHelper.EqualsHelper(
+                item.Model_IsSet,
+                rhs.Model_IsSet,
+                item.Model,
+                rhs.Model,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
+                include);
             ret.SunriseBegin = item.SunriseBegin == rhs.SunriseBegin;
             ret.SunriseEnd = item.SunriseEnd == rhs.SunriseEnd;
             ret.SunsetBegin = item.SunsetBegin == rhs.SunsetBegin;
@@ -2954,7 +2660,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static Climate_Mask<bool> GetHasBeenSetMask(IClimateGetter item)
         {
             var ret = new Climate_Mask<bool>();
-            ret.Weathers = new MaskItem<bool, IEnumerable<MaskItem<bool, WeatherChance_Mask<bool>>>>(item.Weathers.HasBeenSet, item.Weathers.Select((i) => new MaskItem<bool, WeatherChance_Mask<bool>>(true, i.GetHasBeenSetMask())));
+            ret.Weathers = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, WeatherChance_Mask<bool>>>>(item.Weathers.HasBeenSet, item.Weathers.WithIndex().Select((i) => new MaskItemIndexed<bool, WeatherChance_Mask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
             ret.SunTexture = item.SunTexture_IsSet;
             ret.SunGlareTexture = item.SunGlareTexture_IsSet;
             ret.Model = new MaskItem<bool, Model_Mask<bool>>(item.Model_IsSet, ModelCommon.GetHasBeenSetMask(item.Model));
@@ -3035,7 +2741,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         public static void WriteToNode_Xml(
-            IClimateGetter item,
+            this IClimateGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -3159,6 +2865,340 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item.PhaseLength,
                     fieldIndex: (int)Climate_FieldIndex.PhaseLength,
                     errorMask: errorMask);
+            }
+        }
+
+        public static void FillPublic_Xml(
+            this Climate item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    ClimateCommon.FillPublicElement_Xml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+
+        public static void FillPublicElement_Xml(
+            this Climate item,
+            XElement node,
+            string name,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            switch (name)
+            {
+                case "Weathers":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Climate_FieldIndex.Weathers);
+                        if (ListXmlTranslation<WeatherChance>.Instance.Parse(
+                            node: node,
+                            enumer: out var WeathersItem,
+                            transl: LoquiXmlTranslation<WeatherChance>.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.Weathers.SetTo(WeathersItem);
+                        }
+                        else
+                        {
+                            item.Weathers.Unset();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "SunTexture":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Climate_FieldIndex.SunTexture);
+                        if (StringXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out String SunTextureParse,
+                            errorMask: errorMask))
+                        {
+                            item.SunTexture = SunTextureParse;
+                        }
+                        else
+                        {
+                            item.SunTexture = default(String);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "SunGlareTexture":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Climate_FieldIndex.SunGlareTexture);
+                        if (StringXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out String SunGlareTextureParse,
+                            errorMask: errorMask))
+                        {
+                            item.SunGlareTexture = SunGlareTextureParse;
+                        }
+                        else
+                        {
+                            item.SunGlareTexture = default(String);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Model":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Climate_FieldIndex.Model);
+                        if (LoquiXmlTranslation<Model>.Instance.Parse(
+                            node: node,
+                            item: out Model ModelParse,
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)Climate_FieldIndex.Model)))
+                        {
+                            item.Model = ModelParse;
+                        }
+                        else
+                        {
+                            item.Model = default(Model);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "SunriseBegin":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Climate_FieldIndex.SunriseBegin);
+                        if (DateTimeXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out DateTime SunriseBeginParse,
+                            errorMask: errorMask))
+                        {
+                            item.SunriseBegin = SunriseBeginParse;
+                        }
+                        else
+                        {
+                            item.SunriseBegin = default(DateTime);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "SunriseEnd":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Climate_FieldIndex.SunriseEnd);
+                        if (DateTimeXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out DateTime SunriseEndParse,
+                            errorMask: errorMask))
+                        {
+                            item.SunriseEnd = SunriseEndParse;
+                        }
+                        else
+                        {
+                            item.SunriseEnd = default(DateTime);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "SunsetBegin":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Climate_FieldIndex.SunsetBegin);
+                        if (DateTimeXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out DateTime SunsetBeginParse,
+                            errorMask: errorMask))
+                        {
+                            item.SunsetBegin = SunsetBeginParse;
+                        }
+                        else
+                        {
+                            item.SunsetBegin = default(DateTime);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "SunsetEnd":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Climate_FieldIndex.SunsetEnd);
+                        if (DateTimeXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out DateTime SunsetEndParse,
+                            errorMask: errorMask))
+                        {
+                            item.SunsetEnd = SunsetEndParse;
+                        }
+                        else
+                        {
+                            item.SunsetEnd = default(DateTime);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Volatility":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Climate_FieldIndex.Volatility);
+                        if (ByteXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Byte VolatilityParse,
+                            errorMask: errorMask))
+                        {
+                            item.Volatility = VolatilityParse;
+                        }
+                        else
+                        {
+                            item.Volatility = default(Byte);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Phase":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Climate_FieldIndex.Phase);
+                        if (EnumXmlTranslation<Climate.MoonPhase>.Instance.Parse(
+                            node: node,
+                            item: out Climate.MoonPhase PhaseParse,
+                            errorMask: errorMask))
+                        {
+                            item.Phase = PhaseParse;
+                        }
+                        else
+                        {
+                            item.Phase = default(Climate.MoonPhase);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "PhaseLength":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Climate_FieldIndex.PhaseLength);
+                        if (ByteXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Byte PhaseLengthParse,
+                            errorMask: errorMask))
+                        {
+                            item.PhaseLength = PhaseLengthParse;
+                        }
+                        else
+                        {
+                            item.PhaseLength = default(Byte);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                default:
+                    MajorRecordCommon.FillPublicElement_Xml(
+                        item: item,
+                        node: node,
+                        name: name,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                    break;
             }
         }
 
@@ -3330,7 +3370,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public Climate_Mask(T initialValue)
         {
-            this.Weathers = new MaskItem<T, IEnumerable<MaskItem<T, WeatherChance_Mask<T>>>>(initialValue, null);
+            this.Weathers = new MaskItem<T, IEnumerable<MaskItemIndexed<T, WeatherChance_Mask<T>>>>(initialValue, null);
             this.SunTexture = initialValue;
             this.SunGlareTexture = initialValue;
             this.Model = new MaskItem<T, Model_Mask<T>>(initialValue, new Model_Mask<T>(initialValue));
@@ -3345,7 +3385,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region Members
-        public MaskItem<T, IEnumerable<MaskItem<T, WeatherChance_Mask<T>>>> Weathers;
+        public MaskItem<T, IEnumerable<MaskItemIndexed<T, WeatherChance_Mask<T>>>> Weathers;
         public T SunTexture;
         public T SunGlareTexture;
         public MaskItem<T, Model_Mask<T>> Model { get; set; }
@@ -3449,22 +3489,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             base.Translate_InternalFill(obj, eval);
             if (Weathers != null)
             {
-                obj.Weathers = new MaskItem<R, IEnumerable<MaskItem<R, WeatherChance_Mask<R>>>>();
+                obj.Weathers = new MaskItem<R, IEnumerable<MaskItemIndexed<R, WeatherChance_Mask<R>>>>();
                 obj.Weathers.Overall = eval(this.Weathers.Overall);
                 if (Weathers.Specific != null)
                 {
-                    List<MaskItem<R, WeatherChance_Mask<R>>> l = new List<MaskItem<R, WeatherChance_Mask<R>>>();
+                    List<MaskItemIndexed<R, WeatherChance_Mask<R>>> l = new List<MaskItemIndexed<R, WeatherChance_Mask<R>>>();
                     obj.Weathers.Specific = l;
-                    foreach (var item in Weathers.Specific)
+                    foreach (var item in Weathers.Specific.WithIndex())
                     {
-                        MaskItem<R, WeatherChance_Mask<R>> mask = default(MaskItem<R, WeatherChance_Mask<R>>);
-                        if (item != null)
+                        MaskItemIndexed<R, WeatherChance_Mask<R>> mask = default;
+                        mask.Index = item.Index;
+                        if (item.Item != null)
                         {
-                            mask = new MaskItem<R, WeatherChance_Mask<R>>();
-                            mask.Overall = eval(item.Overall);
-                            if (item.Specific != null)
+                            mask = new MaskItemIndexed<R, WeatherChance_Mask<R>>(item.Item.Index);
+                            mask.Overall = eval(item.Item.Overall);
+                            if (item.Item.Specific != null)
                             {
-                                mask.Specific = item.Specific.Translate(eval);
+                                mask.Specific = item.Item.Specific.Translate(eval);
                             }
                         }
                         l.Add(mask);

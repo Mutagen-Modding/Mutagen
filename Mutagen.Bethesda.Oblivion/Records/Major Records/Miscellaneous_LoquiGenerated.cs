@@ -180,8 +180,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> IEqualsMask<Miscellaneous>.GetEqualsMask(Miscellaneous rhs) => MiscellaneousCommon.GetEqualsMask(this, rhs);
-        IMask<bool> IEqualsMask<IMiscellaneousGetter>.GetEqualsMask(IMiscellaneousGetter rhs) => MiscellaneousCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<Miscellaneous>.GetEqualsMask(Miscellaneous rhs, EqualsMaskHelper.Include include) => MiscellaneousCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<IMiscellaneousGetter>.GetEqualsMask(IMiscellaneousGetter rhs, EqualsMaskHelper.Include include) => MiscellaneousCommon.GetEqualsMask(this, rhs, include);
         #region To String
         public string ToString(
             string name = null,
@@ -307,7 +307,13 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 foreach (var elem in node.Elements())
                 {
-                    Fill_Xml_Internal(
+                    FillPrivateElement_Xml(
+                        item: ret,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                    MiscellaneousCommon.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -651,7 +657,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        protected static void Fill_Xml_Internal(
+        protected static void FillPrivateElement_Xml(
             Miscellaneous item,
             XElement node,
             string name,
@@ -660,146 +666,8 @@ namespace Mutagen.Bethesda.Oblivion
         {
             switch (name)
             {
-                case "Name":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Miscellaneous_FieldIndex.Name);
-                        if (StringXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out String NameParse,
-                            errorMask: errorMask))
-                        {
-                            item.Name = NameParse;
-                        }
-                        else
-                        {
-                            item.Name = default(String);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Model":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Miscellaneous_FieldIndex.Model);
-                        if (LoquiXmlTranslation<Model>.Instance.Parse(
-                            node: node,
-                            item: out Model ModelParse,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Miscellaneous_FieldIndex.Model)))
-                        {
-                            item.Model = ModelParse;
-                        }
-                        else
-                        {
-                            item.Model = default(Model);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Icon":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Miscellaneous_FieldIndex.Icon);
-                        if (StringXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out String IconParse,
-                            errorMask: errorMask))
-                        {
-                            item.Icon = IconParse;
-                        }
-                        else
-                        {
-                            item.Icon = default(String);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Script":
-                    FormKeyXmlTranslation.Instance.ParseInto(
-                        node: node,
-                        item: item.Script_Property,
-                        fieldIndex: (int)Miscellaneous_FieldIndex.Script,
-                        errorMask: errorMask);
-                    break;
-                case "Value":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Miscellaneous_FieldIndex.Value);
-                        if (Int32XmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Int32 ValueParse,
-                            errorMask: errorMask))
-                        {
-                            item.Value = ValueParse;
-                        }
-                        else
-                        {
-                            item.Value = default(Int32);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Weight":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Miscellaneous_FieldIndex.Weight);
-                        if (FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Single WeightParse,
-                            errorMask: errorMask))
-                        {
-                            item.Weight = WeightParse;
-                        }
-                        else
-                        {
-                            item.Weight = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
                 default:
-                    ItemAbstract.Fill_Xml_Internal(
+                    ItemAbstract.FillPrivateElement_Xml(
                         item: item,
                         node: node,
                         name: name,
@@ -2179,25 +2047,37 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static Miscellaneous_Mask<bool> GetEqualsMask(
             this IMiscellaneousGetter item,
-            IMiscellaneousGetter rhs)
+            IMiscellaneousGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new Miscellaneous_Mask<bool>();
-            FillEqualsMask(item, rhs, ret);
+            FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
             return ret;
         }
 
         public static void FillEqualsMask(
             IMiscellaneousGetter item,
             IMiscellaneousGetter rhs,
-            Miscellaneous_Mask<bool> ret)
+            Miscellaneous_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
             ret.Name = item.Name_IsSet == rhs.Name_IsSet && object.Equals(item.Name, rhs.Name);
-            ret.Model = IHasBeenSetExt.LoquiEqualsHelper(item.Model_IsSet, rhs.Model_IsSet, item.Model, rhs.Model, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
+            ret.Model = EqualsMaskHelper.EqualsHelper(
+                item.Model_IsSet,
+                rhs.Model_IsSet,
+                item.Model,
+                rhs.Model,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
+                include);
             ret.Icon = item.Icon_IsSet == rhs.Icon_IsSet && object.Equals(item.Icon, rhs.Icon);
             ret.Script = item.Script_Property.FormKey == rhs.Script_Property.FormKey;
             ret.Value = item.Value == rhs.Value;
-            ret.Weight = item.Weight == rhs.Weight;
+            ret.Weight = item.Weight.EqualsWithin(rhs.Weight);
             ItemAbstractCommon.FillEqualsMask(item, rhs, ret);
         }
 
@@ -2372,7 +2252,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         public static void WriteToNode_Xml(
-            IMiscellaneousGetter item,
+            this IMiscellaneousGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -2440,6 +2320,189 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item.Weight,
                     fieldIndex: (int)Miscellaneous_FieldIndex.Weight,
                     errorMask: errorMask);
+            }
+        }
+
+        public static void FillPublic_Xml(
+            this Miscellaneous item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    MiscellaneousCommon.FillPublicElement_Xml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+
+        public static void FillPublicElement_Xml(
+            this Miscellaneous item,
+            XElement node,
+            string name,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            switch (name)
+            {
+                case "Name":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Miscellaneous_FieldIndex.Name);
+                        if (StringXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out String NameParse,
+                            errorMask: errorMask))
+                        {
+                            item.Name = NameParse;
+                        }
+                        else
+                        {
+                            item.Name = default(String);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Model":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Miscellaneous_FieldIndex.Model);
+                        if (LoquiXmlTranslation<Model>.Instance.Parse(
+                            node: node,
+                            item: out Model ModelParse,
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)Miscellaneous_FieldIndex.Model)))
+                        {
+                            item.Model = ModelParse;
+                        }
+                        else
+                        {
+                            item.Model = default(Model);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Icon":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Miscellaneous_FieldIndex.Icon);
+                        if (StringXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out String IconParse,
+                            errorMask: errorMask))
+                        {
+                            item.Icon = IconParse;
+                        }
+                        else
+                        {
+                            item.Icon = default(String);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Script":
+                    FormKeyXmlTranslation.Instance.ParseInto(
+                        node: node,
+                        item: item.Script_Property,
+                        fieldIndex: (int)Miscellaneous_FieldIndex.Script,
+                        errorMask: errorMask);
+                    break;
+                case "Value":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Miscellaneous_FieldIndex.Value);
+                        if (Int32XmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Int32 ValueParse,
+                            errorMask: errorMask))
+                        {
+                            item.Value = ValueParse;
+                        }
+                        else
+                        {
+                            item.Value = default(Int32);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Weight":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Miscellaneous_FieldIndex.Weight);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Single WeightParse,
+                            errorMask: errorMask))
+                        {
+                            item.Weight = WeightParse;
+                        }
+                        else
+                        {
+                            item.Weight = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                default:
+                    ItemAbstractCommon.FillPublicElement_Xml(
+                        item: item,
+                        node: node,
+                        name: name,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                    break;
             }
         }
 

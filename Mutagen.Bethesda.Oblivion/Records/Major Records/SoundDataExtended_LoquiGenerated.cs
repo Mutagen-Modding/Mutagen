@@ -104,8 +104,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> IEqualsMask<SoundDataExtended>.GetEqualsMask(SoundDataExtended rhs) => SoundDataExtendedCommon.GetEqualsMask(this, rhs);
-        IMask<bool> IEqualsMask<ISoundDataExtendedGetter>.GetEqualsMask(ISoundDataExtendedGetter rhs) => SoundDataExtendedCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<SoundDataExtended>.GetEqualsMask(SoundDataExtended rhs, EqualsMaskHelper.Include include) => SoundDataExtendedCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<ISoundDataExtendedGetter>.GetEqualsMask(ISoundDataExtendedGetter rhs, EqualsMaskHelper.Include include) => SoundDataExtendedCommon.GetEqualsMask(this, rhs, include);
         #region To String
         public string ToString(
             string name = null,
@@ -197,7 +197,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 foreach (var elem in node.Elements())
                 {
-                    Fill_Xml_Internal(
+                    SoundDataExtendedCommon.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -508,104 +508,6 @@ namespace Mutagen.Bethesda.Oblivion
                 translationMask: translationMask);
         }
         #endregion
-
-        protected static void Fill_Xml_Internal(
-            SoundDataExtended item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            switch (name)
-            {
-                case "StaticAttenuation":
-                    try
-                    {
-                        errorMask?.PushIndex((int)SoundDataExtended_FieldIndex.StaticAttenuation);
-                        if (FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Single StaticAttenuationParse,
-                            errorMask: errorMask))
-                        {
-                            item.StaticAttenuation = StaticAttenuationParse;
-                        }
-                        else
-                        {
-                            item.StaticAttenuation = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "StopTime":
-                    try
-                    {
-                        errorMask?.PushIndex((int)SoundDataExtended_FieldIndex.StopTime);
-                        if (FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Single StopTimeParse,
-                            errorMask: errorMask))
-                        {
-                            item.StopTime = StopTimeParse;
-                        }
-                        else
-                        {
-                            item.StopTime = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "StartTime":
-                    try
-                    {
-                        errorMask?.PushIndex((int)SoundDataExtended_FieldIndex.StartTime);
-                        if (FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Single StartTimeParse,
-                            errorMask: errorMask))
-                        {
-                            item.StartTime = StartTimeParse;
-                        }
-                        else
-                        {
-                            item.StartTime = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                default:
-                    SoundData.Fill_Xml_Internal(
-                        item: item,
-                        node: node,
-                        name: name,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    break;
-            }
-        }
 
         #endregion
 
@@ -1588,22 +1490,28 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static SoundDataExtended_Mask<bool> GetEqualsMask(
             this ISoundDataExtendedGetter item,
-            ISoundDataExtendedGetter rhs)
+            ISoundDataExtendedGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new SoundDataExtended_Mask<bool>();
-            FillEqualsMask(item, rhs, ret);
+            FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
             return ret;
         }
 
         public static void FillEqualsMask(
             ISoundDataExtendedGetter item,
             ISoundDataExtendedGetter rhs,
-            SoundDataExtended_Mask<bool> ret)
+            SoundDataExtended_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.StaticAttenuation = item.StaticAttenuation == rhs.StaticAttenuation;
-            ret.StopTime = item.StopTime == rhs.StopTime;
-            ret.StartTime = item.StartTime == rhs.StartTime;
+            ret.StaticAttenuation = item.StaticAttenuation.EqualsWithin(rhs.StaticAttenuation);
+            ret.StopTime = item.StopTime.EqualsWithin(rhs.StopTime);
+            ret.StartTime = item.StartTime.EqualsWithin(rhs.StartTime);
             SoundDataCommon.FillEqualsMask(item, rhs, ret);
         }
 
@@ -1731,7 +1639,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         public static void WriteToNode_Xml(
-            ISoundDataExtendedGetter item,
+            this ISoundDataExtendedGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1767,6 +1675,129 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item.StartTime,
                     fieldIndex: (int)SoundDataExtended_FieldIndex.StartTime,
                     errorMask: errorMask);
+            }
+        }
+
+        public static void FillPublic_Xml(
+            this SoundDataExtended item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    SoundDataExtendedCommon.FillPublicElement_Xml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+
+        public static void FillPublicElement_Xml(
+            this SoundDataExtended item,
+            XElement node,
+            string name,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            switch (name)
+            {
+                case "StaticAttenuation":
+                    try
+                    {
+                        errorMask?.PushIndex((int)SoundDataExtended_FieldIndex.StaticAttenuation);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Single StaticAttenuationParse,
+                            errorMask: errorMask))
+                        {
+                            item.StaticAttenuation = StaticAttenuationParse;
+                        }
+                        else
+                        {
+                            item.StaticAttenuation = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "StopTime":
+                    try
+                    {
+                        errorMask?.PushIndex((int)SoundDataExtended_FieldIndex.StopTime);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Single StopTimeParse,
+                            errorMask: errorMask))
+                        {
+                            item.StopTime = StopTimeParse;
+                        }
+                        else
+                        {
+                            item.StopTime = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "StartTime":
+                    try
+                    {
+                        errorMask?.PushIndex((int)SoundDataExtended_FieldIndex.StartTime);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Single StartTimeParse,
+                            errorMask: errorMask))
+                        {
+                            item.StartTime = StartTimeParse;
+                        }
+                        else
+                        {
+                            item.StartTime = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                default:
+                    SoundDataCommon.FillPublicElement_Xml(
+                        item: item,
+                        node: node,
+                        name: name,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                    break;
             }
         }
 

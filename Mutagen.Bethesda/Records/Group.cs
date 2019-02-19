@@ -75,6 +75,12 @@ namespace Mutagen.Bethesda
 
     public static class GroupExt
     {
+        public static readonly Group_TranslationMask<TranslationMaskStub> XmlFolderTranslationMask = new Group_TranslationMask<TranslationMaskStub>(true)
+        {
+            Items = new MaskItem<bool, TranslationMaskStub>(false, default)
+        };
+        public static readonly TranslationCrystal XmlFolderTranslationCrystal = XmlFolderTranslationMask.GetCrystal();
+
         public static async Task Create_Xml_Folder<T>(
             this Group<T> group,
             DirectoryPath dir,
@@ -100,15 +106,24 @@ namespace Mutagen.Bethesda
                         {
                             throw new ArgumentException("XML file did not have \"Group\" top node.");
                         }
-                        ushort i = 0;
-                        foreach (var item in elem.Elements())
+                        group.FillPublic_Xml(
+                            elem,
+                            errorMask,
+                            translationMask: GroupExt.XmlFolderTranslationCrystal);
+                        var itemsNode = elem.Element("Items");
+                        if (itemsNode != null)
                         {
-                            var val = LoquiXmlTranslation<T>.GetCreateFunc()(
-                                item,
-                                errorMask,
-                                translationMask: null);
-                            group.Items.Set(val);
-                            i++;
+                            ushort i = 0;
+                            foreach (var itemNode in itemsNode.Elements())
+                            {
+                                var val = LoquiXmlTranslation<T>.Instance.Parse(
+                                    itemNode,
+                                    out var item,
+                                    errorMask,
+                                    translationMask: null);
+                                group.Items.Set(item);
+                                i++;
+                            }
                         }
                     }
                     catch (Exception ex)
@@ -134,7 +149,12 @@ namespace Mutagen.Bethesda
                 using (errorMask?.PushIndex((int)Group_FieldIndex.Items))
                 {
                     XElement topNode = new XElement("Group");
+                    group.WriteToNode_Xml(
+                        topNode,
+                        errorMask,
+                        translationMask: GroupExt.XmlFolderTranslationCrystal);
                     int counter = 0;
+                    XElement items = new XElement("Items");
                     foreach (var item in group.Items.Items)
                     {
                         using (errorMask.PushIndex(counter))
@@ -142,7 +162,7 @@ namespace Mutagen.Bethesda
                             try
                             {
                                 item.Write_Xml_Folder(
-                                    node: topNode,
+                                    node: items,
                                     name: name,
                                     counter: counter,
                                     dir: dir,
@@ -155,6 +175,10 @@ namespace Mutagen.Bethesda
                             }
                         }
                         counter++;
+                    }
+                    if (items.HasElements)
+                    {
+                        topNode.Add(items);
                     }
                     if (topNode.HasElements)
                     {

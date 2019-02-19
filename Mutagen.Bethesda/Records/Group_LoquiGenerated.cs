@@ -120,8 +120,8 @@ namespace Mutagen.Bethesda
 
         #endregion
 
-        IMask<bool> IEqualsMask<Group<T>>.GetEqualsMask(Group<T> rhs) => GroupCommon.GetEqualsMask(this, rhs);
-        IMask<bool> IEqualsMask<IGroupGetter<T>>.GetEqualsMask(IGroupGetter<T> rhs) => GroupCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<Group<T>>.GetEqualsMask(Group<T> rhs, EqualsMaskHelper.Include include) => GroupCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<IGroupGetter<T>>.GetEqualsMask(IGroupGetter<T> rhs, EqualsMaskHelper.Include include) => GroupCommon.GetEqualsMask(this, rhs, include);
         #region To String
         public string ToString(
             string name = null,
@@ -211,7 +211,13 @@ namespace Mutagen.Bethesda
             {
                 foreach (var elem in node.Elements())
                 {
-                    Fill_Xml_Internal(
+                    FillPrivateElement_Xml(
+                        item: ret,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                    GroupCommon.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -497,7 +503,7 @@ namespace Mutagen.Bethesda
         }
         #endregion
 
-        protected static void Fill_Xml_Internal(
+        protected static void FillPrivateElement_Xml(
             Group<T> item,
             XElement node,
             string name,
@@ -506,67 +512,6 @@ namespace Mutagen.Bethesda
         {
             switch (name)
             {
-                case "GroupType":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Group_FieldIndex.GroupType);
-                        if (EnumXmlTranslation<GroupTypeEnum>.Instance.Parse(
-                            node: node,
-                            item: out GroupTypeEnum GroupTypeParse,
-                            errorMask: errorMask))
-                        {
-                            item.GroupType = GroupTypeParse;
-                        }
-                        else
-                        {
-                            item.GroupType = default(GroupTypeEnum);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "LastModified":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Group_FieldIndex.LastModified);
-                        if (ByteArrayXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Byte[] LastModifiedParse,
-                            errorMask: errorMask))
-                        {
-                            item.LastModified = LastModifiedParse;
-                        }
-                        else
-                        {
-                            item.LastModified = default(Byte[]);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Items":
-                    KeyedDictXmlTranslation<FormKey, T>.Instance.ParseInto(
-                        node: node,
-                        item: item.Items,
-                        fieldIndex: (int)Group_FieldIndex.Items,
-                        errorMask: errorMask,
-                        translationMask: translationMask,
-                        valTransl: LoquiXmlTranslation<T>.Instance.Parse);
-                    break;
                 default:
                     break;
             }
@@ -1677,33 +1622,35 @@ namespace Mutagen.Bethesda.Internals
 
         public static Group_Mask<bool> GetEqualsMask<T>(
             this IGroupGetter<T> item,
-            IGroupGetter<T> rhs)
+            IGroupGetter<T> rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
             where T : IMajorRecord, ILoquiObject<T>
         {
             var ret = new Group_Mask<bool>();
-            FillEqualsMask(item, rhs, ret);
+            FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
             return ret;
         }
 
         public static void FillEqualsMask<T>(
             IGroupGetter<T> item,
             IGroupGetter<T> rhs,
-            Group_Mask<bool> ret)
+            Group_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
             where T : IMajorRecord, ILoquiObject<T>
         {
             if (rhs == null) return;
             ret.ContainedRecordType = object.Equals(item.ContainedRecordType, rhs.ContainedRecordType);
             ret.GroupType = item.GroupType == rhs.GroupType;
             ret.LastModified = item.LastModified.EqualsFast(rhs.LastModified);
-            ret.Items = new MaskItem<bool, IEnumerable<MaskItem<bool, IMask<bool>>>>();
-            ret.Items.Specific = item.Items.Items.SelectAgainst<T, MaskItem<bool, IMask<bool>>>(rhs.Items.Items, ((l, r) =>
-            {
-                MaskItem<bool, IMask<bool>> itemRet;
-                itemRet = l.LoquiEqualsHelper(r, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
-                return itemRet;
-            }
-            ), out ret.Items.Overall);
-            ret.Items.Overall = ret.Items.Overall && ret.Items.Specific.All((b) => b.Overall);
+            ret.Items = EqualsMaskHelper.DictEqualsHelper(
+                lhs: item.Items,
+                rhs: rhs.Items,
+                maskGetter: (k, l, r) => l.GetEqualsMask(r, include),
+                include: include);
         }
 
         public static string ToString<T>(
@@ -1785,7 +1732,7 @@ namespace Mutagen.Bethesda.Internals
             ret.ContainedRecordType = true;
             ret.GroupType = true;
             ret.LastModified = true;
-            ret.Items = new MaskItem<bool, IEnumerable<MaskItem<bool, IMask<bool>>>>(item.Items.HasBeenSet, item.Items.Values.Select((i) => new MaskItem<bool, IMask<bool>>(true, i.GetHasBeenSetMask())));
+            ret.Items = new MaskItem<bool, IEnumerable<MaskItemIndexed<FormKey, bool, IMask<bool>>>>(item.Items.HasBeenSet, item.Items.Values.Select((i) => new MaskItemIndexed<FormKey, bool, IMask<bool>>(i.FormKey, true, i.GetHasBeenSetMask())));
             return ret;
         }
 
@@ -1835,7 +1782,7 @@ namespace Mutagen.Bethesda.Internals
         #endregion
 
         public static void WriteToNode_Xml<T>(
-            IGroupGetter<T> item,
+            this IGroupGetter<T> item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1891,6 +1838,108 @@ namespace Mutagen.Bethesda.Internals
                 {
                     errorMask?.PopIndex();
                 }
+            }
+        }
+
+        public static void FillPublic_Xml<T>(
+            this Group<T> item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+            where T : IMajorRecord, ILoquiObject<T>
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    GroupCommon.FillPublicElement_Xml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+
+        public static void FillPublicElement_Xml<T>(
+            this Group<T> item,
+            XElement node,
+            string name,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+            where T : IMajorRecord, ILoquiObject<T>
+        {
+            switch (name)
+            {
+                case "GroupType":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Group_FieldIndex.GroupType);
+                        if (EnumXmlTranslation<GroupTypeEnum>.Instance.Parse(
+                            node: node,
+                            item: out GroupTypeEnum GroupTypeParse,
+                            errorMask: errorMask))
+                        {
+                            item.GroupType = GroupTypeParse;
+                        }
+                        else
+                        {
+                            item.GroupType = default(GroupTypeEnum);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "LastModified":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Group_FieldIndex.LastModified);
+                        if (ByteArrayXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Byte[] LastModifiedParse,
+                            errorMask: errorMask))
+                        {
+                            item.LastModified = LastModifiedParse;
+                        }
+                        else
+                        {
+                            item.LastModified = default(Byte[]);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Items":
+                    KeyedDictXmlTranslation<FormKey, T>.Instance.ParseInto(
+                        node: node,
+                        item: item.Items,
+                        fieldIndex: (int)Group_FieldIndex.Items,
+                        errorMask: errorMask,
+                        translationMask: translationMask,
+                        valTransl: LoquiXmlTranslation<T>.Instance.Parse);
+                    break;
+                default:
+                    break;
             }
         }
 
@@ -2017,7 +2066,7 @@ namespace Mutagen.Bethesda.Internals
             this.ContainedRecordType = initialValue;
             this.GroupType = initialValue;
             this.LastModified = initialValue;
-            this.Items = new MaskItem<T, IEnumerable<MaskItem<T, IMask<T>>>>(initialValue, null);
+            this.Items = new MaskItem<T, IEnumerable<MaskItemIndexed<FormKey, T, IMask<T>>>>(initialValue, null);
         }
         #endregion
 
@@ -2025,7 +2074,7 @@ namespace Mutagen.Bethesda.Internals
         public T ContainedRecordType;
         public T GroupType;
         public T LastModified;
-        public MaskItem<T, IEnumerable<MaskItem<T, IMask<T>>>> Items;
+        public MaskItem<T, IEnumerable<MaskItemIndexed<FormKey, T, IMask<T>>>> Items;
         #endregion
 
         #region Equals
@@ -2093,22 +2142,16 @@ namespace Mutagen.Bethesda.Internals
             obj.LastModified = eval(this.LastModified);
             if (Items != null)
             {
-                obj.Items = new MaskItem<R, IEnumerable<MaskItem<R, IMask<R>>>>();
+                obj.Items = new MaskItem<R, IEnumerable<MaskItemIndexed<FormKey, R, IMask<R>>>>();
                 obj.Items.Overall = eval(this.Items.Overall);
                 if (Items.Specific != null)
                 {
-                    List<MaskItem<R, IMask<R>>> l = new List<MaskItem<R, IMask<R>>>();
+                    List<MaskItemIndexed<FormKey, R, IMask<R>>> l = new List<MaskItemIndexed<FormKey, R, IMask<R>>>();
                     obj.Items.Specific = l;
                     foreach (var item in Items.Specific)
                     {
-                        MaskItem<R, IMask<R>> mask = default(MaskItem<R, IMask<R>>);
-                        if (item != null)
-                        {
-                            mask = new MaskItem<R, IMask<R>>();
-                            mask.Overall = eval(item.Overall);
-                            throw new NotImplementedException();
-                        }
-                        l.Add(mask);
+                        MaskItemIndexed<FormKey, R, IMask<R>> mask = default(MaskItemIndexed<FormKey, R, IMask<R>>);
+                        throw new NotImplementedException();
                     }
                 }
             }

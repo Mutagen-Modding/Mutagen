@@ -96,8 +96,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> IEqualsMask<AIPackageTarget>.GetEqualsMask(AIPackageTarget rhs) => AIPackageTargetCommon.GetEqualsMask(this, rhs);
-        IMask<bool> IEqualsMask<IAIPackageTargetGetter>.GetEqualsMask(IAIPackageTargetGetter rhs) => AIPackageTargetCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<AIPackageTarget>.GetEqualsMask(AIPackageTarget rhs, EqualsMaskHelper.Include include) => AIPackageTargetCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<IAIPackageTargetGetter>.GetEqualsMask(IAIPackageTargetGetter rhs, EqualsMaskHelper.Include include) => AIPackageTargetCommon.GetEqualsMask(this, rhs, include);
         #region To String
         public string ToString(
             string name = null,
@@ -187,7 +187,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 foreach (var elem in node.Elements())
                 {
-                    Fill_Xml_Internal(
+                    AIPackageTargetCommon.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -501,98 +501,6 @@ namespace Mutagen.Bethesda.Oblivion
                 translationMask: translationMask);
         }
         #endregion
-
-        protected static void Fill_Xml_Internal(
-            AIPackageTarget item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            switch (name)
-            {
-                case "ObjectType":
-                    try
-                    {
-                        errorMask?.PushIndex((int)AIPackageTarget_FieldIndex.ObjectType);
-                        if (EnumXmlTranslation<AIPackageTarget.ObjectTypeEnum>.Instance.Parse(
-                            node: node,
-                            item: out AIPackageTarget.ObjectTypeEnum ObjectTypeParse,
-                            errorMask: errorMask))
-                        {
-                            item.ObjectType = ObjectTypeParse;
-                        }
-                        else
-                        {
-                            item.ObjectType = default(AIPackageTarget.ObjectTypeEnum);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Object":
-                    try
-                    {
-                        errorMask?.PushIndex((int)AIPackageTarget_FieldIndex.Object);
-                        if (Int32XmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Int32 ObjectParse,
-                            errorMask: errorMask))
-                        {
-                            item.Object = ObjectParse;
-                        }
-                        else
-                        {
-                            item.Object = default(Int32);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Count":
-                    try
-                    {
-                        errorMask?.PushIndex((int)AIPackageTarget_FieldIndex.Count);
-                        if (Int32XmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Int32 CountParse,
-                            errorMask: errorMask))
-                        {
-                            item.Count = CountParse;
-                        }
-                        else
-                        {
-                            item.Count = default(Int32);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
 
         #endregion
 
@@ -1576,17 +1484,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static AIPackageTarget_Mask<bool> GetEqualsMask(
             this IAIPackageTargetGetter item,
-            IAIPackageTargetGetter rhs)
+            IAIPackageTargetGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new AIPackageTarget_Mask<bool>();
-            FillEqualsMask(item, rhs, ret);
+            FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
             return ret;
         }
 
         public static void FillEqualsMask(
             IAIPackageTargetGetter item,
             IAIPackageTargetGetter rhs,
-            AIPackageTarget_Mask<bool> ret)
+            AIPackageTarget_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
             ret.ObjectType = item.ObjectType == rhs.ObjectType;
@@ -1695,7 +1609,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         public static void WriteToNode_Xml(
-            IAIPackageTargetGetter item,
+            this IAIPackageTargetGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1726,6 +1640,123 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item.Count,
                     fieldIndex: (int)AIPackageTarget_FieldIndex.Count,
                     errorMask: errorMask);
+            }
+        }
+
+        public static void FillPublic_Xml(
+            this AIPackageTarget item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    AIPackageTargetCommon.FillPublicElement_Xml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+
+        public static void FillPublicElement_Xml(
+            this AIPackageTarget item,
+            XElement node,
+            string name,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            switch (name)
+            {
+                case "ObjectType":
+                    try
+                    {
+                        errorMask?.PushIndex((int)AIPackageTarget_FieldIndex.ObjectType);
+                        if (EnumXmlTranslation<AIPackageTarget.ObjectTypeEnum>.Instance.Parse(
+                            node: node,
+                            item: out AIPackageTarget.ObjectTypeEnum ObjectTypeParse,
+                            errorMask: errorMask))
+                        {
+                            item.ObjectType = ObjectTypeParse;
+                        }
+                        else
+                        {
+                            item.ObjectType = default(AIPackageTarget.ObjectTypeEnum);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Object":
+                    try
+                    {
+                        errorMask?.PushIndex((int)AIPackageTarget_FieldIndex.Object);
+                        if (Int32XmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Int32 ObjectParse,
+                            errorMask: errorMask))
+                        {
+                            item.Object = ObjectParse;
+                        }
+                        else
+                        {
+                            item.Object = default(Int32);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Count":
+                    try
+                    {
+                        errorMask?.PushIndex((int)AIPackageTarget_FieldIndex.Count);
+                        if (Int32XmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Int32 CountParse,
+                            errorMask: errorMask))
+                        {
+                            item.Count = CountParse;
+                        }
+                        else
+                        {
+                            item.Count = default(Int32);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                default:
+                    break;
             }
         }
 

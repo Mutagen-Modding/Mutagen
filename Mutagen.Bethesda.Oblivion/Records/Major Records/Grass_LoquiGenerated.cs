@@ -216,8 +216,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> IEqualsMask<Grass>.GetEqualsMask(Grass rhs) => GrassCommon.GetEqualsMask(this, rhs);
-        IMask<bool> IEqualsMask<IGrassGetter>.GetEqualsMask(IGrassGetter rhs) => GrassCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<Grass>.GetEqualsMask(Grass rhs, EqualsMaskHelper.Include include) => GrassCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<IGrassGetter>.GetEqualsMask(IGrassGetter rhs, EqualsMaskHelper.Include include) => GrassCommon.GetEqualsMask(this, rhs, include);
         #region To String
         public string ToString(
             string name = null,
@@ -332,7 +332,13 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 foreach (var elem in node.Elements())
                 {
-                    Fill_Xml_Internal(
+                    FillPrivateElement_Xml(
+                        item: ret,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                    GrassCommon.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -644,7 +650,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        protected static void Fill_Xml_Internal(
+        protected static void FillPrivateElement_Xml(
             Grass item,
             XElement node,
             string name,
@@ -653,295 +659,8 @@ namespace Mutagen.Bethesda.Oblivion
         {
             switch (name)
             {
-                case "Model":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Grass_FieldIndex.Model);
-                        if (LoquiXmlTranslation<Model>.Instance.Parse(
-                            node: node,
-                            item: out Model ModelParse,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Grass_FieldIndex.Model)))
-                        {
-                            item.Model = ModelParse;
-                        }
-                        else
-                        {
-                            item.Model = default(Model);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Density":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Grass_FieldIndex.Density);
-                        if (ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Byte DensityParse,
-                            errorMask: errorMask))
-                        {
-                            item.Density = DensityParse;
-                        }
-                        else
-                        {
-                            item.Density = default(Byte);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "MinSlope":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Grass_FieldIndex.MinSlope);
-                        if (ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Byte MinSlopeParse,
-                            errorMask: errorMask))
-                        {
-                            item.MinSlope = MinSlopeParse;
-                        }
-                        else
-                        {
-                            item.MinSlope = default(Byte);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "MaxSlope":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Grass_FieldIndex.MaxSlope);
-                        if (ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Byte MaxSlopeParse,
-                            errorMask: errorMask))
-                        {
-                            item.MaxSlope = MaxSlopeParse;
-                        }
-                        else
-                        {
-                            item.MaxSlope = default(Byte);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "UnitFromWaterAmount":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Grass_FieldIndex.UnitFromWaterAmount);
-                        if (UInt16XmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out UInt16 UnitFromWaterAmountParse,
-                            errorMask: errorMask))
-                        {
-                            item.UnitFromWaterAmount = UnitFromWaterAmountParse;
-                        }
-                        else
-                        {
-                            item.UnitFromWaterAmount = default(UInt16);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "UnitFromWaterMode":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Grass_FieldIndex.UnitFromWaterMode);
-                        if (EnumXmlTranslation<Grass.UnitFromWaterType>.Instance.Parse(
-                            node: node,
-                            item: out Grass.UnitFromWaterType UnitFromWaterModeParse,
-                            errorMask: errorMask))
-                        {
-                            item.UnitFromWaterMode = UnitFromWaterModeParse;
-                        }
-                        else
-                        {
-                            item.UnitFromWaterMode = default(Grass.UnitFromWaterType);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "PositionRange":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Grass_FieldIndex.PositionRange);
-                        if (FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Single PositionRangeParse,
-                            errorMask: errorMask))
-                        {
-                            item.PositionRange = PositionRangeParse;
-                        }
-                        else
-                        {
-                            item.PositionRange = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "HeightRange":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Grass_FieldIndex.HeightRange);
-                        if (FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Single HeightRangeParse,
-                            errorMask: errorMask))
-                        {
-                            item.HeightRange = HeightRangeParse;
-                        }
-                        else
-                        {
-                            item.HeightRange = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ColorRange":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Grass_FieldIndex.ColorRange);
-                        if (FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Single ColorRangeParse,
-                            errorMask: errorMask))
-                        {
-                            item.ColorRange = ColorRangeParse;
-                        }
-                        else
-                        {
-                            item.ColorRange = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "WavePeriod":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Grass_FieldIndex.WavePeriod);
-                        if (FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Single WavePeriodParse,
-                            errorMask: errorMask))
-                        {
-                            item.WavePeriod = WavePeriodParse;
-                        }
-                        else
-                        {
-                            item.WavePeriod = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Flags":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Grass_FieldIndex.Flags);
-                        if (EnumXmlTranslation<Grass.GrassFlag>.Instance.Parse(
-                            node: node,
-                            item: out Grass.GrassFlag FlagsParse,
-                            errorMask: errorMask))
-                        {
-                            item.Flags = FlagsParse;
-                        }
-                        else
-                        {
-                            item.Flags = default(Grass.GrassFlag);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
                 default:
-                    MajorRecord.Fill_Xml_Internal(
+                    MajorRecord.FillPrivateElement_Xml(
                         item: item,
                         node: node,
                         name: name,
@@ -2614,29 +2333,41 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static Grass_Mask<bool> GetEqualsMask(
             this IGrassGetter item,
-            IGrassGetter rhs)
+            IGrassGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new Grass_Mask<bool>();
-            FillEqualsMask(item, rhs, ret);
+            FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
             return ret;
         }
 
         public static void FillEqualsMask(
             IGrassGetter item,
             IGrassGetter rhs,
-            Grass_Mask<bool> ret)
+            Grass_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Model = IHasBeenSetExt.LoquiEqualsHelper(item.Model_IsSet, rhs.Model_IsSet, item.Model, rhs.Model, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
+            ret.Model = EqualsMaskHelper.EqualsHelper(
+                item.Model_IsSet,
+                rhs.Model_IsSet,
+                item.Model,
+                rhs.Model,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
+                include);
             ret.Density = item.Density == rhs.Density;
             ret.MinSlope = item.MinSlope == rhs.MinSlope;
             ret.MaxSlope = item.MaxSlope == rhs.MaxSlope;
             ret.UnitFromWaterAmount = item.UnitFromWaterAmount == rhs.UnitFromWaterAmount;
             ret.UnitFromWaterMode = item.UnitFromWaterMode == rhs.UnitFromWaterMode;
-            ret.PositionRange = item.PositionRange == rhs.PositionRange;
-            ret.HeightRange = item.HeightRange == rhs.HeightRange;
-            ret.ColorRange = item.ColorRange == rhs.ColorRange;
-            ret.WavePeriod = item.WavePeriod == rhs.WavePeriod;
+            ret.PositionRange = item.PositionRange.EqualsWithin(rhs.PositionRange);
+            ret.HeightRange = item.HeightRange.EqualsWithin(rhs.HeightRange);
+            ret.ColorRange = item.ColorRange.EqualsWithin(rhs.ColorRange);
+            ret.WavePeriod = item.WavePeriod.EqualsWithin(rhs.WavePeriod);
             ret.Flags = item.Flags == rhs.Flags;
             MajorRecordCommon.FillEqualsMask(item, rhs, ret);
         }
@@ -2809,7 +2540,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         public static void WriteToNode_Xml(
-            IGrassGetter item,
+            this IGrassGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -2919,6 +2650,338 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item.Flags,
                     fieldIndex: (int)Grass_FieldIndex.Flags,
                     errorMask: errorMask);
+            }
+        }
+
+        public static void FillPublic_Xml(
+            this Grass item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    GrassCommon.FillPublicElement_Xml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+
+        public static void FillPublicElement_Xml(
+            this Grass item,
+            XElement node,
+            string name,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            switch (name)
+            {
+                case "Model":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Grass_FieldIndex.Model);
+                        if (LoquiXmlTranslation<Model>.Instance.Parse(
+                            node: node,
+                            item: out Model ModelParse,
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)Grass_FieldIndex.Model)))
+                        {
+                            item.Model = ModelParse;
+                        }
+                        else
+                        {
+                            item.Model = default(Model);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Density":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Grass_FieldIndex.Density);
+                        if (ByteXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Byte DensityParse,
+                            errorMask: errorMask))
+                        {
+                            item.Density = DensityParse;
+                        }
+                        else
+                        {
+                            item.Density = default(Byte);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "MinSlope":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Grass_FieldIndex.MinSlope);
+                        if (ByteXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Byte MinSlopeParse,
+                            errorMask: errorMask))
+                        {
+                            item.MinSlope = MinSlopeParse;
+                        }
+                        else
+                        {
+                            item.MinSlope = default(Byte);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "MaxSlope":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Grass_FieldIndex.MaxSlope);
+                        if (ByteXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Byte MaxSlopeParse,
+                            errorMask: errorMask))
+                        {
+                            item.MaxSlope = MaxSlopeParse;
+                        }
+                        else
+                        {
+                            item.MaxSlope = default(Byte);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "UnitFromWaterAmount":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Grass_FieldIndex.UnitFromWaterAmount);
+                        if (UInt16XmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out UInt16 UnitFromWaterAmountParse,
+                            errorMask: errorMask))
+                        {
+                            item.UnitFromWaterAmount = UnitFromWaterAmountParse;
+                        }
+                        else
+                        {
+                            item.UnitFromWaterAmount = default(UInt16);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "UnitFromWaterMode":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Grass_FieldIndex.UnitFromWaterMode);
+                        if (EnumXmlTranslation<Grass.UnitFromWaterType>.Instance.Parse(
+                            node: node,
+                            item: out Grass.UnitFromWaterType UnitFromWaterModeParse,
+                            errorMask: errorMask))
+                        {
+                            item.UnitFromWaterMode = UnitFromWaterModeParse;
+                        }
+                        else
+                        {
+                            item.UnitFromWaterMode = default(Grass.UnitFromWaterType);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "PositionRange":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Grass_FieldIndex.PositionRange);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Single PositionRangeParse,
+                            errorMask: errorMask))
+                        {
+                            item.PositionRange = PositionRangeParse;
+                        }
+                        else
+                        {
+                            item.PositionRange = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "HeightRange":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Grass_FieldIndex.HeightRange);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Single HeightRangeParse,
+                            errorMask: errorMask))
+                        {
+                            item.HeightRange = HeightRangeParse;
+                        }
+                        else
+                        {
+                            item.HeightRange = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "ColorRange":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Grass_FieldIndex.ColorRange);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Single ColorRangeParse,
+                            errorMask: errorMask))
+                        {
+                            item.ColorRange = ColorRangeParse;
+                        }
+                        else
+                        {
+                            item.ColorRange = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "WavePeriod":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Grass_FieldIndex.WavePeriod);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Single WavePeriodParse,
+                            errorMask: errorMask))
+                        {
+                            item.WavePeriod = WavePeriodParse;
+                        }
+                        else
+                        {
+                            item.WavePeriod = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Flags":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Grass_FieldIndex.Flags);
+                        if (EnumXmlTranslation<Grass.GrassFlag>.Instance.Parse(
+                            node: node,
+                            item: out Grass.GrassFlag FlagsParse,
+                            errorMask: errorMask))
+                        {
+                            item.Flags = FlagsParse;
+                        }
+                        else
+                        {
+                            item.Flags = default(Grass.GrassFlag);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                default:
+                    MajorRecordCommon.FillPublicElement_Xml(
+                        item: item,
+                        node: node,
+                        name: name,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                    break;
             }
         }
 

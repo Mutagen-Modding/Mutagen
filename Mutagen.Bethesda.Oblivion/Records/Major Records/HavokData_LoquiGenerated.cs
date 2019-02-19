@@ -96,8 +96,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> IEqualsMask<HavokData>.GetEqualsMask(HavokData rhs) => HavokDataCommon.GetEqualsMask(this, rhs);
-        IMask<bool> IEqualsMask<IHavokDataGetter>.GetEqualsMask(IHavokDataGetter rhs) => HavokDataCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<HavokData>.GetEqualsMask(HavokData rhs, EqualsMaskHelper.Include include) => HavokDataCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<IHavokDataGetter>.GetEqualsMask(IHavokDataGetter rhs, EqualsMaskHelper.Include include) => HavokDataCommon.GetEqualsMask(this, rhs, include);
         #region To String
         public string ToString(
             string name = null,
@@ -187,7 +187,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 foreach (var elem in node.Elements())
                 {
-                    Fill_Xml_Internal(
+                    HavokDataCommon.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -501,98 +501,6 @@ namespace Mutagen.Bethesda.Oblivion
                 translationMask: translationMask);
         }
         #endregion
-
-        protected static void Fill_Xml_Internal(
-            HavokData item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            switch (name)
-            {
-                case "Material":
-                    try
-                    {
-                        errorMask?.PushIndex((int)HavokData_FieldIndex.Material);
-                        if (EnumXmlTranslation<HavokData.MaterialType>.Instance.Parse(
-                            node: node,
-                            item: out HavokData.MaterialType MaterialParse,
-                            errorMask: errorMask))
-                        {
-                            item.Material = MaterialParse;
-                        }
-                        else
-                        {
-                            item.Material = default(HavokData.MaterialType);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Friction":
-                    try
-                    {
-                        errorMask?.PushIndex((int)HavokData_FieldIndex.Friction);
-                        if (ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Byte FrictionParse,
-                            errorMask: errorMask))
-                        {
-                            item.Friction = FrictionParse;
-                        }
-                        else
-                        {
-                            item.Friction = default(Byte);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Restitution":
-                    try
-                    {
-                        errorMask?.PushIndex((int)HavokData_FieldIndex.Restitution);
-                        if (ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Byte RestitutionParse,
-                            errorMask: errorMask))
-                        {
-                            item.Restitution = RestitutionParse;
-                        }
-                        else
-                        {
-                            item.Restitution = default(Byte);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
 
         #endregion
 
@@ -1576,17 +1484,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static HavokData_Mask<bool> GetEqualsMask(
             this IHavokDataGetter item,
-            IHavokDataGetter rhs)
+            IHavokDataGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new HavokData_Mask<bool>();
-            FillEqualsMask(item, rhs, ret);
+            FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
             return ret;
         }
 
         public static void FillEqualsMask(
             IHavokDataGetter item,
             IHavokDataGetter rhs,
-            HavokData_Mask<bool> ret)
+            HavokData_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
             ret.Material = item.Material == rhs.Material;
@@ -1695,7 +1609,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         public static void WriteToNode_Xml(
-            IHavokDataGetter item,
+            this IHavokDataGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1726,6 +1640,123 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item.Restitution,
                     fieldIndex: (int)HavokData_FieldIndex.Restitution,
                     errorMask: errorMask);
+            }
+        }
+
+        public static void FillPublic_Xml(
+            this HavokData item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    HavokDataCommon.FillPublicElement_Xml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+
+        public static void FillPublicElement_Xml(
+            this HavokData item,
+            XElement node,
+            string name,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            switch (name)
+            {
+                case "Material":
+                    try
+                    {
+                        errorMask?.PushIndex((int)HavokData_FieldIndex.Material);
+                        if (EnumXmlTranslation<HavokData.MaterialType>.Instance.Parse(
+                            node: node,
+                            item: out HavokData.MaterialType MaterialParse,
+                            errorMask: errorMask))
+                        {
+                            item.Material = MaterialParse;
+                        }
+                        else
+                        {
+                            item.Material = default(HavokData.MaterialType);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Friction":
+                    try
+                    {
+                        errorMask?.PushIndex((int)HavokData_FieldIndex.Friction);
+                        if (ByteXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Byte FrictionParse,
+                            errorMask: errorMask))
+                        {
+                            item.Friction = FrictionParse;
+                        }
+                        else
+                        {
+                            item.Friction = default(Byte);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Restitution":
+                    try
+                    {
+                        errorMask?.PushIndex((int)HavokData_FieldIndex.Restitution);
+                        if (ByteXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Byte RestitutionParse,
+                            errorMask: errorMask))
+                        {
+                            item.Restitution = RestitutionParse;
+                        }
+                        else
+                        {
+                            item.Restitution = default(Byte);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                default:
+                    break;
             }
         }
 

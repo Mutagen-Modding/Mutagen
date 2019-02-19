@@ -119,8 +119,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> IEqualsMask<CreatureSound>.GetEqualsMask(CreatureSound rhs) => CreatureSoundCommon.GetEqualsMask(this, rhs);
-        IMask<bool> IEqualsMask<ICreatureSoundGetter>.GetEqualsMask(ICreatureSoundGetter rhs) => CreatureSoundCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<CreatureSound>.GetEqualsMask(CreatureSound rhs, EqualsMaskHelper.Include include) => CreatureSoundCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<ICreatureSoundGetter>.GetEqualsMask(ICreatureSoundGetter rhs, EqualsMaskHelper.Include include) => CreatureSoundCommon.GetEqualsMask(this, rhs, include);
         #region To String
         public string ToString(
             string name = null,
@@ -222,7 +222,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 foreach (var elem in node.Elements())
                 {
-                    Fill_Xml_Internal(
+                    CreatureSoundCommon.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -536,74 +536,6 @@ namespace Mutagen.Bethesda.Oblivion
                 translationMask: translationMask);
         }
         #endregion
-
-        protected static void Fill_Xml_Internal(
-            CreatureSound item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            switch (name)
-            {
-                case "SoundType":
-                    try
-                    {
-                        errorMask?.PushIndex((int)CreatureSound_FieldIndex.SoundType);
-                        if (EnumXmlTranslation<CreatureSound.CreatureSoundType>.Instance.Parse(
-                            node: node,
-                            item: out CreatureSound.CreatureSoundType SoundTypeParse,
-                            errorMask: errorMask))
-                        {
-                            item.SoundType = SoundTypeParse;
-                        }
-                        else
-                        {
-                            item.SoundType = default(CreatureSound.CreatureSoundType);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Sounds":
-                    try
-                    {
-                        errorMask?.PushIndex((int)CreatureSound_FieldIndex.Sounds);
-                        if (ListXmlTranslation<SoundItem>.Instance.Parse(
-                            node: node,
-                            enumer: out var SoundsItem,
-                            transl: LoquiXmlTranslation<SoundItem>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.Sounds.SetTo(SoundsItem);
-                        }
-                        else
-                        {
-                            item.Sounds.Unset();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
 
         #endregion
 
@@ -1619,45 +1551,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static CreatureSound_Mask<bool> GetEqualsMask(
             this ICreatureSoundGetter item,
-            ICreatureSoundGetter rhs)
+            ICreatureSoundGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new CreatureSound_Mask<bool>();
-            FillEqualsMask(item, rhs, ret);
+            FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
             return ret;
         }
 
         public static void FillEqualsMask(
             ICreatureSoundGetter item,
             ICreatureSoundGetter rhs,
-            CreatureSound_Mask<bool> ret)
+            CreatureSound_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
             ret.SoundType = item.SoundType_IsSet == rhs.SoundType_IsSet && item.SoundType == rhs.SoundType;
-            if (item.Sounds.HasBeenSet == rhs.Sounds.HasBeenSet)
-            {
-                if (item.Sounds.HasBeenSet)
-                {
-                    ret.Sounds = new MaskItem<bool, IEnumerable<MaskItem<bool, SoundItem_Mask<bool>>>>();
-                    ret.Sounds.Specific = item.Sounds.SelectAgainst<SoundItem, MaskItem<bool, SoundItem_Mask<bool>>>(rhs.Sounds, ((l, r) =>
-                    {
-                        MaskItem<bool, SoundItem_Mask<bool>> itemRet;
-                        itemRet = l.LoquiEqualsHelper(r, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
-                        return itemRet;
-                    }
-                    ), out ret.Sounds.Overall);
-                    ret.Sounds.Overall = ret.Sounds.Overall && ret.Sounds.Specific.All((b) => b.Overall);
-                }
-                else
-                {
-                    ret.Sounds = new MaskItem<bool, IEnumerable<MaskItem<bool, SoundItem_Mask<bool>>>>();
-                    ret.Sounds.Overall = true;
-                }
-            }
-            else
-            {
-                ret.Sounds = new MaskItem<bool, IEnumerable<MaskItem<bool, SoundItem_Mask<bool>>>>();
-                ret.Sounds.Overall = false;
-            }
+            ret.Sounds = item.Sounds.CollectionEqualsHelper(
+                rhs.Sounds,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
         }
 
         public static string ToString(
@@ -1726,7 +1643,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             var ret = new CreatureSound_Mask<bool>();
             ret.SoundType = item.SoundType_IsSet;
-            ret.Sounds = new MaskItem<bool, IEnumerable<MaskItem<bool, SoundItem_Mask<bool>>>>(item.Sounds.HasBeenSet, item.Sounds.Select((i) => new MaskItem<bool, SoundItem_Mask<bool>>(true, i.GetHasBeenSetMask())));
+            ret.Sounds = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, SoundItem_Mask<bool>>>>(item.Sounds.HasBeenSet, item.Sounds.WithIndex().Select((i) => new MaskItemIndexed<bool, SoundItem_Mask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
             return ret;
         }
 
@@ -1772,7 +1689,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         public static void WriteToNode_Xml(
-            ICreatureSoundGetter item,
+            this ICreatureSoundGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1807,6 +1724,99 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             translationMask: listTranslMask);
                     }
                     );
+            }
+        }
+
+        public static void FillPublic_Xml(
+            this CreatureSound item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    CreatureSoundCommon.FillPublicElement_Xml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+
+        public static void FillPublicElement_Xml(
+            this CreatureSound item,
+            XElement node,
+            string name,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            switch (name)
+            {
+                case "SoundType":
+                    try
+                    {
+                        errorMask?.PushIndex((int)CreatureSound_FieldIndex.SoundType);
+                        if (EnumXmlTranslation<CreatureSound.CreatureSoundType>.Instance.Parse(
+                            node: node,
+                            item: out CreatureSound.CreatureSoundType SoundTypeParse,
+                            errorMask: errorMask))
+                        {
+                            item.SoundType = SoundTypeParse;
+                        }
+                        else
+                        {
+                            item.SoundType = default(CreatureSound.CreatureSoundType);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Sounds":
+                    try
+                    {
+                        errorMask?.PushIndex((int)CreatureSound_FieldIndex.Sounds);
+                        if (ListXmlTranslation<SoundItem>.Instance.Parse(
+                            node: node,
+                            enumer: out var SoundsItem,
+                            transl: LoquiXmlTranslation<SoundItem>.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.Sounds.SetTo(SoundsItem);
+                        }
+                        else
+                        {
+                            item.Sounds.Unset();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                default:
+                    break;
             }
         }
 
@@ -1902,13 +1912,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public CreatureSound_Mask(T initialValue)
         {
             this.SoundType = initialValue;
-            this.Sounds = new MaskItem<T, IEnumerable<MaskItem<T, SoundItem_Mask<T>>>>(initialValue, null);
+            this.Sounds = new MaskItem<T, IEnumerable<MaskItemIndexed<T, SoundItem_Mask<T>>>>(initialValue, null);
         }
         #endregion
 
         #region Members
         public T SoundType;
-        public MaskItem<T, IEnumerable<MaskItem<T, SoundItem_Mask<T>>>> Sounds;
+        public MaskItem<T, IEnumerable<MaskItemIndexed<T, SoundItem_Mask<T>>>> Sounds;
         #endregion
 
         #region Equals
@@ -1968,22 +1978,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             obj.SoundType = eval(this.SoundType);
             if (Sounds != null)
             {
-                obj.Sounds = new MaskItem<R, IEnumerable<MaskItem<R, SoundItem_Mask<R>>>>();
+                obj.Sounds = new MaskItem<R, IEnumerable<MaskItemIndexed<R, SoundItem_Mask<R>>>>();
                 obj.Sounds.Overall = eval(this.Sounds.Overall);
                 if (Sounds.Specific != null)
                 {
-                    List<MaskItem<R, SoundItem_Mask<R>>> l = new List<MaskItem<R, SoundItem_Mask<R>>>();
+                    List<MaskItemIndexed<R, SoundItem_Mask<R>>> l = new List<MaskItemIndexed<R, SoundItem_Mask<R>>>();
                     obj.Sounds.Specific = l;
-                    foreach (var item in Sounds.Specific)
+                    foreach (var item in Sounds.Specific.WithIndex())
                     {
-                        MaskItem<R, SoundItem_Mask<R>> mask = default(MaskItem<R, SoundItem_Mask<R>>);
-                        if (item != null)
+                        MaskItemIndexed<R, SoundItem_Mask<R>> mask = default;
+                        mask.Index = item.Index;
+                        if (item.Item != null)
                         {
-                            mask = new MaskItem<R, SoundItem_Mask<R>>();
-                            mask.Overall = eval(item.Overall);
-                            if (item.Specific != null)
+                            mask = new MaskItemIndexed<R, SoundItem_Mask<R>>(item.Item.Index);
+                            mask.Overall = eval(item.Item.Overall);
+                            if (item.Item.Specific != null)
                             {
-                                mask.Specific = item.Specific.Translate(eval);
+                                mask.Specific = item.Item.Specific.Translate(eval);
                             }
                         }
                         l.Add(mask);

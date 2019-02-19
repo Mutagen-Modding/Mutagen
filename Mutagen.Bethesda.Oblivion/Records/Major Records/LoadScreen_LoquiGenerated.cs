@@ -141,8 +141,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> IEqualsMask<LoadScreen>.GetEqualsMask(LoadScreen rhs) => LoadScreenCommon.GetEqualsMask(this, rhs);
-        IMask<bool> IEqualsMask<ILoadScreenGetter>.GetEqualsMask(ILoadScreenGetter rhs) => LoadScreenCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<LoadScreen>.GetEqualsMask(LoadScreen rhs, EqualsMaskHelper.Include include) => LoadScreenCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<ILoadScreenGetter>.GetEqualsMask(ILoadScreenGetter rhs, EqualsMaskHelper.Include include) => LoadScreenCommon.GetEqualsMask(this, rhs, include);
         #region To String
         public string ToString(
             string name = null,
@@ -255,7 +255,13 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 foreach (var elem in node.Elements())
                 {
-                    Fill_Xml_Internal(
+                    FillPrivateElement_Xml(
+                        item: ret,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                    LoadScreenCommon.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -567,7 +573,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        protected static void Fill_Xml_Internal(
+        protected static void FillPrivateElement_Xml(
             LoadScreen item,
             XElement node,
             string name,
@@ -576,88 +582,8 @@ namespace Mutagen.Bethesda.Oblivion
         {
             switch (name)
             {
-                case "Icon":
-                    try
-                    {
-                        errorMask?.PushIndex((int)LoadScreen_FieldIndex.Icon);
-                        if (StringXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out String IconParse,
-                            errorMask: errorMask))
-                        {
-                            item.Icon = IconParse;
-                        }
-                        else
-                        {
-                            item.Icon = default(String);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Description":
-                    try
-                    {
-                        errorMask?.PushIndex((int)LoadScreen_FieldIndex.Description);
-                        if (StringXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out String DescriptionParse,
-                            errorMask: errorMask))
-                        {
-                            item.Description = DescriptionParse;
-                        }
-                        else
-                        {
-                            item.Description = default(String);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Locations":
-                    try
-                    {
-                        errorMask?.PushIndex((int)LoadScreen_FieldIndex.Locations);
-                        if (ListXmlTranslation<LoadScreenLocation>.Instance.Parse(
-                            node: node,
-                            enumer: out var LocationsItem,
-                            transl: LoquiXmlTranslation<LoadScreenLocation>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.Locations.SetTo(LocationsItem);
-                        }
-                        else
-                        {
-                            item.Locations.Unset();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
                 default:
-                    MajorRecord.Fill_Xml_Internal(
+                    MajorRecord.FillPrivateElement_Xml(
                         item: item,
                         node: node,
                         name: name,
@@ -1756,46 +1682,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static LoadScreen_Mask<bool> GetEqualsMask(
             this ILoadScreenGetter item,
-            ILoadScreenGetter rhs)
+            ILoadScreenGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new LoadScreen_Mask<bool>();
-            FillEqualsMask(item, rhs, ret);
+            FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
             return ret;
         }
 
         public static void FillEqualsMask(
             ILoadScreenGetter item,
             ILoadScreenGetter rhs,
-            LoadScreen_Mask<bool> ret)
+            LoadScreen_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
             ret.Icon = item.Icon_IsSet == rhs.Icon_IsSet && object.Equals(item.Icon, rhs.Icon);
             ret.Description = item.Description_IsSet == rhs.Description_IsSet && object.Equals(item.Description, rhs.Description);
-            if (item.Locations.HasBeenSet == rhs.Locations.HasBeenSet)
-            {
-                if (item.Locations.HasBeenSet)
-                {
-                    ret.Locations = new MaskItem<bool, IEnumerable<MaskItem<bool, LoadScreenLocation_Mask<bool>>>>();
-                    ret.Locations.Specific = item.Locations.SelectAgainst<LoadScreenLocation, MaskItem<bool, LoadScreenLocation_Mask<bool>>>(rhs.Locations, ((l, r) =>
-                    {
-                        MaskItem<bool, LoadScreenLocation_Mask<bool>> itemRet;
-                        itemRet = l.LoquiEqualsHelper(r, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
-                        return itemRet;
-                    }
-                    ), out ret.Locations.Overall);
-                    ret.Locations.Overall = ret.Locations.Overall && ret.Locations.Specific.All((b) => b.Overall);
-                }
-                else
-                {
-                    ret.Locations = new MaskItem<bool, IEnumerable<MaskItem<bool, LoadScreenLocation_Mask<bool>>>>();
-                    ret.Locations.Overall = true;
-                }
-            }
-            else
-            {
-                ret.Locations = new MaskItem<bool, IEnumerable<MaskItem<bool, LoadScreenLocation_Mask<bool>>>>();
-                ret.Locations.Overall = false;
-            }
+            ret.Locations = item.Locations.CollectionEqualsHelper(
+                rhs.Locations,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
             MajorRecordCommon.FillEqualsMask(item, rhs, ret);
         }
 
@@ -1871,7 +1782,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             var ret = new LoadScreen_Mask<bool>();
             ret.Icon = item.Icon_IsSet;
             ret.Description = item.Description_IsSet;
-            ret.Locations = new MaskItem<bool, IEnumerable<MaskItem<bool, LoadScreenLocation_Mask<bool>>>>(item.Locations.HasBeenSet, item.Locations.Select((i) => new MaskItem<bool, LoadScreenLocation_Mask<bool>>(true, i.GetHasBeenSetMask())));
+            ret.Locations = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, LoadScreenLocation_Mask<bool>>>>(item.Locations.HasBeenSet, item.Locations.WithIndex().Select((i) => new MaskItemIndexed<bool, LoadScreenLocation_Mask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
             return ret;
         }
 
@@ -1942,7 +1853,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         public static void WriteToNode_Xml(
-            ILoadScreenGetter item,
+            this ILoadScreenGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1992,6 +1903,131 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             translationMask: listTranslMask);
                     }
                     );
+            }
+        }
+
+        public static void FillPublic_Xml(
+            this LoadScreen item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    LoadScreenCommon.FillPublicElement_Xml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+
+        public static void FillPublicElement_Xml(
+            this LoadScreen item,
+            XElement node,
+            string name,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            switch (name)
+            {
+                case "Icon":
+                    try
+                    {
+                        errorMask?.PushIndex((int)LoadScreen_FieldIndex.Icon);
+                        if (StringXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out String IconParse,
+                            errorMask: errorMask))
+                        {
+                            item.Icon = IconParse;
+                        }
+                        else
+                        {
+                            item.Icon = default(String);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Description":
+                    try
+                    {
+                        errorMask?.PushIndex((int)LoadScreen_FieldIndex.Description);
+                        if (StringXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out String DescriptionParse,
+                            errorMask: errorMask))
+                        {
+                            item.Description = DescriptionParse;
+                        }
+                        else
+                        {
+                            item.Description = default(String);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Locations":
+                    try
+                    {
+                        errorMask?.PushIndex((int)LoadScreen_FieldIndex.Locations);
+                        if (ListXmlTranslation<LoadScreenLocation>.Instance.Parse(
+                            node: node,
+                            enumer: out var LocationsItem,
+                            transl: LoquiXmlTranslation<LoadScreenLocation>.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.Locations.SetTo(LocationsItem);
+                        }
+                        else
+                        {
+                            item.Locations.Unset();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                default:
+                    MajorRecordCommon.FillPublicElement_Xml(
+                        item: item,
+                        node: node,
+                        name: name,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                    break;
             }
         }
 
@@ -2114,14 +2150,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             this.Icon = initialValue;
             this.Description = initialValue;
-            this.Locations = new MaskItem<T, IEnumerable<MaskItem<T, LoadScreenLocation_Mask<T>>>>(initialValue, null);
+            this.Locations = new MaskItem<T, IEnumerable<MaskItemIndexed<T, LoadScreenLocation_Mask<T>>>>(initialValue, null);
         }
         #endregion
 
         #region Members
         public T Icon;
         public T Description;
-        public MaskItem<T, IEnumerable<MaskItem<T, LoadScreenLocation_Mask<T>>>> Locations;
+        public MaskItem<T, IEnumerable<MaskItemIndexed<T, LoadScreenLocation_Mask<T>>>> Locations;
         #endregion
 
         #region Equals
@@ -2189,22 +2225,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             obj.Description = eval(this.Description);
             if (Locations != null)
             {
-                obj.Locations = new MaskItem<R, IEnumerable<MaskItem<R, LoadScreenLocation_Mask<R>>>>();
+                obj.Locations = new MaskItem<R, IEnumerable<MaskItemIndexed<R, LoadScreenLocation_Mask<R>>>>();
                 obj.Locations.Overall = eval(this.Locations.Overall);
                 if (Locations.Specific != null)
                 {
-                    List<MaskItem<R, LoadScreenLocation_Mask<R>>> l = new List<MaskItem<R, LoadScreenLocation_Mask<R>>>();
+                    List<MaskItemIndexed<R, LoadScreenLocation_Mask<R>>> l = new List<MaskItemIndexed<R, LoadScreenLocation_Mask<R>>>();
                     obj.Locations.Specific = l;
-                    foreach (var item in Locations.Specific)
+                    foreach (var item in Locations.Specific.WithIndex())
                     {
-                        MaskItem<R, LoadScreenLocation_Mask<R>> mask = default(MaskItem<R, LoadScreenLocation_Mask<R>>);
-                        if (item != null)
+                        MaskItemIndexed<R, LoadScreenLocation_Mask<R>> mask = default;
+                        mask.Index = item.Index;
+                        if (item.Item != null)
                         {
-                            mask = new MaskItem<R, LoadScreenLocation_Mask<R>>();
-                            mask.Overall = eval(item.Overall);
-                            if (item.Specific != null)
+                            mask = new MaskItemIndexed<R, LoadScreenLocation_Mask<R>>(item.Item.Index);
+                            mask.Overall = eval(item.Item.Overall);
+                            if (item.Item.Specific != null)
                             {
-                                mask.Specific = item.Specific.Translate(eval);
+                                mask.Specific = item.Item.Specific.Translate(eval);
                             }
                         }
                         l.Add(mask);

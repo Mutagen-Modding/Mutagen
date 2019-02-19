@@ -90,8 +90,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> IEqualsMask<RelatedWaters>.GetEqualsMask(RelatedWaters rhs) => RelatedWatersCommon.GetEqualsMask(this, rhs);
-        IMask<bool> IEqualsMask<IRelatedWatersGetter>.GetEqualsMask(IRelatedWatersGetter rhs) => RelatedWatersCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<RelatedWaters>.GetEqualsMask(RelatedWaters rhs, EqualsMaskHelper.Include include) => RelatedWatersCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<IRelatedWatersGetter>.GetEqualsMask(IRelatedWatersGetter rhs, EqualsMaskHelper.Include include) => RelatedWatersCommon.GetEqualsMask(this, rhs, include);
         #region To String
         public string ToString(
             string name = null,
@@ -181,7 +181,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 foreach (var elem in node.Elements())
                 {
-                    Fill_Xml_Internal(
+                    RelatedWatersCommon.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -495,41 +495,6 @@ namespace Mutagen.Bethesda.Oblivion
                 translationMask: translationMask);
         }
         #endregion
-
-        protected static void Fill_Xml_Internal(
-            RelatedWaters item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            switch (name)
-            {
-                case "RelatedWaterDaytime":
-                    FormKeyXmlTranslation.Instance.ParseInto(
-                        node: node,
-                        item: item.RelatedWaterDaytime_Property,
-                        fieldIndex: (int)RelatedWaters_FieldIndex.RelatedWaterDaytime,
-                        errorMask: errorMask);
-                    break;
-                case "RelatedWaterNighttime":
-                    FormKeyXmlTranslation.Instance.ParseInto(
-                        node: node,
-                        item: item.RelatedWaterNighttime_Property,
-                        fieldIndex: (int)RelatedWaters_FieldIndex.RelatedWaterNighttime,
-                        errorMask: errorMask);
-                    break;
-                case "RelatedWaterUnderwater":
-                    FormKeyXmlTranslation.Instance.ParseInto(
-                        node: node,
-                        item: item.RelatedWaterUnderwater_Property,
-                        fieldIndex: (int)RelatedWaters_FieldIndex.RelatedWaterUnderwater,
-                        errorMask: errorMask);
-                    break;
-                default:
-                    break;
-            }
-        }
 
         #endregion
 
@@ -1492,17 +1457,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static RelatedWaters_Mask<bool> GetEqualsMask(
             this IRelatedWatersGetter item,
-            IRelatedWatersGetter rhs)
+            IRelatedWatersGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new RelatedWaters_Mask<bool>();
-            FillEqualsMask(item, rhs, ret);
+            FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
             return ret;
         }
 
         public static void FillEqualsMask(
             IRelatedWatersGetter item,
             IRelatedWatersGetter rhs,
-            RelatedWaters_Mask<bool> ret)
+            RelatedWaters_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
             ret.RelatedWaterDaytime = item.RelatedWaterDaytime_Property.FormKey == rhs.RelatedWaterDaytime_Property.FormKey;
@@ -1611,7 +1582,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         public static void WriteToNode_Xml(
-            IRelatedWatersGetter item,
+            this IRelatedWatersGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1642,6 +1613,66 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item.RelatedWaterUnderwater_Property?.FormKey,
                     fieldIndex: (int)RelatedWaters_FieldIndex.RelatedWaterUnderwater,
                     errorMask: errorMask);
+            }
+        }
+
+        public static void FillPublic_Xml(
+            this RelatedWaters item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    RelatedWatersCommon.FillPublicElement_Xml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+
+        public static void FillPublicElement_Xml(
+            this RelatedWaters item,
+            XElement node,
+            string name,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            switch (name)
+            {
+                case "RelatedWaterDaytime":
+                    FormKeyXmlTranslation.Instance.ParseInto(
+                        node: node,
+                        item: item.RelatedWaterDaytime_Property,
+                        fieldIndex: (int)RelatedWaters_FieldIndex.RelatedWaterDaytime,
+                        errorMask: errorMask);
+                    break;
+                case "RelatedWaterNighttime":
+                    FormKeyXmlTranslation.Instance.ParseInto(
+                        node: node,
+                        item: item.RelatedWaterNighttime_Property,
+                        fieldIndex: (int)RelatedWaters_FieldIndex.RelatedWaterNighttime,
+                        errorMask: errorMask);
+                    break;
+                case "RelatedWaterUnderwater":
+                    FormKeyXmlTranslation.Instance.ParseInto(
+                        node: node,
+                        item: item.RelatedWaterUnderwater_Property,
+                        fieldIndex: (int)RelatedWaters_FieldIndex.RelatedWaterUnderwater,
+                        errorMask: errorMask);
+                    break;
+                default:
+                    break;
             }
         }
 

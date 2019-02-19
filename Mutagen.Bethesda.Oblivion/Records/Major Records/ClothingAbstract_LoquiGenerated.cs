@@ -319,8 +319,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> IEqualsMask<ClothingAbstract>.GetEqualsMask(ClothingAbstract rhs) => ClothingAbstractCommon.GetEqualsMask(this, rhs);
-        IMask<bool> IEqualsMask<IClothingAbstractGetter>.GetEqualsMask(IClothingAbstractGetter rhs) => ClothingAbstractCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<ClothingAbstract>.GetEqualsMask(ClothingAbstract rhs, EqualsMaskHelper.Include include) => ClothingAbstractCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<IClothingAbstractGetter>.GetEqualsMask(IClothingAbstractGetter rhs, EqualsMaskHelper.Include include) => ClothingAbstractCommon.GetEqualsMask(this, rhs, include);
         #region To String
         public string ToString(
             string name = null,
@@ -831,7 +831,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        protected static void Fill_Xml_Internal(
+        protected static void FillPrivateElement_Xml(
             ClothingAbstract item,
             XElement node,
             string name,
@@ -840,286 +840,8 @@ namespace Mutagen.Bethesda.Oblivion
         {
             switch (name)
             {
-                case "Name":
-                    try
-                    {
-                        errorMask?.PushIndex((int)ClothingAbstract_FieldIndex.Name);
-                        if (StringXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out String NameParse,
-                            errorMask: errorMask))
-                        {
-                            item.Name = NameParse;
-                        }
-                        else
-                        {
-                            item.Name = default(String);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Script":
-                    FormKeyXmlTranslation.Instance.ParseInto(
-                        node: node,
-                        item: item.Script_Property,
-                        fieldIndex: (int)ClothingAbstract_FieldIndex.Script,
-                        errorMask: errorMask);
-                    break;
-                case "Enchantment":
-                    FormKeyXmlTranslation.Instance.ParseInto(
-                        node: node,
-                        item: item.Enchantment_Property,
-                        fieldIndex: (int)ClothingAbstract_FieldIndex.Enchantment,
-                        errorMask: errorMask);
-                    break;
-                case "EnchantmentPoints":
-                    try
-                    {
-                        errorMask?.PushIndex((int)ClothingAbstract_FieldIndex.EnchantmentPoints);
-                        if (UInt16XmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out UInt16 EnchantmentPointsParse,
-                            errorMask: errorMask))
-                        {
-                            item.EnchantmentPoints = EnchantmentPointsParse;
-                        }
-                        else
-                        {
-                            item.EnchantmentPoints = default(UInt16);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "BipedFlags":
-                    try
-                    {
-                        errorMask?.PushIndex((int)ClothingAbstract_FieldIndex.BipedFlags);
-                        if (EnumXmlTranslation<BipedFlag>.Instance.Parse(
-                            node: node,
-                            item: out BipedFlag BipedFlagsParse,
-                            errorMask: errorMask))
-                        {
-                            item.BipedFlags = BipedFlagsParse;
-                        }
-                        else
-                        {
-                            item.BipedFlags = default(BipedFlag);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Flags":
-                    try
-                    {
-                        errorMask?.PushIndex((int)ClothingAbstract_FieldIndex.Flags);
-                        if (EnumXmlTranslation<EquipmentFlag>.Instance.Parse(
-                            node: node,
-                            item: out EquipmentFlag FlagsParse,
-                            errorMask: errorMask))
-                        {
-                            item.Flags = FlagsParse;
-                        }
-                        else
-                        {
-                            item.Flags = default(EquipmentFlag);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "MaleBipedModel":
-                    try
-                    {
-                        errorMask?.PushIndex((int)ClothingAbstract_FieldIndex.MaleBipedModel);
-                        if (LoquiXmlTranslation<Model>.Instance.Parse(
-                            node: node,
-                            item: out Model MaleBipedModelParse,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)ClothingAbstract_FieldIndex.MaleBipedModel)))
-                        {
-                            item.MaleBipedModel = MaleBipedModelParse;
-                        }
-                        else
-                        {
-                            item.MaleBipedModel = default(Model);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "MaleWorldModel":
-                    try
-                    {
-                        errorMask?.PushIndex((int)ClothingAbstract_FieldIndex.MaleWorldModel);
-                        if (LoquiXmlTranslation<Model>.Instance.Parse(
-                            node: node,
-                            item: out Model MaleWorldModelParse,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)ClothingAbstract_FieldIndex.MaleWorldModel)))
-                        {
-                            item.MaleWorldModel = MaleWorldModelParse;
-                        }
-                        else
-                        {
-                            item.MaleWorldModel = default(Model);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "MaleIcon":
-                    try
-                    {
-                        errorMask?.PushIndex((int)ClothingAbstract_FieldIndex.MaleIcon);
-                        if (StringXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out String MaleIconParse,
-                            errorMask: errorMask))
-                        {
-                            item.MaleIcon = MaleIconParse;
-                        }
-                        else
-                        {
-                            item.MaleIcon = default(String);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "FemaleBipedModel":
-                    try
-                    {
-                        errorMask?.PushIndex((int)ClothingAbstract_FieldIndex.FemaleBipedModel);
-                        if (LoquiXmlTranslation<Model>.Instance.Parse(
-                            node: node,
-                            item: out Model FemaleBipedModelParse,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)ClothingAbstract_FieldIndex.FemaleBipedModel)))
-                        {
-                            item.FemaleBipedModel = FemaleBipedModelParse;
-                        }
-                        else
-                        {
-                            item.FemaleBipedModel = default(Model);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "FemaleWorldModel":
-                    try
-                    {
-                        errorMask?.PushIndex((int)ClothingAbstract_FieldIndex.FemaleWorldModel);
-                        if (LoquiXmlTranslation<Model>.Instance.Parse(
-                            node: node,
-                            item: out Model FemaleWorldModelParse,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)ClothingAbstract_FieldIndex.FemaleWorldModel)))
-                        {
-                            item.FemaleWorldModel = FemaleWorldModelParse;
-                        }
-                        else
-                        {
-                            item.FemaleWorldModel = default(Model);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "FemaleIcon":
-                    try
-                    {
-                        errorMask?.PushIndex((int)ClothingAbstract_FieldIndex.FemaleIcon);
-                        if (StringXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out String FemaleIconParse,
-                            errorMask: errorMask))
-                        {
-                            item.FemaleIcon = FemaleIconParse;
-                        }
-                        else
-                        {
-                            item.FemaleIcon = default(String);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
                 default:
-                    ItemAbstract.Fill_Xml_Internal(
+                    ItemAbstract.FillPrivateElement_Xml(
                         item: item,
                         node: node,
                         name: name,
@@ -3009,17 +2731,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static ClothingAbstract_Mask<bool> GetEqualsMask(
             this IClothingAbstractGetter item,
-            IClothingAbstractGetter rhs)
+            IClothingAbstractGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new ClothingAbstract_Mask<bool>();
-            FillEqualsMask(item, rhs, ret);
+            FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
             return ret;
         }
 
         public static void FillEqualsMask(
             IClothingAbstractGetter item,
             IClothingAbstractGetter rhs,
-            ClothingAbstract_Mask<bool> ret)
+            ClothingAbstract_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
             ret.Name = item.Name_IsSet == rhs.Name_IsSet && object.Equals(item.Name, rhs.Name);
@@ -3028,11 +2756,35 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.EnchantmentPoints = item.EnchantmentPoints_IsSet == rhs.EnchantmentPoints_IsSet && item.EnchantmentPoints == rhs.EnchantmentPoints;
             ret.BipedFlags = item.BipedFlags == rhs.BipedFlags;
             ret.Flags = item.Flags == rhs.Flags;
-            ret.MaleBipedModel = IHasBeenSetExt.LoquiEqualsHelper(item.MaleBipedModel_IsSet, rhs.MaleBipedModel_IsSet, item.MaleBipedModel, rhs.MaleBipedModel, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
-            ret.MaleWorldModel = IHasBeenSetExt.LoquiEqualsHelper(item.MaleWorldModel_IsSet, rhs.MaleWorldModel_IsSet, item.MaleWorldModel, rhs.MaleWorldModel, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
+            ret.MaleBipedModel = EqualsMaskHelper.EqualsHelper(
+                item.MaleBipedModel_IsSet,
+                rhs.MaleBipedModel_IsSet,
+                item.MaleBipedModel,
+                rhs.MaleBipedModel,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
+                include);
+            ret.MaleWorldModel = EqualsMaskHelper.EqualsHelper(
+                item.MaleWorldModel_IsSet,
+                rhs.MaleWorldModel_IsSet,
+                item.MaleWorldModel,
+                rhs.MaleWorldModel,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
+                include);
             ret.MaleIcon = item.MaleIcon_IsSet == rhs.MaleIcon_IsSet && object.Equals(item.MaleIcon, rhs.MaleIcon);
-            ret.FemaleBipedModel = IHasBeenSetExt.LoquiEqualsHelper(item.FemaleBipedModel_IsSet, rhs.FemaleBipedModel_IsSet, item.FemaleBipedModel, rhs.FemaleBipedModel, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
-            ret.FemaleWorldModel = IHasBeenSetExt.LoquiEqualsHelper(item.FemaleWorldModel_IsSet, rhs.FemaleWorldModel_IsSet, item.FemaleWorldModel, rhs.FemaleWorldModel, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
+            ret.FemaleBipedModel = EqualsMaskHelper.EqualsHelper(
+                item.FemaleBipedModel_IsSet,
+                rhs.FemaleBipedModel_IsSet,
+                item.FemaleBipedModel,
+                rhs.FemaleBipedModel,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
+                include);
+            ret.FemaleWorldModel = EqualsMaskHelper.EqualsHelper(
+                item.FemaleWorldModel_IsSet,
+                rhs.FemaleWorldModel_IsSet,
+                item.FemaleWorldModel,
+                rhs.FemaleWorldModel,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
+                include);
             ret.FemaleIcon = item.FemaleIcon_IsSet == rhs.FemaleIcon_IsSet && object.Equals(item.FemaleIcon, rhs.FemaleIcon);
             ItemAbstractCommon.FillEqualsMask(item, rhs, ret);
         }
@@ -3247,7 +2999,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         public static void WriteToNode_Xml(
-            IClothingAbstractGetter item,
+            this IClothingAbstractGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -3378,6 +3130,329 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item.FemaleIcon,
                     fieldIndex: (int)ClothingAbstract_FieldIndex.FemaleIcon,
                     errorMask: errorMask);
+            }
+        }
+
+        public static void FillPublic_Xml(
+            this ClothingAbstract item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    ClothingAbstractCommon.FillPublicElement_Xml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+
+        public static void FillPublicElement_Xml(
+            this ClothingAbstract item,
+            XElement node,
+            string name,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            switch (name)
+            {
+                case "Name":
+                    try
+                    {
+                        errorMask?.PushIndex((int)ClothingAbstract_FieldIndex.Name);
+                        if (StringXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out String NameParse,
+                            errorMask: errorMask))
+                        {
+                            item.Name = NameParse;
+                        }
+                        else
+                        {
+                            item.Name = default(String);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Script":
+                    FormKeyXmlTranslation.Instance.ParseInto(
+                        node: node,
+                        item: item.Script_Property,
+                        fieldIndex: (int)ClothingAbstract_FieldIndex.Script,
+                        errorMask: errorMask);
+                    break;
+                case "Enchantment":
+                    FormKeyXmlTranslation.Instance.ParseInto(
+                        node: node,
+                        item: item.Enchantment_Property,
+                        fieldIndex: (int)ClothingAbstract_FieldIndex.Enchantment,
+                        errorMask: errorMask);
+                    break;
+                case "EnchantmentPoints":
+                    try
+                    {
+                        errorMask?.PushIndex((int)ClothingAbstract_FieldIndex.EnchantmentPoints);
+                        if (UInt16XmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out UInt16 EnchantmentPointsParse,
+                            errorMask: errorMask))
+                        {
+                            item.EnchantmentPoints = EnchantmentPointsParse;
+                        }
+                        else
+                        {
+                            item.EnchantmentPoints = default(UInt16);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "BipedFlags":
+                    try
+                    {
+                        errorMask?.PushIndex((int)ClothingAbstract_FieldIndex.BipedFlags);
+                        if (EnumXmlTranslation<BipedFlag>.Instance.Parse(
+                            node: node,
+                            item: out BipedFlag BipedFlagsParse,
+                            errorMask: errorMask))
+                        {
+                            item.BipedFlags = BipedFlagsParse;
+                        }
+                        else
+                        {
+                            item.BipedFlags = default(BipedFlag);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Flags":
+                    try
+                    {
+                        errorMask?.PushIndex((int)ClothingAbstract_FieldIndex.Flags);
+                        if (EnumXmlTranslation<EquipmentFlag>.Instance.Parse(
+                            node: node,
+                            item: out EquipmentFlag FlagsParse,
+                            errorMask: errorMask))
+                        {
+                            item.Flags = FlagsParse;
+                        }
+                        else
+                        {
+                            item.Flags = default(EquipmentFlag);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "MaleBipedModel":
+                    try
+                    {
+                        errorMask?.PushIndex((int)ClothingAbstract_FieldIndex.MaleBipedModel);
+                        if (LoquiXmlTranslation<Model>.Instance.Parse(
+                            node: node,
+                            item: out Model MaleBipedModelParse,
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)ClothingAbstract_FieldIndex.MaleBipedModel)))
+                        {
+                            item.MaleBipedModel = MaleBipedModelParse;
+                        }
+                        else
+                        {
+                            item.MaleBipedModel = default(Model);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "MaleWorldModel":
+                    try
+                    {
+                        errorMask?.PushIndex((int)ClothingAbstract_FieldIndex.MaleWorldModel);
+                        if (LoquiXmlTranslation<Model>.Instance.Parse(
+                            node: node,
+                            item: out Model MaleWorldModelParse,
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)ClothingAbstract_FieldIndex.MaleWorldModel)))
+                        {
+                            item.MaleWorldModel = MaleWorldModelParse;
+                        }
+                        else
+                        {
+                            item.MaleWorldModel = default(Model);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "MaleIcon":
+                    try
+                    {
+                        errorMask?.PushIndex((int)ClothingAbstract_FieldIndex.MaleIcon);
+                        if (StringXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out String MaleIconParse,
+                            errorMask: errorMask))
+                        {
+                            item.MaleIcon = MaleIconParse;
+                        }
+                        else
+                        {
+                            item.MaleIcon = default(String);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "FemaleBipedModel":
+                    try
+                    {
+                        errorMask?.PushIndex((int)ClothingAbstract_FieldIndex.FemaleBipedModel);
+                        if (LoquiXmlTranslation<Model>.Instance.Parse(
+                            node: node,
+                            item: out Model FemaleBipedModelParse,
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)ClothingAbstract_FieldIndex.FemaleBipedModel)))
+                        {
+                            item.FemaleBipedModel = FemaleBipedModelParse;
+                        }
+                        else
+                        {
+                            item.FemaleBipedModel = default(Model);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "FemaleWorldModel":
+                    try
+                    {
+                        errorMask?.PushIndex((int)ClothingAbstract_FieldIndex.FemaleWorldModel);
+                        if (LoquiXmlTranslation<Model>.Instance.Parse(
+                            node: node,
+                            item: out Model FemaleWorldModelParse,
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)ClothingAbstract_FieldIndex.FemaleWorldModel)))
+                        {
+                            item.FemaleWorldModel = FemaleWorldModelParse;
+                        }
+                        else
+                        {
+                            item.FemaleWorldModel = default(Model);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "FemaleIcon":
+                    try
+                    {
+                        errorMask?.PushIndex((int)ClothingAbstract_FieldIndex.FemaleIcon);
+                        if (StringXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out String FemaleIconParse,
+                            errorMask: errorMask))
+                        {
+                            item.FemaleIcon = FemaleIconParse;
+                        }
+                        else
+                        {
+                            item.FemaleIcon = default(String);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                default:
+                    ItemAbstractCommon.FillPublicElement_Xml(
+                        item: item,
+                        node: node,
+                        name: name,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                    break;
             }
         }
 

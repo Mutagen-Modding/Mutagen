@@ -145,8 +145,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> IEqualsMask<MapMarker>.GetEqualsMask(MapMarker rhs) => MapMarkerCommon.GetEqualsMask(this, rhs);
-        IMask<bool> IEqualsMask<IMapMarkerGetter>.GetEqualsMask(IMapMarkerGetter rhs) => MapMarkerCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<MapMarker>.GetEqualsMask(MapMarker rhs, EqualsMaskHelper.Include include) => MapMarkerCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<IMapMarkerGetter>.GetEqualsMask(IMapMarkerGetter rhs, EqualsMaskHelper.Include include) => MapMarkerCommon.GetEqualsMask(this, rhs, include);
         #region To String
         public string ToString(
             string name = null,
@@ -257,7 +257,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 foreach (var elem in node.Elements())
                 {
-                    Fill_Xml_Internal(
+                    MapMarkerCommon.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -571,100 +571,6 @@ namespace Mutagen.Bethesda.Oblivion
                 translationMask: translationMask);
         }
         #endregion
-
-        protected static void Fill_Xml_Internal(
-            MapMarker item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            switch (name)
-            {
-                case "Flags":
-                    try
-                    {
-                        errorMask?.PushIndex((int)MapMarker_FieldIndex.Flags);
-                        if (EnumXmlTranslation<MapMarker.Flag>.Instance.Parse(
-                            node: node,
-                            item: out MapMarker.Flag FlagsParse,
-                            errorMask: errorMask))
-                        {
-                            item.Flags = FlagsParse;
-                        }
-                        else
-                        {
-                            item.Flags = default(MapMarker.Flag);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Name":
-                    try
-                    {
-                        errorMask?.PushIndex((int)MapMarker_FieldIndex.Name);
-                        if (StringXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out String NameParse,
-                            errorMask: errorMask))
-                        {
-                            item.Name = NameParse;
-                        }
-                        else
-                        {
-                            item.Name = default(String);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Types":
-                    try
-                    {
-                        errorMask?.PushIndex((int)MapMarker_FieldIndex.Types);
-                        if (ListXmlTranslation<MapMarker.Type>.Instance.Parse(
-                            node: node,
-                            enumer: out var TypesItem,
-                            transl: EnumXmlTranslation<MapMarker.Type>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.Types.SetTo(TypesItem);
-                        }
-                        else
-                        {
-                            item.Types.Unset();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
 
         #endregion
 
@@ -1732,40 +1638,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static MapMarker_Mask<bool> GetEqualsMask(
             this IMapMarkerGetter item,
-            IMapMarkerGetter rhs)
+            IMapMarkerGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new MapMarker_Mask<bool>();
-            FillEqualsMask(item, rhs, ret);
+            FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
             return ret;
         }
 
         public static void FillEqualsMask(
             IMapMarkerGetter item,
             IMapMarkerGetter rhs,
-            MapMarker_Mask<bool> ret)
+            MapMarker_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
             ret.Flags = item.Flags_IsSet == rhs.Flags_IsSet && item.Flags == rhs.Flags;
             ret.Name = item.Name_IsSet == rhs.Name_IsSet && object.Equals(item.Name, rhs.Name);
-            if (item.Types.HasBeenSet == rhs.Types.HasBeenSet)
-            {
-                if (item.Types.HasBeenSet)
-                {
-                    ret.Types = new MaskItem<bool, IEnumerable<bool>>();
-                    ret.Types.Specific = item.Types.SelectAgainst<MapMarker.Type, bool>(rhs.Types, ((l, r) => object.Equals(l, r)), out ret.Types.Overall);
-                    ret.Types.Overall = ret.Types.Overall && ret.Types.Specific.All((b) => b);
-                }
-                else
-                {
-                    ret.Types = new MaskItem<bool, IEnumerable<bool>>();
-                    ret.Types.Overall = true;
-                }
-            }
-            else
-            {
-                ret.Types = new MaskItem<bool, IEnumerable<bool>>();
-                ret.Types.Overall = false;
-            }
+            ret.Types = item.Types.CollectionEqualsHelper(
+                rhs.Types,
+                (l, r) => l == r,
+                include);
         }
 
         public static string ToString(
@@ -1840,7 +1737,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             var ret = new MapMarker_Mask<bool>();
             ret.Flags = item.Flags_IsSet;
             ret.Name = item.Name_IsSet;
-            ret.Types = new MaskItem<bool, IEnumerable<bool>>(item.Types.HasBeenSet, null);
+            ret.Types = new MaskItem<bool, IEnumerable<(int, bool)>>(item.Types.HasBeenSet, null);
             return ret;
         }
 
@@ -1886,7 +1783,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         public static void WriteToNode_Xml(
-            IMapMarkerGetter item,
+            this IMapMarkerGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1930,6 +1827,125 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             errorMask: listSubMask);
                     }
                     );
+            }
+        }
+
+        public static void FillPublic_Xml(
+            this MapMarker item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    MapMarkerCommon.FillPublicElement_Xml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+
+        public static void FillPublicElement_Xml(
+            this MapMarker item,
+            XElement node,
+            string name,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            switch (name)
+            {
+                case "Flags":
+                    try
+                    {
+                        errorMask?.PushIndex((int)MapMarker_FieldIndex.Flags);
+                        if (EnumXmlTranslation<MapMarker.Flag>.Instance.Parse(
+                            node: node,
+                            item: out MapMarker.Flag FlagsParse,
+                            errorMask: errorMask))
+                        {
+                            item.Flags = FlagsParse;
+                        }
+                        else
+                        {
+                            item.Flags = default(MapMarker.Flag);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Name":
+                    try
+                    {
+                        errorMask?.PushIndex((int)MapMarker_FieldIndex.Name);
+                        if (StringXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out String NameParse,
+                            errorMask: errorMask))
+                        {
+                            item.Name = NameParse;
+                        }
+                        else
+                        {
+                            item.Name = default(String);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Types":
+                    try
+                    {
+                        errorMask?.PushIndex((int)MapMarker_FieldIndex.Types);
+                        if (ListXmlTranslation<MapMarker.Type>.Instance.Parse(
+                            node: node,
+                            enumer: out var TypesItem,
+                            transl: EnumXmlTranslation<MapMarker.Type>.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.Types.SetTo(TypesItem);
+                        }
+                        else
+                        {
+                            item.Types.Unset();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                default:
+                    break;
             }
         }
 
@@ -2037,14 +2053,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             this.Flags = initialValue;
             this.Name = initialValue;
-            this.Types = new MaskItem<T, IEnumerable<T>>(initialValue, null);
+            this.Types = new MaskItem<T, IEnumerable<(int Index, T Value)>>(initialValue, null);
         }
         #endregion
 
         #region Members
         public T Flags;
         public T Name;
-        public MaskItem<T, IEnumerable<T>> Types;
+        public MaskItem<T, IEnumerable<(int Index, T Value)>> Types;
         #endregion
 
         #region Equals
@@ -2085,7 +2101,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     foreach (var item in this.Types.Specific)
                     {
-                        if (!eval(item)) return false;
+                        if (!eval(item.Value)) return false;
                     }
                 }
             }
@@ -2107,16 +2123,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             obj.Name = eval(this.Name);
             if (Types != null)
             {
-                obj.Types = new MaskItem<R, IEnumerable<R>>();
+                obj.Types = new MaskItem<R, IEnumerable<(int Index, R Value)>>();
                 obj.Types.Overall = eval(this.Types.Overall);
                 if (Types.Specific != null)
                 {
-                    List<R> l = new List<R>();
+                    List<(int Index, R Item)> l = new List<(int Index, R Item)>();
                     obj.Types.Specific = l;
-                    foreach (var item in Types.Specific)
+                    foreach (var item in Types.Specific.WithIndex())
                     {
-                        R mask = default(R);
-                        mask = eval(item);
+                        (int Index, R Item) mask = default;
+                        mask.Index = item.Index;
+                        mask.Item = eval(item.Item.Value);
                         l.Add(mask);
                     }
                 }
@@ -2208,7 +2225,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         public Exception Flags;
         public Exception Name;
-        public MaskItem<Exception, IEnumerable<Exception>> Types;
+        public MaskItem<Exception, IEnumerable<(int Index, Exception Value)>> Types;
         #endregion
 
         #region IErrorMask
@@ -2240,7 +2257,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     this.Name = ex;
                     break;
                 case MapMarker_FieldIndex.Types:
-                    this.Types = new MaskItem<Exception, IEnumerable<Exception>>(ex, null);
+                    this.Types = new MaskItem<Exception, IEnumerable<(int Index, Exception Value)>>(ex, null);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -2259,7 +2276,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     this.Name = (Exception)obj;
                     break;
                 case MapMarker_FieldIndex.Types:
-                    this.Types = (MaskItem<Exception, IEnumerable<Exception>>)obj;
+                    this.Types = (MaskItem<Exception, IEnumerable<(int Index, Exception Value)>>)obj;
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -2339,7 +2356,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             var ret = new MapMarker_ErrorMask();
             ret.Flags = this.Flags.Combine(rhs.Flags);
             ret.Name = this.Name.Combine(rhs.Name);
-            ret.Types = new MaskItem<Exception, IEnumerable<Exception>>(this.Types.Overall.Combine(rhs.Types.Overall), new List<Exception>(this.Types.Specific.And(rhs.Types.Specific)));
+            ret.Types = new MaskItem<Exception, IEnumerable<(int Index, Exception Value)>>(this.Types.Overall.Combine(rhs.Types.Overall), new List<(int Index, Exception Value)>(this.Types.Specific.And(rhs.Types.Specific)));
             return ret;
         }
         public static MapMarker_ErrorMask Combine(MapMarker_ErrorMask lhs, MapMarker_ErrorMask rhs)

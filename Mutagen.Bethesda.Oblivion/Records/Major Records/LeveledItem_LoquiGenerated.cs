@@ -142,8 +142,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> IEqualsMask<LeveledItem>.GetEqualsMask(LeveledItem rhs) => LeveledItemCommon.GetEqualsMask(this, rhs);
-        IMask<bool> IEqualsMask<ILeveledItemGetter>.GetEqualsMask(ILeveledItemGetter rhs) => LeveledItemCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<LeveledItem>.GetEqualsMask(LeveledItem rhs, EqualsMaskHelper.Include include) => LeveledItemCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<ILeveledItemGetter>.GetEqualsMask(ILeveledItemGetter rhs, EqualsMaskHelper.Include include) => LeveledItemCommon.GetEqualsMask(this, rhs, include);
         #region To String
         public string ToString(
             string name = null,
@@ -256,7 +256,13 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 foreach (var elem in node.Elements())
                 {
-                    Fill_Xml_Internal(
+                    FillPrivateElement_Xml(
+                        item: ret,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                    LeveledItemCommon.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -600,7 +606,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        protected static void Fill_Xml_Internal(
+        protected static void FillPrivateElement_Xml(
             LeveledItem item,
             XElement node,
             string name,
@@ -609,88 +615,8 @@ namespace Mutagen.Bethesda.Oblivion
         {
             switch (name)
             {
-                case "ChanceNone":
-                    try
-                    {
-                        errorMask?.PushIndex((int)LeveledItem_FieldIndex.ChanceNone);
-                        if (ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Byte ChanceNoneParse,
-                            errorMask: errorMask))
-                        {
-                            item.ChanceNone = ChanceNoneParse;
-                        }
-                        else
-                        {
-                            item.ChanceNone = default(Byte);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Flags":
-                    try
-                    {
-                        errorMask?.PushIndex((int)LeveledItem_FieldIndex.Flags);
-                        if (EnumXmlTranslation<LeveledFlag>.Instance.Parse(
-                            node: node,
-                            item: out LeveledFlag FlagsParse,
-                            errorMask: errorMask))
-                        {
-                            item.Flags = FlagsParse;
-                        }
-                        else
-                        {
-                            item.Flags = default(LeveledFlag);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Entries":
-                    try
-                    {
-                        errorMask?.PushIndex((int)LeveledItem_FieldIndex.Entries);
-                        if (ListXmlTranslation<LeveledEntry<ItemAbstract>>.Instance.Parse(
-                            node: node,
-                            enumer: out var EntriesItem,
-                            transl: LoquiXmlTranslation<LeveledEntry<ItemAbstract>>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.Entries.SetTo(EntriesItem);
-                        }
-                        else
-                        {
-                            item.Entries.Unset();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
                 default:
-                    ItemAbstract.Fill_Xml_Internal(
+                    ItemAbstract.FillPrivateElement_Xml(
                         item: item,
                         node: node,
                         name: name,
@@ -1827,46 +1753,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static LeveledItem_Mask<bool> GetEqualsMask(
             this ILeveledItemGetter item,
-            ILeveledItemGetter rhs)
+            ILeveledItemGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new LeveledItem_Mask<bool>();
-            FillEqualsMask(item, rhs, ret);
+            FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
             return ret;
         }
 
         public static void FillEqualsMask(
             ILeveledItemGetter item,
             ILeveledItemGetter rhs,
-            LeveledItem_Mask<bool> ret)
+            LeveledItem_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
             ret.ChanceNone = item.ChanceNone_IsSet == rhs.ChanceNone_IsSet && item.ChanceNone == rhs.ChanceNone;
             ret.Flags = item.Flags_IsSet == rhs.Flags_IsSet && item.Flags == rhs.Flags;
-            if (item.Entries.HasBeenSet == rhs.Entries.HasBeenSet)
-            {
-                if (item.Entries.HasBeenSet)
-                {
-                    ret.Entries = new MaskItem<bool, IEnumerable<MaskItem<bool, LeveledEntry_Mask<bool>>>>();
-                    ret.Entries.Specific = item.Entries.SelectAgainst<LeveledEntry<ItemAbstract>, MaskItem<bool, LeveledEntry_Mask<bool>>>(rhs.Entries, ((l, r) =>
-                    {
-                        MaskItem<bool, LeveledEntry_Mask<bool>> itemRet;
-                        itemRet = l.LoquiEqualsHelper(r, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
-                        return itemRet;
-                    }
-                    ), out ret.Entries.Overall);
-                    ret.Entries.Overall = ret.Entries.Overall && ret.Entries.Specific.All((b) => b.Overall);
-                }
-                else
-                {
-                    ret.Entries = new MaskItem<bool, IEnumerable<MaskItem<bool, LeveledEntry_Mask<bool>>>>();
-                    ret.Entries.Overall = true;
-                }
-            }
-            else
-            {
-                ret.Entries = new MaskItem<bool, IEnumerable<MaskItem<bool, LeveledEntry_Mask<bool>>>>();
-                ret.Entries.Overall = false;
-            }
+            ret.Entries = item.Entries.CollectionEqualsHelper(
+                rhs.Entries,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
             ItemAbstractCommon.FillEqualsMask(item, rhs, ret);
         }
 
@@ -1942,7 +1853,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             var ret = new LeveledItem_Mask<bool>();
             ret.ChanceNone = item.ChanceNone_IsSet;
             ret.Flags = item.Flags_IsSet;
-            ret.Entries = new MaskItem<bool, IEnumerable<MaskItem<bool, LeveledEntry_Mask<bool>>>>(item.Entries.HasBeenSet, item.Entries.Select((i) => new MaskItem<bool, LeveledEntry_Mask<bool>>(true, i.GetHasBeenSetMask())));
+            ret.Entries = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, LeveledEntry_Mask<bool>>>>(item.Entries.HasBeenSet, item.Entries.WithIndex().Select((i) => new MaskItemIndexed<bool, LeveledEntry_Mask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
             return ret;
         }
 
@@ -2038,7 +1949,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         public static void WriteToNode_Xml(
-            ILeveledItemGetter item,
+            this ILeveledItemGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -2088,6 +1999,131 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             translationMask: listTranslMask);
                     }
                     );
+            }
+        }
+
+        public static void FillPublic_Xml(
+            this LeveledItem item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    LeveledItemCommon.FillPublicElement_Xml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+
+        public static void FillPublicElement_Xml(
+            this LeveledItem item,
+            XElement node,
+            string name,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            switch (name)
+            {
+                case "ChanceNone":
+                    try
+                    {
+                        errorMask?.PushIndex((int)LeveledItem_FieldIndex.ChanceNone);
+                        if (ByteXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Byte ChanceNoneParse,
+                            errorMask: errorMask))
+                        {
+                            item.ChanceNone = ChanceNoneParse;
+                        }
+                        else
+                        {
+                            item.ChanceNone = default(Byte);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Flags":
+                    try
+                    {
+                        errorMask?.PushIndex((int)LeveledItem_FieldIndex.Flags);
+                        if (EnumXmlTranslation<LeveledFlag>.Instance.Parse(
+                            node: node,
+                            item: out LeveledFlag FlagsParse,
+                            errorMask: errorMask))
+                        {
+                            item.Flags = FlagsParse;
+                        }
+                        else
+                        {
+                            item.Flags = default(LeveledFlag);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Entries":
+                    try
+                    {
+                        errorMask?.PushIndex((int)LeveledItem_FieldIndex.Entries);
+                        if (ListXmlTranslation<LeveledEntry<ItemAbstract>>.Instance.Parse(
+                            node: node,
+                            enumer: out var EntriesItem,
+                            transl: LoquiXmlTranslation<LeveledEntry<ItemAbstract>>.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.Entries.SetTo(EntriesItem);
+                        }
+                        else
+                        {
+                            item.Entries.Unset();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                default:
+                    ItemAbstractCommon.FillPublicElement_Xml(
+                        item: item,
+                        node: node,
+                        name: name,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                    break;
             }
         }
 
@@ -2215,14 +2251,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             this.ChanceNone = initialValue;
             this.Flags = initialValue;
-            this.Entries = new MaskItem<T, IEnumerable<MaskItem<T, LeveledEntry_Mask<T>>>>(initialValue, null);
+            this.Entries = new MaskItem<T, IEnumerable<MaskItemIndexed<T, LeveledEntry_Mask<T>>>>(initialValue, null);
         }
         #endregion
 
         #region Members
         public T ChanceNone;
         public T Flags;
-        public MaskItem<T, IEnumerable<MaskItem<T, LeveledEntry_Mask<T>>>> Entries;
+        public MaskItem<T, IEnumerable<MaskItemIndexed<T, LeveledEntry_Mask<T>>>> Entries;
         #endregion
 
         #region Equals
@@ -2290,22 +2326,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             obj.Flags = eval(this.Flags);
             if (Entries != null)
             {
-                obj.Entries = new MaskItem<R, IEnumerable<MaskItem<R, LeveledEntry_Mask<R>>>>();
+                obj.Entries = new MaskItem<R, IEnumerable<MaskItemIndexed<R, LeveledEntry_Mask<R>>>>();
                 obj.Entries.Overall = eval(this.Entries.Overall);
                 if (Entries.Specific != null)
                 {
-                    List<MaskItem<R, LeveledEntry_Mask<R>>> l = new List<MaskItem<R, LeveledEntry_Mask<R>>>();
+                    List<MaskItemIndexed<R, LeveledEntry_Mask<R>>> l = new List<MaskItemIndexed<R, LeveledEntry_Mask<R>>>();
                     obj.Entries.Specific = l;
-                    foreach (var item in Entries.Specific)
+                    foreach (var item in Entries.Specific.WithIndex())
                     {
-                        MaskItem<R, LeveledEntry_Mask<R>> mask = default(MaskItem<R, LeveledEntry_Mask<R>>);
-                        if (item != null)
+                        MaskItemIndexed<R, LeveledEntry_Mask<R>> mask = default;
+                        mask.Index = item.Index;
+                        if (item.Item != null)
                         {
-                            mask = new MaskItem<R, LeveledEntry_Mask<R>>();
-                            mask.Overall = eval(item.Overall);
-                            if (item.Specific != null)
+                            mask = new MaskItemIndexed<R, LeveledEntry_Mask<R>>(item.Item.Index);
+                            mask.Overall = eval(item.Item.Overall);
+                            if (item.Item.Specific != null)
                             {
-                                mask.Specific = item.Specific.Translate(eval);
+                                mask.Specific = item.Item.Specific.Translate(eval);
                             }
                         }
                         l.Add(mask);

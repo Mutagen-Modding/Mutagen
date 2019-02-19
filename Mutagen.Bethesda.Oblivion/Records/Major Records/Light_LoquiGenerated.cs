@@ -17,6 +17,7 @@ using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using Mutagen.Bethesda.Oblivion;
 using System.Drawing;
+using Loqui.Presentation;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
 using System.Xml;
@@ -290,8 +291,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> IEqualsMask<Light>.GetEqualsMask(Light rhs) => LightCommon.GetEqualsMask(this, rhs);
-        IMask<bool> IEqualsMask<ILightGetter>.GetEqualsMask(ILightGetter rhs) => LightCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<Light>.GetEqualsMask(Light rhs, EqualsMaskHelper.Include include) => LightCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<ILightGetter>.GetEqualsMask(ILightGetter rhs, EqualsMaskHelper.Include include) => LightCommon.GetEqualsMask(this, rhs, include);
         #region To String
         public string ToString(
             string name = null,
@@ -347,7 +348,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
             if (this.Time != rhs.Time) return false;
             if (this.Radius != rhs.Radius) return false;
-            if (this.Color != rhs.Color) return false;
+            if (!this.Color.ColorOnlyEquals(rhs.Color)) return false;
             if (this.Flags != rhs.Flags) return false;
             if (!this.FalloffExponent.EqualsWithin(rhs.FalloffExponent)) return false;
             if (!this.FOV.EqualsWithin(rhs.FOV)) return false;
@@ -447,7 +448,13 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 foreach (var elem in node.Elements())
                 {
-                    Fill_Xml_Internal(
+                    FillPrivateElement_Xml(
+                        item: ret,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                    LightCommon.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -791,7 +798,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        protected static void Fill_Xml_Internal(
+        protected static void FillPrivateElement_Xml(
             Light item,
             XElement node,
             string name,
@@ -800,335 +807,8 @@ namespace Mutagen.Bethesda.Oblivion
         {
             switch (name)
             {
-                case "Model":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Light_FieldIndex.Model);
-                        if (LoquiXmlTranslation<Model>.Instance.Parse(
-                            node: node,
-                            item: out Model ModelParse,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Light_FieldIndex.Model)))
-                        {
-                            item.Model = ModelParse;
-                        }
-                        else
-                        {
-                            item.Model = default(Model);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Script":
-                    FormKeyXmlTranslation.Instance.ParseInto(
-                        node: node,
-                        item: item.Script_Property,
-                        fieldIndex: (int)Light_FieldIndex.Script,
-                        errorMask: errorMask);
-                    break;
-                case "Name":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Light_FieldIndex.Name);
-                        if (StringXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out String NameParse,
-                            errorMask: errorMask))
-                        {
-                            item.Name = NameParse;
-                        }
-                        else
-                        {
-                            item.Name = default(String);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Icon":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Light_FieldIndex.Icon);
-                        if (StringXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out String IconParse,
-                            errorMask: errorMask))
-                        {
-                            item.Icon = IconParse;
-                        }
-                        else
-                        {
-                            item.Icon = default(String);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Time":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Light_FieldIndex.Time);
-                        if (Int32XmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Int32 TimeParse,
-                            errorMask: errorMask))
-                        {
-                            item.Time = TimeParse;
-                        }
-                        else
-                        {
-                            item.Time = default(Int32);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Radius":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Light_FieldIndex.Radius);
-                        if (UInt32XmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out UInt32 RadiusParse,
-                            errorMask: errorMask))
-                        {
-                            item.Radius = RadiusParse;
-                        }
-                        else
-                        {
-                            item.Radius = default(UInt32);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Color":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Light_FieldIndex.Color);
-                        if (ColorXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Color ColorParse,
-                            errorMask: errorMask))
-                        {
-                            item.Color = ColorParse;
-                        }
-                        else
-                        {
-                            item.Color = default(Color);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Flags":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Light_FieldIndex.Flags);
-                        if (EnumXmlTranslation<Light.LightFlag>.Instance.Parse(
-                            node: node,
-                            item: out Light.LightFlag FlagsParse,
-                            errorMask: errorMask))
-                        {
-                            item.Flags = FlagsParse;
-                        }
-                        else
-                        {
-                            item.Flags = default(Light.LightFlag);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "FalloffExponent":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Light_FieldIndex.FalloffExponent);
-                        if (FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Single FalloffExponentParse,
-                            errorMask: errorMask))
-                        {
-                            item.FalloffExponent = FalloffExponentParse;
-                        }
-                        else
-                        {
-                            item.FalloffExponent = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "FOV":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Light_FieldIndex.FOV);
-                        if (FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Single FOVParse,
-                            errorMask: errorMask))
-                        {
-                            item.FOV = FOVParse;
-                        }
-                        else
-                        {
-                            item.FOV = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Value":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Light_FieldIndex.Value);
-                        if (UInt32XmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out UInt32 ValueParse,
-                            errorMask: errorMask))
-                        {
-                            item.Value = ValueParse;
-                        }
-                        else
-                        {
-                            item.Value = default(UInt32);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Weight":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Light_FieldIndex.Weight);
-                        if (FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Single WeightParse,
-                            errorMask: errorMask))
-                        {
-                            item.Weight = WeightParse;
-                        }
-                        else
-                        {
-                            item.Weight = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Fade":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Light_FieldIndex.Fade);
-                        if (FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Single FadeParse,
-                            errorMask: errorMask))
-                        {
-                            item.Fade = FadeParse;
-                        }
-                        else
-                        {
-                            item.Fade = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Sound":
-                    FormKeyXmlTranslation.Instance.ParseInto(
-                        node: node,
-                        item: item.Sound_Property,
-                        fieldIndex: (int)Light_FieldIndex.Sound,
-                        errorMask: errorMask);
-                    break;
                 default:
-                    ItemAbstract.Fill_Xml_Internal(
+                    ItemAbstract.FillPrivateElement_Xml(
                         item: item,
                         node: node,
                         name: name,
@@ -3132,32 +2812,44 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static Light_Mask<bool> GetEqualsMask(
             this ILightGetter item,
-            ILightGetter rhs)
+            ILightGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new Light_Mask<bool>();
-            FillEqualsMask(item, rhs, ret);
+            FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
             return ret;
         }
 
         public static void FillEqualsMask(
             ILightGetter item,
             ILightGetter rhs,
-            Light_Mask<bool> ret)
+            Light_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Model = IHasBeenSetExt.LoquiEqualsHelper(item.Model_IsSet, rhs.Model_IsSet, item.Model, rhs.Model, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
+            ret.Model = EqualsMaskHelper.EqualsHelper(
+                item.Model_IsSet,
+                rhs.Model_IsSet,
+                item.Model,
+                rhs.Model,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
+                include);
             ret.Script = item.Script_Property.FormKey == rhs.Script_Property.FormKey;
             ret.Name = item.Name_IsSet == rhs.Name_IsSet && object.Equals(item.Name, rhs.Name);
             ret.Icon = item.Icon_IsSet == rhs.Icon_IsSet && object.Equals(item.Icon, rhs.Icon);
             ret.Time = item.Time == rhs.Time;
             ret.Radius = item.Radius == rhs.Radius;
-            ret.Color = item.Color == rhs.Color;
+            ret.Color = item.Color.ColorOnlyEquals(rhs.Color);
             ret.Flags = item.Flags == rhs.Flags;
-            ret.FalloffExponent = item.FalloffExponent == rhs.FalloffExponent;
-            ret.FOV = item.FOV == rhs.FOV;
+            ret.FalloffExponent = item.FalloffExponent.EqualsWithin(rhs.FalloffExponent);
+            ret.FOV = item.FOV.EqualsWithin(rhs.FOV);
             ret.Value = item.Value == rhs.Value;
-            ret.Weight = item.Weight == rhs.Weight;
-            ret.Fade = item.Fade_IsSet == rhs.Fade_IsSet && item.Fade == rhs.Fade;
+            ret.Weight = item.Weight.EqualsWithin(rhs.Weight);
+            ret.Fade = item.Fade_IsSet == rhs.Fade_IsSet && item.Fade.EqualsWithin(rhs.Fade);
             ret.Sound = item.Sound_Property.FormKey == rhs.Sound_Property.FormKey;
             ItemAbstractCommon.FillEqualsMask(item, rhs, ret);
         }
@@ -3375,7 +3067,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         public static void WriteToNode_Xml(
-            ILightGetter item,
+            this ILightGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -3517,6 +3209,378 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item.Sound_Property?.FormKey,
                     fieldIndex: (int)Light_FieldIndex.Sound,
                     errorMask: errorMask);
+            }
+        }
+
+        public static void FillPublic_Xml(
+            this Light item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    LightCommon.FillPublicElement_Xml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+
+        public static void FillPublicElement_Xml(
+            this Light item,
+            XElement node,
+            string name,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            switch (name)
+            {
+                case "Model":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Light_FieldIndex.Model);
+                        if (LoquiXmlTranslation<Model>.Instance.Parse(
+                            node: node,
+                            item: out Model ModelParse,
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)Light_FieldIndex.Model)))
+                        {
+                            item.Model = ModelParse;
+                        }
+                        else
+                        {
+                            item.Model = default(Model);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Script":
+                    FormKeyXmlTranslation.Instance.ParseInto(
+                        node: node,
+                        item: item.Script_Property,
+                        fieldIndex: (int)Light_FieldIndex.Script,
+                        errorMask: errorMask);
+                    break;
+                case "Name":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Light_FieldIndex.Name);
+                        if (StringXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out String NameParse,
+                            errorMask: errorMask))
+                        {
+                            item.Name = NameParse;
+                        }
+                        else
+                        {
+                            item.Name = default(String);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Icon":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Light_FieldIndex.Icon);
+                        if (StringXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out String IconParse,
+                            errorMask: errorMask))
+                        {
+                            item.Icon = IconParse;
+                        }
+                        else
+                        {
+                            item.Icon = default(String);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Time":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Light_FieldIndex.Time);
+                        if (Int32XmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Int32 TimeParse,
+                            errorMask: errorMask))
+                        {
+                            item.Time = TimeParse;
+                        }
+                        else
+                        {
+                            item.Time = default(Int32);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Radius":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Light_FieldIndex.Radius);
+                        if (UInt32XmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out UInt32 RadiusParse,
+                            errorMask: errorMask))
+                        {
+                            item.Radius = RadiusParse;
+                        }
+                        else
+                        {
+                            item.Radius = default(UInt32);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Color":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Light_FieldIndex.Color);
+                        if (ColorXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Color ColorParse,
+                            errorMask: errorMask))
+                        {
+                            item.Color = ColorParse;
+                        }
+                        else
+                        {
+                            item.Color = default(Color);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Flags":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Light_FieldIndex.Flags);
+                        if (EnumXmlTranslation<Light.LightFlag>.Instance.Parse(
+                            node: node,
+                            item: out Light.LightFlag FlagsParse,
+                            errorMask: errorMask))
+                        {
+                            item.Flags = FlagsParse;
+                        }
+                        else
+                        {
+                            item.Flags = default(Light.LightFlag);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "FalloffExponent":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Light_FieldIndex.FalloffExponent);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Single FalloffExponentParse,
+                            errorMask: errorMask))
+                        {
+                            item.FalloffExponent = FalloffExponentParse;
+                        }
+                        else
+                        {
+                            item.FalloffExponent = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "FOV":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Light_FieldIndex.FOV);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Single FOVParse,
+                            errorMask: errorMask))
+                        {
+                            item.FOV = FOVParse;
+                        }
+                        else
+                        {
+                            item.FOV = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Value":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Light_FieldIndex.Value);
+                        if (UInt32XmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out UInt32 ValueParse,
+                            errorMask: errorMask))
+                        {
+                            item.Value = ValueParse;
+                        }
+                        else
+                        {
+                            item.Value = default(UInt32);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Weight":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Light_FieldIndex.Weight);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Single WeightParse,
+                            errorMask: errorMask))
+                        {
+                            item.Weight = WeightParse;
+                        }
+                        else
+                        {
+                            item.Weight = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Fade":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Light_FieldIndex.Fade);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Single FadeParse,
+                            errorMask: errorMask))
+                        {
+                            item.Fade = FadeParse;
+                        }
+                        else
+                        {
+                            item.Fade = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Sound":
+                    FormKeyXmlTranslation.Instance.ParseInto(
+                        node: node,
+                        item: item.Sound_Property,
+                        fieldIndex: (int)Light_FieldIndex.Sound,
+                        errorMask: errorMask);
+                    break;
+                default:
+                    ItemAbstractCommon.FillPublicElement_Xml(
+                        item: item,
+                        node: node,
+                        name: name,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                    break;
             }
         }
 

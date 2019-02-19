@@ -546,8 +546,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> IEqualsMask<CombatStyle>.GetEqualsMask(CombatStyle rhs) => CombatStyleCommon.GetEqualsMask(this, rhs);
-        IMask<bool> IEqualsMask<ICombatStyleGetter>.GetEqualsMask(ICombatStyleGetter rhs) => CombatStyleCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<CombatStyle>.GetEqualsMask(CombatStyle rhs, EqualsMaskHelper.Include include) => CombatStyleCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<ICombatStyleGetter>.GetEqualsMask(ICombatStyleGetter rhs, EqualsMaskHelper.Include include) => CombatStyleCommon.GetEqualsMask(this, rhs, include);
         #region To String
         public string ToString(
             string name = null,
@@ -714,7 +714,13 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 foreach (var elem in node.Elements())
                 {
-                    Fill_Xml_Internal(
+                    FillPrivateElement_Xml(
+                        item: ret,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                    CombatStyleCommon.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -1026,7 +1032,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        protected static void Fill_Xml_Internal(
+        protected static void FillPrivateElement_Xml(
             CombatStyle item,
             XElement node,
             string name,
@@ -1035,971 +1041,8 @@ namespace Mutagen.Bethesda.Oblivion
         {
             switch (name)
             {
-                case "DodgePercentChance":
-                    try
-                    {
-                        errorMask?.PushIndex((int)CombatStyle_FieldIndex.DodgePercentChance);
-                        if (ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Byte DodgePercentChanceParse,
-                            errorMask: errorMask))
-                        {
-                            item.DodgePercentChance = DodgePercentChanceParse;
-                        }
-                        else
-                        {
-                            item.DodgePercentChance = default(Byte);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "LeftRightPercentChance":
-                    try
-                    {
-                        errorMask?.PushIndex((int)CombatStyle_FieldIndex.LeftRightPercentChance);
-                        if (ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Byte LeftRightPercentChanceParse,
-                            errorMask: errorMask))
-                        {
-                            item.LeftRightPercentChance = LeftRightPercentChanceParse;
-                        }
-                        else
-                        {
-                            item.LeftRightPercentChance = default(Byte);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "DodgeLeftRightTimerMin":
-                    try
-                    {
-                        errorMask?.PushIndex((int)CombatStyle_FieldIndex.DodgeLeftRightTimerMin);
-                        if (FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Single DodgeLeftRightTimerMinParse,
-                            errorMask: errorMask))
-                        {
-                            item.DodgeLeftRightTimerMin = DodgeLeftRightTimerMinParse;
-                        }
-                        else
-                        {
-                            item.DodgeLeftRightTimerMin = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "DodgeLeftRightTimerMax":
-                    try
-                    {
-                        errorMask?.PushIndex((int)CombatStyle_FieldIndex.DodgeLeftRightTimerMax);
-                        if (FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Single DodgeLeftRightTimerMaxParse,
-                            errorMask: errorMask))
-                        {
-                            item.DodgeLeftRightTimerMax = DodgeLeftRightTimerMaxParse;
-                        }
-                        else
-                        {
-                            item.DodgeLeftRightTimerMax = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "DodgeForwardTimerMin":
-                    try
-                    {
-                        errorMask?.PushIndex((int)CombatStyle_FieldIndex.DodgeForwardTimerMin);
-                        if (FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Single DodgeForwardTimerMinParse,
-                            errorMask: errorMask))
-                        {
-                            item.DodgeForwardTimerMin = DodgeForwardTimerMinParse;
-                        }
-                        else
-                        {
-                            item.DodgeForwardTimerMin = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "DodgeForwardTimerMax":
-                    try
-                    {
-                        errorMask?.PushIndex((int)CombatStyle_FieldIndex.DodgeForwardTimerMax);
-                        if (FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Single DodgeForwardTimerMaxParse,
-                            errorMask: errorMask))
-                        {
-                            item.DodgeForwardTimerMax = DodgeForwardTimerMaxParse;
-                        }
-                        else
-                        {
-                            item.DodgeForwardTimerMax = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "DodgeBackTimerMin":
-                    try
-                    {
-                        errorMask?.PushIndex((int)CombatStyle_FieldIndex.DodgeBackTimerMin);
-                        if (FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Single DodgeBackTimerMinParse,
-                            errorMask: errorMask))
-                        {
-                            item.DodgeBackTimerMin = DodgeBackTimerMinParse;
-                        }
-                        else
-                        {
-                            item.DodgeBackTimerMin = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "DodgeBackTimerMax":
-                    try
-                    {
-                        errorMask?.PushIndex((int)CombatStyle_FieldIndex.DodgeBackTimerMax);
-                        if (FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Single DodgeBackTimerMaxParse,
-                            errorMask: errorMask))
-                        {
-                            item.DodgeBackTimerMax = DodgeBackTimerMaxParse;
-                        }
-                        else
-                        {
-                            item.DodgeBackTimerMax = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "IdleTimerMin":
-                    try
-                    {
-                        errorMask?.PushIndex((int)CombatStyle_FieldIndex.IdleTimerMin);
-                        if (FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Single IdleTimerMinParse,
-                            errorMask: errorMask))
-                        {
-                            item.IdleTimerMin = IdleTimerMinParse;
-                        }
-                        else
-                        {
-                            item.IdleTimerMin = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "IdleTimerMax":
-                    try
-                    {
-                        errorMask?.PushIndex((int)CombatStyle_FieldIndex.IdleTimerMax);
-                        if (FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Single IdleTimerMaxParse,
-                            errorMask: errorMask))
-                        {
-                            item.IdleTimerMax = IdleTimerMaxParse;
-                        }
-                        else
-                        {
-                            item.IdleTimerMax = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "BlockPercentChance":
-                    try
-                    {
-                        errorMask?.PushIndex((int)CombatStyle_FieldIndex.BlockPercentChance);
-                        if (ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Byte BlockPercentChanceParse,
-                            errorMask: errorMask))
-                        {
-                            item.BlockPercentChance = BlockPercentChanceParse;
-                        }
-                        else
-                        {
-                            item.BlockPercentChance = default(Byte);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "AttackPercentChance":
-                    try
-                    {
-                        errorMask?.PushIndex((int)CombatStyle_FieldIndex.AttackPercentChance);
-                        if (ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Byte AttackPercentChanceParse,
-                            errorMask: errorMask))
-                        {
-                            item.AttackPercentChance = AttackPercentChanceParse;
-                        }
-                        else
-                        {
-                            item.AttackPercentChance = default(Byte);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "RecoilStaggerBonusToAttack":
-                    try
-                    {
-                        errorMask?.PushIndex((int)CombatStyle_FieldIndex.RecoilStaggerBonusToAttack);
-                        if (FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Single RecoilStaggerBonusToAttackParse,
-                            errorMask: errorMask))
-                        {
-                            item.RecoilStaggerBonusToAttack = RecoilStaggerBonusToAttackParse;
-                        }
-                        else
-                        {
-                            item.RecoilStaggerBonusToAttack = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "UnconsciousBonusToAttack":
-                    try
-                    {
-                        errorMask?.PushIndex((int)CombatStyle_FieldIndex.UnconsciousBonusToAttack);
-                        if (FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Single UnconsciousBonusToAttackParse,
-                            errorMask: errorMask))
-                        {
-                            item.UnconsciousBonusToAttack = UnconsciousBonusToAttackParse;
-                        }
-                        else
-                        {
-                            item.UnconsciousBonusToAttack = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "HandToHandBonusToAttack":
-                    try
-                    {
-                        errorMask?.PushIndex((int)CombatStyle_FieldIndex.HandToHandBonusToAttack);
-                        if (FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Single HandToHandBonusToAttackParse,
-                            errorMask: errorMask))
-                        {
-                            item.HandToHandBonusToAttack = HandToHandBonusToAttackParse;
-                        }
-                        else
-                        {
-                            item.HandToHandBonusToAttack = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "PowerAttackPercentChance":
-                    try
-                    {
-                        errorMask?.PushIndex((int)CombatStyle_FieldIndex.PowerAttackPercentChance);
-                        if (ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Byte PowerAttackPercentChanceParse,
-                            errorMask: errorMask))
-                        {
-                            item.PowerAttackPercentChance = PowerAttackPercentChanceParse;
-                        }
-                        else
-                        {
-                            item.PowerAttackPercentChance = default(Byte);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "RecoilStaggerBonusToPowerAttack":
-                    try
-                    {
-                        errorMask?.PushIndex((int)CombatStyle_FieldIndex.RecoilStaggerBonusToPowerAttack);
-                        if (FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Single RecoilStaggerBonusToPowerAttackParse,
-                            errorMask: errorMask))
-                        {
-                            item.RecoilStaggerBonusToPowerAttack = RecoilStaggerBonusToPowerAttackParse;
-                        }
-                        else
-                        {
-                            item.RecoilStaggerBonusToPowerAttack = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "UnconsciousBonusToPowerAttack":
-                    try
-                    {
-                        errorMask?.PushIndex((int)CombatStyle_FieldIndex.UnconsciousBonusToPowerAttack);
-                        if (FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Single UnconsciousBonusToPowerAttackParse,
-                            errorMask: errorMask))
-                        {
-                            item.UnconsciousBonusToPowerAttack = UnconsciousBonusToPowerAttackParse;
-                        }
-                        else
-                        {
-                            item.UnconsciousBonusToPowerAttack = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "PowerAttackNormal":
-                    try
-                    {
-                        errorMask?.PushIndex((int)CombatStyle_FieldIndex.PowerAttackNormal);
-                        if (ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Byte PowerAttackNormalParse,
-                            errorMask: errorMask))
-                        {
-                            item.PowerAttackNormal = PowerAttackNormalParse;
-                        }
-                        else
-                        {
-                            item.PowerAttackNormal = default(Byte);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "PowerAttackForward":
-                    try
-                    {
-                        errorMask?.PushIndex((int)CombatStyle_FieldIndex.PowerAttackForward);
-                        if (ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Byte PowerAttackForwardParse,
-                            errorMask: errorMask))
-                        {
-                            item.PowerAttackForward = PowerAttackForwardParse;
-                        }
-                        else
-                        {
-                            item.PowerAttackForward = default(Byte);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "PowerAttackBack":
-                    try
-                    {
-                        errorMask?.PushIndex((int)CombatStyle_FieldIndex.PowerAttackBack);
-                        if (ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Byte PowerAttackBackParse,
-                            errorMask: errorMask))
-                        {
-                            item.PowerAttackBack = PowerAttackBackParse;
-                        }
-                        else
-                        {
-                            item.PowerAttackBack = default(Byte);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "PowerAttackLeft":
-                    try
-                    {
-                        errorMask?.PushIndex((int)CombatStyle_FieldIndex.PowerAttackLeft);
-                        if (ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Byte PowerAttackLeftParse,
-                            errorMask: errorMask))
-                        {
-                            item.PowerAttackLeft = PowerAttackLeftParse;
-                        }
-                        else
-                        {
-                            item.PowerAttackLeft = default(Byte);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "PowerAttackRight":
-                    try
-                    {
-                        errorMask?.PushIndex((int)CombatStyle_FieldIndex.PowerAttackRight);
-                        if (ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Byte PowerAttackRightParse,
-                            errorMask: errorMask))
-                        {
-                            item.PowerAttackRight = PowerAttackRightParse;
-                        }
-                        else
-                        {
-                            item.PowerAttackRight = default(Byte);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "HoldTimerMin":
-                    try
-                    {
-                        errorMask?.PushIndex((int)CombatStyle_FieldIndex.HoldTimerMin);
-                        if (FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Single HoldTimerMinParse,
-                            errorMask: errorMask))
-                        {
-                            item.HoldTimerMin = HoldTimerMinParse;
-                        }
-                        else
-                        {
-                            item.HoldTimerMin = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "HoldTimerMax":
-                    try
-                    {
-                        errorMask?.PushIndex((int)CombatStyle_FieldIndex.HoldTimerMax);
-                        if (FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Single HoldTimerMaxParse,
-                            errorMask: errorMask))
-                        {
-                            item.HoldTimerMax = HoldTimerMaxParse;
-                        }
-                        else
-                        {
-                            item.HoldTimerMax = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Flags":
-                    try
-                    {
-                        errorMask?.PushIndex((int)CombatStyle_FieldIndex.Flags);
-                        if (EnumXmlTranslation<CombatStyle.Flag>.Instance.Parse(
-                            node: node,
-                            item: out CombatStyle.Flag FlagsParse,
-                            errorMask: errorMask))
-                        {
-                            item.Flags = FlagsParse;
-                        }
-                        else
-                        {
-                            item.Flags = default(CombatStyle.Flag);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "AcrobaticDodgePercentChance":
-                    try
-                    {
-                        errorMask?.PushIndex((int)CombatStyle_FieldIndex.AcrobaticDodgePercentChance);
-                        if (ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Byte AcrobaticDodgePercentChanceParse,
-                            errorMask: errorMask))
-                        {
-                            item.AcrobaticDodgePercentChance = AcrobaticDodgePercentChanceParse;
-                        }
-                        else
-                        {
-                            item.AcrobaticDodgePercentChance = default(Byte);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "RangeMultOptimal":
-                    try
-                    {
-                        errorMask?.PushIndex((int)CombatStyle_FieldIndex.RangeMultOptimal);
-                        if (FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Single RangeMultOptimalParse,
-                            errorMask: errorMask))
-                        {
-                            item.RangeMultOptimal = RangeMultOptimalParse;
-                        }
-                        else
-                        {
-                            item.RangeMultOptimal = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "RangeMultMax":
-                    try
-                    {
-                        errorMask?.PushIndex((int)CombatStyle_FieldIndex.RangeMultMax);
-                        if (FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Single RangeMultMaxParse,
-                            errorMask: errorMask))
-                        {
-                            item.RangeMultMax = RangeMultMaxParse;
-                        }
-                        else
-                        {
-                            item.RangeMultMax = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "SwitchDistanceMelee":
-                    try
-                    {
-                        errorMask?.PushIndex((int)CombatStyle_FieldIndex.SwitchDistanceMelee);
-                        if (FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Single SwitchDistanceMeleeParse,
-                            errorMask: errorMask))
-                        {
-                            item.SwitchDistanceMelee = SwitchDistanceMeleeParse;
-                        }
-                        else
-                        {
-                            item.SwitchDistanceMelee = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "SwitchDistanceRanged":
-                    try
-                    {
-                        errorMask?.PushIndex((int)CombatStyle_FieldIndex.SwitchDistanceRanged);
-                        if (FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Single SwitchDistanceRangedParse,
-                            errorMask: errorMask))
-                        {
-                            item.SwitchDistanceRanged = SwitchDistanceRangedParse;
-                        }
-                        else
-                        {
-                            item.SwitchDistanceRanged = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "BuffStandoffDistance":
-                    try
-                    {
-                        errorMask?.PushIndex((int)CombatStyle_FieldIndex.BuffStandoffDistance);
-                        if (FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Single BuffStandoffDistanceParse,
-                            errorMask: errorMask))
-                        {
-                            item.BuffStandoffDistance = BuffStandoffDistanceParse;
-                        }
-                        else
-                        {
-                            item.BuffStandoffDistance = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "RangedStandoffDistance":
-                    try
-                    {
-                        errorMask?.PushIndex((int)CombatStyle_FieldIndex.RangedStandoffDistance);
-                        if (FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Single RangedStandoffDistanceParse,
-                            errorMask: errorMask))
-                        {
-                            item.RangedStandoffDistance = RangedStandoffDistanceParse;
-                        }
-                        else
-                        {
-                            item.RangedStandoffDistance = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "GroupStandoffDistance":
-                    try
-                    {
-                        errorMask?.PushIndex((int)CombatStyle_FieldIndex.GroupStandoffDistance);
-                        if (FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Single GroupStandoffDistanceParse,
-                            errorMask: errorMask))
-                        {
-                            item.GroupStandoffDistance = GroupStandoffDistanceParse;
-                        }
-                        else
-                        {
-                            item.GroupStandoffDistance = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "RushingAttackPercentChance":
-                    try
-                    {
-                        errorMask?.PushIndex((int)CombatStyle_FieldIndex.RushingAttackPercentChance);
-                        if (ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Byte RushingAttackPercentChanceParse,
-                            errorMask: errorMask))
-                        {
-                            item.RushingAttackPercentChance = RushingAttackPercentChanceParse;
-                        }
-                        else
-                        {
-                            item.RushingAttackPercentChance = default(Byte);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "RushingAttackDistanceMult":
-                    try
-                    {
-                        errorMask?.PushIndex((int)CombatStyle_FieldIndex.RushingAttackDistanceMult);
-                        if (FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Single RushingAttackDistanceMultParse,
-                            errorMask: errorMask))
-                        {
-                            item.RushingAttackDistanceMult = RushingAttackDistanceMultParse;
-                        }
-                        else
-                        {
-                            item.RushingAttackDistanceMult = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Advanced":
-                    try
-                    {
-                        errorMask?.PushIndex((int)CombatStyle_FieldIndex.Advanced);
-                        if (LoquiXmlTranslation<CombatStyleAdvanced>.Instance.Parse(
-                            node: node,
-                            item: out CombatStyleAdvanced AdvancedParse,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)CombatStyle_FieldIndex.Advanced)))
-                        {
-                            item.Advanced = AdvancedParse;
-                        }
-                        else
-                        {
-                            item.Advanced = default(CombatStyleAdvanced);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
                 default:
-                    MajorRecord.Fill_Xml_Internal(
+                    MajorRecord.FillPrivateElement_Xml(
                         item: item,
                         node: node,
                         name: name,
@@ -5650,56 +4693,68 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static CombatStyle_Mask<bool> GetEqualsMask(
             this ICombatStyleGetter item,
-            ICombatStyleGetter rhs)
+            ICombatStyleGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new CombatStyle_Mask<bool>();
-            FillEqualsMask(item, rhs, ret);
+            FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
             return ret;
         }
 
         public static void FillEqualsMask(
             ICombatStyleGetter item,
             ICombatStyleGetter rhs,
-            CombatStyle_Mask<bool> ret)
+            CombatStyle_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
             ret.DodgePercentChance = item.DodgePercentChance == rhs.DodgePercentChance;
             ret.LeftRightPercentChance = item.LeftRightPercentChance == rhs.LeftRightPercentChance;
-            ret.DodgeLeftRightTimerMin = item.DodgeLeftRightTimerMin == rhs.DodgeLeftRightTimerMin;
-            ret.DodgeLeftRightTimerMax = item.DodgeLeftRightTimerMax == rhs.DodgeLeftRightTimerMax;
-            ret.DodgeForwardTimerMin = item.DodgeForwardTimerMin == rhs.DodgeForwardTimerMin;
-            ret.DodgeForwardTimerMax = item.DodgeForwardTimerMax == rhs.DodgeForwardTimerMax;
-            ret.DodgeBackTimerMin = item.DodgeBackTimerMin == rhs.DodgeBackTimerMin;
-            ret.DodgeBackTimerMax = item.DodgeBackTimerMax == rhs.DodgeBackTimerMax;
-            ret.IdleTimerMin = item.IdleTimerMin == rhs.IdleTimerMin;
-            ret.IdleTimerMax = item.IdleTimerMax == rhs.IdleTimerMax;
+            ret.DodgeLeftRightTimerMin = item.DodgeLeftRightTimerMin.EqualsWithin(rhs.DodgeLeftRightTimerMin);
+            ret.DodgeLeftRightTimerMax = item.DodgeLeftRightTimerMax.EqualsWithin(rhs.DodgeLeftRightTimerMax);
+            ret.DodgeForwardTimerMin = item.DodgeForwardTimerMin.EqualsWithin(rhs.DodgeForwardTimerMin);
+            ret.DodgeForwardTimerMax = item.DodgeForwardTimerMax.EqualsWithin(rhs.DodgeForwardTimerMax);
+            ret.DodgeBackTimerMin = item.DodgeBackTimerMin.EqualsWithin(rhs.DodgeBackTimerMin);
+            ret.DodgeBackTimerMax = item.DodgeBackTimerMax.EqualsWithin(rhs.DodgeBackTimerMax);
+            ret.IdleTimerMin = item.IdleTimerMin.EqualsWithin(rhs.IdleTimerMin);
+            ret.IdleTimerMax = item.IdleTimerMax.EqualsWithin(rhs.IdleTimerMax);
             ret.BlockPercentChance = item.BlockPercentChance == rhs.BlockPercentChance;
             ret.AttackPercentChance = item.AttackPercentChance == rhs.AttackPercentChance;
-            ret.RecoilStaggerBonusToAttack = item.RecoilStaggerBonusToAttack == rhs.RecoilStaggerBonusToAttack;
-            ret.UnconsciousBonusToAttack = item.UnconsciousBonusToAttack == rhs.UnconsciousBonusToAttack;
-            ret.HandToHandBonusToAttack = item.HandToHandBonusToAttack == rhs.HandToHandBonusToAttack;
+            ret.RecoilStaggerBonusToAttack = item.RecoilStaggerBonusToAttack.EqualsWithin(rhs.RecoilStaggerBonusToAttack);
+            ret.UnconsciousBonusToAttack = item.UnconsciousBonusToAttack.EqualsWithin(rhs.UnconsciousBonusToAttack);
+            ret.HandToHandBonusToAttack = item.HandToHandBonusToAttack.EqualsWithin(rhs.HandToHandBonusToAttack);
             ret.PowerAttackPercentChance = item.PowerAttackPercentChance == rhs.PowerAttackPercentChance;
-            ret.RecoilStaggerBonusToPowerAttack = item.RecoilStaggerBonusToPowerAttack == rhs.RecoilStaggerBonusToPowerAttack;
-            ret.UnconsciousBonusToPowerAttack = item.UnconsciousBonusToPowerAttack == rhs.UnconsciousBonusToPowerAttack;
+            ret.RecoilStaggerBonusToPowerAttack = item.RecoilStaggerBonusToPowerAttack.EqualsWithin(rhs.RecoilStaggerBonusToPowerAttack);
+            ret.UnconsciousBonusToPowerAttack = item.UnconsciousBonusToPowerAttack.EqualsWithin(rhs.UnconsciousBonusToPowerAttack);
             ret.PowerAttackNormal = item.PowerAttackNormal == rhs.PowerAttackNormal;
             ret.PowerAttackForward = item.PowerAttackForward == rhs.PowerAttackForward;
             ret.PowerAttackBack = item.PowerAttackBack == rhs.PowerAttackBack;
             ret.PowerAttackLeft = item.PowerAttackLeft == rhs.PowerAttackLeft;
             ret.PowerAttackRight = item.PowerAttackRight == rhs.PowerAttackRight;
-            ret.HoldTimerMin = item.HoldTimerMin == rhs.HoldTimerMin;
-            ret.HoldTimerMax = item.HoldTimerMax == rhs.HoldTimerMax;
+            ret.HoldTimerMin = item.HoldTimerMin.EqualsWithin(rhs.HoldTimerMin);
+            ret.HoldTimerMax = item.HoldTimerMax.EqualsWithin(rhs.HoldTimerMax);
             ret.Flags = item.Flags == rhs.Flags;
             ret.AcrobaticDodgePercentChance = item.AcrobaticDodgePercentChance == rhs.AcrobaticDodgePercentChance;
-            ret.RangeMultOptimal = item.RangeMultOptimal == rhs.RangeMultOptimal;
-            ret.RangeMultMax = item.RangeMultMax == rhs.RangeMultMax;
-            ret.SwitchDistanceMelee = item.SwitchDistanceMelee == rhs.SwitchDistanceMelee;
-            ret.SwitchDistanceRanged = item.SwitchDistanceRanged == rhs.SwitchDistanceRanged;
-            ret.BuffStandoffDistance = item.BuffStandoffDistance == rhs.BuffStandoffDistance;
-            ret.RangedStandoffDistance = item.RangedStandoffDistance == rhs.RangedStandoffDistance;
-            ret.GroupStandoffDistance = item.GroupStandoffDistance == rhs.GroupStandoffDistance;
+            ret.RangeMultOptimal = item.RangeMultOptimal.EqualsWithin(rhs.RangeMultOptimal);
+            ret.RangeMultMax = item.RangeMultMax.EqualsWithin(rhs.RangeMultMax);
+            ret.SwitchDistanceMelee = item.SwitchDistanceMelee.EqualsWithin(rhs.SwitchDistanceMelee);
+            ret.SwitchDistanceRanged = item.SwitchDistanceRanged.EqualsWithin(rhs.SwitchDistanceRanged);
+            ret.BuffStandoffDistance = item.BuffStandoffDistance.EqualsWithin(rhs.BuffStandoffDistance);
+            ret.RangedStandoffDistance = item.RangedStandoffDistance.EqualsWithin(rhs.RangedStandoffDistance);
+            ret.GroupStandoffDistance = item.GroupStandoffDistance.EqualsWithin(rhs.GroupStandoffDistance);
             ret.RushingAttackPercentChance = item.RushingAttackPercentChance == rhs.RushingAttackPercentChance;
-            ret.RushingAttackDistanceMult = item.RushingAttackDistanceMult == rhs.RushingAttackDistanceMult;
-            ret.Advanced = IHasBeenSetExt.LoquiEqualsHelper(item.Advanced_IsSet, rhs.Advanced_IsSet, item.Advanced, rhs.Advanced, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
+            ret.RushingAttackDistanceMult = item.RushingAttackDistanceMult.EqualsWithin(rhs.RushingAttackDistanceMult);
+            ret.Advanced = EqualsMaskHelper.EqualsHelper(
+                item.Advanced_IsSet,
+                rhs.Advanced_IsSet,
+                item.Advanced,
+                rhs.Advanced,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
+                include);
             MajorRecordCommon.FillEqualsMask(item, rhs, ret);
         }
 
@@ -6001,7 +5056,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         public static void WriteToNode_Xml(
-            ICombatStyleGetter item,
+            this ICombatStyleGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -6345,6 +5400,1014 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)CombatStyle_FieldIndex.Advanced,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)CombatStyle_FieldIndex.Advanced));
+            }
+        }
+
+        public static void FillPublic_Xml(
+            this CombatStyle item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    CombatStyleCommon.FillPublicElement_Xml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+
+        public static void FillPublicElement_Xml(
+            this CombatStyle item,
+            XElement node,
+            string name,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            switch (name)
+            {
+                case "DodgePercentChance":
+                    try
+                    {
+                        errorMask?.PushIndex((int)CombatStyle_FieldIndex.DodgePercentChance);
+                        if (ByteXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Byte DodgePercentChanceParse,
+                            errorMask: errorMask))
+                        {
+                            item.DodgePercentChance = DodgePercentChanceParse;
+                        }
+                        else
+                        {
+                            item.DodgePercentChance = default(Byte);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "LeftRightPercentChance":
+                    try
+                    {
+                        errorMask?.PushIndex((int)CombatStyle_FieldIndex.LeftRightPercentChance);
+                        if (ByteXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Byte LeftRightPercentChanceParse,
+                            errorMask: errorMask))
+                        {
+                            item.LeftRightPercentChance = LeftRightPercentChanceParse;
+                        }
+                        else
+                        {
+                            item.LeftRightPercentChance = default(Byte);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "DodgeLeftRightTimerMin":
+                    try
+                    {
+                        errorMask?.PushIndex((int)CombatStyle_FieldIndex.DodgeLeftRightTimerMin);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Single DodgeLeftRightTimerMinParse,
+                            errorMask: errorMask))
+                        {
+                            item.DodgeLeftRightTimerMin = DodgeLeftRightTimerMinParse;
+                        }
+                        else
+                        {
+                            item.DodgeLeftRightTimerMin = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "DodgeLeftRightTimerMax":
+                    try
+                    {
+                        errorMask?.PushIndex((int)CombatStyle_FieldIndex.DodgeLeftRightTimerMax);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Single DodgeLeftRightTimerMaxParse,
+                            errorMask: errorMask))
+                        {
+                            item.DodgeLeftRightTimerMax = DodgeLeftRightTimerMaxParse;
+                        }
+                        else
+                        {
+                            item.DodgeLeftRightTimerMax = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "DodgeForwardTimerMin":
+                    try
+                    {
+                        errorMask?.PushIndex((int)CombatStyle_FieldIndex.DodgeForwardTimerMin);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Single DodgeForwardTimerMinParse,
+                            errorMask: errorMask))
+                        {
+                            item.DodgeForwardTimerMin = DodgeForwardTimerMinParse;
+                        }
+                        else
+                        {
+                            item.DodgeForwardTimerMin = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "DodgeForwardTimerMax":
+                    try
+                    {
+                        errorMask?.PushIndex((int)CombatStyle_FieldIndex.DodgeForwardTimerMax);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Single DodgeForwardTimerMaxParse,
+                            errorMask: errorMask))
+                        {
+                            item.DodgeForwardTimerMax = DodgeForwardTimerMaxParse;
+                        }
+                        else
+                        {
+                            item.DodgeForwardTimerMax = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "DodgeBackTimerMin":
+                    try
+                    {
+                        errorMask?.PushIndex((int)CombatStyle_FieldIndex.DodgeBackTimerMin);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Single DodgeBackTimerMinParse,
+                            errorMask: errorMask))
+                        {
+                            item.DodgeBackTimerMin = DodgeBackTimerMinParse;
+                        }
+                        else
+                        {
+                            item.DodgeBackTimerMin = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "DodgeBackTimerMax":
+                    try
+                    {
+                        errorMask?.PushIndex((int)CombatStyle_FieldIndex.DodgeBackTimerMax);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Single DodgeBackTimerMaxParse,
+                            errorMask: errorMask))
+                        {
+                            item.DodgeBackTimerMax = DodgeBackTimerMaxParse;
+                        }
+                        else
+                        {
+                            item.DodgeBackTimerMax = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "IdleTimerMin":
+                    try
+                    {
+                        errorMask?.PushIndex((int)CombatStyle_FieldIndex.IdleTimerMin);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Single IdleTimerMinParse,
+                            errorMask: errorMask))
+                        {
+                            item.IdleTimerMin = IdleTimerMinParse;
+                        }
+                        else
+                        {
+                            item.IdleTimerMin = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "IdleTimerMax":
+                    try
+                    {
+                        errorMask?.PushIndex((int)CombatStyle_FieldIndex.IdleTimerMax);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Single IdleTimerMaxParse,
+                            errorMask: errorMask))
+                        {
+                            item.IdleTimerMax = IdleTimerMaxParse;
+                        }
+                        else
+                        {
+                            item.IdleTimerMax = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "BlockPercentChance":
+                    try
+                    {
+                        errorMask?.PushIndex((int)CombatStyle_FieldIndex.BlockPercentChance);
+                        if (ByteXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Byte BlockPercentChanceParse,
+                            errorMask: errorMask))
+                        {
+                            item.BlockPercentChance = BlockPercentChanceParse;
+                        }
+                        else
+                        {
+                            item.BlockPercentChance = default(Byte);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "AttackPercentChance":
+                    try
+                    {
+                        errorMask?.PushIndex((int)CombatStyle_FieldIndex.AttackPercentChance);
+                        if (ByteXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Byte AttackPercentChanceParse,
+                            errorMask: errorMask))
+                        {
+                            item.AttackPercentChance = AttackPercentChanceParse;
+                        }
+                        else
+                        {
+                            item.AttackPercentChance = default(Byte);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "RecoilStaggerBonusToAttack":
+                    try
+                    {
+                        errorMask?.PushIndex((int)CombatStyle_FieldIndex.RecoilStaggerBonusToAttack);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Single RecoilStaggerBonusToAttackParse,
+                            errorMask: errorMask))
+                        {
+                            item.RecoilStaggerBonusToAttack = RecoilStaggerBonusToAttackParse;
+                        }
+                        else
+                        {
+                            item.RecoilStaggerBonusToAttack = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "UnconsciousBonusToAttack":
+                    try
+                    {
+                        errorMask?.PushIndex((int)CombatStyle_FieldIndex.UnconsciousBonusToAttack);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Single UnconsciousBonusToAttackParse,
+                            errorMask: errorMask))
+                        {
+                            item.UnconsciousBonusToAttack = UnconsciousBonusToAttackParse;
+                        }
+                        else
+                        {
+                            item.UnconsciousBonusToAttack = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "HandToHandBonusToAttack":
+                    try
+                    {
+                        errorMask?.PushIndex((int)CombatStyle_FieldIndex.HandToHandBonusToAttack);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Single HandToHandBonusToAttackParse,
+                            errorMask: errorMask))
+                        {
+                            item.HandToHandBonusToAttack = HandToHandBonusToAttackParse;
+                        }
+                        else
+                        {
+                            item.HandToHandBonusToAttack = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "PowerAttackPercentChance":
+                    try
+                    {
+                        errorMask?.PushIndex((int)CombatStyle_FieldIndex.PowerAttackPercentChance);
+                        if (ByteXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Byte PowerAttackPercentChanceParse,
+                            errorMask: errorMask))
+                        {
+                            item.PowerAttackPercentChance = PowerAttackPercentChanceParse;
+                        }
+                        else
+                        {
+                            item.PowerAttackPercentChance = default(Byte);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "RecoilStaggerBonusToPowerAttack":
+                    try
+                    {
+                        errorMask?.PushIndex((int)CombatStyle_FieldIndex.RecoilStaggerBonusToPowerAttack);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Single RecoilStaggerBonusToPowerAttackParse,
+                            errorMask: errorMask))
+                        {
+                            item.RecoilStaggerBonusToPowerAttack = RecoilStaggerBonusToPowerAttackParse;
+                        }
+                        else
+                        {
+                            item.RecoilStaggerBonusToPowerAttack = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "UnconsciousBonusToPowerAttack":
+                    try
+                    {
+                        errorMask?.PushIndex((int)CombatStyle_FieldIndex.UnconsciousBonusToPowerAttack);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Single UnconsciousBonusToPowerAttackParse,
+                            errorMask: errorMask))
+                        {
+                            item.UnconsciousBonusToPowerAttack = UnconsciousBonusToPowerAttackParse;
+                        }
+                        else
+                        {
+                            item.UnconsciousBonusToPowerAttack = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "PowerAttackNormal":
+                    try
+                    {
+                        errorMask?.PushIndex((int)CombatStyle_FieldIndex.PowerAttackNormal);
+                        if (ByteXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Byte PowerAttackNormalParse,
+                            errorMask: errorMask))
+                        {
+                            item.PowerAttackNormal = PowerAttackNormalParse;
+                        }
+                        else
+                        {
+                            item.PowerAttackNormal = default(Byte);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "PowerAttackForward":
+                    try
+                    {
+                        errorMask?.PushIndex((int)CombatStyle_FieldIndex.PowerAttackForward);
+                        if (ByteXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Byte PowerAttackForwardParse,
+                            errorMask: errorMask))
+                        {
+                            item.PowerAttackForward = PowerAttackForwardParse;
+                        }
+                        else
+                        {
+                            item.PowerAttackForward = default(Byte);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "PowerAttackBack":
+                    try
+                    {
+                        errorMask?.PushIndex((int)CombatStyle_FieldIndex.PowerAttackBack);
+                        if (ByteXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Byte PowerAttackBackParse,
+                            errorMask: errorMask))
+                        {
+                            item.PowerAttackBack = PowerAttackBackParse;
+                        }
+                        else
+                        {
+                            item.PowerAttackBack = default(Byte);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "PowerAttackLeft":
+                    try
+                    {
+                        errorMask?.PushIndex((int)CombatStyle_FieldIndex.PowerAttackLeft);
+                        if (ByteXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Byte PowerAttackLeftParse,
+                            errorMask: errorMask))
+                        {
+                            item.PowerAttackLeft = PowerAttackLeftParse;
+                        }
+                        else
+                        {
+                            item.PowerAttackLeft = default(Byte);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "PowerAttackRight":
+                    try
+                    {
+                        errorMask?.PushIndex((int)CombatStyle_FieldIndex.PowerAttackRight);
+                        if (ByteXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Byte PowerAttackRightParse,
+                            errorMask: errorMask))
+                        {
+                            item.PowerAttackRight = PowerAttackRightParse;
+                        }
+                        else
+                        {
+                            item.PowerAttackRight = default(Byte);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "HoldTimerMin":
+                    try
+                    {
+                        errorMask?.PushIndex((int)CombatStyle_FieldIndex.HoldTimerMin);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Single HoldTimerMinParse,
+                            errorMask: errorMask))
+                        {
+                            item.HoldTimerMin = HoldTimerMinParse;
+                        }
+                        else
+                        {
+                            item.HoldTimerMin = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "HoldTimerMax":
+                    try
+                    {
+                        errorMask?.PushIndex((int)CombatStyle_FieldIndex.HoldTimerMax);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Single HoldTimerMaxParse,
+                            errorMask: errorMask))
+                        {
+                            item.HoldTimerMax = HoldTimerMaxParse;
+                        }
+                        else
+                        {
+                            item.HoldTimerMax = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Flags":
+                    try
+                    {
+                        errorMask?.PushIndex((int)CombatStyle_FieldIndex.Flags);
+                        if (EnumXmlTranslation<CombatStyle.Flag>.Instance.Parse(
+                            node: node,
+                            item: out CombatStyle.Flag FlagsParse,
+                            errorMask: errorMask))
+                        {
+                            item.Flags = FlagsParse;
+                        }
+                        else
+                        {
+                            item.Flags = default(CombatStyle.Flag);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "AcrobaticDodgePercentChance":
+                    try
+                    {
+                        errorMask?.PushIndex((int)CombatStyle_FieldIndex.AcrobaticDodgePercentChance);
+                        if (ByteXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Byte AcrobaticDodgePercentChanceParse,
+                            errorMask: errorMask))
+                        {
+                            item.AcrobaticDodgePercentChance = AcrobaticDodgePercentChanceParse;
+                        }
+                        else
+                        {
+                            item.AcrobaticDodgePercentChance = default(Byte);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "RangeMultOptimal":
+                    try
+                    {
+                        errorMask?.PushIndex((int)CombatStyle_FieldIndex.RangeMultOptimal);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Single RangeMultOptimalParse,
+                            errorMask: errorMask))
+                        {
+                            item.RangeMultOptimal = RangeMultOptimalParse;
+                        }
+                        else
+                        {
+                            item.RangeMultOptimal = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "RangeMultMax":
+                    try
+                    {
+                        errorMask?.PushIndex((int)CombatStyle_FieldIndex.RangeMultMax);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Single RangeMultMaxParse,
+                            errorMask: errorMask))
+                        {
+                            item.RangeMultMax = RangeMultMaxParse;
+                        }
+                        else
+                        {
+                            item.RangeMultMax = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "SwitchDistanceMelee":
+                    try
+                    {
+                        errorMask?.PushIndex((int)CombatStyle_FieldIndex.SwitchDistanceMelee);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Single SwitchDistanceMeleeParse,
+                            errorMask: errorMask))
+                        {
+                            item.SwitchDistanceMelee = SwitchDistanceMeleeParse;
+                        }
+                        else
+                        {
+                            item.SwitchDistanceMelee = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "SwitchDistanceRanged":
+                    try
+                    {
+                        errorMask?.PushIndex((int)CombatStyle_FieldIndex.SwitchDistanceRanged);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Single SwitchDistanceRangedParse,
+                            errorMask: errorMask))
+                        {
+                            item.SwitchDistanceRanged = SwitchDistanceRangedParse;
+                        }
+                        else
+                        {
+                            item.SwitchDistanceRanged = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "BuffStandoffDistance":
+                    try
+                    {
+                        errorMask?.PushIndex((int)CombatStyle_FieldIndex.BuffStandoffDistance);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Single BuffStandoffDistanceParse,
+                            errorMask: errorMask))
+                        {
+                            item.BuffStandoffDistance = BuffStandoffDistanceParse;
+                        }
+                        else
+                        {
+                            item.BuffStandoffDistance = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "RangedStandoffDistance":
+                    try
+                    {
+                        errorMask?.PushIndex((int)CombatStyle_FieldIndex.RangedStandoffDistance);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Single RangedStandoffDistanceParse,
+                            errorMask: errorMask))
+                        {
+                            item.RangedStandoffDistance = RangedStandoffDistanceParse;
+                        }
+                        else
+                        {
+                            item.RangedStandoffDistance = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "GroupStandoffDistance":
+                    try
+                    {
+                        errorMask?.PushIndex((int)CombatStyle_FieldIndex.GroupStandoffDistance);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Single GroupStandoffDistanceParse,
+                            errorMask: errorMask))
+                        {
+                            item.GroupStandoffDistance = GroupStandoffDistanceParse;
+                        }
+                        else
+                        {
+                            item.GroupStandoffDistance = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "RushingAttackPercentChance":
+                    try
+                    {
+                        errorMask?.PushIndex((int)CombatStyle_FieldIndex.RushingAttackPercentChance);
+                        if (ByteXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Byte RushingAttackPercentChanceParse,
+                            errorMask: errorMask))
+                        {
+                            item.RushingAttackPercentChance = RushingAttackPercentChanceParse;
+                        }
+                        else
+                        {
+                            item.RushingAttackPercentChance = default(Byte);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "RushingAttackDistanceMult":
+                    try
+                    {
+                        errorMask?.PushIndex((int)CombatStyle_FieldIndex.RushingAttackDistanceMult);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Single RushingAttackDistanceMultParse,
+                            errorMask: errorMask))
+                        {
+                            item.RushingAttackDistanceMult = RushingAttackDistanceMultParse;
+                        }
+                        else
+                        {
+                            item.RushingAttackDistanceMult = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Advanced":
+                    try
+                    {
+                        errorMask?.PushIndex((int)CombatStyle_FieldIndex.Advanced);
+                        if (LoquiXmlTranslation<CombatStyleAdvanced>.Instance.Parse(
+                            node: node,
+                            item: out CombatStyleAdvanced AdvancedParse,
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)CombatStyle_FieldIndex.Advanced)))
+                        {
+                            item.Advanced = AdvancedParse;
+                        }
+                        else
+                        {
+                            item.Advanced = default(CombatStyleAdvanced);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                default:
+                    MajorRecordCommon.FillPublicElement_Xml(
+                        item: item,
+                        node: node,
+                        name: name,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                    break;
             }
         }
 

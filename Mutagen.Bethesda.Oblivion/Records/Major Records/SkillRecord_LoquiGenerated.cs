@@ -310,8 +310,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> IEqualsMask<SkillRecord>.GetEqualsMask(SkillRecord rhs) => SkillRecordCommon.GetEqualsMask(this, rhs);
-        IMask<bool> IEqualsMask<ISkillRecordGetter>.GetEqualsMask(ISkillRecordGetter rhs) => SkillRecordCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<SkillRecord>.GetEqualsMask(SkillRecord rhs, EqualsMaskHelper.Include include) => SkillRecordCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<ISkillRecordGetter>.GetEqualsMask(ISkillRecordGetter rhs, EqualsMaskHelper.Include include) => SkillRecordCommon.GetEqualsMask(this, rhs, include);
         #region To String
         public string ToString(
             string name = null,
@@ -470,7 +470,13 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 foreach (var elem in node.Elements())
                 {
-                    Fill_Xml_Internal(
+                    FillPrivateElement_Xml(
+                        item: ret,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                    SkillRecordCommon.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -782,7 +788,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        protected static void Fill_Xml_Internal(
+        protected static void FillPrivateElement_Xml(
             SkillRecord item,
             XElement node,
             string name,
@@ -791,320 +797,8 @@ namespace Mutagen.Bethesda.Oblivion
         {
             switch (name)
             {
-                case "Skill":
-                    try
-                    {
-                        errorMask?.PushIndex((int)SkillRecord_FieldIndex.Skill);
-                        if (EnumXmlTranslation<ActorValue>.Instance.Parse(
-                            node: node,
-                            item: out ActorValue SkillParse,
-                            errorMask: errorMask))
-                        {
-                            item.Skill = SkillParse;
-                        }
-                        else
-                        {
-                            item.Skill = default(ActorValue);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Description":
-                    try
-                    {
-                        errorMask?.PushIndex((int)SkillRecord_FieldIndex.Description);
-                        if (StringXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out String DescriptionParse,
-                            errorMask: errorMask))
-                        {
-                            item.Description = DescriptionParse;
-                        }
-                        else
-                        {
-                            item.Description = default(String);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Icon":
-                    try
-                    {
-                        errorMask?.PushIndex((int)SkillRecord_FieldIndex.Icon);
-                        if (StringXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out String IconParse,
-                            errorMask: errorMask))
-                        {
-                            item.Icon = IconParse;
-                        }
-                        else
-                        {
-                            item.Icon = default(String);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Action":
-                    try
-                    {
-                        errorMask?.PushIndex((int)SkillRecord_FieldIndex.Action);
-                        if (EnumXmlTranslation<ActorValue>.Instance.Parse(
-                            node: node,
-                            item: out ActorValue ActionParse,
-                            errorMask: errorMask))
-                        {
-                            item.Action = ActionParse;
-                        }
-                        else
-                        {
-                            item.Action = default(ActorValue);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Attribute":
-                    try
-                    {
-                        errorMask?.PushIndex((int)SkillRecord_FieldIndex.Attribute);
-                        if (EnumXmlTranslation<ActorValue>.Instance.Parse(
-                            node: node,
-                            item: out ActorValue AttributeParse,
-                            errorMask: errorMask))
-                        {
-                            item.Attribute = AttributeParse;
-                        }
-                        else
-                        {
-                            item.Attribute = default(ActorValue);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Specialization":
-                    try
-                    {
-                        errorMask?.PushIndex((int)SkillRecord_FieldIndex.Specialization);
-                        if (EnumXmlTranslation<Specialization>.Instance.Parse(
-                            node: node,
-                            item: out Specialization SpecializationParse,
-                            errorMask: errorMask))
-                        {
-                            item.Specialization = SpecializationParse;
-                        }
-                        else
-                        {
-                            item.Specialization = default(Specialization);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "UseValueFirst":
-                    try
-                    {
-                        errorMask?.PushIndex((int)SkillRecord_FieldIndex.UseValueFirst);
-                        if (FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Single UseValueFirstParse,
-                            errorMask: errorMask))
-                        {
-                            item.UseValueFirst = UseValueFirstParse;
-                        }
-                        else
-                        {
-                            item.UseValueFirst = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "UseValueSecond":
-                    try
-                    {
-                        errorMask?.PushIndex((int)SkillRecord_FieldIndex.UseValueSecond);
-                        if (FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Single UseValueSecondParse,
-                            errorMask: errorMask))
-                        {
-                            item.UseValueSecond = UseValueSecondParse;
-                        }
-                        else
-                        {
-                            item.UseValueSecond = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ApprenticeText":
-                    try
-                    {
-                        errorMask?.PushIndex((int)SkillRecord_FieldIndex.ApprenticeText);
-                        if (StringXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out String ApprenticeTextParse,
-                            errorMask: errorMask))
-                        {
-                            item.ApprenticeText = ApprenticeTextParse;
-                        }
-                        else
-                        {
-                            item.ApprenticeText = default(String);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "JourneymanText":
-                    try
-                    {
-                        errorMask?.PushIndex((int)SkillRecord_FieldIndex.JourneymanText);
-                        if (StringXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out String JourneymanTextParse,
-                            errorMask: errorMask))
-                        {
-                            item.JourneymanText = JourneymanTextParse;
-                        }
-                        else
-                        {
-                            item.JourneymanText = default(String);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ExpertText":
-                    try
-                    {
-                        errorMask?.PushIndex((int)SkillRecord_FieldIndex.ExpertText);
-                        if (StringXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out String ExpertTextParse,
-                            errorMask: errorMask))
-                        {
-                            item.ExpertText = ExpertTextParse;
-                        }
-                        else
-                        {
-                            item.ExpertText = default(String);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "MasterText":
-                    try
-                    {
-                        errorMask?.PushIndex((int)SkillRecord_FieldIndex.MasterText);
-                        if (StringXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out String MasterTextParse,
-                            errorMask: errorMask))
-                        {
-                            item.MasterText = MasterTextParse;
-                        }
-                        else
-                        {
-                            item.MasterText = default(String);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
                 default:
-                    MajorRecord.Fill_Xml_Internal(
+                    MajorRecord.FillPrivateElement_Xml(
                         item: item,
                         node: node,
                         name: name,
@@ -2964,17 +2658,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static SkillRecord_Mask<bool> GetEqualsMask(
             this ISkillRecordGetter item,
-            ISkillRecordGetter rhs)
+            ISkillRecordGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new SkillRecord_Mask<bool>();
-            FillEqualsMask(item, rhs, ret);
+            FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
             return ret;
         }
 
         public static void FillEqualsMask(
             ISkillRecordGetter item,
             ISkillRecordGetter rhs,
-            SkillRecord_Mask<bool> ret)
+            SkillRecord_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
             ret.Skill = item.Skill_IsSet == rhs.Skill_IsSet && item.Skill == rhs.Skill;
@@ -2983,8 +2683,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Action = item.Action == rhs.Action;
             ret.Attribute = item.Attribute == rhs.Attribute;
             ret.Specialization = item.Specialization == rhs.Specialization;
-            ret.UseValueFirst = item.UseValueFirst == rhs.UseValueFirst;
-            ret.UseValueSecond = item.UseValueSecond == rhs.UseValueSecond;
+            ret.UseValueFirst = item.UseValueFirst.EqualsWithin(rhs.UseValueFirst);
+            ret.UseValueSecond = item.UseValueSecond.EqualsWithin(rhs.UseValueSecond);
             ret.ApprenticeText = item.ApprenticeText_IsSet == rhs.ApprenticeText_IsSet && object.Equals(item.ApprenticeText, rhs.ApprenticeText);
             ret.JourneymanText = item.JourneymanText_IsSet == rhs.JourneymanText_IsSet && object.Equals(item.JourneymanText, rhs.JourneymanText);
             ret.ExpertText = item.ExpertText_IsSet == rhs.ExpertText_IsSet && object.Equals(item.ExpertText, rhs.ExpertText);
@@ -3170,7 +2870,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         public static void WriteToNode_Xml(
-            ISkillRecordGetter item,
+            this ISkillRecordGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -3294,6 +2994,363 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item.MasterText,
                     fieldIndex: (int)SkillRecord_FieldIndex.MasterText,
                     errorMask: errorMask);
+            }
+        }
+
+        public static void FillPublic_Xml(
+            this SkillRecord item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    SkillRecordCommon.FillPublicElement_Xml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+
+        public static void FillPublicElement_Xml(
+            this SkillRecord item,
+            XElement node,
+            string name,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            switch (name)
+            {
+                case "Skill":
+                    try
+                    {
+                        errorMask?.PushIndex((int)SkillRecord_FieldIndex.Skill);
+                        if (EnumXmlTranslation<ActorValue>.Instance.Parse(
+                            node: node,
+                            item: out ActorValue SkillParse,
+                            errorMask: errorMask))
+                        {
+                            item.Skill = SkillParse;
+                        }
+                        else
+                        {
+                            item.Skill = default(ActorValue);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Description":
+                    try
+                    {
+                        errorMask?.PushIndex((int)SkillRecord_FieldIndex.Description);
+                        if (StringXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out String DescriptionParse,
+                            errorMask: errorMask))
+                        {
+                            item.Description = DescriptionParse;
+                        }
+                        else
+                        {
+                            item.Description = default(String);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Icon":
+                    try
+                    {
+                        errorMask?.PushIndex((int)SkillRecord_FieldIndex.Icon);
+                        if (StringXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out String IconParse,
+                            errorMask: errorMask))
+                        {
+                            item.Icon = IconParse;
+                        }
+                        else
+                        {
+                            item.Icon = default(String);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Action":
+                    try
+                    {
+                        errorMask?.PushIndex((int)SkillRecord_FieldIndex.Action);
+                        if (EnumXmlTranslation<ActorValue>.Instance.Parse(
+                            node: node,
+                            item: out ActorValue ActionParse,
+                            errorMask: errorMask))
+                        {
+                            item.Action = ActionParse;
+                        }
+                        else
+                        {
+                            item.Action = default(ActorValue);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Attribute":
+                    try
+                    {
+                        errorMask?.PushIndex((int)SkillRecord_FieldIndex.Attribute);
+                        if (EnumXmlTranslation<ActorValue>.Instance.Parse(
+                            node: node,
+                            item: out ActorValue AttributeParse,
+                            errorMask: errorMask))
+                        {
+                            item.Attribute = AttributeParse;
+                        }
+                        else
+                        {
+                            item.Attribute = default(ActorValue);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Specialization":
+                    try
+                    {
+                        errorMask?.PushIndex((int)SkillRecord_FieldIndex.Specialization);
+                        if (EnumXmlTranslation<Specialization>.Instance.Parse(
+                            node: node,
+                            item: out Specialization SpecializationParse,
+                            errorMask: errorMask))
+                        {
+                            item.Specialization = SpecializationParse;
+                        }
+                        else
+                        {
+                            item.Specialization = default(Specialization);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "UseValueFirst":
+                    try
+                    {
+                        errorMask?.PushIndex((int)SkillRecord_FieldIndex.UseValueFirst);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Single UseValueFirstParse,
+                            errorMask: errorMask))
+                        {
+                            item.UseValueFirst = UseValueFirstParse;
+                        }
+                        else
+                        {
+                            item.UseValueFirst = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "UseValueSecond":
+                    try
+                    {
+                        errorMask?.PushIndex((int)SkillRecord_FieldIndex.UseValueSecond);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Single UseValueSecondParse,
+                            errorMask: errorMask))
+                        {
+                            item.UseValueSecond = UseValueSecondParse;
+                        }
+                        else
+                        {
+                            item.UseValueSecond = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "ApprenticeText":
+                    try
+                    {
+                        errorMask?.PushIndex((int)SkillRecord_FieldIndex.ApprenticeText);
+                        if (StringXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out String ApprenticeTextParse,
+                            errorMask: errorMask))
+                        {
+                            item.ApprenticeText = ApprenticeTextParse;
+                        }
+                        else
+                        {
+                            item.ApprenticeText = default(String);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "JourneymanText":
+                    try
+                    {
+                        errorMask?.PushIndex((int)SkillRecord_FieldIndex.JourneymanText);
+                        if (StringXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out String JourneymanTextParse,
+                            errorMask: errorMask))
+                        {
+                            item.JourneymanText = JourneymanTextParse;
+                        }
+                        else
+                        {
+                            item.JourneymanText = default(String);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "ExpertText":
+                    try
+                    {
+                        errorMask?.PushIndex((int)SkillRecord_FieldIndex.ExpertText);
+                        if (StringXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out String ExpertTextParse,
+                            errorMask: errorMask))
+                        {
+                            item.ExpertText = ExpertTextParse;
+                        }
+                        else
+                        {
+                            item.ExpertText = default(String);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "MasterText":
+                    try
+                    {
+                        errorMask?.PushIndex((int)SkillRecord_FieldIndex.MasterText);
+                        if (StringXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out String MasterTextParse,
+                            errorMask: errorMask))
+                        {
+                            item.MasterText = MasterTextParse;
+                        }
+                        else
+                        {
+                            item.MasterText = default(String);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                default:
+                    MajorRecordCommon.FillPublicElement_Xml(
+                        item: item,
+                        node: node,
+                        name: name,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                    break;
             }
         }
 

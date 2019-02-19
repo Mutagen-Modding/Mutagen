@@ -143,8 +143,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> IEqualsMask<Condition>.GetEqualsMask(Condition rhs) => ConditionCommon.GetEqualsMask(this, rhs);
-        IMask<bool> IEqualsMask<IConditionGetter>.GetEqualsMask(IConditionGetter rhs) => ConditionCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<Condition>.GetEqualsMask(Condition rhs, EqualsMaskHelper.Include include) => ConditionCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<IConditionGetter>.GetEqualsMask(IConditionGetter rhs, EqualsMaskHelper.Include include) => ConditionCommon.GetEqualsMask(this, rhs, include);
         #region To String
         public string ToString(
             string name = null,
@@ -244,7 +244,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 foreach (var elem in node.Elements())
                 {
-                    Fill_Xml_Internal(
+                    ConditionCommon.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -558,228 +558,6 @@ namespace Mutagen.Bethesda.Oblivion
                 translationMask: translationMask);
         }
         #endregion
-
-        protected static void Fill_Xml_Internal(
-            Condition item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            switch (name)
-            {
-                case "CompareOperator":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Condition_FieldIndex.CompareOperator);
-                        if (EnumXmlTranslation<CompareOperator>.Instance.Parse(
-                            node: node,
-                            item: out CompareOperator CompareOperatorParse,
-                            errorMask: errorMask))
-                        {
-                            item.CompareOperator = CompareOperatorParse;
-                        }
-                        else
-                        {
-                            item.CompareOperator = default(CompareOperator);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Flags":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Condition_FieldIndex.Flags);
-                        if (EnumXmlTranslation<Condition.Flag>.Instance.Parse(
-                            node: node,
-                            item: out Condition.Flag FlagsParse,
-                            errorMask: errorMask))
-                        {
-                            item.Flags = FlagsParse;
-                        }
-                        else
-                        {
-                            item.Flags = default(Condition.Flag);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Fluff":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Condition_FieldIndex.Fluff);
-                        if (ByteArrayXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Byte[] FluffParse,
-                            errorMask: errorMask))
-                        {
-                            item.Fluff = FluffParse;
-                        }
-                        else
-                        {
-                            item.Fluff = default(Byte[]);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ComparisonValue":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Condition_FieldIndex.ComparisonValue);
-                        if (FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Single ComparisonValueParse,
-                            errorMask: errorMask))
-                        {
-                            item.ComparisonValue = ComparisonValueParse;
-                        }
-                        else
-                        {
-                            item.ComparisonValue = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Function":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Condition_FieldIndex.Function);
-                        if (EnumXmlTranslation<Function>.Instance.Parse(
-                            node: node,
-                            item: out Function FunctionParse,
-                            errorMask: errorMask))
-                        {
-                            item.Function = FunctionParse;
-                        }
-                        else
-                        {
-                            item.Function = default(Function);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "FirstParameter":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Condition_FieldIndex.FirstParameter);
-                        if (Int32XmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Int32 FirstParameterParse,
-                            errorMask: errorMask))
-                        {
-                            item.FirstParameter = FirstParameterParse;
-                        }
-                        else
-                        {
-                            item.FirstParameter = default(Int32);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "SecondParameter":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Condition_FieldIndex.SecondParameter);
-                        if (Int32XmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Int32 SecondParameterParse,
-                            errorMask: errorMask))
-                        {
-                            item.SecondParameter = SecondParameterParse;
-                        }
-                        else
-                        {
-                            item.SecondParameter = default(Int32);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ThirdParameter":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Condition_FieldIndex.ThirdParameter);
-                        if (Int32XmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Int32 ThirdParameterParse,
-                            errorMask: errorMask))
-                        {
-                            item.ThirdParameter = ThirdParameterParse;
-                        }
-                        else
-                        {
-                            item.ThirdParameter = default(Int32);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
 
         #endregion
 
@@ -2173,23 +1951,29 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static Condition_Mask<bool> GetEqualsMask(
             this IConditionGetter item,
-            IConditionGetter rhs)
+            IConditionGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new Condition_Mask<bool>();
-            FillEqualsMask(item, rhs, ret);
+            FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
             return ret;
         }
 
         public static void FillEqualsMask(
             IConditionGetter item,
             IConditionGetter rhs,
-            Condition_Mask<bool> ret)
+            Condition_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
             ret.CompareOperator = item.CompareOperator == rhs.CompareOperator;
             ret.Flags = item.Flags == rhs.Flags;
             ret.Fluff = item.Fluff.EqualsFast(rhs.Fluff);
-            ret.ComparisonValue = item.ComparisonValue == rhs.ComparisonValue;
+            ret.ComparisonValue = item.ComparisonValue.EqualsWithin(rhs.ComparisonValue);
             ret.Function = item.Function == rhs.Function;
             ret.FirstParameter = item.FirstParameter == rhs.FirstParameter;
             ret.SecondParameter = item.SecondParameter == rhs.SecondParameter;
@@ -2322,7 +2106,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         public static void WriteToNode_Xml(
-            IConditionGetter item,
+            this IConditionGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -2398,6 +2182,253 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item.ThirdParameter,
                     fieldIndex: (int)Condition_FieldIndex.ThirdParameter,
                     errorMask: errorMask);
+            }
+        }
+
+        public static void FillPublic_Xml(
+            this Condition item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    ConditionCommon.FillPublicElement_Xml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+
+        public static void FillPublicElement_Xml(
+            this Condition item,
+            XElement node,
+            string name,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            switch (name)
+            {
+                case "CompareOperator":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Condition_FieldIndex.CompareOperator);
+                        if (EnumXmlTranslation<CompareOperator>.Instance.Parse(
+                            node: node,
+                            item: out CompareOperator CompareOperatorParse,
+                            errorMask: errorMask))
+                        {
+                            item.CompareOperator = CompareOperatorParse;
+                        }
+                        else
+                        {
+                            item.CompareOperator = default(CompareOperator);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Flags":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Condition_FieldIndex.Flags);
+                        if (EnumXmlTranslation<Condition.Flag>.Instance.Parse(
+                            node: node,
+                            item: out Condition.Flag FlagsParse,
+                            errorMask: errorMask))
+                        {
+                            item.Flags = FlagsParse;
+                        }
+                        else
+                        {
+                            item.Flags = default(Condition.Flag);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Fluff":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Condition_FieldIndex.Fluff);
+                        if (ByteArrayXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Byte[] FluffParse,
+                            errorMask: errorMask))
+                        {
+                            item.Fluff = FluffParse;
+                        }
+                        else
+                        {
+                            item.Fluff = default(Byte[]);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "ComparisonValue":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Condition_FieldIndex.ComparisonValue);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Single ComparisonValueParse,
+                            errorMask: errorMask))
+                        {
+                            item.ComparisonValue = ComparisonValueParse;
+                        }
+                        else
+                        {
+                            item.ComparisonValue = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Function":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Condition_FieldIndex.Function);
+                        if (EnumXmlTranslation<Function>.Instance.Parse(
+                            node: node,
+                            item: out Function FunctionParse,
+                            errorMask: errorMask))
+                        {
+                            item.Function = FunctionParse;
+                        }
+                        else
+                        {
+                            item.Function = default(Function);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "FirstParameter":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Condition_FieldIndex.FirstParameter);
+                        if (Int32XmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Int32 FirstParameterParse,
+                            errorMask: errorMask))
+                        {
+                            item.FirstParameter = FirstParameterParse;
+                        }
+                        else
+                        {
+                            item.FirstParameter = default(Int32);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "SecondParameter":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Condition_FieldIndex.SecondParameter);
+                        if (Int32XmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Int32 SecondParameterParse,
+                            errorMask: errorMask))
+                        {
+                            item.SecondParameter = SecondParameterParse;
+                        }
+                        else
+                        {
+                            item.SecondParameter = default(Int32);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "ThirdParameter":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Condition_FieldIndex.ThirdParameter);
+                        if (Int32XmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Int32 ThirdParameterParse,
+                            errorMask: errorMask))
+                        {
+                            item.ThirdParameter = ThirdParameterParse;
+                        }
+                        else
+                        {
+                            item.ThirdParameter = default(Int32);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                default:
+                    break;
             }
         }
 

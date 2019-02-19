@@ -87,8 +87,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> IEqualsMask<WeatherChance>.GetEqualsMask(WeatherChance rhs) => WeatherChanceCommon.GetEqualsMask(this, rhs);
-        IMask<bool> IEqualsMask<IWeatherChanceGetter>.GetEqualsMask(IWeatherChanceGetter rhs) => WeatherChanceCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<WeatherChance>.GetEqualsMask(WeatherChance rhs, EqualsMaskHelper.Include include) => WeatherChanceCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<IWeatherChanceGetter>.GetEqualsMask(IWeatherChanceGetter rhs, EqualsMaskHelper.Include include) => WeatherChanceCommon.GetEqualsMask(this, rhs, include);
         #region To String
         public string ToString(
             string name = null,
@@ -176,7 +176,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 foreach (var elem in node.Elements())
                 {
-                    Fill_Xml_Internal(
+                    WeatherChanceCommon.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -490,53 +490,6 @@ namespace Mutagen.Bethesda.Oblivion
                 translationMask: translationMask);
         }
         #endregion
-
-        protected static void Fill_Xml_Internal(
-            WeatherChance item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            switch (name)
-            {
-                case "Weather":
-                    FormKeyXmlTranslation.Instance.ParseInto(
-                        node: node,
-                        item: item.Weather_Property,
-                        fieldIndex: (int)WeatherChance_FieldIndex.Weather,
-                        errorMask: errorMask);
-                    break;
-                case "Chance":
-                    try
-                    {
-                        errorMask?.PushIndex((int)WeatherChance_FieldIndex.Chance);
-                        if (Int32XmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Int32 ChanceParse,
-                            errorMask: errorMask))
-                        {
-                            item.Chance = ChanceParse;
-                        }
-                        else
-                        {
-                            item.Chance = default(Int32);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
 
         #endregion
 
@@ -1447,17 +1400,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static WeatherChance_Mask<bool> GetEqualsMask(
             this IWeatherChanceGetter item,
-            IWeatherChanceGetter rhs)
+            IWeatherChanceGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new WeatherChance_Mask<bool>();
-            FillEqualsMask(item, rhs, ret);
+            FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
             return ret;
         }
 
         public static void FillEqualsMask(
             IWeatherChanceGetter item,
             IWeatherChanceGetter rhs,
-            WeatherChance_Mask<bool> ret)
+            WeatherChance_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
             ret.Weather = item.Weather_Property.FormKey == rhs.Weather_Property.FormKey;
@@ -1560,7 +1519,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         public static void WriteToNode_Xml(
-            IWeatherChanceGetter item,
+            this IWeatherChanceGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1582,6 +1541,78 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item.Chance,
                     fieldIndex: (int)WeatherChance_FieldIndex.Chance,
                     errorMask: errorMask);
+            }
+        }
+
+        public static void FillPublic_Xml(
+            this WeatherChance item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    WeatherChanceCommon.FillPublicElement_Xml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+
+        public static void FillPublicElement_Xml(
+            this WeatherChance item,
+            XElement node,
+            string name,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            switch (name)
+            {
+                case "Weather":
+                    FormKeyXmlTranslation.Instance.ParseInto(
+                        node: node,
+                        item: item.Weather_Property,
+                        fieldIndex: (int)WeatherChance_FieldIndex.Weather,
+                        errorMask: errorMask);
+                    break;
+                case "Chance":
+                    try
+                    {
+                        errorMask?.PushIndex((int)WeatherChance_FieldIndex.Chance);
+                        if (Int32XmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Int32 ChanceParse,
+                            errorMask: errorMask))
+                        {
+                            item.Chance = ChanceParse;
+                        }
+                        else
+                        {
+                            item.Chance = default(Int32);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                default:
+                    break;
             }
         }
 

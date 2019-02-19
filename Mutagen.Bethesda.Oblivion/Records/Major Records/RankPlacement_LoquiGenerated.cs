@@ -102,8 +102,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> IEqualsMask<RankPlacement>.GetEqualsMask(RankPlacement rhs) => RankPlacementCommon.GetEqualsMask(this, rhs);
-        IMask<bool> IEqualsMask<IRankPlacementGetter>.GetEqualsMask(IRankPlacementGetter rhs) => RankPlacementCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<RankPlacement>.GetEqualsMask(RankPlacement rhs, EqualsMaskHelper.Include include) => RankPlacementCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<IRankPlacementGetter>.GetEqualsMask(IRankPlacementGetter rhs, EqualsMaskHelper.Include include) => RankPlacementCommon.GetEqualsMask(this, rhs, include);
         #region To String
         public string ToString(
             string name = null,
@@ -193,7 +193,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 foreach (var elem in node.Elements())
                 {
-                    Fill_Xml_Internal(
+                    RankPlacementCommon.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -507,79 +507,6 @@ namespace Mutagen.Bethesda.Oblivion
                 translationMask: translationMask);
         }
         #endregion
-
-        protected static void Fill_Xml_Internal(
-            RankPlacement item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            switch (name)
-            {
-                case "Faction":
-                    FormKeyXmlTranslation.Instance.ParseInto(
-                        node: node,
-                        item: item.Faction_Property,
-                        fieldIndex: (int)RankPlacement_FieldIndex.Faction,
-                        errorMask: errorMask);
-                    break;
-                case "Rank":
-                    try
-                    {
-                        errorMask?.PushIndex((int)RankPlacement_FieldIndex.Rank);
-                        if (ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Byte RankParse,
-                            errorMask: errorMask))
-                        {
-                            item.Rank = RankParse;
-                        }
-                        else
-                        {
-                            item.Rank = default(Byte);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Fluff":
-                    try
-                    {
-                        errorMask?.PushIndex((int)RankPlacement_FieldIndex.Fluff);
-                        if (ByteArrayXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Byte[] FluffParse,
-                            errorMask: errorMask))
-                        {
-                            item.Fluff = FluffParse;
-                        }
-                        else
-                        {
-                            item.Fluff = default(Byte[]);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
 
         #endregion
 
@@ -1570,17 +1497,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static RankPlacement_Mask<bool> GetEqualsMask(
             this IRankPlacementGetter item,
-            IRankPlacementGetter rhs)
+            IRankPlacementGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new RankPlacement_Mask<bool>();
-            FillEqualsMask(item, rhs, ret);
+            FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
             return ret;
         }
 
         public static void FillEqualsMask(
             IRankPlacementGetter item,
             IRankPlacementGetter rhs,
-            RankPlacement_Mask<bool> ret)
+            RankPlacement_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
             ret.Faction = item.Faction_Property.FormKey == rhs.Faction_Property.FormKey;
@@ -1689,7 +1622,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         public static void WriteToNode_Xml(
-            IRankPlacementGetter item,
+            this IRankPlacementGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1720,6 +1653,104 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item.Fluff,
                     fieldIndex: (int)RankPlacement_FieldIndex.Fluff,
                     errorMask: errorMask);
+            }
+        }
+
+        public static void FillPublic_Xml(
+            this RankPlacement item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    RankPlacementCommon.FillPublicElement_Xml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+
+        public static void FillPublicElement_Xml(
+            this RankPlacement item,
+            XElement node,
+            string name,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            switch (name)
+            {
+                case "Faction":
+                    FormKeyXmlTranslation.Instance.ParseInto(
+                        node: node,
+                        item: item.Faction_Property,
+                        fieldIndex: (int)RankPlacement_FieldIndex.Faction,
+                        errorMask: errorMask);
+                    break;
+                case "Rank":
+                    try
+                    {
+                        errorMask?.PushIndex((int)RankPlacement_FieldIndex.Rank);
+                        if (ByteXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Byte RankParse,
+                            errorMask: errorMask))
+                        {
+                            item.Rank = RankParse;
+                        }
+                        else
+                        {
+                            item.Rank = default(Byte);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Fluff":
+                    try
+                    {
+                        errorMask?.PushIndex((int)RankPlacement_FieldIndex.Fluff);
+                        if (ByteArrayXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Byte[] FluffParse,
+                            errorMask: errorMask))
+                        {
+                            item.Fluff = FluffParse;
+                        }
+                        else
+                        {
+                            item.Fluff = default(Byte[]);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                default:
+                    break;
             }
         }
 

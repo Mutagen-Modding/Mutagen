@@ -16,6 +16,7 @@ using ReactiveUI;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Drawing;
+using Loqui.Presentation;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
@@ -578,8 +579,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> IEqualsMask<Water>.GetEqualsMask(Water rhs) => WaterCommon.GetEqualsMask(this, rhs);
-        IMask<bool> IEqualsMask<IWaterGetter>.GetEqualsMask(IWaterGetter rhs) => WaterCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<Water>.GetEqualsMask(Water rhs, EqualsMaskHelper.Include include) => WaterCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<IWaterGetter>.GetEqualsMask(IWaterGetter rhs, EqualsMaskHelper.Include include) => WaterCommon.GetEqualsMask(this, rhs, include);
         #region To String
         public string ToString(
             string name = null,
@@ -649,9 +650,9 @@ namespace Mutagen.Bethesda.Oblivion
             if (!this.ScrollYSpeed.EqualsWithin(rhs.ScrollYSpeed)) return false;
             if (!this.FogDistanceNearPlane.EqualsWithin(rhs.FogDistanceNearPlane)) return false;
             if (!this.FogDistanceFarPlane.EqualsWithin(rhs.FogDistanceFarPlane)) return false;
-            if (this.ShallowColor != rhs.ShallowColor) return false;
-            if (this.DeepColor != rhs.DeepColor) return false;
-            if (this.ReflectionColor != rhs.ReflectionColor) return false;
+            if (!this.ShallowColor.ColorOnlyEquals(rhs.ShallowColor)) return false;
+            if (!this.DeepColor.ColorOnlyEquals(rhs.DeepColor)) return false;
+            if (!this.ReflectionColor.ColorOnlyEquals(rhs.ReflectionColor)) return false;
             if (this.TextureBlend != rhs.TextureBlend) return false;
             if (!this.RainSimulatorForce.EqualsWithin(rhs.RainSimulatorForce)) return false;
             if (!this.RainSimulatorVelocity.EqualsWithin(rhs.RainSimulatorVelocity)) return false;
@@ -771,7 +772,13 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 foreach (var elem in node.Elements())
                 {
-                    Fill_Xml_Internal(
+                    FillPrivateElement_Xml(
+                        item: ret,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                    WaterCommon.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -1083,7 +1090,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        protected static void Fill_Xml_Internal(
+        protected static void FillPrivateElement_Xml(
             Water item,
             XElement node,
             string name,
@@ -1092,822 +1099,8 @@ namespace Mutagen.Bethesda.Oblivion
         {
             switch (name)
             {
-                case "Texture":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Water_FieldIndex.Texture);
-                        if (StringXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out String TextureParse,
-                            errorMask: errorMask))
-                        {
-                            item.Texture = TextureParse;
-                        }
-                        else
-                        {
-                            item.Texture = default(String);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Opacity":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Water_FieldIndex.Opacity);
-                        if (ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Byte OpacityParse,
-                            errorMask: errorMask))
-                        {
-                            item.Opacity = OpacityParse;
-                        }
-                        else
-                        {
-                            item.Opacity = default(Byte);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Flags":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Water_FieldIndex.Flags);
-                        if (EnumXmlTranslation<Water.Flag>.Instance.Parse(
-                            node: node,
-                            item: out Water.Flag FlagsParse,
-                            errorMask: errorMask))
-                        {
-                            item.Flags = FlagsParse;
-                        }
-                        else
-                        {
-                            item.Flags = default(Water.Flag);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "MaterialID":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Water_FieldIndex.MaterialID);
-                        if (StringXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out String MaterialIDParse,
-                            errorMask: errorMask))
-                        {
-                            item.MaterialID = MaterialIDParse;
-                        }
-                        else
-                        {
-                            item.MaterialID = default(String);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Sound":
-                    FormKeyXmlTranslation.Instance.ParseInto(
-                        node: node,
-                        item: item.Sound_Property,
-                        fieldIndex: (int)Water_FieldIndex.Sound,
-                        errorMask: errorMask);
-                    break;
-                case "WindVelocity":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Water_FieldIndex.WindVelocity);
-                        if (FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Single WindVelocityParse,
-                            errorMask: errorMask))
-                        {
-                            item.WindVelocity = WindVelocityParse;
-                        }
-                        else
-                        {
-                            item.WindVelocity = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "WindDirection":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Water_FieldIndex.WindDirection);
-                        if (FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Single WindDirectionParse,
-                            errorMask: errorMask))
-                        {
-                            item.WindDirection = WindDirectionParse;
-                        }
-                        else
-                        {
-                            item.WindDirection = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "WaveAmplitude":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Water_FieldIndex.WaveAmplitude);
-                        if (FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Single WaveAmplitudeParse,
-                            errorMask: errorMask))
-                        {
-                            item.WaveAmplitude = WaveAmplitudeParse;
-                        }
-                        else
-                        {
-                            item.WaveAmplitude = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "WaveFrequency":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Water_FieldIndex.WaveFrequency);
-                        if (FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Single WaveFrequencyParse,
-                            errorMask: errorMask))
-                        {
-                            item.WaveFrequency = WaveFrequencyParse;
-                        }
-                        else
-                        {
-                            item.WaveFrequency = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "SunPower":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Water_FieldIndex.SunPower);
-                        if (FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Single SunPowerParse,
-                            errorMask: errorMask))
-                        {
-                            item.SunPower = SunPowerParse;
-                        }
-                        else
-                        {
-                            item.SunPower = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ReflectivityAmount":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Water_FieldIndex.ReflectivityAmount);
-                        if (FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Single ReflectivityAmountParse,
-                            errorMask: errorMask))
-                        {
-                            item.ReflectivityAmount = ReflectivityAmountParse;
-                        }
-                        else
-                        {
-                            item.ReflectivityAmount = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "FresnelAmount":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Water_FieldIndex.FresnelAmount);
-                        if (FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Single FresnelAmountParse,
-                            errorMask: errorMask))
-                        {
-                            item.FresnelAmount = FresnelAmountParse;
-                        }
-                        else
-                        {
-                            item.FresnelAmount = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ScrollXSpeed":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Water_FieldIndex.ScrollXSpeed);
-                        if (FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Single ScrollXSpeedParse,
-                            errorMask: errorMask))
-                        {
-                            item.ScrollXSpeed = ScrollXSpeedParse;
-                        }
-                        else
-                        {
-                            item.ScrollXSpeed = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ScrollYSpeed":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Water_FieldIndex.ScrollYSpeed);
-                        if (FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Single ScrollYSpeedParse,
-                            errorMask: errorMask))
-                        {
-                            item.ScrollYSpeed = ScrollYSpeedParse;
-                        }
-                        else
-                        {
-                            item.ScrollYSpeed = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "FogDistanceNearPlane":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Water_FieldIndex.FogDistanceNearPlane);
-                        if (FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Single FogDistanceNearPlaneParse,
-                            errorMask: errorMask))
-                        {
-                            item.FogDistanceNearPlane = FogDistanceNearPlaneParse;
-                        }
-                        else
-                        {
-                            item.FogDistanceNearPlane = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "FogDistanceFarPlane":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Water_FieldIndex.FogDistanceFarPlane);
-                        if (FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Single FogDistanceFarPlaneParse,
-                            errorMask: errorMask))
-                        {
-                            item.FogDistanceFarPlane = FogDistanceFarPlaneParse;
-                        }
-                        else
-                        {
-                            item.FogDistanceFarPlane = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ShallowColor":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Water_FieldIndex.ShallowColor);
-                        if (ColorXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Color ShallowColorParse,
-                            errorMask: errorMask))
-                        {
-                            item.ShallowColor = ShallowColorParse;
-                        }
-                        else
-                        {
-                            item.ShallowColor = default(Color);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "DeepColor":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Water_FieldIndex.DeepColor);
-                        if (ColorXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Color DeepColorParse,
-                            errorMask: errorMask))
-                        {
-                            item.DeepColor = DeepColorParse;
-                        }
-                        else
-                        {
-                            item.DeepColor = default(Color);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ReflectionColor":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Water_FieldIndex.ReflectionColor);
-                        if (ColorXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Color ReflectionColorParse,
-                            errorMask: errorMask))
-                        {
-                            item.ReflectionColor = ReflectionColorParse;
-                        }
-                        else
-                        {
-                            item.ReflectionColor = default(Color);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "TextureBlend":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Water_FieldIndex.TextureBlend);
-                        if (ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Byte TextureBlendParse,
-                            errorMask: errorMask))
-                        {
-                            item.TextureBlend = TextureBlendParse;
-                        }
-                        else
-                        {
-                            item.TextureBlend = default(Byte);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "RainSimulatorForce":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Water_FieldIndex.RainSimulatorForce);
-                        if (FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Single RainSimulatorForceParse,
-                            errorMask: errorMask))
-                        {
-                            item.RainSimulatorForce = RainSimulatorForceParse;
-                        }
-                        else
-                        {
-                            item.RainSimulatorForce = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "RainSimulatorVelocity":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Water_FieldIndex.RainSimulatorVelocity);
-                        if (FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Single RainSimulatorVelocityParse,
-                            errorMask: errorMask))
-                        {
-                            item.RainSimulatorVelocity = RainSimulatorVelocityParse;
-                        }
-                        else
-                        {
-                            item.RainSimulatorVelocity = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "RainSimulatorFalloff":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Water_FieldIndex.RainSimulatorFalloff);
-                        if (FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Single RainSimulatorFalloffParse,
-                            errorMask: errorMask))
-                        {
-                            item.RainSimulatorFalloff = RainSimulatorFalloffParse;
-                        }
-                        else
-                        {
-                            item.RainSimulatorFalloff = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "RainSimulatorDampner":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Water_FieldIndex.RainSimulatorDampner);
-                        if (FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Single RainSimulatorDampnerParse,
-                            errorMask: errorMask))
-                        {
-                            item.RainSimulatorDampner = RainSimulatorDampnerParse;
-                        }
-                        else
-                        {
-                            item.RainSimulatorDampner = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "RainSimulatorStartingSize":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Water_FieldIndex.RainSimulatorStartingSize);
-                        if (FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Single RainSimulatorStartingSizeParse,
-                            errorMask: errorMask))
-                        {
-                            item.RainSimulatorStartingSize = RainSimulatorStartingSizeParse;
-                        }
-                        else
-                        {
-                            item.RainSimulatorStartingSize = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "DisplacementSimulatorForce":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Water_FieldIndex.DisplacementSimulatorForce);
-                        if (FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Single DisplacementSimulatorForceParse,
-                            errorMask: errorMask))
-                        {
-                            item.DisplacementSimulatorForce = DisplacementSimulatorForceParse;
-                        }
-                        else
-                        {
-                            item.DisplacementSimulatorForce = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "DisplacementSimulatorVelocity":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Water_FieldIndex.DisplacementSimulatorVelocity);
-                        if (FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Single DisplacementSimulatorVelocityParse,
-                            errorMask: errorMask))
-                        {
-                            item.DisplacementSimulatorVelocity = DisplacementSimulatorVelocityParse;
-                        }
-                        else
-                        {
-                            item.DisplacementSimulatorVelocity = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "DisplacementSimulatorFalloff":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Water_FieldIndex.DisplacementSimulatorFalloff);
-                        if (FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Single DisplacementSimulatorFalloffParse,
-                            errorMask: errorMask))
-                        {
-                            item.DisplacementSimulatorFalloff = DisplacementSimulatorFalloffParse;
-                        }
-                        else
-                        {
-                            item.DisplacementSimulatorFalloff = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "DisplacementSimulatorDampner":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Water_FieldIndex.DisplacementSimulatorDampner);
-                        if (FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Single DisplacementSimulatorDampnerParse,
-                            errorMask: errorMask))
-                        {
-                            item.DisplacementSimulatorDampner = DisplacementSimulatorDampnerParse;
-                        }
-                        else
-                        {
-                            item.DisplacementSimulatorDampner = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "DisplacementSimulatorStartingSize":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Water_FieldIndex.DisplacementSimulatorStartingSize);
-                        if (FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Single DisplacementSimulatorStartingSizeParse,
-                            errorMask: errorMask))
-                        {
-                            item.DisplacementSimulatorStartingSize = DisplacementSimulatorStartingSizeParse;
-                        }
-                        else
-                        {
-                            item.DisplacementSimulatorStartingSize = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Damage":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Water_FieldIndex.Damage);
-                        if (UInt16XmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out UInt16 DamageParse,
-                            errorMask: errorMask))
-                        {
-                            item.Damage = DamageParse;
-                        }
-                        else
-                        {
-                            item.Damage = default(UInt16);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "RelatedWaters":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Water_FieldIndex.RelatedWaters);
-                        if (LoquiXmlTranslation<RelatedWaters>.Instance.Parse(
-                            node: node,
-                            item: out RelatedWaters RelatedWatersParse,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Water_FieldIndex.RelatedWaters)))
-                        {
-                            item.RelatedWaters = RelatedWatersParse;
-                        }
-                        else
-                        {
-                            item.RelatedWaters = default(RelatedWaters);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
                 default:
-                    MajorRecord.Fill_Xml_Internal(
+                    MajorRecord.FillPrivateElement_Xml(
                         item: item,
                         node: node,
                         name: name,
@@ -5406,17 +4599,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static Water_Mask<bool> GetEqualsMask(
             this IWaterGetter item,
-            IWaterGetter rhs)
+            IWaterGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new Water_Mask<bool>();
-            FillEqualsMask(item, rhs, ret);
+            FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
             return ret;
         }
 
         public static void FillEqualsMask(
             IWaterGetter item,
             IWaterGetter rhs,
-            Water_Mask<bool> ret)
+            Water_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
             ret.Texture = item.Texture_IsSet == rhs.Texture_IsSet && object.Equals(item.Texture, rhs.Texture);
@@ -5424,33 +4623,39 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Flags = item.Flags_IsSet == rhs.Flags_IsSet && item.Flags == rhs.Flags;
             ret.MaterialID = item.MaterialID_IsSet == rhs.MaterialID_IsSet && object.Equals(item.MaterialID, rhs.MaterialID);
             ret.Sound = item.Sound_Property.FormKey == rhs.Sound_Property.FormKey;
-            ret.WindVelocity = item.WindVelocity == rhs.WindVelocity;
-            ret.WindDirection = item.WindDirection == rhs.WindDirection;
-            ret.WaveAmplitude = item.WaveAmplitude == rhs.WaveAmplitude;
-            ret.WaveFrequency = item.WaveFrequency == rhs.WaveFrequency;
-            ret.SunPower = item.SunPower == rhs.SunPower;
-            ret.ReflectivityAmount = item.ReflectivityAmount == rhs.ReflectivityAmount;
-            ret.FresnelAmount = item.FresnelAmount == rhs.FresnelAmount;
-            ret.ScrollXSpeed = item.ScrollXSpeed == rhs.ScrollXSpeed;
-            ret.ScrollYSpeed = item.ScrollYSpeed == rhs.ScrollYSpeed;
-            ret.FogDistanceNearPlane = item.FogDistanceNearPlane == rhs.FogDistanceNearPlane;
-            ret.FogDistanceFarPlane = item.FogDistanceFarPlane == rhs.FogDistanceFarPlane;
-            ret.ShallowColor = item.ShallowColor == rhs.ShallowColor;
-            ret.DeepColor = item.DeepColor == rhs.DeepColor;
-            ret.ReflectionColor = item.ReflectionColor == rhs.ReflectionColor;
+            ret.WindVelocity = item.WindVelocity.EqualsWithin(rhs.WindVelocity);
+            ret.WindDirection = item.WindDirection.EqualsWithin(rhs.WindDirection);
+            ret.WaveAmplitude = item.WaveAmplitude.EqualsWithin(rhs.WaveAmplitude);
+            ret.WaveFrequency = item.WaveFrequency.EqualsWithin(rhs.WaveFrequency);
+            ret.SunPower = item.SunPower.EqualsWithin(rhs.SunPower);
+            ret.ReflectivityAmount = item.ReflectivityAmount.EqualsWithin(rhs.ReflectivityAmount);
+            ret.FresnelAmount = item.FresnelAmount.EqualsWithin(rhs.FresnelAmount);
+            ret.ScrollXSpeed = item.ScrollXSpeed.EqualsWithin(rhs.ScrollXSpeed);
+            ret.ScrollYSpeed = item.ScrollYSpeed.EqualsWithin(rhs.ScrollYSpeed);
+            ret.FogDistanceNearPlane = item.FogDistanceNearPlane.EqualsWithin(rhs.FogDistanceNearPlane);
+            ret.FogDistanceFarPlane = item.FogDistanceFarPlane.EqualsWithin(rhs.FogDistanceFarPlane);
+            ret.ShallowColor = item.ShallowColor.ColorOnlyEquals(rhs.ShallowColor);
+            ret.DeepColor = item.DeepColor.ColorOnlyEquals(rhs.DeepColor);
+            ret.ReflectionColor = item.ReflectionColor.ColorOnlyEquals(rhs.ReflectionColor);
             ret.TextureBlend = item.TextureBlend == rhs.TextureBlend;
-            ret.RainSimulatorForce = item.RainSimulatorForce == rhs.RainSimulatorForce;
-            ret.RainSimulatorVelocity = item.RainSimulatorVelocity == rhs.RainSimulatorVelocity;
-            ret.RainSimulatorFalloff = item.RainSimulatorFalloff == rhs.RainSimulatorFalloff;
-            ret.RainSimulatorDampner = item.RainSimulatorDampner == rhs.RainSimulatorDampner;
-            ret.RainSimulatorStartingSize = item.RainSimulatorStartingSize == rhs.RainSimulatorStartingSize;
-            ret.DisplacementSimulatorForce = item.DisplacementSimulatorForce == rhs.DisplacementSimulatorForce;
-            ret.DisplacementSimulatorVelocity = item.DisplacementSimulatorVelocity == rhs.DisplacementSimulatorVelocity;
-            ret.DisplacementSimulatorFalloff = item.DisplacementSimulatorFalloff == rhs.DisplacementSimulatorFalloff;
-            ret.DisplacementSimulatorDampner = item.DisplacementSimulatorDampner == rhs.DisplacementSimulatorDampner;
-            ret.DisplacementSimulatorStartingSize = item.DisplacementSimulatorStartingSize == rhs.DisplacementSimulatorStartingSize;
+            ret.RainSimulatorForce = item.RainSimulatorForce.EqualsWithin(rhs.RainSimulatorForce);
+            ret.RainSimulatorVelocity = item.RainSimulatorVelocity.EqualsWithin(rhs.RainSimulatorVelocity);
+            ret.RainSimulatorFalloff = item.RainSimulatorFalloff.EqualsWithin(rhs.RainSimulatorFalloff);
+            ret.RainSimulatorDampner = item.RainSimulatorDampner.EqualsWithin(rhs.RainSimulatorDampner);
+            ret.RainSimulatorStartingSize = item.RainSimulatorStartingSize.EqualsWithin(rhs.RainSimulatorStartingSize);
+            ret.DisplacementSimulatorForce = item.DisplacementSimulatorForce.EqualsWithin(rhs.DisplacementSimulatorForce);
+            ret.DisplacementSimulatorVelocity = item.DisplacementSimulatorVelocity.EqualsWithin(rhs.DisplacementSimulatorVelocity);
+            ret.DisplacementSimulatorFalloff = item.DisplacementSimulatorFalloff.EqualsWithin(rhs.DisplacementSimulatorFalloff);
+            ret.DisplacementSimulatorDampner = item.DisplacementSimulatorDampner.EqualsWithin(rhs.DisplacementSimulatorDampner);
+            ret.DisplacementSimulatorStartingSize = item.DisplacementSimulatorStartingSize.EqualsWithin(rhs.DisplacementSimulatorStartingSize);
             ret.Damage = item.Damage == rhs.Damage;
-            ret.RelatedWaters = IHasBeenSetExt.LoquiEqualsHelper(item.RelatedWaters_IsSet, rhs.RelatedWaters_IsSet, item.RelatedWaters, rhs.RelatedWaters, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
+            ret.RelatedWaters = EqualsMaskHelper.EqualsHelper(
+                item.RelatedWaters_IsSet,
+                rhs.RelatedWaters_IsSet,
+                item.RelatedWaters,
+                rhs.RelatedWaters,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
+                include);
             MajorRecordCommon.FillEqualsMask(item, rhs, ret);
         }
 
@@ -5732,7 +4937,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         public static void WriteToNode_Xml(
-            IWaterGetter item,
+            this IWaterGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -6036,6 +5241,865 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)Water_FieldIndex.RelatedWaters,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)Water_FieldIndex.RelatedWaters));
+            }
+        }
+
+        public static void FillPublic_Xml(
+            this Water item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    WaterCommon.FillPublicElement_Xml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+
+        public static void FillPublicElement_Xml(
+            this Water item,
+            XElement node,
+            string name,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            switch (name)
+            {
+                case "Texture":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Water_FieldIndex.Texture);
+                        if (StringXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out String TextureParse,
+                            errorMask: errorMask))
+                        {
+                            item.Texture = TextureParse;
+                        }
+                        else
+                        {
+                            item.Texture = default(String);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Opacity":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Water_FieldIndex.Opacity);
+                        if (ByteXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Byte OpacityParse,
+                            errorMask: errorMask))
+                        {
+                            item.Opacity = OpacityParse;
+                        }
+                        else
+                        {
+                            item.Opacity = default(Byte);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Flags":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Water_FieldIndex.Flags);
+                        if (EnumXmlTranslation<Water.Flag>.Instance.Parse(
+                            node: node,
+                            item: out Water.Flag FlagsParse,
+                            errorMask: errorMask))
+                        {
+                            item.Flags = FlagsParse;
+                        }
+                        else
+                        {
+                            item.Flags = default(Water.Flag);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "MaterialID":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Water_FieldIndex.MaterialID);
+                        if (StringXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out String MaterialIDParse,
+                            errorMask: errorMask))
+                        {
+                            item.MaterialID = MaterialIDParse;
+                        }
+                        else
+                        {
+                            item.MaterialID = default(String);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Sound":
+                    FormKeyXmlTranslation.Instance.ParseInto(
+                        node: node,
+                        item: item.Sound_Property,
+                        fieldIndex: (int)Water_FieldIndex.Sound,
+                        errorMask: errorMask);
+                    break;
+                case "WindVelocity":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Water_FieldIndex.WindVelocity);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Single WindVelocityParse,
+                            errorMask: errorMask))
+                        {
+                            item.WindVelocity = WindVelocityParse;
+                        }
+                        else
+                        {
+                            item.WindVelocity = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "WindDirection":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Water_FieldIndex.WindDirection);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Single WindDirectionParse,
+                            errorMask: errorMask))
+                        {
+                            item.WindDirection = WindDirectionParse;
+                        }
+                        else
+                        {
+                            item.WindDirection = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "WaveAmplitude":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Water_FieldIndex.WaveAmplitude);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Single WaveAmplitudeParse,
+                            errorMask: errorMask))
+                        {
+                            item.WaveAmplitude = WaveAmplitudeParse;
+                        }
+                        else
+                        {
+                            item.WaveAmplitude = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "WaveFrequency":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Water_FieldIndex.WaveFrequency);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Single WaveFrequencyParse,
+                            errorMask: errorMask))
+                        {
+                            item.WaveFrequency = WaveFrequencyParse;
+                        }
+                        else
+                        {
+                            item.WaveFrequency = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "SunPower":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Water_FieldIndex.SunPower);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Single SunPowerParse,
+                            errorMask: errorMask))
+                        {
+                            item.SunPower = SunPowerParse;
+                        }
+                        else
+                        {
+                            item.SunPower = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "ReflectivityAmount":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Water_FieldIndex.ReflectivityAmount);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Single ReflectivityAmountParse,
+                            errorMask: errorMask))
+                        {
+                            item.ReflectivityAmount = ReflectivityAmountParse;
+                        }
+                        else
+                        {
+                            item.ReflectivityAmount = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "FresnelAmount":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Water_FieldIndex.FresnelAmount);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Single FresnelAmountParse,
+                            errorMask: errorMask))
+                        {
+                            item.FresnelAmount = FresnelAmountParse;
+                        }
+                        else
+                        {
+                            item.FresnelAmount = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "ScrollXSpeed":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Water_FieldIndex.ScrollXSpeed);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Single ScrollXSpeedParse,
+                            errorMask: errorMask))
+                        {
+                            item.ScrollXSpeed = ScrollXSpeedParse;
+                        }
+                        else
+                        {
+                            item.ScrollXSpeed = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "ScrollYSpeed":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Water_FieldIndex.ScrollYSpeed);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Single ScrollYSpeedParse,
+                            errorMask: errorMask))
+                        {
+                            item.ScrollYSpeed = ScrollYSpeedParse;
+                        }
+                        else
+                        {
+                            item.ScrollYSpeed = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "FogDistanceNearPlane":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Water_FieldIndex.FogDistanceNearPlane);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Single FogDistanceNearPlaneParse,
+                            errorMask: errorMask))
+                        {
+                            item.FogDistanceNearPlane = FogDistanceNearPlaneParse;
+                        }
+                        else
+                        {
+                            item.FogDistanceNearPlane = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "FogDistanceFarPlane":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Water_FieldIndex.FogDistanceFarPlane);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Single FogDistanceFarPlaneParse,
+                            errorMask: errorMask))
+                        {
+                            item.FogDistanceFarPlane = FogDistanceFarPlaneParse;
+                        }
+                        else
+                        {
+                            item.FogDistanceFarPlane = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "ShallowColor":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Water_FieldIndex.ShallowColor);
+                        if (ColorXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Color ShallowColorParse,
+                            errorMask: errorMask))
+                        {
+                            item.ShallowColor = ShallowColorParse;
+                        }
+                        else
+                        {
+                            item.ShallowColor = default(Color);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "DeepColor":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Water_FieldIndex.DeepColor);
+                        if (ColorXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Color DeepColorParse,
+                            errorMask: errorMask))
+                        {
+                            item.DeepColor = DeepColorParse;
+                        }
+                        else
+                        {
+                            item.DeepColor = default(Color);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "ReflectionColor":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Water_FieldIndex.ReflectionColor);
+                        if (ColorXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Color ReflectionColorParse,
+                            errorMask: errorMask))
+                        {
+                            item.ReflectionColor = ReflectionColorParse;
+                        }
+                        else
+                        {
+                            item.ReflectionColor = default(Color);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "TextureBlend":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Water_FieldIndex.TextureBlend);
+                        if (ByteXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Byte TextureBlendParse,
+                            errorMask: errorMask))
+                        {
+                            item.TextureBlend = TextureBlendParse;
+                        }
+                        else
+                        {
+                            item.TextureBlend = default(Byte);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "RainSimulatorForce":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Water_FieldIndex.RainSimulatorForce);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Single RainSimulatorForceParse,
+                            errorMask: errorMask))
+                        {
+                            item.RainSimulatorForce = RainSimulatorForceParse;
+                        }
+                        else
+                        {
+                            item.RainSimulatorForce = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "RainSimulatorVelocity":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Water_FieldIndex.RainSimulatorVelocity);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Single RainSimulatorVelocityParse,
+                            errorMask: errorMask))
+                        {
+                            item.RainSimulatorVelocity = RainSimulatorVelocityParse;
+                        }
+                        else
+                        {
+                            item.RainSimulatorVelocity = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "RainSimulatorFalloff":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Water_FieldIndex.RainSimulatorFalloff);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Single RainSimulatorFalloffParse,
+                            errorMask: errorMask))
+                        {
+                            item.RainSimulatorFalloff = RainSimulatorFalloffParse;
+                        }
+                        else
+                        {
+                            item.RainSimulatorFalloff = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "RainSimulatorDampner":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Water_FieldIndex.RainSimulatorDampner);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Single RainSimulatorDampnerParse,
+                            errorMask: errorMask))
+                        {
+                            item.RainSimulatorDampner = RainSimulatorDampnerParse;
+                        }
+                        else
+                        {
+                            item.RainSimulatorDampner = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "RainSimulatorStartingSize":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Water_FieldIndex.RainSimulatorStartingSize);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Single RainSimulatorStartingSizeParse,
+                            errorMask: errorMask))
+                        {
+                            item.RainSimulatorStartingSize = RainSimulatorStartingSizeParse;
+                        }
+                        else
+                        {
+                            item.RainSimulatorStartingSize = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "DisplacementSimulatorForce":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Water_FieldIndex.DisplacementSimulatorForce);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Single DisplacementSimulatorForceParse,
+                            errorMask: errorMask))
+                        {
+                            item.DisplacementSimulatorForce = DisplacementSimulatorForceParse;
+                        }
+                        else
+                        {
+                            item.DisplacementSimulatorForce = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "DisplacementSimulatorVelocity":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Water_FieldIndex.DisplacementSimulatorVelocity);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Single DisplacementSimulatorVelocityParse,
+                            errorMask: errorMask))
+                        {
+                            item.DisplacementSimulatorVelocity = DisplacementSimulatorVelocityParse;
+                        }
+                        else
+                        {
+                            item.DisplacementSimulatorVelocity = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "DisplacementSimulatorFalloff":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Water_FieldIndex.DisplacementSimulatorFalloff);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Single DisplacementSimulatorFalloffParse,
+                            errorMask: errorMask))
+                        {
+                            item.DisplacementSimulatorFalloff = DisplacementSimulatorFalloffParse;
+                        }
+                        else
+                        {
+                            item.DisplacementSimulatorFalloff = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "DisplacementSimulatorDampner":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Water_FieldIndex.DisplacementSimulatorDampner);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Single DisplacementSimulatorDampnerParse,
+                            errorMask: errorMask))
+                        {
+                            item.DisplacementSimulatorDampner = DisplacementSimulatorDampnerParse;
+                        }
+                        else
+                        {
+                            item.DisplacementSimulatorDampner = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "DisplacementSimulatorStartingSize":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Water_FieldIndex.DisplacementSimulatorStartingSize);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Single DisplacementSimulatorStartingSizeParse,
+                            errorMask: errorMask))
+                        {
+                            item.DisplacementSimulatorStartingSize = DisplacementSimulatorStartingSizeParse;
+                        }
+                        else
+                        {
+                            item.DisplacementSimulatorStartingSize = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Damage":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Water_FieldIndex.Damage);
+                        if (UInt16XmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out UInt16 DamageParse,
+                            errorMask: errorMask))
+                        {
+                            item.Damage = DamageParse;
+                        }
+                        else
+                        {
+                            item.Damage = default(UInt16);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "RelatedWaters":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Water_FieldIndex.RelatedWaters);
+                        if (LoquiXmlTranslation<RelatedWaters>.Instance.Parse(
+                            node: node,
+                            item: out RelatedWaters RelatedWatersParse,
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)Water_FieldIndex.RelatedWaters)))
+                        {
+                            item.RelatedWaters = RelatedWatersParse;
+                        }
+                        else
+                        {
+                            item.RelatedWaters = default(RelatedWaters);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                default:
+                    MajorRecordCommon.FillPublicElement_Xml(
+                        item: item,
+                        node: node,
+                        name: name,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                    break;
             }
         }
 

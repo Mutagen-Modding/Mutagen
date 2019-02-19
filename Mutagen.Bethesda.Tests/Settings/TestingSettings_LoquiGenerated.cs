@@ -104,8 +104,8 @@ namespace Mutagen.Bethesda.Tests
 
         #endregion
 
-        IMask<bool> IEqualsMask<TestingSettings>.GetEqualsMask(TestingSettings rhs) => TestingSettingsCommon.GetEqualsMask(this, rhs);
-        IMask<bool> IEqualsMask<ITestingSettingsGetter>.GetEqualsMask(ITestingSettingsGetter rhs) => TestingSettingsCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<TestingSettings>.GetEqualsMask(TestingSettings rhs, EqualsMaskHelper.Include include) => TestingSettingsCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<ITestingSettingsGetter>.GetEqualsMask(ITestingSettingsGetter rhs, EqualsMaskHelper.Include include) => TestingSettingsCommon.GetEqualsMask(this, rhs, include);
         #region To String
         public override string ToString()
         {
@@ -208,7 +208,7 @@ namespace Mutagen.Bethesda.Tests
             {
                 foreach (var elem in node.Elements())
                 {
-                    Fill_Xml_Internal(
+                    TestingSettingsCommon.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -522,206 +522,6 @@ namespace Mutagen.Bethesda.Tests
                 translationMask: translationMask);
         }
         #endregion
-
-        protected static void Fill_Xml_Internal(
-            TestingSettings item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            switch (name)
-            {
-                case "TestFolder":
-                    try
-                    {
-                        errorMask?.PushIndex((int)TestingSettings_FieldIndex.TestFolder);
-                        if (BooleanXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Boolean TestFolderParse,
-                            errorMask: errorMask))
-                        {
-                            item.TestFolder = TestFolderParse;
-                        }
-                        else
-                        {
-                            item.TestFolder = default(Boolean);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "TestGroupMasks":
-                    try
-                    {
-                        errorMask?.PushIndex((int)TestingSettings_FieldIndex.TestGroupMasks);
-                        if (BooleanXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Boolean TestGroupMasksParse,
-                            errorMask: errorMask))
-                        {
-                            item.TestGroupMasks = TestGroupMasksParse;
-                        }
-                        else
-                        {
-                            item.TestGroupMasks = default(Boolean);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "TestModList":
-                    try
-                    {
-                        errorMask?.PushIndex((int)TestingSettings_FieldIndex.TestModList);
-                        if (BooleanXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Boolean TestModListParse,
-                            errorMask: errorMask))
-                        {
-                            item.TestModList = TestModListParse;
-                        }
-                        else
-                        {
-                            item.TestModList = default(Boolean);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "TestFlattenedMod":
-                    try
-                    {
-                        errorMask?.PushIndex((int)TestingSettings_FieldIndex.TestFlattenedMod);
-                        if (BooleanXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Boolean TestFlattenedModParse,
-                            errorMask: errorMask))
-                        {
-                            item.TestFlattenedMod = TestFlattenedModParse;
-                        }
-                        else
-                        {
-                            item.TestFlattenedMod = default(Boolean);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "PassthroughSettings":
-                    try
-                    {
-                        errorMask?.PushIndex((int)TestingSettings_FieldIndex.PassthroughSettings);
-                        if (LoquiXmlTranslation<PassthroughSettings>.Instance.Parse(
-                            node: node,
-                            item: out PassthroughSettings PassthroughSettingsParse,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)TestingSettings_FieldIndex.PassthroughSettings)))
-                        {
-                            item.PassthroughSettings = PassthroughSettingsParse;
-                        }
-                        else
-                        {
-                            item.PassthroughSettings = default(PassthroughSettings);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "OblivionESM":
-                    try
-                    {
-                        errorMask?.PushIndex((int)TestingSettings_FieldIndex.OblivionESM);
-                        if (LoquiXmlTranslation<Passthrough>.Instance.Parse(
-                            node: node,
-                            item: out Passthrough OblivionESMParse,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)TestingSettings_FieldIndex.OblivionESM)))
-                        {
-                            item.OblivionESM = OblivionESMParse;
-                        }
-                        else
-                        {
-                            item.OblivionESM = default(Passthrough);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "OtherPassthroughs":
-                    try
-                    {
-                        errorMask?.PushIndex((int)TestingSettings_FieldIndex.OtherPassthroughs);
-                        if (ListXmlTranslation<Passthrough>.Instance.Parse(
-                            node: node,
-                            enumer: out var OtherPassthroughsItem,
-                            transl: LoquiXmlTranslation<Passthrough>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.OtherPassthroughs.SetTo(OtherPassthroughsItem);
-                        }
-                        else
-                        {
-                            item.OtherPassthroughs.Unset();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
 
         #endregion
 
@@ -1523,40 +1323,35 @@ namespace Mutagen.Bethesda.Tests.Internals
 
         public static TestingSettings_Mask<bool> GetEqualsMask(
             this ITestingSettingsGetter item,
-            ITestingSettingsGetter rhs)
+            ITestingSettingsGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new TestingSettings_Mask<bool>();
-            FillEqualsMask(item, rhs, ret);
+            FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
             return ret;
         }
 
         public static void FillEqualsMask(
             ITestingSettingsGetter item,
             ITestingSettingsGetter rhs,
-            TestingSettings_Mask<bool> ret)
+            TestingSettings_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
             ret.TestFolder = item.TestFolder == rhs.TestFolder;
             ret.TestGroupMasks = item.TestGroupMasks == rhs.TestGroupMasks;
             ret.TestModList = item.TestModList == rhs.TestModList;
             ret.TestFlattenedMod = item.TestFlattenedMod == rhs.TestFlattenedMod;
-            ret.PassthroughSettings = new MaskItem<bool, PassthroughSettings_Mask<bool>>();
-            ret.PassthroughSettings.Specific = PassthroughSettingsCommon.GetEqualsMask(item.PassthroughSettings, rhs.PassthroughSettings);
-            ret.PassthroughSettings.Overall = ret.PassthroughSettings.Specific.AllEqual((b) => b);
-            ret.OblivionESM = new MaskItem<bool, Passthrough_Mask<bool>>();
-            ret.OblivionESM.Specific = PassthroughCommon.GetEqualsMask(item.OblivionESM, rhs.OblivionESM);
-            ret.OblivionESM.Overall = ret.OblivionESM.Specific.AllEqual((b) => b);
-            ret.OtherPassthroughs = new MaskItem<bool, IEnumerable<MaskItem<bool, Passthrough_Mask<bool>>>>();
-            ret.OtherPassthroughs.Specific = item.OtherPassthroughs.SelectAgainst<Passthrough, MaskItem<bool, Passthrough_Mask<bool>>>(rhs.OtherPassthroughs, ((l, r) =>
-            {
-                MaskItem<bool, Passthrough_Mask<bool>> itemRet;
-                itemRet = new MaskItem<bool, Passthrough_Mask<bool>>();
-                itemRet.Specific = PassthroughCommon.GetEqualsMask(l, r);
-                itemRet.Overall = itemRet.Specific.AllEqual((b) => b);
-                return itemRet;
-            }
-            ), out ret.OtherPassthroughs.Overall);
-            ret.OtherPassthroughs.Overall = ret.OtherPassthroughs.Overall && ret.OtherPassthroughs.Specific.All((b) => b.Overall);
+            ret.PassthroughSettings = MaskItemExt.Factory(PassthroughSettingsCommon.GetEqualsMask(item.PassthroughSettings, rhs.PassthroughSettings, include), include);
+            ret.OblivionESM = MaskItemExt.Factory(PassthroughCommon.GetEqualsMask(item.OblivionESM, rhs.OblivionESM, include), include);
+            ret.OtherPassthroughs = item.OtherPassthroughs.CollectionEqualsHelper(
+                rhs.OtherPassthroughs,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
         }
 
         public static string ToString(
@@ -1648,7 +1443,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             ret.TestFlattenedMod = true;
             ret.PassthroughSettings = new MaskItem<bool, PassthroughSettings_Mask<bool>>(true, PassthroughSettingsCommon.GetHasBeenSetMask(item.PassthroughSettings));
             ret.OblivionESM = new MaskItem<bool, Passthrough_Mask<bool>>(true, PassthroughCommon.GetHasBeenSetMask(item.OblivionESM));
-            ret.OtherPassthroughs = new MaskItem<bool, IEnumerable<MaskItem<bool, Passthrough_Mask<bool>>>>(item.OtherPassthroughs.HasBeenSet, item.OtherPassthroughs.Select((i) => new MaskItem<bool, Passthrough_Mask<bool>>(true, i.GetHasBeenSetMask())));
+            ret.OtherPassthroughs = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Passthrough_Mask<bool>>>>(item.OtherPassthroughs.HasBeenSet, item.OtherPassthroughs.WithIndex().Select((i) => new MaskItemIndexed<bool, Passthrough_Mask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
             return ret;
         }
 
@@ -1694,7 +1489,7 @@ namespace Mutagen.Bethesda.Tests.Internals
         #endregion
 
         public static void WriteToNode_Xml(
-            ITestingSettingsGetter item,
+            this ITestingSettingsGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1777,6 +1572,231 @@ namespace Mutagen.Bethesda.Tests.Internals
             }
         }
 
+        public static void FillPublic_Xml(
+            this TestingSettings item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    TestingSettingsCommon.FillPublicElement_Xml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+
+        public static void FillPublicElement_Xml(
+            this TestingSettings item,
+            XElement node,
+            string name,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            switch (name)
+            {
+                case "TestFolder":
+                    try
+                    {
+                        errorMask?.PushIndex((int)TestingSettings_FieldIndex.TestFolder);
+                        if (BooleanXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Boolean TestFolderParse,
+                            errorMask: errorMask))
+                        {
+                            item.TestFolder = TestFolderParse;
+                        }
+                        else
+                        {
+                            item.TestFolder = default(Boolean);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "TestGroupMasks":
+                    try
+                    {
+                        errorMask?.PushIndex((int)TestingSettings_FieldIndex.TestGroupMasks);
+                        if (BooleanXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Boolean TestGroupMasksParse,
+                            errorMask: errorMask))
+                        {
+                            item.TestGroupMasks = TestGroupMasksParse;
+                        }
+                        else
+                        {
+                            item.TestGroupMasks = default(Boolean);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "TestModList":
+                    try
+                    {
+                        errorMask?.PushIndex((int)TestingSettings_FieldIndex.TestModList);
+                        if (BooleanXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Boolean TestModListParse,
+                            errorMask: errorMask))
+                        {
+                            item.TestModList = TestModListParse;
+                        }
+                        else
+                        {
+                            item.TestModList = default(Boolean);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "TestFlattenedMod":
+                    try
+                    {
+                        errorMask?.PushIndex((int)TestingSettings_FieldIndex.TestFlattenedMod);
+                        if (BooleanXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Boolean TestFlattenedModParse,
+                            errorMask: errorMask))
+                        {
+                            item.TestFlattenedMod = TestFlattenedModParse;
+                        }
+                        else
+                        {
+                            item.TestFlattenedMod = default(Boolean);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "PassthroughSettings":
+                    try
+                    {
+                        errorMask?.PushIndex((int)TestingSettings_FieldIndex.PassthroughSettings);
+                        if (LoquiXmlTranslation<PassthroughSettings>.Instance.Parse(
+                            node: node,
+                            item: out PassthroughSettings PassthroughSettingsParse,
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)TestingSettings_FieldIndex.PassthroughSettings)))
+                        {
+                            item.PassthroughSettings = PassthroughSettingsParse;
+                        }
+                        else
+                        {
+                            item.PassthroughSettings = default(PassthroughSettings);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "OblivionESM":
+                    try
+                    {
+                        errorMask?.PushIndex((int)TestingSettings_FieldIndex.OblivionESM);
+                        if (LoquiXmlTranslation<Passthrough>.Instance.Parse(
+                            node: node,
+                            item: out Passthrough OblivionESMParse,
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)TestingSettings_FieldIndex.OblivionESM)))
+                        {
+                            item.OblivionESM = OblivionESMParse;
+                        }
+                        else
+                        {
+                            item.OblivionESM = default(Passthrough);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "OtherPassthroughs":
+                    try
+                    {
+                        errorMask?.PushIndex((int)TestingSettings_FieldIndex.OtherPassthroughs);
+                        if (ListXmlTranslation<Passthrough>.Instance.Parse(
+                            node: node,
+                            enumer: out var OtherPassthroughsItem,
+                            transl: LoquiXmlTranslation<Passthrough>.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.OtherPassthroughs.SetTo(OtherPassthroughsItem);
+                        }
+                        else
+                        {
+                            item.OtherPassthroughs.Unset();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+
         #endregion
 
     }
@@ -1799,7 +1819,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             this.TestFlattenedMod = initialValue;
             this.PassthroughSettings = new MaskItem<T, PassthroughSettings_Mask<T>>(initialValue, new PassthroughSettings_Mask<T>(initialValue));
             this.OblivionESM = new MaskItem<T, Passthrough_Mask<T>>(initialValue, new Passthrough_Mask<T>(initialValue));
-            this.OtherPassthroughs = new MaskItem<T, IEnumerable<MaskItem<T, Passthrough_Mask<T>>>>(initialValue, null);
+            this.OtherPassthroughs = new MaskItem<T, IEnumerable<MaskItemIndexed<T, Passthrough_Mask<T>>>>(initialValue, null);
         }
         #endregion
 
@@ -1810,7 +1830,7 @@ namespace Mutagen.Bethesda.Tests.Internals
         public T TestFlattenedMod;
         public MaskItem<T, PassthroughSettings_Mask<T>> PassthroughSettings { get; set; }
         public MaskItem<T, Passthrough_Mask<T>> OblivionESM { get; set; }
-        public MaskItem<T, IEnumerable<MaskItem<T, Passthrough_Mask<T>>>> OtherPassthroughs;
+        public MaskItem<T, IEnumerable<MaskItemIndexed<T, Passthrough_Mask<T>>>> OtherPassthroughs;
         #endregion
 
         #region Equals
@@ -1914,22 +1934,23 @@ namespace Mutagen.Bethesda.Tests.Internals
             }
             if (OtherPassthroughs != null)
             {
-                obj.OtherPassthroughs = new MaskItem<R, IEnumerable<MaskItem<R, Passthrough_Mask<R>>>>();
+                obj.OtherPassthroughs = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Passthrough_Mask<R>>>>();
                 obj.OtherPassthroughs.Overall = eval(this.OtherPassthroughs.Overall);
                 if (OtherPassthroughs.Specific != null)
                 {
-                    List<MaskItem<R, Passthrough_Mask<R>>> l = new List<MaskItem<R, Passthrough_Mask<R>>>();
+                    List<MaskItemIndexed<R, Passthrough_Mask<R>>> l = new List<MaskItemIndexed<R, Passthrough_Mask<R>>>();
                     obj.OtherPassthroughs.Specific = l;
-                    foreach (var item in OtherPassthroughs.Specific)
+                    foreach (var item in OtherPassthroughs.Specific.WithIndex())
                     {
-                        MaskItem<R, Passthrough_Mask<R>> mask = default(MaskItem<R, Passthrough_Mask<R>>);
-                        if (item != null)
+                        MaskItemIndexed<R, Passthrough_Mask<R>> mask = default;
+                        mask.Index = item.Index;
+                        if (item.Item != null)
                         {
-                            mask = new MaskItem<R, Passthrough_Mask<R>>();
-                            mask.Overall = eval(item.Overall);
-                            if (item.Specific != null)
+                            mask = new MaskItemIndexed<R, Passthrough_Mask<R>>(item.Item.Index);
+                            mask.Overall = eval(item.Item.Overall);
+                            if (item.Item.Specific != null)
                             {
-                                mask.Specific = item.Specific.Translate(eval);
+                                mask.Specific = item.Item.Specific.Translate(eval);
                             }
                         }
                         l.Add(mask);

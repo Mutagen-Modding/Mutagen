@@ -95,8 +95,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> IEqualsMask<AIPackageLocation>.GetEqualsMask(AIPackageLocation rhs) => AIPackageLocationCommon.GetEqualsMask(this, rhs);
-        IMask<bool> IEqualsMask<IAIPackageLocationGetter>.GetEqualsMask(IAIPackageLocationGetter rhs) => AIPackageLocationCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<AIPackageLocation>.GetEqualsMask(AIPackageLocation rhs, EqualsMaskHelper.Include include) => AIPackageLocationCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<IAIPackageLocationGetter>.GetEqualsMask(IAIPackageLocationGetter rhs, EqualsMaskHelper.Include include) => AIPackageLocationCommon.GetEqualsMask(this, rhs, include);
         #region To String
         public string ToString(
             string name = null,
@@ -186,7 +186,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 foreach (var elem in node.Elements())
                 {
-                    Fill_Xml_Internal(
+                    AIPackageLocationCommon.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -500,79 +500,6 @@ namespace Mutagen.Bethesda.Oblivion
                 translationMask: translationMask);
         }
         #endregion
-
-        protected static void Fill_Xml_Internal(
-            AIPackageLocation item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            switch (name)
-            {
-                case "Type":
-                    try
-                    {
-                        errorMask?.PushIndex((int)AIPackageLocation_FieldIndex.Type);
-                        if (EnumXmlTranslation<AIPackageLocation.LocationType>.Instance.Parse(
-                            node: node,
-                            item: out AIPackageLocation.LocationType TypeParse,
-                            errorMask: errorMask))
-                        {
-                            item.Type = TypeParse;
-                        }
-                        else
-                        {
-                            item.Type = default(AIPackageLocation.LocationType);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "LocationReference":
-                    FormKeyXmlTranslation.Instance.ParseInto(
-                        node: node,
-                        item: item.LocationReference_Property,
-                        fieldIndex: (int)AIPackageLocation_FieldIndex.LocationReference,
-                        errorMask: errorMask);
-                    break;
-                case "Radius":
-                    try
-                    {
-                        errorMask?.PushIndex((int)AIPackageLocation_FieldIndex.Radius);
-                        if (FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Single RadiusParse,
-                            errorMask: errorMask))
-                        {
-                            item.Radius = RadiusParse;
-                        }
-                        else
-                        {
-                            item.Radius = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
 
         #endregion
 
@@ -1563,22 +1490,28 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static AIPackageLocation_Mask<bool> GetEqualsMask(
             this IAIPackageLocationGetter item,
-            IAIPackageLocationGetter rhs)
+            IAIPackageLocationGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new AIPackageLocation_Mask<bool>();
-            FillEqualsMask(item, rhs, ret);
+            FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
             return ret;
         }
 
         public static void FillEqualsMask(
             IAIPackageLocationGetter item,
             IAIPackageLocationGetter rhs,
-            AIPackageLocation_Mask<bool> ret)
+            AIPackageLocation_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
             ret.Type = item.Type == rhs.Type;
             ret.LocationReference = item.LocationReference_Property.FormKey == rhs.LocationReference_Property.FormKey;
-            ret.Radius = item.Radius == rhs.Radius;
+            ret.Radius = item.Radius.EqualsWithin(rhs.Radius);
         }
 
         public static string ToString(
@@ -1682,7 +1615,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         public static void WriteToNode_Xml(
-            IAIPackageLocationGetter item,
+            this IAIPackageLocationGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1713,6 +1646,104 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item.Radius,
                     fieldIndex: (int)AIPackageLocation_FieldIndex.Radius,
                     errorMask: errorMask);
+            }
+        }
+
+        public static void FillPublic_Xml(
+            this AIPackageLocation item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    AIPackageLocationCommon.FillPublicElement_Xml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+
+        public static void FillPublicElement_Xml(
+            this AIPackageLocation item,
+            XElement node,
+            string name,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            switch (name)
+            {
+                case "Type":
+                    try
+                    {
+                        errorMask?.PushIndex((int)AIPackageLocation_FieldIndex.Type);
+                        if (EnumXmlTranslation<AIPackageLocation.LocationType>.Instance.Parse(
+                            node: node,
+                            item: out AIPackageLocation.LocationType TypeParse,
+                            errorMask: errorMask))
+                        {
+                            item.Type = TypeParse;
+                        }
+                        else
+                        {
+                            item.Type = default(AIPackageLocation.LocationType);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "LocationReference":
+                    FormKeyXmlTranslation.Instance.ParseInto(
+                        node: node,
+                        item: item.LocationReference_Property,
+                        fieldIndex: (int)AIPackageLocation_FieldIndex.LocationReference,
+                        errorMask: errorMask);
+                    break;
+                case "Radius":
+                    try
+                    {
+                        errorMask?.PushIndex((int)AIPackageLocation_FieldIndex.Radius);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Single RadiusParse,
+                            errorMask: errorMask))
+                        {
+                            item.Radius = RadiusParse;
+                        }
+                        else
+                        {
+                            item.Radius = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                default:
+                    break;
             }
         }
 

@@ -173,8 +173,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> IEqualsMask<LogEntry>.GetEqualsMask(LogEntry rhs) => LogEntryCommon.GetEqualsMask(this, rhs);
-        IMask<bool> IEqualsMask<ILogEntryGetter>.GetEqualsMask(ILogEntryGetter rhs) => LogEntryCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<LogEntry>.GetEqualsMask(LogEntry rhs, EqualsMaskHelper.Include include) => LogEntryCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<ILogEntryGetter>.GetEqualsMask(ILogEntryGetter rhs, EqualsMaskHelper.Include include) => LogEntryCommon.GetEqualsMask(this, rhs, include);
         #region To String
         public string ToString(
             string name = null,
@@ -294,7 +294,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 foreach (var elem in node.Elements())
                 {
-                    Fill_Xml_Internal(
+                    LogEntryCommon.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -608,127 +608,6 @@ namespace Mutagen.Bethesda.Oblivion
                 translationMask: translationMask);
         }
         #endregion
-
-        protected static void Fill_Xml_Internal(
-            LogEntry item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            switch (name)
-            {
-                case "Flags":
-                    try
-                    {
-                        errorMask?.PushIndex((int)LogEntry_FieldIndex.Flags);
-                        if (EnumXmlTranslation<LogEntry.Flag>.Instance.Parse(
-                            node: node,
-                            item: out LogEntry.Flag FlagsParse,
-                            errorMask: errorMask))
-                        {
-                            item.Flags = FlagsParse;
-                        }
-                        else
-                        {
-                            item.Flags = default(LogEntry.Flag);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Conditions":
-                    try
-                    {
-                        errorMask?.PushIndex((int)LogEntry_FieldIndex.Conditions);
-                        if (ListXmlTranslation<Condition>.Instance.Parse(
-                            node: node,
-                            enumer: out var ConditionsItem,
-                            transl: LoquiXmlTranslation<Condition>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.Conditions.SetTo(ConditionsItem);
-                        }
-                        else
-                        {
-                            item.Conditions.Unset();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Entry":
-                    try
-                    {
-                        errorMask?.PushIndex((int)LogEntry_FieldIndex.Entry);
-                        if (StringXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out String EntryParse,
-                            errorMask: errorMask))
-                        {
-                            item.Entry = EntryParse;
-                        }
-                        else
-                        {
-                            item.Entry = default(String);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ResultScript":
-                    try
-                    {
-                        errorMask?.PushIndex((int)LogEntry_FieldIndex.ResultScript);
-                        if (LoquiXmlTranslation<ScriptFields>.Instance.Parse(
-                            node: node,
-                            item: out ScriptFields ResultScriptParse,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)LogEntry_FieldIndex.ResultScript)))
-                        {
-                            item.ResultScript = ResultScriptParse;
-                        }
-                        else
-                        {
-                            item.ResultScript = default(ScriptFields);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
 
         #endregion
 
@@ -1990,47 +1869,38 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static LogEntry_Mask<bool> GetEqualsMask(
             this ILogEntryGetter item,
-            ILogEntryGetter rhs)
+            ILogEntryGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new LogEntry_Mask<bool>();
-            FillEqualsMask(item, rhs, ret);
+            FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
             return ret;
         }
 
         public static void FillEqualsMask(
             ILogEntryGetter item,
             ILogEntryGetter rhs,
-            LogEntry_Mask<bool> ret)
+            LogEntry_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
             ret.Flags = item.Flags_IsSet == rhs.Flags_IsSet && item.Flags == rhs.Flags;
-            if (item.Conditions.HasBeenSet == rhs.Conditions.HasBeenSet)
-            {
-                if (item.Conditions.HasBeenSet)
-                {
-                    ret.Conditions = new MaskItem<bool, IEnumerable<MaskItem<bool, Condition_Mask<bool>>>>();
-                    ret.Conditions.Specific = item.Conditions.SelectAgainst<Condition, MaskItem<bool, Condition_Mask<bool>>>(rhs.Conditions, ((l, r) =>
-                    {
-                        MaskItem<bool, Condition_Mask<bool>> itemRet;
-                        itemRet = l.LoquiEqualsHelper(r, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
-                        return itemRet;
-                    }
-                    ), out ret.Conditions.Overall);
-                    ret.Conditions.Overall = ret.Conditions.Overall && ret.Conditions.Specific.All((b) => b.Overall);
-                }
-                else
-                {
-                    ret.Conditions = new MaskItem<bool, IEnumerable<MaskItem<bool, Condition_Mask<bool>>>>();
-                    ret.Conditions.Overall = true;
-                }
-            }
-            else
-            {
-                ret.Conditions = new MaskItem<bool, IEnumerable<MaskItem<bool, Condition_Mask<bool>>>>();
-                ret.Conditions.Overall = false;
-            }
+            ret.Conditions = item.Conditions.CollectionEqualsHelper(
+                rhs.Conditions,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
             ret.Entry = item.Entry_IsSet == rhs.Entry_IsSet && object.Equals(item.Entry, rhs.Entry);
-            ret.ResultScript = IHasBeenSetExt.LoquiEqualsHelper(item.ResultScript_IsSet, rhs.ResultScript_IsSet, item.ResultScript, rhs.ResultScript, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
+            ret.ResultScript = EqualsMaskHelper.EqualsHelper(
+                item.ResultScript_IsSet,
+                rhs.ResultScript_IsSet,
+                item.ResultScript,
+                rhs.ResultScript,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
+                include);
         }
 
         public static string ToString(
@@ -2110,7 +1980,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             var ret = new LogEntry_Mask<bool>();
             ret.Flags = item.Flags_IsSet;
-            ret.Conditions = new MaskItem<bool, IEnumerable<MaskItem<bool, Condition_Mask<bool>>>>(item.Conditions.HasBeenSet, item.Conditions.Select((i) => new MaskItem<bool, Condition_Mask<bool>>(true, i.GetHasBeenSetMask())));
+            ret.Conditions = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Condition_Mask<bool>>>>(item.Conditions.HasBeenSet, item.Conditions.WithIndex().Select((i) => new MaskItemIndexed<bool, Condition_Mask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
             ret.Entry = item.Entry_IsSet;
             ret.ResultScript = new MaskItem<bool, ScriptFields_Mask<bool>>(item.ResultScript_IsSet, ScriptFieldsCommon.GetHasBeenSetMask(item.ResultScript));
             return ret;
@@ -2158,7 +2028,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         public static void WriteToNode_Xml(
-            ILogEntryGetter item,
+            this ILogEntryGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -2214,6 +2084,152 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)LogEntry_FieldIndex.ResultScript,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)LogEntry_FieldIndex.ResultScript));
+            }
+        }
+
+        public static void FillPublic_Xml(
+            this LogEntry item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    LogEntryCommon.FillPublicElement_Xml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+
+        public static void FillPublicElement_Xml(
+            this LogEntry item,
+            XElement node,
+            string name,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            switch (name)
+            {
+                case "Flags":
+                    try
+                    {
+                        errorMask?.PushIndex((int)LogEntry_FieldIndex.Flags);
+                        if (EnumXmlTranslation<LogEntry.Flag>.Instance.Parse(
+                            node: node,
+                            item: out LogEntry.Flag FlagsParse,
+                            errorMask: errorMask))
+                        {
+                            item.Flags = FlagsParse;
+                        }
+                        else
+                        {
+                            item.Flags = default(LogEntry.Flag);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Conditions":
+                    try
+                    {
+                        errorMask?.PushIndex((int)LogEntry_FieldIndex.Conditions);
+                        if (ListXmlTranslation<Condition>.Instance.Parse(
+                            node: node,
+                            enumer: out var ConditionsItem,
+                            transl: LoquiXmlTranslation<Condition>.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.Conditions.SetTo(ConditionsItem);
+                        }
+                        else
+                        {
+                            item.Conditions.Unset();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Entry":
+                    try
+                    {
+                        errorMask?.PushIndex((int)LogEntry_FieldIndex.Entry);
+                        if (StringXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out String EntryParse,
+                            errorMask: errorMask))
+                        {
+                            item.Entry = EntryParse;
+                        }
+                        else
+                        {
+                            item.Entry = default(String);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "ResultScript":
+                    try
+                    {
+                        errorMask?.PushIndex((int)LogEntry_FieldIndex.ResultScript);
+                        if (LoquiXmlTranslation<ScriptFields>.Instance.Parse(
+                            node: node,
+                            item: out ScriptFields ResultScriptParse,
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)LogEntry_FieldIndex.ResultScript)))
+                        {
+                            item.ResultScript = ResultScriptParse;
+                        }
+                        else
+                        {
+                            item.ResultScript = default(ScriptFields);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                default:
+                    break;
             }
         }
 
@@ -2328,7 +2344,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public LogEntry_Mask(T initialValue)
         {
             this.Flags = initialValue;
-            this.Conditions = new MaskItem<T, IEnumerable<MaskItem<T, Condition_Mask<T>>>>(initialValue, null);
+            this.Conditions = new MaskItem<T, IEnumerable<MaskItemIndexed<T, Condition_Mask<T>>>>(initialValue, null);
             this.Entry = initialValue;
             this.ResultScript = new MaskItem<T, ScriptFields_Mask<T>>(initialValue, new ScriptFields_Mask<T>(initialValue));
         }
@@ -2336,7 +2352,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #region Members
         public T Flags;
-        public MaskItem<T, IEnumerable<MaskItem<T, Condition_Mask<T>>>> Conditions;
+        public MaskItem<T, IEnumerable<MaskItemIndexed<T, Condition_Mask<T>>>> Conditions;
         public T Entry;
         public MaskItem<T, ScriptFields_Mask<T>> ResultScript { get; set; }
         #endregion
@@ -2408,22 +2424,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             obj.Flags = eval(this.Flags);
             if (Conditions != null)
             {
-                obj.Conditions = new MaskItem<R, IEnumerable<MaskItem<R, Condition_Mask<R>>>>();
+                obj.Conditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition_Mask<R>>>>();
                 obj.Conditions.Overall = eval(this.Conditions.Overall);
                 if (Conditions.Specific != null)
                 {
-                    List<MaskItem<R, Condition_Mask<R>>> l = new List<MaskItem<R, Condition_Mask<R>>>();
+                    List<MaskItemIndexed<R, Condition_Mask<R>>> l = new List<MaskItemIndexed<R, Condition_Mask<R>>>();
                     obj.Conditions.Specific = l;
-                    foreach (var item in Conditions.Specific)
+                    foreach (var item in Conditions.Specific.WithIndex())
                     {
-                        MaskItem<R, Condition_Mask<R>> mask = default(MaskItem<R, Condition_Mask<R>>);
-                        if (item != null)
+                        MaskItemIndexed<R, Condition_Mask<R>> mask = default;
+                        mask.Index = item.Index;
+                        if (item.Item != null)
                         {
-                            mask = new MaskItem<R, Condition_Mask<R>>();
-                            mask.Overall = eval(item.Overall);
-                            if (item.Specific != null)
+                            mask = new MaskItemIndexed<R, Condition_Mask<R>>(item.Item.Index);
+                            mask.Overall = eval(item.Item.Overall);
+                            if (item.Item.Specific != null)
                             {
-                                mask.Specific = item.Specific.Translate(eval);
+                                mask.Specific = item.Item.Specific.Translate(eval);
                             }
                         }
                         l.Add(mask);

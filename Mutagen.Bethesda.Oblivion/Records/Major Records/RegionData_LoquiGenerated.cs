@@ -109,8 +109,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> IEqualsMask<RegionData>.GetEqualsMask(RegionData rhs) => RegionDataCommon.GetEqualsMask(this, rhs);
-        IMask<bool> IEqualsMask<IRegionDataGetter>.GetEqualsMask(IRegionDataGetter rhs) => RegionDataCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<RegionData>.GetEqualsMask(RegionData rhs, EqualsMaskHelper.Include include) => RegionDataCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<IRegionDataGetter>.GetEqualsMask(IRegionDataGetter rhs, EqualsMaskHelper.Include include) => RegionDataCommon.GetEqualsMask(this, rhs, include);
         #region To String
         public string ToString(
             string name = null,
@@ -502,7 +502,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        protected static void Fill_Xml_Internal(
+        protected static void FillPrivateElement_Xml(
             RegionData item,
             XElement node,
             string name,
@@ -525,58 +525,6 @@ namespace Mutagen.Bethesda.Oblivion
                         else
                         {
                             item.DataType = default(RegionData.RegionDataType);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Flags":
-                    try
-                    {
-                        errorMask?.PushIndex((int)RegionData_FieldIndex.Flags);
-                        if (EnumXmlTranslation<RegionData.RegionDataFlag>.Instance.Parse(
-                            node: node,
-                            item: out RegionData.RegionDataFlag FlagsParse,
-                            errorMask: errorMask))
-                        {
-                            item.Flags = FlagsParse;
-                        }
-                        else
-                        {
-                            item.Flags = default(RegionData.RegionDataFlag);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Priority":
-                    try
-                    {
-                        errorMask?.PushIndex((int)RegionData_FieldIndex.Priority);
-                        if (ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Byte PriorityParse,
-                            errorMask: errorMask))
-                        {
-                            item.Priority = PriorityParse;
-                        }
-                        else
-                        {
-                            item.Priority = default(Byte);
                         }
                     }
                     catch (Exception ex)
@@ -1422,17 +1370,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static RegionData_Mask<bool> GetEqualsMask(
             this IRegionDataGetter item,
-            IRegionDataGetter rhs)
+            IRegionDataGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new RegionData_Mask<bool>();
-            FillEqualsMask(item, rhs, ret);
+            FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
             return ret;
         }
 
         public static void FillEqualsMask(
             IRegionDataGetter item,
             IRegionDataGetter rhs,
-            RegionData_Mask<bool> ret)
+            RegionData_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
             ret.DataType = item.DataType == rhs.DataType;
@@ -1541,7 +1495,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         public static void WriteToNode_Xml(
-            IRegionDataGetter item,
+            this IRegionDataGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1572,6 +1526,97 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item.Priority,
                     fieldIndex: (int)RegionData_FieldIndex.Priority,
                     errorMask: errorMask);
+            }
+        }
+
+        public static void FillPublic_Xml(
+            this RegionData item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    RegionDataCommon.FillPublicElement_Xml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+
+        public static void FillPublicElement_Xml(
+            this RegionData item,
+            XElement node,
+            string name,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            switch (name)
+            {
+                case "Flags":
+                    try
+                    {
+                        errorMask?.PushIndex((int)RegionData_FieldIndex.Flags);
+                        if (EnumXmlTranslation<RegionData.RegionDataFlag>.Instance.Parse(
+                            node: node,
+                            item: out RegionData.RegionDataFlag FlagsParse,
+                            errorMask: errorMask))
+                        {
+                            item.Flags = FlagsParse;
+                        }
+                        else
+                        {
+                            item.Flags = default(RegionData.RegionDataFlag);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Priority":
+                    try
+                    {
+                        errorMask?.PushIndex((int)RegionData_FieldIndex.Priority);
+                        if (ByteXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Byte PriorityParse,
+                            errorMask: errorMask))
+                        {
+                            item.Priority = PriorityParse;
+                        }
+                        else
+                        {
+                            item.Priority = default(Byte);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                default:
+                    break;
             }
         }
 

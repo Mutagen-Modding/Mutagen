@@ -110,8 +110,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> IEqualsMask<LockInformation>.GetEqualsMask(LockInformation rhs) => LockInformationCommon.GetEqualsMask(this, rhs);
-        IMask<bool> IEqualsMask<ILockInformationGetter>.GetEqualsMask(ILockInformationGetter rhs) => LockInformationCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<LockInformation>.GetEqualsMask(LockInformation rhs, EqualsMaskHelper.Include include) => LockInformationCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<ILockInformationGetter>.GetEqualsMask(ILockInformationGetter rhs, EqualsMaskHelper.Include include) => LockInformationCommon.GetEqualsMask(this, rhs, include);
         #region To String
         public string ToString(
             string name = null,
@@ -203,7 +203,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 foreach (var elem in node.Elements())
                 {
-                    Fill_Xml_Internal(
+                    LockInformationCommon.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -517,105 +517,6 @@ namespace Mutagen.Bethesda.Oblivion
                 translationMask: translationMask);
         }
         #endregion
-
-        protected static void Fill_Xml_Internal(
-            LockInformation item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            switch (name)
-            {
-                case "LockLevel":
-                    try
-                    {
-                        errorMask?.PushIndex((int)LockInformation_FieldIndex.LockLevel);
-                        if (ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Byte LockLevelParse,
-                            errorMask: errorMask))
-                        {
-                            item.LockLevel = LockLevelParse;
-                        }
-                        else
-                        {
-                            item.LockLevel = default(Byte);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Fluff":
-                    try
-                    {
-                        errorMask?.PushIndex((int)LockInformation_FieldIndex.Fluff);
-                        if (ByteArrayXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Byte[] FluffParse,
-                            errorMask: errorMask))
-                        {
-                            item.Fluff = FluffParse;
-                        }
-                        else
-                        {
-                            item.Fluff = default(Byte[]);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Key":
-                    FormKeyXmlTranslation.Instance.ParseInto(
-                        node: node,
-                        item: item.Key_Property,
-                        fieldIndex: (int)LockInformation_FieldIndex.Key,
-                        errorMask: errorMask);
-                    break;
-                case "Flags":
-                    try
-                    {
-                        errorMask?.PushIndex((int)LockInformation_FieldIndex.Flags);
-                        if (EnumXmlTranslation<LockInformation.Flag>.Instance.Parse(
-                            node: node,
-                            item: out LockInformation.Flag FlagsParse,
-                            errorMask: errorMask))
-                        {
-                            item.Flags = FlagsParse;
-                        }
-                        else
-                        {
-                            item.Flags = default(LockInformation.Flag);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
 
         #endregion
 
@@ -1680,17 +1581,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static LockInformation_Mask<bool> GetEqualsMask(
             this ILockInformationGetter item,
-            ILockInformationGetter rhs)
+            ILockInformationGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new LockInformation_Mask<bool>();
-            FillEqualsMask(item, rhs, ret);
+            FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
             return ret;
         }
 
         public static void FillEqualsMask(
             ILockInformationGetter item,
             ILockInformationGetter rhs,
-            LockInformation_Mask<bool> ret)
+            LockInformation_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
             ret.LockLevel = item.LockLevel == rhs.LockLevel;
@@ -1805,7 +1712,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         public static void WriteToNode_Xml(
-            ILockInformationGetter item,
+            this ILockInformationGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1845,6 +1752,130 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item.Flags,
                     fieldIndex: (int)LockInformation_FieldIndex.Flags,
                     errorMask: errorMask);
+            }
+        }
+
+        public static void FillPublic_Xml(
+            this LockInformation item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    LockInformationCommon.FillPublicElement_Xml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+
+        public static void FillPublicElement_Xml(
+            this LockInformation item,
+            XElement node,
+            string name,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            switch (name)
+            {
+                case "LockLevel":
+                    try
+                    {
+                        errorMask?.PushIndex((int)LockInformation_FieldIndex.LockLevel);
+                        if (ByteXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Byte LockLevelParse,
+                            errorMask: errorMask))
+                        {
+                            item.LockLevel = LockLevelParse;
+                        }
+                        else
+                        {
+                            item.LockLevel = default(Byte);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Fluff":
+                    try
+                    {
+                        errorMask?.PushIndex((int)LockInformation_FieldIndex.Fluff);
+                        if (ByteArrayXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Byte[] FluffParse,
+                            errorMask: errorMask))
+                        {
+                            item.Fluff = FluffParse;
+                        }
+                        else
+                        {
+                            item.Fluff = default(Byte[]);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Key":
+                    FormKeyXmlTranslation.Instance.ParseInto(
+                        node: node,
+                        item: item.Key_Property,
+                        fieldIndex: (int)LockInformation_FieldIndex.Key,
+                        errorMask: errorMask);
+                    break;
+                case "Flags":
+                    try
+                    {
+                        errorMask?.PushIndex((int)LockInformation_FieldIndex.Flags);
+                        if (EnumXmlTranslation<LockInformation.Flag>.Instance.Parse(
+                            node: node,
+                            item: out LockInformation.Flag FlagsParse,
+                            errorMask: errorMask))
+                        {
+                            item.Flags = FlagsParse;
+                        }
+                        else
+                        {
+                            item.Flags = default(LockInformation.Flag);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                default:
+                    break;
             }
         }
 

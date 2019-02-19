@@ -194,8 +194,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> IEqualsMask<Door>.GetEqualsMask(Door rhs) => DoorCommon.GetEqualsMask(this, rhs);
-        IMask<bool> IEqualsMask<IDoorGetter>.GetEqualsMask(IDoorGetter rhs) => DoorCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<Door>.GetEqualsMask(Door rhs, EqualsMaskHelper.Include include) => DoorCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<IDoorGetter>.GetEqualsMask(IDoorGetter rhs, EqualsMaskHelper.Include include) => DoorCommon.GetEqualsMask(this, rhs, include);
         #region To String
         public string ToString(
             string name = null,
@@ -353,7 +353,13 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 foreach (var elem in node.Elements())
                 {
-                    Fill_Xml_Internal(
+                    FillPrivateElement_Xml(
+                        item: ret,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                    DoorCommon.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -665,7 +671,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        protected static void Fill_Xml_Internal(
+        protected static void FillPrivateElement_Xml(
             Door item,
             XElement node,
             string name,
@@ -674,143 +680,8 @@ namespace Mutagen.Bethesda.Oblivion
         {
             switch (name)
             {
-                case "Name":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Door_FieldIndex.Name);
-                        if (StringXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out String NameParse,
-                            errorMask: errorMask))
-                        {
-                            item.Name = NameParse;
-                        }
-                        else
-                        {
-                            item.Name = default(String);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Model":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Door_FieldIndex.Model);
-                        if (LoquiXmlTranslation<Model>.Instance.Parse(
-                            node: node,
-                            item: out Model ModelParse,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Door_FieldIndex.Model)))
-                        {
-                            item.Model = ModelParse;
-                        }
-                        else
-                        {
-                            item.Model = default(Model);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Script":
-                    FormKeyXmlTranslation.Instance.ParseInto(
-                        node: node,
-                        item: item.Script_Property,
-                        fieldIndex: (int)Door_FieldIndex.Script,
-                        errorMask: errorMask);
-                    break;
-                case "OpenSound":
-                    FormKeyXmlTranslation.Instance.ParseInto(
-                        node: node,
-                        item: item.OpenSound_Property,
-                        fieldIndex: (int)Door_FieldIndex.OpenSound,
-                        errorMask: errorMask);
-                    break;
-                case "CloseSound":
-                    FormKeyXmlTranslation.Instance.ParseInto(
-                        node: node,
-                        item: item.CloseSound_Property,
-                        fieldIndex: (int)Door_FieldIndex.CloseSound,
-                        errorMask: errorMask);
-                    break;
-                case "LoopSound":
-                    FormKeyXmlTranslation.Instance.ParseInto(
-                        node: node,
-                        item: item.LoopSound_Property,
-                        fieldIndex: (int)Door_FieldIndex.LoopSound,
-                        errorMask: errorMask);
-                    break;
-                case "Flags":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Door_FieldIndex.Flags);
-                        if (EnumXmlTranslation<Door.DoorFlag>.Instance.Parse(
-                            node: node,
-                            item: out Door.DoorFlag FlagsParse,
-                            errorMask: errorMask))
-                        {
-                            item.Flags = FlagsParse;
-                        }
-                        else
-                        {
-                            item.Flags = default(Door.DoorFlag);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "RandomTeleportDestinations":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Door_FieldIndex.RandomTeleportDestinations);
-                        if (ListXmlTranslation<FormIDSetLink<Place>>.Instance.Parse(
-                            node: node,
-                            enumer: out var RandomTeleportDestinationsItem,
-                            transl: FormKeyXmlTranslation.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.RandomTeleportDestinations.SetTo(RandomTeleportDestinationsItem);
-                        }
-                        else
-                        {
-                            item.RandomTeleportDestinations.Unset();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
                 default:
-                    MajorRecord.Fill_Xml_Internal(
+                    MajorRecord.FillPrivateElement_Xml(
                         item: item,
                         node: node,
                         name: name,
@@ -2311,45 +2182,42 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static Door_Mask<bool> GetEqualsMask(
             this IDoorGetter item,
-            IDoorGetter rhs)
+            IDoorGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new Door_Mask<bool>();
-            FillEqualsMask(item, rhs, ret);
+            FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
             return ret;
         }
 
         public static void FillEqualsMask(
             IDoorGetter item,
             IDoorGetter rhs,
-            Door_Mask<bool> ret)
+            Door_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
             ret.Name = item.Name_IsSet == rhs.Name_IsSet && object.Equals(item.Name, rhs.Name);
-            ret.Model = IHasBeenSetExt.LoquiEqualsHelper(item.Model_IsSet, rhs.Model_IsSet, item.Model, rhs.Model, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
+            ret.Model = EqualsMaskHelper.EqualsHelper(
+                item.Model_IsSet,
+                rhs.Model_IsSet,
+                item.Model,
+                rhs.Model,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
+                include);
             ret.Script = item.Script_Property.FormKey == rhs.Script_Property.FormKey;
             ret.OpenSound = item.OpenSound_Property.FormKey == rhs.OpenSound_Property.FormKey;
             ret.CloseSound = item.CloseSound_Property.FormKey == rhs.CloseSound_Property.FormKey;
             ret.LoopSound = item.LoopSound_Property.FormKey == rhs.LoopSound_Property.FormKey;
             ret.Flags = item.Flags_IsSet == rhs.Flags_IsSet && item.Flags == rhs.Flags;
-            if (item.RandomTeleportDestinations.HasBeenSet == rhs.RandomTeleportDestinations.HasBeenSet)
-            {
-                if (item.RandomTeleportDestinations.HasBeenSet)
-                {
-                    ret.RandomTeleportDestinations = new MaskItem<bool, IEnumerable<bool>>();
-                    ret.RandomTeleportDestinations.Specific = item.RandomTeleportDestinations.SelectAgainst<FormIDSetLink<Place>, bool>(rhs.RandomTeleportDestinations, ((l, r) => object.Equals(l, r)), out ret.RandomTeleportDestinations.Overall);
-                    ret.RandomTeleportDestinations.Overall = ret.RandomTeleportDestinations.Overall && ret.RandomTeleportDestinations.Specific.All((b) => b);
-                }
-                else
-                {
-                    ret.RandomTeleportDestinations = new MaskItem<bool, IEnumerable<bool>>();
-                    ret.RandomTeleportDestinations.Overall = true;
-                }
-            }
-            else
-            {
-                ret.RandomTeleportDestinations = new MaskItem<bool, IEnumerable<bool>>();
-                ret.RandomTeleportDestinations.Overall = false;
-            }
+            ret.RandomTeleportDestinations = item.RandomTeleportDestinations.CollectionEqualsHelper(
+                rhs.RandomTeleportDestinations,
+                (l, r) => object.Equals(l, r),
+                include);
             MajorRecordCommon.FillEqualsMask(item, rhs, ret);
         }
 
@@ -2456,7 +2324,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.CloseSound = item.CloseSound_Property.HasBeenSet;
             ret.LoopSound = item.LoopSound_Property.HasBeenSet;
             ret.Flags = item.Flags_IsSet;
-            ret.RandomTeleportDestinations = new MaskItem<bool, IEnumerable<bool>>(item.RandomTeleportDestinations.HasBeenSet, null);
+            ret.RandomTeleportDestinations = new MaskItem<bool, IEnumerable<(int, bool)>>(item.RandomTeleportDestinations.HasBeenSet, null);
             return ret;
         }
 
@@ -2527,7 +2395,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         public static void WriteToNode_Xml(
-            IDoorGetter item,
+            this IDoorGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -2627,6 +2495,186 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             errorMask: listSubMask);
                     }
                     );
+            }
+        }
+
+        public static void FillPublic_Xml(
+            this Door item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    DoorCommon.FillPublicElement_Xml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+
+        public static void FillPublicElement_Xml(
+            this Door item,
+            XElement node,
+            string name,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            switch (name)
+            {
+                case "Name":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Door_FieldIndex.Name);
+                        if (StringXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out String NameParse,
+                            errorMask: errorMask))
+                        {
+                            item.Name = NameParse;
+                        }
+                        else
+                        {
+                            item.Name = default(String);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Model":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Door_FieldIndex.Model);
+                        if (LoquiXmlTranslation<Model>.Instance.Parse(
+                            node: node,
+                            item: out Model ModelParse,
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)Door_FieldIndex.Model)))
+                        {
+                            item.Model = ModelParse;
+                        }
+                        else
+                        {
+                            item.Model = default(Model);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Script":
+                    FormKeyXmlTranslation.Instance.ParseInto(
+                        node: node,
+                        item: item.Script_Property,
+                        fieldIndex: (int)Door_FieldIndex.Script,
+                        errorMask: errorMask);
+                    break;
+                case "OpenSound":
+                    FormKeyXmlTranslation.Instance.ParseInto(
+                        node: node,
+                        item: item.OpenSound_Property,
+                        fieldIndex: (int)Door_FieldIndex.OpenSound,
+                        errorMask: errorMask);
+                    break;
+                case "CloseSound":
+                    FormKeyXmlTranslation.Instance.ParseInto(
+                        node: node,
+                        item: item.CloseSound_Property,
+                        fieldIndex: (int)Door_FieldIndex.CloseSound,
+                        errorMask: errorMask);
+                    break;
+                case "LoopSound":
+                    FormKeyXmlTranslation.Instance.ParseInto(
+                        node: node,
+                        item: item.LoopSound_Property,
+                        fieldIndex: (int)Door_FieldIndex.LoopSound,
+                        errorMask: errorMask);
+                    break;
+                case "Flags":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Door_FieldIndex.Flags);
+                        if (EnumXmlTranslation<Door.DoorFlag>.Instance.Parse(
+                            node: node,
+                            item: out Door.DoorFlag FlagsParse,
+                            errorMask: errorMask))
+                        {
+                            item.Flags = FlagsParse;
+                        }
+                        else
+                        {
+                            item.Flags = default(Door.DoorFlag);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "RandomTeleportDestinations":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Door_FieldIndex.RandomTeleportDestinations);
+                        if (ListXmlTranslation<FormIDSetLink<Place>>.Instance.Parse(
+                            node: node,
+                            enumer: out var RandomTeleportDestinationsItem,
+                            transl: FormKeyXmlTranslation.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.RandomTeleportDestinations.SetTo(RandomTeleportDestinationsItem);
+                        }
+                        else
+                        {
+                            item.RandomTeleportDestinations.Unset();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                default:
+                    MajorRecordCommon.FillPublicElement_Xml(
+                        item: item,
+                        node: node,
+                        name: name,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                    break;
             }
         }
 
@@ -2810,7 +2858,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.CloseSound = initialValue;
             this.LoopSound = initialValue;
             this.Flags = initialValue;
-            this.RandomTeleportDestinations = new MaskItem<T, IEnumerable<T>>(initialValue, null);
+            this.RandomTeleportDestinations = new MaskItem<T, IEnumerable<(int Index, T Value)>>(initialValue, null);
         }
         #endregion
 
@@ -2822,7 +2870,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public T CloseSound;
         public T LoopSound;
         public T Flags;
-        public MaskItem<T, IEnumerable<T>> RandomTeleportDestinations;
+        public MaskItem<T, IEnumerable<(int Index, T Value)>> RandomTeleportDestinations;
         #endregion
 
         #region Equals
@@ -2885,7 +2933,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     foreach (var item in this.RandomTeleportDestinations.Specific)
                     {
-                        if (!eval(item)) return false;
+                        if (!eval(item.Value)) return false;
                     }
                 }
             }
@@ -2921,16 +2969,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             obj.Flags = eval(this.Flags);
             if (RandomTeleportDestinations != null)
             {
-                obj.RandomTeleportDestinations = new MaskItem<R, IEnumerable<R>>();
+                obj.RandomTeleportDestinations = new MaskItem<R, IEnumerable<(int Index, R Value)>>();
                 obj.RandomTeleportDestinations.Overall = eval(this.RandomTeleportDestinations.Overall);
                 if (RandomTeleportDestinations.Specific != null)
                 {
-                    List<R> l = new List<R>();
+                    List<(int Index, R Item)> l = new List<(int Index, R Item)>();
                     obj.RandomTeleportDestinations.Specific = l;
-                    foreach (var item in RandomTeleportDestinations.Specific)
+                    foreach (var item in RandomTeleportDestinations.Specific.WithIndex())
                     {
-                        R mask = default(R);
-                        mask = eval(item);
+                        (int Index, R Item) mask = default;
+                        mask.Index = item.Index;
+                        mask.Item = eval(item.Item.Value);
                         l.Add(mask);
                     }
                 }
@@ -3035,7 +3084,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Exception CloseSound;
         public Exception LoopSound;
         public Exception Flags;
-        public MaskItem<Exception, IEnumerable<Exception>> RandomTeleportDestinations;
+        public MaskItem<Exception, IEnumerable<(int Index, Exception Value)>> RandomTeleportDestinations;
         #endregion
 
         #region IErrorMask
@@ -3092,7 +3141,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     this.Flags = ex;
                     break;
                 case Door_FieldIndex.RandomTeleportDestinations:
-                    this.RandomTeleportDestinations = new MaskItem<Exception, IEnumerable<Exception>>(ex, null);
+                    this.RandomTeleportDestinations = new MaskItem<Exception, IEnumerable<(int Index, Exception Value)>>(ex, null);
                     break;
                 default:
                     base.SetNthException(index, ex);
@@ -3127,7 +3176,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     this.Flags = (Exception)obj;
                     break;
                 case Door_FieldIndex.RandomTeleportDestinations:
-                    this.RandomTeleportDestinations = (MaskItem<Exception, IEnumerable<Exception>>)obj;
+                    this.RandomTeleportDestinations = (MaskItem<Exception, IEnumerable<(int Index, Exception Value)>>)obj;
                     break;
                 default:
                     base.SetNthMask(index, obj);
@@ -3224,7 +3273,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.CloseSound = this.CloseSound.Combine(rhs.CloseSound);
             ret.LoopSound = this.LoopSound.Combine(rhs.LoopSound);
             ret.Flags = this.Flags.Combine(rhs.Flags);
-            ret.RandomTeleportDestinations = new MaskItem<Exception, IEnumerable<Exception>>(this.RandomTeleportDestinations.Overall.Combine(rhs.RandomTeleportDestinations.Overall), new List<Exception>(this.RandomTeleportDestinations.Specific.And(rhs.RandomTeleportDestinations.Specific)));
+            ret.RandomTeleportDestinations = new MaskItem<Exception, IEnumerable<(int Index, Exception Value)>>(this.RandomTeleportDestinations.Overall.Combine(rhs.RandomTeleportDestinations.Overall), new List<(int Index, Exception Value)>(this.RandomTeleportDestinations.Specific.And(rhs.RandomTeleportDestinations.Specific)));
             return ret;
         }
         public static Door_ErrorMask Combine(Door_ErrorMask lhs, Door_ErrorMask rhs)

@@ -96,8 +96,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> IEqualsMask<DistantLODData>.GetEqualsMask(DistantLODData rhs) => DistantLODDataCommon.GetEqualsMask(this, rhs);
-        IMask<bool> IEqualsMask<IDistantLODDataGetter>.GetEqualsMask(IDistantLODDataGetter rhs) => DistantLODDataCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<DistantLODData>.GetEqualsMask(DistantLODData rhs, EqualsMaskHelper.Include include) => DistantLODDataCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<IDistantLODDataGetter>.GetEqualsMask(IDistantLODDataGetter rhs, EqualsMaskHelper.Include include) => DistantLODDataCommon.GetEqualsMask(this, rhs, include);
         #region To String
         public string ToString(
             string name = null,
@@ -187,7 +187,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 foreach (var elem in node.Elements())
                 {
-                    Fill_Xml_Internal(
+                    DistantLODDataCommon.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -501,98 +501,6 @@ namespace Mutagen.Bethesda.Oblivion
                 translationMask: translationMask);
         }
         #endregion
-
-        protected static void Fill_Xml_Internal(
-            DistantLODData item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            switch (name)
-            {
-                case "Unknown0":
-                    try
-                    {
-                        errorMask?.PushIndex((int)DistantLODData_FieldIndex.Unknown0);
-                        if (FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Single Unknown0Parse,
-                            errorMask: errorMask))
-                        {
-                            item.Unknown0 = Unknown0Parse;
-                        }
-                        else
-                        {
-                            item.Unknown0 = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Unknown1":
-                    try
-                    {
-                        errorMask?.PushIndex((int)DistantLODData_FieldIndex.Unknown1);
-                        if (FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Single Unknown1Parse,
-                            errorMask: errorMask))
-                        {
-                            item.Unknown1 = Unknown1Parse;
-                        }
-                        else
-                        {
-                            item.Unknown1 = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Unknown2":
-                    try
-                    {
-                        errorMask?.PushIndex((int)DistantLODData_FieldIndex.Unknown2);
-                        if (FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Single Unknown2Parse,
-                            errorMask: errorMask))
-                        {
-                            item.Unknown2 = Unknown2Parse;
-                        }
-                        else
-                        {
-                            item.Unknown2 = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
 
         #endregion
 
@@ -1576,22 +1484,28 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static DistantLODData_Mask<bool> GetEqualsMask(
             this IDistantLODDataGetter item,
-            IDistantLODDataGetter rhs)
+            IDistantLODDataGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new DistantLODData_Mask<bool>();
-            FillEqualsMask(item, rhs, ret);
+            FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
             return ret;
         }
 
         public static void FillEqualsMask(
             IDistantLODDataGetter item,
             IDistantLODDataGetter rhs,
-            DistantLODData_Mask<bool> ret)
+            DistantLODData_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Unknown0 = item.Unknown0 == rhs.Unknown0;
-            ret.Unknown1 = item.Unknown1 == rhs.Unknown1;
-            ret.Unknown2 = item.Unknown2 == rhs.Unknown2;
+            ret.Unknown0 = item.Unknown0.EqualsWithin(rhs.Unknown0);
+            ret.Unknown1 = item.Unknown1.EqualsWithin(rhs.Unknown1);
+            ret.Unknown2 = item.Unknown2.EqualsWithin(rhs.Unknown2);
         }
 
         public static string ToString(
@@ -1695,7 +1609,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         public static void WriteToNode_Xml(
-            IDistantLODDataGetter item,
+            this IDistantLODDataGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1726,6 +1640,123 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item.Unknown2,
                     fieldIndex: (int)DistantLODData_FieldIndex.Unknown2,
                     errorMask: errorMask);
+            }
+        }
+
+        public static void FillPublic_Xml(
+            this DistantLODData item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    DistantLODDataCommon.FillPublicElement_Xml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+
+        public static void FillPublicElement_Xml(
+            this DistantLODData item,
+            XElement node,
+            string name,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            switch (name)
+            {
+                case "Unknown0":
+                    try
+                    {
+                        errorMask?.PushIndex((int)DistantLODData_FieldIndex.Unknown0);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Single Unknown0Parse,
+                            errorMask: errorMask))
+                        {
+                            item.Unknown0 = Unknown0Parse;
+                        }
+                        else
+                        {
+                            item.Unknown0 = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Unknown1":
+                    try
+                    {
+                        errorMask?.PushIndex((int)DistantLODData_FieldIndex.Unknown1);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Single Unknown1Parse,
+                            errorMask: errorMask))
+                        {
+                            item.Unknown1 = Unknown1Parse;
+                        }
+                        else
+                        {
+                            item.Unknown1 = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Unknown2":
+                    try
+                    {
+                        errorMask?.PushIndex((int)DistantLODData_FieldIndex.Unknown2);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Single Unknown2Parse,
+                            errorMask: errorMask))
+                        {
+                            item.Unknown2 = Unknown2Parse;
+                        }
+                        else
+                        {
+                            item.Unknown2 = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                default:
+                    break;
             }
         }
 

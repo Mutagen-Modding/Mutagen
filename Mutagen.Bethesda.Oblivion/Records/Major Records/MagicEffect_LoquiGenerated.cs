@@ -304,8 +304,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> IEqualsMask<MagicEffect>.GetEqualsMask(MagicEffect rhs) => MagicEffectCommon.GetEqualsMask(this, rhs);
-        IMask<bool> IEqualsMask<IMagicEffectGetter>.GetEqualsMask(IMagicEffectGetter rhs) => MagicEffectCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<MagicEffect>.GetEqualsMask(MagicEffect rhs, EqualsMaskHelper.Include include) => MagicEffectCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<IMagicEffectGetter>.GetEqualsMask(IMagicEffectGetter rhs, EqualsMaskHelper.Include include) => MagicEffectCommon.GetEqualsMask(this, rhs, include);
         #region To String
         public string ToString(
             string name = null,
@@ -456,7 +456,13 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 foreach (var elem in node.Elements())
                 {
-                    Fill_Xml_Internal(
+                    FillPrivateElement_Xml(
+                        item: ret,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                    MagicEffectCommon.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -768,7 +774,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        protected static void Fill_Xml_Internal(
+        protected static void FillPrivateElement_Xml(
             MagicEffect item,
             XElement node,
             string name,
@@ -777,364 +783,8 @@ namespace Mutagen.Bethesda.Oblivion
         {
             switch (name)
             {
-                case "Name":
-                    try
-                    {
-                        errorMask?.PushIndex((int)MagicEffect_FieldIndex.Name);
-                        if (StringXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out String NameParse,
-                            errorMask: errorMask))
-                        {
-                            item.Name = NameParse;
-                        }
-                        else
-                        {
-                            item.Name = default(String);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Description":
-                    try
-                    {
-                        errorMask?.PushIndex((int)MagicEffect_FieldIndex.Description);
-                        if (StringXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out String DescriptionParse,
-                            errorMask: errorMask))
-                        {
-                            item.Description = DescriptionParse;
-                        }
-                        else
-                        {
-                            item.Description = default(String);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Icon":
-                    try
-                    {
-                        errorMask?.PushIndex((int)MagicEffect_FieldIndex.Icon);
-                        if (StringXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out String IconParse,
-                            errorMask: errorMask))
-                        {
-                            item.Icon = IconParse;
-                        }
-                        else
-                        {
-                            item.Icon = default(String);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Model":
-                    try
-                    {
-                        errorMask?.PushIndex((int)MagicEffect_FieldIndex.Model);
-                        if (LoquiXmlTranslation<Model>.Instance.Parse(
-                            node: node,
-                            item: out Model ModelParse,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)MagicEffect_FieldIndex.Model)))
-                        {
-                            item.Model = ModelParse;
-                        }
-                        else
-                        {
-                            item.Model = default(Model);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Flags":
-                    try
-                    {
-                        errorMask?.PushIndex((int)MagicEffect_FieldIndex.Flags);
-                        if (EnumXmlTranslation<MagicEffect.MagicFlag>.Instance.Parse(
-                            node: node,
-                            item: out MagicEffect.MagicFlag FlagsParse,
-                            errorMask: errorMask))
-                        {
-                            item.Flags = FlagsParse;
-                        }
-                        else
-                        {
-                            item.Flags = default(MagicEffect.MagicFlag);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "BaseCost":
-                    try
-                    {
-                        errorMask?.PushIndex((int)MagicEffect_FieldIndex.BaseCost);
-                        if (FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Single BaseCostParse,
-                            errorMask: errorMask))
-                        {
-                            item.BaseCost = BaseCostParse;
-                        }
-                        else
-                        {
-                            item.BaseCost = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Unused":
-                    try
-                    {
-                        errorMask?.PushIndex((int)MagicEffect_FieldIndex.Unused);
-                        if (ByteArrayXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Byte[] UnusedParse,
-                            errorMask: errorMask))
-                        {
-                            item.Unused = UnusedParse;
-                        }
-                        else
-                        {
-                            item.Unused = default(Byte[]);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "MagicSchool":
-                    try
-                    {
-                        errorMask?.PushIndex((int)MagicEffect_FieldIndex.MagicSchool);
-                        if (EnumXmlTranslation<MagicSchool>.Instance.Parse(
-                            node: node,
-                            item: out MagicSchool MagicSchoolParse,
-                            errorMask: errorMask))
-                        {
-                            item.MagicSchool = MagicSchoolParse;
-                        }
-                        else
-                        {
-                            item.MagicSchool = default(MagicSchool);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Resistance":
-                    try
-                    {
-                        errorMask?.PushIndex((int)MagicEffect_FieldIndex.Resistance);
-                        if (EnumXmlTranslation<Resistance>.Instance.Parse(
-                            node: node,
-                            item: out Resistance ResistanceParse,
-                            errorMask: errorMask))
-                        {
-                            item.Resistance = ResistanceParse;
-                        }
-                        else
-                        {
-                            item.Resistance = default(Resistance);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "CounterEffectCount":
-                    try
-                    {
-                        errorMask?.PushIndex((int)MagicEffect_FieldIndex.CounterEffectCount);
-                        if (UInt32XmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out UInt32 CounterEffectCountParse,
-                            errorMask: errorMask))
-                        {
-                            item.CounterEffectCount = CounterEffectCountParse;
-                        }
-                        else
-                        {
-                            item.CounterEffectCount = default(UInt32);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Light":
-                    FormKeyXmlTranslation.Instance.ParseInto(
-                        node: node,
-                        item: item.Light_Property,
-                        fieldIndex: (int)MagicEffect_FieldIndex.Light,
-                        errorMask: errorMask);
-                    break;
-                case "ProjectileSpeed":
-                    try
-                    {
-                        errorMask?.PushIndex((int)MagicEffect_FieldIndex.ProjectileSpeed);
-                        if (FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Single ProjectileSpeedParse,
-                            errorMask: errorMask))
-                        {
-                            item.ProjectileSpeed = ProjectileSpeedParse;
-                        }
-                        else
-                        {
-                            item.ProjectileSpeed = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "EffectShader":
-                    FormKeyXmlTranslation.Instance.ParseInto(
-                        node: node,
-                        item: item.EffectShader_Property,
-                        fieldIndex: (int)MagicEffect_FieldIndex.EffectShader,
-                        errorMask: errorMask);
-                    break;
-                case "SubData":
-                    try
-                    {
-                        errorMask?.PushIndex((int)MagicEffect_FieldIndex.SubData);
-                        if (LoquiXmlTranslation<MagicEffectSubData>.Instance.Parse(
-                            node: node,
-                            item: out MagicEffectSubData SubDataParse,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)MagicEffect_FieldIndex.SubData)))
-                        {
-                            item.SubData = SubDataParse;
-                        }
-                        else
-                        {
-                            item.SubData = default(MagicEffectSubData);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "CounterEffects":
-                    try
-                    {
-                        errorMask?.PushIndex((int)MagicEffect_FieldIndex.CounterEffects);
-                        if (ListXmlTranslation<EDIDLink<MagicEffect>>.Instance.Parse(
-                            node: node,
-                            enumer: out var CounterEffectsItem,
-                            transl: FormKeyXmlTranslation.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.CounterEffects.SetTo(CounterEffectsItem);
-                        }
-                        else
-                        {
-                            item.CounterEffects.Unset();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
                 default:
-                    MajorRecord.Fill_Xml_Internal(
+                    MajorRecord.FillPrivateElement_Xml(
                         item: item,
                         node: node,
                         name: name,
@@ -3222,54 +2872,49 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static MagicEffect_Mask<bool> GetEqualsMask(
             this IMagicEffectGetter item,
-            IMagicEffectGetter rhs)
+            IMagicEffectGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new MagicEffect_Mask<bool>();
-            FillEqualsMask(item, rhs, ret);
+            FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
             return ret;
         }
 
         public static void FillEqualsMask(
             IMagicEffectGetter item,
             IMagicEffectGetter rhs,
-            MagicEffect_Mask<bool> ret)
+            MagicEffect_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
             ret.Name = item.Name_IsSet == rhs.Name_IsSet && object.Equals(item.Name, rhs.Name);
             ret.Description = item.Description_IsSet == rhs.Description_IsSet && object.Equals(item.Description, rhs.Description);
             ret.Icon = item.Icon_IsSet == rhs.Icon_IsSet && object.Equals(item.Icon, rhs.Icon);
-            ret.Model = IHasBeenSetExt.LoquiEqualsHelper(item.Model_IsSet, rhs.Model_IsSet, item.Model, rhs.Model, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
+            ret.Model = EqualsMaskHelper.EqualsHelper(
+                item.Model_IsSet,
+                rhs.Model_IsSet,
+                item.Model,
+                rhs.Model,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
+                include);
             ret.Flags = item.Flags == rhs.Flags;
-            ret.BaseCost = item.BaseCost == rhs.BaseCost;
+            ret.BaseCost = item.BaseCost.EqualsWithin(rhs.BaseCost);
             ret.Unused = item.Unused.EqualsFast(rhs.Unused);
             ret.MagicSchool = item.MagicSchool == rhs.MagicSchool;
             ret.Resistance = item.Resistance == rhs.Resistance;
             ret.CounterEffectCount = item.CounterEffectCount == rhs.CounterEffectCount;
             ret.Light = item.Light_Property.FormKey == rhs.Light_Property.FormKey;
-            ret.ProjectileSpeed = item.ProjectileSpeed == rhs.ProjectileSpeed;
+            ret.ProjectileSpeed = item.ProjectileSpeed.EqualsWithin(rhs.ProjectileSpeed);
             ret.EffectShader = item.EffectShader_Property.FormKey == rhs.EffectShader_Property.FormKey;
-            ret.SubData = new MaskItem<bool, MagicEffectSubData_Mask<bool>>();
-            ret.SubData.Specific = MagicEffectSubDataCommon.GetEqualsMask(item.SubData, rhs.SubData);
-            ret.SubData.Overall = ret.SubData.Specific.AllEqual((b) => b);
-            if (item.CounterEffects.HasBeenSet == rhs.CounterEffects.HasBeenSet)
-            {
-                if (item.CounterEffects.HasBeenSet)
-                {
-                    ret.CounterEffects = new MaskItem<bool, IEnumerable<bool>>();
-                    ret.CounterEffects.Specific = item.CounterEffects.SelectAgainst<EDIDLink<MagicEffect>, bool>(rhs.CounterEffects, ((l, r) => object.Equals(l, r)), out ret.CounterEffects.Overall);
-                    ret.CounterEffects.Overall = ret.CounterEffects.Overall && ret.CounterEffects.Specific.All((b) => b);
-                }
-                else
-                {
-                    ret.CounterEffects = new MaskItem<bool, IEnumerable<bool>>();
-                    ret.CounterEffects.Overall = true;
-                }
-            }
-            else
-            {
-                ret.CounterEffects = new MaskItem<bool, IEnumerable<bool>>();
-                ret.CounterEffects.Overall = false;
-            }
+            ret.SubData = MaskItemExt.Factory(MagicEffectSubDataCommon.GetEqualsMask(item.SubData, rhs.SubData, include), include);
+            ret.CounterEffects = item.CounterEffects.CollectionEqualsHelper(
+                rhs.CounterEffects,
+                (l, r) => object.Equals(l, r),
+                include);
             MajorRecordCommon.FillEqualsMask(item, rhs, ret);
         }
 
@@ -3408,7 +3053,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.ProjectileSpeed = true;
             ret.EffectShader = true;
             ret.SubData = new MaskItem<bool, MagicEffectSubData_Mask<bool>>(true, MagicEffectSubDataCommon.GetHasBeenSetMask(item.SubData));
-            ret.CounterEffects = new MaskItem<bool, IEnumerable<bool>>(item.CounterEffects.HasBeenSet, null);
+            ret.CounterEffects = new MaskItem<bool, IEnumerable<(int, bool)>>(item.CounterEffects.HasBeenSet, null);
             return ret;
         }
 
@@ -3479,7 +3124,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         public static void WriteToNode_Xml(
-            IMagicEffectGetter item,
+            this IMagicEffectGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -3640,6 +3285,407 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             errorMask: listSubMask);
                     }
                     );
+            }
+        }
+
+        public static void FillPublic_Xml(
+            this MagicEffect item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    MagicEffectCommon.FillPublicElement_Xml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+
+        public static void FillPublicElement_Xml(
+            this MagicEffect item,
+            XElement node,
+            string name,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            switch (name)
+            {
+                case "Name":
+                    try
+                    {
+                        errorMask?.PushIndex((int)MagicEffect_FieldIndex.Name);
+                        if (StringXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out String NameParse,
+                            errorMask: errorMask))
+                        {
+                            item.Name = NameParse;
+                        }
+                        else
+                        {
+                            item.Name = default(String);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Description":
+                    try
+                    {
+                        errorMask?.PushIndex((int)MagicEffect_FieldIndex.Description);
+                        if (StringXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out String DescriptionParse,
+                            errorMask: errorMask))
+                        {
+                            item.Description = DescriptionParse;
+                        }
+                        else
+                        {
+                            item.Description = default(String);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Icon":
+                    try
+                    {
+                        errorMask?.PushIndex((int)MagicEffect_FieldIndex.Icon);
+                        if (StringXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out String IconParse,
+                            errorMask: errorMask))
+                        {
+                            item.Icon = IconParse;
+                        }
+                        else
+                        {
+                            item.Icon = default(String);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Model":
+                    try
+                    {
+                        errorMask?.PushIndex((int)MagicEffect_FieldIndex.Model);
+                        if (LoquiXmlTranslation<Model>.Instance.Parse(
+                            node: node,
+                            item: out Model ModelParse,
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)MagicEffect_FieldIndex.Model)))
+                        {
+                            item.Model = ModelParse;
+                        }
+                        else
+                        {
+                            item.Model = default(Model);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Flags":
+                    try
+                    {
+                        errorMask?.PushIndex((int)MagicEffect_FieldIndex.Flags);
+                        if (EnumXmlTranslation<MagicEffect.MagicFlag>.Instance.Parse(
+                            node: node,
+                            item: out MagicEffect.MagicFlag FlagsParse,
+                            errorMask: errorMask))
+                        {
+                            item.Flags = FlagsParse;
+                        }
+                        else
+                        {
+                            item.Flags = default(MagicEffect.MagicFlag);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "BaseCost":
+                    try
+                    {
+                        errorMask?.PushIndex((int)MagicEffect_FieldIndex.BaseCost);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Single BaseCostParse,
+                            errorMask: errorMask))
+                        {
+                            item.BaseCost = BaseCostParse;
+                        }
+                        else
+                        {
+                            item.BaseCost = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Unused":
+                    try
+                    {
+                        errorMask?.PushIndex((int)MagicEffect_FieldIndex.Unused);
+                        if (ByteArrayXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Byte[] UnusedParse,
+                            errorMask: errorMask))
+                        {
+                            item.Unused = UnusedParse;
+                        }
+                        else
+                        {
+                            item.Unused = default(Byte[]);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "MagicSchool":
+                    try
+                    {
+                        errorMask?.PushIndex((int)MagicEffect_FieldIndex.MagicSchool);
+                        if (EnumXmlTranslation<MagicSchool>.Instance.Parse(
+                            node: node,
+                            item: out MagicSchool MagicSchoolParse,
+                            errorMask: errorMask))
+                        {
+                            item.MagicSchool = MagicSchoolParse;
+                        }
+                        else
+                        {
+                            item.MagicSchool = default(MagicSchool);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Resistance":
+                    try
+                    {
+                        errorMask?.PushIndex((int)MagicEffect_FieldIndex.Resistance);
+                        if (EnumXmlTranslation<Resistance>.Instance.Parse(
+                            node: node,
+                            item: out Resistance ResistanceParse,
+                            errorMask: errorMask))
+                        {
+                            item.Resistance = ResistanceParse;
+                        }
+                        else
+                        {
+                            item.Resistance = default(Resistance);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "CounterEffectCount":
+                    try
+                    {
+                        errorMask?.PushIndex((int)MagicEffect_FieldIndex.CounterEffectCount);
+                        if (UInt32XmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out UInt32 CounterEffectCountParse,
+                            errorMask: errorMask))
+                        {
+                            item.CounterEffectCount = CounterEffectCountParse;
+                        }
+                        else
+                        {
+                            item.CounterEffectCount = default(UInt32);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Light":
+                    FormKeyXmlTranslation.Instance.ParseInto(
+                        node: node,
+                        item: item.Light_Property,
+                        fieldIndex: (int)MagicEffect_FieldIndex.Light,
+                        errorMask: errorMask);
+                    break;
+                case "ProjectileSpeed":
+                    try
+                    {
+                        errorMask?.PushIndex((int)MagicEffect_FieldIndex.ProjectileSpeed);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Single ProjectileSpeedParse,
+                            errorMask: errorMask))
+                        {
+                            item.ProjectileSpeed = ProjectileSpeedParse;
+                        }
+                        else
+                        {
+                            item.ProjectileSpeed = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "EffectShader":
+                    FormKeyXmlTranslation.Instance.ParseInto(
+                        node: node,
+                        item: item.EffectShader_Property,
+                        fieldIndex: (int)MagicEffect_FieldIndex.EffectShader,
+                        errorMask: errorMask);
+                    break;
+                case "SubData":
+                    try
+                    {
+                        errorMask?.PushIndex((int)MagicEffect_FieldIndex.SubData);
+                        if (LoquiXmlTranslation<MagicEffectSubData>.Instance.Parse(
+                            node: node,
+                            item: out MagicEffectSubData SubDataParse,
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)MagicEffect_FieldIndex.SubData)))
+                        {
+                            item.SubData = SubDataParse;
+                        }
+                        else
+                        {
+                            item.SubData = default(MagicEffectSubData);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "CounterEffects":
+                    try
+                    {
+                        errorMask?.PushIndex((int)MagicEffect_FieldIndex.CounterEffects);
+                        if (ListXmlTranslation<EDIDLink<MagicEffect>>.Instance.Parse(
+                            node: node,
+                            enumer: out var CounterEffectsItem,
+                            transl: FormKeyXmlTranslation.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.CounterEffects.SetTo(CounterEffectsItem);
+                        }
+                        else
+                        {
+                            item.CounterEffects.Unset();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                default:
+                    MajorRecordCommon.FillPublicElement_Xml(
+                        item: item,
+                        node: node,
+                        name: name,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                    break;
             }
         }
 
@@ -3858,7 +3904,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.ProjectileSpeed = initialValue;
             this.EffectShader = initialValue;
             this.SubData = new MaskItem<T, MagicEffectSubData_Mask<T>>(initialValue, new MagicEffectSubData_Mask<T>(initialValue));
-            this.CounterEffects = new MaskItem<T, IEnumerable<T>>(initialValue, null);
+            this.CounterEffects = new MaskItem<T, IEnumerable<(int Index, T Value)>>(initialValue, null);
         }
         #endregion
 
@@ -3877,7 +3923,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public T ProjectileSpeed;
         public T EffectShader;
         public MaskItem<T, MagicEffectSubData_Mask<T>> SubData { get; set; }
-        public MaskItem<T, IEnumerable<T>> CounterEffects;
+        public MaskItem<T, IEnumerable<(int Index, T Value)>> CounterEffects;
         #endregion
 
         #region Equals
@@ -3965,7 +4011,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     foreach (var item in this.CounterEffects.Specific)
                     {
-                        if (!eval(item)) return false;
+                        if (!eval(item.Value)) return false;
                     }
                 }
             }
@@ -4016,16 +4062,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (CounterEffects != null)
             {
-                obj.CounterEffects = new MaskItem<R, IEnumerable<R>>();
+                obj.CounterEffects = new MaskItem<R, IEnumerable<(int Index, R Value)>>();
                 obj.CounterEffects.Overall = eval(this.CounterEffects.Overall);
                 if (CounterEffects.Specific != null)
                 {
-                    List<R> l = new List<R>();
+                    List<(int Index, R Item)> l = new List<(int Index, R Item)>();
                     obj.CounterEffects.Specific = l;
-                    foreach (var item in CounterEffects.Specific)
+                    foreach (var item in CounterEffects.Specific.WithIndex())
                     {
-                        R mask = default(R);
-                        mask = eval(item);
+                        (int Index, R Item) mask = default;
+                        mask.Index = item.Index;
+                        mask.Item = eval(item.Item.Value);
                         l.Add(mask);
                     }
                 }
@@ -4165,7 +4212,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Exception ProjectileSpeed;
         public Exception EffectShader;
         public MaskItem<Exception, MagicEffectSubData_ErrorMask> SubData;
-        public MaskItem<Exception, IEnumerable<Exception>> CounterEffects;
+        public MaskItem<Exception, IEnumerable<(int Index, Exception Value)>> CounterEffects;
         #endregion
 
         #region IErrorMask
@@ -4257,7 +4304,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     this.SubData = new MaskItem<Exception, MagicEffectSubData_ErrorMask>(ex, null);
                     break;
                 case MagicEffect_FieldIndex.CounterEffects:
-                    this.CounterEffects = new MaskItem<Exception, IEnumerable<Exception>>(ex, null);
+                    this.CounterEffects = new MaskItem<Exception, IEnumerable<(int Index, Exception Value)>>(ex, null);
                     break;
                 default:
                     base.SetNthException(index, ex);
@@ -4313,7 +4360,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     this.SubData = (MaskItem<Exception, MagicEffectSubData_ErrorMask>)obj;
                     break;
                 case MagicEffect_FieldIndex.CounterEffects:
-                    this.CounterEffects = (MaskItem<Exception, IEnumerable<Exception>>)obj;
+                    this.CounterEffects = (MaskItem<Exception, IEnumerable<(int Index, Exception Value)>>)obj;
                     break;
                 default:
                     base.SetNthMask(index, obj);
@@ -4431,7 +4478,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.ProjectileSpeed = this.ProjectileSpeed.Combine(rhs.ProjectileSpeed);
             ret.EffectShader = this.EffectShader.Combine(rhs.EffectShader);
             ret.SubData = new MaskItem<Exception, MagicEffectSubData_ErrorMask>(this.SubData.Overall.Combine(rhs.SubData.Overall), ((IErrorMask<MagicEffectSubData_ErrorMask>)this.SubData.Specific).Combine(rhs.SubData.Specific));
-            ret.CounterEffects = new MaskItem<Exception, IEnumerable<Exception>>(this.CounterEffects.Overall.Combine(rhs.CounterEffects.Overall), new List<Exception>(this.CounterEffects.Specific.And(rhs.CounterEffects.Specific)));
+            ret.CounterEffects = new MaskItem<Exception, IEnumerable<(int Index, Exception Value)>>(this.CounterEffects.Overall.Combine(rhs.CounterEffects.Overall), new List<(int Index, Exception Value)>(this.CounterEffects.Specific.And(rhs.CounterEffects.Specific)));
             return ret;
         }
         public static MagicEffect_ErrorMask Combine(MagicEffect_ErrorMask lhs, MagicEffect_ErrorMask rhs)

@@ -79,8 +79,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> IEqualsMask<RaceStatsGendered>.GetEqualsMask(RaceStatsGendered rhs) => RaceStatsGenderedCommon.GetEqualsMask(this, rhs);
-        IMask<bool> IEqualsMask<IRaceStatsGenderedGetter>.GetEqualsMask(IRaceStatsGenderedGetter rhs) => RaceStatsGenderedCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<RaceStatsGendered>.GetEqualsMask(RaceStatsGendered rhs, EqualsMaskHelper.Include include) => RaceStatsGenderedCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<IRaceStatsGenderedGetter>.GetEqualsMask(IRaceStatsGenderedGetter rhs, EqualsMaskHelper.Include include) => RaceStatsGenderedCommon.GetEqualsMask(this, rhs, include);
         #region To String
         public string ToString(
             string name = null,
@@ -168,7 +168,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 foreach (var elem in node.Elements())
                 {
-                    Fill_Xml_Internal(
+                    RaceStatsGenderedCommon.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -482,74 +482,6 @@ namespace Mutagen.Bethesda.Oblivion
                 translationMask: translationMask);
         }
         #endregion
-
-        protected static void Fill_Xml_Internal(
-            RaceStatsGendered item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            switch (name)
-            {
-                case "Male":
-                    try
-                    {
-                        errorMask?.PushIndex((int)RaceStatsGendered_FieldIndex.Male);
-                        if (LoquiXmlTranslation<RaceStats>.Instance.Parse(
-                            node: node,
-                            item: out RaceStats MaleParse,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)RaceStatsGendered_FieldIndex.Male)))
-                        {
-                            item.Male = MaleParse;
-                        }
-                        else
-                        {
-                            item.Male = default(RaceStats);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Female":
-                    try
-                    {
-                        errorMask?.PushIndex((int)RaceStatsGendered_FieldIndex.Female);
-                        if (LoquiXmlTranslation<RaceStats>.Instance.Parse(
-                            node: node,
-                            item: out RaceStats FemaleParse,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)RaceStatsGendered_FieldIndex.Female)))
-                        {
-                            item.Female = FemaleParse;
-                        }
-                        else
-                        {
-                            item.Female = default(RaceStats);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
 
         #endregion
 
@@ -1519,25 +1451,27 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static RaceStatsGendered_Mask<bool> GetEqualsMask(
             this IRaceStatsGenderedGetter item,
-            IRaceStatsGenderedGetter rhs)
+            IRaceStatsGenderedGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new RaceStatsGendered_Mask<bool>();
-            FillEqualsMask(item, rhs, ret);
+            FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
             return ret;
         }
 
         public static void FillEqualsMask(
             IRaceStatsGenderedGetter item,
             IRaceStatsGenderedGetter rhs,
-            RaceStatsGendered_Mask<bool> ret)
+            RaceStatsGendered_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Male = new MaskItem<bool, RaceStats_Mask<bool>>();
-            ret.Male.Specific = RaceStatsCommon.GetEqualsMask(item.Male, rhs.Male);
-            ret.Male.Overall = ret.Male.Specific.AllEqual((b) => b);
-            ret.Female = new MaskItem<bool, RaceStats_Mask<bool>>();
-            ret.Female.Specific = RaceStatsCommon.GetEqualsMask(item.Female, rhs.Female);
-            ret.Female.Overall = ret.Female.Specific.AllEqual((b) => b);
+            ret.Male = MaskItemExt.Factory(RaceStatsCommon.GetEqualsMask(item.Male, rhs.Male, include), include);
+            ret.Female = MaskItemExt.Factory(RaceStatsCommon.GetEqualsMask(item.Female, rhs.Female, include), include);
         }
 
         public static string ToString(
@@ -1636,7 +1570,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         public static void WriteToNode_Xml(
-            IRaceStatsGenderedGetter item,
+            this IRaceStatsGenderedGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1660,6 +1594,99 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)RaceStatsGendered_FieldIndex.Female,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)RaceStatsGendered_FieldIndex.Female));
+            }
+        }
+
+        public static void FillPublic_Xml(
+            this RaceStatsGendered item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    RaceStatsGenderedCommon.FillPublicElement_Xml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+
+        public static void FillPublicElement_Xml(
+            this RaceStatsGendered item,
+            XElement node,
+            string name,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            switch (name)
+            {
+                case "Male":
+                    try
+                    {
+                        errorMask?.PushIndex((int)RaceStatsGendered_FieldIndex.Male);
+                        if (LoquiXmlTranslation<RaceStats>.Instance.Parse(
+                            node: node,
+                            item: out RaceStats MaleParse,
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)RaceStatsGendered_FieldIndex.Male)))
+                        {
+                            item.Male = MaleParse;
+                        }
+                        else
+                        {
+                            item.Male = default(RaceStats);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Female":
+                    try
+                    {
+                        errorMask?.PushIndex((int)RaceStatsGendered_FieldIndex.Female);
+                        if (LoquiXmlTranslation<RaceStats>.Instance.Parse(
+                            node: node,
+                            item: out RaceStats FemaleParse,
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)RaceStatsGendered_FieldIndex.Female)))
+                        {
+                            item.Female = FemaleParse;
+                        }
+                        else
+                        {
+                            item.Female = default(RaceStats);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                default:
+                    break;
             }
         }
 

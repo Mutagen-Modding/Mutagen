@@ -119,8 +119,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> IEqualsMask<MagicEffectSubData>.GetEqualsMask(MagicEffectSubData rhs) => MagicEffectSubDataCommon.GetEqualsMask(this, rhs);
-        IMask<bool> IEqualsMask<IMagicEffectSubDataGetter>.GetEqualsMask(IMagicEffectSubDataGetter rhs) => MagicEffectSubDataCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<MagicEffectSubData>.GetEqualsMask(MagicEffectSubData rhs, EqualsMaskHelper.Include include) => MagicEffectSubDataCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<IMagicEffectSubDataGetter>.GetEqualsMask(IMagicEffectSubDataGetter rhs, EqualsMaskHelper.Include include) => MagicEffectSubDataCommon.GetEqualsMask(this, rhs, include);
         #region To String
         public string ToString(
             string name = null,
@@ -218,7 +218,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 foreach (var elem in node.Elements())
                 {
-                    Fill_Xml_Internal(
+                    MagicEffectSubDataCommon.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -532,107 +532,6 @@ namespace Mutagen.Bethesda.Oblivion
                 translationMask: translationMask);
         }
         #endregion
-
-        protected static void Fill_Xml_Internal(
-            MagicEffectSubData item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            switch (name)
-            {
-                case "EnchantEffect":
-                    FormKeyXmlTranslation.Instance.ParseInto(
-                        node: node,
-                        item: item.EnchantEffect_Property,
-                        fieldIndex: (int)MagicEffectSubData_FieldIndex.EnchantEffect,
-                        errorMask: errorMask);
-                    break;
-                case "CastingSound":
-                    FormKeyXmlTranslation.Instance.ParseInto(
-                        node: node,
-                        item: item.CastingSound_Property,
-                        fieldIndex: (int)MagicEffectSubData_FieldIndex.CastingSound,
-                        errorMask: errorMask);
-                    break;
-                case "BoltSound":
-                    FormKeyXmlTranslation.Instance.ParseInto(
-                        node: node,
-                        item: item.BoltSound_Property,
-                        fieldIndex: (int)MagicEffectSubData_FieldIndex.BoltSound,
-                        errorMask: errorMask);
-                    break;
-                case "HitSound":
-                    FormKeyXmlTranslation.Instance.ParseInto(
-                        node: node,
-                        item: item.HitSound_Property,
-                        fieldIndex: (int)MagicEffectSubData_FieldIndex.HitSound,
-                        errorMask: errorMask);
-                    break;
-                case "AreaSound":
-                    FormKeyXmlTranslation.Instance.ParseInto(
-                        node: node,
-                        item: item.AreaSound_Property,
-                        fieldIndex: (int)MagicEffectSubData_FieldIndex.AreaSound,
-                        errorMask: errorMask);
-                    break;
-                case "ConstantEffectEnchantmentFactor":
-                    try
-                    {
-                        errorMask?.PushIndex((int)MagicEffectSubData_FieldIndex.ConstantEffectEnchantmentFactor);
-                        if (FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Single ConstantEffectEnchantmentFactorParse,
-                            errorMask: errorMask))
-                        {
-                            item.ConstantEffectEnchantmentFactor = ConstantEffectEnchantmentFactorParse;
-                        }
-                        else
-                        {
-                            item.ConstantEffectEnchantmentFactor = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ConstantEffectBarterFactor":
-                    try
-                    {
-                        errorMask?.PushIndex((int)MagicEffectSubData_FieldIndex.ConstantEffectBarterFactor);
-                        if (FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Single ConstantEffectBarterFactorParse,
-                            errorMask: errorMask))
-                        {
-                            item.ConstantEffectBarterFactor = ConstantEffectBarterFactorParse;
-                        }
-                        else
-                        {
-                            item.ConstantEffectBarterFactor = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
 
         #endregion
 
@@ -1885,17 +1784,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static MagicEffectSubData_Mask<bool> GetEqualsMask(
             this IMagicEffectSubDataGetter item,
-            IMagicEffectSubDataGetter rhs)
+            IMagicEffectSubDataGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new MagicEffectSubData_Mask<bool>();
-            FillEqualsMask(item, rhs, ret);
+            FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
             return ret;
         }
 
         public static void FillEqualsMask(
             IMagicEffectSubDataGetter item,
             IMagicEffectSubDataGetter rhs,
-            MagicEffectSubData_Mask<bool> ret)
+            MagicEffectSubData_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
             ret.EnchantEffect = item.EnchantEffect_Property.FormKey == rhs.EnchantEffect_Property.FormKey;
@@ -1903,8 +1808,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.BoltSound = item.BoltSound_Property.FormKey == rhs.BoltSound_Property.FormKey;
             ret.HitSound = item.HitSound_Property.FormKey == rhs.HitSound_Property.FormKey;
             ret.AreaSound = item.AreaSound_Property.FormKey == rhs.AreaSound_Property.FormKey;
-            ret.ConstantEffectEnchantmentFactor = item.ConstantEffectEnchantmentFactor == rhs.ConstantEffectEnchantmentFactor;
-            ret.ConstantEffectBarterFactor = item.ConstantEffectBarterFactor == rhs.ConstantEffectBarterFactor;
+            ret.ConstantEffectEnchantmentFactor = item.ConstantEffectEnchantmentFactor.EqualsWithin(rhs.ConstantEffectEnchantmentFactor);
+            ret.ConstantEffectBarterFactor = item.ConstantEffectBarterFactor.EqualsWithin(rhs.ConstantEffectBarterFactor);
         }
 
         public static string ToString(
@@ -2028,7 +1933,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         public static void WriteToNode_Xml(
-            IMagicEffectSubDataGetter item,
+            this IMagicEffectSubDataGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -2095,6 +2000,132 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item.ConstantEffectBarterFactor,
                     fieldIndex: (int)MagicEffectSubData_FieldIndex.ConstantEffectBarterFactor,
                     errorMask: errorMask);
+            }
+        }
+
+        public static void FillPublic_Xml(
+            this MagicEffectSubData item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    MagicEffectSubDataCommon.FillPublicElement_Xml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+
+        public static void FillPublicElement_Xml(
+            this MagicEffectSubData item,
+            XElement node,
+            string name,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            switch (name)
+            {
+                case "EnchantEffect":
+                    FormKeyXmlTranslation.Instance.ParseInto(
+                        node: node,
+                        item: item.EnchantEffect_Property,
+                        fieldIndex: (int)MagicEffectSubData_FieldIndex.EnchantEffect,
+                        errorMask: errorMask);
+                    break;
+                case "CastingSound":
+                    FormKeyXmlTranslation.Instance.ParseInto(
+                        node: node,
+                        item: item.CastingSound_Property,
+                        fieldIndex: (int)MagicEffectSubData_FieldIndex.CastingSound,
+                        errorMask: errorMask);
+                    break;
+                case "BoltSound":
+                    FormKeyXmlTranslation.Instance.ParseInto(
+                        node: node,
+                        item: item.BoltSound_Property,
+                        fieldIndex: (int)MagicEffectSubData_FieldIndex.BoltSound,
+                        errorMask: errorMask);
+                    break;
+                case "HitSound":
+                    FormKeyXmlTranslation.Instance.ParseInto(
+                        node: node,
+                        item: item.HitSound_Property,
+                        fieldIndex: (int)MagicEffectSubData_FieldIndex.HitSound,
+                        errorMask: errorMask);
+                    break;
+                case "AreaSound":
+                    FormKeyXmlTranslation.Instance.ParseInto(
+                        node: node,
+                        item: item.AreaSound_Property,
+                        fieldIndex: (int)MagicEffectSubData_FieldIndex.AreaSound,
+                        errorMask: errorMask);
+                    break;
+                case "ConstantEffectEnchantmentFactor":
+                    try
+                    {
+                        errorMask?.PushIndex((int)MagicEffectSubData_FieldIndex.ConstantEffectEnchantmentFactor);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Single ConstantEffectEnchantmentFactorParse,
+                            errorMask: errorMask))
+                        {
+                            item.ConstantEffectEnchantmentFactor = ConstantEffectEnchantmentFactorParse;
+                        }
+                        else
+                        {
+                            item.ConstantEffectEnchantmentFactor = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "ConstantEffectBarterFactor":
+                    try
+                    {
+                        errorMask?.PushIndex((int)MagicEffectSubData_FieldIndex.ConstantEffectBarterFactor);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Single ConstantEffectBarterFactorParse,
+                            errorMask: errorMask))
+                        {
+                            item.ConstantEffectBarterFactor = ConstantEffectBarterFactorParse;
+                        }
+                        else
+                        {
+                            item.ConstantEffectBarterFactor = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                default:
+                    break;
             }
         }
 

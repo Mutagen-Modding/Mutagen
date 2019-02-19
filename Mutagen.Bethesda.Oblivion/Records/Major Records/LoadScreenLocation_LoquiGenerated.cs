@@ -93,8 +93,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> IEqualsMask<LoadScreenLocation>.GetEqualsMask(LoadScreenLocation rhs) => LoadScreenLocationCommon.GetEqualsMask(this, rhs);
-        IMask<bool> IEqualsMask<ILoadScreenLocationGetter>.GetEqualsMask(ILoadScreenLocationGetter rhs) => LoadScreenLocationCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<LoadScreenLocation>.GetEqualsMask(LoadScreenLocation rhs, EqualsMaskHelper.Include include) => LoadScreenLocationCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<ILoadScreenLocationGetter>.GetEqualsMask(ILoadScreenLocationGetter rhs, EqualsMaskHelper.Include include) => LoadScreenLocationCommon.GetEqualsMask(this, rhs, include);
         #region To String
         public string ToString(
             string name = null,
@@ -129,7 +129,7 @@ namespace Mutagen.Bethesda.Oblivion
             if (rhs == null) return false;
             if (!this.Direct_Property.Equals(rhs.Direct_Property)) return false;
             if (!this.Indirect_Property.Equals(rhs.Indirect_Property)) return false;
-            if (this.GridPoint != rhs.GridPoint) return false;
+            if (!this.GridPoint.Equals(rhs.GridPoint)) return false;
             return true;
         }
 
@@ -184,7 +184,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 foreach (var elem in node.Elements())
                 {
-                    Fill_Xml_Internal(
+                    LoadScreenLocationCommon.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -498,60 +498,6 @@ namespace Mutagen.Bethesda.Oblivion
                 translationMask: translationMask);
         }
         #endregion
-
-        protected static void Fill_Xml_Internal(
-            LoadScreenLocation item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            switch (name)
-            {
-                case "Direct":
-                    FormKeyXmlTranslation.Instance.ParseInto(
-                        node: node,
-                        item: item.Direct_Property,
-                        fieldIndex: (int)LoadScreenLocation_FieldIndex.Direct,
-                        errorMask: errorMask);
-                    break;
-                case "Indirect":
-                    FormKeyXmlTranslation.Instance.ParseInto(
-                        node: node,
-                        item: item.Indirect_Property,
-                        fieldIndex: (int)LoadScreenLocation_FieldIndex.Indirect,
-                        errorMask: errorMask);
-                    break;
-                case "GridPoint":
-                    try
-                    {
-                        errorMask?.PushIndex((int)LoadScreenLocation_FieldIndex.GridPoint);
-                        if (P2Int16XmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out P2Int16 GridPointParse,
-                            errorMask: errorMask))
-                        {
-                            item.GridPoint = GridPointParse;
-                        }
-                        else
-                        {
-                            item.GridPoint = default(P2Int16);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
 
         #endregion
 
@@ -1535,17 +1481,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static LoadScreenLocation_Mask<bool> GetEqualsMask(
             this ILoadScreenLocationGetter item,
-            ILoadScreenLocationGetter rhs)
+            ILoadScreenLocationGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new LoadScreenLocation_Mask<bool>();
-            FillEqualsMask(item, rhs, ret);
+            FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
             return ret;
         }
 
         public static void FillEqualsMask(
             ILoadScreenLocationGetter item,
             ILoadScreenLocationGetter rhs,
-            LoadScreenLocation_Mask<bool> ret)
+            LoadScreenLocation_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
             ret.Direct = item.Direct_Property.FormKey == rhs.Direct_Property.FormKey;
@@ -1654,7 +1606,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         public static void WriteToNode_Xml(
-            ILoadScreenLocationGetter item,
+            this ILoadScreenLocationGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1685,6 +1637,85 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item.GridPoint,
                     fieldIndex: (int)LoadScreenLocation_FieldIndex.GridPoint,
                     errorMask: errorMask);
+            }
+        }
+
+        public static void FillPublic_Xml(
+            this LoadScreenLocation item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    LoadScreenLocationCommon.FillPublicElement_Xml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+
+        public static void FillPublicElement_Xml(
+            this LoadScreenLocation item,
+            XElement node,
+            string name,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            switch (name)
+            {
+                case "Direct":
+                    FormKeyXmlTranslation.Instance.ParseInto(
+                        node: node,
+                        item: item.Direct_Property,
+                        fieldIndex: (int)LoadScreenLocation_FieldIndex.Direct,
+                        errorMask: errorMask);
+                    break;
+                case "Indirect":
+                    FormKeyXmlTranslation.Instance.ParseInto(
+                        node: node,
+                        item: item.Indirect_Property,
+                        fieldIndex: (int)LoadScreenLocation_FieldIndex.Indirect,
+                        errorMask: errorMask);
+                    break;
+                case "GridPoint":
+                    try
+                    {
+                        errorMask?.PushIndex((int)LoadScreenLocation_FieldIndex.GridPoint);
+                        if (P2Int16XmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out P2Int16 GridPointParse,
+                            errorMask: errorMask))
+                        {
+                            item.GridPoint = GridPointParse;
+                        }
+                        else
+                        {
+                            item.GridPoint = default(P2Int16);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                default:
+                    break;
             }
         }
 

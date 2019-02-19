@@ -130,8 +130,8 @@ namespace Mutagen.Bethesda
 
         #endregion
 
-        IMask<bool> IEqualsMask<MajorRecord>.GetEqualsMask(MajorRecord rhs) => MajorRecordCommon.GetEqualsMask(this, rhs);
-        IMask<bool> IEqualsMask<IMajorRecordGetter>.GetEqualsMask(IMajorRecordGetter rhs) => MajorRecordCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<MajorRecord>.GetEqualsMask(MajorRecord rhs, EqualsMaskHelper.Include include) => MajorRecordCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<IMajorRecordGetter>.GetEqualsMask(IMajorRecordGetter rhs, EqualsMaskHelper.Include include) => MajorRecordCommon.GetEqualsMask(this, rhs, include);
         #region To String
         public string ToString(
             string name = null,
@@ -534,7 +534,7 @@ namespace Mutagen.Bethesda
         }
         #endregion
 
-        protected static void Fill_Xml_Internal(
+        protected static void FillPrivateElement_Xml(
             MajorRecord item,
             XElement node,
             string name,
@@ -543,32 +543,6 @@ namespace Mutagen.Bethesda
         {
             switch (name)
             {
-                case "MajorRecordFlags":
-                    try
-                    {
-                        errorMask?.PushIndex((int)MajorRecord_FieldIndex.MajorRecordFlags);
-                        if (EnumXmlTranslation<MajorRecord.MajorRecordFlag>.Instance.Parse(
-                            node: node,
-                            item: out MajorRecord.MajorRecordFlag MajorRecordFlagsParse,
-                            errorMask: errorMask))
-                        {
-                            item.MajorRecordFlags = MajorRecordFlagsParse;
-                        }
-                        else
-                        {
-                            item.MajorRecordFlags = default(MajorRecord.MajorRecordFlag);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
                 case "FormKey":
                     try
                     {
@@ -583,58 +557,6 @@ namespace Mutagen.Bethesda
                         else
                         {
                             item.FormKey = default(FormKey);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Version":
-                    try
-                    {
-                        errorMask?.PushIndex((int)MajorRecord_FieldIndex.Version);
-                        if (UInt32XmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out UInt32 VersionParse,
-                            errorMask: errorMask))
-                        {
-                            item.Version = VersionParse;
-                        }
-                        else
-                        {
-                            item.Version = default(UInt32);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "EditorID":
-                    try
-                    {
-                        errorMask?.PushIndex((int)MajorRecord_FieldIndex.EditorID);
-                        if (StringXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out String EditorIDParse,
-                            errorMask: errorMask))
-                        {
-                            item.EditorID = EditorIDParse;
-                        }
-                        else
-                        {
-                            item.EditorID = default(String);
                         }
                     }
                     catch (Exception ex)
@@ -1763,17 +1685,23 @@ namespace Mutagen.Bethesda.Internals
 
         public static MajorRecord_Mask<bool> GetEqualsMask(
             this IMajorRecordGetter item,
-            IMajorRecordGetter rhs)
+            IMajorRecordGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new MajorRecord_Mask<bool>();
-            FillEqualsMask(item, rhs, ret);
+            FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
             return ret;
         }
 
         public static void FillEqualsMask(
             IMajorRecordGetter item,
             IMajorRecordGetter rhs,
-            MajorRecord_Mask<bool> ret)
+            MajorRecord_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
             ret.MajorRecordFlags = item.MajorRecordFlags == rhs.MajorRecordFlags;
@@ -1895,7 +1823,7 @@ namespace Mutagen.Bethesda.Internals
         #endregion
 
         public static void WriteToNode_Xml(
-            IMajorRecordGetter item,
+            this IMajorRecordGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1936,6 +1864,123 @@ namespace Mutagen.Bethesda.Internals
                     item: item.EditorID,
                     fieldIndex: (int)MajorRecord_FieldIndex.EditorID,
                     errorMask: errorMask);
+            }
+        }
+
+        public static void FillPublic_Xml(
+            this MajorRecord item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    MajorRecordCommon.FillPublicElement_Xml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+
+        public static void FillPublicElement_Xml(
+            this MajorRecord item,
+            XElement node,
+            string name,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            switch (name)
+            {
+                case "MajorRecordFlags":
+                    try
+                    {
+                        errorMask?.PushIndex((int)MajorRecord_FieldIndex.MajorRecordFlags);
+                        if (EnumXmlTranslation<MajorRecord.MajorRecordFlag>.Instance.Parse(
+                            node: node,
+                            item: out MajorRecord.MajorRecordFlag MajorRecordFlagsParse,
+                            errorMask: errorMask))
+                        {
+                            item.MajorRecordFlags = MajorRecordFlagsParse;
+                        }
+                        else
+                        {
+                            item.MajorRecordFlags = default(MajorRecord.MajorRecordFlag);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Version":
+                    try
+                    {
+                        errorMask?.PushIndex((int)MajorRecord_FieldIndex.Version);
+                        if (UInt32XmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out UInt32 VersionParse,
+                            errorMask: errorMask))
+                        {
+                            item.Version = VersionParse;
+                        }
+                        else
+                        {
+                            item.Version = default(UInt32);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "EditorID":
+                    try
+                    {
+                        errorMask?.PushIndex((int)MajorRecord_FieldIndex.EditorID);
+                        if (StringXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out String EditorIDParse,
+                            errorMask: errorMask))
+                        {
+                            item.EditorID = EditorIDParse;
+                        }
+                        else
+                        {
+                            item.EditorID = default(String);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                default:
+                    break;
             }
         }
 

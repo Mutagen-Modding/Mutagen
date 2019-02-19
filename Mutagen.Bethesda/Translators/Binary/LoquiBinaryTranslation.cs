@@ -33,7 +33,7 @@ namespace Mutagen.Bethesda.Binary
         public static readonly Lazy<WRITE_FUNC> WRITE = new Lazy<WRITE_FUNC>(GetWriteFunc);
 
         #region Parse
-        public static CREATE_FUNC GetCreateFunc()
+        private static CREATE_FUNC GetCreateFunc()
         {
             var tType = typeof(T);
             var options = tType.GetMethods()
@@ -186,7 +186,7 @@ namespace Mutagen.Bethesda.Binary
         #endregion
 
         #region Write
-        public static WRITE_FUNC GetWriteFunc()
+        private static WRITE_FUNC GetWriteFunc()
         {
             var method = typeof(T).GetMethods(BindingFlags.Instance | BindingFlags.Public)
                 .Where((methodInfo) => methodInfo.Name.Equals("Write_Binary"))

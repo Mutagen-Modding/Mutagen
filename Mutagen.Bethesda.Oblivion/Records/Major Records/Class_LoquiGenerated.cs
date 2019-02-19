@@ -231,8 +231,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> IEqualsMask<Class>.GetEqualsMask(Class rhs) => ClassCommon.GetEqualsMask(this, rhs);
-        IMask<bool> IEqualsMask<IClassGetter>.GetEqualsMask(IClassGetter rhs) => ClassCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<Class>.GetEqualsMask(Class rhs, EqualsMaskHelper.Include include) => ClassCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<IClassGetter>.GetEqualsMask(IClassGetter rhs, EqualsMaskHelper.Include include) => ClassCommon.GetEqualsMask(this, rhs, include);
         #region To String
         public string ToString(
             string name = null,
@@ -357,7 +357,13 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 foreach (var elem in node.Elements())
                 {
-                    Fill_Xml_Internal(
+                    FillPrivateElement_Xml(
+                        item: ret,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                    ClassCommon.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -669,7 +675,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        protected static void Fill_Xml_Internal(
+        protected static void FillPrivateElement_Xml(
             Class item,
             XElement node,
             string name,
@@ -678,247 +684,8 @@ namespace Mutagen.Bethesda.Oblivion
         {
             switch (name)
             {
-                case "Name":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Class_FieldIndex.Name);
-                        if (StringXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out String NameParse,
-                            errorMask: errorMask))
-                        {
-                            item.Name = NameParse;
-                        }
-                        else
-                        {
-                            item.Name = default(String);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Description":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Class_FieldIndex.Description);
-                        if (StringXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out String DescriptionParse,
-                            errorMask: errorMask))
-                        {
-                            item.Description = DescriptionParse;
-                        }
-                        else
-                        {
-                            item.Description = default(String);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Icon":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Class_FieldIndex.Icon);
-                        if (StringXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out String IconParse,
-                            errorMask: errorMask))
-                        {
-                            item.Icon = IconParse;
-                        }
-                        else
-                        {
-                            item.Icon = default(String);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "PrimaryAttributes":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Class_FieldIndex.PrimaryAttributes);
-                        if (ListXmlTranslation<ActorValue>.Instance.Parse(
-                            node: node,
-                            enumer: out var PrimaryAttributesItem,
-                            transl: EnumXmlTranslation<ActorValue>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.PrimaryAttributes.SetTo(PrimaryAttributesItem);
-                        }
-                        else
-                        {
-                            item.PrimaryAttributes.Unset();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Specialization":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Class_FieldIndex.Specialization);
-                        if (EnumXmlTranslation<Class.SpecializationFlag>.Instance.Parse(
-                            node: node,
-                            item: out Class.SpecializationFlag SpecializationParse,
-                            errorMask: errorMask))
-                        {
-                            item.Specialization = SpecializationParse;
-                        }
-                        else
-                        {
-                            item.Specialization = default(Class.SpecializationFlag);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "SecondaryAttributes":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Class_FieldIndex.SecondaryAttributes);
-                        if (ListXmlTranslation<ActorValue>.Instance.Parse(
-                            node: node,
-                            enumer: out var SecondaryAttributesItem,
-                            transl: EnumXmlTranslation<ActorValue>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.SecondaryAttributes.SetTo(SecondaryAttributesItem);
-                        }
-                        else
-                        {
-                            item.SecondaryAttributes.Unset();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Flags":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Class_FieldIndex.Flags);
-                        if (EnumXmlTranslation<ClassFlag>.Instance.Parse(
-                            node: node,
-                            item: out ClassFlag FlagsParse,
-                            errorMask: errorMask))
-                        {
-                            item.Flags = FlagsParse;
-                        }
-                        else
-                        {
-                            item.Flags = default(ClassFlag);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ClassServices":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Class_FieldIndex.ClassServices);
-                        if (EnumXmlTranslation<ClassService>.Instance.Parse(
-                            node: node,
-                            item: out ClassService ClassServicesParse,
-                            errorMask: errorMask))
-                        {
-                            item.ClassServices = ClassServicesParse;
-                        }
-                        else
-                        {
-                            item.ClassServices = default(ClassService);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Training":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Class_FieldIndex.Training);
-                        if (LoquiXmlTranslation<ClassTraining>.Instance.Parse(
-                            node: node,
-                            item: out ClassTraining TrainingParse,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Class_FieldIndex.Training)))
-                        {
-                            item.Training = TrainingParse;
-                        }
-                        else
-                        {
-                            item.Training = default(ClassTraining);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
                 default:
-                    MajorRecord.Fill_Xml_Internal(
+                    MajorRecord.FillPrivateElement_Xml(
                         item: item,
                         node: node,
                         name: name,
@@ -2475,34 +2242,40 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static Class_Mask<bool> GetEqualsMask(
             this IClassGetter item,
-            IClassGetter rhs)
+            IClassGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new Class_Mask<bool>();
-            FillEqualsMask(item, rhs, ret);
+            FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
             return ret;
         }
 
         public static void FillEqualsMask(
             IClassGetter item,
             IClassGetter rhs,
-            Class_Mask<bool> ret)
+            Class_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
             ret.Name = item.Name_IsSet == rhs.Name_IsSet && object.Equals(item.Name, rhs.Name);
             ret.Description = item.Description_IsSet == rhs.Description_IsSet && object.Equals(item.Description, rhs.Description);
             ret.Icon = item.Icon_IsSet == rhs.Icon_IsSet && object.Equals(item.Icon, rhs.Icon);
-            ret.PrimaryAttributes = new MaskItem<bool, IEnumerable<bool>>();
-            ret.PrimaryAttributes.Specific = item.PrimaryAttributes.SelectAgainst<ActorValue, bool>(rhs.PrimaryAttributes, ((l, r) => object.Equals(l, r)), out ret.PrimaryAttributes.Overall);
-            ret.PrimaryAttributes.Overall = ret.PrimaryAttributes.Overall && ret.PrimaryAttributes.Specific.All((b) => b);
+            ret.PrimaryAttributes = item.PrimaryAttributes.CollectionEqualsHelper(
+                rhs.PrimaryAttributes,
+                (l, r) => l == r,
+                include);
             ret.Specialization = item.Specialization == rhs.Specialization;
-            ret.SecondaryAttributes = new MaskItem<bool, IEnumerable<bool>>();
-            ret.SecondaryAttributes.Specific = item.SecondaryAttributes.SelectAgainst<ActorValue, bool>(rhs.SecondaryAttributes, ((l, r) => object.Equals(l, r)), out ret.SecondaryAttributes.Overall);
-            ret.SecondaryAttributes.Overall = ret.SecondaryAttributes.Overall && ret.SecondaryAttributes.Specific.All((b) => b);
+            ret.SecondaryAttributes = item.SecondaryAttributes.CollectionEqualsHelper(
+                rhs.SecondaryAttributes,
+                (l, r) => l == r,
+                include);
             ret.Flags = item.Flags == rhs.Flags;
             ret.ClassServices = item.ClassServices == rhs.ClassServices;
-            ret.Training = new MaskItem<bool, ClassTraining_Mask<bool>>();
-            ret.Training.Specific = ClassTrainingCommon.GetEqualsMask(item.Training, rhs.Training);
-            ret.Training.Overall = ret.Training.Specific.AllEqual((b) => b);
+            ret.Training = MaskItemExt.Factory(ClassTrainingCommon.GetEqualsMask(item.Training, rhs.Training, include), include);
             MajorRecordCommon.FillEqualsMask(item, rhs, ret);
         }
 
@@ -2619,9 +2392,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Name = item.Name_IsSet;
             ret.Description = item.Description_IsSet;
             ret.Icon = item.Icon_IsSet;
-            ret.PrimaryAttributes = new MaskItem<bool, IEnumerable<bool>>(item.PrimaryAttributes.HasBeenSet, null);
+            ret.PrimaryAttributes = new MaskItem<bool, IEnumerable<(int, bool)>>(item.PrimaryAttributes.HasBeenSet, null);
             ret.Specialization = true;
-            ret.SecondaryAttributes = new MaskItem<bool, IEnumerable<bool>>(item.SecondaryAttributes.HasBeenSet, null);
+            ret.SecondaryAttributes = new MaskItem<bool, IEnumerable<(int, bool)>>(item.SecondaryAttributes.HasBeenSet, null);
             ret.Flags = true;
             ret.ClassServices = true;
             ret.Training = new MaskItem<bool, ClassTraining_Mask<bool>>(true, ClassTrainingCommon.GetHasBeenSetMask(item.Training));
@@ -2695,7 +2468,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         public static void WriteToNode_Xml(
-            IClassGetter item,
+            this IClassGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -2809,6 +2582,290 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)Class_FieldIndex.Training,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)Class_FieldIndex.Training));
+            }
+        }
+
+        public static void FillPublic_Xml(
+            this Class item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    ClassCommon.FillPublicElement_Xml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+
+        public static void FillPublicElement_Xml(
+            this Class item,
+            XElement node,
+            string name,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            switch (name)
+            {
+                case "Name":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Class_FieldIndex.Name);
+                        if (StringXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out String NameParse,
+                            errorMask: errorMask))
+                        {
+                            item.Name = NameParse;
+                        }
+                        else
+                        {
+                            item.Name = default(String);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Description":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Class_FieldIndex.Description);
+                        if (StringXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out String DescriptionParse,
+                            errorMask: errorMask))
+                        {
+                            item.Description = DescriptionParse;
+                        }
+                        else
+                        {
+                            item.Description = default(String);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Icon":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Class_FieldIndex.Icon);
+                        if (StringXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out String IconParse,
+                            errorMask: errorMask))
+                        {
+                            item.Icon = IconParse;
+                        }
+                        else
+                        {
+                            item.Icon = default(String);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "PrimaryAttributes":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Class_FieldIndex.PrimaryAttributes);
+                        if (ListXmlTranslation<ActorValue>.Instance.Parse(
+                            node: node,
+                            enumer: out var PrimaryAttributesItem,
+                            transl: EnumXmlTranslation<ActorValue>.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.PrimaryAttributes.SetTo(PrimaryAttributesItem);
+                        }
+                        else
+                        {
+                            item.PrimaryAttributes.Unset();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Specialization":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Class_FieldIndex.Specialization);
+                        if (EnumXmlTranslation<Class.SpecializationFlag>.Instance.Parse(
+                            node: node,
+                            item: out Class.SpecializationFlag SpecializationParse,
+                            errorMask: errorMask))
+                        {
+                            item.Specialization = SpecializationParse;
+                        }
+                        else
+                        {
+                            item.Specialization = default(Class.SpecializationFlag);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "SecondaryAttributes":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Class_FieldIndex.SecondaryAttributes);
+                        if (ListXmlTranslation<ActorValue>.Instance.Parse(
+                            node: node,
+                            enumer: out var SecondaryAttributesItem,
+                            transl: EnumXmlTranslation<ActorValue>.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.SecondaryAttributes.SetTo(SecondaryAttributesItem);
+                        }
+                        else
+                        {
+                            item.SecondaryAttributes.Unset();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Flags":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Class_FieldIndex.Flags);
+                        if (EnumXmlTranslation<ClassFlag>.Instance.Parse(
+                            node: node,
+                            item: out ClassFlag FlagsParse,
+                            errorMask: errorMask))
+                        {
+                            item.Flags = FlagsParse;
+                        }
+                        else
+                        {
+                            item.Flags = default(ClassFlag);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "ClassServices":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Class_FieldIndex.ClassServices);
+                        if (EnumXmlTranslation<ClassService>.Instance.Parse(
+                            node: node,
+                            item: out ClassService ClassServicesParse,
+                            errorMask: errorMask))
+                        {
+                            item.ClassServices = ClassServicesParse;
+                        }
+                        else
+                        {
+                            item.ClassServices = default(ClassService);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Training":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Class_FieldIndex.Training);
+                        if (LoquiXmlTranslation<ClassTraining>.Instance.Parse(
+                            node: node,
+                            item: out ClassTraining TrainingParse,
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)Class_FieldIndex.Training)))
+                        {
+                            item.Training = TrainingParse;
+                        }
+                        else
+                        {
+                            item.Training = default(ClassTraining);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                default:
+                    MajorRecordCommon.FillPublicElement_Xml(
+                        item: item,
+                        node: node,
+                        name: name,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                    break;
             }
         }
 
@@ -2986,9 +3043,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.Name = initialValue;
             this.Description = initialValue;
             this.Icon = initialValue;
-            this.PrimaryAttributes = new MaskItem<T, IEnumerable<T>>(initialValue, null);
+            this.PrimaryAttributes = new MaskItem<T, IEnumerable<(int Index, T Value)>>(initialValue, null);
             this.Specialization = initialValue;
-            this.SecondaryAttributes = new MaskItem<T, IEnumerable<T>>(initialValue, null);
+            this.SecondaryAttributes = new MaskItem<T, IEnumerable<(int Index, T Value)>>(initialValue, null);
             this.Flags = initialValue;
             this.ClassServices = initialValue;
             this.Training = new MaskItem<T, ClassTraining_Mask<T>>(initialValue, new ClassTraining_Mask<T>(initialValue));
@@ -2999,9 +3056,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public T Name;
         public T Description;
         public T Icon;
-        public MaskItem<T, IEnumerable<T>> PrimaryAttributes;
+        public MaskItem<T, IEnumerable<(int Index, T Value)>> PrimaryAttributes;
         public T Specialization;
-        public MaskItem<T, IEnumerable<T>> SecondaryAttributes;
+        public MaskItem<T, IEnumerable<(int Index, T Value)>> SecondaryAttributes;
         public T Flags;
         public T ClassServices;
         public MaskItem<T, ClassTraining_Mask<T>> Training { get; set; }
@@ -3061,7 +3118,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     foreach (var item in this.PrimaryAttributes.Specific)
                     {
-                        if (!eval(item)) return false;
+                        if (!eval(item.Value)) return false;
                     }
                 }
             }
@@ -3073,7 +3130,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     foreach (var item in this.SecondaryAttributes.Specific)
                     {
-                        if (!eval(item)) return false;
+                        if (!eval(item.Value)) return false;
                     }
                 }
             }
@@ -3104,16 +3161,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             obj.Icon = eval(this.Icon);
             if (PrimaryAttributes != null)
             {
-                obj.PrimaryAttributes = new MaskItem<R, IEnumerable<R>>();
+                obj.PrimaryAttributes = new MaskItem<R, IEnumerable<(int Index, R Value)>>();
                 obj.PrimaryAttributes.Overall = eval(this.PrimaryAttributes.Overall);
                 if (PrimaryAttributes.Specific != null)
                 {
-                    List<R> l = new List<R>();
+                    List<(int Index, R Item)> l = new List<(int Index, R Item)>();
                     obj.PrimaryAttributes.Specific = l;
-                    foreach (var item in PrimaryAttributes.Specific)
+                    foreach (var item in PrimaryAttributes.Specific.WithIndex())
                     {
-                        R mask = default(R);
-                        mask = eval(item);
+                        (int Index, R Item) mask = default;
+                        mask.Index = item.Index;
+                        mask.Item = eval(item.Item.Value);
                         l.Add(mask);
                     }
                 }
@@ -3121,16 +3179,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             obj.Specialization = eval(this.Specialization);
             if (SecondaryAttributes != null)
             {
-                obj.SecondaryAttributes = new MaskItem<R, IEnumerable<R>>();
+                obj.SecondaryAttributes = new MaskItem<R, IEnumerable<(int Index, R Value)>>();
                 obj.SecondaryAttributes.Overall = eval(this.SecondaryAttributes.Overall);
                 if (SecondaryAttributes.Specific != null)
                 {
-                    List<R> l = new List<R>();
+                    List<(int Index, R Item)> l = new List<(int Index, R Item)>();
                     obj.SecondaryAttributes.Specific = l;
-                    foreach (var item in SecondaryAttributes.Specific)
+                    foreach (var item in SecondaryAttributes.Specific.WithIndex())
                     {
-                        R mask = default(R);
-                        mask = eval(item);
+                        (int Index, R Item) mask = default;
+                        mask.Index = item.Index;
+                        mask.Item = eval(item.Item.Value);
                         l.Add(mask);
                     }
                 }
@@ -3268,9 +3327,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Exception Name;
         public Exception Description;
         public Exception Icon;
-        public MaskItem<Exception, IEnumerable<Exception>> PrimaryAttributes;
+        public MaskItem<Exception, IEnumerable<(int Index, Exception Value)>> PrimaryAttributes;
         public Exception Specialization;
-        public MaskItem<Exception, IEnumerable<Exception>> SecondaryAttributes;
+        public MaskItem<Exception, IEnumerable<(int Index, Exception Value)>> SecondaryAttributes;
         public Exception Flags;
         public Exception ClassServices;
         public MaskItem<Exception, ClassTraining_ErrorMask> Training;
@@ -3320,13 +3379,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     this.Icon = ex;
                     break;
                 case Class_FieldIndex.PrimaryAttributes:
-                    this.PrimaryAttributes = new MaskItem<Exception, IEnumerable<Exception>>(ex, null);
+                    this.PrimaryAttributes = new MaskItem<Exception, IEnumerable<(int Index, Exception Value)>>(ex, null);
                     break;
                 case Class_FieldIndex.Specialization:
                     this.Specialization = ex;
                     break;
                 case Class_FieldIndex.SecondaryAttributes:
-                    this.SecondaryAttributes = new MaskItem<Exception, IEnumerable<Exception>>(ex, null);
+                    this.SecondaryAttributes = new MaskItem<Exception, IEnumerable<(int Index, Exception Value)>>(ex, null);
                     break;
                 case Class_FieldIndex.Flags:
                     this.Flags = ex;
@@ -3358,13 +3417,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     this.Icon = (Exception)obj;
                     break;
                 case Class_FieldIndex.PrimaryAttributes:
-                    this.PrimaryAttributes = (MaskItem<Exception, IEnumerable<Exception>>)obj;
+                    this.PrimaryAttributes = (MaskItem<Exception, IEnumerable<(int Index, Exception Value)>>)obj;
                     break;
                 case Class_FieldIndex.Specialization:
                     this.Specialization = (Exception)obj;
                     break;
                 case Class_FieldIndex.SecondaryAttributes:
-                    this.SecondaryAttributes = (MaskItem<Exception, IEnumerable<Exception>>)obj;
+                    this.SecondaryAttributes = (MaskItem<Exception, IEnumerable<(int Index, Exception Value)>>)obj;
                     break;
                 case Class_FieldIndex.Flags:
                     this.Flags = (Exception)obj;
@@ -3489,9 +3548,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Name = this.Name.Combine(rhs.Name);
             ret.Description = this.Description.Combine(rhs.Description);
             ret.Icon = this.Icon.Combine(rhs.Icon);
-            ret.PrimaryAttributes = new MaskItem<Exception, IEnumerable<Exception>>(this.PrimaryAttributes.Overall.Combine(rhs.PrimaryAttributes.Overall), new List<Exception>(this.PrimaryAttributes.Specific.And(rhs.PrimaryAttributes.Specific)));
+            ret.PrimaryAttributes = new MaskItem<Exception, IEnumerable<(int Index, Exception Value)>>(this.PrimaryAttributes.Overall.Combine(rhs.PrimaryAttributes.Overall), new List<(int Index, Exception Value)>(this.PrimaryAttributes.Specific.And(rhs.PrimaryAttributes.Specific)));
             ret.Specialization = this.Specialization.Combine(rhs.Specialization);
-            ret.SecondaryAttributes = new MaskItem<Exception, IEnumerable<Exception>>(this.SecondaryAttributes.Overall.Combine(rhs.SecondaryAttributes.Overall), new List<Exception>(this.SecondaryAttributes.Specific.And(rhs.SecondaryAttributes.Specific)));
+            ret.SecondaryAttributes = new MaskItem<Exception, IEnumerable<(int Index, Exception Value)>>(this.SecondaryAttributes.Overall.Combine(rhs.SecondaryAttributes.Overall), new List<(int Index, Exception Value)>(this.SecondaryAttributes.Specific.And(rhs.SecondaryAttributes.Specific)));
             ret.Flags = this.Flags.Combine(rhs.Flags);
             ret.ClassServices = this.ClassServices.Combine(rhs.ClassServices);
             ret.Training = new MaskItem<Exception, ClassTraining_ErrorMask>(this.Training.Overall.Combine(rhs.Training.Overall), ((IErrorMask<ClassTraining_ErrorMask>)this.Training.Specific).Combine(rhs.Training.Specific));

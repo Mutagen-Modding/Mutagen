@@ -88,8 +88,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> IEqualsMask<SkillBoost>.GetEqualsMask(SkillBoost rhs) => SkillBoostCommon.GetEqualsMask(this, rhs);
-        IMask<bool> IEqualsMask<ISkillBoostGetter>.GetEqualsMask(ISkillBoostGetter rhs) => SkillBoostCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<SkillBoost>.GetEqualsMask(SkillBoost rhs, EqualsMaskHelper.Include include) => SkillBoostCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<ISkillBoostGetter>.GetEqualsMask(ISkillBoostGetter rhs, EqualsMaskHelper.Include include) => SkillBoostCommon.GetEqualsMask(this, rhs, include);
         #region To String
         public string ToString(
             string name = null,
@@ -177,7 +177,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 foreach (var elem in node.Elements())
                 {
-                    Fill_Xml_Internal(
+                    SkillBoostCommon.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -491,72 +491,6 @@ namespace Mutagen.Bethesda.Oblivion
                 translationMask: translationMask);
         }
         #endregion
-
-        protected static void Fill_Xml_Internal(
-            SkillBoost item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            switch (name)
-            {
-                case "Skill":
-                    try
-                    {
-                        errorMask?.PushIndex((int)SkillBoost_FieldIndex.Skill);
-                        if (EnumXmlTranslation<ActorValue>.Instance.Parse(
-                            node: node,
-                            item: out ActorValue SkillParse,
-                            errorMask: errorMask))
-                        {
-                            item.Skill = SkillParse;
-                        }
-                        else
-                        {
-                            item.Skill = default(ActorValue);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Boost":
-                    try
-                    {
-                        errorMask?.PushIndex((int)SkillBoost_FieldIndex.Boost);
-                        if (Int8XmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out SByte BoostParse,
-                            errorMask: errorMask))
-                        {
-                            item.Boost = BoostParse;
-                        }
-                        else
-                        {
-                            item.Boost = default(SByte);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
 
         #endregion
 
@@ -1457,17 +1391,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static SkillBoost_Mask<bool> GetEqualsMask(
             this ISkillBoostGetter item,
-            ISkillBoostGetter rhs)
+            ISkillBoostGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new SkillBoost_Mask<bool>();
-            FillEqualsMask(item, rhs, ret);
+            FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
             return ret;
         }
 
         public static void FillEqualsMask(
             ISkillBoostGetter item,
             ISkillBoostGetter rhs,
-            SkillBoost_Mask<bool> ret)
+            SkillBoost_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
             ret.Skill = item.Skill == rhs.Skill;
@@ -1570,7 +1510,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         public static void WriteToNode_Xml(
-            ISkillBoostGetter item,
+            this ISkillBoostGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1592,6 +1532,97 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item.Boost,
                     fieldIndex: (int)SkillBoost_FieldIndex.Boost,
                     errorMask: errorMask);
+            }
+        }
+
+        public static void FillPublic_Xml(
+            this SkillBoost item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    SkillBoostCommon.FillPublicElement_Xml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+
+        public static void FillPublicElement_Xml(
+            this SkillBoost item,
+            XElement node,
+            string name,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            switch (name)
+            {
+                case "Skill":
+                    try
+                    {
+                        errorMask?.PushIndex((int)SkillBoost_FieldIndex.Skill);
+                        if (EnumXmlTranslation<ActorValue>.Instance.Parse(
+                            node: node,
+                            item: out ActorValue SkillParse,
+                            errorMask: errorMask))
+                        {
+                            item.Skill = SkillParse;
+                        }
+                        else
+                        {
+                            item.Skill = default(ActorValue);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Boost":
+                    try
+                    {
+                        errorMask?.PushIndex((int)SkillBoost_FieldIndex.Boost);
+                        if (Int8XmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out SByte BoostParse,
+                            errorMask: errorMask))
+                        {
+                            item.Boost = BoostParse;
+                        }
+                        else
+                        {
+                            item.Boost = default(SByte);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                default:
+                    break;
             }
         }
 

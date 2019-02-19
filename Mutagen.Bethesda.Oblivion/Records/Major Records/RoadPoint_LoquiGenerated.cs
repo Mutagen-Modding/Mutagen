@@ -115,8 +115,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> IEqualsMask<RoadPoint>.GetEqualsMask(RoadPoint rhs) => RoadPointCommon.GetEqualsMask(this, rhs);
-        IMask<bool> IEqualsMask<IRoadPointGetter>.GetEqualsMask(IRoadPointGetter rhs) => RoadPointCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<RoadPoint>.GetEqualsMask(RoadPoint rhs, EqualsMaskHelper.Include include) => RoadPointCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<IRoadPointGetter>.GetEqualsMask(IRoadPointGetter rhs, EqualsMaskHelper.Include include) => RoadPointCommon.GetEqualsMask(this, rhs, include);
         #region To String
         public string ToString(
             string name = null,
@@ -149,7 +149,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Equals(RoadPoint rhs)
         {
             if (rhs == null) return false;
-            if (this.Point != rhs.Point) return false;
+            if (!this.Point.Equals(rhs.Point)) return false;
             if (!this.NumConnectionsFluffBytes.EqualsFast(rhs.NumConnectionsFluffBytes)) return false;
             if (!this.Connections.SequenceEqual(rhs.Connections)) return false;
             return true;
@@ -206,7 +206,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 foreach (var elem in node.Elements())
                 {
-                    Fill_Xml_Internal(
+                    RoadPointCommon.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -520,100 +520,6 @@ namespace Mutagen.Bethesda.Oblivion
                 translationMask: translationMask);
         }
         #endregion
-
-        protected static void Fill_Xml_Internal(
-            RoadPoint item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            switch (name)
-            {
-                case "Point":
-                    try
-                    {
-                        errorMask?.PushIndex((int)RoadPoint_FieldIndex.Point);
-                        if (P3FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out P3Float PointParse,
-                            errorMask: errorMask))
-                        {
-                            item.Point = PointParse;
-                        }
-                        else
-                        {
-                            item.Point = default(P3Float);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "NumConnectionsFluffBytes":
-                    try
-                    {
-                        errorMask?.PushIndex((int)RoadPoint_FieldIndex.NumConnectionsFluffBytes);
-                        if (ByteArrayXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Byte[] NumConnectionsFluffBytesParse,
-                            errorMask: errorMask))
-                        {
-                            item.NumConnectionsFluffBytes = NumConnectionsFluffBytesParse;
-                        }
-                        else
-                        {
-                            item.NumConnectionsFluffBytes = default(Byte[]);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Connections":
-                    try
-                    {
-                        errorMask?.PushIndex((int)RoadPoint_FieldIndex.Connections);
-                        if (ListXmlTranslation<P3Float>.Instance.Parse(
-                            node: node,
-                            enumer: out var ConnectionsItem,
-                            transl: P3FloatXmlTranslation.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.Connections.SetTo(ConnectionsItem);
-                        }
-                        else
-                        {
-                            item.Connections.Unset();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
 
         #endregion
 
@@ -1572,24 +1478,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static RoadPoint_Mask<bool> GetEqualsMask(
             this IRoadPointGetter item,
-            IRoadPointGetter rhs)
+            IRoadPointGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new RoadPoint_Mask<bool>();
-            FillEqualsMask(item, rhs, ret);
+            FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
             return ret;
         }
 
         public static void FillEqualsMask(
             IRoadPointGetter item,
             IRoadPointGetter rhs,
-            RoadPoint_Mask<bool> ret)
+            RoadPoint_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
             ret.Point = item.Point == rhs.Point;
             ret.NumConnectionsFluffBytes = item.NumConnectionsFluffBytes.EqualsFast(rhs.NumConnectionsFluffBytes);
-            ret.Connections = new MaskItem<bool, IEnumerable<bool>>();
-            ret.Connections.Specific = item.Connections.SelectAgainst<P3Float, bool>(rhs.Connections, ((l, r) => object.Equals(l, r)), out ret.Connections.Overall);
-            ret.Connections.Overall = ret.Connections.Overall && ret.Connections.Specific.All((b) => b);
+            ret.Connections = item.Connections.CollectionEqualsHelper(
+                rhs.Connections,
+                (l, r) => l.Equals(r),
+                include);
         }
 
         public static string ToString(
@@ -1662,7 +1575,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             var ret = new RoadPoint_Mask<bool>();
             ret.Point = true;
             ret.NumConnectionsFluffBytes = true;
-            ret.Connections = new MaskItem<bool, IEnumerable<bool>>(item.Connections.HasBeenSet, null);
+            ret.Connections = new MaskItem<bool, IEnumerable<(int, bool)>>(item.Connections.HasBeenSet, null);
             return ret;
         }
 
@@ -1708,7 +1621,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         public static void WriteToNode_Xml(
-            IRoadPointGetter item,
+            this IRoadPointGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1749,6 +1662,125 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             errorMask: listSubMask);
                     }
                     );
+            }
+        }
+
+        public static void FillPublic_Xml(
+            this RoadPoint item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    RoadPointCommon.FillPublicElement_Xml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+
+        public static void FillPublicElement_Xml(
+            this RoadPoint item,
+            XElement node,
+            string name,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            switch (name)
+            {
+                case "Point":
+                    try
+                    {
+                        errorMask?.PushIndex((int)RoadPoint_FieldIndex.Point);
+                        if (P3FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out P3Float PointParse,
+                            errorMask: errorMask))
+                        {
+                            item.Point = PointParse;
+                        }
+                        else
+                        {
+                            item.Point = default(P3Float);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "NumConnectionsFluffBytes":
+                    try
+                    {
+                        errorMask?.PushIndex((int)RoadPoint_FieldIndex.NumConnectionsFluffBytes);
+                        if (ByteArrayXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Byte[] NumConnectionsFluffBytesParse,
+                            errorMask: errorMask))
+                        {
+                            item.NumConnectionsFluffBytes = NumConnectionsFluffBytesParse;
+                        }
+                        else
+                        {
+                            item.NumConnectionsFluffBytes = default(Byte[]);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Connections":
+                    try
+                    {
+                        errorMask?.PushIndex((int)RoadPoint_FieldIndex.Connections);
+                        if (ListXmlTranslation<P3Float>.Instance.Parse(
+                            node: node,
+                            enumer: out var ConnectionsItem,
+                            transl: P3FloatXmlTranslation.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.Connections.SetTo(ConnectionsItem);
+                        }
+                        else
+                        {
+                            item.Connections.Unset();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                default:
+                    break;
             }
         }
 
@@ -1831,14 +1863,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             this.Point = initialValue;
             this.NumConnectionsFluffBytes = initialValue;
-            this.Connections = new MaskItem<T, IEnumerable<T>>(initialValue, null);
+            this.Connections = new MaskItem<T, IEnumerable<(int Index, T Value)>>(initialValue, null);
         }
         #endregion
 
         #region Members
         public T Point;
         public T NumConnectionsFluffBytes;
-        public MaskItem<T, IEnumerable<T>> Connections;
+        public MaskItem<T, IEnumerable<(int Index, T Value)>> Connections;
         #endregion
 
         #region Equals
@@ -1879,7 +1911,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     foreach (var item in this.Connections.Specific)
                     {
-                        if (!eval(item)) return false;
+                        if (!eval(item.Value)) return false;
                     }
                 }
             }
@@ -1901,16 +1933,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             obj.NumConnectionsFluffBytes = eval(this.NumConnectionsFluffBytes);
             if (Connections != null)
             {
-                obj.Connections = new MaskItem<R, IEnumerable<R>>();
+                obj.Connections = new MaskItem<R, IEnumerable<(int Index, R Value)>>();
                 obj.Connections.Overall = eval(this.Connections.Overall);
                 if (Connections.Specific != null)
                 {
-                    List<R> l = new List<R>();
+                    List<(int Index, R Item)> l = new List<(int Index, R Item)>();
                     obj.Connections.Specific = l;
-                    foreach (var item in Connections.Specific)
+                    foreach (var item in Connections.Specific.WithIndex())
                     {
-                        R mask = default(R);
-                        mask = eval(item);
+                        (int Index, R Item) mask = default;
+                        mask.Index = item.Index;
+                        mask.Item = eval(item.Item.Value);
                         l.Add(mask);
                     }
                 }
@@ -2002,7 +2035,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         public Exception Point;
         public Exception NumConnectionsFluffBytes;
-        public MaskItem<Exception, IEnumerable<Exception>> Connections;
+        public MaskItem<Exception, IEnumerable<(int Index, Exception Value)>> Connections;
         #endregion
 
         #region IErrorMask
@@ -2034,7 +2067,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     this.NumConnectionsFluffBytes = ex;
                     break;
                 case RoadPoint_FieldIndex.Connections:
-                    this.Connections = new MaskItem<Exception, IEnumerable<Exception>>(ex, null);
+                    this.Connections = new MaskItem<Exception, IEnumerable<(int Index, Exception Value)>>(ex, null);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -2053,7 +2086,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     this.NumConnectionsFluffBytes = (Exception)obj;
                     break;
                 case RoadPoint_FieldIndex.Connections:
-                    this.Connections = (MaskItem<Exception, IEnumerable<Exception>>)obj;
+                    this.Connections = (MaskItem<Exception, IEnumerable<(int Index, Exception Value)>>)obj;
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -2133,7 +2166,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             var ret = new RoadPoint_ErrorMask();
             ret.Point = this.Point.Combine(rhs.Point);
             ret.NumConnectionsFluffBytes = this.NumConnectionsFluffBytes.Combine(rhs.NumConnectionsFluffBytes);
-            ret.Connections = new MaskItem<Exception, IEnumerable<Exception>>(this.Connections.Overall.Combine(rhs.Connections.Overall), new List<Exception>(this.Connections.Specific.And(rhs.Connections.Specific)));
+            ret.Connections = new MaskItem<Exception, IEnumerable<(int Index, Exception Value)>>(this.Connections.Overall.Combine(rhs.Connections.Overall), new List<(int Index, Exception Value)>(this.Connections.Specific.And(rhs.Connections.Specific)));
             return ret;
         }
         public static RoadPoint_ErrorMask Combine(RoadPoint_ErrorMask lhs, RoadPoint_ErrorMask rhs)

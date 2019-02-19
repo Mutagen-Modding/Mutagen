@@ -221,8 +221,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> IEqualsMask<RegionDataObject>.GetEqualsMask(RegionDataObject rhs) => RegionDataObjectCommon.GetEqualsMask(this, rhs);
-        IMask<bool> IEqualsMask<IRegionDataObjectGetter>.GetEqualsMask(IRegionDataObjectGetter rhs) => RegionDataObjectCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<RegionDataObject>.GetEqualsMask(RegionDataObject rhs, EqualsMaskHelper.Include include) => RegionDataObjectCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<IRegionDataObjectGetter>.GetEqualsMask(IRegionDataObjectGetter rhs, EqualsMaskHelper.Include include) => RegionDataObjectCommon.GetEqualsMask(this, rhs, include);
         #region To String
         public string ToString(
             string name = null,
@@ -270,7 +270,7 @@ namespace Mutagen.Bethesda.Oblivion
             if (!this.Sink.EqualsWithin(rhs.Sink)) return false;
             if (!this.SinkVariance.EqualsWithin(rhs.SinkVariance)) return false;
             if (!this.SizeVariance.EqualsWithin(rhs.SizeVariance)) return false;
-            if (this.AngleVariance != rhs.AngleVariance) return false;
+            if (!this.AngleVariance.Equals(rhs.AngleVariance)) return false;
             if (!this.Unknow2n.EqualsFast(rhs.Unknow2n)) return false;
             return true;
         }
@@ -340,7 +340,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 foreach (var elem in node.Elements())
                 {
-                    Fill_Xml_Internal(
+                    RegionDataObjectCommon.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -654,443 +654,6 @@ namespace Mutagen.Bethesda.Oblivion
                 translationMask: translationMask);
         }
         #endregion
-
-        protected static void Fill_Xml_Internal(
-            RegionDataObject item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            switch (name)
-            {
-                case "Object":
-                    FormKeyXmlTranslation.Instance.ParseInto(
-                        node: node,
-                        item: item.Object_Property,
-                        fieldIndex: (int)RegionDataObject_FieldIndex.Object,
-                        errorMask: errorMask);
-                    break;
-                case "ParentIndex":
-                    try
-                    {
-                        errorMask?.PushIndex((int)RegionDataObject_FieldIndex.ParentIndex);
-                        if (UInt16XmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out UInt16 ParentIndexParse,
-                            errorMask: errorMask))
-                        {
-                            item.ParentIndex = ParentIndexParse;
-                        }
-                        else
-                        {
-                            item.ParentIndex = default(UInt16);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Unknown1":
-                    try
-                    {
-                        errorMask?.PushIndex((int)RegionDataObject_FieldIndex.Unknown1);
-                        if (ByteArrayXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Byte[] Unknown1Parse,
-                            errorMask: errorMask))
-                        {
-                            item.Unknown1 = Unknown1Parse;
-                        }
-                        else
-                        {
-                            item.Unknown1 = default(Byte[]);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Density":
-                    try
-                    {
-                        errorMask?.PushIndex((int)RegionDataObject_FieldIndex.Density);
-                        if (FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Single DensityParse,
-                            errorMask: errorMask))
-                        {
-                            item.Density = DensityParse;
-                        }
-                        else
-                        {
-                            item.Density = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Clustering":
-                    try
-                    {
-                        errorMask?.PushIndex((int)RegionDataObject_FieldIndex.Clustering);
-                        if (ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Byte ClusteringParse,
-                            errorMask: errorMask))
-                        {
-                            item.Clustering = ClusteringParse;
-                        }
-                        else
-                        {
-                            item.Clustering = default(Byte);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "MinSlope":
-                    try
-                    {
-                        errorMask?.PushIndex((int)RegionDataObject_FieldIndex.MinSlope);
-                        if (ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Byte MinSlopeParse,
-                            errorMask: errorMask))
-                        {
-                            item.MinSlope = MinSlopeParse;
-                        }
-                        else
-                        {
-                            item.MinSlope = default(Byte);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "MaxSlope":
-                    try
-                    {
-                        errorMask?.PushIndex((int)RegionDataObject_FieldIndex.MaxSlope);
-                        if (ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Byte MaxSlopeParse,
-                            errorMask: errorMask))
-                        {
-                            item.MaxSlope = MaxSlopeParse;
-                        }
-                        else
-                        {
-                            item.MaxSlope = default(Byte);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Flags":
-                    try
-                    {
-                        errorMask?.PushIndex((int)RegionDataObject_FieldIndex.Flags);
-                        if (EnumXmlTranslation<RegionDataObject.Flag>.Instance.Parse(
-                            node: node,
-                            item: out RegionDataObject.Flag FlagsParse,
-                            errorMask: errorMask))
-                        {
-                            item.Flags = FlagsParse;
-                        }
-                        else
-                        {
-                            item.Flags = default(RegionDataObject.Flag);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "RadiusWrtPercent":
-                    try
-                    {
-                        errorMask?.PushIndex((int)RegionDataObject_FieldIndex.RadiusWrtPercent);
-                        if (UInt16XmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out UInt16 RadiusWrtPercentParse,
-                            errorMask: errorMask))
-                        {
-                            item.RadiusWrtPercent = RadiusWrtPercentParse;
-                        }
-                        else
-                        {
-                            item.RadiusWrtPercent = default(UInt16);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Radius":
-                    try
-                    {
-                        errorMask?.PushIndex((int)RegionDataObject_FieldIndex.Radius);
-                        if (UInt16XmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out UInt16 RadiusParse,
-                            errorMask: errorMask))
-                        {
-                            item.Radius = RadiusParse;
-                        }
-                        else
-                        {
-                            item.Radius = default(UInt16);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "MinHeight":
-                    try
-                    {
-                        errorMask?.PushIndex((int)RegionDataObject_FieldIndex.MinHeight);
-                        if (FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Single MinHeightParse,
-                            errorMask: errorMask))
-                        {
-                            item.MinHeight = MinHeightParse;
-                        }
-                        else
-                        {
-                            item.MinHeight = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "MaxHeight":
-                    try
-                    {
-                        errorMask?.PushIndex((int)RegionDataObject_FieldIndex.MaxHeight);
-                        if (FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Single MaxHeightParse,
-                            errorMask: errorMask))
-                        {
-                            item.MaxHeight = MaxHeightParse;
-                        }
-                        else
-                        {
-                            item.MaxHeight = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Sink":
-                    try
-                    {
-                        errorMask?.PushIndex((int)RegionDataObject_FieldIndex.Sink);
-                        if (FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Single SinkParse,
-                            errorMask: errorMask))
-                        {
-                            item.Sink = SinkParse;
-                        }
-                        else
-                        {
-                            item.Sink = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "SinkVariance":
-                    try
-                    {
-                        errorMask?.PushIndex((int)RegionDataObject_FieldIndex.SinkVariance);
-                        if (FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Single SinkVarianceParse,
-                            errorMask: errorMask))
-                        {
-                            item.SinkVariance = SinkVarianceParse;
-                        }
-                        else
-                        {
-                            item.SinkVariance = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "SizeVariance":
-                    try
-                    {
-                        errorMask?.PushIndex((int)RegionDataObject_FieldIndex.SizeVariance);
-                        if (FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Single SizeVarianceParse,
-                            errorMask: errorMask))
-                        {
-                            item.SizeVariance = SizeVarianceParse;
-                        }
-                        else
-                        {
-                            item.SizeVariance = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "AngleVariance":
-                    try
-                    {
-                        errorMask?.PushIndex((int)RegionDataObject_FieldIndex.AngleVariance);
-                        if (P3UInt16XmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out P3UInt16 AngleVarianceParse,
-                            errorMask: errorMask))
-                        {
-                            item.AngleVariance = AngleVarianceParse;
-                        }
-                        else
-                        {
-                            item.AngleVariance = default(P3UInt16);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Unknow2n":
-                    try
-                    {
-                        errorMask?.PushIndex((int)RegionDataObject_FieldIndex.Unknow2n);
-                        if (ByteArrayXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Byte[] Unknow2nParse,
-                            errorMask: errorMask))
-                        {
-                            item.Unknow2n = Unknow2nParse;
-                        }
-                        else
-                        {
-                            item.Unknow2n = default(Byte[]);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
 
         #endregion
 
@@ -3111,34 +2674,40 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static RegionDataObject_Mask<bool> GetEqualsMask(
             this IRegionDataObjectGetter item,
-            IRegionDataObjectGetter rhs)
+            IRegionDataObjectGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new RegionDataObject_Mask<bool>();
-            FillEqualsMask(item, rhs, ret);
+            FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
             return ret;
         }
 
         public static void FillEqualsMask(
             IRegionDataObjectGetter item,
             IRegionDataObjectGetter rhs,
-            RegionDataObject_Mask<bool> ret)
+            RegionDataObject_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
             ret.Object = item.Object_Property.FormKey == rhs.Object_Property.FormKey;
             ret.ParentIndex = item.ParentIndex == rhs.ParentIndex;
             ret.Unknown1 = item.Unknown1.EqualsFast(rhs.Unknown1);
-            ret.Density = item.Density == rhs.Density;
+            ret.Density = item.Density.EqualsWithin(rhs.Density);
             ret.Clustering = item.Clustering == rhs.Clustering;
             ret.MinSlope = item.MinSlope == rhs.MinSlope;
             ret.MaxSlope = item.MaxSlope == rhs.MaxSlope;
             ret.Flags = item.Flags == rhs.Flags;
             ret.RadiusWrtPercent = item.RadiusWrtPercent == rhs.RadiusWrtPercent;
             ret.Radius = item.Radius == rhs.Radius;
-            ret.MinHeight = item.MinHeight == rhs.MinHeight;
-            ret.MaxHeight = item.MaxHeight == rhs.MaxHeight;
-            ret.Sink = item.Sink == rhs.Sink;
-            ret.SinkVariance = item.SinkVariance == rhs.SinkVariance;
-            ret.SizeVariance = item.SizeVariance == rhs.SizeVariance;
+            ret.MinHeight = item.MinHeight.EqualsWithin(rhs.MinHeight);
+            ret.MaxHeight = item.MaxHeight.EqualsWithin(rhs.MaxHeight);
+            ret.Sink = item.Sink.EqualsWithin(rhs.Sink);
+            ret.SinkVariance = item.SinkVariance.EqualsWithin(rhs.SinkVariance);
+            ret.SizeVariance = item.SizeVariance.EqualsWithin(rhs.SizeVariance);
             ret.AngleVariance = item.AngleVariance == rhs.AngleVariance;
             ret.Unknow2n = item.Unknow2n.EqualsFast(rhs.Unknow2n);
         }
@@ -3314,7 +2883,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         public static void WriteToNode_Xml(
-            IRegionDataObjectGetter item,
+            this IRegionDataObjectGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -3471,6 +3040,468 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item.Unknow2n,
                     fieldIndex: (int)RegionDataObject_FieldIndex.Unknow2n,
                     errorMask: errorMask);
+            }
+        }
+
+        public static void FillPublic_Xml(
+            this RegionDataObject item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    RegionDataObjectCommon.FillPublicElement_Xml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+
+        public static void FillPublicElement_Xml(
+            this RegionDataObject item,
+            XElement node,
+            string name,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            switch (name)
+            {
+                case "Object":
+                    FormKeyXmlTranslation.Instance.ParseInto(
+                        node: node,
+                        item: item.Object_Property,
+                        fieldIndex: (int)RegionDataObject_FieldIndex.Object,
+                        errorMask: errorMask);
+                    break;
+                case "ParentIndex":
+                    try
+                    {
+                        errorMask?.PushIndex((int)RegionDataObject_FieldIndex.ParentIndex);
+                        if (UInt16XmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out UInt16 ParentIndexParse,
+                            errorMask: errorMask))
+                        {
+                            item.ParentIndex = ParentIndexParse;
+                        }
+                        else
+                        {
+                            item.ParentIndex = default(UInt16);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Unknown1":
+                    try
+                    {
+                        errorMask?.PushIndex((int)RegionDataObject_FieldIndex.Unknown1);
+                        if (ByteArrayXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Byte[] Unknown1Parse,
+                            errorMask: errorMask))
+                        {
+                            item.Unknown1 = Unknown1Parse;
+                        }
+                        else
+                        {
+                            item.Unknown1 = default(Byte[]);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Density":
+                    try
+                    {
+                        errorMask?.PushIndex((int)RegionDataObject_FieldIndex.Density);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Single DensityParse,
+                            errorMask: errorMask))
+                        {
+                            item.Density = DensityParse;
+                        }
+                        else
+                        {
+                            item.Density = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Clustering":
+                    try
+                    {
+                        errorMask?.PushIndex((int)RegionDataObject_FieldIndex.Clustering);
+                        if (ByteXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Byte ClusteringParse,
+                            errorMask: errorMask))
+                        {
+                            item.Clustering = ClusteringParse;
+                        }
+                        else
+                        {
+                            item.Clustering = default(Byte);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "MinSlope":
+                    try
+                    {
+                        errorMask?.PushIndex((int)RegionDataObject_FieldIndex.MinSlope);
+                        if (ByteXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Byte MinSlopeParse,
+                            errorMask: errorMask))
+                        {
+                            item.MinSlope = MinSlopeParse;
+                        }
+                        else
+                        {
+                            item.MinSlope = default(Byte);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "MaxSlope":
+                    try
+                    {
+                        errorMask?.PushIndex((int)RegionDataObject_FieldIndex.MaxSlope);
+                        if (ByteXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Byte MaxSlopeParse,
+                            errorMask: errorMask))
+                        {
+                            item.MaxSlope = MaxSlopeParse;
+                        }
+                        else
+                        {
+                            item.MaxSlope = default(Byte);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Flags":
+                    try
+                    {
+                        errorMask?.PushIndex((int)RegionDataObject_FieldIndex.Flags);
+                        if (EnumXmlTranslation<RegionDataObject.Flag>.Instance.Parse(
+                            node: node,
+                            item: out RegionDataObject.Flag FlagsParse,
+                            errorMask: errorMask))
+                        {
+                            item.Flags = FlagsParse;
+                        }
+                        else
+                        {
+                            item.Flags = default(RegionDataObject.Flag);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "RadiusWrtPercent":
+                    try
+                    {
+                        errorMask?.PushIndex((int)RegionDataObject_FieldIndex.RadiusWrtPercent);
+                        if (UInt16XmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out UInt16 RadiusWrtPercentParse,
+                            errorMask: errorMask))
+                        {
+                            item.RadiusWrtPercent = RadiusWrtPercentParse;
+                        }
+                        else
+                        {
+                            item.RadiusWrtPercent = default(UInt16);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Radius":
+                    try
+                    {
+                        errorMask?.PushIndex((int)RegionDataObject_FieldIndex.Radius);
+                        if (UInt16XmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out UInt16 RadiusParse,
+                            errorMask: errorMask))
+                        {
+                            item.Radius = RadiusParse;
+                        }
+                        else
+                        {
+                            item.Radius = default(UInt16);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "MinHeight":
+                    try
+                    {
+                        errorMask?.PushIndex((int)RegionDataObject_FieldIndex.MinHeight);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Single MinHeightParse,
+                            errorMask: errorMask))
+                        {
+                            item.MinHeight = MinHeightParse;
+                        }
+                        else
+                        {
+                            item.MinHeight = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "MaxHeight":
+                    try
+                    {
+                        errorMask?.PushIndex((int)RegionDataObject_FieldIndex.MaxHeight);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Single MaxHeightParse,
+                            errorMask: errorMask))
+                        {
+                            item.MaxHeight = MaxHeightParse;
+                        }
+                        else
+                        {
+                            item.MaxHeight = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Sink":
+                    try
+                    {
+                        errorMask?.PushIndex((int)RegionDataObject_FieldIndex.Sink);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Single SinkParse,
+                            errorMask: errorMask))
+                        {
+                            item.Sink = SinkParse;
+                        }
+                        else
+                        {
+                            item.Sink = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "SinkVariance":
+                    try
+                    {
+                        errorMask?.PushIndex((int)RegionDataObject_FieldIndex.SinkVariance);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Single SinkVarianceParse,
+                            errorMask: errorMask))
+                        {
+                            item.SinkVariance = SinkVarianceParse;
+                        }
+                        else
+                        {
+                            item.SinkVariance = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "SizeVariance":
+                    try
+                    {
+                        errorMask?.PushIndex((int)RegionDataObject_FieldIndex.SizeVariance);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Single SizeVarianceParse,
+                            errorMask: errorMask))
+                        {
+                            item.SizeVariance = SizeVarianceParse;
+                        }
+                        else
+                        {
+                            item.SizeVariance = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "AngleVariance":
+                    try
+                    {
+                        errorMask?.PushIndex((int)RegionDataObject_FieldIndex.AngleVariance);
+                        if (P3UInt16XmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out P3UInt16 AngleVarianceParse,
+                            errorMask: errorMask))
+                        {
+                            item.AngleVariance = AngleVarianceParse;
+                        }
+                        else
+                        {
+                            item.AngleVariance = default(P3UInt16);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Unknow2n":
+                    try
+                    {
+                        errorMask?.PushIndex((int)RegionDataObject_FieldIndex.Unknow2n);
+                        if (ByteArrayXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Byte[] Unknow2nParse,
+                            errorMask: errorMask))
+                        {
+                            item.Unknow2n = Unknow2nParse;
+                        }
+                        else
+                        {
+                            item.Unknow2n = default(Byte[]);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                default:
+                    break;
             }
         }
 

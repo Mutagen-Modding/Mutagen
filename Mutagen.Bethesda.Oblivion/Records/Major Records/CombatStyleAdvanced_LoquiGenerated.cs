@@ -240,8 +240,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> IEqualsMask<CombatStyleAdvanced>.GetEqualsMask(CombatStyleAdvanced rhs) => CombatStyleAdvancedCommon.GetEqualsMask(this, rhs);
-        IMask<bool> IEqualsMask<ICombatStyleAdvancedGetter>.GetEqualsMask(ICombatStyleAdvancedGetter rhs) => CombatStyleAdvancedCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<CombatStyleAdvanced>.GetEqualsMask(CombatStyleAdvanced rhs, EqualsMaskHelper.Include include) => CombatStyleAdvancedCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<ICombatStyleAdvancedGetter>.GetEqualsMask(ICombatStyleAdvancedGetter rhs, EqualsMaskHelper.Include include) => CombatStyleAdvancedCommon.GetEqualsMask(this, rhs, include);
         #region To String
         public string ToString(
             string name = null,
@@ -367,7 +367,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 foreach (var elem in node.Elements())
                 {
-                    Fill_Xml_Internal(
+                    CombatStyleAdvancedCommon.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -681,566 +681,6 @@ namespace Mutagen.Bethesda.Oblivion
                 translationMask: translationMask);
         }
         #endregion
-
-        protected static void Fill_Xml_Internal(
-            CombatStyleAdvanced item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            switch (name)
-            {
-                case "DodgeFatigueModMult":
-                    try
-                    {
-                        errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.DodgeFatigueModMult);
-                        if (FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Single DodgeFatigueModMultParse,
-                            errorMask: errorMask))
-                        {
-                            item.DodgeFatigueModMult = DodgeFatigueModMultParse;
-                        }
-                        else
-                        {
-                            item.DodgeFatigueModMult = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "DodgeFatigueModBase":
-                    try
-                    {
-                        errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.DodgeFatigueModBase);
-                        if (FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Single DodgeFatigueModBaseParse,
-                            errorMask: errorMask))
-                        {
-                            item.DodgeFatigueModBase = DodgeFatigueModBaseParse;
-                        }
-                        else
-                        {
-                            item.DodgeFatigueModBase = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "EncumbSpeedModBase":
-                    try
-                    {
-                        errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.EncumbSpeedModBase);
-                        if (FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Single EncumbSpeedModBaseParse,
-                            errorMask: errorMask))
-                        {
-                            item.EncumbSpeedModBase = EncumbSpeedModBaseParse;
-                        }
-                        else
-                        {
-                            item.EncumbSpeedModBase = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "EncumbSpeedModMult":
-                    try
-                    {
-                        errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.EncumbSpeedModMult);
-                        if (FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Single EncumbSpeedModMultParse,
-                            errorMask: errorMask))
-                        {
-                            item.EncumbSpeedModMult = EncumbSpeedModMultParse;
-                        }
-                        else
-                        {
-                            item.EncumbSpeedModMult = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "DodgeWhileUnderAttackMult":
-                    try
-                    {
-                        errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.DodgeWhileUnderAttackMult);
-                        if (FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Single DodgeWhileUnderAttackMultParse,
-                            errorMask: errorMask))
-                        {
-                            item.DodgeWhileUnderAttackMult = DodgeWhileUnderAttackMultParse;
-                        }
-                        else
-                        {
-                            item.DodgeWhileUnderAttackMult = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "DodgeNotUnderAttackMult":
-                    try
-                    {
-                        errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.DodgeNotUnderAttackMult);
-                        if (FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Single DodgeNotUnderAttackMultParse,
-                            errorMask: errorMask))
-                        {
-                            item.DodgeNotUnderAttackMult = DodgeNotUnderAttackMultParse;
-                        }
-                        else
-                        {
-                            item.DodgeNotUnderAttackMult = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "DodgeBackWhileUnderAttackMult":
-                    try
-                    {
-                        errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.DodgeBackWhileUnderAttackMult);
-                        if (FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Single DodgeBackWhileUnderAttackMultParse,
-                            errorMask: errorMask))
-                        {
-                            item.DodgeBackWhileUnderAttackMult = DodgeBackWhileUnderAttackMultParse;
-                        }
-                        else
-                        {
-                            item.DodgeBackWhileUnderAttackMult = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "DodgeBackNotUnderAttackMult":
-                    try
-                    {
-                        errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.DodgeBackNotUnderAttackMult);
-                        if (FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Single DodgeBackNotUnderAttackMultParse,
-                            errorMask: errorMask))
-                        {
-                            item.DodgeBackNotUnderAttackMult = DodgeBackNotUnderAttackMultParse;
-                        }
-                        else
-                        {
-                            item.DodgeBackNotUnderAttackMult = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "DodgeForwardWhileUnderAttackMult":
-                    try
-                    {
-                        errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.DodgeForwardWhileUnderAttackMult);
-                        if (FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Single DodgeForwardWhileUnderAttackMultParse,
-                            errorMask: errorMask))
-                        {
-                            item.DodgeForwardWhileUnderAttackMult = DodgeForwardWhileUnderAttackMultParse;
-                        }
-                        else
-                        {
-                            item.DodgeForwardWhileUnderAttackMult = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "DodgeForwardNotUnderAttackMult":
-                    try
-                    {
-                        errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.DodgeForwardNotUnderAttackMult);
-                        if (FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Single DodgeForwardNotUnderAttackMultParse,
-                            errorMask: errorMask))
-                        {
-                            item.DodgeForwardNotUnderAttackMult = DodgeForwardNotUnderAttackMultParse;
-                        }
-                        else
-                        {
-                            item.DodgeForwardNotUnderAttackMult = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "BlockSkillModifierMult":
-                    try
-                    {
-                        errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.BlockSkillModifierMult);
-                        if (FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Single BlockSkillModifierMultParse,
-                            errorMask: errorMask))
-                        {
-                            item.BlockSkillModifierMult = BlockSkillModifierMultParse;
-                        }
-                        else
-                        {
-                            item.BlockSkillModifierMult = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "BlockSkillModifierBase":
-                    try
-                    {
-                        errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.BlockSkillModifierBase);
-                        if (FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Single BlockSkillModifierBaseParse,
-                            errorMask: errorMask))
-                        {
-                            item.BlockSkillModifierBase = BlockSkillModifierBaseParse;
-                        }
-                        else
-                        {
-                            item.BlockSkillModifierBase = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "BlockWhileUnderAttackMult":
-                    try
-                    {
-                        errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.BlockWhileUnderAttackMult);
-                        if (FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Single BlockWhileUnderAttackMultParse,
-                            errorMask: errorMask))
-                        {
-                            item.BlockWhileUnderAttackMult = BlockWhileUnderAttackMultParse;
-                        }
-                        else
-                        {
-                            item.BlockWhileUnderAttackMult = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "BlockNotUnderAttackMult":
-                    try
-                    {
-                        errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.BlockNotUnderAttackMult);
-                        if (FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Single BlockNotUnderAttackMultParse,
-                            errorMask: errorMask))
-                        {
-                            item.BlockNotUnderAttackMult = BlockNotUnderAttackMultParse;
-                        }
-                        else
-                        {
-                            item.BlockNotUnderAttackMult = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "AttackSkillModifierMult":
-                    try
-                    {
-                        errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.AttackSkillModifierMult);
-                        if (FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Single AttackSkillModifierMultParse,
-                            errorMask: errorMask))
-                        {
-                            item.AttackSkillModifierMult = AttackSkillModifierMultParse;
-                        }
-                        else
-                        {
-                            item.AttackSkillModifierMult = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "AttackSkillModifierBase":
-                    try
-                    {
-                        errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.AttackSkillModifierBase);
-                        if (FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Single AttackSkillModifierBaseParse,
-                            errorMask: errorMask))
-                        {
-                            item.AttackSkillModifierBase = AttackSkillModifierBaseParse;
-                        }
-                        else
-                        {
-                            item.AttackSkillModifierBase = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "AttackWhileUnderAttackMult":
-                    try
-                    {
-                        errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.AttackWhileUnderAttackMult);
-                        if (FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Single AttackWhileUnderAttackMultParse,
-                            errorMask: errorMask))
-                        {
-                            item.AttackWhileUnderAttackMult = AttackWhileUnderAttackMultParse;
-                        }
-                        else
-                        {
-                            item.AttackWhileUnderAttackMult = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "AttackNotUnderAttackMult":
-                    try
-                    {
-                        errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.AttackNotUnderAttackMult);
-                        if (FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Single AttackNotUnderAttackMultParse,
-                            errorMask: errorMask))
-                        {
-                            item.AttackNotUnderAttackMult = AttackNotUnderAttackMultParse;
-                        }
-                        else
-                        {
-                            item.AttackNotUnderAttackMult = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "AttackDuringBlockMult":
-                    try
-                    {
-                        errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.AttackDuringBlockMult);
-                        if (FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Single AttackDuringBlockMultParse,
-                            errorMask: errorMask))
-                        {
-                            item.AttackDuringBlockMult = AttackDuringBlockMultParse;
-                        }
-                        else
-                        {
-                            item.AttackDuringBlockMult = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "PowerAttackFatigueModBase":
-                    try
-                    {
-                        errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.PowerAttackFatigueModBase);
-                        if (FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Single PowerAttackFatigueModBaseParse,
-                            errorMask: errorMask))
-                        {
-                            item.PowerAttackFatigueModBase = PowerAttackFatigueModBaseParse;
-                        }
-                        else
-                        {
-                            item.PowerAttackFatigueModBase = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "PowerAttackFatigueModMult":
-                    try
-                    {
-                        errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.PowerAttackFatigueModMult);
-                        if (FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Single PowerAttackFatigueModMultParse,
-                            errorMask: errorMask))
-                        {
-                            item.PowerAttackFatigueModMult = PowerAttackFatigueModMultParse;
-                        }
-                        else
-                        {
-                            item.PowerAttackFatigueModMult = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
 
         #endregion
 
@@ -3556,40 +2996,46 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static CombatStyleAdvanced_Mask<bool> GetEqualsMask(
             this ICombatStyleAdvancedGetter item,
-            ICombatStyleAdvancedGetter rhs)
+            ICombatStyleAdvancedGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new CombatStyleAdvanced_Mask<bool>();
-            FillEqualsMask(item, rhs, ret);
+            FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
             return ret;
         }
 
         public static void FillEqualsMask(
             ICombatStyleAdvancedGetter item,
             ICombatStyleAdvancedGetter rhs,
-            CombatStyleAdvanced_Mask<bool> ret)
+            CombatStyleAdvanced_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.DodgeFatigueModMult = item.DodgeFatigueModMult == rhs.DodgeFatigueModMult;
-            ret.DodgeFatigueModBase = item.DodgeFatigueModBase == rhs.DodgeFatigueModBase;
-            ret.EncumbSpeedModBase = item.EncumbSpeedModBase == rhs.EncumbSpeedModBase;
-            ret.EncumbSpeedModMult = item.EncumbSpeedModMult == rhs.EncumbSpeedModMult;
-            ret.DodgeWhileUnderAttackMult = item.DodgeWhileUnderAttackMult == rhs.DodgeWhileUnderAttackMult;
-            ret.DodgeNotUnderAttackMult = item.DodgeNotUnderAttackMult == rhs.DodgeNotUnderAttackMult;
-            ret.DodgeBackWhileUnderAttackMult = item.DodgeBackWhileUnderAttackMult == rhs.DodgeBackWhileUnderAttackMult;
-            ret.DodgeBackNotUnderAttackMult = item.DodgeBackNotUnderAttackMult == rhs.DodgeBackNotUnderAttackMult;
-            ret.DodgeForwardWhileUnderAttackMult = item.DodgeForwardWhileUnderAttackMult == rhs.DodgeForwardWhileUnderAttackMult;
-            ret.DodgeForwardNotUnderAttackMult = item.DodgeForwardNotUnderAttackMult == rhs.DodgeForwardNotUnderAttackMult;
-            ret.BlockSkillModifierMult = item.BlockSkillModifierMult == rhs.BlockSkillModifierMult;
-            ret.BlockSkillModifierBase = item.BlockSkillModifierBase == rhs.BlockSkillModifierBase;
-            ret.BlockWhileUnderAttackMult = item.BlockWhileUnderAttackMult == rhs.BlockWhileUnderAttackMult;
-            ret.BlockNotUnderAttackMult = item.BlockNotUnderAttackMult == rhs.BlockNotUnderAttackMult;
-            ret.AttackSkillModifierMult = item.AttackSkillModifierMult == rhs.AttackSkillModifierMult;
-            ret.AttackSkillModifierBase = item.AttackSkillModifierBase == rhs.AttackSkillModifierBase;
-            ret.AttackWhileUnderAttackMult = item.AttackWhileUnderAttackMult == rhs.AttackWhileUnderAttackMult;
-            ret.AttackNotUnderAttackMult = item.AttackNotUnderAttackMult == rhs.AttackNotUnderAttackMult;
-            ret.AttackDuringBlockMult = item.AttackDuringBlockMult == rhs.AttackDuringBlockMult;
-            ret.PowerAttackFatigueModBase = item.PowerAttackFatigueModBase == rhs.PowerAttackFatigueModBase;
-            ret.PowerAttackFatigueModMult = item.PowerAttackFatigueModMult == rhs.PowerAttackFatigueModMult;
+            ret.DodgeFatigueModMult = item.DodgeFatigueModMult.EqualsWithin(rhs.DodgeFatigueModMult);
+            ret.DodgeFatigueModBase = item.DodgeFatigueModBase.EqualsWithin(rhs.DodgeFatigueModBase);
+            ret.EncumbSpeedModBase = item.EncumbSpeedModBase.EqualsWithin(rhs.EncumbSpeedModBase);
+            ret.EncumbSpeedModMult = item.EncumbSpeedModMult.EqualsWithin(rhs.EncumbSpeedModMult);
+            ret.DodgeWhileUnderAttackMult = item.DodgeWhileUnderAttackMult.EqualsWithin(rhs.DodgeWhileUnderAttackMult);
+            ret.DodgeNotUnderAttackMult = item.DodgeNotUnderAttackMult.EqualsWithin(rhs.DodgeNotUnderAttackMult);
+            ret.DodgeBackWhileUnderAttackMult = item.DodgeBackWhileUnderAttackMult.EqualsWithin(rhs.DodgeBackWhileUnderAttackMult);
+            ret.DodgeBackNotUnderAttackMult = item.DodgeBackNotUnderAttackMult.EqualsWithin(rhs.DodgeBackNotUnderAttackMult);
+            ret.DodgeForwardWhileUnderAttackMult = item.DodgeForwardWhileUnderAttackMult.EqualsWithin(rhs.DodgeForwardWhileUnderAttackMult);
+            ret.DodgeForwardNotUnderAttackMult = item.DodgeForwardNotUnderAttackMult.EqualsWithin(rhs.DodgeForwardNotUnderAttackMult);
+            ret.BlockSkillModifierMult = item.BlockSkillModifierMult.EqualsWithin(rhs.BlockSkillModifierMult);
+            ret.BlockSkillModifierBase = item.BlockSkillModifierBase.EqualsWithin(rhs.BlockSkillModifierBase);
+            ret.BlockWhileUnderAttackMult = item.BlockWhileUnderAttackMult.EqualsWithin(rhs.BlockWhileUnderAttackMult);
+            ret.BlockNotUnderAttackMult = item.BlockNotUnderAttackMult.EqualsWithin(rhs.BlockNotUnderAttackMult);
+            ret.AttackSkillModifierMult = item.AttackSkillModifierMult.EqualsWithin(rhs.AttackSkillModifierMult);
+            ret.AttackSkillModifierBase = item.AttackSkillModifierBase.EqualsWithin(rhs.AttackSkillModifierBase);
+            ret.AttackWhileUnderAttackMult = item.AttackWhileUnderAttackMult.EqualsWithin(rhs.AttackWhileUnderAttackMult);
+            ret.AttackNotUnderAttackMult = item.AttackNotUnderAttackMult.EqualsWithin(rhs.AttackNotUnderAttackMult);
+            ret.AttackDuringBlockMult = item.AttackDuringBlockMult.EqualsWithin(rhs.AttackDuringBlockMult);
+            ret.PowerAttackFatigueModBase = item.PowerAttackFatigueModBase.EqualsWithin(rhs.PowerAttackFatigueModBase);
+            ret.PowerAttackFatigueModMult = item.PowerAttackFatigueModMult.EqualsWithin(rhs.PowerAttackFatigueModMult);
         }
 
         public static string ToString(
@@ -3783,7 +3229,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         public static void WriteToNode_Xml(
-            ICombatStyleAdvancedGetter item,
+            this ICombatStyleAdvancedGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -3976,6 +3422,591 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item.PowerAttackFatigueModMult,
                     fieldIndex: (int)CombatStyleAdvanced_FieldIndex.PowerAttackFatigueModMult,
                     errorMask: errorMask);
+            }
+        }
+
+        public static void FillPublic_Xml(
+            this CombatStyleAdvanced item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    CombatStyleAdvancedCommon.FillPublicElement_Xml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+
+        public static void FillPublicElement_Xml(
+            this CombatStyleAdvanced item,
+            XElement node,
+            string name,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            switch (name)
+            {
+                case "DodgeFatigueModMult":
+                    try
+                    {
+                        errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.DodgeFatigueModMult);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Single DodgeFatigueModMultParse,
+                            errorMask: errorMask))
+                        {
+                            item.DodgeFatigueModMult = DodgeFatigueModMultParse;
+                        }
+                        else
+                        {
+                            item.DodgeFatigueModMult = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "DodgeFatigueModBase":
+                    try
+                    {
+                        errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.DodgeFatigueModBase);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Single DodgeFatigueModBaseParse,
+                            errorMask: errorMask))
+                        {
+                            item.DodgeFatigueModBase = DodgeFatigueModBaseParse;
+                        }
+                        else
+                        {
+                            item.DodgeFatigueModBase = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "EncumbSpeedModBase":
+                    try
+                    {
+                        errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.EncumbSpeedModBase);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Single EncumbSpeedModBaseParse,
+                            errorMask: errorMask))
+                        {
+                            item.EncumbSpeedModBase = EncumbSpeedModBaseParse;
+                        }
+                        else
+                        {
+                            item.EncumbSpeedModBase = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "EncumbSpeedModMult":
+                    try
+                    {
+                        errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.EncumbSpeedModMult);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Single EncumbSpeedModMultParse,
+                            errorMask: errorMask))
+                        {
+                            item.EncumbSpeedModMult = EncumbSpeedModMultParse;
+                        }
+                        else
+                        {
+                            item.EncumbSpeedModMult = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "DodgeWhileUnderAttackMult":
+                    try
+                    {
+                        errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.DodgeWhileUnderAttackMult);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Single DodgeWhileUnderAttackMultParse,
+                            errorMask: errorMask))
+                        {
+                            item.DodgeWhileUnderAttackMult = DodgeWhileUnderAttackMultParse;
+                        }
+                        else
+                        {
+                            item.DodgeWhileUnderAttackMult = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "DodgeNotUnderAttackMult":
+                    try
+                    {
+                        errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.DodgeNotUnderAttackMult);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Single DodgeNotUnderAttackMultParse,
+                            errorMask: errorMask))
+                        {
+                            item.DodgeNotUnderAttackMult = DodgeNotUnderAttackMultParse;
+                        }
+                        else
+                        {
+                            item.DodgeNotUnderAttackMult = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "DodgeBackWhileUnderAttackMult":
+                    try
+                    {
+                        errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.DodgeBackWhileUnderAttackMult);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Single DodgeBackWhileUnderAttackMultParse,
+                            errorMask: errorMask))
+                        {
+                            item.DodgeBackWhileUnderAttackMult = DodgeBackWhileUnderAttackMultParse;
+                        }
+                        else
+                        {
+                            item.DodgeBackWhileUnderAttackMult = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "DodgeBackNotUnderAttackMult":
+                    try
+                    {
+                        errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.DodgeBackNotUnderAttackMult);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Single DodgeBackNotUnderAttackMultParse,
+                            errorMask: errorMask))
+                        {
+                            item.DodgeBackNotUnderAttackMult = DodgeBackNotUnderAttackMultParse;
+                        }
+                        else
+                        {
+                            item.DodgeBackNotUnderAttackMult = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "DodgeForwardWhileUnderAttackMult":
+                    try
+                    {
+                        errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.DodgeForwardWhileUnderAttackMult);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Single DodgeForwardWhileUnderAttackMultParse,
+                            errorMask: errorMask))
+                        {
+                            item.DodgeForwardWhileUnderAttackMult = DodgeForwardWhileUnderAttackMultParse;
+                        }
+                        else
+                        {
+                            item.DodgeForwardWhileUnderAttackMult = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "DodgeForwardNotUnderAttackMult":
+                    try
+                    {
+                        errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.DodgeForwardNotUnderAttackMult);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Single DodgeForwardNotUnderAttackMultParse,
+                            errorMask: errorMask))
+                        {
+                            item.DodgeForwardNotUnderAttackMult = DodgeForwardNotUnderAttackMultParse;
+                        }
+                        else
+                        {
+                            item.DodgeForwardNotUnderAttackMult = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "BlockSkillModifierMult":
+                    try
+                    {
+                        errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.BlockSkillModifierMult);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Single BlockSkillModifierMultParse,
+                            errorMask: errorMask))
+                        {
+                            item.BlockSkillModifierMult = BlockSkillModifierMultParse;
+                        }
+                        else
+                        {
+                            item.BlockSkillModifierMult = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "BlockSkillModifierBase":
+                    try
+                    {
+                        errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.BlockSkillModifierBase);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Single BlockSkillModifierBaseParse,
+                            errorMask: errorMask))
+                        {
+                            item.BlockSkillModifierBase = BlockSkillModifierBaseParse;
+                        }
+                        else
+                        {
+                            item.BlockSkillModifierBase = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "BlockWhileUnderAttackMult":
+                    try
+                    {
+                        errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.BlockWhileUnderAttackMult);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Single BlockWhileUnderAttackMultParse,
+                            errorMask: errorMask))
+                        {
+                            item.BlockWhileUnderAttackMult = BlockWhileUnderAttackMultParse;
+                        }
+                        else
+                        {
+                            item.BlockWhileUnderAttackMult = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "BlockNotUnderAttackMult":
+                    try
+                    {
+                        errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.BlockNotUnderAttackMult);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Single BlockNotUnderAttackMultParse,
+                            errorMask: errorMask))
+                        {
+                            item.BlockNotUnderAttackMult = BlockNotUnderAttackMultParse;
+                        }
+                        else
+                        {
+                            item.BlockNotUnderAttackMult = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "AttackSkillModifierMult":
+                    try
+                    {
+                        errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.AttackSkillModifierMult);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Single AttackSkillModifierMultParse,
+                            errorMask: errorMask))
+                        {
+                            item.AttackSkillModifierMult = AttackSkillModifierMultParse;
+                        }
+                        else
+                        {
+                            item.AttackSkillModifierMult = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "AttackSkillModifierBase":
+                    try
+                    {
+                        errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.AttackSkillModifierBase);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Single AttackSkillModifierBaseParse,
+                            errorMask: errorMask))
+                        {
+                            item.AttackSkillModifierBase = AttackSkillModifierBaseParse;
+                        }
+                        else
+                        {
+                            item.AttackSkillModifierBase = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "AttackWhileUnderAttackMult":
+                    try
+                    {
+                        errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.AttackWhileUnderAttackMult);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Single AttackWhileUnderAttackMultParse,
+                            errorMask: errorMask))
+                        {
+                            item.AttackWhileUnderAttackMult = AttackWhileUnderAttackMultParse;
+                        }
+                        else
+                        {
+                            item.AttackWhileUnderAttackMult = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "AttackNotUnderAttackMult":
+                    try
+                    {
+                        errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.AttackNotUnderAttackMult);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Single AttackNotUnderAttackMultParse,
+                            errorMask: errorMask))
+                        {
+                            item.AttackNotUnderAttackMult = AttackNotUnderAttackMultParse;
+                        }
+                        else
+                        {
+                            item.AttackNotUnderAttackMult = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "AttackDuringBlockMult":
+                    try
+                    {
+                        errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.AttackDuringBlockMult);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Single AttackDuringBlockMultParse,
+                            errorMask: errorMask))
+                        {
+                            item.AttackDuringBlockMult = AttackDuringBlockMultParse;
+                        }
+                        else
+                        {
+                            item.AttackDuringBlockMult = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "PowerAttackFatigueModBase":
+                    try
+                    {
+                        errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.PowerAttackFatigueModBase);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Single PowerAttackFatigueModBaseParse,
+                            errorMask: errorMask))
+                        {
+                            item.PowerAttackFatigueModBase = PowerAttackFatigueModBaseParse;
+                        }
+                        else
+                        {
+                            item.PowerAttackFatigueModBase = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "PowerAttackFatigueModMult":
+                    try
+                    {
+                        errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.PowerAttackFatigueModMult);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Single PowerAttackFatigueModMultParse,
+                            errorMask: errorMask))
+                        {
+                            item.PowerAttackFatigueModMult = PowerAttackFatigueModMultParse;
+                        }
+                        else
+                        {
+                            item.PowerAttackFatigueModMult = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                default:
+                    break;
             }
         }
 

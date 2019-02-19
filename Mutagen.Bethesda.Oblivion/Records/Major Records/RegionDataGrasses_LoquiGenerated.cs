@@ -89,8 +89,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> IEqualsMask<RegionDataGrasses>.GetEqualsMask(RegionDataGrasses rhs) => RegionDataGrassesCommon.GetEqualsMask(this, rhs);
-        IMask<bool> IEqualsMask<IRegionDataGrassesGetter>.GetEqualsMask(IRegionDataGrassesGetter rhs) => RegionDataGrassesCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<RegionDataGrasses>.GetEqualsMask(RegionDataGrasses rhs, EqualsMaskHelper.Include include) => RegionDataGrassesCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<IRegionDataGrassesGetter>.GetEqualsMask(IRegionDataGrassesGetter rhs, EqualsMaskHelper.Include include) => RegionDataGrassesCommon.GetEqualsMask(this, rhs, include);
         #region To String
         public string ToString(
             string name = null,
@@ -185,7 +185,13 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 foreach (var elem in node.Elements())
                 {
-                    Fill_Xml_Internal(
+                    FillPrivateElement_Xml(
+                        item: ret,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                    RegionDataGrassesCommon.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -497,7 +503,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        protected static void Fill_Xml_Internal(
+        protected static void FillPrivateElement_Xml(
             RegionDataGrasses item,
             XElement node,
             string name,
@@ -506,36 +512,8 @@ namespace Mutagen.Bethesda.Oblivion
         {
             switch (name)
             {
-                case "Grasses":
-                    try
-                    {
-                        errorMask?.PushIndex((int)RegionDataGrasses_FieldIndex.Grasses);
-                        if (ListXmlTranslation<FormIDLink<Grass>>.Instance.Parse(
-                            node: node,
-                            enumer: out var GrassesItem,
-                            transl: FormKeyXmlTranslation.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.Grasses.SetTo(GrassesItem);
-                        }
-                        else
-                        {
-                            item.Grasses.Unset();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
                 default:
-                    RegionData.Fill_Xml_Internal(
+                    RegionData.FillPrivateElement_Xml(
                         item: item,
                         node: node,
                         name: name,
@@ -1398,38 +1376,29 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static RegionDataGrasses_Mask<bool> GetEqualsMask(
             this IRegionDataGrassesGetter item,
-            IRegionDataGrassesGetter rhs)
+            IRegionDataGrassesGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new RegionDataGrasses_Mask<bool>();
-            FillEqualsMask(item, rhs, ret);
+            FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
             return ret;
         }
 
         public static void FillEqualsMask(
             IRegionDataGrassesGetter item,
             IRegionDataGrassesGetter rhs,
-            RegionDataGrasses_Mask<bool> ret)
+            RegionDataGrasses_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            if (item.Grasses.HasBeenSet == rhs.Grasses.HasBeenSet)
-            {
-                if (item.Grasses.HasBeenSet)
-                {
-                    ret.Grasses = new MaskItem<bool, IEnumerable<bool>>();
-                    ret.Grasses.Specific = item.Grasses.SelectAgainst<FormIDLink<Grass>, bool>(rhs.Grasses, ((l, r) => object.Equals(l, r)), out ret.Grasses.Overall);
-                    ret.Grasses.Overall = ret.Grasses.Overall && ret.Grasses.Specific.All((b) => b);
-                }
-                else
-                {
-                    ret.Grasses = new MaskItem<bool, IEnumerable<bool>>();
-                    ret.Grasses.Overall = true;
-                }
-            }
-            else
-            {
-                ret.Grasses = new MaskItem<bool, IEnumerable<bool>>();
-                ret.Grasses.Overall = false;
-            }
+            ret.Grasses = item.Grasses.CollectionEqualsHelper(
+                rhs.Grasses,
+                (l, r) => object.Equals(l, r),
+                include);
             RegionDataCommon.FillEqualsMask(item, rhs, ret);
         }
 
@@ -1493,7 +1462,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static RegionDataGrasses_Mask<bool> GetHasBeenSetMask(IRegionDataGrassesGetter item)
         {
             var ret = new RegionDataGrasses_Mask<bool>();
-            ret.Grasses = new MaskItem<bool, IEnumerable<bool>>(item.Grasses.HasBeenSet, null);
+            ret.Grasses = new MaskItem<bool, IEnumerable<(int, bool)>>(item.Grasses.HasBeenSet, null);
             return ret;
         }
 
@@ -1560,7 +1529,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         public static void WriteToNode_Xml(
-            IRegionDataGrassesGetter item,
+            this IRegionDataGrassesGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1589,6 +1558,79 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             errorMask: listSubMask);
                     }
                     );
+            }
+        }
+
+        public static void FillPublic_Xml(
+            this RegionDataGrasses item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    RegionDataGrassesCommon.FillPublicElement_Xml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+
+        public static void FillPublicElement_Xml(
+            this RegionDataGrasses item,
+            XElement node,
+            string name,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            switch (name)
+            {
+                case "Grasses":
+                    try
+                    {
+                        errorMask?.PushIndex((int)RegionDataGrasses_FieldIndex.Grasses);
+                        if (ListXmlTranslation<FormIDLink<Grass>>.Instance.Parse(
+                            node: node,
+                            enumer: out var GrassesItem,
+                            transl: FormKeyXmlTranslation.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.Grasses.SetTo(GrassesItem);
+                        }
+                        else
+                        {
+                            item.Grasses.Unset();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                default:
+                    RegionDataCommon.FillPublicElement_Xml(
+                        item: item,
+                        node: node,
+                        name: name,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                    break;
             }
         }
 
@@ -1679,12 +1721,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public RegionDataGrasses_Mask(T initialValue)
         {
-            this.Grasses = new MaskItem<T, IEnumerable<T>>(initialValue, null);
+            this.Grasses = new MaskItem<T, IEnumerable<(int Index, T Value)>>(initialValue, null);
         }
         #endregion
 
         #region Members
-        public MaskItem<T, IEnumerable<T>> Grasses;
+        public MaskItem<T, IEnumerable<(int Index, T Value)>> Grasses;
         #endregion
 
         #region Equals
@@ -1722,7 +1764,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     foreach (var item in this.Grasses.Specific)
                     {
-                        if (!eval(item)) return false;
+                        if (!eval(item.Value)) return false;
                     }
                 }
             }
@@ -1743,16 +1785,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             base.Translate_InternalFill(obj, eval);
             if (Grasses != null)
             {
-                obj.Grasses = new MaskItem<R, IEnumerable<R>>();
+                obj.Grasses = new MaskItem<R, IEnumerable<(int Index, R Value)>>();
                 obj.Grasses.Overall = eval(this.Grasses.Overall);
                 if (Grasses.Specific != null)
                 {
-                    List<R> l = new List<R>();
+                    List<(int Index, R Item)> l = new List<(int Index, R Item)>();
                     obj.Grasses.Specific = l;
-                    foreach (var item in Grasses.Specific)
+                    foreach (var item in Grasses.Specific.WithIndex())
                     {
-                        R mask = default(R);
-                        mask = eval(item);
+                        (int Index, R Item) mask = default;
+                        mask.Index = item.Index;
+                        mask.Item = eval(item.Item.Value);
                         l.Add(mask);
                     }
                 }
@@ -1822,7 +1865,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public class RegionDataGrasses_ErrorMask : RegionData_ErrorMask, IErrorMask<RegionDataGrasses_ErrorMask>
     {
         #region Members
-        public MaskItem<Exception, IEnumerable<Exception>> Grasses;
+        public MaskItem<Exception, IEnumerable<(int Index, Exception Value)>> Grasses;
         #endregion
 
         #region IErrorMask
@@ -1844,7 +1887,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case RegionDataGrasses_FieldIndex.Grasses:
-                    this.Grasses = new MaskItem<Exception, IEnumerable<Exception>>(ex, null);
+                    this.Grasses = new MaskItem<Exception, IEnumerable<(int Index, Exception Value)>>(ex, null);
                     break;
                 default:
                     base.SetNthException(index, ex);
@@ -1858,7 +1901,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case RegionDataGrasses_FieldIndex.Grasses:
-                    this.Grasses = (MaskItem<Exception, IEnumerable<Exception>>)obj;
+                    this.Grasses = (MaskItem<Exception, IEnumerable<(int Index, Exception Value)>>)obj;
                     break;
                 default:
                     base.SetNthMask(index, obj);
@@ -1934,7 +1977,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public RegionDataGrasses_ErrorMask Combine(RegionDataGrasses_ErrorMask rhs)
         {
             var ret = new RegionDataGrasses_ErrorMask();
-            ret.Grasses = new MaskItem<Exception, IEnumerable<Exception>>(this.Grasses.Overall.Combine(rhs.Grasses.Overall), new List<Exception>(this.Grasses.Specific.And(rhs.Grasses.Specific)));
+            ret.Grasses = new MaskItem<Exception, IEnumerable<(int Index, Exception Value)>>(this.Grasses.Overall.Combine(rhs.Grasses.Overall), new List<(int Index, Exception Value)>(this.Grasses.Specific.And(rhs.Grasses.Specific)));
             return ret;
         }
         public static RegionDataGrasses_ErrorMask Combine(RegionDataGrasses_ErrorMask lhs, RegionDataGrasses_ErrorMask rhs)

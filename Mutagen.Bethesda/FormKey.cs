@@ -93,6 +93,15 @@ namespace Mutagen.Bethesda
             return true;
         }
 
+        public static FormKey Factory(string str)
+        {
+            if (!TryFactory(str, out var form))
+            {
+                throw new ArgumentException("Malformed FormKey string: " + str);
+            }
+            return form;
+        }
+
         public override string ToString()
         {
             return $"{IDString()}{this.ModKey}";

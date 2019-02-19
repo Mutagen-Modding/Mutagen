@@ -124,8 +124,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> IEqualsMask<BodyPart>.GetEqualsMask(BodyPart rhs) => BodyPartCommon.GetEqualsMask(this, rhs);
-        IMask<bool> IEqualsMask<IBodyPartGetter>.GetEqualsMask(IBodyPartGetter rhs) => BodyPartCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<BodyPart>.GetEqualsMask(BodyPart rhs, EqualsMaskHelper.Include include) => BodyPartCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<IBodyPartGetter>.GetEqualsMask(IBodyPartGetter rhs, EqualsMaskHelper.Include include) => BodyPartCommon.GetEqualsMask(this, rhs, include);
         #region To String
         public string ToString(
             string name = null,
@@ -227,7 +227,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 foreach (var elem in node.Elements())
                 {
-                    Fill_Xml_Internal(
+                    BodyPartCommon.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -541,72 +541,6 @@ namespace Mutagen.Bethesda.Oblivion
                 translationMask: translationMask);
         }
         #endregion
-
-        protected static void Fill_Xml_Internal(
-            BodyPart item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            switch (name)
-            {
-                case "Index":
-                    try
-                    {
-                        errorMask?.PushIndex((int)BodyPart_FieldIndex.Index);
-                        if (EnumXmlTranslation<Race.BodyIndex>.Instance.Parse(
-                            node: node,
-                            item: out Race.BodyIndex IndexParse,
-                            errorMask: errorMask))
-                        {
-                            item.Index = IndexParse;
-                        }
-                        else
-                        {
-                            item.Index = default(Race.BodyIndex);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Icon":
-                    try
-                    {
-                        errorMask?.PushIndex((int)BodyPart_FieldIndex.Icon);
-                        if (StringXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out String IconParse,
-                            errorMask: errorMask))
-                        {
-                            item.Icon = IconParse;
-                        }
-                        else
-                        {
-                            item.Icon = default(String);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
 
         #endregion
 
@@ -1599,17 +1533,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static BodyPart_Mask<bool> GetEqualsMask(
             this IBodyPartGetter item,
-            IBodyPartGetter rhs)
+            IBodyPartGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new BodyPart_Mask<bool>();
-            FillEqualsMask(item, rhs, ret);
+            FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
             return ret;
         }
 
         public static void FillEqualsMask(
             IBodyPartGetter item,
             IBodyPartGetter rhs,
-            BodyPart_Mask<bool> ret)
+            BodyPart_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
             ret.Index = item.Index_IsSet == rhs.Index_IsSet && item.Index == rhs.Index;
@@ -1714,7 +1654,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         public static void WriteToNode_Xml(
-            IBodyPartGetter item,
+            this IBodyPartGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1738,6 +1678,97 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item.Icon,
                     fieldIndex: (int)BodyPart_FieldIndex.Icon,
                     errorMask: errorMask);
+            }
+        }
+
+        public static void FillPublic_Xml(
+            this BodyPart item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    BodyPartCommon.FillPublicElement_Xml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+
+        public static void FillPublicElement_Xml(
+            this BodyPart item,
+            XElement node,
+            string name,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            switch (name)
+            {
+                case "Index":
+                    try
+                    {
+                        errorMask?.PushIndex((int)BodyPart_FieldIndex.Index);
+                        if (EnumXmlTranslation<Race.BodyIndex>.Instance.Parse(
+                            node: node,
+                            item: out Race.BodyIndex IndexParse,
+                            errorMask: errorMask))
+                        {
+                            item.Index = IndexParse;
+                        }
+                        else
+                        {
+                            item.Index = default(Race.BodyIndex);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Icon":
+                    try
+                    {
+                        errorMask?.PushIndex((int)BodyPart_FieldIndex.Icon);
+                        if (StringXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out String IconParse,
+                            errorMask: errorMask))
+                        {
+                            item.Icon = IconParse;
+                        }
+                        else
+                        {
+                            item.Icon = default(String);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                default:
+                    break;
             }
         }
 

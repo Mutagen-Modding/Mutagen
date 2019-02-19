@@ -549,8 +549,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> IEqualsMask<Race>.GetEqualsMask(Race rhs) => RaceCommon.GetEqualsMask(this, rhs);
-        IMask<bool> IEqualsMask<IRaceGetter>.GetEqualsMask(IRaceGetter rhs) => RaceCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<Race>.GetEqualsMask(Race rhs, EqualsMaskHelper.Include include) => RaceCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<IRaceGetter>.GetEqualsMask(IRaceGetter rhs, EqualsMaskHelper.Include include) => RaceCommon.GetEqualsMask(this, rhs, include);
         #region To String
         public string ToString(
             string name = null,
@@ -794,7 +794,13 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 foreach (var elem in node.Elements())
                 {
-                    Fill_Xml_Internal(
+                    FillPrivateElement_Xml(
+                        item: ret,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                    RaceCommon.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -1106,7 +1112,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        protected static void Fill_Xml_Internal(
+        protected static void FillPrivateElement_Xml(
             Race item,
             XElement node,
             string name,
@@ -1115,623 +1121,8 @@ namespace Mutagen.Bethesda.Oblivion
         {
             switch (name)
             {
-                case "Name":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Race_FieldIndex.Name);
-                        if (StringXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out String NameParse,
-                            errorMask: errorMask))
-                        {
-                            item.Name = NameParse;
-                        }
-                        else
-                        {
-                            item.Name = default(String);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Description":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Race_FieldIndex.Description);
-                        if (StringXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out String DescriptionParse,
-                            errorMask: errorMask))
-                        {
-                            item.Description = DescriptionParse;
-                        }
-                        else
-                        {
-                            item.Description = default(String);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Spells":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Race_FieldIndex.Spells);
-                        if (ListXmlTranslation<FormIDSetLink<Spell>>.Instance.Parse(
-                            node: node,
-                            enumer: out var SpellsItem,
-                            transl: FormKeyXmlTranslation.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.Spells.SetTo(SpellsItem);
-                        }
-                        else
-                        {
-                            item.Spells.Unset();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Relations":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Race_FieldIndex.Relations);
-                        if (ListXmlTranslation<RaceRelation>.Instance.Parse(
-                            node: node,
-                            enumer: out var RelationsItem,
-                            transl: LoquiXmlTranslation<RaceRelation>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.Relations.SetTo(RelationsItem);
-                        }
-                        else
-                        {
-                            item.Relations.Unset();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "SkillBoosts":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Race_FieldIndex.SkillBoosts);
-                        if (ListXmlTranslation<SkillBoost>.Instance.Parse(
-                            node: node,
-                            enumer: out var SkillBoostsItem,
-                            transl: LoquiXmlTranslation<SkillBoost>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.SkillBoosts.SetTo(SkillBoostsItem);
-                        }
-                        else
-                        {
-                            item.SkillBoosts.Unset();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Fluff":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Race_FieldIndex.Fluff);
-                        if (ByteArrayXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Byte[] FluffParse,
-                            errorMask: errorMask))
-                        {
-                            item.Fluff = FluffParse;
-                        }
-                        else
-                        {
-                            item.Fluff = default(Byte[]);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "MaleHeight":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Race_FieldIndex.MaleHeight);
-                        if (FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Single MaleHeightParse,
-                            errorMask: errorMask))
-                        {
-                            item.MaleHeight = MaleHeightParse;
-                        }
-                        else
-                        {
-                            item.MaleHeight = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "FemaleHeight":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Race_FieldIndex.FemaleHeight);
-                        if (FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Single FemaleHeightParse,
-                            errorMask: errorMask))
-                        {
-                            item.FemaleHeight = FemaleHeightParse;
-                        }
-                        else
-                        {
-                            item.FemaleHeight = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "MaleWeight":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Race_FieldIndex.MaleWeight);
-                        if (FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Single MaleWeightParse,
-                            errorMask: errorMask))
-                        {
-                            item.MaleWeight = MaleWeightParse;
-                        }
-                        else
-                        {
-                            item.MaleWeight = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "FemaleWeight":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Race_FieldIndex.FemaleWeight);
-                        if (FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Single FemaleWeightParse,
-                            errorMask: errorMask))
-                        {
-                            item.FemaleWeight = FemaleWeightParse;
-                        }
-                        else
-                        {
-                            item.FemaleWeight = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Flags":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Race_FieldIndex.Flags);
-                        if (EnumXmlTranslation<Race.Flag>.Instance.Parse(
-                            node: node,
-                            item: out Race.Flag FlagsParse,
-                            errorMask: errorMask))
-                        {
-                            item.Flags = FlagsParse;
-                        }
-                        else
-                        {
-                            item.Flags = default(Race.Flag);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Voices":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Race_FieldIndex.Voices);
-                        if (LoquiXmlTranslation<RaceVoices>.Instance.Parse(
-                            node: node,
-                            item: out RaceVoices VoicesParse,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Race_FieldIndex.Voices)))
-                        {
-                            item.Voices = VoicesParse;
-                        }
-                        else
-                        {
-                            item.Voices = default(RaceVoices);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "DefaultHair":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Race_FieldIndex.DefaultHair);
-                        if (LoquiXmlTranslation<RaceHair>.Instance.Parse(
-                            node: node,
-                            item: out RaceHair DefaultHairParse,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Race_FieldIndex.DefaultHair)))
-                        {
-                            item.DefaultHair = DefaultHairParse;
-                        }
-                        else
-                        {
-                            item.DefaultHair = default(RaceHair);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "DefaultHairColor":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Race_FieldIndex.DefaultHairColor);
-                        if (ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Byte DefaultHairColorParse,
-                            errorMask: errorMask))
-                        {
-                            item.DefaultHairColor = DefaultHairColorParse;
-                        }
-                        else
-                        {
-                            item.DefaultHairColor = default(Byte);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "FaceGenMainClamp":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Race_FieldIndex.FaceGenMainClamp);
-                        if (Int32XmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Int32 FaceGenMainClampParse,
-                            errorMask: errorMask))
-                        {
-                            item.FaceGenMainClamp = FaceGenMainClampParse;
-                        }
-                        else
-                        {
-                            item.FaceGenMainClamp = default(Int32);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "FaceGenFaceClamp":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Race_FieldIndex.FaceGenFaceClamp);
-                        if (Int32XmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Int32 FaceGenFaceClampParse,
-                            errorMask: errorMask))
-                        {
-                            item.FaceGenFaceClamp = FaceGenFaceClampParse;
-                        }
-                        else
-                        {
-                            item.FaceGenFaceClamp = default(Int32);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "RaceStats":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Race_FieldIndex.RaceStats);
-                        if (LoquiXmlTranslation<RaceStatsGendered>.Instance.Parse(
-                            node: node,
-                            item: out RaceStatsGendered RaceStatsParse,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Race_FieldIndex.RaceStats)))
-                        {
-                            item.RaceStats = RaceStatsParse;
-                        }
-                        else
-                        {
-                            item.RaceStats = default(RaceStatsGendered);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "FaceData":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Race_FieldIndex.FaceData);
-                        if (ListXmlTranslation<FacePart>.Instance.Parse(
-                            node: node,
-                            enumer: out var FaceDataItem,
-                            transl: LoquiXmlTranslation<FacePart>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.FaceData.SetTo(FaceDataItem);
-                        }
-                        else
-                        {
-                            item.FaceData.Unset();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "BodyData":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Race_FieldIndex.BodyData);
-                        if (LoquiXmlTranslation<GenderedBodyData>.Instance.Parse(
-                            node: node,
-                            item: out GenderedBodyData BodyDataParse,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Race_FieldIndex.BodyData)))
-                        {
-                            item.BodyData = BodyDataParse;
-                        }
-                        else
-                        {
-                            item.BodyData = default(GenderedBodyData);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Hairs":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Race_FieldIndex.Hairs);
-                        if (ListXmlTranslation<FormIDLink<Hair>>.Instance.Parse(
-                            node: node,
-                            enumer: out var HairsItem,
-                            transl: FormKeyXmlTranslation.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.Hairs.SetTo(HairsItem);
-                        }
-                        else
-                        {
-                            item.Hairs.Unset();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Eyes":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Race_FieldIndex.Eyes);
-                        if (ListXmlTranslation<FormIDLink<Eye>>.Instance.Parse(
-                            node: node,
-                            enumer: out var EyesItem,
-                            transl: FormKeyXmlTranslation.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.Eyes.SetTo(EyesItem);
-                        }
-                        else
-                        {
-                            item.Eyes.Unset();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "FaceGenData":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Race_FieldIndex.FaceGenData);
-                        if (LoquiXmlTranslation<FaceGenData>.Instance.Parse(
-                            node: node,
-                            item: out FaceGenData FaceGenDataParse,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Race_FieldIndex.FaceGenData)))
-                        {
-                            item.FaceGenData = FaceGenDataParse;
-                        }
-                        else
-                        {
-                            item.FaceGenData = default(FaceGenData);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Unknown":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Race_FieldIndex.Unknown);
-                        if (ByteArrayXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Byte[] UnknownParse,
-                            errorMask: errorMask))
-                        {
-                            item.Unknown = UnknownParse;
-                        }
-                        else
-                        {
-                            item.Unknown = default(Byte[]);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
                 default:
-                    MajorRecord.Fill_Xml_Internal(
+                    MajorRecord.FillPrivateElement_Xml(
                         item: item,
                         node: node,
                         name: name,
@@ -4735,153 +4126,95 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static Race_Mask<bool> GetEqualsMask(
             this IRaceGetter item,
-            IRaceGetter rhs)
+            IRaceGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new Race_Mask<bool>();
-            FillEqualsMask(item, rhs, ret);
+            FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
             return ret;
         }
 
         public static void FillEqualsMask(
             IRaceGetter item,
             IRaceGetter rhs,
-            Race_Mask<bool> ret)
+            Race_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
             ret.Name = item.Name_IsSet == rhs.Name_IsSet && object.Equals(item.Name, rhs.Name);
             ret.Description = item.Description_IsSet == rhs.Description_IsSet && object.Equals(item.Description, rhs.Description);
-            if (item.Spells.HasBeenSet == rhs.Spells.HasBeenSet)
-            {
-                if (item.Spells.HasBeenSet)
-                {
-                    ret.Spells = new MaskItem<bool, IEnumerable<bool>>();
-                    ret.Spells.Specific = item.Spells.SelectAgainst<FormIDSetLink<Spell>, bool>(rhs.Spells, ((l, r) => object.Equals(l, r)), out ret.Spells.Overall);
-                    ret.Spells.Overall = ret.Spells.Overall && ret.Spells.Specific.All((b) => b);
-                }
-                else
-                {
-                    ret.Spells = new MaskItem<bool, IEnumerable<bool>>();
-                    ret.Spells.Overall = true;
-                }
-            }
-            else
-            {
-                ret.Spells = new MaskItem<bool, IEnumerable<bool>>();
-                ret.Spells.Overall = false;
-            }
-            if (item.Relations.HasBeenSet == rhs.Relations.HasBeenSet)
-            {
-                if (item.Relations.HasBeenSet)
-                {
-                    ret.Relations = new MaskItem<bool, IEnumerable<MaskItem<bool, RaceRelation_Mask<bool>>>>();
-                    ret.Relations.Specific = item.Relations.SelectAgainst<RaceRelation, MaskItem<bool, RaceRelation_Mask<bool>>>(rhs.Relations, ((l, r) =>
-                    {
-                        MaskItem<bool, RaceRelation_Mask<bool>> itemRet;
-                        itemRet = l.LoquiEqualsHelper(r, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
-                        return itemRet;
-                    }
-                    ), out ret.Relations.Overall);
-                    ret.Relations.Overall = ret.Relations.Overall && ret.Relations.Specific.All((b) => b.Overall);
-                }
-                else
-                {
-                    ret.Relations = new MaskItem<bool, IEnumerable<MaskItem<bool, RaceRelation_Mask<bool>>>>();
-                    ret.Relations.Overall = true;
-                }
-            }
-            else
-            {
-                ret.Relations = new MaskItem<bool, IEnumerable<MaskItem<bool, RaceRelation_Mask<bool>>>>();
-                ret.Relations.Overall = false;
-            }
-            ret.SkillBoosts = new MaskItem<bool, IEnumerable<MaskItem<bool, SkillBoost_Mask<bool>>>>();
-            ret.SkillBoosts.Specific = item.SkillBoosts.SelectAgainst<SkillBoost, MaskItem<bool, SkillBoost_Mask<bool>>>(rhs.SkillBoosts, ((l, r) =>
-            {
-                MaskItem<bool, SkillBoost_Mask<bool>> itemRet;
-                itemRet = new MaskItem<bool, SkillBoost_Mask<bool>>();
-                itemRet.Specific = SkillBoostCommon.GetEqualsMask(l, r);
-                itemRet.Overall = itemRet.Specific.AllEqual((b) => b);
-                return itemRet;
-            }
-            ), out ret.SkillBoosts.Overall);
-            ret.SkillBoosts.Overall = ret.SkillBoosts.Overall && ret.SkillBoosts.Specific.All((b) => b.Overall);
+            ret.Spells = item.Spells.CollectionEqualsHelper(
+                rhs.Spells,
+                (l, r) => object.Equals(l, r),
+                include);
+            ret.Relations = item.Relations.CollectionEqualsHelper(
+                rhs.Relations,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.SkillBoosts = item.SkillBoosts.CollectionEqualsHelper(
+                rhs.SkillBoosts,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
             ret.Fluff = item.Fluff.EqualsFast(rhs.Fluff);
-            ret.MaleHeight = item.MaleHeight == rhs.MaleHeight;
-            ret.FemaleHeight = item.FemaleHeight == rhs.FemaleHeight;
-            ret.MaleWeight = item.MaleWeight == rhs.MaleWeight;
-            ret.FemaleWeight = item.FemaleWeight == rhs.FemaleWeight;
+            ret.MaleHeight = item.MaleHeight.EqualsWithin(rhs.MaleHeight);
+            ret.FemaleHeight = item.FemaleHeight.EqualsWithin(rhs.FemaleHeight);
+            ret.MaleWeight = item.MaleWeight.EqualsWithin(rhs.MaleWeight);
+            ret.FemaleWeight = item.FemaleWeight.EqualsWithin(rhs.FemaleWeight);
             ret.Flags = item.Flags == rhs.Flags;
-            ret.Voices = IHasBeenSetExt.LoquiEqualsHelper(item.Voices_IsSet, rhs.Voices_IsSet, item.Voices, rhs.Voices, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
-            ret.DefaultHair = IHasBeenSetExt.LoquiEqualsHelper(item.DefaultHair_IsSet, rhs.DefaultHair_IsSet, item.DefaultHair, rhs.DefaultHair, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
+            ret.Voices = EqualsMaskHelper.EqualsHelper(
+                item.Voices_IsSet,
+                rhs.Voices_IsSet,
+                item.Voices,
+                rhs.Voices,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
+                include);
+            ret.DefaultHair = EqualsMaskHelper.EqualsHelper(
+                item.DefaultHair_IsSet,
+                rhs.DefaultHair_IsSet,
+                item.DefaultHair,
+                rhs.DefaultHair,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
+                include);
             ret.DefaultHairColor = item.DefaultHairColor_IsSet == rhs.DefaultHairColor_IsSet && item.DefaultHairColor == rhs.DefaultHairColor;
             ret.FaceGenMainClamp = item.FaceGenMainClamp_IsSet == rhs.FaceGenMainClamp_IsSet && item.FaceGenMainClamp == rhs.FaceGenMainClamp;
             ret.FaceGenFaceClamp = item.FaceGenFaceClamp_IsSet == rhs.FaceGenFaceClamp_IsSet && item.FaceGenFaceClamp == rhs.FaceGenFaceClamp;
-            ret.RaceStats = IHasBeenSetExt.LoquiEqualsHelper(item.RaceStats_IsSet, rhs.RaceStats_IsSet, item.RaceStats, rhs.RaceStats, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
-            if (item.FaceData.HasBeenSet == rhs.FaceData.HasBeenSet)
-            {
-                if (item.FaceData.HasBeenSet)
-                {
-                    ret.FaceData = new MaskItem<bool, IEnumerable<MaskItem<bool, FacePart_Mask<bool>>>>();
-                    ret.FaceData.Specific = item.FaceData.SelectAgainst<FacePart, MaskItem<bool, FacePart_Mask<bool>>>(rhs.FaceData, ((l, r) =>
-                    {
-                        MaskItem<bool, FacePart_Mask<bool>> itemRet;
-                        itemRet = l.LoquiEqualsHelper(r, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
-                        return itemRet;
-                    }
-                    ), out ret.FaceData.Overall);
-                    ret.FaceData.Overall = ret.FaceData.Overall && ret.FaceData.Specific.All((b) => b.Overall);
-                }
-                else
-                {
-                    ret.FaceData = new MaskItem<bool, IEnumerable<MaskItem<bool, FacePart_Mask<bool>>>>();
-                    ret.FaceData.Overall = true;
-                }
-            }
-            else
-            {
-                ret.FaceData = new MaskItem<bool, IEnumerable<MaskItem<bool, FacePart_Mask<bool>>>>();
-                ret.FaceData.Overall = false;
-            }
-            ret.BodyData = IHasBeenSetExt.LoquiEqualsHelper(item.BodyData_IsSet, rhs.BodyData_IsSet, item.BodyData, rhs.BodyData, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
-            if (item.Hairs.HasBeenSet == rhs.Hairs.HasBeenSet)
-            {
-                if (item.Hairs.HasBeenSet)
-                {
-                    ret.Hairs = new MaskItem<bool, IEnumerable<bool>>();
-                    ret.Hairs.Specific = item.Hairs.SelectAgainst<FormIDLink<Hair>, bool>(rhs.Hairs, ((l, r) => object.Equals(l, r)), out ret.Hairs.Overall);
-                    ret.Hairs.Overall = ret.Hairs.Overall && ret.Hairs.Specific.All((b) => b);
-                }
-                else
-                {
-                    ret.Hairs = new MaskItem<bool, IEnumerable<bool>>();
-                    ret.Hairs.Overall = true;
-                }
-            }
-            else
-            {
-                ret.Hairs = new MaskItem<bool, IEnumerable<bool>>();
-                ret.Hairs.Overall = false;
-            }
-            if (item.Eyes.HasBeenSet == rhs.Eyes.HasBeenSet)
-            {
-                if (item.Eyes.HasBeenSet)
-                {
-                    ret.Eyes = new MaskItem<bool, IEnumerable<bool>>();
-                    ret.Eyes.Specific = item.Eyes.SelectAgainst<FormIDLink<Eye>, bool>(rhs.Eyes, ((l, r) => object.Equals(l, r)), out ret.Eyes.Overall);
-                    ret.Eyes.Overall = ret.Eyes.Overall && ret.Eyes.Specific.All((b) => b);
-                }
-                else
-                {
-                    ret.Eyes = new MaskItem<bool, IEnumerable<bool>>();
-                    ret.Eyes.Overall = true;
-                }
-            }
-            else
-            {
-                ret.Eyes = new MaskItem<bool, IEnumerable<bool>>();
-                ret.Eyes.Overall = false;
-            }
-            ret.FaceGenData = IHasBeenSetExt.LoquiEqualsHelper(item.FaceGenData_IsSet, rhs.FaceGenData_IsSet, item.FaceGenData, rhs.FaceGenData, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
+            ret.RaceStats = EqualsMaskHelper.EqualsHelper(
+                item.RaceStats_IsSet,
+                rhs.RaceStats_IsSet,
+                item.RaceStats,
+                rhs.RaceStats,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
+                include);
+            ret.FaceData = item.FaceData.CollectionEqualsHelper(
+                rhs.FaceData,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.BodyData = EqualsMaskHelper.EqualsHelper(
+                item.BodyData_IsSet,
+                rhs.BodyData_IsSet,
+                item.BodyData,
+                rhs.BodyData,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
+                include);
+            ret.Hairs = item.Hairs.CollectionEqualsHelper(
+                rhs.Hairs,
+                (l, r) => object.Equals(l, r),
+                include);
+            ret.Eyes = item.Eyes.CollectionEqualsHelper(
+                rhs.Eyes,
+                (l, r) => object.Equals(l, r),
+                include);
+            ret.FaceGenData = EqualsMaskHelper.EqualsHelper(
+                item.FaceGenData_IsSet,
+                rhs.FaceGenData_IsSet,
+                item.FaceGenData,
+                rhs.FaceGenData,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
+                include);
             ret.Unknown = item.Unknown_IsSet == rhs.Unknown_IsSet && item.Unknown.EqualsFast(rhs.Unknown);
             MajorRecordCommon.FillEqualsMask(item, rhs, ret);
         }
@@ -5127,9 +4460,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             var ret = new Race_Mask<bool>();
             ret.Name = item.Name_IsSet;
             ret.Description = item.Description_IsSet;
-            ret.Spells = new MaskItem<bool, IEnumerable<bool>>(item.Spells.HasBeenSet, null);
-            ret.Relations = new MaskItem<bool, IEnumerable<MaskItem<bool, RaceRelation_Mask<bool>>>>(item.Relations.HasBeenSet, item.Relations.Select((i) => new MaskItem<bool, RaceRelation_Mask<bool>>(true, i.GetHasBeenSetMask())));
-            ret.SkillBoosts = new MaskItem<bool, IEnumerable<MaskItem<bool, SkillBoost_Mask<bool>>>>(item.SkillBoosts.HasBeenSet, item.SkillBoosts.Select((i) => new MaskItem<bool, SkillBoost_Mask<bool>>(true, i.GetHasBeenSetMask())));
+            ret.Spells = new MaskItem<bool, IEnumerable<(int, bool)>>(item.Spells.HasBeenSet, null);
+            ret.Relations = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, RaceRelation_Mask<bool>>>>(item.Relations.HasBeenSet, item.Relations.WithIndex().Select((i) => new MaskItemIndexed<bool, RaceRelation_Mask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            ret.SkillBoosts = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, SkillBoost_Mask<bool>>>>(item.SkillBoosts.HasBeenSet, item.SkillBoosts.WithIndex().Select((i) => new MaskItemIndexed<bool, SkillBoost_Mask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
             ret.Fluff = true;
             ret.MaleHeight = true;
             ret.FemaleHeight = true;
@@ -5142,10 +4475,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.FaceGenMainClamp = item.FaceGenMainClamp_IsSet;
             ret.FaceGenFaceClamp = item.FaceGenFaceClamp_IsSet;
             ret.RaceStats = new MaskItem<bool, RaceStatsGendered_Mask<bool>>(item.RaceStats_IsSet, RaceStatsGenderedCommon.GetHasBeenSetMask(item.RaceStats));
-            ret.FaceData = new MaskItem<bool, IEnumerable<MaskItem<bool, FacePart_Mask<bool>>>>(item.FaceData.HasBeenSet, item.FaceData.Select((i) => new MaskItem<bool, FacePart_Mask<bool>>(true, i.GetHasBeenSetMask())));
+            ret.FaceData = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, FacePart_Mask<bool>>>>(item.FaceData.HasBeenSet, item.FaceData.WithIndex().Select((i) => new MaskItemIndexed<bool, FacePart_Mask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
             ret.BodyData = new MaskItem<bool, GenderedBodyData_Mask<bool>>(item.BodyData_IsSet, GenderedBodyDataCommon.GetHasBeenSetMask(item.BodyData));
-            ret.Hairs = new MaskItem<bool, IEnumerable<bool>>(item.Hairs.HasBeenSet, null);
-            ret.Eyes = new MaskItem<bool, IEnumerable<bool>>(item.Eyes.HasBeenSet, null);
+            ret.Hairs = new MaskItem<bool, IEnumerable<(int, bool)>>(item.Hairs.HasBeenSet, null);
+            ret.Eyes = new MaskItem<bool, IEnumerable<(int, bool)>>(item.Eyes.HasBeenSet, null);
             ret.FaceGenData = new MaskItem<bool, FaceGenData_Mask<bool>>(item.FaceGenData_IsSet, FaceGenDataCommon.GetHasBeenSetMask(item.FaceGenData));
             ret.Unknown = item.Unknown_IsSet;
             return ret;
@@ -5218,7 +4551,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         public static void WriteToNode_Xml(
-            IRaceGetter item,
+            this IRaceGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -5518,6 +4851,666 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item.Unknown,
                     fieldIndex: (int)Race_FieldIndex.Unknown,
                     errorMask: errorMask);
+            }
+        }
+
+        public static void FillPublic_Xml(
+            this Race item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    RaceCommon.FillPublicElement_Xml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+
+        public static void FillPublicElement_Xml(
+            this Race item,
+            XElement node,
+            string name,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            switch (name)
+            {
+                case "Name":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Race_FieldIndex.Name);
+                        if (StringXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out String NameParse,
+                            errorMask: errorMask))
+                        {
+                            item.Name = NameParse;
+                        }
+                        else
+                        {
+                            item.Name = default(String);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Description":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Race_FieldIndex.Description);
+                        if (StringXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out String DescriptionParse,
+                            errorMask: errorMask))
+                        {
+                            item.Description = DescriptionParse;
+                        }
+                        else
+                        {
+                            item.Description = default(String);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Spells":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Race_FieldIndex.Spells);
+                        if (ListXmlTranslation<FormIDSetLink<Spell>>.Instance.Parse(
+                            node: node,
+                            enumer: out var SpellsItem,
+                            transl: FormKeyXmlTranslation.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.Spells.SetTo(SpellsItem);
+                        }
+                        else
+                        {
+                            item.Spells.Unset();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Relations":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Race_FieldIndex.Relations);
+                        if (ListXmlTranslation<RaceRelation>.Instance.Parse(
+                            node: node,
+                            enumer: out var RelationsItem,
+                            transl: LoquiXmlTranslation<RaceRelation>.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.Relations.SetTo(RelationsItem);
+                        }
+                        else
+                        {
+                            item.Relations.Unset();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "SkillBoosts":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Race_FieldIndex.SkillBoosts);
+                        if (ListXmlTranslation<SkillBoost>.Instance.Parse(
+                            node: node,
+                            enumer: out var SkillBoostsItem,
+                            transl: LoquiXmlTranslation<SkillBoost>.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.SkillBoosts.SetTo(SkillBoostsItem);
+                        }
+                        else
+                        {
+                            item.SkillBoosts.Unset();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Fluff":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Race_FieldIndex.Fluff);
+                        if (ByteArrayXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Byte[] FluffParse,
+                            errorMask: errorMask))
+                        {
+                            item.Fluff = FluffParse;
+                        }
+                        else
+                        {
+                            item.Fluff = default(Byte[]);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "MaleHeight":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Race_FieldIndex.MaleHeight);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Single MaleHeightParse,
+                            errorMask: errorMask))
+                        {
+                            item.MaleHeight = MaleHeightParse;
+                        }
+                        else
+                        {
+                            item.MaleHeight = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "FemaleHeight":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Race_FieldIndex.FemaleHeight);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Single FemaleHeightParse,
+                            errorMask: errorMask))
+                        {
+                            item.FemaleHeight = FemaleHeightParse;
+                        }
+                        else
+                        {
+                            item.FemaleHeight = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "MaleWeight":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Race_FieldIndex.MaleWeight);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Single MaleWeightParse,
+                            errorMask: errorMask))
+                        {
+                            item.MaleWeight = MaleWeightParse;
+                        }
+                        else
+                        {
+                            item.MaleWeight = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "FemaleWeight":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Race_FieldIndex.FemaleWeight);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Single FemaleWeightParse,
+                            errorMask: errorMask))
+                        {
+                            item.FemaleWeight = FemaleWeightParse;
+                        }
+                        else
+                        {
+                            item.FemaleWeight = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Flags":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Race_FieldIndex.Flags);
+                        if (EnumXmlTranslation<Race.Flag>.Instance.Parse(
+                            node: node,
+                            item: out Race.Flag FlagsParse,
+                            errorMask: errorMask))
+                        {
+                            item.Flags = FlagsParse;
+                        }
+                        else
+                        {
+                            item.Flags = default(Race.Flag);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Voices":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Race_FieldIndex.Voices);
+                        if (LoquiXmlTranslation<RaceVoices>.Instance.Parse(
+                            node: node,
+                            item: out RaceVoices VoicesParse,
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)Race_FieldIndex.Voices)))
+                        {
+                            item.Voices = VoicesParse;
+                        }
+                        else
+                        {
+                            item.Voices = default(RaceVoices);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "DefaultHair":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Race_FieldIndex.DefaultHair);
+                        if (LoquiXmlTranslation<RaceHair>.Instance.Parse(
+                            node: node,
+                            item: out RaceHair DefaultHairParse,
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)Race_FieldIndex.DefaultHair)))
+                        {
+                            item.DefaultHair = DefaultHairParse;
+                        }
+                        else
+                        {
+                            item.DefaultHair = default(RaceHair);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "DefaultHairColor":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Race_FieldIndex.DefaultHairColor);
+                        if (ByteXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Byte DefaultHairColorParse,
+                            errorMask: errorMask))
+                        {
+                            item.DefaultHairColor = DefaultHairColorParse;
+                        }
+                        else
+                        {
+                            item.DefaultHairColor = default(Byte);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "FaceGenMainClamp":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Race_FieldIndex.FaceGenMainClamp);
+                        if (Int32XmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Int32 FaceGenMainClampParse,
+                            errorMask: errorMask))
+                        {
+                            item.FaceGenMainClamp = FaceGenMainClampParse;
+                        }
+                        else
+                        {
+                            item.FaceGenMainClamp = default(Int32);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "FaceGenFaceClamp":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Race_FieldIndex.FaceGenFaceClamp);
+                        if (Int32XmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Int32 FaceGenFaceClampParse,
+                            errorMask: errorMask))
+                        {
+                            item.FaceGenFaceClamp = FaceGenFaceClampParse;
+                        }
+                        else
+                        {
+                            item.FaceGenFaceClamp = default(Int32);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "RaceStats":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Race_FieldIndex.RaceStats);
+                        if (LoquiXmlTranslation<RaceStatsGendered>.Instance.Parse(
+                            node: node,
+                            item: out RaceStatsGendered RaceStatsParse,
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)Race_FieldIndex.RaceStats)))
+                        {
+                            item.RaceStats = RaceStatsParse;
+                        }
+                        else
+                        {
+                            item.RaceStats = default(RaceStatsGendered);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "FaceData":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Race_FieldIndex.FaceData);
+                        if (ListXmlTranslation<FacePart>.Instance.Parse(
+                            node: node,
+                            enumer: out var FaceDataItem,
+                            transl: LoquiXmlTranslation<FacePart>.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.FaceData.SetTo(FaceDataItem);
+                        }
+                        else
+                        {
+                            item.FaceData.Unset();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "BodyData":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Race_FieldIndex.BodyData);
+                        if (LoquiXmlTranslation<GenderedBodyData>.Instance.Parse(
+                            node: node,
+                            item: out GenderedBodyData BodyDataParse,
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)Race_FieldIndex.BodyData)))
+                        {
+                            item.BodyData = BodyDataParse;
+                        }
+                        else
+                        {
+                            item.BodyData = default(GenderedBodyData);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Hairs":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Race_FieldIndex.Hairs);
+                        if (ListXmlTranslation<FormIDLink<Hair>>.Instance.Parse(
+                            node: node,
+                            enumer: out var HairsItem,
+                            transl: FormKeyXmlTranslation.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.Hairs.SetTo(HairsItem);
+                        }
+                        else
+                        {
+                            item.Hairs.Unset();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Eyes":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Race_FieldIndex.Eyes);
+                        if (ListXmlTranslation<FormIDLink<Eye>>.Instance.Parse(
+                            node: node,
+                            enumer: out var EyesItem,
+                            transl: FormKeyXmlTranslation.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.Eyes.SetTo(EyesItem);
+                        }
+                        else
+                        {
+                            item.Eyes.Unset();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "FaceGenData":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Race_FieldIndex.FaceGenData);
+                        if (LoquiXmlTranslation<FaceGenData>.Instance.Parse(
+                            node: node,
+                            item: out FaceGenData FaceGenDataParse,
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)Race_FieldIndex.FaceGenData)))
+                        {
+                            item.FaceGenData = FaceGenDataParse;
+                        }
+                        else
+                        {
+                            item.FaceGenData = default(FaceGenData);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Unknown":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Race_FieldIndex.Unknown);
+                        if (ByteArrayXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Byte[] UnknownParse,
+                            errorMask: errorMask))
+                        {
+                            item.Unknown = UnknownParse;
+                        }
+                        else
+                        {
+                            item.Unknown = default(Byte[]);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                default:
+                    MajorRecordCommon.FillPublicElement_Xml(
+                        item: item,
+                        node: node,
+                        name: name,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                    break;
             }
         }
 
@@ -5850,9 +5843,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             this.Name = initialValue;
             this.Description = initialValue;
-            this.Spells = new MaskItem<T, IEnumerable<T>>(initialValue, null);
-            this.Relations = new MaskItem<T, IEnumerable<MaskItem<T, RaceRelation_Mask<T>>>>(initialValue, null);
-            this.SkillBoosts = new MaskItem<T, IEnumerable<MaskItem<T, SkillBoost_Mask<T>>>>(initialValue, null);
+            this.Spells = new MaskItem<T, IEnumerable<(int Index, T Value)>>(initialValue, null);
+            this.Relations = new MaskItem<T, IEnumerable<MaskItemIndexed<T, RaceRelation_Mask<T>>>>(initialValue, null);
+            this.SkillBoosts = new MaskItem<T, IEnumerable<MaskItemIndexed<T, SkillBoost_Mask<T>>>>(initialValue, null);
             this.Fluff = initialValue;
             this.MaleHeight = initialValue;
             this.FemaleHeight = initialValue;
@@ -5865,10 +5858,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.FaceGenMainClamp = initialValue;
             this.FaceGenFaceClamp = initialValue;
             this.RaceStats = new MaskItem<T, RaceStatsGendered_Mask<T>>(initialValue, new RaceStatsGendered_Mask<T>(initialValue));
-            this.FaceData = new MaskItem<T, IEnumerable<MaskItem<T, FacePart_Mask<T>>>>(initialValue, null);
+            this.FaceData = new MaskItem<T, IEnumerable<MaskItemIndexed<T, FacePart_Mask<T>>>>(initialValue, null);
             this.BodyData = new MaskItem<T, GenderedBodyData_Mask<T>>(initialValue, new GenderedBodyData_Mask<T>(initialValue));
-            this.Hairs = new MaskItem<T, IEnumerable<T>>(initialValue, null);
-            this.Eyes = new MaskItem<T, IEnumerable<T>>(initialValue, null);
+            this.Hairs = new MaskItem<T, IEnumerable<(int Index, T Value)>>(initialValue, null);
+            this.Eyes = new MaskItem<T, IEnumerable<(int Index, T Value)>>(initialValue, null);
             this.FaceGenData = new MaskItem<T, FaceGenData_Mask<T>>(initialValue, new FaceGenData_Mask<T>(initialValue));
             this.Unknown = initialValue;
         }
@@ -5877,9 +5870,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Members
         public T Name;
         public T Description;
-        public MaskItem<T, IEnumerable<T>> Spells;
-        public MaskItem<T, IEnumerable<MaskItem<T, RaceRelation_Mask<T>>>> Relations;
-        public MaskItem<T, IEnumerable<MaskItem<T, SkillBoost_Mask<T>>>> SkillBoosts;
+        public MaskItem<T, IEnumerable<(int Index, T Value)>> Spells;
+        public MaskItem<T, IEnumerable<MaskItemIndexed<T, RaceRelation_Mask<T>>>> Relations;
+        public MaskItem<T, IEnumerable<MaskItemIndexed<T, SkillBoost_Mask<T>>>> SkillBoosts;
         public T Fluff;
         public T MaleHeight;
         public T FemaleHeight;
@@ -5892,10 +5885,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public T FaceGenMainClamp;
         public T FaceGenFaceClamp;
         public MaskItem<T, RaceStatsGendered_Mask<T>> RaceStats { get; set; }
-        public MaskItem<T, IEnumerable<MaskItem<T, FacePart_Mask<T>>>> FaceData;
+        public MaskItem<T, IEnumerable<MaskItemIndexed<T, FacePart_Mask<T>>>> FaceData;
         public MaskItem<T, GenderedBodyData_Mask<T>> BodyData { get; set; }
-        public MaskItem<T, IEnumerable<T>> Hairs;
-        public MaskItem<T, IEnumerable<T>> Eyes;
+        public MaskItem<T, IEnumerable<(int Index, T Value)>> Hairs;
+        public MaskItem<T, IEnumerable<(int Index, T Value)>> Eyes;
         public MaskItem<T, FaceGenData_Mask<T>> FaceGenData { get; set; }
         public T Unknown;
         #endregion
@@ -5981,7 +5974,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     foreach (var item in this.Spells.Specific)
                     {
-                        if (!eval(item)) return false;
+                        if (!eval(item.Value)) return false;
                     }
                 }
             }
@@ -6057,7 +6050,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     foreach (var item in this.Hairs.Specific)
                     {
-                        if (!eval(item)) return false;
+                        if (!eval(item.Value)) return false;
                     }
                 }
             }
@@ -6068,7 +6061,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     foreach (var item in this.Eyes.Specific)
                     {
-                        if (!eval(item)) return false;
+                        if (!eval(item.Value)) return false;
                     }
                 }
             }
@@ -6097,38 +6090,40 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             obj.Description = eval(this.Description);
             if (Spells != null)
             {
-                obj.Spells = new MaskItem<R, IEnumerable<R>>();
+                obj.Spells = new MaskItem<R, IEnumerable<(int Index, R Value)>>();
                 obj.Spells.Overall = eval(this.Spells.Overall);
                 if (Spells.Specific != null)
                 {
-                    List<R> l = new List<R>();
+                    List<(int Index, R Item)> l = new List<(int Index, R Item)>();
                     obj.Spells.Specific = l;
-                    foreach (var item in Spells.Specific)
+                    foreach (var item in Spells.Specific.WithIndex())
                     {
-                        R mask = default(R);
-                        mask = eval(item);
+                        (int Index, R Item) mask = default;
+                        mask.Index = item.Index;
+                        mask.Item = eval(item.Item.Value);
                         l.Add(mask);
                     }
                 }
             }
             if (Relations != null)
             {
-                obj.Relations = new MaskItem<R, IEnumerable<MaskItem<R, RaceRelation_Mask<R>>>>();
+                obj.Relations = new MaskItem<R, IEnumerable<MaskItemIndexed<R, RaceRelation_Mask<R>>>>();
                 obj.Relations.Overall = eval(this.Relations.Overall);
                 if (Relations.Specific != null)
                 {
-                    List<MaskItem<R, RaceRelation_Mask<R>>> l = new List<MaskItem<R, RaceRelation_Mask<R>>>();
+                    List<MaskItemIndexed<R, RaceRelation_Mask<R>>> l = new List<MaskItemIndexed<R, RaceRelation_Mask<R>>>();
                     obj.Relations.Specific = l;
-                    foreach (var item in Relations.Specific)
+                    foreach (var item in Relations.Specific.WithIndex())
                     {
-                        MaskItem<R, RaceRelation_Mask<R>> mask = default(MaskItem<R, RaceRelation_Mask<R>>);
-                        if (item != null)
+                        MaskItemIndexed<R, RaceRelation_Mask<R>> mask = default;
+                        mask.Index = item.Index;
+                        if (item.Item != null)
                         {
-                            mask = new MaskItem<R, RaceRelation_Mask<R>>();
-                            mask.Overall = eval(item.Overall);
-                            if (item.Specific != null)
+                            mask = new MaskItemIndexed<R, RaceRelation_Mask<R>>(item.Item.Index);
+                            mask.Overall = eval(item.Item.Overall);
+                            if (item.Item.Specific != null)
                             {
-                                mask.Specific = item.Specific.Translate(eval);
+                                mask.Specific = item.Item.Specific.Translate(eval);
                             }
                         }
                         l.Add(mask);
@@ -6137,22 +6132,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (SkillBoosts != null)
             {
-                obj.SkillBoosts = new MaskItem<R, IEnumerable<MaskItem<R, SkillBoost_Mask<R>>>>();
+                obj.SkillBoosts = new MaskItem<R, IEnumerable<MaskItemIndexed<R, SkillBoost_Mask<R>>>>();
                 obj.SkillBoosts.Overall = eval(this.SkillBoosts.Overall);
                 if (SkillBoosts.Specific != null)
                 {
-                    List<MaskItem<R, SkillBoost_Mask<R>>> l = new List<MaskItem<R, SkillBoost_Mask<R>>>();
+                    List<MaskItemIndexed<R, SkillBoost_Mask<R>>> l = new List<MaskItemIndexed<R, SkillBoost_Mask<R>>>();
                     obj.SkillBoosts.Specific = l;
-                    foreach (var item in SkillBoosts.Specific)
+                    foreach (var item in SkillBoosts.Specific.WithIndex())
                     {
-                        MaskItem<R, SkillBoost_Mask<R>> mask = default(MaskItem<R, SkillBoost_Mask<R>>);
-                        if (item != null)
+                        MaskItemIndexed<R, SkillBoost_Mask<R>> mask = default;
+                        mask.Index = item.Index;
+                        if (item.Item != null)
                         {
-                            mask = new MaskItem<R, SkillBoost_Mask<R>>();
-                            mask.Overall = eval(item.Overall);
-                            if (item.Specific != null)
+                            mask = new MaskItemIndexed<R, SkillBoost_Mask<R>>(item.Item.Index);
+                            mask.Overall = eval(item.Item.Overall);
+                            if (item.Item.Specific != null)
                             {
-                                mask.Specific = item.Specific.Translate(eval);
+                                mask.Specific = item.Item.Specific.Translate(eval);
                             }
                         }
                         l.Add(mask);
@@ -6197,22 +6193,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (FaceData != null)
             {
-                obj.FaceData = new MaskItem<R, IEnumerable<MaskItem<R, FacePart_Mask<R>>>>();
+                obj.FaceData = new MaskItem<R, IEnumerable<MaskItemIndexed<R, FacePart_Mask<R>>>>();
                 obj.FaceData.Overall = eval(this.FaceData.Overall);
                 if (FaceData.Specific != null)
                 {
-                    List<MaskItem<R, FacePart_Mask<R>>> l = new List<MaskItem<R, FacePart_Mask<R>>>();
+                    List<MaskItemIndexed<R, FacePart_Mask<R>>> l = new List<MaskItemIndexed<R, FacePart_Mask<R>>>();
                     obj.FaceData.Specific = l;
-                    foreach (var item in FaceData.Specific)
+                    foreach (var item in FaceData.Specific.WithIndex())
                     {
-                        MaskItem<R, FacePart_Mask<R>> mask = default(MaskItem<R, FacePart_Mask<R>>);
-                        if (item != null)
+                        MaskItemIndexed<R, FacePart_Mask<R>> mask = default;
+                        mask.Index = item.Index;
+                        if (item.Item != null)
                         {
-                            mask = new MaskItem<R, FacePart_Mask<R>>();
-                            mask.Overall = eval(item.Overall);
-                            if (item.Specific != null)
+                            mask = new MaskItemIndexed<R, FacePart_Mask<R>>(item.Item.Index);
+                            mask.Overall = eval(item.Item.Overall);
+                            if (item.Item.Specific != null)
                             {
-                                mask.Specific = item.Specific.Translate(eval);
+                                mask.Specific = item.Item.Specific.Translate(eval);
                             }
                         }
                         l.Add(mask);
@@ -6230,32 +6227,34 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (Hairs != null)
             {
-                obj.Hairs = new MaskItem<R, IEnumerable<R>>();
+                obj.Hairs = new MaskItem<R, IEnumerable<(int Index, R Value)>>();
                 obj.Hairs.Overall = eval(this.Hairs.Overall);
                 if (Hairs.Specific != null)
                 {
-                    List<R> l = new List<R>();
+                    List<(int Index, R Item)> l = new List<(int Index, R Item)>();
                     obj.Hairs.Specific = l;
-                    foreach (var item in Hairs.Specific)
+                    foreach (var item in Hairs.Specific.WithIndex())
                     {
-                        R mask = default(R);
-                        mask = eval(item);
+                        (int Index, R Item) mask = default;
+                        mask.Index = item.Index;
+                        mask.Item = eval(item.Item.Value);
                         l.Add(mask);
                     }
                 }
             }
             if (Eyes != null)
             {
-                obj.Eyes = new MaskItem<R, IEnumerable<R>>();
+                obj.Eyes = new MaskItem<R, IEnumerable<(int Index, R Value)>>();
                 obj.Eyes.Overall = eval(this.Eyes.Overall);
                 if (Eyes.Specific != null)
                 {
-                    List<R> l = new List<R>();
+                    List<(int Index, R Item)> l = new List<(int Index, R Item)>();
                     obj.Eyes.Specific = l;
-                    foreach (var item in Eyes.Specific)
+                    foreach (var item in Eyes.Specific.WithIndex())
                     {
-                        R mask = default(R);
-                        mask = eval(item);
+                        (int Index, R Item) mask = default;
+                        mask.Index = item.Index;
+                        mask.Item = eval(item.Item.Value);
                         l.Add(mask);
                     }
                 }
@@ -6535,7 +6534,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Members
         public Exception Name;
         public Exception Description;
-        public MaskItem<Exception, IEnumerable<Exception>> Spells;
+        public MaskItem<Exception, IEnumerable<(int Index, Exception Value)>> Spells;
         public MaskItem<Exception, IEnumerable<MaskItem<Exception, RaceRelation_ErrorMask>>> Relations;
         public MaskItem<Exception, IEnumerable<MaskItem<Exception, SkillBoost_ErrorMask>>> SkillBoosts;
         public Exception Fluff;
@@ -6552,8 +6551,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public MaskItem<Exception, RaceStatsGendered_ErrorMask> RaceStats;
         public MaskItem<Exception, IEnumerable<MaskItem<Exception, FacePart_ErrorMask>>> FaceData;
         public MaskItem<Exception, GenderedBodyData_ErrorMask> BodyData;
-        public MaskItem<Exception, IEnumerable<Exception>> Hairs;
-        public MaskItem<Exception, IEnumerable<Exception>> Eyes;
+        public MaskItem<Exception, IEnumerable<(int Index, Exception Value)>> Hairs;
+        public MaskItem<Exception, IEnumerable<(int Index, Exception Value)>> Eyes;
         public MaskItem<Exception, FaceGenData_ErrorMask> FaceGenData;
         public Exception Unknown;
         #endregion
@@ -6627,7 +6626,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     this.Description = ex;
                     break;
                 case Race_FieldIndex.Spells:
-                    this.Spells = new MaskItem<Exception, IEnumerable<Exception>>(ex, null);
+                    this.Spells = new MaskItem<Exception, IEnumerable<(int Index, Exception Value)>>(ex, null);
                     break;
                 case Race_FieldIndex.Relations:
                     this.Relations = new MaskItem<Exception, IEnumerable<MaskItem<Exception, RaceRelation_ErrorMask>>>(ex, null);
@@ -6678,10 +6677,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     this.BodyData = new MaskItem<Exception, GenderedBodyData_ErrorMask>(ex, null);
                     break;
                 case Race_FieldIndex.Hairs:
-                    this.Hairs = new MaskItem<Exception, IEnumerable<Exception>>(ex, null);
+                    this.Hairs = new MaskItem<Exception, IEnumerable<(int Index, Exception Value)>>(ex, null);
                     break;
                 case Race_FieldIndex.Eyes:
-                    this.Eyes = new MaskItem<Exception, IEnumerable<Exception>>(ex, null);
+                    this.Eyes = new MaskItem<Exception, IEnumerable<(int Index, Exception Value)>>(ex, null);
                     break;
                 case Race_FieldIndex.FaceGenData:
                     this.FaceGenData = new MaskItem<Exception, FaceGenData_ErrorMask>(ex, null);
@@ -6707,7 +6706,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     this.Description = (Exception)obj;
                     break;
                 case Race_FieldIndex.Spells:
-                    this.Spells = (MaskItem<Exception, IEnumerable<Exception>>)obj;
+                    this.Spells = (MaskItem<Exception, IEnumerable<(int Index, Exception Value)>>)obj;
                     break;
                 case Race_FieldIndex.Relations:
                     this.Relations = (MaskItem<Exception, IEnumerable<MaskItem<Exception, RaceRelation_ErrorMask>>>)obj;
@@ -6758,10 +6757,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     this.BodyData = (MaskItem<Exception, GenderedBodyData_ErrorMask>)obj;
                     break;
                 case Race_FieldIndex.Hairs:
-                    this.Hairs = (MaskItem<Exception, IEnumerable<Exception>>)obj;
+                    this.Hairs = (MaskItem<Exception, IEnumerable<(int Index, Exception Value)>>)obj;
                     break;
                 case Race_FieldIndex.Eyes:
-                    this.Eyes = (MaskItem<Exception, IEnumerable<Exception>>)obj;
+                    this.Eyes = (MaskItem<Exception, IEnumerable<(int Index, Exception Value)>>)obj;
                     break;
                 case Race_FieldIndex.FaceGenData:
                     this.FaceGenData = (MaskItem<Exception, FaceGenData_ErrorMask>)obj;
@@ -6994,7 +6993,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             var ret = new Race_ErrorMask();
             ret.Name = this.Name.Combine(rhs.Name);
             ret.Description = this.Description.Combine(rhs.Description);
-            ret.Spells = new MaskItem<Exception, IEnumerable<Exception>>(this.Spells.Overall.Combine(rhs.Spells.Overall), new List<Exception>(this.Spells.Specific.And(rhs.Spells.Specific)));
+            ret.Spells = new MaskItem<Exception, IEnumerable<(int Index, Exception Value)>>(this.Spells.Overall.Combine(rhs.Spells.Overall), new List<(int Index, Exception Value)>(this.Spells.Specific.And(rhs.Spells.Specific)));
             ret.Relations = new MaskItem<Exception, IEnumerable<MaskItem<Exception, RaceRelation_ErrorMask>>>(this.Relations.Overall.Combine(rhs.Relations.Overall), new List<MaskItem<Exception, RaceRelation_ErrorMask>>(this.Relations.Specific.And(rhs.Relations.Specific)));
             ret.SkillBoosts = new MaskItem<Exception, IEnumerable<MaskItem<Exception, SkillBoost_ErrorMask>>>(this.SkillBoosts.Overall.Combine(rhs.SkillBoosts.Overall), new List<MaskItem<Exception, SkillBoost_ErrorMask>>(this.SkillBoosts.Specific.And(rhs.SkillBoosts.Specific)));
             ret.Fluff = this.Fluff.Combine(rhs.Fluff);
@@ -7011,8 +7010,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.RaceStats = new MaskItem<Exception, RaceStatsGendered_ErrorMask>(this.RaceStats.Overall.Combine(rhs.RaceStats.Overall), ((IErrorMask<RaceStatsGendered_ErrorMask>)this.RaceStats.Specific).Combine(rhs.RaceStats.Specific));
             ret.FaceData = new MaskItem<Exception, IEnumerable<MaskItem<Exception, FacePart_ErrorMask>>>(this.FaceData.Overall.Combine(rhs.FaceData.Overall), new List<MaskItem<Exception, FacePart_ErrorMask>>(this.FaceData.Specific.And(rhs.FaceData.Specific)));
             ret.BodyData = new MaskItem<Exception, GenderedBodyData_ErrorMask>(this.BodyData.Overall.Combine(rhs.BodyData.Overall), ((IErrorMask<GenderedBodyData_ErrorMask>)this.BodyData.Specific).Combine(rhs.BodyData.Specific));
-            ret.Hairs = new MaskItem<Exception, IEnumerable<Exception>>(this.Hairs.Overall.Combine(rhs.Hairs.Overall), new List<Exception>(this.Hairs.Specific.And(rhs.Hairs.Specific)));
-            ret.Eyes = new MaskItem<Exception, IEnumerable<Exception>>(this.Eyes.Overall.Combine(rhs.Eyes.Overall), new List<Exception>(this.Eyes.Specific.And(rhs.Eyes.Specific)));
+            ret.Hairs = new MaskItem<Exception, IEnumerable<(int Index, Exception Value)>>(this.Hairs.Overall.Combine(rhs.Hairs.Overall), new List<(int Index, Exception Value)>(this.Hairs.Specific.And(rhs.Hairs.Specific)));
+            ret.Eyes = new MaskItem<Exception, IEnumerable<(int Index, Exception Value)>>(this.Eyes.Overall.Combine(rhs.Eyes.Overall), new List<(int Index, Exception Value)>(this.Eyes.Specific.And(rhs.Eyes.Specific)));
             ret.FaceGenData = new MaskItem<Exception, FaceGenData_ErrorMask>(this.FaceGenData.Overall.Combine(rhs.FaceGenData.Overall), ((IErrorMask<FaceGenData_ErrorMask>)this.FaceGenData.Specific).Combine(rhs.FaceGenData.Specific));
             ret.Unknown = this.Unknown.Combine(rhs.Unknown);
             return ret;

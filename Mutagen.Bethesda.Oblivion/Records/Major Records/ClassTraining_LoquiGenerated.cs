@@ -107,8 +107,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> IEqualsMask<ClassTraining>.GetEqualsMask(ClassTraining rhs) => ClassTrainingCommon.GetEqualsMask(this, rhs);
-        IMask<bool> IEqualsMask<IClassTrainingGetter>.GetEqualsMask(IClassTrainingGetter rhs) => ClassTrainingCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<ClassTraining>.GetEqualsMask(ClassTraining rhs, EqualsMaskHelper.Include include) => ClassTrainingCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<IClassTrainingGetter>.GetEqualsMask(IClassTrainingGetter rhs, EqualsMaskHelper.Include include) => ClassTrainingCommon.GetEqualsMask(this, rhs, include);
         #region To String
         public string ToString(
             string name = null,
@@ -198,7 +198,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 foreach (var elem in node.Elements())
                 {
-                    Fill_Xml_Internal(
+                    ClassTrainingCommon.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -512,98 +512,6 @@ namespace Mutagen.Bethesda.Oblivion
                 translationMask: translationMask);
         }
         #endregion
-
-        protected static void Fill_Xml_Internal(
-            ClassTraining item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            switch (name)
-            {
-                case "TrainedSkill":
-                    try
-                    {
-                        errorMask?.PushIndex((int)ClassTraining_FieldIndex.TrainedSkill);
-                        if (EnumXmlTranslation<Skill>.Instance.Parse(
-                            node: node,
-                            item: out Skill TrainedSkillParse,
-                            errorMask: errorMask))
-                        {
-                            item.TrainedSkill = TrainedSkillParse;
-                        }
-                        else
-                        {
-                            item.TrainedSkill = default(Skill);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "MaximumTrainingLevel":
-                    try
-                    {
-                        errorMask?.PushIndex((int)ClassTraining_FieldIndex.MaximumTrainingLevel);
-                        if (ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Byte MaximumTrainingLevelParse,
-                            errorMask: errorMask))
-                        {
-                            item.MaximumTrainingLevel = MaximumTrainingLevelParse;
-                        }
-                        else
-                        {
-                            item.MaximumTrainingLevel = default(Byte);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Fluff":
-                    try
-                    {
-                        errorMask?.PushIndex((int)ClassTraining_FieldIndex.Fluff);
-                        if (ByteArrayXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Byte[] FluffParse,
-                            errorMask: errorMask))
-                        {
-                            item.Fluff = FluffParse;
-                        }
-                        else
-                        {
-                            item.Fluff = default(Byte[]);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
 
         #endregion
 
@@ -1578,17 +1486,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static ClassTraining_Mask<bool> GetEqualsMask(
             this IClassTrainingGetter item,
-            IClassTrainingGetter rhs)
+            IClassTrainingGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new ClassTraining_Mask<bool>();
-            FillEqualsMask(item, rhs, ret);
+            FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
             return ret;
         }
 
         public static void FillEqualsMask(
             IClassTrainingGetter item,
             IClassTrainingGetter rhs,
-            ClassTraining_Mask<bool> ret)
+            ClassTraining_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
             ret.TrainedSkill = item.TrainedSkill == rhs.TrainedSkill;
@@ -1697,7 +1611,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         public static void WriteToNode_Xml(
-            IClassTrainingGetter item,
+            this IClassTrainingGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1728,6 +1642,123 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item.Fluff,
                     fieldIndex: (int)ClassTraining_FieldIndex.Fluff,
                     errorMask: errorMask);
+            }
+        }
+
+        public static void FillPublic_Xml(
+            this ClassTraining item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    ClassTrainingCommon.FillPublicElement_Xml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+
+        public static void FillPublicElement_Xml(
+            this ClassTraining item,
+            XElement node,
+            string name,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            switch (name)
+            {
+                case "TrainedSkill":
+                    try
+                    {
+                        errorMask?.PushIndex((int)ClassTraining_FieldIndex.TrainedSkill);
+                        if (EnumXmlTranslation<Skill>.Instance.Parse(
+                            node: node,
+                            item: out Skill TrainedSkillParse,
+                            errorMask: errorMask))
+                        {
+                            item.TrainedSkill = TrainedSkillParse;
+                        }
+                        else
+                        {
+                            item.TrainedSkill = default(Skill);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "MaximumTrainingLevel":
+                    try
+                    {
+                        errorMask?.PushIndex((int)ClassTraining_FieldIndex.MaximumTrainingLevel);
+                        if (ByteXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Byte MaximumTrainingLevelParse,
+                            errorMask: errorMask))
+                        {
+                            item.MaximumTrainingLevel = MaximumTrainingLevelParse;
+                        }
+                        else
+                        {
+                            item.MaximumTrainingLevel = default(Byte);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Fluff":
+                    try
+                    {
+                        errorMask?.PushIndex((int)ClassTraining_FieldIndex.Fluff);
+                        if (ByteArrayXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Byte[] FluffParse,
+                            errorMask: errorMask))
+                        {
+                            item.Fluff = FluffParse;
+                        }
+                        else
+                        {
+                            item.Fluff = default(Byte[]);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                default:
+                    break;
             }
         }
 

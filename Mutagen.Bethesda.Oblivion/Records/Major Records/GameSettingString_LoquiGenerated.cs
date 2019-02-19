@@ -95,8 +95,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> IEqualsMask<GameSettingString>.GetEqualsMask(GameSettingString rhs) => GameSettingStringCommon.GetEqualsMask(this, rhs);
-        IMask<bool> IEqualsMask<IGameSettingStringGetter>.GetEqualsMask(IGameSettingStringGetter rhs) => GameSettingStringCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<GameSettingString>.GetEqualsMask(GameSettingString rhs, EqualsMaskHelper.Include include) => GameSettingStringCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<IGameSettingStringGetter>.GetEqualsMask(IGameSettingStringGetter rhs, EqualsMaskHelper.Include include) => GameSettingStringCommon.GetEqualsMask(this, rhs, include);
         #region To String
         public string ToString(
             string name = null,
@@ -191,7 +191,13 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 foreach (var elem in node.Elements())
                 {
-                    Fill_Xml_Internal(
+                    FillPrivateElement_Xml(
+                        item: ret,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                    GameSettingStringCommon.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -535,7 +541,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        protected static void Fill_Xml_Internal(
+        protected static void FillPrivateElement_Xml(
             GameSettingString item,
             XElement node,
             string name,
@@ -544,34 +550,8 @@ namespace Mutagen.Bethesda.Oblivion
         {
             switch (name)
             {
-                case "Data":
-                    try
-                    {
-                        errorMask?.PushIndex((int)GameSettingString_FieldIndex.Data);
-                        if (StringXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out String DataParse,
-                            errorMask: errorMask))
-                        {
-                            item.Data = DataParse;
-                        }
-                        else
-                        {
-                            item.Data = default(String);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
                 default:
-                    GameSetting.Fill_Xml_Internal(
+                    GameSetting.FillPrivateElement_Xml(
                         item: item,
                         node: node,
                         name: name,
@@ -1462,17 +1442,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static GameSettingString_Mask<bool> GetEqualsMask(
             this IGameSettingStringGetter item,
-            IGameSettingStringGetter rhs)
+            IGameSettingStringGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new GameSettingString_Mask<bool>();
-            FillEqualsMask(item, rhs, ret);
+            FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
             return ret;
         }
 
         public static void FillEqualsMask(
             IGameSettingStringGetter item,
             IGameSettingStringGetter rhs,
-            GameSettingString_Mask<bool> ret)
+            GameSettingString_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
             ret.Data = item.Data_IsSet == rhs.Data_IsSet && object.Equals(item.Data, rhs.Data);
@@ -1621,7 +1607,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         public static void WriteToNode_Xml(
-            IGameSettingStringGetter item,
+            this IGameSettingStringGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1640,6 +1626,77 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item.Data,
                     fieldIndex: (int)GameSettingString_FieldIndex.Data,
                     errorMask: errorMask);
+            }
+        }
+
+        public static void FillPublic_Xml(
+            this GameSettingString item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    GameSettingStringCommon.FillPublicElement_Xml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+
+        public static void FillPublicElement_Xml(
+            this GameSettingString item,
+            XElement node,
+            string name,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            switch (name)
+            {
+                case "Data":
+                    try
+                    {
+                        errorMask?.PushIndex((int)GameSettingString_FieldIndex.Data);
+                        if (StringXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out String DataParse,
+                            errorMask: errorMask))
+                        {
+                            item.Data = DataParse;
+                        }
+                        else
+                        {
+                            item.Data = default(String);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                default:
+                    GameSettingCommon.FillPublicElement_Xml(
+                        item: item,
+                        node: node,
+                        name: name,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                    break;
             }
         }
 

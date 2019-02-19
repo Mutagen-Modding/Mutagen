@@ -16,6 +16,7 @@ using ReactiveUI;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Drawing;
+using Loqui.Presentation;
 using System.Xml;
 using System.Xml.Linq;
 using System.IO;
@@ -105,8 +106,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> IEqualsMask<WeatherType>.GetEqualsMask(WeatherType rhs) => WeatherTypeCommon.GetEqualsMask(this, rhs);
-        IMask<bool> IEqualsMask<IWeatherTypeGetter>.GetEqualsMask(IWeatherTypeGetter rhs) => WeatherTypeCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<WeatherType>.GetEqualsMask(WeatherType rhs, EqualsMaskHelper.Include include) => WeatherTypeCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<IWeatherTypeGetter>.GetEqualsMask(IWeatherTypeGetter rhs, EqualsMaskHelper.Include include) => WeatherTypeCommon.GetEqualsMask(this, rhs, include);
         #region To String
         public string ToString(
             string name = null,
@@ -139,10 +140,10 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Equals(WeatherType rhs)
         {
             if (rhs == null) return false;
-            if (this.Sunrise != rhs.Sunrise) return false;
-            if (this.Day != rhs.Day) return false;
-            if (this.Sunset != rhs.Sunset) return false;
-            if (this.Night != rhs.Night) return false;
+            if (!this.Sunrise.ColorOnlyEquals(rhs.Sunrise)) return false;
+            if (!this.Day.ColorOnlyEquals(rhs.Day)) return false;
+            if (!this.Sunset.ColorOnlyEquals(rhs.Sunset)) return false;
+            if (!this.Night.ColorOnlyEquals(rhs.Night)) return false;
             return true;
         }
 
@@ -198,7 +199,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 foreach (var elem in node.Elements())
                 {
-                    Fill_Xml_Internal(
+                    WeatherTypeCommon.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -512,124 +513,6 @@ namespace Mutagen.Bethesda.Oblivion
                 translationMask: translationMask);
         }
         #endregion
-
-        protected static void Fill_Xml_Internal(
-            WeatherType item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            switch (name)
-            {
-                case "Sunrise":
-                    try
-                    {
-                        errorMask?.PushIndex((int)WeatherType_FieldIndex.Sunrise);
-                        if (ColorXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Color SunriseParse,
-                            errorMask: errorMask))
-                        {
-                            item.Sunrise = SunriseParse;
-                        }
-                        else
-                        {
-                            item.Sunrise = default(Color);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Day":
-                    try
-                    {
-                        errorMask?.PushIndex((int)WeatherType_FieldIndex.Day);
-                        if (ColorXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Color DayParse,
-                            errorMask: errorMask))
-                        {
-                            item.Day = DayParse;
-                        }
-                        else
-                        {
-                            item.Day = default(Color);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Sunset":
-                    try
-                    {
-                        errorMask?.PushIndex((int)WeatherType_FieldIndex.Sunset);
-                        if (ColorXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Color SunsetParse,
-                            errorMask: errorMask))
-                        {
-                            item.Sunset = SunsetParse;
-                        }
-                        else
-                        {
-                            item.Sunset = default(Color);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Night":
-                    try
-                    {
-                        errorMask?.PushIndex((int)WeatherType_FieldIndex.Night);
-                        if (ColorXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Color NightParse,
-                            errorMask: errorMask))
-                        {
-                            item.Night = NightParse;
-                        }
-                        else
-                        {
-                            item.Night = default(Color);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
 
         #endregion
 
@@ -1682,23 +1565,29 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static WeatherType_Mask<bool> GetEqualsMask(
             this IWeatherTypeGetter item,
-            IWeatherTypeGetter rhs)
+            IWeatherTypeGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new WeatherType_Mask<bool>();
-            FillEqualsMask(item, rhs, ret);
+            FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
             return ret;
         }
 
         public static void FillEqualsMask(
             IWeatherTypeGetter item,
             IWeatherTypeGetter rhs,
-            WeatherType_Mask<bool> ret)
+            WeatherType_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Sunrise = item.Sunrise == rhs.Sunrise;
-            ret.Day = item.Day == rhs.Day;
-            ret.Sunset = item.Sunset == rhs.Sunset;
-            ret.Night = item.Night == rhs.Night;
+            ret.Sunrise = item.Sunrise.ColorOnlyEquals(rhs.Sunrise);
+            ret.Day = item.Day.ColorOnlyEquals(rhs.Day);
+            ret.Sunset = item.Sunset.ColorOnlyEquals(rhs.Sunset);
+            ret.Night = item.Night.ColorOnlyEquals(rhs.Night);
         }
 
         public static string ToString(
@@ -1807,7 +1696,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         public static void WriteToNode_Xml(
-            IWeatherTypeGetter item,
+            this IWeatherTypeGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1847,6 +1736,149 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item.Night,
                     fieldIndex: (int)WeatherType_FieldIndex.Night,
                     errorMask: errorMask);
+            }
+        }
+
+        public static void FillPublic_Xml(
+            this WeatherType item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    WeatherTypeCommon.FillPublicElement_Xml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+
+        public static void FillPublicElement_Xml(
+            this WeatherType item,
+            XElement node,
+            string name,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            switch (name)
+            {
+                case "Sunrise":
+                    try
+                    {
+                        errorMask?.PushIndex((int)WeatherType_FieldIndex.Sunrise);
+                        if (ColorXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Color SunriseParse,
+                            errorMask: errorMask))
+                        {
+                            item.Sunrise = SunriseParse;
+                        }
+                        else
+                        {
+                            item.Sunrise = default(Color);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Day":
+                    try
+                    {
+                        errorMask?.PushIndex((int)WeatherType_FieldIndex.Day);
+                        if (ColorXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Color DayParse,
+                            errorMask: errorMask))
+                        {
+                            item.Day = DayParse;
+                        }
+                        else
+                        {
+                            item.Day = default(Color);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Sunset":
+                    try
+                    {
+                        errorMask?.PushIndex((int)WeatherType_FieldIndex.Sunset);
+                        if (ColorXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Color SunsetParse,
+                            errorMask: errorMask))
+                        {
+                            item.Sunset = SunsetParse;
+                        }
+                        else
+                        {
+                            item.Sunset = default(Color);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Night":
+                    try
+                    {
+                        errorMask?.PushIndex((int)WeatherType_FieldIndex.Night);
+                        if (ColorXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Color NightParse,
+                            errorMask: errorMask))
+                        {
+                            item.Night = NightParse;
+                        }
+                        else
+                        {
+                            item.Night = default(Color);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                default:
+                    break;
             }
         }
 

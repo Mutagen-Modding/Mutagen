@@ -209,8 +209,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> IEqualsMask<DialogItem>.GetEqualsMask(DialogItem rhs) => DialogItemCommon.GetEqualsMask(this, rhs);
-        IMask<bool> IEqualsMask<IDialogItemGetter>.GetEqualsMask(IDialogItemGetter rhs) => DialogItemCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<DialogItem>.GetEqualsMask(DialogItem rhs, EqualsMaskHelper.Include include) => DialogItemCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<IDialogItemGetter>.GetEqualsMask(IDialogItemGetter rhs, EqualsMaskHelper.Include include) => DialogItemCommon.GetEqualsMask(this, rhs, include);
         #region To String
         public string ToString(
             string name = null,
@@ -372,7 +372,13 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 foreach (var elem in node.Elements())
                 {
-                    Fill_Xml_Internal(
+                    FillPrivateElement_Xml(
+                        item: ret,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                    DialogItemCommon.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -684,7 +690,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        protected static void Fill_Xml_Internal(
+        protected static void FillPrivateElement_Xml(
             DialogItem item,
             XElement node,
             string name,
@@ -693,212 +699,6 @@ namespace Mutagen.Bethesda.Oblivion
         {
             switch (name)
             {
-                case "DialogType":
-                    try
-                    {
-                        errorMask?.PushIndex((int)DialogItem_FieldIndex.DialogType);
-                        if (EnumXmlTranslation<DialogType>.Instance.Parse(
-                            node: node,
-                            item: out DialogType DialogTypeParse,
-                            errorMask: errorMask))
-                        {
-                            item.DialogType = DialogTypeParse;
-                        }
-                        else
-                        {
-                            item.DialogType = default(DialogType);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Flags":
-                    try
-                    {
-                        errorMask?.PushIndex((int)DialogItem_FieldIndex.Flags);
-                        if (EnumXmlTranslation<DialogItem.Flag>.Instance.Parse(
-                            node: node,
-                            item: out DialogItem.Flag FlagsParse,
-                            errorMask: errorMask))
-                        {
-                            item.Flags = FlagsParse;
-                        }
-                        else
-                        {
-                            item.Flags = default(DialogItem.Flag);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Quest":
-                    FormKeyXmlTranslation.Instance.ParseInto(
-                        node: node,
-                        item: item.Quest_Property,
-                        fieldIndex: (int)DialogItem_FieldIndex.Quest,
-                        errorMask: errorMask);
-                    break;
-                case "PreviousTopic":
-                    FormKeyXmlTranslation.Instance.ParseInto(
-                        node: node,
-                        item: item.PreviousTopic_Property,
-                        fieldIndex: (int)DialogItem_FieldIndex.PreviousTopic,
-                        errorMask: errorMask);
-                    break;
-                case "Topics":
-                    try
-                    {
-                        errorMask?.PushIndex((int)DialogItem_FieldIndex.Topics);
-                        if (ListXmlTranslation<FormIDSetLink<DialogTopic>>.Instance.Parse(
-                            node: node,
-                            enumer: out var TopicsItem,
-                            transl: FormKeyXmlTranslation.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.Topics.SetTo(TopicsItem);
-                        }
-                        else
-                        {
-                            item.Topics.Unset();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Responses":
-                    try
-                    {
-                        errorMask?.PushIndex((int)DialogItem_FieldIndex.Responses);
-                        if (ListXmlTranslation<DialogResponse>.Instance.Parse(
-                            node: node,
-                            enumer: out var ResponsesItem,
-                            transl: LoquiXmlTranslation<DialogResponse>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.Responses.SetTo(ResponsesItem);
-                        }
-                        else
-                        {
-                            item.Responses.Unset();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Conditions":
-                    try
-                    {
-                        errorMask?.PushIndex((int)DialogItem_FieldIndex.Conditions);
-                        if (ListXmlTranslation<Condition>.Instance.Parse(
-                            node: node,
-                            enumer: out var ConditionsItem,
-                            transl: LoquiXmlTranslation<Condition>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.Conditions.SetTo(ConditionsItem);
-                        }
-                        else
-                        {
-                            item.Conditions.Unset();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Choices":
-                    try
-                    {
-                        errorMask?.PushIndex((int)DialogItem_FieldIndex.Choices);
-                        if (ListXmlTranslation<FormIDSetLink<DialogTopic>>.Instance.Parse(
-                            node: node,
-                            enumer: out var ChoicesItem,
-                            transl: FormKeyXmlTranslation.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.Choices.SetTo(ChoicesItem);
-                        }
-                        else
-                        {
-                            item.Choices.Unset();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "LinkFrom":
-                    try
-                    {
-                        errorMask?.PushIndex((int)DialogItem_FieldIndex.LinkFrom);
-                        if (ListXmlTranslation<FormIDSetLink<DialogTopic>>.Instance.Parse(
-                            node: node,
-                            enumer: out var LinkFromItem,
-                            transl: FormKeyXmlTranslation.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.LinkFrom.SetTo(LinkFromItem);
-                        }
-                        else
-                        {
-                            item.LinkFrom.Unset();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
                 case "Script":
                     try
                     {
@@ -925,7 +725,7 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     break;
                 default:
-                    MajorRecord.Fill_Xml_Internal(
+                    MajorRecord.FillPrivateElement_Xml(
                         item: item,
                         node: node,
                         name: name,
@@ -2564,131 +2364,56 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static DialogItem_Mask<bool> GetEqualsMask(
             this IDialogItemGetter item,
-            IDialogItemGetter rhs)
+            IDialogItemGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new DialogItem_Mask<bool>();
-            FillEqualsMask(item, rhs, ret);
+            FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
             return ret;
         }
 
         public static void FillEqualsMask(
             IDialogItemGetter item,
             IDialogItemGetter rhs,
-            DialogItem_Mask<bool> ret)
+            DialogItem_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
             ret.DialogType = item.DialogType == rhs.DialogType;
             ret.Flags = item.Flags == rhs.Flags;
             ret.Quest = item.Quest_Property.FormKey == rhs.Quest_Property.FormKey;
             ret.PreviousTopic = item.PreviousTopic_Property.FormKey == rhs.PreviousTopic_Property.FormKey;
-            if (item.Topics.HasBeenSet == rhs.Topics.HasBeenSet)
-            {
-                if (item.Topics.HasBeenSet)
-                {
-                    ret.Topics = new MaskItem<bool, IEnumerable<bool>>();
-                    ret.Topics.Specific = item.Topics.SelectAgainst<FormIDSetLink<DialogTopic>, bool>(rhs.Topics, ((l, r) => object.Equals(l, r)), out ret.Topics.Overall);
-                    ret.Topics.Overall = ret.Topics.Overall && ret.Topics.Specific.All((b) => b);
-                }
-                else
-                {
-                    ret.Topics = new MaskItem<bool, IEnumerable<bool>>();
-                    ret.Topics.Overall = true;
-                }
-            }
-            else
-            {
-                ret.Topics = new MaskItem<bool, IEnumerable<bool>>();
-                ret.Topics.Overall = false;
-            }
-            if (item.Responses.HasBeenSet == rhs.Responses.HasBeenSet)
-            {
-                if (item.Responses.HasBeenSet)
-                {
-                    ret.Responses = new MaskItem<bool, IEnumerable<MaskItem<bool, DialogResponse_Mask<bool>>>>();
-                    ret.Responses.Specific = item.Responses.SelectAgainst<DialogResponse, MaskItem<bool, DialogResponse_Mask<bool>>>(rhs.Responses, ((l, r) =>
-                    {
-                        MaskItem<bool, DialogResponse_Mask<bool>> itemRet;
-                        itemRet = l.LoquiEqualsHelper(r, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
-                        return itemRet;
-                    }
-                    ), out ret.Responses.Overall);
-                    ret.Responses.Overall = ret.Responses.Overall && ret.Responses.Specific.All((b) => b.Overall);
-                }
-                else
-                {
-                    ret.Responses = new MaskItem<bool, IEnumerable<MaskItem<bool, DialogResponse_Mask<bool>>>>();
-                    ret.Responses.Overall = true;
-                }
-            }
-            else
-            {
-                ret.Responses = new MaskItem<bool, IEnumerable<MaskItem<bool, DialogResponse_Mask<bool>>>>();
-                ret.Responses.Overall = false;
-            }
-            if (item.Conditions.HasBeenSet == rhs.Conditions.HasBeenSet)
-            {
-                if (item.Conditions.HasBeenSet)
-                {
-                    ret.Conditions = new MaskItem<bool, IEnumerable<MaskItem<bool, Condition_Mask<bool>>>>();
-                    ret.Conditions.Specific = item.Conditions.SelectAgainst<Condition, MaskItem<bool, Condition_Mask<bool>>>(rhs.Conditions, ((l, r) =>
-                    {
-                        MaskItem<bool, Condition_Mask<bool>> itemRet;
-                        itemRet = l.LoquiEqualsHelper(r, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
-                        return itemRet;
-                    }
-                    ), out ret.Conditions.Overall);
-                    ret.Conditions.Overall = ret.Conditions.Overall && ret.Conditions.Specific.All((b) => b.Overall);
-                }
-                else
-                {
-                    ret.Conditions = new MaskItem<bool, IEnumerable<MaskItem<bool, Condition_Mask<bool>>>>();
-                    ret.Conditions.Overall = true;
-                }
-            }
-            else
-            {
-                ret.Conditions = new MaskItem<bool, IEnumerable<MaskItem<bool, Condition_Mask<bool>>>>();
-                ret.Conditions.Overall = false;
-            }
-            if (item.Choices.HasBeenSet == rhs.Choices.HasBeenSet)
-            {
-                if (item.Choices.HasBeenSet)
-                {
-                    ret.Choices = new MaskItem<bool, IEnumerable<bool>>();
-                    ret.Choices.Specific = item.Choices.SelectAgainst<FormIDSetLink<DialogTopic>, bool>(rhs.Choices, ((l, r) => object.Equals(l, r)), out ret.Choices.Overall);
-                    ret.Choices.Overall = ret.Choices.Overall && ret.Choices.Specific.All((b) => b);
-                }
-                else
-                {
-                    ret.Choices = new MaskItem<bool, IEnumerable<bool>>();
-                    ret.Choices.Overall = true;
-                }
-            }
-            else
-            {
-                ret.Choices = new MaskItem<bool, IEnumerable<bool>>();
-                ret.Choices.Overall = false;
-            }
-            if (item.LinkFrom.HasBeenSet == rhs.LinkFrom.HasBeenSet)
-            {
-                if (item.LinkFrom.HasBeenSet)
-                {
-                    ret.LinkFrom = new MaskItem<bool, IEnumerable<bool>>();
-                    ret.LinkFrom.Specific = item.LinkFrom.SelectAgainst<FormIDSetLink<DialogTopic>, bool>(rhs.LinkFrom, ((l, r) => object.Equals(l, r)), out ret.LinkFrom.Overall);
-                    ret.LinkFrom.Overall = ret.LinkFrom.Overall && ret.LinkFrom.Specific.All((b) => b);
-                }
-                else
-                {
-                    ret.LinkFrom = new MaskItem<bool, IEnumerable<bool>>();
-                    ret.LinkFrom.Overall = true;
-                }
-            }
-            else
-            {
-                ret.LinkFrom = new MaskItem<bool, IEnumerable<bool>>();
-                ret.LinkFrom.Overall = false;
-            }
-            ret.Script = IHasBeenSetExt.LoquiEqualsHelper(item.Script_IsSet, rhs.Script_IsSet, item.Script, rhs.Script, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
+            ret.Topics = item.Topics.CollectionEqualsHelper(
+                rhs.Topics,
+                (l, r) => object.Equals(l, r),
+                include);
+            ret.Responses = item.Responses.CollectionEqualsHelper(
+                rhs.Responses,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.Conditions = item.Conditions.CollectionEqualsHelper(
+                rhs.Conditions,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.Choices = item.Choices.CollectionEqualsHelper(
+                rhs.Choices,
+                (l, r) => object.Equals(l, r),
+                include);
+            ret.LinkFrom = item.LinkFrom.CollectionEqualsHelper(
+                rhs.LinkFrom,
+                (l, r) => object.Equals(l, r),
+                include);
+            ret.Script = EqualsMaskHelper.EqualsHelper(
+                item.Script_IsSet,
+                rhs.Script_IsSet,
+                item.Script,
+                rhs.Script,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
+                include);
             MajorRecordCommon.FillEqualsMask(item, rhs, ret);
         }
 
@@ -2856,11 +2581,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Flags = true;
             ret.Quest = item.Quest_Property.HasBeenSet;
             ret.PreviousTopic = item.PreviousTopic_Property.HasBeenSet;
-            ret.Topics = new MaskItem<bool, IEnumerable<bool>>(item.Topics.HasBeenSet, null);
-            ret.Responses = new MaskItem<bool, IEnumerable<MaskItem<bool, DialogResponse_Mask<bool>>>>(item.Responses.HasBeenSet, item.Responses.Select((i) => new MaskItem<bool, DialogResponse_Mask<bool>>(true, i.GetHasBeenSetMask())));
-            ret.Conditions = new MaskItem<bool, IEnumerable<MaskItem<bool, Condition_Mask<bool>>>>(item.Conditions.HasBeenSet, item.Conditions.Select((i) => new MaskItem<bool, Condition_Mask<bool>>(true, i.GetHasBeenSetMask())));
-            ret.Choices = new MaskItem<bool, IEnumerable<bool>>(item.Choices.HasBeenSet, null);
-            ret.LinkFrom = new MaskItem<bool, IEnumerable<bool>>(item.LinkFrom.HasBeenSet, null);
+            ret.Topics = new MaskItem<bool, IEnumerable<(int, bool)>>(item.Topics.HasBeenSet, null);
+            ret.Responses = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, DialogResponse_Mask<bool>>>>(item.Responses.HasBeenSet, item.Responses.WithIndex().Select((i) => new MaskItemIndexed<bool, DialogResponse_Mask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            ret.Conditions = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Condition_Mask<bool>>>>(item.Conditions.HasBeenSet, item.Conditions.WithIndex().Select((i) => new MaskItemIndexed<bool, Condition_Mask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            ret.Choices = new MaskItem<bool, IEnumerable<(int, bool)>>(item.Choices.HasBeenSet, null);
+            ret.LinkFrom = new MaskItem<bool, IEnumerable<(int, bool)>>(item.LinkFrom.HasBeenSet, null);
             ret.Script = new MaskItem<bool, ScriptFields_Mask<bool>>(item.Script_IsSet, ScriptFieldsCommon.GetHasBeenSetMask(item.Script));
             return ret;
         }
@@ -2932,7 +2657,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         public static void WriteToNode_Xml(
-            IDialogItemGetter item,
+            this IDialogItemGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -3092,6 +2817,257 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)DialogItem_FieldIndex.Script,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)DialogItem_FieldIndex.Script));
+            }
+        }
+
+        public static void FillPublic_Xml(
+            this DialogItem item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    DialogItemCommon.FillPublicElement_Xml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+
+        public static void FillPublicElement_Xml(
+            this DialogItem item,
+            XElement node,
+            string name,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            switch (name)
+            {
+                case "DialogType":
+                    try
+                    {
+                        errorMask?.PushIndex((int)DialogItem_FieldIndex.DialogType);
+                        if (EnumXmlTranslation<DialogType>.Instance.Parse(
+                            node: node,
+                            item: out DialogType DialogTypeParse,
+                            errorMask: errorMask))
+                        {
+                            item.DialogType = DialogTypeParse;
+                        }
+                        else
+                        {
+                            item.DialogType = default(DialogType);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Flags":
+                    try
+                    {
+                        errorMask?.PushIndex((int)DialogItem_FieldIndex.Flags);
+                        if (EnumXmlTranslation<DialogItem.Flag>.Instance.Parse(
+                            node: node,
+                            item: out DialogItem.Flag FlagsParse,
+                            errorMask: errorMask))
+                        {
+                            item.Flags = FlagsParse;
+                        }
+                        else
+                        {
+                            item.Flags = default(DialogItem.Flag);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Quest":
+                    FormKeyXmlTranslation.Instance.ParseInto(
+                        node: node,
+                        item: item.Quest_Property,
+                        fieldIndex: (int)DialogItem_FieldIndex.Quest,
+                        errorMask: errorMask);
+                    break;
+                case "PreviousTopic":
+                    FormKeyXmlTranslation.Instance.ParseInto(
+                        node: node,
+                        item: item.PreviousTopic_Property,
+                        fieldIndex: (int)DialogItem_FieldIndex.PreviousTopic,
+                        errorMask: errorMask);
+                    break;
+                case "Topics":
+                    try
+                    {
+                        errorMask?.PushIndex((int)DialogItem_FieldIndex.Topics);
+                        if (ListXmlTranslation<FormIDSetLink<DialogTopic>>.Instance.Parse(
+                            node: node,
+                            enumer: out var TopicsItem,
+                            transl: FormKeyXmlTranslation.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.Topics.SetTo(TopicsItem);
+                        }
+                        else
+                        {
+                            item.Topics.Unset();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Responses":
+                    try
+                    {
+                        errorMask?.PushIndex((int)DialogItem_FieldIndex.Responses);
+                        if (ListXmlTranslation<DialogResponse>.Instance.Parse(
+                            node: node,
+                            enumer: out var ResponsesItem,
+                            transl: LoquiXmlTranslation<DialogResponse>.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.Responses.SetTo(ResponsesItem);
+                        }
+                        else
+                        {
+                            item.Responses.Unset();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Conditions":
+                    try
+                    {
+                        errorMask?.PushIndex((int)DialogItem_FieldIndex.Conditions);
+                        if (ListXmlTranslation<Condition>.Instance.Parse(
+                            node: node,
+                            enumer: out var ConditionsItem,
+                            transl: LoquiXmlTranslation<Condition>.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.Conditions.SetTo(ConditionsItem);
+                        }
+                        else
+                        {
+                            item.Conditions.Unset();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Choices":
+                    try
+                    {
+                        errorMask?.PushIndex((int)DialogItem_FieldIndex.Choices);
+                        if (ListXmlTranslation<FormIDSetLink<DialogTopic>>.Instance.Parse(
+                            node: node,
+                            enumer: out var ChoicesItem,
+                            transl: FormKeyXmlTranslation.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.Choices.SetTo(ChoicesItem);
+                        }
+                        else
+                        {
+                            item.Choices.Unset();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "LinkFrom":
+                    try
+                    {
+                        errorMask?.PushIndex((int)DialogItem_FieldIndex.LinkFrom);
+                        if (ListXmlTranslation<FormIDSetLink<DialogTopic>>.Instance.Parse(
+                            node: node,
+                            enumer: out var LinkFromItem,
+                            transl: FormKeyXmlTranslation.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.LinkFrom.SetTo(LinkFromItem);
+                        }
+                        else
+                        {
+                            item.LinkFrom.Unset();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                default:
+                    MajorRecordCommon.FillPublicElement_Xml(
+                        item: item,
+                        node: node,
+                        name: name,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                    break;
             }
         }
 
@@ -3322,11 +3298,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.Flags = initialValue;
             this.Quest = initialValue;
             this.PreviousTopic = initialValue;
-            this.Topics = new MaskItem<T, IEnumerable<T>>(initialValue, null);
-            this.Responses = new MaskItem<T, IEnumerable<MaskItem<T, DialogResponse_Mask<T>>>>(initialValue, null);
-            this.Conditions = new MaskItem<T, IEnumerable<MaskItem<T, Condition_Mask<T>>>>(initialValue, null);
-            this.Choices = new MaskItem<T, IEnumerable<T>>(initialValue, null);
-            this.LinkFrom = new MaskItem<T, IEnumerable<T>>(initialValue, null);
+            this.Topics = new MaskItem<T, IEnumerable<(int Index, T Value)>>(initialValue, null);
+            this.Responses = new MaskItem<T, IEnumerable<MaskItemIndexed<T, DialogResponse_Mask<T>>>>(initialValue, null);
+            this.Conditions = new MaskItem<T, IEnumerable<MaskItemIndexed<T, Condition_Mask<T>>>>(initialValue, null);
+            this.Choices = new MaskItem<T, IEnumerable<(int Index, T Value)>>(initialValue, null);
+            this.LinkFrom = new MaskItem<T, IEnumerable<(int Index, T Value)>>(initialValue, null);
             this.Script = new MaskItem<T, ScriptFields_Mask<T>>(initialValue, new ScriptFields_Mask<T>(initialValue));
         }
         #endregion
@@ -3336,11 +3312,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public T Flags;
         public T Quest;
         public T PreviousTopic;
-        public MaskItem<T, IEnumerable<T>> Topics;
-        public MaskItem<T, IEnumerable<MaskItem<T, DialogResponse_Mask<T>>>> Responses;
-        public MaskItem<T, IEnumerable<MaskItem<T, Condition_Mask<T>>>> Conditions;
-        public MaskItem<T, IEnumerable<T>> Choices;
-        public MaskItem<T, IEnumerable<T>> LinkFrom;
+        public MaskItem<T, IEnumerable<(int Index, T Value)>> Topics;
+        public MaskItem<T, IEnumerable<MaskItemIndexed<T, DialogResponse_Mask<T>>>> Responses;
+        public MaskItem<T, IEnumerable<MaskItemIndexed<T, Condition_Mask<T>>>> Conditions;
+        public MaskItem<T, IEnumerable<(int Index, T Value)>> Choices;
+        public MaskItem<T, IEnumerable<(int Index, T Value)>> LinkFrom;
         public MaskItem<T, ScriptFields_Mask<T>> Script { get; set; }
         #endregion
 
@@ -3401,7 +3377,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     foreach (var item in this.Topics.Specific)
                     {
-                        if (!eval(item)) return false;
+                        if (!eval(item.Value)) return false;
                     }
                 }
             }
@@ -3436,7 +3412,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     foreach (var item in this.Choices.Specific)
                     {
-                        if (!eval(item)) return false;
+                        if (!eval(item.Value)) return false;
                     }
                 }
             }
@@ -3447,7 +3423,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     foreach (var item in this.LinkFrom.Specific)
                     {
-                        if (!eval(item)) return false;
+                        if (!eval(item.Value)) return false;
                     }
                 }
             }
@@ -3477,38 +3453,40 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             obj.PreviousTopic = eval(this.PreviousTopic);
             if (Topics != null)
             {
-                obj.Topics = new MaskItem<R, IEnumerable<R>>();
+                obj.Topics = new MaskItem<R, IEnumerable<(int Index, R Value)>>();
                 obj.Topics.Overall = eval(this.Topics.Overall);
                 if (Topics.Specific != null)
                 {
-                    List<R> l = new List<R>();
+                    List<(int Index, R Item)> l = new List<(int Index, R Item)>();
                     obj.Topics.Specific = l;
-                    foreach (var item in Topics.Specific)
+                    foreach (var item in Topics.Specific.WithIndex())
                     {
-                        R mask = default(R);
-                        mask = eval(item);
+                        (int Index, R Item) mask = default;
+                        mask.Index = item.Index;
+                        mask.Item = eval(item.Item.Value);
                         l.Add(mask);
                     }
                 }
             }
             if (Responses != null)
             {
-                obj.Responses = new MaskItem<R, IEnumerable<MaskItem<R, DialogResponse_Mask<R>>>>();
+                obj.Responses = new MaskItem<R, IEnumerable<MaskItemIndexed<R, DialogResponse_Mask<R>>>>();
                 obj.Responses.Overall = eval(this.Responses.Overall);
                 if (Responses.Specific != null)
                 {
-                    List<MaskItem<R, DialogResponse_Mask<R>>> l = new List<MaskItem<R, DialogResponse_Mask<R>>>();
+                    List<MaskItemIndexed<R, DialogResponse_Mask<R>>> l = new List<MaskItemIndexed<R, DialogResponse_Mask<R>>>();
                     obj.Responses.Specific = l;
-                    foreach (var item in Responses.Specific)
+                    foreach (var item in Responses.Specific.WithIndex())
                     {
-                        MaskItem<R, DialogResponse_Mask<R>> mask = default(MaskItem<R, DialogResponse_Mask<R>>);
-                        if (item != null)
+                        MaskItemIndexed<R, DialogResponse_Mask<R>> mask = default;
+                        mask.Index = item.Index;
+                        if (item.Item != null)
                         {
-                            mask = new MaskItem<R, DialogResponse_Mask<R>>();
-                            mask.Overall = eval(item.Overall);
-                            if (item.Specific != null)
+                            mask = new MaskItemIndexed<R, DialogResponse_Mask<R>>(item.Item.Index);
+                            mask.Overall = eval(item.Item.Overall);
+                            if (item.Item.Specific != null)
                             {
-                                mask.Specific = item.Specific.Translate(eval);
+                                mask.Specific = item.Item.Specific.Translate(eval);
                             }
                         }
                         l.Add(mask);
@@ -3517,22 +3495,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (Conditions != null)
             {
-                obj.Conditions = new MaskItem<R, IEnumerable<MaskItem<R, Condition_Mask<R>>>>();
+                obj.Conditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition_Mask<R>>>>();
                 obj.Conditions.Overall = eval(this.Conditions.Overall);
                 if (Conditions.Specific != null)
                 {
-                    List<MaskItem<R, Condition_Mask<R>>> l = new List<MaskItem<R, Condition_Mask<R>>>();
+                    List<MaskItemIndexed<R, Condition_Mask<R>>> l = new List<MaskItemIndexed<R, Condition_Mask<R>>>();
                     obj.Conditions.Specific = l;
-                    foreach (var item in Conditions.Specific)
+                    foreach (var item in Conditions.Specific.WithIndex())
                     {
-                        MaskItem<R, Condition_Mask<R>> mask = default(MaskItem<R, Condition_Mask<R>>);
-                        if (item != null)
+                        MaskItemIndexed<R, Condition_Mask<R>> mask = default;
+                        mask.Index = item.Index;
+                        if (item.Item != null)
                         {
-                            mask = new MaskItem<R, Condition_Mask<R>>();
-                            mask.Overall = eval(item.Overall);
-                            if (item.Specific != null)
+                            mask = new MaskItemIndexed<R, Condition_Mask<R>>(item.Item.Index);
+                            mask.Overall = eval(item.Item.Overall);
+                            if (item.Item.Specific != null)
                             {
-                                mask.Specific = item.Specific.Translate(eval);
+                                mask.Specific = item.Item.Specific.Translate(eval);
                             }
                         }
                         l.Add(mask);
@@ -3541,32 +3520,34 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (Choices != null)
             {
-                obj.Choices = new MaskItem<R, IEnumerable<R>>();
+                obj.Choices = new MaskItem<R, IEnumerable<(int Index, R Value)>>();
                 obj.Choices.Overall = eval(this.Choices.Overall);
                 if (Choices.Specific != null)
                 {
-                    List<R> l = new List<R>();
+                    List<(int Index, R Item)> l = new List<(int Index, R Item)>();
                     obj.Choices.Specific = l;
-                    foreach (var item in Choices.Specific)
+                    foreach (var item in Choices.Specific.WithIndex())
                     {
-                        R mask = default(R);
-                        mask = eval(item);
+                        (int Index, R Item) mask = default;
+                        mask.Index = item.Index;
+                        mask.Item = eval(item.Item.Value);
                         l.Add(mask);
                     }
                 }
             }
             if (LinkFrom != null)
             {
-                obj.LinkFrom = new MaskItem<R, IEnumerable<R>>();
+                obj.LinkFrom = new MaskItem<R, IEnumerable<(int Index, R Value)>>();
                 obj.LinkFrom.Overall = eval(this.LinkFrom.Overall);
                 if (LinkFrom.Specific != null)
                 {
-                    List<R> l = new List<R>();
+                    List<(int Index, R Item)> l = new List<(int Index, R Item)>();
                     obj.LinkFrom.Specific = l;
-                    foreach (var item in LinkFrom.Specific)
+                    foreach (var item in LinkFrom.Specific.WithIndex())
                     {
-                        R mask = default(R);
-                        mask = eval(item);
+                        (int Index, R Item) mask = default;
+                        mask.Index = item.Index;
+                        mask.Item = eval(item.Item.Value);
                         l.Add(mask);
                     }
                 }
@@ -3773,11 +3754,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Exception Flags;
         public Exception Quest;
         public Exception PreviousTopic;
-        public MaskItem<Exception, IEnumerable<Exception>> Topics;
+        public MaskItem<Exception, IEnumerable<(int Index, Exception Value)>> Topics;
         public MaskItem<Exception, IEnumerable<MaskItem<Exception, DialogResponse_ErrorMask>>> Responses;
         public MaskItem<Exception, IEnumerable<MaskItem<Exception, Condition_ErrorMask>>> Conditions;
-        public MaskItem<Exception, IEnumerable<Exception>> Choices;
-        public MaskItem<Exception, IEnumerable<Exception>> LinkFrom;
+        public MaskItem<Exception, IEnumerable<(int Index, Exception Value)>> Choices;
+        public MaskItem<Exception, IEnumerable<(int Index, Exception Value)>> LinkFrom;
         public MaskItem<Exception, ScriptFields_ErrorMask> Script;
         #endregion
 
@@ -3830,7 +3811,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     this.PreviousTopic = ex;
                     break;
                 case DialogItem_FieldIndex.Topics:
-                    this.Topics = new MaskItem<Exception, IEnumerable<Exception>>(ex, null);
+                    this.Topics = new MaskItem<Exception, IEnumerable<(int Index, Exception Value)>>(ex, null);
                     break;
                 case DialogItem_FieldIndex.Responses:
                     this.Responses = new MaskItem<Exception, IEnumerable<MaskItem<Exception, DialogResponse_ErrorMask>>>(ex, null);
@@ -3839,10 +3820,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     this.Conditions = new MaskItem<Exception, IEnumerable<MaskItem<Exception, Condition_ErrorMask>>>(ex, null);
                     break;
                 case DialogItem_FieldIndex.Choices:
-                    this.Choices = new MaskItem<Exception, IEnumerable<Exception>>(ex, null);
+                    this.Choices = new MaskItem<Exception, IEnumerable<(int Index, Exception Value)>>(ex, null);
                     break;
                 case DialogItem_FieldIndex.LinkFrom:
-                    this.LinkFrom = new MaskItem<Exception, IEnumerable<Exception>>(ex, null);
+                    this.LinkFrom = new MaskItem<Exception, IEnumerable<(int Index, Exception Value)>>(ex, null);
                     break;
                 case DialogItem_FieldIndex.Script:
                     this.Script = new MaskItem<Exception, ScriptFields_ErrorMask>(ex, null);
@@ -3871,7 +3852,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     this.PreviousTopic = (Exception)obj;
                     break;
                 case DialogItem_FieldIndex.Topics:
-                    this.Topics = (MaskItem<Exception, IEnumerable<Exception>>)obj;
+                    this.Topics = (MaskItem<Exception, IEnumerable<(int Index, Exception Value)>>)obj;
                     break;
                 case DialogItem_FieldIndex.Responses:
                     this.Responses = (MaskItem<Exception, IEnumerable<MaskItem<Exception, DialogResponse_ErrorMask>>>)obj;
@@ -3880,10 +3861,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     this.Conditions = (MaskItem<Exception, IEnumerable<MaskItem<Exception, Condition_ErrorMask>>>)obj;
                     break;
                 case DialogItem_FieldIndex.Choices:
-                    this.Choices = (MaskItem<Exception, IEnumerable<Exception>>)obj;
+                    this.Choices = (MaskItem<Exception, IEnumerable<(int Index, Exception Value)>>)obj;
                     break;
                 case DialogItem_FieldIndex.LinkFrom:
-                    this.LinkFrom = (MaskItem<Exception, IEnumerable<Exception>>)obj;
+                    this.LinkFrom = (MaskItem<Exception, IEnumerable<(int Index, Exception Value)>>)obj;
                     break;
                 case DialogItem_FieldIndex.Script:
                     this.Script = (MaskItem<Exception, ScriptFields_ErrorMask>)obj;
@@ -4068,11 +4049,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Flags = this.Flags.Combine(rhs.Flags);
             ret.Quest = this.Quest.Combine(rhs.Quest);
             ret.PreviousTopic = this.PreviousTopic.Combine(rhs.PreviousTopic);
-            ret.Topics = new MaskItem<Exception, IEnumerable<Exception>>(this.Topics.Overall.Combine(rhs.Topics.Overall), new List<Exception>(this.Topics.Specific.And(rhs.Topics.Specific)));
+            ret.Topics = new MaskItem<Exception, IEnumerable<(int Index, Exception Value)>>(this.Topics.Overall.Combine(rhs.Topics.Overall), new List<(int Index, Exception Value)>(this.Topics.Specific.And(rhs.Topics.Specific)));
             ret.Responses = new MaskItem<Exception, IEnumerable<MaskItem<Exception, DialogResponse_ErrorMask>>>(this.Responses.Overall.Combine(rhs.Responses.Overall), new List<MaskItem<Exception, DialogResponse_ErrorMask>>(this.Responses.Specific.And(rhs.Responses.Specific)));
             ret.Conditions = new MaskItem<Exception, IEnumerable<MaskItem<Exception, Condition_ErrorMask>>>(this.Conditions.Overall.Combine(rhs.Conditions.Overall), new List<MaskItem<Exception, Condition_ErrorMask>>(this.Conditions.Specific.And(rhs.Conditions.Specific)));
-            ret.Choices = new MaskItem<Exception, IEnumerable<Exception>>(this.Choices.Overall.Combine(rhs.Choices.Overall), new List<Exception>(this.Choices.Specific.And(rhs.Choices.Specific)));
-            ret.LinkFrom = new MaskItem<Exception, IEnumerable<Exception>>(this.LinkFrom.Overall.Combine(rhs.LinkFrom.Overall), new List<Exception>(this.LinkFrom.Specific.And(rhs.LinkFrom.Specific)));
+            ret.Choices = new MaskItem<Exception, IEnumerable<(int Index, Exception Value)>>(this.Choices.Overall.Combine(rhs.Choices.Overall), new List<(int Index, Exception Value)>(this.Choices.Specific.And(rhs.Choices.Specific)));
+            ret.LinkFrom = new MaskItem<Exception, IEnumerable<(int Index, Exception Value)>>(this.LinkFrom.Overall.Combine(rhs.LinkFrom.Overall), new List<(int Index, Exception Value)>(this.LinkFrom.Specific.And(rhs.LinkFrom.Specific)));
             ret.Script = new MaskItem<Exception, ScriptFields_ErrorMask>(this.Script.Overall.Combine(rhs.Script.Overall), ((IErrorMask<ScriptFields_ErrorMask>)this.Script.Specific).Combine(rhs.Script.Specific));
             return ret;
         }

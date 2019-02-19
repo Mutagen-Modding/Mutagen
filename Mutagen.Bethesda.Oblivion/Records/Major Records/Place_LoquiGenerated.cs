@@ -69,8 +69,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> IEqualsMask<Place>.GetEqualsMask(Place rhs) => PlaceCommon.GetEqualsMask(this, rhs);
-        IMask<bool> IEqualsMask<IPlaceGetter>.GetEqualsMask(IPlaceGetter rhs) => PlaceCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<Place>.GetEqualsMask(Place rhs, EqualsMaskHelper.Include include) => PlaceCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<IPlaceGetter>.GetEqualsMask(IPlaceGetter rhs, EqualsMaskHelper.Include include) => PlaceCommon.GetEqualsMask(this, rhs, include);
         #region To String
         public string ToString(
             string name = null,
@@ -455,7 +455,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        protected static void Fill_Xml_Internal(
+        protected static void FillPrivateElement_Xml(
             Place item,
             XElement node,
             string name,
@@ -465,7 +465,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 default:
-                    MajorRecord.Fill_Xml_Internal(
+                    MajorRecord.FillPrivateElement_Xml(
                         item: item,
                         node: node,
                         name: name,
@@ -1050,17 +1050,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static Place_Mask<bool> GetEqualsMask(
             this IPlaceGetter item,
-            IPlaceGetter rhs)
+            IPlaceGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new Place_Mask<bool>();
-            FillEqualsMask(item, rhs, ret);
+            FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
             return ret;
         }
 
         public static void FillEqualsMask(
             IPlaceGetter item,
             IPlaceGetter rhs,
-            Place_Mask<bool> ret)
+            Place_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
             MajorRecordCommon.FillEqualsMask(item, rhs, ret);
@@ -1177,7 +1183,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         public static void WriteToNode_Xml(
-            IPlaceGetter item,
+            this IPlaceGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1187,6 +1193,51 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
+        }
+
+        public static void FillPublic_Xml(
+            this Place item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    PlaceCommon.FillPublicElement_Xml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+
+        public static void FillPublicElement_Xml(
+            this Place item,
+            XElement node,
+            string name,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            switch (name)
+            {
+                default:
+                    MajorRecordCommon.FillPublicElement_Xml(
+                        item: item,
+                        node: node,
+                        name: name,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                    break;
+            }
         }
 
         #endregion

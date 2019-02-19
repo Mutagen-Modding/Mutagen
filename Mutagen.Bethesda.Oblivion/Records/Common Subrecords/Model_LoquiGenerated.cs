@@ -116,8 +116,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> IEqualsMask<Model>.GetEqualsMask(Model rhs) => ModelCommon.GetEqualsMask(this, rhs);
-        IMask<bool> IEqualsMask<IModelGetter>.GetEqualsMask(IModelGetter rhs) => ModelCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<Model>.GetEqualsMask(Model rhs, EqualsMaskHelper.Include include) => ModelCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<IModelGetter>.GetEqualsMask(IModelGetter rhs, EqualsMaskHelper.Include include) => ModelCommon.GetEqualsMask(this, rhs, include);
         #region To String
         public string ToString(
             string name = null,
@@ -214,7 +214,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 foreach (var elem in node.Elements())
                 {
-                    Fill_Xml_Internal(
+                    ModelCommon.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -528,98 +528,6 @@ namespace Mutagen.Bethesda.Oblivion
                 translationMask: translationMask);
         }
         #endregion
-
-        protected static void Fill_Xml_Internal(
-            Model item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            switch (name)
-            {
-                case "File":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Model_FieldIndex.File);
-                        if (StringXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out String FileParse,
-                            errorMask: errorMask))
-                        {
-                            item.File = FileParse;
-                        }
-                        else
-                        {
-                            item.File = default(String);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "BoundRadius":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Model_FieldIndex.BoundRadius);
-                        if (FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Single BoundRadiusParse,
-                            errorMask: errorMask))
-                        {
-                            item.BoundRadius = BoundRadiusParse;
-                        }
-                        else
-                        {
-                            item.BoundRadius = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Hashes":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Model_FieldIndex.Hashes);
-                        if (ByteArrayXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Byte[] HashesParse,
-                            errorMask: errorMask))
-                        {
-                            item.Hashes = HashesParse;
-                        }
-                        else
-                        {
-                            item.Hashes = default(Byte[]);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
 
         #endregion
 
@@ -1666,21 +1574,27 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static Model_Mask<bool> GetEqualsMask(
             this IModelGetter item,
-            IModelGetter rhs)
+            IModelGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new Model_Mask<bool>();
-            FillEqualsMask(item, rhs, ret);
+            FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
             return ret;
         }
 
         public static void FillEqualsMask(
             IModelGetter item,
             IModelGetter rhs,
-            Model_Mask<bool> ret)
+            Model_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
             ret.File = object.Equals(item.File, rhs.File);
-            ret.BoundRadius = item.BoundRadius == rhs.BoundRadius;
+            ret.BoundRadius = item.BoundRadius.EqualsWithin(rhs.BoundRadius);
             ret.Hashes = item.Hashes_IsSet == rhs.Hashes_IsSet && item.Hashes.EqualsFast(rhs.Hashes);
         }
 
@@ -1786,7 +1700,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         public static void WriteToNode_Xml(
-            IModelGetter item,
+            this IModelGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1818,6 +1732,123 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item.Hashes,
                     fieldIndex: (int)Model_FieldIndex.Hashes,
                     errorMask: errorMask);
+            }
+        }
+
+        public static void FillPublic_Xml(
+            this Model item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    ModelCommon.FillPublicElement_Xml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+
+        public static void FillPublicElement_Xml(
+            this Model item,
+            XElement node,
+            string name,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            switch (name)
+            {
+                case "File":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Model_FieldIndex.File);
+                        if (StringXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out String FileParse,
+                            errorMask: errorMask))
+                        {
+                            item.File = FileParse;
+                        }
+                        else
+                        {
+                            item.File = default(String);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "BoundRadius":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Model_FieldIndex.BoundRadius);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Single BoundRadiusParse,
+                            errorMask: errorMask))
+                        {
+                            item.BoundRadius = BoundRadiusParse;
+                        }
+                        else
+                        {
+                            item.BoundRadius = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Hashes":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Model_FieldIndex.Hashes);
+                        if (ByteArrayXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Byte[] HashesParse,
+                            errorMask: errorMask))
+                        {
+                            item.Hashes = HashesParse;
+                        }
+                        else
+                        {
+                            item.Hashes = default(Byte[]);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                default:
+                    break;
             }
         }
 

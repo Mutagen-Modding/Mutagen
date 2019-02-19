@@ -112,8 +112,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> IEqualsMask<AIPackageSchedule>.GetEqualsMask(AIPackageSchedule rhs) => AIPackageScheduleCommon.GetEqualsMask(this, rhs);
-        IMask<bool> IEqualsMask<IAIPackageScheduleGetter>.GetEqualsMask(IAIPackageScheduleGetter rhs) => AIPackageScheduleCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<AIPackageSchedule>.GetEqualsMask(AIPackageSchedule rhs, EqualsMaskHelper.Include include) => AIPackageScheduleCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<IAIPackageScheduleGetter>.GetEqualsMask(IAIPackageScheduleGetter rhs, EqualsMaskHelper.Include include) => AIPackageScheduleCommon.GetEqualsMask(this, rhs, include);
         #region To String
         public string ToString(
             string name = null,
@@ -207,7 +207,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 foreach (var elem in node.Elements())
                 {
-                    Fill_Xml_Internal(
+                    AIPackageScheduleCommon.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -521,150 +521,6 @@ namespace Mutagen.Bethesda.Oblivion
                 translationMask: translationMask);
         }
         #endregion
-
-        protected static void Fill_Xml_Internal(
-            AIPackageSchedule item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            switch (name)
-            {
-                case "Month":
-                    try
-                    {
-                        errorMask?.PushIndex((int)AIPackageSchedule_FieldIndex.Month);
-                        if (EnumXmlTranslation<Month>.Instance.Parse(
-                            node: node,
-                            item: out Month MonthParse,
-                            errorMask: errorMask))
-                        {
-                            item.Month = MonthParse;
-                        }
-                        else
-                        {
-                            item.Month = default(Month);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "DayOfWeek":
-                    try
-                    {
-                        errorMask?.PushIndex((int)AIPackageSchedule_FieldIndex.DayOfWeek);
-                        if (EnumXmlTranslation<Weekday>.Instance.Parse(
-                            node: node,
-                            item: out Weekday DayOfWeekParse,
-                            errorMask: errorMask))
-                        {
-                            item.DayOfWeek = DayOfWeekParse;
-                        }
-                        else
-                        {
-                            item.DayOfWeek = default(Weekday);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Day":
-                    try
-                    {
-                        errorMask?.PushIndex((int)AIPackageSchedule_FieldIndex.Day);
-                        if (ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Byte DayParse,
-                            errorMask: errorMask))
-                        {
-                            item.Day = DayParse;
-                        }
-                        else
-                        {
-                            item.Day = default(Byte);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Time":
-                    try
-                    {
-                        errorMask?.PushIndex((int)AIPackageSchedule_FieldIndex.Time);
-                        if (ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Byte TimeParse,
-                            errorMask: errorMask))
-                        {
-                            item.Time = TimeParse;
-                        }
-                        else
-                        {
-                            item.Time = default(Byte);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Duration":
-                    try
-                    {
-                        errorMask?.PushIndex((int)AIPackageSchedule_FieldIndex.Duration);
-                        if (Int32XmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Int32 DurationParse,
-                            errorMask: errorMask))
-                        {
-                            item.Duration = DurationParse;
-                        }
-                        else
-                        {
-                            item.Duration = default(Int32);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
 
         #endregion
 
@@ -1796,17 +1652,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static AIPackageSchedule_Mask<bool> GetEqualsMask(
             this IAIPackageScheduleGetter item,
-            IAIPackageScheduleGetter rhs)
+            IAIPackageScheduleGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new AIPackageSchedule_Mask<bool>();
-            FillEqualsMask(item, rhs, ret);
+            FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
             return ret;
         }
 
         public static void FillEqualsMask(
             IAIPackageScheduleGetter item,
             IAIPackageScheduleGetter rhs,
-            AIPackageSchedule_Mask<bool> ret)
+            AIPackageSchedule_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
             ret.Month = item.Month == rhs.Month;
@@ -1927,7 +1789,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         public static void WriteToNode_Xml(
-            IAIPackageScheduleGetter item,
+            this IAIPackageScheduleGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1976,6 +1838,175 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item.Duration,
                     fieldIndex: (int)AIPackageSchedule_FieldIndex.Duration,
                     errorMask: errorMask);
+            }
+        }
+
+        public static void FillPublic_Xml(
+            this AIPackageSchedule item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    AIPackageScheduleCommon.FillPublicElement_Xml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+
+        public static void FillPublicElement_Xml(
+            this AIPackageSchedule item,
+            XElement node,
+            string name,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            switch (name)
+            {
+                case "Month":
+                    try
+                    {
+                        errorMask?.PushIndex((int)AIPackageSchedule_FieldIndex.Month);
+                        if (EnumXmlTranslation<Month>.Instance.Parse(
+                            node: node,
+                            item: out Month MonthParse,
+                            errorMask: errorMask))
+                        {
+                            item.Month = MonthParse;
+                        }
+                        else
+                        {
+                            item.Month = default(Month);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "DayOfWeek":
+                    try
+                    {
+                        errorMask?.PushIndex((int)AIPackageSchedule_FieldIndex.DayOfWeek);
+                        if (EnumXmlTranslation<Weekday>.Instance.Parse(
+                            node: node,
+                            item: out Weekday DayOfWeekParse,
+                            errorMask: errorMask))
+                        {
+                            item.DayOfWeek = DayOfWeekParse;
+                        }
+                        else
+                        {
+                            item.DayOfWeek = default(Weekday);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Day":
+                    try
+                    {
+                        errorMask?.PushIndex((int)AIPackageSchedule_FieldIndex.Day);
+                        if (ByteXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Byte DayParse,
+                            errorMask: errorMask))
+                        {
+                            item.Day = DayParse;
+                        }
+                        else
+                        {
+                            item.Day = default(Byte);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Time":
+                    try
+                    {
+                        errorMask?.PushIndex((int)AIPackageSchedule_FieldIndex.Time);
+                        if (ByteXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Byte TimeParse,
+                            errorMask: errorMask))
+                        {
+                            item.Time = TimeParse;
+                        }
+                        else
+                        {
+                            item.Time = default(Byte);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Duration":
+                    try
+                    {
+                        errorMask?.PushIndex((int)AIPackageSchedule_FieldIndex.Duration);
+                        if (Int32XmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Int32 DurationParse,
+                            errorMask: errorMask))
+                        {
+                            item.Duration = DurationParse;
+                        }
+                        else
+                        {
+                            item.Duration = default(Int32);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                default:
+                    break;
             }
         }
 

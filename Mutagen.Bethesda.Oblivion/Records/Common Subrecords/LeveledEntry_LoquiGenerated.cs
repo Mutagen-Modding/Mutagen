@@ -157,8 +157,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> IEqualsMask<LeveledEntry<T>>.GetEqualsMask(LeveledEntry<T> rhs) => LeveledEntryCommon.GetEqualsMask(this, rhs);
-        IMask<bool> IEqualsMask<ILeveledEntryGetter<T>>.GetEqualsMask(ILeveledEntryGetter<T> rhs) => LeveledEntryCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<LeveledEntry<T>>.GetEqualsMask(LeveledEntry<T> rhs, EqualsMaskHelper.Include include) => LeveledEntryCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<ILeveledEntryGetter<T>>.GetEqualsMask(ILeveledEntryGetter<T> rhs, EqualsMaskHelper.Include include) => LeveledEntryCommon.GetEqualsMask(this, rhs, include);
         #region To String
         public string ToString(
             string name = null,
@@ -269,7 +269,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 foreach (var elem in node.Elements())
                 {
-                    Fill_Xml_Internal(
+                    LeveledEntryCommon.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -607,131 +607,6 @@ namespace Mutagen.Bethesda.Oblivion
                 translationMask: translationMask);
         }
         #endregion
-
-        protected static void Fill_Xml_Internal(
-            LeveledEntry<T> item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            switch (name)
-            {
-                case "Level":
-                    try
-                    {
-                        errorMask?.PushIndex((int)LeveledEntry_FieldIndex.Level);
-                        if (Int16XmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Int16 LevelParse,
-                            errorMask: errorMask))
-                        {
-                            item.Level = LevelParse;
-                        }
-                        else
-                        {
-                            item.Level = default(Int16);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Fluff":
-                    try
-                    {
-                        errorMask?.PushIndex((int)LeveledEntry_FieldIndex.Fluff);
-                        if (ByteArrayXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Byte[] FluffParse,
-                            errorMask: errorMask))
-                        {
-                            item.Fluff = FluffParse;
-                        }
-                        else
-                        {
-                            item.Fluff = default(Byte[]);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Reference":
-                    FormKeyXmlTranslation.Instance.ParseInto(
-                        node: node,
-                        item: item.Reference_Property,
-                        fieldIndex: (int)LeveledEntry_FieldIndex.Reference,
-                        errorMask: errorMask);
-                    break;
-                case "Count":
-                    try
-                    {
-                        errorMask?.PushIndex((int)LeveledEntry_FieldIndex.Count);
-                        if (Int16XmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Int16 CountParse,
-                            errorMask: errorMask))
-                        {
-                            item.Count = CountParse;
-                        }
-                        else
-                        {
-                            item.Count = default(Int16);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Fluff2":
-                    try
-                    {
-                        errorMask?.PushIndex((int)LeveledEntry_FieldIndex.Fluff2);
-                        if (ByteArrayXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Byte[] Fluff2Parse,
-                            errorMask: errorMask))
-                        {
-                            item.Fluff2 = Fluff2Parse;
-                        }
-                        else
-                        {
-                            item.Fluff2 = default(Byte[]);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
 
         #endregion
 
@@ -1966,18 +1841,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static LeveledEntry_Mask<bool> GetEqualsMask<T>(
             this ILeveledEntryGetter<T> item,
-            ILeveledEntryGetter<T> rhs)
+            ILeveledEntryGetter<T> rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
             where T : Bethesda.MajorRecord, ILoquiObject<T>
         {
             var ret = new LeveledEntry_Mask<bool>();
-            FillEqualsMask(item, rhs, ret);
+            FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
             return ret;
         }
 
         public static void FillEqualsMask<T>(
             ILeveledEntryGetter<T> item,
             ILeveledEntryGetter<T> rhs,
-            LeveledEntry_Mask<bool> ret)
+            LeveledEntry_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
             where T : Bethesda.MajorRecord, ILoquiObject<T>
         {
             if (rhs == null) return;
@@ -2109,7 +1990,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         public static void WriteToNode_Xml<T>(
-            ILeveledEntryGetter<T> item,
+            this ILeveledEntryGetter<T> item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -2161,6 +2042,158 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item.Fluff2,
                     fieldIndex: (int)LeveledEntry_FieldIndex.Fluff2,
                     errorMask: errorMask);
+            }
+        }
+
+        public static void FillPublic_Xml<T>(
+            this LeveledEntry<T> item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+            where T : Bethesda.MajorRecord, ILoquiObject<T>
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    LeveledEntryCommon.FillPublicElement_Xml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+
+        public static void FillPublicElement_Xml<T>(
+            this LeveledEntry<T> item,
+            XElement node,
+            string name,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+            where T : Bethesda.MajorRecord, ILoquiObject<T>
+        {
+            switch (name)
+            {
+                case "Level":
+                    try
+                    {
+                        errorMask?.PushIndex((int)LeveledEntry_FieldIndex.Level);
+                        if (Int16XmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Int16 LevelParse,
+                            errorMask: errorMask))
+                        {
+                            item.Level = LevelParse;
+                        }
+                        else
+                        {
+                            item.Level = default(Int16);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Fluff":
+                    try
+                    {
+                        errorMask?.PushIndex((int)LeveledEntry_FieldIndex.Fluff);
+                        if (ByteArrayXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Byte[] FluffParse,
+                            errorMask: errorMask))
+                        {
+                            item.Fluff = FluffParse;
+                        }
+                        else
+                        {
+                            item.Fluff = default(Byte[]);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Reference":
+                    FormKeyXmlTranslation.Instance.ParseInto(
+                        node: node,
+                        item: item.Reference_Property,
+                        fieldIndex: (int)LeveledEntry_FieldIndex.Reference,
+                        errorMask: errorMask);
+                    break;
+                case "Count":
+                    try
+                    {
+                        errorMask?.PushIndex((int)LeveledEntry_FieldIndex.Count);
+                        if (Int16XmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Int16 CountParse,
+                            errorMask: errorMask))
+                        {
+                            item.Count = CountParse;
+                        }
+                        else
+                        {
+                            item.Count = default(Int16);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Fluff2":
+                    try
+                    {
+                        errorMask?.PushIndex((int)LeveledEntry_FieldIndex.Fluff2);
+                        if (ByteArrayXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Byte[] Fluff2Parse,
+                            errorMask: errorMask))
+                        {
+                            item.Fluff2 = Fluff2Parse;
+                        }
+                        else
+                        {
+                            item.Fluff2 = default(Byte[]);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                default:
+                    break;
             }
         }
 

@@ -132,8 +132,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> IEqualsMask<WorldspaceBlock>.GetEqualsMask(WorldspaceBlock rhs) => WorldspaceBlockCommon.GetEqualsMask(this, rhs);
-        IMask<bool> IEqualsMask<IWorldspaceBlockGetter>.GetEqualsMask(IWorldspaceBlockGetter rhs) => WorldspaceBlockCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<WorldspaceBlock>.GetEqualsMask(WorldspaceBlock rhs, EqualsMaskHelper.Include include) => WorldspaceBlockCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<IWorldspaceBlockGetter>.GetEqualsMask(IWorldspaceBlockGetter rhs, EqualsMaskHelper.Include include) => WorldspaceBlockCommon.GetEqualsMask(this, rhs, include);
         #region To String
         public string ToString(
             string name = null,
@@ -234,7 +234,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 foreach (var elem in node.Elements())
                 {
-                    Fill_Xml_Internal(
+                    WorldspaceBlockCommon.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -548,152 +548,6 @@ namespace Mutagen.Bethesda.Oblivion
                 translationMask: translationMask);
         }
         #endregion
-
-        protected static void Fill_Xml_Internal(
-            WorldspaceBlock item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            switch (name)
-            {
-                case "BlockNumberY":
-                    try
-                    {
-                        errorMask?.PushIndex((int)WorldspaceBlock_FieldIndex.BlockNumberY);
-                        if (Int16XmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Int16 BlockNumberYParse,
-                            errorMask: errorMask))
-                        {
-                            item.BlockNumberY = BlockNumberYParse;
-                        }
-                        else
-                        {
-                            item.BlockNumberY = default(Int16);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "BlockNumberX":
-                    try
-                    {
-                        errorMask?.PushIndex((int)WorldspaceBlock_FieldIndex.BlockNumberX);
-                        if (Int16XmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Int16 BlockNumberXParse,
-                            errorMask: errorMask))
-                        {
-                            item.BlockNumberX = BlockNumberXParse;
-                        }
-                        else
-                        {
-                            item.BlockNumberX = default(Int16);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "GroupType":
-                    try
-                    {
-                        errorMask?.PushIndex((int)WorldspaceBlock_FieldIndex.GroupType);
-                        if (EnumXmlTranslation<GroupTypeEnum>.Instance.Parse(
-                            node: node,
-                            item: out GroupTypeEnum GroupTypeParse,
-                            errorMask: errorMask))
-                        {
-                            item.GroupType = GroupTypeParse;
-                        }
-                        else
-                        {
-                            item.GroupType = default(GroupTypeEnum);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "LastModified":
-                    try
-                    {
-                        errorMask?.PushIndex((int)WorldspaceBlock_FieldIndex.LastModified);
-                        if (ByteArrayXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Byte[] LastModifiedParse,
-                            errorMask: errorMask))
-                        {
-                            item.LastModified = LastModifiedParse;
-                        }
-                        else
-                        {
-                            item.LastModified = default(Byte[]);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Items":
-                    try
-                    {
-                        errorMask?.PushIndex((int)WorldspaceBlock_FieldIndex.Items);
-                        if (ListXmlTranslation<WorldspaceSubBlock>.Instance.Parse(
-                            node: node,
-                            enumer: out var ItemsItem,
-                            transl: LoquiXmlTranslation<WorldspaceSubBlock>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.Items.SetTo(ItemsItem);
-                        }
-                        else
-                        {
-                            item.Items.Unset();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
 
         #endregion
 
@@ -1894,48 +1748,33 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static WorldspaceBlock_Mask<bool> GetEqualsMask(
             this IWorldspaceBlockGetter item,
-            IWorldspaceBlockGetter rhs)
+            IWorldspaceBlockGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new WorldspaceBlock_Mask<bool>();
-            FillEqualsMask(item, rhs, ret);
+            FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
             return ret;
         }
 
         public static void FillEqualsMask(
             IWorldspaceBlockGetter item,
             IWorldspaceBlockGetter rhs,
-            WorldspaceBlock_Mask<bool> ret)
+            WorldspaceBlock_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
             ret.BlockNumberY = item.BlockNumberY == rhs.BlockNumberY;
             ret.BlockNumberX = item.BlockNumberX == rhs.BlockNumberX;
             ret.GroupType = item.GroupType == rhs.GroupType;
             ret.LastModified = item.LastModified.EqualsFast(rhs.LastModified);
-            if (item.Items.HasBeenSet == rhs.Items.HasBeenSet)
-            {
-                if (item.Items.HasBeenSet)
-                {
-                    ret.Items = new MaskItem<bool, IEnumerable<MaskItem<bool, WorldspaceSubBlock_Mask<bool>>>>();
-                    ret.Items.Specific = item.Items.SelectAgainst<WorldspaceSubBlock, MaskItem<bool, WorldspaceSubBlock_Mask<bool>>>(rhs.Items, ((l, r) =>
-                    {
-                        MaskItem<bool, WorldspaceSubBlock_Mask<bool>> itemRet;
-                        itemRet = l.LoquiEqualsHelper(r, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
-                        return itemRet;
-                    }
-                    ), out ret.Items.Overall);
-                    ret.Items.Overall = ret.Items.Overall && ret.Items.Specific.All((b) => b.Overall);
-                }
-                else
-                {
-                    ret.Items = new MaskItem<bool, IEnumerable<MaskItem<bool, WorldspaceSubBlock_Mask<bool>>>>();
-                    ret.Items.Overall = true;
-                }
-            }
-            else
-            {
-                ret.Items = new MaskItem<bool, IEnumerable<MaskItem<bool, WorldspaceSubBlock_Mask<bool>>>>();
-                ret.Items.Overall = false;
-            }
+            ret.Items = item.Items.CollectionEqualsHelper(
+                rhs.Items,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
         }
 
         public static string ToString(
@@ -2018,7 +1857,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.BlockNumberX = true;
             ret.GroupType = true;
             ret.LastModified = true;
-            ret.Items = new MaskItem<bool, IEnumerable<MaskItem<bool, WorldspaceSubBlock_Mask<bool>>>>(item.Items.HasBeenSet, item.Items.Select((i) => new MaskItem<bool, WorldspaceSubBlock_Mask<bool>>(true, i.GetHasBeenSetMask())));
+            ret.Items = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, WorldspaceSubBlock_Mask<bool>>>>(item.Items.HasBeenSet, item.Items.WithIndex().Select((i) => new MaskItemIndexed<bool, WorldspaceSubBlock_Mask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
             return ret;
         }
 
@@ -2064,7 +1903,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         public static void WriteToNode_Xml(
-            IWorldspaceBlockGetter item,
+            this IWorldspaceBlockGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -2125,6 +1964,177 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             translationMask: listTranslMask);
                     }
                     );
+            }
+        }
+
+        public static void FillPublic_Xml(
+            this WorldspaceBlock item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    WorldspaceBlockCommon.FillPublicElement_Xml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+
+        public static void FillPublicElement_Xml(
+            this WorldspaceBlock item,
+            XElement node,
+            string name,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            switch (name)
+            {
+                case "BlockNumberY":
+                    try
+                    {
+                        errorMask?.PushIndex((int)WorldspaceBlock_FieldIndex.BlockNumberY);
+                        if (Int16XmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Int16 BlockNumberYParse,
+                            errorMask: errorMask))
+                        {
+                            item.BlockNumberY = BlockNumberYParse;
+                        }
+                        else
+                        {
+                            item.BlockNumberY = default(Int16);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "BlockNumberX":
+                    try
+                    {
+                        errorMask?.PushIndex((int)WorldspaceBlock_FieldIndex.BlockNumberX);
+                        if (Int16XmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Int16 BlockNumberXParse,
+                            errorMask: errorMask))
+                        {
+                            item.BlockNumberX = BlockNumberXParse;
+                        }
+                        else
+                        {
+                            item.BlockNumberX = default(Int16);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "GroupType":
+                    try
+                    {
+                        errorMask?.PushIndex((int)WorldspaceBlock_FieldIndex.GroupType);
+                        if (EnumXmlTranslation<GroupTypeEnum>.Instance.Parse(
+                            node: node,
+                            item: out GroupTypeEnum GroupTypeParse,
+                            errorMask: errorMask))
+                        {
+                            item.GroupType = GroupTypeParse;
+                        }
+                        else
+                        {
+                            item.GroupType = default(GroupTypeEnum);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "LastModified":
+                    try
+                    {
+                        errorMask?.PushIndex((int)WorldspaceBlock_FieldIndex.LastModified);
+                        if (ByteArrayXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Byte[] LastModifiedParse,
+                            errorMask: errorMask))
+                        {
+                            item.LastModified = LastModifiedParse;
+                        }
+                        else
+                        {
+                            item.LastModified = default(Byte[]);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Items":
+                    try
+                    {
+                        errorMask?.PushIndex((int)WorldspaceBlock_FieldIndex.Items);
+                        if (ListXmlTranslation<WorldspaceSubBlock>.Instance.Parse(
+                            node: node,
+                            enumer: out var ItemsItem,
+                            transl: LoquiXmlTranslation<WorldspaceSubBlock>.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.Items.SetTo(ItemsItem);
+                        }
+                        else
+                        {
+                            item.Items.Unset();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                default:
+                    break;
             }
         }
 
@@ -2252,7 +2262,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.BlockNumberX = initialValue;
             this.GroupType = initialValue;
             this.LastModified = initialValue;
-            this.Items = new MaskItem<T, IEnumerable<MaskItem<T, WorldspaceSubBlock_Mask<T>>>>(initialValue, null);
+            this.Items = new MaskItem<T, IEnumerable<MaskItemIndexed<T, WorldspaceSubBlock_Mask<T>>>>(initialValue, null);
         }
         #endregion
 
@@ -2261,7 +2271,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public T BlockNumberX;
         public T GroupType;
         public T LastModified;
-        public MaskItem<T, IEnumerable<MaskItem<T, WorldspaceSubBlock_Mask<T>>>> Items;
+        public MaskItem<T, IEnumerable<MaskItemIndexed<T, WorldspaceSubBlock_Mask<T>>>> Items;
         #endregion
 
         #region Equals
@@ -2333,22 +2343,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             obj.LastModified = eval(this.LastModified);
             if (Items != null)
             {
-                obj.Items = new MaskItem<R, IEnumerable<MaskItem<R, WorldspaceSubBlock_Mask<R>>>>();
+                obj.Items = new MaskItem<R, IEnumerable<MaskItemIndexed<R, WorldspaceSubBlock_Mask<R>>>>();
                 obj.Items.Overall = eval(this.Items.Overall);
                 if (Items.Specific != null)
                 {
-                    List<MaskItem<R, WorldspaceSubBlock_Mask<R>>> l = new List<MaskItem<R, WorldspaceSubBlock_Mask<R>>>();
+                    List<MaskItemIndexed<R, WorldspaceSubBlock_Mask<R>>> l = new List<MaskItemIndexed<R, WorldspaceSubBlock_Mask<R>>>();
                     obj.Items.Specific = l;
-                    foreach (var item in Items.Specific)
+                    foreach (var item in Items.Specific.WithIndex())
                     {
-                        MaskItem<R, WorldspaceSubBlock_Mask<R>> mask = default(MaskItem<R, WorldspaceSubBlock_Mask<R>>);
-                        if (item != null)
+                        MaskItemIndexed<R, WorldspaceSubBlock_Mask<R>> mask = default;
+                        mask.Index = item.Index;
+                        if (item.Item != null)
                         {
-                            mask = new MaskItem<R, WorldspaceSubBlock_Mask<R>>();
-                            mask.Overall = eval(item.Overall);
-                            if (item.Specific != null)
+                            mask = new MaskItemIndexed<R, WorldspaceSubBlock_Mask<R>>(item.Item.Index);
+                            mask.Overall = eval(item.Item.Overall);
+                            if (item.Item.Specific != null)
                             {
-                                mask.Specific = item.Specific.Translate(eval);
+                                mask.Specific = item.Item.Specific.Translate(eval);
                             }
                         }
                         l.Add(mask);

@@ -167,8 +167,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> IEqualsMask<Effect>.GetEqualsMask(Effect rhs) => EffectCommon.GetEqualsMask(this, rhs);
-        IMask<bool> IEqualsMask<IEffectGetter>.GetEqualsMask(IEffectGetter rhs) => EffectCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<Effect>.GetEqualsMask(Effect rhs, EqualsMaskHelper.Include include) => EffectCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<IEffectGetter>.GetEqualsMask(IEffectGetter rhs, EqualsMaskHelper.Include include) => EffectCommon.GetEqualsMask(this, rhs, include);
         #region To String
         public string ToString(
             string name = null,
@@ -273,7 +273,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 foreach (var elem in node.Elements())
                 {
-                    Fill_Xml_Internal(
+                    EffectCommon.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -587,184 +587,6 @@ namespace Mutagen.Bethesda.Oblivion
                 translationMask: translationMask);
         }
         #endregion
-
-        protected static void Fill_Xml_Internal(
-            Effect item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            switch (name)
-            {
-                case "MagicEffect":
-                    FormKeyXmlTranslation.Instance.ParseInto(
-                        node: node,
-                        item: item.MagicEffect_Property,
-                        fieldIndex: (int)Effect_FieldIndex.MagicEffect,
-                        errorMask: errorMask);
-                    break;
-                case "Magnitude":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Effect_FieldIndex.Magnitude);
-                        if (UInt32XmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out UInt32 MagnitudeParse,
-                            errorMask: errorMask))
-                        {
-                            item.Magnitude = MagnitudeParse;
-                        }
-                        else
-                        {
-                            item.Magnitude = default(UInt32);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Area":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Effect_FieldIndex.Area);
-                        if (UInt32XmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out UInt32 AreaParse,
-                            errorMask: errorMask))
-                        {
-                            item.Area = AreaParse;
-                        }
-                        else
-                        {
-                            item.Area = default(UInt32);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Duration":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Effect_FieldIndex.Duration);
-                        if (UInt32XmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out UInt32 DurationParse,
-                            errorMask: errorMask))
-                        {
-                            item.Duration = DurationParse;
-                        }
-                        else
-                        {
-                            item.Duration = default(UInt32);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Type":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Effect_FieldIndex.Type);
-                        if (EnumXmlTranslation<Effect.EffectType>.Instance.Parse(
-                            node: node,
-                            item: out Effect.EffectType TypeParse,
-                            errorMask: errorMask))
-                        {
-                            item.Type = TypeParse;
-                        }
-                        else
-                        {
-                            item.Type = default(Effect.EffectType);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ActorValue":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Effect_FieldIndex.ActorValue);
-                        if (EnumXmlTranslation<ActorValueExtended>.Instance.Parse(
-                            node: node,
-                            item: out ActorValueExtended ActorValueParse,
-                            errorMask: errorMask))
-                        {
-                            item.ActorValue = ActorValueParse;
-                        }
-                        else
-                        {
-                            item.ActorValue = default(ActorValueExtended);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ScriptEffect":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Effect_FieldIndex.ScriptEffect);
-                        if (LoquiXmlTranslation<ScriptEffect>.Instance.Parse(
-                            node: node,
-                            item: out ScriptEffect ScriptEffectParse,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Effect_FieldIndex.ScriptEffect)))
-                        {
-                            item.ScriptEffect = ScriptEffectParse;
-                        }
-                        else
-                        {
-                            item.ScriptEffect = default(ScriptEffect);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
 
         #endregion
 
@@ -2185,17 +2007,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static Effect_Mask<bool> GetEqualsMask(
             this IEffectGetter item,
-            IEffectGetter rhs)
+            IEffectGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new Effect_Mask<bool>();
-            FillEqualsMask(item, rhs, ret);
+            FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
             return ret;
         }
 
         public static void FillEqualsMask(
             IEffectGetter item,
             IEffectGetter rhs,
-            Effect_Mask<bool> ret)
+            Effect_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
             ret.MagicEffect = item.MagicEffect_Property.FormKey == rhs.MagicEffect_Property.FormKey;
@@ -2204,7 +2032,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Duration = item.Duration == rhs.Duration;
             ret.Type = item.Type == rhs.Type;
             ret.ActorValue = item.ActorValue == rhs.ActorValue;
-            ret.ScriptEffect = IHasBeenSetExt.LoquiEqualsHelper(item.ScriptEffect_IsSet, rhs.ScriptEffect_IsSet, item.ScriptEffect, rhs.ScriptEffect, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
+            ret.ScriptEffect = EqualsMaskHelper.EqualsHelper(
+                item.ScriptEffect_IsSet,
+                rhs.ScriptEffect_IsSet,
+                item.ScriptEffect,
+                rhs.ScriptEffect,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
+                include);
         }
 
         public static string ToString(
@@ -2330,7 +2164,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         public static void WriteToNode_Xml(
-            IEffectGetter item,
+            this IEffectGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -2399,6 +2233,209 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)Effect_FieldIndex.ScriptEffect,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)Effect_FieldIndex.ScriptEffect));
+            }
+        }
+
+        public static void FillPublic_Xml(
+            this Effect item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    EffectCommon.FillPublicElement_Xml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+
+        public static void FillPublicElement_Xml(
+            this Effect item,
+            XElement node,
+            string name,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            switch (name)
+            {
+                case "MagicEffect":
+                    FormKeyXmlTranslation.Instance.ParseInto(
+                        node: node,
+                        item: item.MagicEffect_Property,
+                        fieldIndex: (int)Effect_FieldIndex.MagicEffect,
+                        errorMask: errorMask);
+                    break;
+                case "Magnitude":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Effect_FieldIndex.Magnitude);
+                        if (UInt32XmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out UInt32 MagnitudeParse,
+                            errorMask: errorMask))
+                        {
+                            item.Magnitude = MagnitudeParse;
+                        }
+                        else
+                        {
+                            item.Magnitude = default(UInt32);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Area":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Effect_FieldIndex.Area);
+                        if (UInt32XmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out UInt32 AreaParse,
+                            errorMask: errorMask))
+                        {
+                            item.Area = AreaParse;
+                        }
+                        else
+                        {
+                            item.Area = default(UInt32);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Duration":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Effect_FieldIndex.Duration);
+                        if (UInt32XmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out UInt32 DurationParse,
+                            errorMask: errorMask))
+                        {
+                            item.Duration = DurationParse;
+                        }
+                        else
+                        {
+                            item.Duration = default(UInt32);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Type":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Effect_FieldIndex.Type);
+                        if (EnumXmlTranslation<Effect.EffectType>.Instance.Parse(
+                            node: node,
+                            item: out Effect.EffectType TypeParse,
+                            errorMask: errorMask))
+                        {
+                            item.Type = TypeParse;
+                        }
+                        else
+                        {
+                            item.Type = default(Effect.EffectType);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "ActorValue":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Effect_FieldIndex.ActorValue);
+                        if (EnumXmlTranslation<ActorValueExtended>.Instance.Parse(
+                            node: node,
+                            item: out ActorValueExtended ActorValueParse,
+                            errorMask: errorMask))
+                        {
+                            item.ActorValue = ActorValueParse;
+                        }
+                        else
+                        {
+                            item.ActorValue = default(ActorValueExtended);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "ScriptEffect":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Effect_FieldIndex.ScriptEffect);
+                        if (LoquiXmlTranslation<ScriptEffect>.Instance.Parse(
+                            node: node,
+                            item: out ScriptEffect ScriptEffectParse,
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)Effect_FieldIndex.ScriptEffect)))
+                        {
+                            item.ScriptEffect = ScriptEffectParse;
+                        }
+                        else
+                        {
+                            item.ScriptEffect = default(ScriptEffect);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                default:
+                    break;
             }
         }
 

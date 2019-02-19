@@ -160,8 +160,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> IEqualsMask<DialogTopic>.GetEqualsMask(DialogTopic rhs) => DialogTopicCommon.GetEqualsMask(this, rhs);
-        IMask<bool> IEqualsMask<IDialogTopicGetter>.GetEqualsMask(IDialogTopicGetter rhs) => DialogTopicCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<DialogTopic>.GetEqualsMask(DialogTopic rhs, EqualsMaskHelper.Include include) => DialogTopicCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<IDialogTopicGetter>.GetEqualsMask(IDialogTopicGetter rhs, EqualsMaskHelper.Include include) => DialogTopicCommon.GetEqualsMask(this, rhs, include);
         #region To String
         public string ToString(
             string name = null,
@@ -283,7 +283,13 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 foreach (var elem in node.Elements())
                 {
-                    Fill_Xml_Internal(
+                    FillPrivateElement_Xml(
+                        item: ret,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                    DialogTopicCommon.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -595,7 +601,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        protected static void Fill_Xml_Internal(
+        protected static void FillPrivateElement_Xml(
             DialogTopic item,
             XElement node,
             string name,
@@ -604,116 +610,8 @@ namespace Mutagen.Bethesda.Oblivion
         {
             switch (name)
             {
-                case "Quests":
-                    try
-                    {
-                        errorMask?.PushIndex((int)DialogTopic_FieldIndex.Quests);
-                        if (ListXmlTranslation<FormIDSetLink<Quest>>.Instance.Parse(
-                            node: node,
-                            enumer: out var QuestsItem,
-                            transl: FormKeyXmlTranslation.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.Quests.SetTo(QuestsItem);
-                        }
-                        else
-                        {
-                            item.Quests.Unset();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Name":
-                    try
-                    {
-                        errorMask?.PushIndex((int)DialogTopic_FieldIndex.Name);
-                        if (StringXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out String NameParse,
-                            errorMask: errorMask))
-                        {
-                            item.Name = NameParse;
-                        }
-                        else
-                        {
-                            item.Name = default(String);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "DialogType":
-                    try
-                    {
-                        errorMask?.PushIndex((int)DialogTopic_FieldIndex.DialogType);
-                        if (EnumXmlTranslation<DialogType>.Instance.Parse(
-                            node: node,
-                            item: out DialogType DialogTypeParse,
-                            errorMask: errorMask))
-                        {
-                            item.DialogType = DialogTypeParse;
-                        }
-                        else
-                        {
-                            item.DialogType = default(DialogType);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Items":
-                    try
-                    {
-                        errorMask?.PushIndex((int)DialogTopic_FieldIndex.Items);
-                        if (ListXmlTranslation<DialogItem>.Instance.Parse(
-                            node: node,
-                            enumer: out var ItemsItem,
-                            transl: LoquiXmlTranslation<DialogItem>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.Items.SetTo(ItemsItem);
-                        }
-                        else
-                        {
-                            item.Items.Unset();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
                 default:
-                    MajorRecord.Fill_Xml_Internal(
+                    MajorRecord.FillPrivateElement_Xml(
                         item: item,
                         node: node,
                         name: name,
@@ -1906,65 +1804,35 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static DialogTopic_Mask<bool> GetEqualsMask(
             this IDialogTopicGetter item,
-            IDialogTopicGetter rhs)
+            IDialogTopicGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new DialogTopic_Mask<bool>();
-            FillEqualsMask(item, rhs, ret);
+            FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
             return ret;
         }
 
         public static void FillEqualsMask(
             IDialogTopicGetter item,
             IDialogTopicGetter rhs,
-            DialogTopic_Mask<bool> ret)
+            DialogTopic_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            if (item.Quests.HasBeenSet == rhs.Quests.HasBeenSet)
-            {
-                if (item.Quests.HasBeenSet)
-                {
-                    ret.Quests = new MaskItem<bool, IEnumerable<bool>>();
-                    ret.Quests.Specific = item.Quests.SelectAgainst<FormIDSetLink<Quest>, bool>(rhs.Quests, ((l, r) => object.Equals(l, r)), out ret.Quests.Overall);
-                    ret.Quests.Overall = ret.Quests.Overall && ret.Quests.Specific.All((b) => b);
-                }
-                else
-                {
-                    ret.Quests = new MaskItem<bool, IEnumerable<bool>>();
-                    ret.Quests.Overall = true;
-                }
-            }
-            else
-            {
-                ret.Quests = new MaskItem<bool, IEnumerable<bool>>();
-                ret.Quests.Overall = false;
-            }
+            ret.Quests = item.Quests.CollectionEqualsHelper(
+                rhs.Quests,
+                (l, r) => object.Equals(l, r),
+                include);
             ret.Name = item.Name_IsSet == rhs.Name_IsSet && object.Equals(item.Name, rhs.Name);
             ret.DialogType = item.DialogType_IsSet == rhs.DialogType_IsSet && item.DialogType == rhs.DialogType;
-            if (item.Items.HasBeenSet == rhs.Items.HasBeenSet)
-            {
-                if (item.Items.HasBeenSet)
-                {
-                    ret.Items = new MaskItem<bool, IEnumerable<MaskItem<bool, DialogItem_Mask<bool>>>>();
-                    ret.Items.Specific = item.Items.SelectAgainst<DialogItem, MaskItem<bool, DialogItem_Mask<bool>>>(rhs.Items, ((l, r) =>
-                    {
-                        MaskItem<bool, DialogItem_Mask<bool>> itemRet;
-                        itemRet = l.LoquiEqualsHelper(r, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
-                        return itemRet;
-                    }
-                    ), out ret.Items.Overall);
-                    ret.Items.Overall = ret.Items.Overall && ret.Items.Specific.All((b) => b.Overall);
-                }
-                else
-                {
-                    ret.Items = new MaskItem<bool, IEnumerable<MaskItem<bool, DialogItem_Mask<bool>>>>();
-                    ret.Items.Overall = true;
-                }
-            }
-            else
-            {
-                ret.Items = new MaskItem<bool, IEnumerable<MaskItem<bool, DialogItem_Mask<bool>>>>();
-                ret.Items.Overall = false;
-            }
+            ret.Items = item.Items.CollectionEqualsHelper(
+                rhs.Items,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
             MajorRecordCommon.FillEqualsMask(item, rhs, ret);
         }
 
@@ -2057,10 +1925,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static DialogTopic_Mask<bool> GetHasBeenSetMask(IDialogTopicGetter item)
         {
             var ret = new DialogTopic_Mask<bool>();
-            ret.Quests = new MaskItem<bool, IEnumerable<bool>>(item.Quests.HasBeenSet, null);
+            ret.Quests = new MaskItem<bool, IEnumerable<(int, bool)>>(item.Quests.HasBeenSet, null);
             ret.Name = item.Name_IsSet;
             ret.DialogType = item.DialogType_IsSet;
-            ret.Items = new MaskItem<bool, IEnumerable<MaskItem<bool, DialogItem_Mask<bool>>>>(item.Items.HasBeenSet, item.Items.Select((i) => new MaskItem<bool, DialogItem_Mask<bool>>(true, i.GetHasBeenSetMask())));
+            ret.Items = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, DialogItem_Mask<bool>>>>(item.Items.HasBeenSet, item.Items.WithIndex().Select((i) => new MaskItemIndexed<bool, DialogItem_Mask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
             return ret;
         }
 
@@ -2131,7 +1999,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         public static void WriteToNode_Xml(
-            IDialogTopicGetter item,
+            this IDialogTopicGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -2201,6 +2069,159 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             translationMask: listTranslMask);
                     }
                     );
+            }
+        }
+
+        public static void FillPublic_Xml(
+            this DialogTopic item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    DialogTopicCommon.FillPublicElement_Xml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+
+        public static void FillPublicElement_Xml(
+            this DialogTopic item,
+            XElement node,
+            string name,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            switch (name)
+            {
+                case "Quests":
+                    try
+                    {
+                        errorMask?.PushIndex((int)DialogTopic_FieldIndex.Quests);
+                        if (ListXmlTranslation<FormIDSetLink<Quest>>.Instance.Parse(
+                            node: node,
+                            enumer: out var QuestsItem,
+                            transl: FormKeyXmlTranslation.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.Quests.SetTo(QuestsItem);
+                        }
+                        else
+                        {
+                            item.Quests.Unset();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Name":
+                    try
+                    {
+                        errorMask?.PushIndex((int)DialogTopic_FieldIndex.Name);
+                        if (StringXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out String NameParse,
+                            errorMask: errorMask))
+                        {
+                            item.Name = NameParse;
+                        }
+                        else
+                        {
+                            item.Name = default(String);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "DialogType":
+                    try
+                    {
+                        errorMask?.PushIndex((int)DialogTopic_FieldIndex.DialogType);
+                        if (EnumXmlTranslation<DialogType>.Instance.Parse(
+                            node: node,
+                            item: out DialogType DialogTypeParse,
+                            errorMask: errorMask))
+                        {
+                            item.DialogType = DialogTypeParse;
+                        }
+                        else
+                        {
+                            item.DialogType = default(DialogType);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Items":
+                    try
+                    {
+                        errorMask?.PushIndex((int)DialogTopic_FieldIndex.Items);
+                        if (ListXmlTranslation<DialogItem>.Instance.Parse(
+                            node: node,
+                            enumer: out var ItemsItem,
+                            transl: LoquiXmlTranslation<DialogItem>.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.Items.SetTo(ItemsItem);
+                        }
+                        else
+                        {
+                            item.Items.Unset();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                default:
+                    MajorRecordCommon.FillPublicElement_Xml(
+                        item: item,
+                        node: node,
+                        name: name,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                    break;
             }
         }
 
@@ -2329,18 +2350,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public DialogTopic_Mask(T initialValue)
         {
-            this.Quests = new MaskItem<T, IEnumerable<T>>(initialValue, null);
+            this.Quests = new MaskItem<T, IEnumerable<(int Index, T Value)>>(initialValue, null);
             this.Name = initialValue;
             this.DialogType = initialValue;
-            this.Items = new MaskItem<T, IEnumerable<MaskItem<T, DialogItem_Mask<T>>>>(initialValue, null);
+            this.Items = new MaskItem<T, IEnumerable<MaskItemIndexed<T, DialogItem_Mask<T>>>>(initialValue, null);
         }
         #endregion
 
         #region Members
-        public MaskItem<T, IEnumerable<T>> Quests;
+        public MaskItem<T, IEnumerable<(int Index, T Value)>> Quests;
         public T Name;
         public T DialogType;
-        public MaskItem<T, IEnumerable<MaskItem<T, DialogItem_Mask<T>>>> Items;
+        public MaskItem<T, IEnumerable<MaskItemIndexed<T, DialogItem_Mask<T>>>> Items;
         #endregion
 
         #region Equals
@@ -2384,7 +2405,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     foreach (var item in this.Quests.Specific)
                     {
-                        if (!eval(item)) return false;
+                        if (!eval(item.Value)) return false;
                     }
                 }
             }
@@ -2419,16 +2440,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             base.Translate_InternalFill(obj, eval);
             if (Quests != null)
             {
-                obj.Quests = new MaskItem<R, IEnumerable<R>>();
+                obj.Quests = new MaskItem<R, IEnumerable<(int Index, R Value)>>();
                 obj.Quests.Overall = eval(this.Quests.Overall);
                 if (Quests.Specific != null)
                 {
-                    List<R> l = new List<R>();
+                    List<(int Index, R Item)> l = new List<(int Index, R Item)>();
                     obj.Quests.Specific = l;
-                    foreach (var item in Quests.Specific)
+                    foreach (var item in Quests.Specific.WithIndex())
                     {
-                        R mask = default(R);
-                        mask = eval(item);
+                        (int Index, R Item) mask = default;
+                        mask.Index = item.Index;
+                        mask.Item = eval(item.Item.Value);
                         l.Add(mask);
                     }
                 }
@@ -2437,22 +2459,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             obj.DialogType = eval(this.DialogType);
             if (Items != null)
             {
-                obj.Items = new MaskItem<R, IEnumerable<MaskItem<R, DialogItem_Mask<R>>>>();
+                obj.Items = new MaskItem<R, IEnumerable<MaskItemIndexed<R, DialogItem_Mask<R>>>>();
                 obj.Items.Overall = eval(this.Items.Overall);
                 if (Items.Specific != null)
                 {
-                    List<MaskItem<R, DialogItem_Mask<R>>> l = new List<MaskItem<R, DialogItem_Mask<R>>>();
+                    List<MaskItemIndexed<R, DialogItem_Mask<R>>> l = new List<MaskItemIndexed<R, DialogItem_Mask<R>>>();
                     obj.Items.Specific = l;
-                    foreach (var item in Items.Specific)
+                    foreach (var item in Items.Specific.WithIndex())
                     {
-                        MaskItem<R, DialogItem_Mask<R>> mask = default(MaskItem<R, DialogItem_Mask<R>>);
-                        if (item != null)
+                        MaskItemIndexed<R, DialogItem_Mask<R>> mask = default;
+                        mask.Index = item.Index;
+                        if (item.Item != null)
                         {
-                            mask = new MaskItem<R, DialogItem_Mask<R>>();
-                            mask.Overall = eval(item.Overall);
-                            if (item.Specific != null)
+                            mask = new MaskItemIndexed<R, DialogItem_Mask<R>>(item.Item.Index);
+                            mask.Overall = eval(item.Item.Overall);
+                            if (item.Item.Specific != null)
                             {
-                                mask.Specific = item.Specific.Translate(eval);
+                                mask.Specific = item.Item.Specific.Translate(eval);
                             }
                         }
                         l.Add(mask);
@@ -2558,7 +2581,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public class DialogTopic_ErrorMask : MajorRecord_ErrorMask, IErrorMask<DialogTopic_ErrorMask>
     {
         #region Members
-        public MaskItem<Exception, IEnumerable<Exception>> Quests;
+        public MaskItem<Exception, IEnumerable<(int Index, Exception Value)>> Quests;
         public Exception Name;
         public Exception DialogType;
         public MaskItem<Exception, IEnumerable<MaskItem<Exception, DialogItem_ErrorMask>>> Items;
@@ -2589,7 +2612,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case DialogTopic_FieldIndex.Quests:
-                    this.Quests = new MaskItem<Exception, IEnumerable<Exception>>(ex, null);
+                    this.Quests = new MaskItem<Exception, IEnumerable<(int Index, Exception Value)>>(ex, null);
                     break;
                 case DialogTopic_FieldIndex.Name:
                     this.Name = ex;
@@ -2612,7 +2635,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case DialogTopic_FieldIndex.Quests:
-                    this.Quests = (MaskItem<Exception, IEnumerable<Exception>>)obj;
+                    this.Quests = (MaskItem<Exception, IEnumerable<(int Index, Exception Value)>>)obj;
                     break;
                 case DialogTopic_FieldIndex.Name:
                     this.Name = (Exception)obj;
@@ -2724,7 +2747,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public DialogTopic_ErrorMask Combine(DialogTopic_ErrorMask rhs)
         {
             var ret = new DialogTopic_ErrorMask();
-            ret.Quests = new MaskItem<Exception, IEnumerable<Exception>>(this.Quests.Overall.Combine(rhs.Quests.Overall), new List<Exception>(this.Quests.Specific.And(rhs.Quests.Specific)));
+            ret.Quests = new MaskItem<Exception, IEnumerable<(int Index, Exception Value)>>(this.Quests.Overall.Combine(rhs.Quests.Overall), new List<(int Index, Exception Value)>(this.Quests.Specific.And(rhs.Quests.Specific)));
             ret.Name = this.Name.Combine(rhs.Name);
             ret.DialogType = this.DialogType.Combine(rhs.DialogType);
             ret.Items = new MaskItem<Exception, IEnumerable<MaskItem<Exception, DialogItem_ErrorMask>>>(this.Items.Overall.Combine(rhs.Items.Overall), new List<MaskItem<Exception, DialogItem_ErrorMask>>(this.Items.Specific.And(rhs.Items.Specific)));

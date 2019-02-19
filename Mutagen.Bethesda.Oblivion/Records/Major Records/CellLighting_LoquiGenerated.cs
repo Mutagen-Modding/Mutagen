@@ -16,6 +16,7 @@ using ReactiveUI;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Drawing;
+using Loqui.Presentation;
 using System.Xml;
 using System.Xml.Linq;
 using System.IO;
@@ -145,8 +146,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> IEqualsMask<CellLighting>.GetEqualsMask(CellLighting rhs) => CellLightingCommon.GetEqualsMask(this, rhs);
-        IMask<bool> IEqualsMask<ICellLightingGetter>.GetEqualsMask(ICellLightingGetter rhs) => CellLightingCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<CellLighting>.GetEqualsMask(CellLighting rhs, EqualsMaskHelper.Include include) => CellLightingCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<ICellLightingGetter>.GetEqualsMask(ICellLightingGetter rhs, EqualsMaskHelper.Include include) => CellLightingCommon.GetEqualsMask(this, rhs, include);
         #region To String
         public string ToString(
             string name = null,
@@ -179,9 +180,9 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Equals(CellLighting rhs)
         {
             if (rhs == null) return false;
-            if (this.AmbientColor != rhs.AmbientColor) return false;
-            if (this.DirectionalColor != rhs.DirectionalColor) return false;
-            if (this.FogColor != rhs.FogColor) return false;
+            if (!this.AmbientColor.ColorOnlyEquals(rhs.AmbientColor)) return false;
+            if (!this.DirectionalColor.ColorOnlyEquals(rhs.DirectionalColor)) return false;
+            if (!this.FogColor.ColorOnlyEquals(rhs.FogColor)) return false;
             if (!this.FogNear.EqualsWithin(rhs.FogNear)) return false;
             if (!this.FogFar.EqualsWithin(rhs.FogFar)) return false;
             if (this.DirectionalRotationXY != rhs.DirectionalRotationXY) return false;
@@ -248,7 +249,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 foreach (var elem in node.Elements())
                 {
-                    Fill_Xml_Internal(
+                    CellLightingCommon.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -562,254 +563,6 @@ namespace Mutagen.Bethesda.Oblivion
                 translationMask: translationMask);
         }
         #endregion
-
-        protected static void Fill_Xml_Internal(
-            CellLighting item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            switch (name)
-            {
-                case "AmbientColor":
-                    try
-                    {
-                        errorMask?.PushIndex((int)CellLighting_FieldIndex.AmbientColor);
-                        if (ColorXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Color AmbientColorParse,
-                            errorMask: errorMask))
-                        {
-                            item.AmbientColor = AmbientColorParse;
-                        }
-                        else
-                        {
-                            item.AmbientColor = default(Color);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "DirectionalColor":
-                    try
-                    {
-                        errorMask?.PushIndex((int)CellLighting_FieldIndex.DirectionalColor);
-                        if (ColorXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Color DirectionalColorParse,
-                            errorMask: errorMask))
-                        {
-                            item.DirectionalColor = DirectionalColorParse;
-                        }
-                        else
-                        {
-                            item.DirectionalColor = default(Color);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "FogColor":
-                    try
-                    {
-                        errorMask?.PushIndex((int)CellLighting_FieldIndex.FogColor);
-                        if (ColorXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Color FogColorParse,
-                            errorMask: errorMask))
-                        {
-                            item.FogColor = FogColorParse;
-                        }
-                        else
-                        {
-                            item.FogColor = default(Color);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "FogNear":
-                    try
-                    {
-                        errorMask?.PushIndex((int)CellLighting_FieldIndex.FogNear);
-                        if (FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Single FogNearParse,
-                            errorMask: errorMask))
-                        {
-                            item.FogNear = FogNearParse;
-                        }
-                        else
-                        {
-                            item.FogNear = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "FogFar":
-                    try
-                    {
-                        errorMask?.PushIndex((int)CellLighting_FieldIndex.FogFar);
-                        if (FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Single FogFarParse,
-                            errorMask: errorMask))
-                        {
-                            item.FogFar = FogFarParse;
-                        }
-                        else
-                        {
-                            item.FogFar = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "DirectionalRotationXY":
-                    try
-                    {
-                        errorMask?.PushIndex((int)CellLighting_FieldIndex.DirectionalRotationXY);
-                        if (Int32XmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Int32 DirectionalRotationXYParse,
-                            errorMask: errorMask))
-                        {
-                            item.DirectionalRotationXY = DirectionalRotationXYParse;
-                        }
-                        else
-                        {
-                            item.DirectionalRotationXY = default(Int32);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "DirectionalRotationZ":
-                    try
-                    {
-                        errorMask?.PushIndex((int)CellLighting_FieldIndex.DirectionalRotationZ);
-                        if (Int32XmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Int32 DirectionalRotationZParse,
-                            errorMask: errorMask))
-                        {
-                            item.DirectionalRotationZ = DirectionalRotationZParse;
-                        }
-                        else
-                        {
-                            item.DirectionalRotationZ = default(Int32);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "DirectionalFade":
-                    try
-                    {
-                        errorMask?.PushIndex((int)CellLighting_FieldIndex.DirectionalFade);
-                        if (FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Single DirectionalFadeParse,
-                            errorMask: errorMask))
-                        {
-                            item.DirectionalFade = DirectionalFadeParse;
-                        }
-                        else
-                        {
-                            item.DirectionalFade = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "FogClipDistance":
-                    try
-                    {
-                        errorMask?.PushIndex((int)CellLighting_FieldIndex.FogClipDistance);
-                        if (FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Single FogClipDistanceParse,
-                            errorMask: errorMask))
-                        {
-                            item.FogClipDistance = FogClipDistanceParse;
-                        }
-                        else
-                        {
-                            item.FogClipDistance = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
 
         #endregion
 
@@ -2240,28 +1993,34 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static CellLighting_Mask<bool> GetEqualsMask(
             this ICellLightingGetter item,
-            ICellLightingGetter rhs)
+            ICellLightingGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new CellLighting_Mask<bool>();
-            FillEqualsMask(item, rhs, ret);
+            FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
             return ret;
         }
 
         public static void FillEqualsMask(
             ICellLightingGetter item,
             ICellLightingGetter rhs,
-            CellLighting_Mask<bool> ret)
+            CellLighting_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.AmbientColor = item.AmbientColor == rhs.AmbientColor;
-            ret.DirectionalColor = item.DirectionalColor == rhs.DirectionalColor;
-            ret.FogColor = item.FogColor == rhs.FogColor;
-            ret.FogNear = item.FogNear == rhs.FogNear;
-            ret.FogFar = item.FogFar == rhs.FogFar;
+            ret.AmbientColor = item.AmbientColor.ColorOnlyEquals(rhs.AmbientColor);
+            ret.DirectionalColor = item.DirectionalColor.ColorOnlyEquals(rhs.DirectionalColor);
+            ret.FogColor = item.FogColor.ColorOnlyEquals(rhs.FogColor);
+            ret.FogNear = item.FogNear.EqualsWithin(rhs.FogNear);
+            ret.FogFar = item.FogFar.EqualsWithin(rhs.FogFar);
             ret.DirectionalRotationXY = item.DirectionalRotationXY == rhs.DirectionalRotationXY;
             ret.DirectionalRotationZ = item.DirectionalRotationZ == rhs.DirectionalRotationZ;
-            ret.DirectionalFade = item.DirectionalFade == rhs.DirectionalFade;
-            ret.FogClipDistance = item.FogClipDistance == rhs.FogClipDistance;
+            ret.DirectionalFade = item.DirectionalFade.EqualsWithin(rhs.DirectionalFade);
+            ret.FogClipDistance = item.FogClipDistance.EqualsWithin(rhs.FogClipDistance);
         }
 
         public static string ToString(
@@ -2395,7 +2154,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         public static void WriteToNode_Xml(
-            ICellLightingGetter item,
+            this ICellLightingGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -2480,6 +2239,279 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item.FogClipDistance,
                     fieldIndex: (int)CellLighting_FieldIndex.FogClipDistance,
                     errorMask: errorMask);
+            }
+        }
+
+        public static void FillPublic_Xml(
+            this CellLighting item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    CellLightingCommon.FillPublicElement_Xml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+
+        public static void FillPublicElement_Xml(
+            this CellLighting item,
+            XElement node,
+            string name,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            switch (name)
+            {
+                case "AmbientColor":
+                    try
+                    {
+                        errorMask?.PushIndex((int)CellLighting_FieldIndex.AmbientColor);
+                        if (ColorXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Color AmbientColorParse,
+                            errorMask: errorMask))
+                        {
+                            item.AmbientColor = AmbientColorParse;
+                        }
+                        else
+                        {
+                            item.AmbientColor = default(Color);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "DirectionalColor":
+                    try
+                    {
+                        errorMask?.PushIndex((int)CellLighting_FieldIndex.DirectionalColor);
+                        if (ColorXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Color DirectionalColorParse,
+                            errorMask: errorMask))
+                        {
+                            item.DirectionalColor = DirectionalColorParse;
+                        }
+                        else
+                        {
+                            item.DirectionalColor = default(Color);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "FogColor":
+                    try
+                    {
+                        errorMask?.PushIndex((int)CellLighting_FieldIndex.FogColor);
+                        if (ColorXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Color FogColorParse,
+                            errorMask: errorMask))
+                        {
+                            item.FogColor = FogColorParse;
+                        }
+                        else
+                        {
+                            item.FogColor = default(Color);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "FogNear":
+                    try
+                    {
+                        errorMask?.PushIndex((int)CellLighting_FieldIndex.FogNear);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Single FogNearParse,
+                            errorMask: errorMask))
+                        {
+                            item.FogNear = FogNearParse;
+                        }
+                        else
+                        {
+                            item.FogNear = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "FogFar":
+                    try
+                    {
+                        errorMask?.PushIndex((int)CellLighting_FieldIndex.FogFar);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Single FogFarParse,
+                            errorMask: errorMask))
+                        {
+                            item.FogFar = FogFarParse;
+                        }
+                        else
+                        {
+                            item.FogFar = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "DirectionalRotationXY":
+                    try
+                    {
+                        errorMask?.PushIndex((int)CellLighting_FieldIndex.DirectionalRotationXY);
+                        if (Int32XmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Int32 DirectionalRotationXYParse,
+                            errorMask: errorMask))
+                        {
+                            item.DirectionalRotationXY = DirectionalRotationXYParse;
+                        }
+                        else
+                        {
+                            item.DirectionalRotationXY = default(Int32);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "DirectionalRotationZ":
+                    try
+                    {
+                        errorMask?.PushIndex((int)CellLighting_FieldIndex.DirectionalRotationZ);
+                        if (Int32XmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Int32 DirectionalRotationZParse,
+                            errorMask: errorMask))
+                        {
+                            item.DirectionalRotationZ = DirectionalRotationZParse;
+                        }
+                        else
+                        {
+                            item.DirectionalRotationZ = default(Int32);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "DirectionalFade":
+                    try
+                    {
+                        errorMask?.PushIndex((int)CellLighting_FieldIndex.DirectionalFade);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Single DirectionalFadeParse,
+                            errorMask: errorMask))
+                        {
+                            item.DirectionalFade = DirectionalFadeParse;
+                        }
+                        else
+                        {
+                            item.DirectionalFade = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "FogClipDistance":
+                    try
+                    {
+                        errorMask?.PushIndex((int)CellLighting_FieldIndex.FogClipDistance);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Single FogClipDistanceParse,
+                            errorMask: errorMask))
+                        {
+                            item.FogClipDistance = FogClipDistanceParse;
+                        }
+                        else
+                        {
+                            item.FogClipDistance = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                default:
+                    break;
             }
         }
 

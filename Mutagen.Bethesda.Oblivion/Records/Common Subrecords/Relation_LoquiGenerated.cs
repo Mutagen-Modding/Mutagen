@@ -87,8 +87,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> IEqualsMask<Relation>.GetEqualsMask(Relation rhs) => RelationCommon.GetEqualsMask(this, rhs);
-        IMask<bool> IEqualsMask<IRelationGetter>.GetEqualsMask(IRelationGetter rhs) => RelationCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<Relation>.GetEqualsMask(Relation rhs, EqualsMaskHelper.Include include) => RelationCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<IRelationGetter>.GetEqualsMask(IRelationGetter rhs, EqualsMaskHelper.Include include) => RelationCommon.GetEqualsMask(this, rhs, include);
         #region To String
         public string ToString(
             string name = null,
@@ -176,7 +176,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 foreach (var elem in node.Elements())
                 {
-                    Fill_Xml_Internal(
+                    RelationCommon.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -490,53 +490,6 @@ namespace Mutagen.Bethesda.Oblivion
                 translationMask: translationMask);
         }
         #endregion
-
-        protected static void Fill_Xml_Internal(
-            Relation item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            switch (name)
-            {
-                case "Faction":
-                    FormKeyXmlTranslation.Instance.ParseInto(
-                        node: node,
-                        item: item.Faction_Property,
-                        fieldIndex: (int)Relation_FieldIndex.Faction,
-                        errorMask: errorMask);
-                    break;
-                case "Modifier":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Relation_FieldIndex.Modifier);
-                        if (Int32XmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Int32 ModifierParse,
-                            errorMask: errorMask))
-                        {
-                            item.Modifier = ModifierParse;
-                        }
-                        else
-                        {
-                            item.Modifier = default(Int32);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
 
         #endregion
 
@@ -1453,17 +1406,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static Relation_Mask<bool> GetEqualsMask(
             this IRelationGetter item,
-            IRelationGetter rhs)
+            IRelationGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new Relation_Mask<bool>();
-            FillEqualsMask(item, rhs, ret);
+            FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
             return ret;
         }
 
         public static void FillEqualsMask(
             IRelationGetter item,
             IRelationGetter rhs,
-            Relation_Mask<bool> ret)
+            Relation_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
             ret.Faction = item.Faction_Property.FormKey == rhs.Faction_Property.FormKey;
@@ -1566,7 +1525,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         public static void WriteToNode_Xml(
-            IRelationGetter item,
+            this IRelationGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1588,6 +1547,78 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item.Modifier,
                     fieldIndex: (int)Relation_FieldIndex.Modifier,
                     errorMask: errorMask);
+            }
+        }
+
+        public static void FillPublic_Xml(
+            this Relation item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    RelationCommon.FillPublicElement_Xml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+
+        public static void FillPublicElement_Xml(
+            this Relation item,
+            XElement node,
+            string name,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            switch (name)
+            {
+                case "Faction":
+                    FormKeyXmlTranslation.Instance.ParseInto(
+                        node: node,
+                        item: item.Faction_Property,
+                        fieldIndex: (int)Relation_FieldIndex.Faction,
+                        errorMask: errorMask);
+                    break;
+                case "Modifier":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Relation_FieldIndex.Modifier);
+                        if (Int32XmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Int32 ModifierParse,
+                            errorMask: errorMask))
+                        {
+                            item.Modifier = ModifierParse;
+                        }
+                        else
+                        {
+                            item.Modifier = default(Int32);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                default:
+                    break;
             }
         }
 

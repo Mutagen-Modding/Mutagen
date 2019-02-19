@@ -117,8 +117,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> IEqualsMask<Armor>.GetEqualsMask(Armor rhs) => ArmorCommon.GetEqualsMask(this, rhs);
-        IMask<bool> IEqualsMask<IArmorGetter>.GetEqualsMask(IArmorGetter rhs) => ArmorCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<Armor>.GetEqualsMask(Armor rhs, EqualsMaskHelper.Include include) => ArmorCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<IArmorGetter>.GetEqualsMask(IArmorGetter rhs, EqualsMaskHelper.Include include) => ArmorCommon.GetEqualsMask(this, rhs, include);
         #region To String
         public string ToString(
             string name = null,
@@ -212,7 +212,13 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 foreach (var elem in node.Elements())
                 {
-                    Fill_Xml_Internal(
+                    FillPrivateElement_Xml(
+                        item: ret,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                    ArmorCommon.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -588,7 +594,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        protected static void Fill_Xml_Internal(
+        protected static void FillPrivateElement_Xml(
             Armor item,
             XElement node,
             string name,
@@ -597,112 +603,8 @@ namespace Mutagen.Bethesda.Oblivion
         {
             switch (name)
             {
-                case "ArmorValue":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Armor_FieldIndex.ArmorValue);
-                        if (FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Single ArmorValueParse,
-                            errorMask: errorMask))
-                        {
-                            item.ArmorValue = ArmorValueParse;
-                        }
-                        else
-                        {
-                            item.ArmorValue = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Value":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Armor_FieldIndex.Value);
-                        if (UInt32XmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out UInt32 ValueParse,
-                            errorMask: errorMask))
-                        {
-                            item.Value = ValueParse;
-                        }
-                        else
-                        {
-                            item.Value = default(UInt32);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Health":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Armor_FieldIndex.Health);
-                        if (UInt32XmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out UInt32 HealthParse,
-                            errorMask: errorMask))
-                        {
-                            item.Health = HealthParse;
-                        }
-                        else
-                        {
-                            item.Health = default(UInt32);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Weight":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Armor_FieldIndex.Weight);
-                        if (FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Single WeightParse,
-                            errorMask: errorMask))
-                        {
-                            item.Weight = WeightParse;
-                        }
-                        else
-                        {
-                            item.Weight = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
                 default:
-                    ClothingAbstract.Fill_Xml_Internal(
+                    ClothingAbstract.FillPrivateElement_Xml(
                         item: item,
                         node: node,
                         name: name,
@@ -1843,23 +1745,29 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static Armor_Mask<bool> GetEqualsMask(
             this IArmorGetter item,
-            IArmorGetter rhs)
+            IArmorGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new Armor_Mask<bool>();
-            FillEqualsMask(item, rhs, ret);
+            FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
             return ret;
         }
 
         public static void FillEqualsMask(
             IArmorGetter item,
             IArmorGetter rhs,
-            Armor_Mask<bool> ret)
+            Armor_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.ArmorValue = item.ArmorValue == rhs.ArmorValue;
+            ret.ArmorValue = item.ArmorValue.EqualsWithin(rhs.ArmorValue);
             ret.Value = item.Value == rhs.Value;
             ret.Health = item.Health == rhs.Health;
-            ret.Weight = item.Weight == rhs.Weight;
+            ret.Weight = item.Weight.EqualsWithin(rhs.Weight);
             ClothingAbstractCommon.FillEqualsMask(item, rhs, ret);
         }
 
@@ -2068,7 +1976,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         public static void WriteToNode_Xml(
-            IArmorGetter item,
+            this IArmorGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -2113,6 +2021,155 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item.Weight,
                     fieldIndex: (int)Armor_FieldIndex.Weight,
                     errorMask: errorMask);
+            }
+        }
+
+        public static void FillPublic_Xml(
+            this Armor item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    ArmorCommon.FillPublicElement_Xml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+
+        public static void FillPublicElement_Xml(
+            this Armor item,
+            XElement node,
+            string name,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            switch (name)
+            {
+                case "ArmorValue":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Armor_FieldIndex.ArmorValue);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Single ArmorValueParse,
+                            errorMask: errorMask))
+                        {
+                            item.ArmorValue = ArmorValueParse;
+                        }
+                        else
+                        {
+                            item.ArmorValue = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Value":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Armor_FieldIndex.Value);
+                        if (UInt32XmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out UInt32 ValueParse,
+                            errorMask: errorMask))
+                        {
+                            item.Value = ValueParse;
+                        }
+                        else
+                        {
+                            item.Value = default(UInt32);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Health":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Armor_FieldIndex.Health);
+                        if (UInt32XmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out UInt32 HealthParse,
+                            errorMask: errorMask))
+                        {
+                            item.Health = HealthParse;
+                        }
+                        else
+                        {
+                            item.Health = default(UInt32);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Weight":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Armor_FieldIndex.Weight);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Single WeightParse,
+                            errorMask: errorMask))
+                        {
+                            item.Weight = WeightParse;
+                        }
+                        else
+                        {
+                            item.Weight = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                default:
+                    ClothingAbstractCommon.FillPublicElement_Xml(
+                        item: item,
+                        node: node,
+                        name: name,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                    break;
             }
         }
 

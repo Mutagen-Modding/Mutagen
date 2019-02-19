@@ -27,17 +27,21 @@ namespace Mutagen.Bethesda.Oblivion
             int counter,
             ErrorMaskBuilder errorMask)
         {
-            var subDir = Path.Combine(dir.Value.Path, $"Cells/{this.BlockNumber}");
+            var subDir = Path.Combine(dir.Value.Path, $"{this.BlockNumber}");
             Directory.CreateDirectory(subDir);
+            this.Write_Xml(
+                Path.Combine(subDir, "Group.xml"),
+                errorMask: errorMask,
+                translationMask: GroupExt.XmlFolderTranslationCrystal);
             int blockCounter = 0;
             foreach (var item in this.Items)
             {
-                using (errorMask.PushIndex(blockCounter++))
+                using (errorMask.PushIndex(blockCounter))
                 {
                     try
                     {
                         item.Write_Xml_Folder(
-                            path: subDir,
+                            path: Path.Combine(subDir, $"{blockCounter.ToString()}.xml"),
                             errorMask: errorMask);
                     }
                     catch (Exception ex)
@@ -46,6 +50,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask.ReportException(ex);
                     }
                 }
+                blockCounter++;
             }
         }
 
@@ -54,6 +59,40 @@ namespace Mutagen.Bethesda.Oblivion
             var ret = new CellBlock();
             ret.CopyFieldsFrom(this, duplicateMask);
             ret.Items.SetTo(this.Items.Select(i => (CellSubBlock)i.Duplicate(getNextFormKey, duplicatedRecordTracker)));
+            return ret;
+        }
+
+        public static CellBlock Create_XmlFolder(
+            string path,
+            ErrorMaskBuilder errorMask)
+        {
+            CellBlock ret = new CellBlock();
+            var groupPath = Path.Combine(path, $"Group.xml");
+            if (File.Exists(groupPath))
+            {
+                XElement elem = XElement.Load(groupPath);
+                ret.FillPublic_Xml(
+                    elem,
+                    errorMask,
+                    translationMask: GroupExt.XmlFolderTranslationCrystal);
+            }
+            var dir = new DirectoryPath(path);
+            foreach (var f in dir.EnumerateFiles(recursive: false)
+                .SelectWhere(subDir =>
+                {
+                    if (int.TryParse(subDir.NameWithoutExtension, out var i))
+                    {
+                        return TryGet<(int Index, FilePath File)>.Succeed((i, subDir));
+                    }
+                    else
+                    {
+                        return TryGet<(int Index, FilePath File)>.Failure;
+                    }
+                })
+                .OrderBy(i => i.Index))
+            {
+                ret.Items.Add(CellSubBlock.Create_Xml_Folder(f.File, f.Index));
+            }
             return ret;
         }
     }

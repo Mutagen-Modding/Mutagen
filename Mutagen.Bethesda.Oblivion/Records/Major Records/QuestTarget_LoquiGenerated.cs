@@ -111,8 +111,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> IEqualsMask<QuestTarget>.GetEqualsMask(QuestTarget rhs) => QuestTargetCommon.GetEqualsMask(this, rhs);
-        IMask<bool> IEqualsMask<IQuestTargetGetter>.GetEqualsMask(IQuestTargetGetter rhs) => QuestTargetCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<QuestTarget>.GetEqualsMask(QuestTarget rhs, EqualsMaskHelper.Include include) => QuestTargetCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<IQuestTargetGetter>.GetEqualsMask(IQuestTargetGetter rhs, EqualsMaskHelper.Include include) => QuestTargetCommon.GetEqualsMask(this, rhs, include);
         #region To String
         public string ToString(
             string name = null,
@@ -209,7 +209,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 foreach (var elem in node.Elements())
                 {
-                    Fill_Xml_Internal(
+                    QuestTargetCommon.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -523,81 +523,6 @@ namespace Mutagen.Bethesda.Oblivion
                 translationMask: translationMask);
         }
         #endregion
-
-        protected static void Fill_Xml_Internal(
-            QuestTarget item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            switch (name)
-            {
-                case "Target":
-                    FormKeyXmlTranslation.Instance.ParseInto(
-                        node: node,
-                        item: item.Target_Property,
-                        fieldIndex: (int)QuestTarget_FieldIndex.Target,
-                        errorMask: errorMask);
-                    break;
-                case "Flags":
-                    try
-                    {
-                        errorMask?.PushIndex((int)QuestTarget_FieldIndex.Flags);
-                        if (EnumXmlTranslation<QuestTarget.Flag>.Instance.Parse(
-                            node: node,
-                            item: out QuestTarget.Flag FlagsParse,
-                            errorMask: errorMask))
-                        {
-                            item.Flags = FlagsParse;
-                        }
-                        else
-                        {
-                            item.Flags = default(QuestTarget.Flag);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Conditions":
-                    try
-                    {
-                        errorMask?.PushIndex((int)QuestTarget_FieldIndex.Conditions);
-                        if (ListXmlTranslation<Condition>.Instance.Parse(
-                            node: node,
-                            enumer: out var ConditionsItem,
-                            transl: LoquiXmlTranslation<Condition>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.Conditions.SetTo(ConditionsItem);
-                        }
-                        else
-                        {
-                            item.Conditions.Unset();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
 
         #endregion
 
@@ -1653,46 +1578,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static QuestTarget_Mask<bool> GetEqualsMask(
             this IQuestTargetGetter item,
-            IQuestTargetGetter rhs)
+            IQuestTargetGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new QuestTarget_Mask<bool>();
-            FillEqualsMask(item, rhs, ret);
+            FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
             return ret;
         }
 
         public static void FillEqualsMask(
             IQuestTargetGetter item,
             IQuestTargetGetter rhs,
-            QuestTarget_Mask<bool> ret)
+            QuestTarget_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
             ret.Target = item.Target_Property.FormKey == rhs.Target_Property.FormKey;
             ret.Flags = item.Flags == rhs.Flags;
-            if (item.Conditions.HasBeenSet == rhs.Conditions.HasBeenSet)
-            {
-                if (item.Conditions.HasBeenSet)
-                {
-                    ret.Conditions = new MaskItem<bool, IEnumerable<MaskItem<bool, Condition_Mask<bool>>>>();
-                    ret.Conditions.Specific = item.Conditions.SelectAgainst<Condition, MaskItem<bool, Condition_Mask<bool>>>(rhs.Conditions, ((l, r) =>
-                    {
-                        MaskItem<bool, Condition_Mask<bool>> itemRet;
-                        itemRet = l.LoquiEqualsHelper(r, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
-                        return itemRet;
-                    }
-                    ), out ret.Conditions.Overall);
-                    ret.Conditions.Overall = ret.Conditions.Overall && ret.Conditions.Specific.All((b) => b.Overall);
-                }
-                else
-                {
-                    ret.Conditions = new MaskItem<bool, IEnumerable<MaskItem<bool, Condition_Mask<bool>>>>();
-                    ret.Conditions.Overall = true;
-                }
-            }
-            else
-            {
-                ret.Conditions = new MaskItem<bool, IEnumerable<MaskItem<bool, Condition_Mask<bool>>>>();
-                ret.Conditions.Overall = false;
-            }
+            ret.Conditions = item.Conditions.CollectionEqualsHelper(
+                rhs.Conditions,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
         }
 
         public static string ToString(
@@ -1765,7 +1675,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             var ret = new QuestTarget_Mask<bool>();
             ret.Target = true;
             ret.Flags = true;
-            ret.Conditions = new MaskItem<bool, IEnumerable<MaskItem<bool, Condition_Mask<bool>>>>(item.Conditions.HasBeenSet, item.Conditions.Select((i) => new MaskItem<bool, Condition_Mask<bool>>(true, i.GetHasBeenSetMask())));
+            ret.Conditions = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Condition_Mask<bool>>>>(item.Conditions.HasBeenSet, item.Conditions.WithIndex().Select((i) => new MaskItemIndexed<bool, Condition_Mask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
             return ret;
         }
 
@@ -1811,7 +1721,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         public static void WriteToNode_Xml(
-            IQuestTargetGetter item,
+            this IQuestTargetGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1854,6 +1764,106 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             translationMask: listTranslMask);
                     }
                     );
+            }
+        }
+
+        public static void FillPublic_Xml(
+            this QuestTarget item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    QuestTargetCommon.FillPublicElement_Xml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+
+        public static void FillPublicElement_Xml(
+            this QuestTarget item,
+            XElement node,
+            string name,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            switch (name)
+            {
+                case "Target":
+                    FormKeyXmlTranslation.Instance.ParseInto(
+                        node: node,
+                        item: item.Target_Property,
+                        fieldIndex: (int)QuestTarget_FieldIndex.Target,
+                        errorMask: errorMask);
+                    break;
+                case "Flags":
+                    try
+                    {
+                        errorMask?.PushIndex((int)QuestTarget_FieldIndex.Flags);
+                        if (EnumXmlTranslation<QuestTarget.Flag>.Instance.Parse(
+                            node: node,
+                            item: out QuestTarget.Flag FlagsParse,
+                            errorMask: errorMask))
+                        {
+                            item.Flags = FlagsParse;
+                        }
+                        else
+                        {
+                            item.Flags = default(QuestTarget.Flag);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Conditions":
+                    try
+                    {
+                        errorMask?.PushIndex((int)QuestTarget_FieldIndex.Conditions);
+                        if (ListXmlTranslation<Condition>.Instance.Parse(
+                            node: node,
+                            enumer: out var ConditionsItem,
+                            transl: LoquiXmlTranslation<Condition>.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.Conditions.SetTo(ConditionsItem);
+                        }
+                        else
+                        {
+                            item.Conditions.Unset();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                default:
+                    break;
             }
         }
 
@@ -1957,14 +1967,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             this.Target = initialValue;
             this.Flags = initialValue;
-            this.Conditions = new MaskItem<T, IEnumerable<MaskItem<T, Condition_Mask<T>>>>(initialValue, null);
+            this.Conditions = new MaskItem<T, IEnumerable<MaskItemIndexed<T, Condition_Mask<T>>>>(initialValue, null);
         }
         #endregion
 
         #region Members
         public T Target;
         public T Flags;
-        public MaskItem<T, IEnumerable<MaskItem<T, Condition_Mask<T>>>> Conditions;
+        public MaskItem<T, IEnumerable<MaskItemIndexed<T, Condition_Mask<T>>>> Conditions;
         #endregion
 
         #region Equals
@@ -2028,22 +2038,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             obj.Flags = eval(this.Flags);
             if (Conditions != null)
             {
-                obj.Conditions = new MaskItem<R, IEnumerable<MaskItem<R, Condition_Mask<R>>>>();
+                obj.Conditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition_Mask<R>>>>();
                 obj.Conditions.Overall = eval(this.Conditions.Overall);
                 if (Conditions.Specific != null)
                 {
-                    List<MaskItem<R, Condition_Mask<R>>> l = new List<MaskItem<R, Condition_Mask<R>>>();
+                    List<MaskItemIndexed<R, Condition_Mask<R>>> l = new List<MaskItemIndexed<R, Condition_Mask<R>>>();
                     obj.Conditions.Specific = l;
-                    foreach (var item in Conditions.Specific)
+                    foreach (var item in Conditions.Specific.WithIndex())
                     {
-                        MaskItem<R, Condition_Mask<R>> mask = default(MaskItem<R, Condition_Mask<R>>);
-                        if (item != null)
+                        MaskItemIndexed<R, Condition_Mask<R>> mask = default;
+                        mask.Index = item.Index;
+                        if (item.Item != null)
                         {
-                            mask = new MaskItem<R, Condition_Mask<R>>();
-                            mask.Overall = eval(item.Overall);
-                            if (item.Specific != null)
+                            mask = new MaskItemIndexed<R, Condition_Mask<R>>(item.Item.Index);
+                            mask.Overall = eval(item.Item.Overall);
+                            if (item.Item.Specific != null)
                             {
-                                mask.Specific = item.Specific.Translate(eval);
+                                mask.Specific = item.Item.Specific.Translate(eval);
                             }
                         }
                         l.Add(mask);

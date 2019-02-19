@@ -136,8 +136,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> IEqualsMask<RaceStats>.GetEqualsMask(RaceStats rhs) => RaceStatsCommon.GetEqualsMask(this, rhs);
-        IMask<bool> IEqualsMask<IRaceStatsGetter>.GetEqualsMask(IRaceStatsGetter rhs) => RaceStatsCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<RaceStats>.GetEqualsMask(RaceStats rhs, EqualsMaskHelper.Include include) => RaceStatsCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<IRaceStatsGetter>.GetEqualsMask(IRaceStatsGetter rhs, EqualsMaskHelper.Include include) => RaceStatsCommon.GetEqualsMask(this, rhs, include);
         #region To String
         public string ToString(
             string name = null,
@@ -237,7 +237,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 foreach (var elem in node.Elements())
                 {
-                    Fill_Xml_Internal(
+                    RaceStatsCommon.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -551,228 +551,6 @@ namespace Mutagen.Bethesda.Oblivion
                 translationMask: translationMask);
         }
         #endregion
-
-        protected static void Fill_Xml_Internal(
-            RaceStats item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            switch (name)
-            {
-                case "Strength":
-                    try
-                    {
-                        errorMask?.PushIndex((int)RaceStats_FieldIndex.Strength);
-                        if (ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Byte StrengthParse,
-                            errorMask: errorMask))
-                        {
-                            item.Strength = StrengthParse;
-                        }
-                        else
-                        {
-                            item.Strength = default(Byte);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Intelligence":
-                    try
-                    {
-                        errorMask?.PushIndex((int)RaceStats_FieldIndex.Intelligence);
-                        if (ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Byte IntelligenceParse,
-                            errorMask: errorMask))
-                        {
-                            item.Intelligence = IntelligenceParse;
-                        }
-                        else
-                        {
-                            item.Intelligence = default(Byte);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Willpower":
-                    try
-                    {
-                        errorMask?.PushIndex((int)RaceStats_FieldIndex.Willpower);
-                        if (ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Byte WillpowerParse,
-                            errorMask: errorMask))
-                        {
-                            item.Willpower = WillpowerParse;
-                        }
-                        else
-                        {
-                            item.Willpower = default(Byte);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Agility":
-                    try
-                    {
-                        errorMask?.PushIndex((int)RaceStats_FieldIndex.Agility);
-                        if (ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Byte AgilityParse,
-                            errorMask: errorMask))
-                        {
-                            item.Agility = AgilityParse;
-                        }
-                        else
-                        {
-                            item.Agility = default(Byte);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Speed":
-                    try
-                    {
-                        errorMask?.PushIndex((int)RaceStats_FieldIndex.Speed);
-                        if (ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Byte SpeedParse,
-                            errorMask: errorMask))
-                        {
-                            item.Speed = SpeedParse;
-                        }
-                        else
-                        {
-                            item.Speed = default(Byte);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Endurance":
-                    try
-                    {
-                        errorMask?.PushIndex((int)RaceStats_FieldIndex.Endurance);
-                        if (ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Byte EnduranceParse,
-                            errorMask: errorMask))
-                        {
-                            item.Endurance = EnduranceParse;
-                        }
-                        else
-                        {
-                            item.Endurance = default(Byte);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Personality":
-                    try
-                    {
-                        errorMask?.PushIndex((int)RaceStats_FieldIndex.Personality);
-                        if (ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Byte PersonalityParse,
-                            errorMask: errorMask))
-                        {
-                            item.Personality = PersonalityParse;
-                        }
-                        else
-                        {
-                            item.Personality = default(Byte);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Luck":
-                    try
-                    {
-                        errorMask?.PushIndex((int)RaceStats_FieldIndex.Luck);
-                        if (ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Byte LuckParse,
-                            errorMask: errorMask))
-                        {
-                            item.Luck = LuckParse;
-                        }
-                        else
-                        {
-                            item.Luck = default(Byte);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
 
         #endregion
 
@@ -2117,17 +1895,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static RaceStats_Mask<bool> GetEqualsMask(
             this IRaceStatsGetter item,
-            IRaceStatsGetter rhs)
+            IRaceStatsGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new RaceStats_Mask<bool>();
-            FillEqualsMask(item, rhs, ret);
+            FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
             return ret;
         }
 
         public static void FillEqualsMask(
             IRaceStatsGetter item,
             IRaceStatsGetter rhs,
-            RaceStats_Mask<bool> ret)
+            RaceStats_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
             ret.Strength = item.Strength == rhs.Strength;
@@ -2266,7 +2050,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         public static void WriteToNode_Xml(
-            IRaceStatsGetter item,
+            this IRaceStatsGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -2342,6 +2126,253 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item.Luck,
                     fieldIndex: (int)RaceStats_FieldIndex.Luck,
                     errorMask: errorMask);
+            }
+        }
+
+        public static void FillPublic_Xml(
+            this RaceStats item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    RaceStatsCommon.FillPublicElement_Xml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+
+        public static void FillPublicElement_Xml(
+            this RaceStats item,
+            XElement node,
+            string name,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            switch (name)
+            {
+                case "Strength":
+                    try
+                    {
+                        errorMask?.PushIndex((int)RaceStats_FieldIndex.Strength);
+                        if (ByteXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Byte StrengthParse,
+                            errorMask: errorMask))
+                        {
+                            item.Strength = StrengthParse;
+                        }
+                        else
+                        {
+                            item.Strength = default(Byte);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Intelligence":
+                    try
+                    {
+                        errorMask?.PushIndex((int)RaceStats_FieldIndex.Intelligence);
+                        if (ByteXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Byte IntelligenceParse,
+                            errorMask: errorMask))
+                        {
+                            item.Intelligence = IntelligenceParse;
+                        }
+                        else
+                        {
+                            item.Intelligence = default(Byte);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Willpower":
+                    try
+                    {
+                        errorMask?.PushIndex((int)RaceStats_FieldIndex.Willpower);
+                        if (ByteXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Byte WillpowerParse,
+                            errorMask: errorMask))
+                        {
+                            item.Willpower = WillpowerParse;
+                        }
+                        else
+                        {
+                            item.Willpower = default(Byte);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Agility":
+                    try
+                    {
+                        errorMask?.PushIndex((int)RaceStats_FieldIndex.Agility);
+                        if (ByteXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Byte AgilityParse,
+                            errorMask: errorMask))
+                        {
+                            item.Agility = AgilityParse;
+                        }
+                        else
+                        {
+                            item.Agility = default(Byte);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Speed":
+                    try
+                    {
+                        errorMask?.PushIndex((int)RaceStats_FieldIndex.Speed);
+                        if (ByteXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Byte SpeedParse,
+                            errorMask: errorMask))
+                        {
+                            item.Speed = SpeedParse;
+                        }
+                        else
+                        {
+                            item.Speed = default(Byte);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Endurance":
+                    try
+                    {
+                        errorMask?.PushIndex((int)RaceStats_FieldIndex.Endurance);
+                        if (ByteXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Byte EnduranceParse,
+                            errorMask: errorMask))
+                        {
+                            item.Endurance = EnduranceParse;
+                        }
+                        else
+                        {
+                            item.Endurance = default(Byte);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Personality":
+                    try
+                    {
+                        errorMask?.PushIndex((int)RaceStats_FieldIndex.Personality);
+                        if (ByteXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Byte PersonalityParse,
+                            errorMask: errorMask))
+                        {
+                            item.Personality = PersonalityParse;
+                        }
+                        else
+                        {
+                            item.Personality = default(Byte);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Luck":
+                    try
+                    {
+                        errorMask?.PushIndex((int)RaceStats_FieldIndex.Luck);
+                        if (ByteXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Byte LuckParse,
+                            errorMask: errorMask))
+                        {
+                            item.Luck = LuckParse;
+                        }
+                        else
+                        {
+                            item.Luck = default(Byte);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                default:
+                    break;
             }
         }
 

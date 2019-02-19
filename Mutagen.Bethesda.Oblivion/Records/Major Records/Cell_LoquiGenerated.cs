@@ -407,8 +407,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> IEqualsMask<Cell>.GetEqualsMask(Cell rhs) => CellCommon.GetEqualsMask(this, rhs);
-        IMask<bool> IEqualsMask<ICellGetter>.GetEqualsMask(ICellGetter rhs) => CellCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<Cell>.GetEqualsMask(Cell rhs, EqualsMaskHelper.Include include) => CellCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<ICellGetter>.GetEqualsMask(ICellGetter rhs, EqualsMaskHelper.Include include) => CellCommon.GetEqualsMask(this, rhs, include);
         #region To String
         public string ToString(
             string name = null,
@@ -455,7 +455,7 @@ namespace Mutagen.Bethesda.Oblivion
             if (Grid_IsSet != rhs.Grid_IsSet) return false;
             if (Grid_IsSet)
             {
-                if (this.Grid != rhs.Grid) return false;
+                if (!this.Grid.Equals(rhs.Grid)) return false;
             }
             if (Lighting_IsSet != rhs.Lighting_IsSet) return false;
             if (Lighting_IsSet)
@@ -647,7 +647,13 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 foreach (var elem in node.Elements())
                 {
-                    Fill_Xml_Internal(
+                    FillPrivateElement_Xml(
+                        item: ret,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                    CellCommon.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -991,7 +997,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        protected static void Fill_Xml_Internal(
+        protected static void FillPrivateElement_Xml(
             Cell item,
             XElement node,
             string name,
@@ -1000,385 +1006,8 @@ namespace Mutagen.Bethesda.Oblivion
         {
             switch (name)
             {
-                case "Name":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Cell_FieldIndex.Name);
-                        if (StringXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out String NameParse,
-                            errorMask: errorMask))
-                        {
-                            item.Name = NameParse;
-                        }
-                        else
-                        {
-                            item.Name = default(String);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Flags":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Cell_FieldIndex.Flags);
-                        if (EnumXmlTranslation<Cell.Flag>.Instance.Parse(
-                            node: node,
-                            item: out Cell.Flag FlagsParse,
-                            errorMask: errorMask))
-                        {
-                            item.Flags = FlagsParse;
-                        }
-                        else
-                        {
-                            item.Flags = default(Cell.Flag);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Grid":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Cell_FieldIndex.Grid);
-                        if (P2IntXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out P2Int GridParse,
-                            errorMask: errorMask))
-                        {
-                            item.Grid = GridParse;
-                        }
-                        else
-                        {
-                            item.Grid = default(P2Int);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Lighting":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Cell_FieldIndex.Lighting);
-                        if (LoquiXmlTranslation<CellLighting>.Instance.Parse(
-                            node: node,
-                            item: out CellLighting LightingParse,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Cell_FieldIndex.Lighting)))
-                        {
-                            item.Lighting = LightingParse;
-                        }
-                        else
-                        {
-                            item.Lighting = default(CellLighting);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Regions":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Cell_FieldIndex.Regions);
-                        if (ListXmlTranslation<FormIDLink<Region>>.Instance.Parse(
-                            node: node,
-                            enumer: out var RegionsItem,
-                            transl: FormKeyXmlTranslation.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.Regions.SetTo(RegionsItem);
-                        }
-                        else
-                        {
-                            item.Regions.Unset();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "MusicType":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Cell_FieldIndex.MusicType);
-                        if (EnumXmlTranslation<MusicType>.Instance.Parse(
-                            node: node,
-                            item: out MusicType MusicTypeParse,
-                            errorMask: errorMask))
-                        {
-                            item.MusicType = MusicTypeParse;
-                        }
-                        else
-                        {
-                            item.MusicType = default(MusicType);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "WaterHeight":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Cell_FieldIndex.WaterHeight);
-                        if (FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Single WaterHeightParse,
-                            errorMask: errorMask))
-                        {
-                            item.WaterHeight = WaterHeightParse;
-                        }
-                        else
-                        {
-                            item.WaterHeight = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Climate":
-                    FormKeyXmlTranslation.Instance.ParseInto(
-                        node: node,
-                        item: item.Climate_Property,
-                        fieldIndex: (int)Cell_FieldIndex.Climate,
-                        errorMask: errorMask);
-                    break;
-                case "Water":
-                    FormKeyXmlTranslation.Instance.ParseInto(
-                        node: node,
-                        item: item.Water_Property,
-                        fieldIndex: (int)Cell_FieldIndex.Water,
-                        errorMask: errorMask);
-                    break;
-                case "Owner":
-                    FormKeyXmlTranslation.Instance.ParseInto(
-                        node: node,
-                        item: item.Owner_Property,
-                        fieldIndex: (int)Cell_FieldIndex.Owner,
-                        errorMask: errorMask);
-                    break;
-                case "FactionRank":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Cell_FieldIndex.FactionRank);
-                        if (Int32XmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Int32 FactionRankParse,
-                            errorMask: errorMask))
-                        {
-                            item.FactionRank = FactionRankParse;
-                        }
-                        else
-                        {
-                            item.FactionRank = default(Int32);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "GlobalVariable":
-                    FormKeyXmlTranslation.Instance.ParseInto(
-                        node: node,
-                        item: item.GlobalVariable_Property,
-                        fieldIndex: (int)Cell_FieldIndex.GlobalVariable,
-                        errorMask: errorMask);
-                    break;
-                case "PathGrid":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Cell_FieldIndex.PathGrid);
-                        if (LoquiXmlTranslation<PathGrid>.Instance.Parse(
-                            node: node,
-                            item: out PathGrid PathGridParse,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Cell_FieldIndex.PathGrid)))
-                        {
-                            item.PathGrid = PathGridParse;
-                        }
-                        else
-                        {
-                            item.PathGrid = default(PathGrid);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Landscape":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Cell_FieldIndex.Landscape);
-                        if (LoquiXmlTranslation<Landscape>.Instance.Parse(
-                            node: node,
-                            item: out Landscape LandscapeParse,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Cell_FieldIndex.Landscape)))
-                        {
-                            item.Landscape = LandscapeParse;
-                        }
-                        else
-                        {
-                            item.Landscape = default(Landscape);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Persistent":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Cell_FieldIndex.Persistent);
-                        if (ListXmlTranslation<IPlaced>.Instance.Parse(
-                            node: node,
-                            enumer: out var PersistentItem,
-                            transl: LoquiXmlTranslation<IPlaced>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.Persistent.SetTo(PersistentItem);
-                        }
-                        else
-                        {
-                            item.Persistent.Unset();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Temporary":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Cell_FieldIndex.Temporary);
-                        if (ListXmlTranslation<IPlaced>.Instance.Parse(
-                            node: node,
-                            enumer: out var TemporaryItem,
-                            transl: LoquiXmlTranslation<IPlaced>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.Temporary.SetTo(TemporaryItem);
-                        }
-                        else
-                        {
-                            item.Temporary.Unset();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "VisibleWhenDistant":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Cell_FieldIndex.VisibleWhenDistant);
-                        if (ListXmlTranslation<IPlaced>.Instance.Parse(
-                            node: node,
-                            enumer: out var VisibleWhenDistantItem,
-                            transl: LoquiXmlTranslation<IPlaced>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.VisibleWhenDistant.SetTo(VisibleWhenDistantItem);
-                        }
-                        else
-                        {
-                            item.VisibleWhenDistant.Unset();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
                 default:
-                    Place.Fill_Xml_Internal(
+                    Place.FillPrivateElement_Xml(
                         item: item,
                         node: node,
                         name: name,
@@ -3780,126 +3409,72 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static Cell_Mask<bool> GetEqualsMask(
             this ICellGetter item,
-            ICellGetter rhs)
+            ICellGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new Cell_Mask<bool>();
-            FillEqualsMask(item, rhs, ret);
+            FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
             return ret;
         }
 
         public static void FillEqualsMask(
             ICellGetter item,
             ICellGetter rhs,
-            Cell_Mask<bool> ret)
+            Cell_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
             ret.Name = item.Name_IsSet == rhs.Name_IsSet && object.Equals(item.Name, rhs.Name);
             ret.Flags = item.Flags_IsSet == rhs.Flags_IsSet && item.Flags == rhs.Flags;
             ret.Grid = item.Grid_IsSet == rhs.Grid_IsSet && item.Grid == rhs.Grid;
-            ret.Lighting = IHasBeenSetExt.LoquiEqualsHelper(item.Lighting_IsSet, rhs.Lighting_IsSet, item.Lighting, rhs.Lighting, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
-            if (item.Regions.HasBeenSet == rhs.Regions.HasBeenSet)
-            {
-                if (item.Regions.HasBeenSet)
-                {
-                    ret.Regions = new MaskItem<bool, IEnumerable<bool>>();
-                    ret.Regions.Specific = item.Regions.SelectAgainst<FormIDLink<Region>, bool>(rhs.Regions, ((l, r) => object.Equals(l, r)), out ret.Regions.Overall);
-                    ret.Regions.Overall = ret.Regions.Overall && ret.Regions.Specific.All((b) => b);
-                }
-                else
-                {
-                    ret.Regions = new MaskItem<bool, IEnumerable<bool>>();
-                    ret.Regions.Overall = true;
-                }
-            }
-            else
-            {
-                ret.Regions = new MaskItem<bool, IEnumerable<bool>>();
-                ret.Regions.Overall = false;
-            }
+            ret.Lighting = EqualsMaskHelper.EqualsHelper(
+                item.Lighting_IsSet,
+                rhs.Lighting_IsSet,
+                item.Lighting,
+                rhs.Lighting,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
+                include);
+            ret.Regions = item.Regions.CollectionEqualsHelper(
+                rhs.Regions,
+                (l, r) => object.Equals(l, r),
+                include);
             ret.MusicType = item.MusicType_IsSet == rhs.MusicType_IsSet && item.MusicType == rhs.MusicType;
-            ret.WaterHeight = item.WaterHeight_IsSet == rhs.WaterHeight_IsSet && item.WaterHeight == rhs.WaterHeight;
+            ret.WaterHeight = item.WaterHeight_IsSet == rhs.WaterHeight_IsSet && item.WaterHeight.EqualsWithin(rhs.WaterHeight);
             ret.Climate = item.Climate_Property.FormKey == rhs.Climate_Property.FormKey;
             ret.Water = item.Water_Property.FormKey == rhs.Water_Property.FormKey;
             ret.Owner = item.Owner_Property.FormKey == rhs.Owner_Property.FormKey;
             ret.FactionRank = item.FactionRank_IsSet == rhs.FactionRank_IsSet && item.FactionRank == rhs.FactionRank;
             ret.GlobalVariable = item.GlobalVariable_Property.FormKey == rhs.GlobalVariable_Property.FormKey;
-            ret.PathGrid = IHasBeenSetExt.LoquiEqualsHelper(item.PathGrid_IsSet, rhs.PathGrid_IsSet, item.PathGrid, rhs.PathGrid, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
-            ret.Landscape = IHasBeenSetExt.LoquiEqualsHelper(item.Landscape_IsSet, rhs.Landscape_IsSet, item.Landscape, rhs.Landscape, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
-            if (item.Persistent.HasBeenSet == rhs.Persistent.HasBeenSet)
-            {
-                if (item.Persistent.HasBeenSet)
-                {
-                    ret.Persistent = new MaskItem<bool, IEnumerable<MaskItem<bool, IMask<bool>>>>();
-                    ret.Persistent.Specific = item.Persistent.SelectAgainst<IPlaced, MaskItem<bool, IMask<bool>>>(rhs.Persistent, ((l, r) =>
-                    {
-                        MaskItem<bool, IMask<bool>> itemRet;
-                        itemRet = l.LoquiEqualsHelper(r, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
-                        return itemRet;
-                    }
-                    ), out ret.Persistent.Overall);
-                    ret.Persistent.Overall = ret.Persistent.Overall && ret.Persistent.Specific.All((b) => b.Overall);
-                }
-                else
-                {
-                    ret.Persistent = new MaskItem<bool, IEnumerable<MaskItem<bool, IMask<bool>>>>();
-                    ret.Persistent.Overall = true;
-                }
-            }
-            else
-            {
-                ret.Persistent = new MaskItem<bool, IEnumerable<MaskItem<bool, IMask<bool>>>>();
-                ret.Persistent.Overall = false;
-            }
-            if (item.Temporary.HasBeenSet == rhs.Temporary.HasBeenSet)
-            {
-                if (item.Temporary.HasBeenSet)
-                {
-                    ret.Temporary = new MaskItem<bool, IEnumerable<MaskItem<bool, IMask<bool>>>>();
-                    ret.Temporary.Specific = item.Temporary.SelectAgainst<IPlaced, MaskItem<bool, IMask<bool>>>(rhs.Temporary, ((l, r) =>
-                    {
-                        MaskItem<bool, IMask<bool>> itemRet;
-                        itemRet = l.LoquiEqualsHelper(r, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
-                        return itemRet;
-                    }
-                    ), out ret.Temporary.Overall);
-                    ret.Temporary.Overall = ret.Temporary.Overall && ret.Temporary.Specific.All((b) => b.Overall);
-                }
-                else
-                {
-                    ret.Temporary = new MaskItem<bool, IEnumerable<MaskItem<bool, IMask<bool>>>>();
-                    ret.Temporary.Overall = true;
-                }
-            }
-            else
-            {
-                ret.Temporary = new MaskItem<bool, IEnumerable<MaskItem<bool, IMask<bool>>>>();
-                ret.Temporary.Overall = false;
-            }
-            if (item.VisibleWhenDistant.HasBeenSet == rhs.VisibleWhenDistant.HasBeenSet)
-            {
-                if (item.VisibleWhenDistant.HasBeenSet)
-                {
-                    ret.VisibleWhenDistant = new MaskItem<bool, IEnumerable<MaskItem<bool, IMask<bool>>>>();
-                    ret.VisibleWhenDistant.Specific = item.VisibleWhenDistant.SelectAgainst<IPlaced, MaskItem<bool, IMask<bool>>>(rhs.VisibleWhenDistant, ((l, r) =>
-                    {
-                        MaskItem<bool, IMask<bool>> itemRet;
-                        itemRet = l.LoquiEqualsHelper(r, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
-                        return itemRet;
-                    }
-                    ), out ret.VisibleWhenDistant.Overall);
-                    ret.VisibleWhenDistant.Overall = ret.VisibleWhenDistant.Overall && ret.VisibleWhenDistant.Specific.All((b) => b.Overall);
-                }
-                else
-                {
-                    ret.VisibleWhenDistant = new MaskItem<bool, IEnumerable<MaskItem<bool, IMask<bool>>>>();
-                    ret.VisibleWhenDistant.Overall = true;
-                }
-            }
-            else
-            {
-                ret.VisibleWhenDistant = new MaskItem<bool, IEnumerable<MaskItem<bool, IMask<bool>>>>();
-                ret.VisibleWhenDistant.Overall = false;
-            }
+            ret.PathGrid = EqualsMaskHelper.EqualsHelper(
+                item.PathGrid_IsSet,
+                rhs.PathGrid_IsSet,
+                item.PathGrid,
+                rhs.PathGrid,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
+                include);
+            ret.Landscape = EqualsMaskHelper.EqualsHelper(
+                item.Landscape_IsSet,
+                rhs.Landscape_IsSet,
+                item.Landscape,
+                rhs.Landscape,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
+                include);
+            ret.Persistent = item.Persistent.CollectionEqualsHelper(
+                rhs.Persistent,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.Temporary = item.Temporary.CollectionEqualsHelper(
+                rhs.Temporary,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.VisibleWhenDistant = item.VisibleWhenDistant.CollectionEqualsHelper(
+                rhs.VisibleWhenDistant,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
             PlaceCommon.FillEqualsMask(item, rhs, ret);
         }
 
@@ -4092,7 +3667,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Flags = item.Flags_IsSet;
             ret.Grid = item.Grid_IsSet;
             ret.Lighting = new MaskItem<bool, CellLighting_Mask<bool>>(item.Lighting_IsSet, CellLightingCommon.GetHasBeenSetMask(item.Lighting));
-            ret.Regions = new MaskItem<bool, IEnumerable<bool>>(item.Regions.HasBeenSet, null);
+            ret.Regions = new MaskItem<bool, IEnumerable<(int, bool)>>(item.Regions.HasBeenSet, null);
             ret.MusicType = item.MusicType_IsSet;
             ret.WaterHeight = item.WaterHeight_IsSet;
             ret.Climate = item.Climate_Property.HasBeenSet;
@@ -4102,9 +3677,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.GlobalVariable = item.GlobalVariable_Property.HasBeenSet;
             ret.PathGrid = new MaskItem<bool, PathGrid_Mask<bool>>(item.PathGrid_IsSet, PathGridCommon.GetHasBeenSetMask(item.PathGrid));
             ret.Landscape = new MaskItem<bool, Landscape_Mask<bool>>(item.Landscape_IsSet, LandscapeCommon.GetHasBeenSetMask(item.Landscape));
-            ret.Persistent = new MaskItem<bool, IEnumerable<MaskItem<bool, IMask<bool>>>>(item.Persistent.HasBeenSet, item.Persistent.Select((i) => new MaskItem<bool, IMask<bool>>(true, i.GetHasBeenSetMask())));
-            ret.Temporary = new MaskItem<bool, IEnumerable<MaskItem<bool, IMask<bool>>>>(item.Temporary.HasBeenSet, item.Temporary.Select((i) => new MaskItem<bool, IMask<bool>>(true, i.GetHasBeenSetMask())));
-            ret.VisibleWhenDistant = new MaskItem<bool, IEnumerable<MaskItem<bool, IMask<bool>>>>(item.VisibleWhenDistant.HasBeenSet, item.VisibleWhenDistant.Select((i) => new MaskItem<bool, IMask<bool>>(true, i.GetHasBeenSetMask())));
+            ret.Persistent = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, IMask<bool>>>>(item.Persistent.HasBeenSet, item.Persistent.WithIndex().Select((i) => new MaskItemIndexed<bool, IMask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            ret.Temporary = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, IMask<bool>>>>(item.Temporary.HasBeenSet, item.Temporary.WithIndex().Select((i) => new MaskItemIndexed<bool, IMask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            ret.VisibleWhenDistant = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, IMask<bool>>>>(item.VisibleWhenDistant.HasBeenSet, item.VisibleWhenDistant.WithIndex().Select((i) => new MaskItemIndexed<bool, IMask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
             return ret;
         }
 
@@ -4200,7 +3775,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         public static void WriteToNode_Xml(
-            ICellGetter item,
+            this ICellGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -4428,6 +4003,428 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
+        public static void FillPublic_Xml(
+            this Cell item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    CellCommon.FillPublicElement_Xml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+
+        public static void FillPublicElement_Xml(
+            this Cell item,
+            XElement node,
+            string name,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            switch (name)
+            {
+                case "Name":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Cell_FieldIndex.Name);
+                        if (StringXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out String NameParse,
+                            errorMask: errorMask))
+                        {
+                            item.Name = NameParse;
+                        }
+                        else
+                        {
+                            item.Name = default(String);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Flags":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Cell_FieldIndex.Flags);
+                        if (EnumXmlTranslation<Cell.Flag>.Instance.Parse(
+                            node: node,
+                            item: out Cell.Flag FlagsParse,
+                            errorMask: errorMask))
+                        {
+                            item.Flags = FlagsParse;
+                        }
+                        else
+                        {
+                            item.Flags = default(Cell.Flag);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Grid":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Cell_FieldIndex.Grid);
+                        if (P2IntXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out P2Int GridParse,
+                            errorMask: errorMask))
+                        {
+                            item.Grid = GridParse;
+                        }
+                        else
+                        {
+                            item.Grid = default(P2Int);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Lighting":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Cell_FieldIndex.Lighting);
+                        if (LoquiXmlTranslation<CellLighting>.Instance.Parse(
+                            node: node,
+                            item: out CellLighting LightingParse,
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)Cell_FieldIndex.Lighting)))
+                        {
+                            item.Lighting = LightingParse;
+                        }
+                        else
+                        {
+                            item.Lighting = default(CellLighting);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Regions":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Cell_FieldIndex.Regions);
+                        if (ListXmlTranslation<FormIDLink<Region>>.Instance.Parse(
+                            node: node,
+                            enumer: out var RegionsItem,
+                            transl: FormKeyXmlTranslation.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.Regions.SetTo(RegionsItem);
+                        }
+                        else
+                        {
+                            item.Regions.Unset();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "MusicType":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Cell_FieldIndex.MusicType);
+                        if (EnumXmlTranslation<MusicType>.Instance.Parse(
+                            node: node,
+                            item: out MusicType MusicTypeParse,
+                            errorMask: errorMask))
+                        {
+                            item.MusicType = MusicTypeParse;
+                        }
+                        else
+                        {
+                            item.MusicType = default(MusicType);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "WaterHeight":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Cell_FieldIndex.WaterHeight);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Single WaterHeightParse,
+                            errorMask: errorMask))
+                        {
+                            item.WaterHeight = WaterHeightParse;
+                        }
+                        else
+                        {
+                            item.WaterHeight = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Climate":
+                    FormKeyXmlTranslation.Instance.ParseInto(
+                        node: node,
+                        item: item.Climate_Property,
+                        fieldIndex: (int)Cell_FieldIndex.Climate,
+                        errorMask: errorMask);
+                    break;
+                case "Water":
+                    FormKeyXmlTranslation.Instance.ParseInto(
+                        node: node,
+                        item: item.Water_Property,
+                        fieldIndex: (int)Cell_FieldIndex.Water,
+                        errorMask: errorMask);
+                    break;
+                case "Owner":
+                    FormKeyXmlTranslation.Instance.ParseInto(
+                        node: node,
+                        item: item.Owner_Property,
+                        fieldIndex: (int)Cell_FieldIndex.Owner,
+                        errorMask: errorMask);
+                    break;
+                case "FactionRank":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Cell_FieldIndex.FactionRank);
+                        if (Int32XmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Int32 FactionRankParse,
+                            errorMask: errorMask))
+                        {
+                            item.FactionRank = FactionRankParse;
+                        }
+                        else
+                        {
+                            item.FactionRank = default(Int32);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "GlobalVariable":
+                    FormKeyXmlTranslation.Instance.ParseInto(
+                        node: node,
+                        item: item.GlobalVariable_Property,
+                        fieldIndex: (int)Cell_FieldIndex.GlobalVariable,
+                        errorMask: errorMask);
+                    break;
+                case "PathGrid":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Cell_FieldIndex.PathGrid);
+                        if (LoquiXmlTranslation<PathGrid>.Instance.Parse(
+                            node: node,
+                            item: out PathGrid PathGridParse,
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)Cell_FieldIndex.PathGrid)))
+                        {
+                            item.PathGrid = PathGridParse;
+                        }
+                        else
+                        {
+                            item.PathGrid = default(PathGrid);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Landscape":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Cell_FieldIndex.Landscape);
+                        if (LoquiXmlTranslation<Landscape>.Instance.Parse(
+                            node: node,
+                            item: out Landscape LandscapeParse,
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)Cell_FieldIndex.Landscape)))
+                        {
+                            item.Landscape = LandscapeParse;
+                        }
+                        else
+                        {
+                            item.Landscape = default(Landscape);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Persistent":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Cell_FieldIndex.Persistent);
+                        if (ListXmlTranslation<IPlaced>.Instance.Parse(
+                            node: node,
+                            enumer: out var PersistentItem,
+                            transl: LoquiXmlTranslation<IPlaced>.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.Persistent.SetTo(PersistentItem);
+                        }
+                        else
+                        {
+                            item.Persistent.Unset();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Temporary":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Cell_FieldIndex.Temporary);
+                        if (ListXmlTranslation<IPlaced>.Instance.Parse(
+                            node: node,
+                            enumer: out var TemporaryItem,
+                            transl: LoquiXmlTranslation<IPlaced>.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.Temporary.SetTo(TemporaryItem);
+                        }
+                        else
+                        {
+                            item.Temporary.Unset();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "VisibleWhenDistant":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Cell_FieldIndex.VisibleWhenDistant);
+                        if (ListXmlTranslation<IPlaced>.Instance.Parse(
+                            node: node,
+                            enumer: out var VisibleWhenDistantItem,
+                            transl: LoquiXmlTranslation<IPlaced>.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.VisibleWhenDistant.SetTo(VisibleWhenDistantItem);
+                        }
+                        else
+                        {
+                            item.VisibleWhenDistant.Unset();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                default:
+                    PlaceCommon.FillPublicElement_Xml(
+                        item: item,
+                        node: node,
+                        name: name,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                    break;
+            }
+        }
+
         #endregion
 
         #region Binary Translation
@@ -4650,7 +4647,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.Flags = initialValue;
             this.Grid = initialValue;
             this.Lighting = new MaskItem<T, CellLighting_Mask<T>>(initialValue, new CellLighting_Mask<T>(initialValue));
-            this.Regions = new MaskItem<T, IEnumerable<T>>(initialValue, null);
+            this.Regions = new MaskItem<T, IEnumerable<(int Index, T Value)>>(initialValue, null);
             this.MusicType = initialValue;
             this.WaterHeight = initialValue;
             this.Climate = initialValue;
@@ -4660,9 +4657,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.GlobalVariable = initialValue;
             this.PathGrid = new MaskItem<T, PathGrid_Mask<T>>(initialValue, new PathGrid_Mask<T>(initialValue));
             this.Landscape = new MaskItem<T, Landscape_Mask<T>>(initialValue, new Landscape_Mask<T>(initialValue));
-            this.Persistent = new MaskItem<T, IEnumerable<MaskItem<T, IMask<T>>>>(initialValue, null);
-            this.Temporary = new MaskItem<T, IEnumerable<MaskItem<T, IMask<T>>>>(initialValue, null);
-            this.VisibleWhenDistant = new MaskItem<T, IEnumerable<MaskItem<T, IMask<T>>>>(initialValue, null);
+            this.Persistent = new MaskItem<T, IEnumerable<MaskItemIndexed<T, IMask<T>>>>(initialValue, null);
+            this.Temporary = new MaskItem<T, IEnumerable<MaskItemIndexed<T, IMask<T>>>>(initialValue, null);
+            this.VisibleWhenDistant = new MaskItem<T, IEnumerable<MaskItemIndexed<T, IMask<T>>>>(initialValue, null);
         }
         #endregion
 
@@ -4671,7 +4668,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public T Flags;
         public T Grid;
         public MaskItem<T, CellLighting_Mask<T>> Lighting { get; set; }
-        public MaskItem<T, IEnumerable<T>> Regions;
+        public MaskItem<T, IEnumerable<(int Index, T Value)>> Regions;
         public T MusicType;
         public T WaterHeight;
         public T Climate;
@@ -4681,9 +4678,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public T GlobalVariable;
         public MaskItem<T, PathGrid_Mask<T>> PathGrid { get; set; }
         public MaskItem<T, Landscape_Mask<T>> Landscape { get; set; }
-        public MaskItem<T, IEnumerable<MaskItem<T, IMask<T>>>> Persistent;
-        public MaskItem<T, IEnumerable<MaskItem<T, IMask<T>>>> Temporary;
-        public MaskItem<T, IEnumerable<MaskItem<T, IMask<T>>>> VisibleWhenDistant;
+        public MaskItem<T, IEnumerable<MaskItemIndexed<T, IMask<T>>>> Persistent;
+        public MaskItem<T, IEnumerable<MaskItemIndexed<T, IMask<T>>>> Temporary;
+        public MaskItem<T, IEnumerable<MaskItemIndexed<T, IMask<T>>>> VisibleWhenDistant;
         #endregion
 
         #region Equals
@@ -4761,7 +4758,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     foreach (var item in this.Regions.Specific)
                     {
-                        if (!eval(item)) return false;
+                        if (!eval(item.Value)) return false;
                     }
                 }
             }
@@ -4847,16 +4844,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (Regions != null)
             {
-                obj.Regions = new MaskItem<R, IEnumerable<R>>();
+                obj.Regions = new MaskItem<R, IEnumerable<(int Index, R Value)>>();
                 obj.Regions.Overall = eval(this.Regions.Overall);
                 if (Regions.Specific != null)
                 {
-                    List<R> l = new List<R>();
+                    List<(int Index, R Item)> l = new List<(int Index, R Item)>();
                     obj.Regions.Specific = l;
-                    foreach (var item in Regions.Specific)
+                    foreach (var item in Regions.Specific.WithIndex())
                     {
-                        R mask = default(R);
-                        mask = eval(item);
+                        (int Index, R Item) mask = default;
+                        mask.Index = item.Index;
+                        mask.Item = eval(item.Item.Value);
                         l.Add(mask);
                     }
                 }
@@ -4888,19 +4886,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (Persistent != null)
             {
-                obj.Persistent = new MaskItem<R, IEnumerable<MaskItem<R, IMask<R>>>>();
+                obj.Persistent = new MaskItem<R, IEnumerable<MaskItemIndexed<R, IMask<R>>>>();
                 obj.Persistent.Overall = eval(this.Persistent.Overall);
                 if (Persistent.Specific != null)
                 {
-                    List<MaskItem<R, IMask<R>>> l = new List<MaskItem<R, IMask<R>>>();
+                    List<MaskItemIndexed<R, IMask<R>>> l = new List<MaskItemIndexed<R, IMask<R>>>();
                     obj.Persistent.Specific = l;
-                    foreach (var item in Persistent.Specific)
+                    foreach (var item in Persistent.Specific.WithIndex())
                     {
-                        MaskItem<R, IMask<R>> mask = default(MaskItem<R, IMask<R>>);
-                        if (item != null)
+                        MaskItemIndexed<R, IMask<R>> mask = default;
+                        mask.Index = item.Index;
+                        if (item.Item != null)
                         {
-                            mask = new MaskItem<R, IMask<R>>();
-                            mask.Overall = eval(item.Overall);
+                            mask = new MaskItemIndexed<R, IMask<R>>(item.Item.Index);
+                            mask.Overall = eval(item.Item.Overall);
                             throw new NotImplementedException();
                         }
                         l.Add(mask);
@@ -4909,19 +4908,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (Temporary != null)
             {
-                obj.Temporary = new MaskItem<R, IEnumerable<MaskItem<R, IMask<R>>>>();
+                obj.Temporary = new MaskItem<R, IEnumerable<MaskItemIndexed<R, IMask<R>>>>();
                 obj.Temporary.Overall = eval(this.Temporary.Overall);
                 if (Temporary.Specific != null)
                 {
-                    List<MaskItem<R, IMask<R>>> l = new List<MaskItem<R, IMask<R>>>();
+                    List<MaskItemIndexed<R, IMask<R>>> l = new List<MaskItemIndexed<R, IMask<R>>>();
                     obj.Temporary.Specific = l;
-                    foreach (var item in Temporary.Specific)
+                    foreach (var item in Temporary.Specific.WithIndex())
                     {
-                        MaskItem<R, IMask<R>> mask = default(MaskItem<R, IMask<R>>);
-                        if (item != null)
+                        MaskItemIndexed<R, IMask<R>> mask = default;
+                        mask.Index = item.Index;
+                        if (item.Item != null)
                         {
-                            mask = new MaskItem<R, IMask<R>>();
-                            mask.Overall = eval(item.Overall);
+                            mask = new MaskItemIndexed<R, IMask<R>>(item.Item.Index);
+                            mask.Overall = eval(item.Item.Overall);
                             throw new NotImplementedException();
                         }
                         l.Add(mask);
@@ -4930,19 +4930,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (VisibleWhenDistant != null)
             {
-                obj.VisibleWhenDistant = new MaskItem<R, IEnumerable<MaskItem<R, IMask<R>>>>();
+                obj.VisibleWhenDistant = new MaskItem<R, IEnumerable<MaskItemIndexed<R, IMask<R>>>>();
                 obj.VisibleWhenDistant.Overall = eval(this.VisibleWhenDistant.Overall);
                 if (VisibleWhenDistant.Specific != null)
                 {
-                    List<MaskItem<R, IMask<R>>> l = new List<MaskItem<R, IMask<R>>>();
+                    List<MaskItemIndexed<R, IMask<R>>> l = new List<MaskItemIndexed<R, IMask<R>>>();
                     obj.VisibleWhenDistant.Specific = l;
-                    foreach (var item in VisibleWhenDistant.Specific)
+                    foreach (var item in VisibleWhenDistant.Specific.WithIndex())
                     {
-                        MaskItem<R, IMask<R>> mask = default(MaskItem<R, IMask<R>>);
-                        if (item != null)
+                        MaskItemIndexed<R, IMask<R>> mask = default;
+                        mask.Index = item.Index;
+                        if (item.Item != null)
                         {
-                            mask = new MaskItem<R, IMask<R>>();
-                            mask.Overall = eval(item.Overall);
+                            mask = new MaskItemIndexed<R, IMask<R>>(item.Item.Index);
+                            mask.Overall = eval(item.Item.Overall);
                             throw new NotImplementedException();
                         }
                         l.Add(mask);
@@ -5148,7 +5149,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Exception Flags;
         public Exception Grid;
         public MaskItem<Exception, CellLighting_ErrorMask> Lighting;
-        public MaskItem<Exception, IEnumerable<Exception>> Regions;
+        public MaskItem<Exception, IEnumerable<(int Index, Exception Value)>> Regions;
         public Exception MusicType;
         public Exception WaterHeight;
         public Exception Climate;
@@ -5226,7 +5227,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     this.Lighting = new MaskItem<Exception, CellLighting_ErrorMask>(ex, null);
                     break;
                 case Cell_FieldIndex.Regions:
-                    this.Regions = new MaskItem<Exception, IEnumerable<Exception>>(ex, null);
+                    this.Regions = new MaskItem<Exception, IEnumerable<(int Index, Exception Value)>>(ex, null);
                     break;
                 case Cell_FieldIndex.MusicType:
                     this.MusicType = ex;
@@ -5288,7 +5289,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     this.Lighting = (MaskItem<Exception, CellLighting_ErrorMask>)obj;
                     break;
                 case Cell_FieldIndex.Regions:
-                    this.Regions = (MaskItem<Exception, IEnumerable<Exception>>)obj;
+                    this.Regions = (MaskItem<Exception, IEnumerable<(int Index, Exception Value)>>)obj;
                     break;
                 case Cell_FieldIndex.MusicType:
                     this.MusicType = (Exception)obj;
@@ -5499,7 +5500,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Flags = this.Flags.Combine(rhs.Flags);
             ret.Grid = this.Grid.Combine(rhs.Grid);
             ret.Lighting = new MaskItem<Exception, CellLighting_ErrorMask>(this.Lighting.Overall.Combine(rhs.Lighting.Overall), ((IErrorMask<CellLighting_ErrorMask>)this.Lighting.Specific).Combine(rhs.Lighting.Specific));
-            ret.Regions = new MaskItem<Exception, IEnumerable<Exception>>(this.Regions.Overall.Combine(rhs.Regions.Overall), new List<Exception>(this.Regions.Specific.And(rhs.Regions.Specific)));
+            ret.Regions = new MaskItem<Exception, IEnumerable<(int Index, Exception Value)>>(this.Regions.Overall.Combine(rhs.Regions.Overall), new List<(int Index, Exception Value)>(this.Regions.Specific.And(rhs.Regions.Specific)));
             ret.MusicType = this.MusicType.Combine(rhs.MusicType);
             ret.WaterHeight = this.WaterHeight.Combine(rhs.WaterHeight);
             ret.Climate = this.Climate.Combine(rhs.Climate);

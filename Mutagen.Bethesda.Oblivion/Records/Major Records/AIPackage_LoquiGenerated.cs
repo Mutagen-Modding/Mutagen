@@ -195,8 +195,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> IEqualsMask<AIPackage>.GetEqualsMask(AIPackage rhs) => AIPackageCommon.GetEqualsMask(this, rhs);
-        IMask<bool> IEqualsMask<IAIPackageGetter>.GetEqualsMask(IAIPackageGetter rhs) => AIPackageCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<AIPackage>.GetEqualsMask(AIPackage rhs, EqualsMaskHelper.Include include) => AIPackageCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<IAIPackageGetter>.GetEqualsMask(IAIPackageGetter rhs, EqualsMaskHelper.Include include) => AIPackageCommon.GetEqualsMask(this, rhs, include);
         #region To String
         public string ToString(
             string name = null,
@@ -322,7 +322,13 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 foreach (var elem in node.Elements())
                 {
-                    Fill_Xml_Internal(
+                    FillPrivateElement_Xml(
+                        item: ret,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                    AIPackageCommon.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -634,7 +640,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        protected static void Fill_Xml_Internal(
+        protected static void FillPrivateElement_Xml(
             AIPackage item,
             XElement node,
             string name,
@@ -643,169 +649,8 @@ namespace Mutagen.Bethesda.Oblivion
         {
             switch (name)
             {
-                case "Flags":
-                    try
-                    {
-                        errorMask?.PushIndex((int)AIPackage_FieldIndex.Flags);
-                        if (EnumXmlTranslation<AIPackage.Flag>.Instance.Parse(
-                            node: node,
-                            item: out AIPackage.Flag FlagsParse,
-                            errorMask: errorMask))
-                        {
-                            item.Flags = FlagsParse;
-                        }
-                        else
-                        {
-                            item.Flags = default(AIPackage.Flag);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "GeneralType":
-                    try
-                    {
-                        errorMask?.PushIndex((int)AIPackage_FieldIndex.GeneralType);
-                        if (EnumXmlTranslation<AIPackage.GeneralTypeEnum>.Instance.Parse(
-                            node: node,
-                            item: out AIPackage.GeneralTypeEnum GeneralTypeParse,
-                            errorMask: errorMask))
-                        {
-                            item.GeneralType = GeneralTypeParse;
-                        }
-                        else
-                        {
-                            item.GeneralType = default(AIPackage.GeneralTypeEnum);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Location":
-                    try
-                    {
-                        errorMask?.PushIndex((int)AIPackage_FieldIndex.Location);
-                        if (LoquiXmlTranslation<AIPackageLocation>.Instance.Parse(
-                            node: node,
-                            item: out AIPackageLocation LocationParse,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)AIPackage_FieldIndex.Location)))
-                        {
-                            item.Location = LocationParse;
-                        }
-                        else
-                        {
-                            item.Location = default(AIPackageLocation);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Schedule":
-                    try
-                    {
-                        errorMask?.PushIndex((int)AIPackage_FieldIndex.Schedule);
-                        if (LoquiXmlTranslation<AIPackageSchedule>.Instance.Parse(
-                            node: node,
-                            item: out AIPackageSchedule ScheduleParse,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)AIPackage_FieldIndex.Schedule)))
-                        {
-                            item.Schedule = ScheduleParse;
-                        }
-                        else
-                        {
-                            item.Schedule = default(AIPackageSchedule);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Target":
-                    try
-                    {
-                        errorMask?.PushIndex((int)AIPackage_FieldIndex.Target);
-                        if (LoquiXmlTranslation<AIPackageTarget>.Instance.Parse(
-                            node: node,
-                            item: out AIPackageTarget TargetParse,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)AIPackage_FieldIndex.Target)))
-                        {
-                            item.Target = TargetParse;
-                        }
-                        else
-                        {
-                            item.Target = default(AIPackageTarget);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Conditions":
-                    try
-                    {
-                        errorMask?.PushIndex((int)AIPackage_FieldIndex.Conditions);
-                        if (ListXmlTranslation<Condition>.Instance.Parse(
-                            node: node,
-                            enumer: out var ConditionsItem,
-                            transl: LoquiXmlTranslation<Condition>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.Conditions.SetTo(ConditionsItem);
-                        }
-                        else
-                        {
-                            item.Conditions.Unset();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
                 default:
-                    MajorRecord.Fill_Xml_Internal(
+                    MajorRecord.FillPrivateElement_Xml(
                         item: item,
                         node: node,
                         name: name,
@@ -2258,49 +2103,52 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static AIPackage_Mask<bool> GetEqualsMask(
             this IAIPackageGetter item,
-            IAIPackageGetter rhs)
+            IAIPackageGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new AIPackage_Mask<bool>();
-            FillEqualsMask(item, rhs, ret);
+            FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
             return ret;
         }
 
         public static void FillEqualsMask(
             IAIPackageGetter item,
             IAIPackageGetter rhs,
-            AIPackage_Mask<bool> ret)
+            AIPackage_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
             ret.Flags = item.Flags == rhs.Flags;
             ret.GeneralType = item.GeneralType == rhs.GeneralType;
-            ret.Location = IHasBeenSetExt.LoquiEqualsHelper(item.Location_IsSet, rhs.Location_IsSet, item.Location, rhs.Location, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
-            ret.Schedule = IHasBeenSetExt.LoquiEqualsHelper(item.Schedule_IsSet, rhs.Schedule_IsSet, item.Schedule, rhs.Schedule, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
-            ret.Target = IHasBeenSetExt.LoquiEqualsHelper(item.Target_IsSet, rhs.Target_IsSet, item.Target, rhs.Target, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
-            if (item.Conditions.HasBeenSet == rhs.Conditions.HasBeenSet)
-            {
-                if (item.Conditions.HasBeenSet)
-                {
-                    ret.Conditions = new MaskItem<bool, IEnumerable<MaskItem<bool, Condition_Mask<bool>>>>();
-                    ret.Conditions.Specific = item.Conditions.SelectAgainst<Condition, MaskItem<bool, Condition_Mask<bool>>>(rhs.Conditions, ((l, r) =>
-                    {
-                        MaskItem<bool, Condition_Mask<bool>> itemRet;
-                        itemRet = l.LoquiEqualsHelper(r, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
-                        return itemRet;
-                    }
-                    ), out ret.Conditions.Overall);
-                    ret.Conditions.Overall = ret.Conditions.Overall && ret.Conditions.Specific.All((b) => b.Overall);
-                }
-                else
-                {
-                    ret.Conditions = new MaskItem<bool, IEnumerable<MaskItem<bool, Condition_Mask<bool>>>>();
-                    ret.Conditions.Overall = true;
-                }
-            }
-            else
-            {
-                ret.Conditions = new MaskItem<bool, IEnumerable<MaskItem<bool, Condition_Mask<bool>>>>();
-                ret.Conditions.Overall = false;
-            }
+            ret.Location = EqualsMaskHelper.EqualsHelper(
+                item.Location_IsSet,
+                rhs.Location_IsSet,
+                item.Location,
+                rhs.Location,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
+                include);
+            ret.Schedule = EqualsMaskHelper.EqualsHelper(
+                item.Schedule_IsSet,
+                rhs.Schedule_IsSet,
+                item.Schedule,
+                rhs.Schedule,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
+                include);
+            ret.Target = EqualsMaskHelper.EqualsHelper(
+                item.Target_IsSet,
+                rhs.Target_IsSet,
+                item.Target,
+                rhs.Target,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
+                include);
+            ret.Conditions = item.Conditions.CollectionEqualsHelper(
+                rhs.Conditions,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
             MajorRecordCommon.FillEqualsMask(item, rhs, ret);
         }
 
@@ -2395,7 +2243,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Location = new MaskItem<bool, AIPackageLocation_Mask<bool>>(item.Location_IsSet, AIPackageLocationCommon.GetHasBeenSetMask(item.Location));
             ret.Schedule = new MaskItem<bool, AIPackageSchedule_Mask<bool>>(item.Schedule_IsSet, AIPackageScheduleCommon.GetHasBeenSetMask(item.Schedule));
             ret.Target = new MaskItem<bool, AIPackageTarget_Mask<bool>>(item.Target_IsSet, AIPackageTargetCommon.GetHasBeenSetMask(item.Target));
-            ret.Conditions = new MaskItem<bool, IEnumerable<MaskItem<bool, Condition_Mask<bool>>>>(item.Conditions.HasBeenSet, item.Conditions.Select((i) => new MaskItem<bool, Condition_Mask<bool>>(true, i.GetHasBeenSetMask())));
+            ret.Conditions = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Condition_Mask<bool>>>>(item.Conditions.HasBeenSet, item.Conditions.WithIndex().Select((i) => new MaskItemIndexed<bool, Condition_Mask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
             return ret;
         }
 
@@ -2466,7 +2314,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         public static void WriteToNode_Xml(
-            IAIPackageGetter item,
+            this IAIPackageGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -2547,6 +2395,212 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             translationMask: listTranslMask);
                     }
                     );
+            }
+        }
+
+        public static void FillPublic_Xml(
+            this AIPackage item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    AIPackageCommon.FillPublicElement_Xml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+
+        public static void FillPublicElement_Xml(
+            this AIPackage item,
+            XElement node,
+            string name,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            switch (name)
+            {
+                case "Flags":
+                    try
+                    {
+                        errorMask?.PushIndex((int)AIPackage_FieldIndex.Flags);
+                        if (EnumXmlTranslation<AIPackage.Flag>.Instance.Parse(
+                            node: node,
+                            item: out AIPackage.Flag FlagsParse,
+                            errorMask: errorMask))
+                        {
+                            item.Flags = FlagsParse;
+                        }
+                        else
+                        {
+                            item.Flags = default(AIPackage.Flag);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "GeneralType":
+                    try
+                    {
+                        errorMask?.PushIndex((int)AIPackage_FieldIndex.GeneralType);
+                        if (EnumXmlTranslation<AIPackage.GeneralTypeEnum>.Instance.Parse(
+                            node: node,
+                            item: out AIPackage.GeneralTypeEnum GeneralTypeParse,
+                            errorMask: errorMask))
+                        {
+                            item.GeneralType = GeneralTypeParse;
+                        }
+                        else
+                        {
+                            item.GeneralType = default(AIPackage.GeneralTypeEnum);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Location":
+                    try
+                    {
+                        errorMask?.PushIndex((int)AIPackage_FieldIndex.Location);
+                        if (LoquiXmlTranslation<AIPackageLocation>.Instance.Parse(
+                            node: node,
+                            item: out AIPackageLocation LocationParse,
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)AIPackage_FieldIndex.Location)))
+                        {
+                            item.Location = LocationParse;
+                        }
+                        else
+                        {
+                            item.Location = default(AIPackageLocation);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Schedule":
+                    try
+                    {
+                        errorMask?.PushIndex((int)AIPackage_FieldIndex.Schedule);
+                        if (LoquiXmlTranslation<AIPackageSchedule>.Instance.Parse(
+                            node: node,
+                            item: out AIPackageSchedule ScheduleParse,
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)AIPackage_FieldIndex.Schedule)))
+                        {
+                            item.Schedule = ScheduleParse;
+                        }
+                        else
+                        {
+                            item.Schedule = default(AIPackageSchedule);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Target":
+                    try
+                    {
+                        errorMask?.PushIndex((int)AIPackage_FieldIndex.Target);
+                        if (LoquiXmlTranslation<AIPackageTarget>.Instance.Parse(
+                            node: node,
+                            item: out AIPackageTarget TargetParse,
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)AIPackage_FieldIndex.Target)))
+                        {
+                            item.Target = TargetParse;
+                        }
+                        else
+                        {
+                            item.Target = default(AIPackageTarget);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Conditions":
+                    try
+                    {
+                        errorMask?.PushIndex((int)AIPackage_FieldIndex.Conditions);
+                        if (ListXmlTranslation<Condition>.Instance.Parse(
+                            node: node,
+                            enumer: out var ConditionsItem,
+                            transl: LoquiXmlTranslation<Condition>.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.Conditions.SetTo(ConditionsItem);
+                        }
+                        else
+                        {
+                            item.Conditions.Unset();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                default:
+                    MajorRecordCommon.FillPublicElement_Xml(
+                        item: item,
+                        node: node,
+                        name: name,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                    break;
             }
         }
 
@@ -2695,7 +2749,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.Location = new MaskItem<T, AIPackageLocation_Mask<T>>(initialValue, new AIPackageLocation_Mask<T>(initialValue));
             this.Schedule = new MaskItem<T, AIPackageSchedule_Mask<T>>(initialValue, new AIPackageSchedule_Mask<T>(initialValue));
             this.Target = new MaskItem<T, AIPackageTarget_Mask<T>>(initialValue, new AIPackageTarget_Mask<T>(initialValue));
-            this.Conditions = new MaskItem<T, IEnumerable<MaskItem<T, Condition_Mask<T>>>>(initialValue, null);
+            this.Conditions = new MaskItem<T, IEnumerable<MaskItemIndexed<T, Condition_Mask<T>>>>(initialValue, null);
         }
         #endregion
 
@@ -2705,7 +2759,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public MaskItem<T, AIPackageLocation_Mask<T>> Location { get; set; }
         public MaskItem<T, AIPackageSchedule_Mask<T>> Schedule { get; set; }
         public MaskItem<T, AIPackageTarget_Mask<T>> Target { get; set; }
-        public MaskItem<T, IEnumerable<MaskItem<T, Condition_Mask<T>>>> Conditions;
+        public MaskItem<T, IEnumerable<MaskItemIndexed<T, Condition_Mask<T>>>> Conditions;
         #endregion
 
         #region Equals
@@ -2821,22 +2875,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (Conditions != null)
             {
-                obj.Conditions = new MaskItem<R, IEnumerable<MaskItem<R, Condition_Mask<R>>>>();
+                obj.Conditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition_Mask<R>>>>();
                 obj.Conditions.Overall = eval(this.Conditions.Overall);
                 if (Conditions.Specific != null)
                 {
-                    List<MaskItem<R, Condition_Mask<R>>> l = new List<MaskItem<R, Condition_Mask<R>>>();
+                    List<MaskItemIndexed<R, Condition_Mask<R>>> l = new List<MaskItemIndexed<R, Condition_Mask<R>>>();
                     obj.Conditions.Specific = l;
-                    foreach (var item in Conditions.Specific)
+                    foreach (var item in Conditions.Specific.WithIndex())
                     {
-                        MaskItem<R, Condition_Mask<R>> mask = default(MaskItem<R, Condition_Mask<R>>);
-                        if (item != null)
+                        MaskItemIndexed<R, Condition_Mask<R>> mask = default;
+                        mask.Index = item.Index;
+                        if (item.Item != null)
                         {
-                            mask = new MaskItem<R, Condition_Mask<R>>();
-                            mask.Overall = eval(item.Overall);
-                            if (item.Specific != null)
+                            mask = new MaskItemIndexed<R, Condition_Mask<R>>(item.Item.Index);
+                            mask.Overall = eval(item.Item.Overall);
+                            if (item.Item.Specific != null)
                             {
-                                mask.Specific = item.Specific.Translate(eval);
+                                mask.Specific = item.Item.Specific.Translate(eval);
                             }
                         }
                         l.Add(mask);

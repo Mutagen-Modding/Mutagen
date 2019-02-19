@@ -808,8 +808,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> IEqualsMask<Creature>.GetEqualsMask(Creature rhs) => CreatureCommon.GetEqualsMask(this, rhs);
-        IMask<bool> IEqualsMask<ICreatureGetter>.GetEqualsMask(ICreatureGetter rhs) => CreatureCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<Creature>.GetEqualsMask(Creature rhs, EqualsMaskHelper.Include include) => CreatureCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<ICreatureGetter>.GetEqualsMask(ICreatureGetter rhs, EqualsMaskHelper.Include include) => CreatureCommon.GetEqualsMask(this, rhs, include);
         #region To String
         public string ToString(
             string name = null,
@@ -1133,7 +1133,13 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 foreach (var elem in node.Elements())
                 {
-                    Fill_Xml_Internal(
+                    FillPrivateElement_Xml(
+                        item: ret,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                    CreatureCommon.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -1509,7 +1515,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        protected static void Fill_Xml_Internal(
+        protected static void FillPrivateElement_Xml(
             Creature item,
             XElement node,
             string name,
@@ -1518,1221 +1524,8 @@ namespace Mutagen.Bethesda.Oblivion
         {
             switch (name)
             {
-                case "Name":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Creature_FieldIndex.Name);
-                        if (StringXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out String NameParse,
-                            errorMask: errorMask))
-                        {
-                            item.Name = NameParse;
-                        }
-                        else
-                        {
-                            item.Name = default(String);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Model":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Creature_FieldIndex.Model);
-                        if (LoquiXmlTranslation<Model>.Instance.Parse(
-                            node: node,
-                            item: out Model ModelParse,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Creature_FieldIndex.Model)))
-                        {
-                            item.Model = ModelParse;
-                        }
-                        else
-                        {
-                            item.Model = default(Model);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Items":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Creature_FieldIndex.Items);
-                        if (ListXmlTranslation<ItemEntry>.Instance.Parse(
-                            node: node,
-                            enumer: out var ItemsItem,
-                            transl: LoquiXmlTranslation<ItemEntry>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.Items.SetTo(ItemsItem);
-                        }
-                        else
-                        {
-                            item.Items.Unset();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Spells":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Creature_FieldIndex.Spells);
-                        if (ListXmlTranslation<FormIDSetLink<SpellAbstract>>.Instance.Parse(
-                            node: node,
-                            enumer: out var SpellsItem,
-                            transl: FormKeyXmlTranslation.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.Spells.SetTo(SpellsItem);
-                        }
-                        else
-                        {
-                            item.Spells.Unset();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Models":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Creature_FieldIndex.Models);
-                        if (ListXmlTranslation<String>.Instance.Parse(
-                            node: node,
-                            enumer: out var ModelsItem,
-                            transl: StringXmlTranslation.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.Models.SetTo(ModelsItem);
-                        }
-                        else
-                        {
-                            item.Models.Unset();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "NIFT":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Creature_FieldIndex.NIFT);
-                        if (ByteArrayXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Byte[] NIFTParse,
-                            errorMask: errorMask))
-                        {
-                            item.NIFT = NIFTParse;
-                        }
-                        else
-                        {
-                            item.NIFT = default(Byte[]);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Flags":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Creature_FieldIndex.Flags);
-                        if (EnumXmlTranslation<Creature.CreatureFlag>.Instance.Parse(
-                            node: node,
-                            item: out Creature.CreatureFlag FlagsParse,
-                            errorMask: errorMask))
-                        {
-                            item.Flags = FlagsParse;
-                        }
-                        else
-                        {
-                            item.Flags = default(Creature.CreatureFlag);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "BaseSpellPoints":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Creature_FieldIndex.BaseSpellPoints);
-                        if (UInt16XmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out UInt16 BaseSpellPointsParse,
-                            errorMask: errorMask))
-                        {
-                            item.BaseSpellPoints = BaseSpellPointsParse;
-                        }
-                        else
-                        {
-                            item.BaseSpellPoints = default(UInt16);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Fatigue":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Creature_FieldIndex.Fatigue);
-                        if (UInt16XmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out UInt16 FatigueParse,
-                            errorMask: errorMask))
-                        {
-                            item.Fatigue = FatigueParse;
-                        }
-                        else
-                        {
-                            item.Fatigue = default(UInt16);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "BarterGold":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Creature_FieldIndex.BarterGold);
-                        if (UInt16XmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out UInt16 BarterGoldParse,
-                            errorMask: errorMask))
-                        {
-                            item.BarterGold = BarterGoldParse;
-                        }
-                        else
-                        {
-                            item.BarterGold = default(UInt16);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "LevelOffset":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Creature_FieldIndex.LevelOffset);
-                        if (Int16XmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Int16 LevelOffsetParse,
-                            errorMask: errorMask))
-                        {
-                            item.LevelOffset = LevelOffsetParse;
-                        }
-                        else
-                        {
-                            item.LevelOffset = default(Int16);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "CalcMin":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Creature_FieldIndex.CalcMin);
-                        if (UInt16XmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out UInt16 CalcMinParse,
-                            errorMask: errorMask))
-                        {
-                            item.CalcMin = CalcMinParse;
-                        }
-                        else
-                        {
-                            item.CalcMin = default(UInt16);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "CalcMax":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Creature_FieldIndex.CalcMax);
-                        if (UInt16XmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out UInt16 CalcMaxParse,
-                            errorMask: errorMask))
-                        {
-                            item.CalcMax = CalcMaxParse;
-                        }
-                        else
-                        {
-                            item.CalcMax = default(UInt16);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Factions":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Creature_FieldIndex.Factions);
-                        if (ListXmlTranslation<RankPlacement>.Instance.Parse(
-                            node: node,
-                            enumer: out var FactionsItem,
-                            transl: LoquiXmlTranslation<RankPlacement>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.Factions.SetTo(FactionsItem);
-                        }
-                        else
-                        {
-                            item.Factions.Unset();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "DeathItem":
-                    FormKeyXmlTranslation.Instance.ParseInto(
-                        node: node,
-                        item: item.DeathItem_Property,
-                        fieldIndex: (int)Creature_FieldIndex.DeathItem,
-                        errorMask: errorMask);
-                    break;
-                case "Script":
-                    FormKeyXmlTranslation.Instance.ParseInto(
-                        node: node,
-                        item: item.Script_Property,
-                        fieldIndex: (int)Creature_FieldIndex.Script,
-                        errorMask: errorMask);
-                    break;
-                case "Aggression":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Creature_FieldIndex.Aggression);
-                        if (ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Byte AggressionParse,
-                            errorMask: errorMask))
-                        {
-                            item.Aggression = AggressionParse;
-                        }
-                        else
-                        {
-                            item.Aggression = default(Byte);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Confidence":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Creature_FieldIndex.Confidence);
-                        if (ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Byte ConfidenceParse,
-                            errorMask: errorMask))
-                        {
-                            item.Confidence = ConfidenceParse;
-                        }
-                        else
-                        {
-                            item.Confidence = default(Byte);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "EnergyLevel":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Creature_FieldIndex.EnergyLevel);
-                        if (ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Byte EnergyLevelParse,
-                            errorMask: errorMask))
-                        {
-                            item.EnergyLevel = EnergyLevelParse;
-                        }
-                        else
-                        {
-                            item.EnergyLevel = default(Byte);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Responsibility":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Creature_FieldIndex.Responsibility);
-                        if (ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Byte ResponsibilityParse,
-                            errorMask: errorMask))
-                        {
-                            item.Responsibility = ResponsibilityParse;
-                        }
-                        else
-                        {
-                            item.Responsibility = default(Byte);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "BuySellServices":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Creature_FieldIndex.BuySellServices);
-                        if (EnumXmlTranslation<NPC.BuySellServiceFlag>.Instance.Parse(
-                            node: node,
-                            item: out NPC.BuySellServiceFlag BuySellServicesParse,
-                            errorMask: errorMask))
-                        {
-                            item.BuySellServices = BuySellServicesParse;
-                        }
-                        else
-                        {
-                            item.BuySellServices = default(NPC.BuySellServiceFlag);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Teaches":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Creature_FieldIndex.Teaches);
-                        if (EnumXmlTranslation<Skill>.Instance.Parse(
-                            node: node,
-                            item: out Skill TeachesParse,
-                            errorMask: errorMask))
-                        {
-                            item.Teaches = TeachesParse;
-                        }
-                        else
-                        {
-                            item.Teaches = default(Skill);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "MaximumTrainingLevel":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Creature_FieldIndex.MaximumTrainingLevel);
-                        if (ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Byte MaximumTrainingLevelParse,
-                            errorMask: errorMask))
-                        {
-                            item.MaximumTrainingLevel = MaximumTrainingLevelParse;
-                        }
-                        else
-                        {
-                            item.MaximumTrainingLevel = default(Byte);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "AIPackages":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Creature_FieldIndex.AIPackages);
-                        if (ListXmlTranslation<FormIDSetLink<AIPackage>>.Instance.Parse(
-                            node: node,
-                            enumer: out var AIPackagesItem,
-                            transl: FormKeyXmlTranslation.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.AIPackages.SetTo(AIPackagesItem);
-                        }
-                        else
-                        {
-                            item.AIPackages.Unset();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Animations":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Creature_FieldIndex.Animations);
-                        if (ListXmlTranslation<String>.Instance.Parse(
-                            node: node,
-                            enumer: out var AnimationsItem,
-                            transl: StringXmlTranslation.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.Animations.SetTo(AnimationsItem);
-                        }
-                        else
-                        {
-                            item.Animations.Unset();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "CreatureType":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Creature_FieldIndex.CreatureType);
-                        if (EnumXmlTranslation<Creature.CreatureTypeEnum>.Instance.Parse(
-                            node: node,
-                            item: out Creature.CreatureTypeEnum CreatureTypeParse,
-                            errorMask: errorMask))
-                        {
-                            item.CreatureType = CreatureTypeParse;
-                        }
-                        else
-                        {
-                            item.CreatureType = default(Creature.CreatureTypeEnum);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "CombatSkill":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Creature_FieldIndex.CombatSkill);
-                        if (ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Byte CombatSkillParse,
-                            errorMask: errorMask))
-                        {
-                            item.CombatSkill = CombatSkillParse;
-                        }
-                        else
-                        {
-                            item.CombatSkill = default(Byte);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "MagicSkill":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Creature_FieldIndex.MagicSkill);
-                        if (ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Byte MagicSkillParse,
-                            errorMask: errorMask))
-                        {
-                            item.MagicSkill = MagicSkillParse;
-                        }
-                        else
-                        {
-                            item.MagicSkill = default(Byte);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "StealthSkill":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Creature_FieldIndex.StealthSkill);
-                        if (ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Byte StealthSkillParse,
-                            errorMask: errorMask))
-                        {
-                            item.StealthSkill = StealthSkillParse;
-                        }
-                        else
-                        {
-                            item.StealthSkill = default(Byte);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "SoulLevel":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Creature_FieldIndex.SoulLevel);
-                        if (EnumXmlTranslation<SoulLevel>.Instance.Parse(
-                            node: node,
-                            item: out SoulLevel SoulLevelParse,
-                            errorMask: errorMask))
-                        {
-                            item.SoulLevel = SoulLevelParse;
-                        }
-                        else
-                        {
-                            item.SoulLevel = default(SoulLevel);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Health":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Creature_FieldIndex.Health);
-                        if (UInt32XmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out UInt32 HealthParse,
-                            errorMask: errorMask))
-                        {
-                            item.Health = HealthParse;
-                        }
-                        else
-                        {
-                            item.Health = default(UInt32);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "AttackDamage":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Creature_FieldIndex.AttackDamage);
-                        if (UInt16XmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out UInt16 AttackDamageParse,
-                            errorMask: errorMask))
-                        {
-                            item.AttackDamage = AttackDamageParse;
-                        }
-                        else
-                        {
-                            item.AttackDamage = default(UInt16);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Strength":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Creature_FieldIndex.Strength);
-                        if (ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Byte StrengthParse,
-                            errorMask: errorMask))
-                        {
-                            item.Strength = StrengthParse;
-                        }
-                        else
-                        {
-                            item.Strength = default(Byte);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Intelligence":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Creature_FieldIndex.Intelligence);
-                        if (ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Byte IntelligenceParse,
-                            errorMask: errorMask))
-                        {
-                            item.Intelligence = IntelligenceParse;
-                        }
-                        else
-                        {
-                            item.Intelligence = default(Byte);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Willpower":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Creature_FieldIndex.Willpower);
-                        if (ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Byte WillpowerParse,
-                            errorMask: errorMask))
-                        {
-                            item.Willpower = WillpowerParse;
-                        }
-                        else
-                        {
-                            item.Willpower = default(Byte);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Agility":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Creature_FieldIndex.Agility);
-                        if (ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Byte AgilityParse,
-                            errorMask: errorMask))
-                        {
-                            item.Agility = AgilityParse;
-                        }
-                        else
-                        {
-                            item.Agility = default(Byte);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Speed":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Creature_FieldIndex.Speed);
-                        if (ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Byte SpeedParse,
-                            errorMask: errorMask))
-                        {
-                            item.Speed = SpeedParse;
-                        }
-                        else
-                        {
-                            item.Speed = default(Byte);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Endurance":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Creature_FieldIndex.Endurance);
-                        if (ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Byte EnduranceParse,
-                            errorMask: errorMask))
-                        {
-                            item.Endurance = EnduranceParse;
-                        }
-                        else
-                        {
-                            item.Endurance = default(Byte);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Personality":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Creature_FieldIndex.Personality);
-                        if (ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Byte PersonalityParse,
-                            errorMask: errorMask))
-                        {
-                            item.Personality = PersonalityParse;
-                        }
-                        else
-                        {
-                            item.Personality = default(Byte);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Luck":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Creature_FieldIndex.Luck);
-                        if (ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Byte LuckParse,
-                            errorMask: errorMask))
-                        {
-                            item.Luck = LuckParse;
-                        }
-                        else
-                        {
-                            item.Luck = default(Byte);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "AttackReach":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Creature_FieldIndex.AttackReach);
-                        if (ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Byte AttackReachParse,
-                            errorMask: errorMask))
-                        {
-                            item.AttackReach = AttackReachParse;
-                        }
-                        else
-                        {
-                            item.AttackReach = default(Byte);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "CombatStyle":
-                    FormKeyXmlTranslation.Instance.ParseInto(
-                        node: node,
-                        item: item.CombatStyle_Property,
-                        fieldIndex: (int)Creature_FieldIndex.CombatStyle,
-                        errorMask: errorMask);
-                    break;
-                case "TurningSpeed":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Creature_FieldIndex.TurningSpeed);
-                        if (FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Single TurningSpeedParse,
-                            errorMask: errorMask))
-                        {
-                            item.TurningSpeed = TurningSpeedParse;
-                        }
-                        else
-                        {
-                            item.TurningSpeed = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "BaseScale":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Creature_FieldIndex.BaseScale);
-                        if (FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Single BaseScaleParse,
-                            errorMask: errorMask))
-                        {
-                            item.BaseScale = BaseScaleParse;
-                        }
-                        else
-                        {
-                            item.BaseScale = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "FootWeight":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Creature_FieldIndex.FootWeight);
-                        if (FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Single FootWeightParse,
-                            errorMask: errorMask))
-                        {
-                            item.FootWeight = FootWeightParse;
-                        }
-                        else
-                        {
-                            item.FootWeight = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "BloodSpray":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Creature_FieldIndex.BloodSpray);
-                        if (StringXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out String BloodSprayParse,
-                            errorMask: errorMask))
-                        {
-                            item.BloodSpray = BloodSprayParse;
-                        }
-                        else
-                        {
-                            item.BloodSpray = default(String);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "BloodDecal":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Creature_FieldIndex.BloodDecal);
-                        if (StringXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out String BloodDecalParse,
-                            errorMask: errorMask))
-                        {
-                            item.BloodDecal = BloodDecalParse;
-                        }
-                        else
-                        {
-                            item.BloodDecal = default(String);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "InheritsSoundFrom":
-                    FormKeyXmlTranslation.Instance.ParseInto(
-                        node: node,
-                        item: item.InheritsSoundFrom_Property,
-                        fieldIndex: (int)Creature_FieldIndex.InheritsSoundFrom,
-                        errorMask: errorMask);
-                    break;
-                case "Sounds":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Creature_FieldIndex.Sounds);
-                        if (ListXmlTranslation<CreatureSound>.Instance.Parse(
-                            node: node,
-                            enumer: out var SoundsItem,
-                            transl: LoquiXmlTranslation<CreatureSound>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.Sounds.SetTo(SoundsItem);
-                        }
-                        else
-                        {
-                            item.Sounds.Unset();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
                 default:
-                    NPCAbstract.Fill_Xml_Internal(
+                    NPCAbstract.FillPrivateElement_Xml(
                         item: item,
                         node: node,
                         name: name,
@@ -7582,84 +6375,45 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static Creature_Mask<bool> GetEqualsMask(
             this ICreatureGetter item,
-            ICreatureGetter rhs)
+            ICreatureGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new Creature_Mask<bool>();
-            FillEqualsMask(item, rhs, ret);
+            FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
             return ret;
         }
 
         public static void FillEqualsMask(
             ICreatureGetter item,
             ICreatureGetter rhs,
-            Creature_Mask<bool> ret)
+            Creature_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
             ret.Name = item.Name_IsSet == rhs.Name_IsSet && object.Equals(item.Name, rhs.Name);
-            ret.Model = IHasBeenSetExt.LoquiEqualsHelper(item.Model_IsSet, rhs.Model_IsSet, item.Model, rhs.Model, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
-            if (item.Items.HasBeenSet == rhs.Items.HasBeenSet)
-            {
-                if (item.Items.HasBeenSet)
-                {
-                    ret.Items = new MaskItem<bool, IEnumerable<MaskItem<bool, ItemEntry_Mask<bool>>>>();
-                    ret.Items.Specific = item.Items.SelectAgainst<ItemEntry, MaskItem<bool, ItemEntry_Mask<bool>>>(rhs.Items, ((l, r) =>
-                    {
-                        MaskItem<bool, ItemEntry_Mask<bool>> itemRet;
-                        itemRet = l.LoquiEqualsHelper(r, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
-                        return itemRet;
-                    }
-                    ), out ret.Items.Overall);
-                    ret.Items.Overall = ret.Items.Overall && ret.Items.Specific.All((b) => b.Overall);
-                }
-                else
-                {
-                    ret.Items = new MaskItem<bool, IEnumerable<MaskItem<bool, ItemEntry_Mask<bool>>>>();
-                    ret.Items.Overall = true;
-                }
-            }
-            else
-            {
-                ret.Items = new MaskItem<bool, IEnumerable<MaskItem<bool, ItemEntry_Mask<bool>>>>();
-                ret.Items.Overall = false;
-            }
-            if (item.Spells.HasBeenSet == rhs.Spells.HasBeenSet)
-            {
-                if (item.Spells.HasBeenSet)
-                {
-                    ret.Spells = new MaskItem<bool, IEnumerable<bool>>();
-                    ret.Spells.Specific = item.Spells.SelectAgainst<FormIDSetLink<SpellAbstract>, bool>(rhs.Spells, ((l, r) => object.Equals(l, r)), out ret.Spells.Overall);
-                    ret.Spells.Overall = ret.Spells.Overall && ret.Spells.Specific.All((b) => b);
-                }
-                else
-                {
-                    ret.Spells = new MaskItem<bool, IEnumerable<bool>>();
-                    ret.Spells.Overall = true;
-                }
-            }
-            else
-            {
-                ret.Spells = new MaskItem<bool, IEnumerable<bool>>();
-                ret.Spells.Overall = false;
-            }
-            if (item.Models.HasBeenSet == rhs.Models.HasBeenSet)
-            {
-                if (item.Models.HasBeenSet)
-                {
-                    ret.Models = new MaskItem<bool, IEnumerable<bool>>();
-                    ret.Models.Specific = item.Models.SelectAgainst<String, bool>(rhs.Models, ((l, r) => object.Equals(l, r)), out ret.Models.Overall);
-                    ret.Models.Overall = ret.Models.Overall && ret.Models.Specific.All((b) => b);
-                }
-                else
-                {
-                    ret.Models = new MaskItem<bool, IEnumerable<bool>>();
-                    ret.Models.Overall = true;
-                }
-            }
-            else
-            {
-                ret.Models = new MaskItem<bool, IEnumerable<bool>>();
-                ret.Models.Overall = false;
-            }
+            ret.Model = EqualsMaskHelper.EqualsHelper(
+                item.Model_IsSet,
+                rhs.Model_IsSet,
+                item.Model,
+                rhs.Model,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
+                include);
+            ret.Items = item.Items.CollectionEqualsHelper(
+                rhs.Items,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.Spells = item.Spells.CollectionEqualsHelper(
+                rhs.Spells,
+                (l, r) => object.Equals(l, r),
+                include);
+            ret.Models = item.Models.CollectionEqualsHelper(
+                rhs.Models,
+                (l, r) => l == r,
+                include);
             ret.NIFT = item.NIFT_IsSet == rhs.NIFT_IsSet && item.NIFT.EqualsFast(rhs.NIFT);
             ret.Flags = item.Flags == rhs.Flags;
             ret.BaseSpellPoints = item.BaseSpellPoints == rhs.BaseSpellPoints;
@@ -7668,31 +6422,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.LevelOffset = item.LevelOffset == rhs.LevelOffset;
             ret.CalcMin = item.CalcMin == rhs.CalcMin;
             ret.CalcMax = item.CalcMax == rhs.CalcMax;
-            if (item.Factions.HasBeenSet == rhs.Factions.HasBeenSet)
-            {
-                if (item.Factions.HasBeenSet)
-                {
-                    ret.Factions = new MaskItem<bool, IEnumerable<MaskItem<bool, RankPlacement_Mask<bool>>>>();
-                    ret.Factions.Specific = item.Factions.SelectAgainst<RankPlacement, MaskItem<bool, RankPlacement_Mask<bool>>>(rhs.Factions, ((l, r) =>
-                    {
-                        MaskItem<bool, RankPlacement_Mask<bool>> itemRet;
-                        itemRet = l.LoquiEqualsHelper(r, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
-                        return itemRet;
-                    }
-                    ), out ret.Factions.Overall);
-                    ret.Factions.Overall = ret.Factions.Overall && ret.Factions.Specific.All((b) => b.Overall);
-                }
-                else
-                {
-                    ret.Factions = new MaskItem<bool, IEnumerable<MaskItem<bool, RankPlacement_Mask<bool>>>>();
-                    ret.Factions.Overall = true;
-                }
-            }
-            else
-            {
-                ret.Factions = new MaskItem<bool, IEnumerable<MaskItem<bool, RankPlacement_Mask<bool>>>>();
-                ret.Factions.Overall = false;
-            }
+            ret.Factions = item.Factions.CollectionEqualsHelper(
+                rhs.Factions,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
             ret.DeathItem = item.DeathItem_Property.FormKey == rhs.DeathItem_Property.FormKey;
             ret.Script = item.Script_Property.FormKey == rhs.Script_Property.FormKey;
             ret.Aggression = item.Aggression == rhs.Aggression;
@@ -7702,44 +6435,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.BuySellServices = item.BuySellServices == rhs.BuySellServices;
             ret.Teaches = item.Teaches == rhs.Teaches;
             ret.MaximumTrainingLevel = item.MaximumTrainingLevel == rhs.MaximumTrainingLevel;
-            if (item.AIPackages.HasBeenSet == rhs.AIPackages.HasBeenSet)
-            {
-                if (item.AIPackages.HasBeenSet)
-                {
-                    ret.AIPackages = new MaskItem<bool, IEnumerable<bool>>();
-                    ret.AIPackages.Specific = item.AIPackages.SelectAgainst<FormIDSetLink<AIPackage>, bool>(rhs.AIPackages, ((l, r) => object.Equals(l, r)), out ret.AIPackages.Overall);
-                    ret.AIPackages.Overall = ret.AIPackages.Overall && ret.AIPackages.Specific.All((b) => b);
-                }
-                else
-                {
-                    ret.AIPackages = new MaskItem<bool, IEnumerable<bool>>();
-                    ret.AIPackages.Overall = true;
-                }
-            }
-            else
-            {
-                ret.AIPackages = new MaskItem<bool, IEnumerable<bool>>();
-                ret.AIPackages.Overall = false;
-            }
-            if (item.Animations.HasBeenSet == rhs.Animations.HasBeenSet)
-            {
-                if (item.Animations.HasBeenSet)
-                {
-                    ret.Animations = new MaskItem<bool, IEnumerable<bool>>();
-                    ret.Animations.Specific = item.Animations.SelectAgainst<String, bool>(rhs.Animations, ((l, r) => object.Equals(l, r)), out ret.Animations.Overall);
-                    ret.Animations.Overall = ret.Animations.Overall && ret.Animations.Specific.All((b) => b);
-                }
-                else
-                {
-                    ret.Animations = new MaskItem<bool, IEnumerable<bool>>();
-                    ret.Animations.Overall = true;
-                }
-            }
-            else
-            {
-                ret.Animations = new MaskItem<bool, IEnumerable<bool>>();
-                ret.Animations.Overall = false;
-            }
+            ret.AIPackages = item.AIPackages.CollectionEqualsHelper(
+                rhs.AIPackages,
+                (l, r) => object.Equals(l, r),
+                include);
+            ret.Animations = item.Animations.CollectionEqualsHelper(
+                rhs.Animations,
+                (l, r) => l == r,
+                include);
             ret.CreatureType = item.CreatureType == rhs.CreatureType;
             ret.CombatSkill = item.CombatSkill == rhs.CombatSkill;
             ret.MagicSkill = item.MagicSkill == rhs.MagicSkill;
@@ -7757,37 +6460,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Luck = item.Luck == rhs.Luck;
             ret.AttackReach = item.AttackReach_IsSet == rhs.AttackReach_IsSet && item.AttackReach == rhs.AttackReach;
             ret.CombatStyle = item.CombatStyle_Property.FormKey == rhs.CombatStyle_Property.FormKey;
-            ret.TurningSpeed = item.TurningSpeed_IsSet == rhs.TurningSpeed_IsSet && item.TurningSpeed == rhs.TurningSpeed;
-            ret.BaseScale = item.BaseScale_IsSet == rhs.BaseScale_IsSet && item.BaseScale == rhs.BaseScale;
-            ret.FootWeight = item.FootWeight_IsSet == rhs.FootWeight_IsSet && item.FootWeight == rhs.FootWeight;
+            ret.TurningSpeed = item.TurningSpeed_IsSet == rhs.TurningSpeed_IsSet && item.TurningSpeed.EqualsWithin(rhs.TurningSpeed);
+            ret.BaseScale = item.BaseScale_IsSet == rhs.BaseScale_IsSet && item.BaseScale.EqualsWithin(rhs.BaseScale);
+            ret.FootWeight = item.FootWeight_IsSet == rhs.FootWeight_IsSet && item.FootWeight.EqualsWithin(rhs.FootWeight);
             ret.BloodSpray = item.BloodSpray_IsSet == rhs.BloodSpray_IsSet && object.Equals(item.BloodSpray, rhs.BloodSpray);
             ret.BloodDecal = item.BloodDecal_IsSet == rhs.BloodDecal_IsSet && object.Equals(item.BloodDecal, rhs.BloodDecal);
             ret.InheritsSoundFrom = item.InheritsSoundFrom_Property.FormKey == rhs.InheritsSoundFrom_Property.FormKey;
-            if (item.Sounds.HasBeenSet == rhs.Sounds.HasBeenSet)
-            {
-                if (item.Sounds.HasBeenSet)
-                {
-                    ret.Sounds = new MaskItem<bool, IEnumerable<MaskItem<bool, CreatureSound_Mask<bool>>>>();
-                    ret.Sounds.Specific = item.Sounds.SelectAgainst<CreatureSound, MaskItem<bool, CreatureSound_Mask<bool>>>(rhs.Sounds, ((l, r) =>
-                    {
-                        MaskItem<bool, CreatureSound_Mask<bool>> itemRet;
-                        itemRet = l.LoquiEqualsHelper(r, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
-                        return itemRet;
-                    }
-                    ), out ret.Sounds.Overall);
-                    ret.Sounds.Overall = ret.Sounds.Overall && ret.Sounds.Specific.All((b) => b.Overall);
-                }
-                else
-                {
-                    ret.Sounds = new MaskItem<bool, IEnumerable<MaskItem<bool, CreatureSound_Mask<bool>>>>();
-                    ret.Sounds.Overall = true;
-                }
-            }
-            else
-            {
-                ret.Sounds = new MaskItem<bool, IEnumerable<MaskItem<bool, CreatureSound_Mask<bool>>>>();
-                ret.Sounds.Overall = false;
-            }
+            ret.Sounds = item.Sounds.CollectionEqualsHelper(
+                rhs.Sounds,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
             NPCAbstractCommon.FillEqualsMask(item, rhs, ret);
         }
 
@@ -8149,9 +6831,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             var ret = new Creature_Mask<bool>();
             ret.Name = item.Name_IsSet;
             ret.Model = new MaskItem<bool, Model_Mask<bool>>(item.Model_IsSet, ModelCommon.GetHasBeenSetMask(item.Model));
-            ret.Items = new MaskItem<bool, IEnumerable<MaskItem<bool, ItemEntry_Mask<bool>>>>(item.Items.HasBeenSet, item.Items.Select((i) => new MaskItem<bool, ItemEntry_Mask<bool>>(true, i.GetHasBeenSetMask())));
-            ret.Spells = new MaskItem<bool, IEnumerable<bool>>(item.Spells.HasBeenSet, null);
-            ret.Models = new MaskItem<bool, IEnumerable<bool>>(item.Models.HasBeenSet, null);
+            ret.Items = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, ItemEntry_Mask<bool>>>>(item.Items.HasBeenSet, item.Items.WithIndex().Select((i) => new MaskItemIndexed<bool, ItemEntry_Mask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            ret.Spells = new MaskItem<bool, IEnumerable<(int, bool)>>(item.Spells.HasBeenSet, null);
+            ret.Models = new MaskItem<bool, IEnumerable<(int, bool)>>(item.Models.HasBeenSet, null);
             ret.NIFT = item.NIFT_IsSet;
             ret.Flags = true;
             ret.BaseSpellPoints = true;
@@ -8160,7 +6842,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.LevelOffset = true;
             ret.CalcMin = true;
             ret.CalcMax = true;
-            ret.Factions = new MaskItem<bool, IEnumerable<MaskItem<bool, RankPlacement_Mask<bool>>>>(item.Factions.HasBeenSet, item.Factions.Select((i) => new MaskItem<bool, RankPlacement_Mask<bool>>(true, i.GetHasBeenSetMask())));
+            ret.Factions = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, RankPlacement_Mask<bool>>>>(item.Factions.HasBeenSet, item.Factions.WithIndex().Select((i) => new MaskItemIndexed<bool, RankPlacement_Mask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
             ret.DeathItem = item.DeathItem_Property.HasBeenSet;
             ret.Script = item.Script_Property.HasBeenSet;
             ret.Aggression = true;
@@ -8170,8 +6852,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.BuySellServices = true;
             ret.Teaches = true;
             ret.MaximumTrainingLevel = true;
-            ret.AIPackages = new MaskItem<bool, IEnumerable<bool>>(item.AIPackages.HasBeenSet, null);
-            ret.Animations = new MaskItem<bool, IEnumerable<bool>>(item.Animations.HasBeenSet, null);
+            ret.AIPackages = new MaskItem<bool, IEnumerable<(int, bool)>>(item.AIPackages.HasBeenSet, null);
+            ret.Animations = new MaskItem<bool, IEnumerable<(int, bool)>>(item.Animations.HasBeenSet, null);
             ret.CreatureType = true;
             ret.CombatSkill = true;
             ret.MagicSkill = true;
@@ -8195,7 +6877,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.BloodSpray = item.BloodSpray_IsSet;
             ret.BloodDecal = item.BloodDecal_IsSet;
             ret.InheritsSoundFrom = item.InheritsSoundFrom_Property.HasBeenSet;
-            ret.Sounds = new MaskItem<bool, IEnumerable<MaskItem<bool, CreatureSound_Mask<bool>>>>(item.Sounds.HasBeenSet, item.Sounds.Select((i) => new MaskItem<bool, CreatureSound_Mask<bool>>(true, i.GetHasBeenSetMask())));
+            ret.Sounds = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, CreatureSound_Mask<bool>>>>(item.Sounds.HasBeenSet, item.Sounds.WithIndex().Select((i) => new MaskItemIndexed<bool, CreatureSound_Mask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
             return ret;
         }
 
@@ -8316,7 +6998,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         public static void WriteToNode_Xml(
-            ICreatureGetter item,
+            this ICreatureGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -8863,6 +7545,1264 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
+        public static void FillPublic_Xml(
+            this Creature item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    CreatureCommon.FillPublicElement_Xml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+
+        public static void FillPublicElement_Xml(
+            this Creature item,
+            XElement node,
+            string name,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            switch (name)
+            {
+                case "Name":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Creature_FieldIndex.Name);
+                        if (StringXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out String NameParse,
+                            errorMask: errorMask))
+                        {
+                            item.Name = NameParse;
+                        }
+                        else
+                        {
+                            item.Name = default(String);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Model":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Creature_FieldIndex.Model);
+                        if (LoquiXmlTranslation<Model>.Instance.Parse(
+                            node: node,
+                            item: out Model ModelParse,
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)Creature_FieldIndex.Model)))
+                        {
+                            item.Model = ModelParse;
+                        }
+                        else
+                        {
+                            item.Model = default(Model);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Items":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Creature_FieldIndex.Items);
+                        if (ListXmlTranslation<ItemEntry>.Instance.Parse(
+                            node: node,
+                            enumer: out var ItemsItem,
+                            transl: LoquiXmlTranslation<ItemEntry>.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.Items.SetTo(ItemsItem);
+                        }
+                        else
+                        {
+                            item.Items.Unset();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Spells":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Creature_FieldIndex.Spells);
+                        if (ListXmlTranslation<FormIDSetLink<SpellAbstract>>.Instance.Parse(
+                            node: node,
+                            enumer: out var SpellsItem,
+                            transl: FormKeyXmlTranslation.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.Spells.SetTo(SpellsItem);
+                        }
+                        else
+                        {
+                            item.Spells.Unset();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Models":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Creature_FieldIndex.Models);
+                        if (ListXmlTranslation<String>.Instance.Parse(
+                            node: node,
+                            enumer: out var ModelsItem,
+                            transl: StringXmlTranslation.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.Models.SetTo(ModelsItem);
+                        }
+                        else
+                        {
+                            item.Models.Unset();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "NIFT":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Creature_FieldIndex.NIFT);
+                        if (ByteArrayXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Byte[] NIFTParse,
+                            errorMask: errorMask))
+                        {
+                            item.NIFT = NIFTParse;
+                        }
+                        else
+                        {
+                            item.NIFT = default(Byte[]);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Flags":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Creature_FieldIndex.Flags);
+                        if (EnumXmlTranslation<Creature.CreatureFlag>.Instance.Parse(
+                            node: node,
+                            item: out Creature.CreatureFlag FlagsParse,
+                            errorMask: errorMask))
+                        {
+                            item.Flags = FlagsParse;
+                        }
+                        else
+                        {
+                            item.Flags = default(Creature.CreatureFlag);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "BaseSpellPoints":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Creature_FieldIndex.BaseSpellPoints);
+                        if (UInt16XmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out UInt16 BaseSpellPointsParse,
+                            errorMask: errorMask))
+                        {
+                            item.BaseSpellPoints = BaseSpellPointsParse;
+                        }
+                        else
+                        {
+                            item.BaseSpellPoints = default(UInt16);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Fatigue":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Creature_FieldIndex.Fatigue);
+                        if (UInt16XmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out UInt16 FatigueParse,
+                            errorMask: errorMask))
+                        {
+                            item.Fatigue = FatigueParse;
+                        }
+                        else
+                        {
+                            item.Fatigue = default(UInt16);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "BarterGold":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Creature_FieldIndex.BarterGold);
+                        if (UInt16XmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out UInt16 BarterGoldParse,
+                            errorMask: errorMask))
+                        {
+                            item.BarterGold = BarterGoldParse;
+                        }
+                        else
+                        {
+                            item.BarterGold = default(UInt16);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "LevelOffset":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Creature_FieldIndex.LevelOffset);
+                        if (Int16XmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Int16 LevelOffsetParse,
+                            errorMask: errorMask))
+                        {
+                            item.LevelOffset = LevelOffsetParse;
+                        }
+                        else
+                        {
+                            item.LevelOffset = default(Int16);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "CalcMin":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Creature_FieldIndex.CalcMin);
+                        if (UInt16XmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out UInt16 CalcMinParse,
+                            errorMask: errorMask))
+                        {
+                            item.CalcMin = CalcMinParse;
+                        }
+                        else
+                        {
+                            item.CalcMin = default(UInt16);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "CalcMax":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Creature_FieldIndex.CalcMax);
+                        if (UInt16XmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out UInt16 CalcMaxParse,
+                            errorMask: errorMask))
+                        {
+                            item.CalcMax = CalcMaxParse;
+                        }
+                        else
+                        {
+                            item.CalcMax = default(UInt16);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Factions":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Creature_FieldIndex.Factions);
+                        if (ListXmlTranslation<RankPlacement>.Instance.Parse(
+                            node: node,
+                            enumer: out var FactionsItem,
+                            transl: LoquiXmlTranslation<RankPlacement>.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.Factions.SetTo(FactionsItem);
+                        }
+                        else
+                        {
+                            item.Factions.Unset();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "DeathItem":
+                    FormKeyXmlTranslation.Instance.ParseInto(
+                        node: node,
+                        item: item.DeathItem_Property,
+                        fieldIndex: (int)Creature_FieldIndex.DeathItem,
+                        errorMask: errorMask);
+                    break;
+                case "Script":
+                    FormKeyXmlTranslation.Instance.ParseInto(
+                        node: node,
+                        item: item.Script_Property,
+                        fieldIndex: (int)Creature_FieldIndex.Script,
+                        errorMask: errorMask);
+                    break;
+                case "Aggression":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Creature_FieldIndex.Aggression);
+                        if (ByteXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Byte AggressionParse,
+                            errorMask: errorMask))
+                        {
+                            item.Aggression = AggressionParse;
+                        }
+                        else
+                        {
+                            item.Aggression = default(Byte);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Confidence":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Creature_FieldIndex.Confidence);
+                        if (ByteXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Byte ConfidenceParse,
+                            errorMask: errorMask))
+                        {
+                            item.Confidence = ConfidenceParse;
+                        }
+                        else
+                        {
+                            item.Confidence = default(Byte);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "EnergyLevel":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Creature_FieldIndex.EnergyLevel);
+                        if (ByteXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Byte EnergyLevelParse,
+                            errorMask: errorMask))
+                        {
+                            item.EnergyLevel = EnergyLevelParse;
+                        }
+                        else
+                        {
+                            item.EnergyLevel = default(Byte);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Responsibility":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Creature_FieldIndex.Responsibility);
+                        if (ByteXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Byte ResponsibilityParse,
+                            errorMask: errorMask))
+                        {
+                            item.Responsibility = ResponsibilityParse;
+                        }
+                        else
+                        {
+                            item.Responsibility = default(Byte);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "BuySellServices":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Creature_FieldIndex.BuySellServices);
+                        if (EnumXmlTranslation<NPC.BuySellServiceFlag>.Instance.Parse(
+                            node: node,
+                            item: out NPC.BuySellServiceFlag BuySellServicesParse,
+                            errorMask: errorMask))
+                        {
+                            item.BuySellServices = BuySellServicesParse;
+                        }
+                        else
+                        {
+                            item.BuySellServices = default(NPC.BuySellServiceFlag);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Teaches":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Creature_FieldIndex.Teaches);
+                        if (EnumXmlTranslation<Skill>.Instance.Parse(
+                            node: node,
+                            item: out Skill TeachesParse,
+                            errorMask: errorMask))
+                        {
+                            item.Teaches = TeachesParse;
+                        }
+                        else
+                        {
+                            item.Teaches = default(Skill);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "MaximumTrainingLevel":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Creature_FieldIndex.MaximumTrainingLevel);
+                        if (ByteXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Byte MaximumTrainingLevelParse,
+                            errorMask: errorMask))
+                        {
+                            item.MaximumTrainingLevel = MaximumTrainingLevelParse;
+                        }
+                        else
+                        {
+                            item.MaximumTrainingLevel = default(Byte);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "AIPackages":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Creature_FieldIndex.AIPackages);
+                        if (ListXmlTranslation<FormIDSetLink<AIPackage>>.Instance.Parse(
+                            node: node,
+                            enumer: out var AIPackagesItem,
+                            transl: FormKeyXmlTranslation.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.AIPackages.SetTo(AIPackagesItem);
+                        }
+                        else
+                        {
+                            item.AIPackages.Unset();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Animations":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Creature_FieldIndex.Animations);
+                        if (ListXmlTranslation<String>.Instance.Parse(
+                            node: node,
+                            enumer: out var AnimationsItem,
+                            transl: StringXmlTranslation.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.Animations.SetTo(AnimationsItem);
+                        }
+                        else
+                        {
+                            item.Animations.Unset();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "CreatureType":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Creature_FieldIndex.CreatureType);
+                        if (EnumXmlTranslation<Creature.CreatureTypeEnum>.Instance.Parse(
+                            node: node,
+                            item: out Creature.CreatureTypeEnum CreatureTypeParse,
+                            errorMask: errorMask))
+                        {
+                            item.CreatureType = CreatureTypeParse;
+                        }
+                        else
+                        {
+                            item.CreatureType = default(Creature.CreatureTypeEnum);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "CombatSkill":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Creature_FieldIndex.CombatSkill);
+                        if (ByteXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Byte CombatSkillParse,
+                            errorMask: errorMask))
+                        {
+                            item.CombatSkill = CombatSkillParse;
+                        }
+                        else
+                        {
+                            item.CombatSkill = default(Byte);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "MagicSkill":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Creature_FieldIndex.MagicSkill);
+                        if (ByteXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Byte MagicSkillParse,
+                            errorMask: errorMask))
+                        {
+                            item.MagicSkill = MagicSkillParse;
+                        }
+                        else
+                        {
+                            item.MagicSkill = default(Byte);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "StealthSkill":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Creature_FieldIndex.StealthSkill);
+                        if (ByteXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Byte StealthSkillParse,
+                            errorMask: errorMask))
+                        {
+                            item.StealthSkill = StealthSkillParse;
+                        }
+                        else
+                        {
+                            item.StealthSkill = default(Byte);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "SoulLevel":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Creature_FieldIndex.SoulLevel);
+                        if (EnumXmlTranslation<SoulLevel>.Instance.Parse(
+                            node: node,
+                            item: out SoulLevel SoulLevelParse,
+                            errorMask: errorMask))
+                        {
+                            item.SoulLevel = SoulLevelParse;
+                        }
+                        else
+                        {
+                            item.SoulLevel = default(SoulLevel);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Health":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Creature_FieldIndex.Health);
+                        if (UInt32XmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out UInt32 HealthParse,
+                            errorMask: errorMask))
+                        {
+                            item.Health = HealthParse;
+                        }
+                        else
+                        {
+                            item.Health = default(UInt32);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "AttackDamage":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Creature_FieldIndex.AttackDamage);
+                        if (UInt16XmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out UInt16 AttackDamageParse,
+                            errorMask: errorMask))
+                        {
+                            item.AttackDamage = AttackDamageParse;
+                        }
+                        else
+                        {
+                            item.AttackDamage = default(UInt16);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Strength":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Creature_FieldIndex.Strength);
+                        if (ByteXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Byte StrengthParse,
+                            errorMask: errorMask))
+                        {
+                            item.Strength = StrengthParse;
+                        }
+                        else
+                        {
+                            item.Strength = default(Byte);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Intelligence":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Creature_FieldIndex.Intelligence);
+                        if (ByteXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Byte IntelligenceParse,
+                            errorMask: errorMask))
+                        {
+                            item.Intelligence = IntelligenceParse;
+                        }
+                        else
+                        {
+                            item.Intelligence = default(Byte);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Willpower":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Creature_FieldIndex.Willpower);
+                        if (ByteXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Byte WillpowerParse,
+                            errorMask: errorMask))
+                        {
+                            item.Willpower = WillpowerParse;
+                        }
+                        else
+                        {
+                            item.Willpower = default(Byte);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Agility":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Creature_FieldIndex.Agility);
+                        if (ByteXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Byte AgilityParse,
+                            errorMask: errorMask))
+                        {
+                            item.Agility = AgilityParse;
+                        }
+                        else
+                        {
+                            item.Agility = default(Byte);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Speed":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Creature_FieldIndex.Speed);
+                        if (ByteXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Byte SpeedParse,
+                            errorMask: errorMask))
+                        {
+                            item.Speed = SpeedParse;
+                        }
+                        else
+                        {
+                            item.Speed = default(Byte);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Endurance":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Creature_FieldIndex.Endurance);
+                        if (ByteXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Byte EnduranceParse,
+                            errorMask: errorMask))
+                        {
+                            item.Endurance = EnduranceParse;
+                        }
+                        else
+                        {
+                            item.Endurance = default(Byte);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Personality":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Creature_FieldIndex.Personality);
+                        if (ByteXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Byte PersonalityParse,
+                            errorMask: errorMask))
+                        {
+                            item.Personality = PersonalityParse;
+                        }
+                        else
+                        {
+                            item.Personality = default(Byte);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Luck":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Creature_FieldIndex.Luck);
+                        if (ByteXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Byte LuckParse,
+                            errorMask: errorMask))
+                        {
+                            item.Luck = LuckParse;
+                        }
+                        else
+                        {
+                            item.Luck = default(Byte);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "AttackReach":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Creature_FieldIndex.AttackReach);
+                        if (ByteXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Byte AttackReachParse,
+                            errorMask: errorMask))
+                        {
+                            item.AttackReach = AttackReachParse;
+                        }
+                        else
+                        {
+                            item.AttackReach = default(Byte);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "CombatStyle":
+                    FormKeyXmlTranslation.Instance.ParseInto(
+                        node: node,
+                        item: item.CombatStyle_Property,
+                        fieldIndex: (int)Creature_FieldIndex.CombatStyle,
+                        errorMask: errorMask);
+                    break;
+                case "TurningSpeed":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Creature_FieldIndex.TurningSpeed);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Single TurningSpeedParse,
+                            errorMask: errorMask))
+                        {
+                            item.TurningSpeed = TurningSpeedParse;
+                        }
+                        else
+                        {
+                            item.TurningSpeed = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "BaseScale":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Creature_FieldIndex.BaseScale);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Single BaseScaleParse,
+                            errorMask: errorMask))
+                        {
+                            item.BaseScale = BaseScaleParse;
+                        }
+                        else
+                        {
+                            item.BaseScale = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "FootWeight":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Creature_FieldIndex.FootWeight);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Single FootWeightParse,
+                            errorMask: errorMask))
+                        {
+                            item.FootWeight = FootWeightParse;
+                        }
+                        else
+                        {
+                            item.FootWeight = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "BloodSpray":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Creature_FieldIndex.BloodSpray);
+                        if (StringXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out String BloodSprayParse,
+                            errorMask: errorMask))
+                        {
+                            item.BloodSpray = BloodSprayParse;
+                        }
+                        else
+                        {
+                            item.BloodSpray = default(String);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "BloodDecal":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Creature_FieldIndex.BloodDecal);
+                        if (StringXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out String BloodDecalParse,
+                            errorMask: errorMask))
+                        {
+                            item.BloodDecal = BloodDecalParse;
+                        }
+                        else
+                        {
+                            item.BloodDecal = default(String);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "InheritsSoundFrom":
+                    FormKeyXmlTranslation.Instance.ParseInto(
+                        node: node,
+                        item: item.InheritsSoundFrom_Property,
+                        fieldIndex: (int)Creature_FieldIndex.InheritsSoundFrom,
+                        errorMask: errorMask);
+                    break;
+                case "Sounds":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Creature_FieldIndex.Sounds);
+                        if (ListXmlTranslation<CreatureSound>.Instance.Parse(
+                            node: node,
+                            enumer: out var SoundsItem,
+                            transl: LoquiXmlTranslation<CreatureSound>.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.Sounds.SetTo(SoundsItem);
+                        }
+                        else
+                        {
+                            item.Sounds.Unset();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                default:
+                    NPCAbstractCommon.FillPublicElement_Xml(
+                        item: item,
+                        node: node,
+                        name: name,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                    break;
+            }
+        }
+
         #endregion
 
         #region Binary Translation
@@ -9356,9 +9296,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             this.Name = initialValue;
             this.Model = new MaskItem<T, Model_Mask<T>>(initialValue, new Model_Mask<T>(initialValue));
-            this.Items = new MaskItem<T, IEnumerable<MaskItem<T, ItemEntry_Mask<T>>>>(initialValue, null);
-            this.Spells = new MaskItem<T, IEnumerable<T>>(initialValue, null);
-            this.Models = new MaskItem<T, IEnumerable<T>>(initialValue, null);
+            this.Items = new MaskItem<T, IEnumerable<MaskItemIndexed<T, ItemEntry_Mask<T>>>>(initialValue, null);
+            this.Spells = new MaskItem<T, IEnumerable<(int Index, T Value)>>(initialValue, null);
+            this.Models = new MaskItem<T, IEnumerable<(int Index, T Value)>>(initialValue, null);
             this.NIFT = initialValue;
             this.Flags = initialValue;
             this.BaseSpellPoints = initialValue;
@@ -9367,7 +9307,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.LevelOffset = initialValue;
             this.CalcMin = initialValue;
             this.CalcMax = initialValue;
-            this.Factions = new MaskItem<T, IEnumerable<MaskItem<T, RankPlacement_Mask<T>>>>(initialValue, null);
+            this.Factions = new MaskItem<T, IEnumerable<MaskItemIndexed<T, RankPlacement_Mask<T>>>>(initialValue, null);
             this.DeathItem = initialValue;
             this.Script = initialValue;
             this.Aggression = initialValue;
@@ -9377,8 +9317,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.BuySellServices = initialValue;
             this.Teaches = initialValue;
             this.MaximumTrainingLevel = initialValue;
-            this.AIPackages = new MaskItem<T, IEnumerable<T>>(initialValue, null);
-            this.Animations = new MaskItem<T, IEnumerable<T>>(initialValue, null);
+            this.AIPackages = new MaskItem<T, IEnumerable<(int Index, T Value)>>(initialValue, null);
+            this.Animations = new MaskItem<T, IEnumerable<(int Index, T Value)>>(initialValue, null);
             this.CreatureType = initialValue;
             this.CombatSkill = initialValue;
             this.MagicSkill = initialValue;
@@ -9402,16 +9342,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.BloodSpray = initialValue;
             this.BloodDecal = initialValue;
             this.InheritsSoundFrom = initialValue;
-            this.Sounds = new MaskItem<T, IEnumerable<MaskItem<T, CreatureSound_Mask<T>>>>(initialValue, null);
+            this.Sounds = new MaskItem<T, IEnumerable<MaskItemIndexed<T, CreatureSound_Mask<T>>>>(initialValue, null);
         }
         #endregion
 
         #region Members
         public T Name;
         public MaskItem<T, Model_Mask<T>> Model { get; set; }
-        public MaskItem<T, IEnumerable<MaskItem<T, ItemEntry_Mask<T>>>> Items;
-        public MaskItem<T, IEnumerable<T>> Spells;
-        public MaskItem<T, IEnumerable<T>> Models;
+        public MaskItem<T, IEnumerable<MaskItemIndexed<T, ItemEntry_Mask<T>>>> Items;
+        public MaskItem<T, IEnumerable<(int Index, T Value)>> Spells;
+        public MaskItem<T, IEnumerable<(int Index, T Value)>> Models;
         public T NIFT;
         public T Flags;
         public T BaseSpellPoints;
@@ -9420,7 +9360,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public T LevelOffset;
         public T CalcMin;
         public T CalcMax;
-        public MaskItem<T, IEnumerable<MaskItem<T, RankPlacement_Mask<T>>>> Factions;
+        public MaskItem<T, IEnumerable<MaskItemIndexed<T, RankPlacement_Mask<T>>>> Factions;
         public T DeathItem;
         public T Script;
         public T Aggression;
@@ -9430,8 +9370,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public T BuySellServices;
         public T Teaches;
         public T MaximumTrainingLevel;
-        public MaskItem<T, IEnumerable<T>> AIPackages;
-        public MaskItem<T, IEnumerable<T>> Animations;
+        public MaskItem<T, IEnumerable<(int Index, T Value)>> AIPackages;
+        public MaskItem<T, IEnumerable<(int Index, T Value)>> Animations;
         public T CreatureType;
         public T CombatSkill;
         public T MagicSkill;
@@ -9455,7 +9395,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public T BloodSpray;
         public T BloodDecal;
         public T InheritsSoundFrom;
-        public MaskItem<T, IEnumerable<MaskItem<T, CreatureSound_Mask<T>>>> Sounds;
+        public MaskItem<T, IEnumerable<MaskItemIndexed<T, CreatureSound_Mask<T>>>> Sounds;
         #endregion
 
         #region Equals
@@ -9607,7 +9547,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     foreach (var item in this.Spells.Specific)
                     {
-                        if (!eval(item)) return false;
+                        if (!eval(item.Value)) return false;
                     }
                 }
             }
@@ -9618,7 +9558,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     foreach (var item in this.Models.Specific)
                     {
-                        if (!eval(item)) return false;
+                        if (!eval(item.Value)) return false;
                     }
                 }
             }
@@ -9658,7 +9598,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     foreach (var item in this.AIPackages.Specific)
                     {
-                        if (!eval(item)) return false;
+                        if (!eval(item.Value)) return false;
                     }
                 }
             }
@@ -9669,7 +9609,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     foreach (var item in this.Animations.Specific)
                     {
-                        if (!eval(item)) return false;
+                        if (!eval(item.Value)) return false;
                     }
                 }
             }
@@ -9735,22 +9675,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (Items != null)
             {
-                obj.Items = new MaskItem<R, IEnumerable<MaskItem<R, ItemEntry_Mask<R>>>>();
+                obj.Items = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ItemEntry_Mask<R>>>>();
                 obj.Items.Overall = eval(this.Items.Overall);
                 if (Items.Specific != null)
                 {
-                    List<MaskItem<R, ItemEntry_Mask<R>>> l = new List<MaskItem<R, ItemEntry_Mask<R>>>();
+                    List<MaskItemIndexed<R, ItemEntry_Mask<R>>> l = new List<MaskItemIndexed<R, ItemEntry_Mask<R>>>();
                     obj.Items.Specific = l;
-                    foreach (var item in Items.Specific)
+                    foreach (var item in Items.Specific.WithIndex())
                     {
-                        MaskItem<R, ItemEntry_Mask<R>> mask = default(MaskItem<R, ItemEntry_Mask<R>>);
-                        if (item != null)
+                        MaskItemIndexed<R, ItemEntry_Mask<R>> mask = default;
+                        mask.Index = item.Index;
+                        if (item.Item != null)
                         {
-                            mask = new MaskItem<R, ItemEntry_Mask<R>>();
-                            mask.Overall = eval(item.Overall);
-                            if (item.Specific != null)
+                            mask = new MaskItemIndexed<R, ItemEntry_Mask<R>>(item.Item.Index);
+                            mask.Overall = eval(item.Item.Overall);
+                            if (item.Item.Specific != null)
                             {
-                                mask.Specific = item.Specific.Translate(eval);
+                                mask.Specific = item.Item.Specific.Translate(eval);
                             }
                         }
                         l.Add(mask);
@@ -9759,32 +9700,34 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (Spells != null)
             {
-                obj.Spells = new MaskItem<R, IEnumerable<R>>();
+                obj.Spells = new MaskItem<R, IEnumerable<(int Index, R Value)>>();
                 obj.Spells.Overall = eval(this.Spells.Overall);
                 if (Spells.Specific != null)
                 {
-                    List<R> l = new List<R>();
+                    List<(int Index, R Item)> l = new List<(int Index, R Item)>();
                     obj.Spells.Specific = l;
-                    foreach (var item in Spells.Specific)
+                    foreach (var item in Spells.Specific.WithIndex())
                     {
-                        R mask = default(R);
-                        mask = eval(item);
+                        (int Index, R Item) mask = default;
+                        mask.Index = item.Index;
+                        mask.Item = eval(item.Item.Value);
                         l.Add(mask);
                     }
                 }
             }
             if (Models != null)
             {
-                obj.Models = new MaskItem<R, IEnumerable<R>>();
+                obj.Models = new MaskItem<R, IEnumerable<(int Index, R Value)>>();
                 obj.Models.Overall = eval(this.Models.Overall);
                 if (Models.Specific != null)
                 {
-                    List<R> l = new List<R>();
+                    List<(int Index, R Item)> l = new List<(int Index, R Item)>();
                     obj.Models.Specific = l;
-                    foreach (var item in Models.Specific)
+                    foreach (var item in Models.Specific.WithIndex())
                     {
-                        R mask = default(R);
-                        mask = eval(item);
+                        (int Index, R Item) mask = default;
+                        mask.Index = item.Index;
+                        mask.Item = eval(item.Item.Value);
                         l.Add(mask);
                     }
                 }
@@ -9799,22 +9742,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             obj.CalcMax = eval(this.CalcMax);
             if (Factions != null)
             {
-                obj.Factions = new MaskItem<R, IEnumerable<MaskItem<R, RankPlacement_Mask<R>>>>();
+                obj.Factions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, RankPlacement_Mask<R>>>>();
                 obj.Factions.Overall = eval(this.Factions.Overall);
                 if (Factions.Specific != null)
                 {
-                    List<MaskItem<R, RankPlacement_Mask<R>>> l = new List<MaskItem<R, RankPlacement_Mask<R>>>();
+                    List<MaskItemIndexed<R, RankPlacement_Mask<R>>> l = new List<MaskItemIndexed<R, RankPlacement_Mask<R>>>();
                     obj.Factions.Specific = l;
-                    foreach (var item in Factions.Specific)
+                    foreach (var item in Factions.Specific.WithIndex())
                     {
-                        MaskItem<R, RankPlacement_Mask<R>> mask = default(MaskItem<R, RankPlacement_Mask<R>>);
-                        if (item != null)
+                        MaskItemIndexed<R, RankPlacement_Mask<R>> mask = default;
+                        mask.Index = item.Index;
+                        if (item.Item != null)
                         {
-                            mask = new MaskItem<R, RankPlacement_Mask<R>>();
-                            mask.Overall = eval(item.Overall);
-                            if (item.Specific != null)
+                            mask = new MaskItemIndexed<R, RankPlacement_Mask<R>>(item.Item.Index);
+                            mask.Overall = eval(item.Item.Overall);
+                            if (item.Item.Specific != null)
                             {
-                                mask.Specific = item.Specific.Translate(eval);
+                                mask.Specific = item.Item.Specific.Translate(eval);
                             }
                         }
                         l.Add(mask);
@@ -9832,32 +9776,34 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             obj.MaximumTrainingLevel = eval(this.MaximumTrainingLevel);
             if (AIPackages != null)
             {
-                obj.AIPackages = new MaskItem<R, IEnumerable<R>>();
+                obj.AIPackages = new MaskItem<R, IEnumerable<(int Index, R Value)>>();
                 obj.AIPackages.Overall = eval(this.AIPackages.Overall);
                 if (AIPackages.Specific != null)
                 {
-                    List<R> l = new List<R>();
+                    List<(int Index, R Item)> l = new List<(int Index, R Item)>();
                     obj.AIPackages.Specific = l;
-                    foreach (var item in AIPackages.Specific)
+                    foreach (var item in AIPackages.Specific.WithIndex())
                     {
-                        R mask = default(R);
-                        mask = eval(item);
+                        (int Index, R Item) mask = default;
+                        mask.Index = item.Index;
+                        mask.Item = eval(item.Item.Value);
                         l.Add(mask);
                     }
                 }
             }
             if (Animations != null)
             {
-                obj.Animations = new MaskItem<R, IEnumerable<R>>();
+                obj.Animations = new MaskItem<R, IEnumerable<(int Index, R Value)>>();
                 obj.Animations.Overall = eval(this.Animations.Overall);
                 if (Animations.Specific != null)
                 {
-                    List<R> l = new List<R>();
+                    List<(int Index, R Item)> l = new List<(int Index, R Item)>();
                     obj.Animations.Specific = l;
-                    foreach (var item in Animations.Specific)
+                    foreach (var item in Animations.Specific.WithIndex())
                     {
-                        R mask = default(R);
-                        mask = eval(item);
+                        (int Index, R Item) mask = default;
+                        mask.Index = item.Index;
+                        mask.Item = eval(item.Item.Value);
                         l.Add(mask);
                     }
                 }
@@ -9887,22 +9833,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             obj.InheritsSoundFrom = eval(this.InheritsSoundFrom);
             if (Sounds != null)
             {
-                obj.Sounds = new MaskItem<R, IEnumerable<MaskItem<R, CreatureSound_Mask<R>>>>();
+                obj.Sounds = new MaskItem<R, IEnumerable<MaskItemIndexed<R, CreatureSound_Mask<R>>>>();
                 obj.Sounds.Overall = eval(this.Sounds.Overall);
                 if (Sounds.Specific != null)
                 {
-                    List<MaskItem<R, CreatureSound_Mask<R>>> l = new List<MaskItem<R, CreatureSound_Mask<R>>>();
+                    List<MaskItemIndexed<R, CreatureSound_Mask<R>>> l = new List<MaskItemIndexed<R, CreatureSound_Mask<R>>>();
                     obj.Sounds.Specific = l;
-                    foreach (var item in Sounds.Specific)
+                    foreach (var item in Sounds.Specific.WithIndex())
                     {
-                        MaskItem<R, CreatureSound_Mask<R>> mask = default(MaskItem<R, CreatureSound_Mask<R>>);
-                        if (item != null)
+                        MaskItemIndexed<R, CreatureSound_Mask<R>> mask = default;
+                        mask.Index = item.Index;
+                        if (item.Item != null)
                         {
-                            mask = new MaskItem<R, CreatureSound_Mask<R>>();
-                            mask.Overall = eval(item.Overall);
-                            if (item.Specific != null)
+                            mask = new MaskItemIndexed<R, CreatureSound_Mask<R>>(item.Item.Index);
+                            mask.Overall = eval(item.Item.Overall);
+                            if (item.Item.Specific != null)
                             {
-                                mask.Specific = item.Specific.Translate(eval);
+                                mask.Specific = item.Item.Specific.Translate(eval);
                             }
                         }
                         l.Add(mask);
@@ -10301,8 +10248,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Exception Name;
         public MaskItem<Exception, Model_ErrorMask> Model;
         public MaskItem<Exception, IEnumerable<MaskItem<Exception, ItemEntry_ErrorMask>>> Items;
-        public MaskItem<Exception, IEnumerable<Exception>> Spells;
-        public MaskItem<Exception, IEnumerable<Exception>> Models;
+        public MaskItem<Exception, IEnumerable<(int Index, Exception Value)>> Spells;
+        public MaskItem<Exception, IEnumerable<(int Index, Exception Value)>> Models;
         public Exception NIFT;
         public Exception Flags;
         public Exception BaseSpellPoints;
@@ -10321,8 +10268,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Exception BuySellServices;
         public Exception Teaches;
         public Exception MaximumTrainingLevel;
-        public MaskItem<Exception, IEnumerable<Exception>> AIPackages;
-        public MaskItem<Exception, IEnumerable<Exception>> Animations;
+        public MaskItem<Exception, IEnumerable<(int Index, Exception Value)>> AIPackages;
+        public MaskItem<Exception, IEnumerable<(int Index, Exception Value)>> Animations;
         public Exception CreatureType;
         public Exception CombatSkill;
         public Exception MagicSkill;
@@ -10473,10 +10420,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     this.Items = new MaskItem<Exception, IEnumerable<MaskItem<Exception, ItemEntry_ErrorMask>>>(ex, null);
                     break;
                 case Creature_FieldIndex.Spells:
-                    this.Spells = new MaskItem<Exception, IEnumerable<Exception>>(ex, null);
+                    this.Spells = new MaskItem<Exception, IEnumerable<(int Index, Exception Value)>>(ex, null);
                     break;
                 case Creature_FieldIndex.Models:
-                    this.Models = new MaskItem<Exception, IEnumerable<Exception>>(ex, null);
+                    this.Models = new MaskItem<Exception, IEnumerable<(int Index, Exception Value)>>(ex, null);
                     break;
                 case Creature_FieldIndex.NIFT:
                     this.NIFT = ex;
@@ -10533,10 +10480,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     this.MaximumTrainingLevel = ex;
                     break;
                 case Creature_FieldIndex.AIPackages:
-                    this.AIPackages = new MaskItem<Exception, IEnumerable<Exception>>(ex, null);
+                    this.AIPackages = new MaskItem<Exception, IEnumerable<(int Index, Exception Value)>>(ex, null);
                     break;
                 case Creature_FieldIndex.Animations:
-                    this.Animations = new MaskItem<Exception, IEnumerable<Exception>>(ex, null);
+                    this.Animations = new MaskItem<Exception, IEnumerable<(int Index, Exception Value)>>(ex, null);
                     break;
                 case Creature_FieldIndex.CreatureType:
                     this.CreatureType = ex;
@@ -10631,10 +10578,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     this.Items = (MaskItem<Exception, IEnumerable<MaskItem<Exception, ItemEntry_ErrorMask>>>)obj;
                     break;
                 case Creature_FieldIndex.Spells:
-                    this.Spells = (MaskItem<Exception, IEnumerable<Exception>>)obj;
+                    this.Spells = (MaskItem<Exception, IEnumerable<(int Index, Exception Value)>>)obj;
                     break;
                 case Creature_FieldIndex.Models:
-                    this.Models = (MaskItem<Exception, IEnumerable<Exception>>)obj;
+                    this.Models = (MaskItem<Exception, IEnumerable<(int Index, Exception Value)>>)obj;
                     break;
                 case Creature_FieldIndex.NIFT:
                     this.NIFT = (Exception)obj;
@@ -10691,10 +10638,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     this.MaximumTrainingLevel = (Exception)obj;
                     break;
                 case Creature_FieldIndex.AIPackages:
-                    this.AIPackages = (MaskItem<Exception, IEnumerable<Exception>>)obj;
+                    this.AIPackages = (MaskItem<Exception, IEnumerable<(int Index, Exception Value)>>)obj;
                     break;
                 case Creature_FieldIndex.Animations:
-                    this.Animations = (MaskItem<Exception, IEnumerable<Exception>>)obj;
+                    this.Animations = (MaskItem<Exception, IEnumerable<(int Index, Exception Value)>>)obj;
                     break;
                 case Creature_FieldIndex.CreatureType:
                     this.CreatureType = (Exception)obj;
@@ -11067,8 +11014,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Name = this.Name.Combine(rhs.Name);
             ret.Model = new MaskItem<Exception, Model_ErrorMask>(this.Model.Overall.Combine(rhs.Model.Overall), ((IErrorMask<Model_ErrorMask>)this.Model.Specific).Combine(rhs.Model.Specific));
             ret.Items = new MaskItem<Exception, IEnumerable<MaskItem<Exception, ItemEntry_ErrorMask>>>(this.Items.Overall.Combine(rhs.Items.Overall), new List<MaskItem<Exception, ItemEntry_ErrorMask>>(this.Items.Specific.And(rhs.Items.Specific)));
-            ret.Spells = new MaskItem<Exception, IEnumerable<Exception>>(this.Spells.Overall.Combine(rhs.Spells.Overall), new List<Exception>(this.Spells.Specific.And(rhs.Spells.Specific)));
-            ret.Models = new MaskItem<Exception, IEnumerable<Exception>>(this.Models.Overall.Combine(rhs.Models.Overall), new List<Exception>(this.Models.Specific.And(rhs.Models.Specific)));
+            ret.Spells = new MaskItem<Exception, IEnumerable<(int Index, Exception Value)>>(this.Spells.Overall.Combine(rhs.Spells.Overall), new List<(int Index, Exception Value)>(this.Spells.Specific.And(rhs.Spells.Specific)));
+            ret.Models = new MaskItem<Exception, IEnumerable<(int Index, Exception Value)>>(this.Models.Overall.Combine(rhs.Models.Overall), new List<(int Index, Exception Value)>(this.Models.Specific.And(rhs.Models.Specific)));
             ret.NIFT = this.NIFT.Combine(rhs.NIFT);
             ret.Flags = this.Flags.Combine(rhs.Flags);
             ret.BaseSpellPoints = this.BaseSpellPoints.Combine(rhs.BaseSpellPoints);
@@ -11087,8 +11034,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.BuySellServices = this.BuySellServices.Combine(rhs.BuySellServices);
             ret.Teaches = this.Teaches.Combine(rhs.Teaches);
             ret.MaximumTrainingLevel = this.MaximumTrainingLevel.Combine(rhs.MaximumTrainingLevel);
-            ret.AIPackages = new MaskItem<Exception, IEnumerable<Exception>>(this.AIPackages.Overall.Combine(rhs.AIPackages.Overall), new List<Exception>(this.AIPackages.Specific.And(rhs.AIPackages.Specific)));
-            ret.Animations = new MaskItem<Exception, IEnumerable<Exception>>(this.Animations.Overall.Combine(rhs.Animations.Overall), new List<Exception>(this.Animations.Specific.And(rhs.Animations.Specific)));
+            ret.AIPackages = new MaskItem<Exception, IEnumerable<(int Index, Exception Value)>>(this.AIPackages.Overall.Combine(rhs.AIPackages.Overall), new List<(int Index, Exception Value)>(this.AIPackages.Specific.And(rhs.AIPackages.Specific)));
+            ret.Animations = new MaskItem<Exception, IEnumerable<(int Index, Exception Value)>>(this.Animations.Overall.Combine(rhs.Animations.Overall), new List<(int Index, Exception Value)>(this.Animations.Specific.And(rhs.Animations.Specific)));
             ret.CreatureType = this.CreatureType.Combine(rhs.CreatureType);
             ret.CombatSkill = this.CombatSkill.Combine(rhs.CombatSkill);
             ret.MagicSkill = this.MagicSkill.Combine(rhs.MagicSkill);

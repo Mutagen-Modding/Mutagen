@@ -18,6 +18,11 @@ namespace Mutagen.Bethesda
     public partial class ListGroup<T>
         where T : ILoquiObject<T>
     {
+        public static readonly ListGroup_TranslationMask<TranslationMaskStub> XmlFolderTranslationMask = new ListGroup_TranslationMask<TranslationMaskStub>(true)
+        {
+            Items = new MaskItem<bool, TranslationMaskStub>(false, default)
+        };
+
         static partial void FillBinary_ContainedRecordType_Custom(
             MutagenFrame frame,
             ListGroup<T> item,
@@ -48,7 +53,7 @@ namespace Mutagen.Bethesda
             string name,
             ErrorMaskBuilder errorMask,
             int index)
-            where T : ILoquiObject<T>, IXmlFolderItem
+            where T : ILoquiObject<T>, IXmlFolderItem, new()
         {
             using (errorMask?.PushIndex(index))
             {
@@ -56,23 +61,52 @@ namespace Mutagen.Bethesda
                 {
                     try
                     {
-                        var path = Path.Combine(dir.Path, $"{name}.xml");
-                        if (!File.Exists(path))
+                        dir = new DirectoryPath(Path.Combine(dir.Path, name));
+                        group.Clear();
+                        var path = Path.Combine(dir.Path, $"Group.xml");
+                        if (File.Exists(path))
                         {
-                            group.Clear();
-                            return;
-                        }
-                        foreach (var item in dir.EnumerateFiles())
-                        {
-                            if (!item.Info.Extension.Equals("xml"))
+                            XElement elem = XElement.Load(path);
+                            if (elem.Name != "Group")
                             {
-                                continue;
+                                throw new ArgumentException("XML file did not have \"Group\" top node.");
                             }
-
-                            var val = LoquiXmlFolderTranslation<T>.CREATE.Value(
-                                item.Path,
-                                null);
-                            group.Items.Add(val);
+                            group.FillPublic_Xml(
+                                elem,
+                                errorMask,
+                                translationMask: ListGroup<T>.XmlFolderTranslationMask.GetCrystal());
+                        }
+                        int counter = 0;
+                        foreach (var subDir in dir.EnumerateDirectories(recursive: false, includeSelf: false)
+                            .SelectWhere(subDir =>
+                            {
+                                if (int.TryParse(subDir.Name, out var i))
+                                {
+                                    return TryGet<(int Index, DirectoryPath Dir)>.Succeed((i, subDir));
+                                }
+                                else
+                                {
+                                    return TryGet<(int Index, DirectoryPath Dir)>.Failure;
+                                }
+                            })
+                            .OrderBy(i => i.Index))
+                        {
+                            using (errorMask.PushIndex(counter))
+                            {
+                                try
+                                {
+                                    group.Items.Add(
+                                        LoquiXmlFolderTranslation<T>.CREATE.Value(
+                                            subDir.Dir.Path, 
+                                            errorMask: errorMask));
+                                }
+                                catch (Exception ex)
+                                when (errorMask != null)
+                                {
+                                    errorMask.ReportException(ex);
+                                }
+                            }
+                            counter++;
                         }
                     }
                     catch (Exception ex)
@@ -98,6 +132,12 @@ namespace Mutagen.Bethesda
                 {
                     try
                     {
+                        dir = new DirectoryPath(Path.Combine(dir.Path, name));
+                        XElement topNode = new XElement("Group");
+                        list.WriteToNode_Xml(
+                            topNode,
+                            errorMask,
+                            translationMask: ListGroup<T>.XmlFolderTranslationMask.GetCrystal());
                         int counter = 0;
                         foreach (var item in list.Items.Items)
                         {
@@ -120,6 +160,8 @@ namespace Mutagen.Bethesda
                             }
                             counter++;
                         }
+                        dir.Create();
+                        topNode.SaveIfChanged(Path.Combine(dir.Path, $"Group.xml"));
                     }
                     catch (Exception ex)
                     when (errorMask != null)

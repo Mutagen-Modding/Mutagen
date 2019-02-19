@@ -98,8 +98,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> IEqualsMask<PointToReferenceMapping>.GetEqualsMask(PointToReferenceMapping rhs) => PointToReferenceMappingCommon.GetEqualsMask(this, rhs);
-        IMask<bool> IEqualsMask<IPointToReferenceMappingGetter>.GetEqualsMask(IPointToReferenceMappingGetter rhs) => PointToReferenceMappingCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<PointToReferenceMapping>.GetEqualsMask(PointToReferenceMapping rhs, EqualsMaskHelper.Include include) => PointToReferenceMappingCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<IPointToReferenceMappingGetter>.GetEqualsMask(IPointToReferenceMappingGetter rhs, EqualsMaskHelper.Include include) => PointToReferenceMappingCommon.GetEqualsMask(this, rhs, include);
         #region To String
         public string ToString(
             string name = null,
@@ -187,7 +187,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 foreach (var elem in node.Elements())
                 {
-                    Fill_Xml_Internal(
+                    PointToReferenceMappingCommon.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -501,55 +501,6 @@ namespace Mutagen.Bethesda.Oblivion
                 translationMask: translationMask);
         }
         #endregion
-
-        protected static void Fill_Xml_Internal(
-            PointToReferenceMapping item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            switch (name)
-            {
-                case "Reference":
-                    FormKeyXmlTranslation.Instance.ParseInto(
-                        node: node,
-                        item: item.Reference_Property,
-                        fieldIndex: (int)PointToReferenceMapping_FieldIndex.Reference,
-                        errorMask: errorMask);
-                    break;
-                case "Points":
-                    try
-                    {
-                        errorMask?.PushIndex((int)PointToReferenceMapping_FieldIndex.Points);
-                        if (ListXmlTranslation<Int16>.Instance.Parse(
-                            node: node,
-                            enumer: out var PointsItem,
-                            transl: Int16XmlTranslation.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.Points.SetTo(PointsItem);
-                        }
-                        else
-                        {
-                            item.Points.Unset();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
 
         #endregion
 
@@ -1437,23 +1388,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static PointToReferenceMapping_Mask<bool> GetEqualsMask(
             this IPointToReferenceMappingGetter item,
-            IPointToReferenceMappingGetter rhs)
+            IPointToReferenceMappingGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new PointToReferenceMapping_Mask<bool>();
-            FillEqualsMask(item, rhs, ret);
+            FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
             return ret;
         }
 
         public static void FillEqualsMask(
             IPointToReferenceMappingGetter item,
             IPointToReferenceMappingGetter rhs,
-            PointToReferenceMapping_Mask<bool> ret)
+            PointToReferenceMapping_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
             ret.Reference = item.Reference_Property.FormKey == rhs.Reference_Property.FormKey;
-            ret.Points = new MaskItem<bool, IEnumerable<bool>>();
-            ret.Points.Specific = item.Points.SelectAgainst<Int16, bool>(rhs.Points, ((l, r) => object.Equals(l, r)), out ret.Points.Overall);
-            ret.Points.Overall = ret.Points.Overall && ret.Points.Specific.All((b) => b);
+            ret.Points = item.Points.CollectionEqualsHelper(
+                rhs.Points,
+                (l, r) => l == r,
+                include);
         }
 
         public static string ToString(
@@ -1521,7 +1479,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             var ret = new PointToReferenceMapping_Mask<bool>();
             ret.Reference = true;
-            ret.Points = new MaskItem<bool, IEnumerable<bool>>(item.Points.HasBeenSet, null);
+            ret.Points = new MaskItem<bool, IEnumerable<(int, bool)>>(item.Points.HasBeenSet, null);
             return ret;
         }
 
@@ -1567,7 +1525,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         public static void WriteToNode_Xml(
-            IPointToReferenceMappingGetter item,
+            this IPointToReferenceMappingGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1599,6 +1557,80 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             errorMask: listSubMask);
                     }
                     );
+            }
+        }
+
+        public static void FillPublic_Xml(
+            this PointToReferenceMapping item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    PointToReferenceMappingCommon.FillPublicElement_Xml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+
+        public static void FillPublicElement_Xml(
+            this PointToReferenceMapping item,
+            XElement node,
+            string name,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            switch (name)
+            {
+                case "Reference":
+                    FormKeyXmlTranslation.Instance.ParseInto(
+                        node: node,
+                        item: item.Reference_Property,
+                        fieldIndex: (int)PointToReferenceMapping_FieldIndex.Reference,
+                        errorMask: errorMask);
+                    break;
+                case "Points":
+                    try
+                    {
+                        errorMask?.PushIndex((int)PointToReferenceMapping_FieldIndex.Points);
+                        if (ListXmlTranslation<Int16>.Instance.Parse(
+                            node: node,
+                            enumer: out var PointsItem,
+                            transl: Int16XmlTranslation.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.Points.SetTo(PointsItem);
+                        }
+                        else
+                        {
+                            item.Points.Unset();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                default:
+                    break;
             }
         }
 
@@ -1682,13 +1714,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public PointToReferenceMapping_Mask(T initialValue)
         {
             this.Reference = initialValue;
-            this.Points = new MaskItem<T, IEnumerable<T>>(initialValue, null);
+            this.Points = new MaskItem<T, IEnumerable<(int Index, T Value)>>(initialValue, null);
         }
         #endregion
 
         #region Members
         public T Reference;
-        public MaskItem<T, IEnumerable<T>> Points;
+        public MaskItem<T, IEnumerable<(int Index, T Value)>> Points;
         #endregion
 
         #region Equals
@@ -1726,7 +1758,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     foreach (var item in this.Points.Specific)
                     {
-                        if (!eval(item)) return false;
+                        if (!eval(item.Value)) return false;
                     }
                 }
             }
@@ -1747,16 +1779,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             obj.Reference = eval(this.Reference);
             if (Points != null)
             {
-                obj.Points = new MaskItem<R, IEnumerable<R>>();
+                obj.Points = new MaskItem<R, IEnumerable<(int Index, R Value)>>();
                 obj.Points.Overall = eval(this.Points.Overall);
                 if (Points.Specific != null)
                 {
-                    List<R> l = new List<R>();
+                    List<(int Index, R Item)> l = new List<(int Index, R Item)>();
                     obj.Points.Specific = l;
-                    foreach (var item in Points.Specific)
+                    foreach (var item in Points.Specific.WithIndex())
                     {
-                        R mask = default(R);
-                        mask = eval(item);
+                        (int Index, R Item) mask = default;
+                        mask.Index = item.Index;
+                        mask.Item = eval(item.Item.Value);
                         l.Add(mask);
                     }
                 }
@@ -1843,7 +1876,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         public Exception Reference;
-        public MaskItem<Exception, IEnumerable<Exception>> Points;
+        public MaskItem<Exception, IEnumerable<(int Index, Exception Value)>> Points;
         #endregion
 
         #region IErrorMask
@@ -1870,7 +1903,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     this.Reference = ex;
                     break;
                 case PointToReferenceMapping_FieldIndex.Points:
-                    this.Points = new MaskItem<Exception, IEnumerable<Exception>>(ex, null);
+                    this.Points = new MaskItem<Exception, IEnumerable<(int Index, Exception Value)>>(ex, null);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1886,7 +1919,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     this.Reference = (Exception)obj;
                     break;
                 case PointToReferenceMapping_FieldIndex.Points:
-                    this.Points = (MaskItem<Exception, IEnumerable<Exception>>)obj;
+                    this.Points = (MaskItem<Exception, IEnumerable<(int Index, Exception Value)>>)obj;
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1963,7 +1996,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             var ret = new PointToReferenceMapping_ErrorMask();
             ret.Reference = this.Reference.Combine(rhs.Reference);
-            ret.Points = new MaskItem<Exception, IEnumerable<Exception>>(this.Points.Overall.Combine(rhs.Points.Overall), new List<Exception>(this.Points.Specific.And(rhs.Points.Specific)));
+            ret.Points = new MaskItem<Exception, IEnumerable<(int Index, Exception Value)>>(this.Points.Overall.Combine(rhs.Points.Overall), new List<(int Index, Exception Value)>(this.Points.Specific.And(rhs.Points.Specific)));
             return ret;
         }
         public static PointToReferenceMapping_ErrorMask Combine(PointToReferenceMapping_ErrorMask lhs, PointToReferenceMapping_ErrorMask rhs)

@@ -89,8 +89,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> IEqualsMask<RegionDataWeather>.GetEqualsMask(RegionDataWeather rhs) => RegionDataWeatherCommon.GetEqualsMask(this, rhs);
-        IMask<bool> IEqualsMask<IRegionDataWeatherGetter>.GetEqualsMask(IRegionDataWeatherGetter rhs) => RegionDataWeatherCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<RegionDataWeather>.GetEqualsMask(RegionDataWeather rhs, EqualsMaskHelper.Include include) => RegionDataWeatherCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<IRegionDataWeatherGetter>.GetEqualsMask(IRegionDataWeatherGetter rhs, EqualsMaskHelper.Include include) => RegionDataWeatherCommon.GetEqualsMask(this, rhs, include);
         #region To String
         public string ToString(
             string name = null,
@@ -185,7 +185,13 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 foreach (var elem in node.Elements())
                 {
-                    Fill_Xml_Internal(
+                    FillPrivateElement_Xml(
+                        item: ret,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                    RegionDataWeatherCommon.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -497,7 +503,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        protected static void Fill_Xml_Internal(
+        protected static void FillPrivateElement_Xml(
             RegionDataWeather item,
             XElement node,
             string name,
@@ -506,36 +512,8 @@ namespace Mutagen.Bethesda.Oblivion
         {
             switch (name)
             {
-                case "Weathers":
-                    try
-                    {
-                        errorMask?.PushIndex((int)RegionDataWeather_FieldIndex.Weathers);
-                        if (ListXmlTranslation<WeatherChance>.Instance.Parse(
-                            node: node,
-                            enumer: out var WeathersItem,
-                            transl: LoquiXmlTranslation<WeatherChance>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.Weathers.SetTo(WeathersItem);
-                        }
-                        else
-                        {
-                            item.Weathers.Unset();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
                 default:
-                    RegionData.Fill_Xml_Internal(
+                    RegionData.FillPrivateElement_Xml(
                         item: item,
                         node: node,
                         name: name,
@@ -1421,46 +1399,29 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static RegionDataWeather_Mask<bool> GetEqualsMask(
             this IRegionDataWeatherGetter item,
-            IRegionDataWeatherGetter rhs)
+            IRegionDataWeatherGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new RegionDataWeather_Mask<bool>();
-            FillEqualsMask(item, rhs, ret);
+            FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
             return ret;
         }
 
         public static void FillEqualsMask(
             IRegionDataWeatherGetter item,
             IRegionDataWeatherGetter rhs,
-            RegionDataWeather_Mask<bool> ret)
+            RegionDataWeather_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            if (item.Weathers.HasBeenSet == rhs.Weathers.HasBeenSet)
-            {
-                if (item.Weathers.HasBeenSet)
-                {
-                    ret.Weathers = new MaskItem<bool, IEnumerable<MaskItem<bool, WeatherChance_Mask<bool>>>>();
-                    ret.Weathers.Specific = item.Weathers.SelectAgainst<WeatherChance, MaskItem<bool, WeatherChance_Mask<bool>>>(rhs.Weathers, ((l, r) =>
-                    {
-                        MaskItem<bool, WeatherChance_Mask<bool>> itemRet;
-                        itemRet = new MaskItem<bool, WeatherChance_Mask<bool>>();
-                        itemRet.Specific = WeatherChanceCommon.GetEqualsMask(l, r);
-                        itemRet.Overall = itemRet.Specific.AllEqual((b) => b);
-                        return itemRet;
-                    }
-                    ), out ret.Weathers.Overall);
-                    ret.Weathers.Overall = ret.Weathers.Overall && ret.Weathers.Specific.All((b) => b.Overall);
-                }
-                else
-                {
-                    ret.Weathers = new MaskItem<bool, IEnumerable<MaskItem<bool, WeatherChance_Mask<bool>>>>();
-                    ret.Weathers.Overall = true;
-                }
-            }
-            else
-            {
-                ret.Weathers = new MaskItem<bool, IEnumerable<MaskItem<bool, WeatherChance_Mask<bool>>>>();
-                ret.Weathers.Overall = false;
-            }
+            ret.Weathers = item.Weathers.CollectionEqualsHelper(
+                rhs.Weathers,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
             RegionDataCommon.FillEqualsMask(item, rhs, ret);
         }
 
@@ -1524,7 +1485,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static RegionDataWeather_Mask<bool> GetHasBeenSetMask(IRegionDataWeatherGetter item)
         {
             var ret = new RegionDataWeather_Mask<bool>();
-            ret.Weathers = new MaskItem<bool, IEnumerable<MaskItem<bool, WeatherChance_Mask<bool>>>>(item.Weathers.HasBeenSet, item.Weathers.Select((i) => new MaskItem<bool, WeatherChance_Mask<bool>>(true, i.GetHasBeenSetMask())));
+            ret.Weathers = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, WeatherChance_Mask<bool>>>>(item.Weathers.HasBeenSet, item.Weathers.WithIndex().Select((i) => new MaskItemIndexed<bool, WeatherChance_Mask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
             return ret;
         }
 
@@ -1591,7 +1552,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         public static void WriteToNode_Xml(
-            IRegionDataWeatherGetter item,
+            this IRegionDataWeatherGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1621,6 +1582,79 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             translationMask: listTranslMask);
                     }
                     );
+            }
+        }
+
+        public static void FillPublic_Xml(
+            this RegionDataWeather item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    RegionDataWeatherCommon.FillPublicElement_Xml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+
+        public static void FillPublicElement_Xml(
+            this RegionDataWeather item,
+            XElement node,
+            string name,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            switch (name)
+            {
+                case "Weathers":
+                    try
+                    {
+                        errorMask?.PushIndex((int)RegionDataWeather_FieldIndex.Weathers);
+                        if (ListXmlTranslation<WeatherChance>.Instance.Parse(
+                            node: node,
+                            enumer: out var WeathersItem,
+                            transl: LoquiXmlTranslation<WeatherChance>.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.Weathers.SetTo(WeathersItem);
+                        }
+                        else
+                        {
+                            item.Weathers.Unset();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                default:
+                    RegionDataCommon.FillPublicElement_Xml(
+                        item: item,
+                        node: node,
+                        name: name,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                    break;
             }
         }
 
@@ -1711,12 +1745,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public RegionDataWeather_Mask(T initialValue)
         {
-            this.Weathers = new MaskItem<T, IEnumerable<MaskItem<T, WeatherChance_Mask<T>>>>(initialValue, null);
+            this.Weathers = new MaskItem<T, IEnumerable<MaskItemIndexed<T, WeatherChance_Mask<T>>>>(initialValue, null);
         }
         #endregion
 
         #region Members
-        public MaskItem<T, IEnumerable<MaskItem<T, WeatherChance_Mask<T>>>> Weathers;
+        public MaskItem<T, IEnumerable<MaskItemIndexed<T, WeatherChance_Mask<T>>>> Weathers;
         #endregion
 
         #region Equals
@@ -1776,22 +1810,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             base.Translate_InternalFill(obj, eval);
             if (Weathers != null)
             {
-                obj.Weathers = new MaskItem<R, IEnumerable<MaskItem<R, WeatherChance_Mask<R>>>>();
+                obj.Weathers = new MaskItem<R, IEnumerable<MaskItemIndexed<R, WeatherChance_Mask<R>>>>();
                 obj.Weathers.Overall = eval(this.Weathers.Overall);
                 if (Weathers.Specific != null)
                 {
-                    List<MaskItem<R, WeatherChance_Mask<R>>> l = new List<MaskItem<R, WeatherChance_Mask<R>>>();
+                    List<MaskItemIndexed<R, WeatherChance_Mask<R>>> l = new List<MaskItemIndexed<R, WeatherChance_Mask<R>>>();
                     obj.Weathers.Specific = l;
-                    foreach (var item in Weathers.Specific)
+                    foreach (var item in Weathers.Specific.WithIndex())
                     {
-                        MaskItem<R, WeatherChance_Mask<R>> mask = default(MaskItem<R, WeatherChance_Mask<R>>);
-                        if (item != null)
+                        MaskItemIndexed<R, WeatherChance_Mask<R>> mask = default;
+                        mask.Index = item.Index;
+                        if (item.Item != null)
                         {
-                            mask = new MaskItem<R, WeatherChance_Mask<R>>();
-                            mask.Overall = eval(item.Overall);
-                            if (item.Specific != null)
+                            mask = new MaskItemIndexed<R, WeatherChance_Mask<R>>(item.Item.Index);
+                            mask.Overall = eval(item.Item.Overall);
+                            if (item.Item.Specific != null)
                             {
-                                mask.Specific = item.Specific.Translate(eval);
+                                mask.Specific = item.Item.Specific.Translate(eval);
                             }
                         }
                         l.Add(mask);

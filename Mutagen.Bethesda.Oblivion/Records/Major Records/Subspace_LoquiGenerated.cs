@@ -104,8 +104,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> IEqualsMask<Subspace>.GetEqualsMask(Subspace rhs) => SubspaceCommon.GetEqualsMask(this, rhs);
-        IMask<bool> IEqualsMask<ISubspaceGetter>.GetEqualsMask(ISubspaceGetter rhs) => SubspaceCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<Subspace>.GetEqualsMask(Subspace rhs, EqualsMaskHelper.Include include) => SubspaceCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<ISubspaceGetter>.GetEqualsMask(ISubspaceGetter rhs, EqualsMaskHelper.Include include) => SubspaceCommon.GetEqualsMask(this, rhs, include);
         #region To String
         public string ToString(
             string name = null,
@@ -197,7 +197,13 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 foreach (var elem in node.Elements())
                 {
-                    Fill_Xml_Internal(
+                    FillPrivateElement_Xml(
+                        item: ret,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                    SubspaceCommon.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -509,7 +515,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        protected static void Fill_Xml_Internal(
+        protected static void FillPrivateElement_Xml(
             Subspace item,
             XElement node,
             string name,
@@ -518,86 +524,8 @@ namespace Mutagen.Bethesda.Oblivion
         {
             switch (name)
             {
-                case "X":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Subspace_FieldIndex.X);
-                        if (FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Single XParse,
-                            errorMask: errorMask))
-                        {
-                            item.X = XParse;
-                        }
-                        else
-                        {
-                            item.X = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Y":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Subspace_FieldIndex.Y);
-                        if (FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Single YParse,
-                            errorMask: errorMask))
-                        {
-                            item.Y = YParse;
-                        }
-                        else
-                        {
-                            item.Y = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Z":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Subspace_FieldIndex.Z);
-                        if (FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Single ZParse,
-                            errorMask: errorMask))
-                        {
-                            item.Z = ZParse;
-                        }
-                        else
-                        {
-                            item.Z = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
                 default:
-                    MajorRecord.Fill_Xml_Internal(
+                    MajorRecord.FillPrivateElement_Xml(
                         item: item,
                         node: node,
                         name: name,
@@ -1616,22 +1544,28 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static Subspace_Mask<bool> GetEqualsMask(
             this ISubspaceGetter item,
-            ISubspaceGetter rhs)
+            ISubspaceGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new Subspace_Mask<bool>();
-            FillEqualsMask(item, rhs, ret);
+            FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
             return ret;
         }
 
         public static void FillEqualsMask(
             ISubspaceGetter item,
             ISubspaceGetter rhs,
-            Subspace_Mask<bool> ret)
+            Subspace_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.X = item.X == rhs.X;
-            ret.Y = item.Y == rhs.Y;
-            ret.Z = item.Z == rhs.Z;
+            ret.X = item.X.EqualsWithin(rhs.X);
+            ret.Y = item.Y.EqualsWithin(rhs.Y);
+            ret.Z = item.Z.EqualsWithin(rhs.Z);
             MajorRecordCommon.FillEqualsMask(item, rhs, ret);
         }
 
@@ -1761,7 +1695,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         public static void WriteToNode_Xml(
-            ISubspaceGetter item,
+            this ISubspaceGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1797,6 +1731,129 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item.Z,
                     fieldIndex: (int)Subspace_FieldIndex.Z,
                     errorMask: errorMask);
+            }
+        }
+
+        public static void FillPublic_Xml(
+            this Subspace item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    SubspaceCommon.FillPublicElement_Xml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+
+        public static void FillPublicElement_Xml(
+            this Subspace item,
+            XElement node,
+            string name,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            switch (name)
+            {
+                case "X":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Subspace_FieldIndex.X);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Single XParse,
+                            errorMask: errorMask))
+                        {
+                            item.X = XParse;
+                        }
+                        else
+                        {
+                            item.X = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Y":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Subspace_FieldIndex.Y);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Single YParse,
+                            errorMask: errorMask))
+                        {
+                            item.Y = YParse;
+                        }
+                        else
+                        {
+                            item.Y = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Z":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Subspace_FieldIndex.Z);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Single ZParse,
+                            errorMask: errorMask))
+                        {
+                            item.Z = ZParse;
+                        }
+                        else
+                        {
+                            item.Z = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                default:
+                    MajorRecordCommon.FillPublicElement_Xml(
+                        item: item,
+                        node: node,
+                        name: name,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                    break;
             }
         }
 

@@ -88,8 +88,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> IEqualsMask<Road>.GetEqualsMask(Road rhs) => RoadCommon.GetEqualsMask(this, rhs);
-        IMask<bool> IEqualsMask<IRoadGetter>.GetEqualsMask(IRoadGetter rhs) => RoadCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<Road>.GetEqualsMask(Road rhs, EqualsMaskHelper.Include include) => RoadCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<IRoadGetter>.GetEqualsMask(IRoadGetter rhs, EqualsMaskHelper.Include include) => RoadCommon.GetEqualsMask(this, rhs, include);
         #region To String
         public string ToString(
             string name = null,
@@ -184,7 +184,13 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 foreach (var elem in node.Elements())
                 {
-                    Fill_Xml_Internal(
+                    FillPrivateElement_Xml(
+                        item: ret,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                    RoadCommon.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -496,7 +502,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        protected static void Fill_Xml_Internal(
+        protected static void FillPrivateElement_Xml(
             Road item,
             XElement node,
             string name,
@@ -505,36 +511,8 @@ namespace Mutagen.Bethesda.Oblivion
         {
             switch (name)
             {
-                case "Points":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Road_FieldIndex.Points);
-                        if (ListXmlTranslation<RoadPoint>.Instance.Parse(
-                            node: node,
-                            enumer: out var PointsItem,
-                            transl: LoquiXmlTranslation<RoadPoint>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.Points.SetTo(PointsItem);
-                        }
-                        else
-                        {
-                            item.Points.Unset();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
                 default:
-                    MajorRecord.Fill_Xml_Internal(
+                    MajorRecord.FillPrivateElement_Xml(
                         item: item,
                         node: node,
                         name: name,
@@ -1405,46 +1383,29 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static Road_Mask<bool> GetEqualsMask(
             this IRoadGetter item,
-            IRoadGetter rhs)
+            IRoadGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new Road_Mask<bool>();
-            FillEqualsMask(item, rhs, ret);
+            FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
             return ret;
         }
 
         public static void FillEqualsMask(
             IRoadGetter item,
             IRoadGetter rhs,
-            Road_Mask<bool> ret)
+            Road_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            if (item.Points.HasBeenSet == rhs.Points.HasBeenSet)
-            {
-                if (item.Points.HasBeenSet)
-                {
-                    ret.Points = new MaskItem<bool, IEnumerable<MaskItem<bool, RoadPoint_Mask<bool>>>>();
-                    ret.Points.Specific = item.Points.SelectAgainst<RoadPoint, MaskItem<bool, RoadPoint_Mask<bool>>>(rhs.Points, ((l, r) =>
-                    {
-                        MaskItem<bool, RoadPoint_Mask<bool>> itemRet;
-                        itemRet = new MaskItem<bool, RoadPoint_Mask<bool>>();
-                        itemRet.Specific = RoadPointCommon.GetEqualsMask(l, r);
-                        itemRet.Overall = itemRet.Specific.AllEqual((b) => b);
-                        return itemRet;
-                    }
-                    ), out ret.Points.Overall);
-                    ret.Points.Overall = ret.Points.Overall && ret.Points.Specific.All((b) => b.Overall);
-                }
-                else
-                {
-                    ret.Points = new MaskItem<bool, IEnumerable<MaskItem<bool, RoadPoint_Mask<bool>>>>();
-                    ret.Points.Overall = true;
-                }
-            }
-            else
-            {
-                ret.Points = new MaskItem<bool, IEnumerable<MaskItem<bool, RoadPoint_Mask<bool>>>>();
-                ret.Points.Overall = false;
-            }
+            ret.Points = item.Points.CollectionEqualsHelper(
+                rhs.Points,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
             MajorRecordCommon.FillEqualsMask(item, rhs, ret);
         }
 
@@ -1508,7 +1469,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static Road_Mask<bool> GetHasBeenSetMask(IRoadGetter item)
         {
             var ret = new Road_Mask<bool>();
-            ret.Points = new MaskItem<bool, IEnumerable<MaskItem<bool, RoadPoint_Mask<bool>>>>(item.Points.HasBeenSet, item.Points.Select((i) => new MaskItem<bool, RoadPoint_Mask<bool>>(true, i.GetHasBeenSetMask())));
+            ret.Points = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, RoadPoint_Mask<bool>>>>(item.Points.HasBeenSet, item.Points.WithIndex().Select((i) => new MaskItemIndexed<bool, RoadPoint_Mask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
             return ret;
         }
 
@@ -1579,7 +1540,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         public static void WriteToNode_Xml(
-            IRoadGetter item,
+            this IRoadGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1609,6 +1570,79 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             translationMask: listTranslMask);
                     }
                     );
+            }
+        }
+
+        public static void FillPublic_Xml(
+            this Road item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    RoadCommon.FillPublicElement_Xml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+
+        public static void FillPublicElement_Xml(
+            this Road item,
+            XElement node,
+            string name,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            switch (name)
+            {
+                case "Points":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Road_FieldIndex.Points);
+                        if (ListXmlTranslation<RoadPoint>.Instance.Parse(
+                            node: node,
+                            enumer: out var PointsItem,
+                            transl: LoquiXmlTranslation<RoadPoint>.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.Points.SetTo(PointsItem);
+                        }
+                        else
+                        {
+                            item.Points.Unset();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                default:
+                    MajorRecordCommon.FillPublicElement_Xml(
+                        item: item,
+                        node: node,
+                        name: name,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                    break;
             }
         }
 
@@ -1697,12 +1731,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public Road_Mask(T initialValue)
         {
-            this.Points = new MaskItem<T, IEnumerable<MaskItem<T, RoadPoint_Mask<T>>>>(initialValue, null);
+            this.Points = new MaskItem<T, IEnumerable<MaskItemIndexed<T, RoadPoint_Mask<T>>>>(initialValue, null);
         }
         #endregion
 
         #region Members
-        public MaskItem<T, IEnumerable<MaskItem<T, RoadPoint_Mask<T>>>> Points;
+        public MaskItem<T, IEnumerable<MaskItemIndexed<T, RoadPoint_Mask<T>>>> Points;
         #endregion
 
         #region Equals
@@ -1762,22 +1796,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             base.Translate_InternalFill(obj, eval);
             if (Points != null)
             {
-                obj.Points = new MaskItem<R, IEnumerable<MaskItem<R, RoadPoint_Mask<R>>>>();
+                obj.Points = new MaskItem<R, IEnumerable<MaskItemIndexed<R, RoadPoint_Mask<R>>>>();
                 obj.Points.Overall = eval(this.Points.Overall);
                 if (Points.Specific != null)
                 {
-                    List<MaskItem<R, RoadPoint_Mask<R>>> l = new List<MaskItem<R, RoadPoint_Mask<R>>>();
+                    List<MaskItemIndexed<R, RoadPoint_Mask<R>>> l = new List<MaskItemIndexed<R, RoadPoint_Mask<R>>>();
                     obj.Points.Specific = l;
-                    foreach (var item in Points.Specific)
+                    foreach (var item in Points.Specific.WithIndex())
                     {
-                        MaskItem<R, RoadPoint_Mask<R>> mask = default(MaskItem<R, RoadPoint_Mask<R>>);
-                        if (item != null)
+                        MaskItemIndexed<R, RoadPoint_Mask<R>> mask = default;
+                        mask.Index = item.Index;
+                        if (item.Item != null)
                         {
-                            mask = new MaskItem<R, RoadPoint_Mask<R>>();
-                            mask.Overall = eval(item.Overall);
-                            if (item.Specific != null)
+                            mask = new MaskItemIndexed<R, RoadPoint_Mask<R>>(item.Item.Index);
+                            mask.Overall = eval(item.Item.Overall);
+                            if (item.Item.Specific != null)
                             {
-                                mask.Specific = item.Specific.Translate(eval);
+                                mask.Specific = item.Item.Specific.Translate(eval);
                             }
                         }
                         l.Add(mask);

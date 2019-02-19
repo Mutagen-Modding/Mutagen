@@ -72,8 +72,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> IEqualsMask<ScriptReference>.GetEqualsMask(ScriptReference rhs) => ScriptReferenceCommon.GetEqualsMask(this, rhs);
-        IMask<bool> IEqualsMask<IScriptReferenceGetter>.GetEqualsMask(IScriptReferenceGetter rhs) => ScriptReferenceCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<ScriptReference>.GetEqualsMask(ScriptReference rhs, EqualsMaskHelper.Include include) => ScriptReferenceCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<IScriptReferenceGetter>.GetEqualsMask(IScriptReferenceGetter rhs, EqualsMaskHelper.Include include) => ScriptReferenceCommon.GetEqualsMask(this, rhs, include);
         #region To String
         public string ToString(
             string name = null,
@@ -458,20 +458,6 @@ namespace Mutagen.Bethesda.Oblivion
                 translationMask: translationMask);
         }
         #endregion
-
-        protected static void Fill_Xml_Internal(
-            ScriptReference item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            switch (name)
-            {
-                default:
-                    break;
-            }
-        }
 
         #endregion
 
@@ -1056,17 +1042,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static ScriptReference_Mask<bool> GetEqualsMask(
             this IScriptReferenceGetter item,
-            IScriptReferenceGetter rhs)
+            IScriptReferenceGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new ScriptReference_Mask<bool>();
-            FillEqualsMask(item, rhs, ret);
+            FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
             return ret;
         }
 
         public static void FillEqualsMask(
             IScriptReferenceGetter item,
             IScriptReferenceGetter rhs,
-            ScriptReference_Mask<bool> ret)
+            ScriptReference_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
         }
@@ -1157,11 +1149,50 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         public static void WriteToNode_Xml(
-            IScriptReferenceGetter item,
+            this IScriptReferenceGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
         {
+        }
+
+        public static void FillPublic_Xml(
+            this ScriptReference item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    ScriptReferenceCommon.FillPublicElement_Xml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+
+        public static void FillPublicElement_Xml(
+            this ScriptReference item,
+            XElement node,
+            string name,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            switch (name)
+            {
+                default:
+                    break;
+            }
         }
 
         #endregion

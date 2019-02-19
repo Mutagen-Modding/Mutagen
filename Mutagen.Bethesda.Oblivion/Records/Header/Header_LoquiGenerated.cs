@@ -96,8 +96,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> IEqualsMask<Header>.GetEqualsMask(Header rhs) => HeaderCommon.GetEqualsMask(this, rhs);
-        IMask<bool> IEqualsMask<IHeaderGetter>.GetEqualsMask(IHeaderGetter rhs) => HeaderCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<Header>.GetEqualsMask(Header rhs, EqualsMaskHelper.Include include) => HeaderCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<IHeaderGetter>.GetEqualsMask(IHeaderGetter rhs, EqualsMaskHelper.Include include) => HeaderCommon.GetEqualsMask(this, rhs, include);
         #region To String
         public string ToString(
             string name = null,
@@ -187,7 +187,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 foreach (var elem in node.Elements())
                 {
-                    Fill_Xml_Internal(
+                    HeaderCommon.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -501,98 +501,6 @@ namespace Mutagen.Bethesda.Oblivion
                 translationMask: translationMask);
         }
         #endregion
-
-        protected static void Fill_Xml_Internal(
-            Header item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            switch (name)
-            {
-                case "Version":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Header_FieldIndex.Version);
-                        if (FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Single VersionParse,
-                            errorMask: errorMask))
-                        {
-                            item.Version = VersionParse;
-                        }
-                        else
-                        {
-                            item.Version = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "NumRecords":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Header_FieldIndex.NumRecords);
-                        if (Int32XmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Int32 NumRecordsParse,
-                            errorMask: errorMask))
-                        {
-                            item.NumRecords = NumRecordsParse;
-                        }
-                        else
-                        {
-                            item.NumRecords = default(Int32);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "NextObjectID":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Header_FieldIndex.NextObjectID);
-                        if (UInt32XmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out UInt32 NextObjectIDParse,
-                            errorMask: errorMask))
-                        {
-                            item.NextObjectID = NextObjectIDParse;
-                        }
-                        else
-                        {
-                            item.NextObjectID = default(UInt32);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
 
         #endregion
 
@@ -1576,20 +1484,26 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static Header_Mask<bool> GetEqualsMask(
             this IHeaderGetter item,
-            IHeaderGetter rhs)
+            IHeaderGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new Header_Mask<bool>();
-            FillEqualsMask(item, rhs, ret);
+            FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
             return ret;
         }
 
         public static void FillEqualsMask(
             IHeaderGetter item,
             IHeaderGetter rhs,
-            Header_Mask<bool> ret)
+            Header_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Version = item.Version == rhs.Version;
+            ret.Version = item.Version.EqualsWithin(rhs.Version);
             ret.NumRecords = item.NumRecords == rhs.NumRecords;
             ret.NextObjectID = item.NextObjectID == rhs.NextObjectID;
         }
@@ -1695,7 +1609,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         public static void WriteToNode_Xml(
-            IHeaderGetter item,
+            this IHeaderGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1726,6 +1640,123 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item.NextObjectID,
                     fieldIndex: (int)Header_FieldIndex.NextObjectID,
                     errorMask: errorMask);
+            }
+        }
+
+        public static void FillPublic_Xml(
+            this Header item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    HeaderCommon.FillPublicElement_Xml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+
+        public static void FillPublicElement_Xml(
+            this Header item,
+            XElement node,
+            string name,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            switch (name)
+            {
+                case "Version":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Header_FieldIndex.Version);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Single VersionParse,
+                            errorMask: errorMask))
+                        {
+                            item.Version = VersionParse;
+                        }
+                        else
+                        {
+                            item.Version = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "NumRecords":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Header_FieldIndex.NumRecords);
+                        if (Int32XmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Int32 NumRecordsParse,
+                            errorMask: errorMask))
+                        {
+                            item.NumRecords = NumRecordsParse;
+                        }
+                        else
+                        {
+                            item.NumRecords = default(Int32);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "NextObjectID":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Header_FieldIndex.NextObjectID);
+                        if (UInt32XmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out UInt32 NextObjectIDParse,
+                            errorMask: errorMask))
+                        {
+                            item.NextObjectID = NextObjectIDParse;
+                        }
+                        else
+                        {
+                            item.NextObjectID = default(UInt32);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                default:
+                    break;
             }
         }
 

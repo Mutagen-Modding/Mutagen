@@ -77,8 +77,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> IEqualsMask<ScriptVariableReference>.GetEqualsMask(ScriptVariableReference rhs) => ScriptVariableReferenceCommon.GetEqualsMask(this, rhs);
-        IMask<bool> IEqualsMask<IScriptVariableReferenceGetter>.GetEqualsMask(IScriptVariableReferenceGetter rhs) => ScriptVariableReferenceCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<ScriptVariableReference>.GetEqualsMask(ScriptVariableReference rhs, EqualsMaskHelper.Include include) => ScriptVariableReferenceCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<IScriptVariableReferenceGetter>.GetEqualsMask(IScriptVariableReferenceGetter rhs, EqualsMaskHelper.Include include) => ScriptVariableReferenceCommon.GetEqualsMask(this, rhs, include);
         #region To String
         public string ToString(
             string name = null,
@@ -166,7 +166,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 foreach (var elem in node.Elements())
                 {
-                    Fill_Xml_Internal(
+                    ScriptVariableReferenceCommon.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -477,52 +477,6 @@ namespace Mutagen.Bethesda.Oblivion
                 translationMask: translationMask);
         }
         #endregion
-
-        protected static void Fill_Xml_Internal(
-            ScriptVariableReference item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            switch (name)
-            {
-                case "VariableIndex":
-                    try
-                    {
-                        errorMask?.PushIndex((int)ScriptVariableReference_FieldIndex.VariableIndex);
-                        if (Int32XmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Int32 VariableIndexParse,
-                            errorMask: errorMask))
-                        {
-                            item.VariableIndex = VariableIndexParse;
-                        }
-                        else
-                        {
-                            item.VariableIndex = default(Int32);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                default:
-                    ScriptReference.Fill_Xml_Internal(
-                        item: item,
-                        node: node,
-                        name: name,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    break;
-            }
-        }
 
         #endregion
 
@@ -1364,17 +1318,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static ScriptVariableReference_Mask<bool> GetEqualsMask(
             this IScriptVariableReferenceGetter item,
-            IScriptVariableReferenceGetter rhs)
+            IScriptVariableReferenceGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new ScriptVariableReference_Mask<bool>();
-            FillEqualsMask(item, rhs, ret);
+            FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
             return ret;
         }
 
         public static void FillEqualsMask(
             IScriptVariableReferenceGetter item,
             IScriptVariableReferenceGetter rhs,
-            ScriptVariableReference_Mask<bool> ret)
+            ScriptVariableReference_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
             ret.VariableIndex = item.VariableIndex == rhs.VariableIndex;
@@ -1487,7 +1447,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         public static void WriteToNode_Xml(
-            IScriptVariableReferenceGetter item,
+            this IScriptVariableReferenceGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1505,6 +1465,77 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item.VariableIndex,
                     fieldIndex: (int)ScriptVariableReference_FieldIndex.VariableIndex,
                     errorMask: errorMask);
+            }
+        }
+
+        public static void FillPublic_Xml(
+            this ScriptVariableReference item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    ScriptVariableReferenceCommon.FillPublicElement_Xml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+
+        public static void FillPublicElement_Xml(
+            this ScriptVariableReference item,
+            XElement node,
+            string name,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            switch (name)
+            {
+                case "VariableIndex":
+                    try
+                    {
+                        errorMask?.PushIndex((int)ScriptVariableReference_FieldIndex.VariableIndex);
+                        if (Int32XmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Int32 VariableIndexParse,
+                            errorMask: errorMask))
+                        {
+                            item.VariableIndex = VariableIndexParse;
+                        }
+                        else
+                        {
+                            item.VariableIndex = default(Int32);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                default:
+                    ScriptReferenceCommon.FillPublicElement_Xml(
+                        item: item,
+                        node: node,
+                        name: name,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                    break;
             }
         }
 

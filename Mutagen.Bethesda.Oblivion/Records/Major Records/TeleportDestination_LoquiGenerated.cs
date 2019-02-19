@@ -95,8 +95,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> IEqualsMask<TeleportDestination>.GetEqualsMask(TeleportDestination rhs) => TeleportDestinationCommon.GetEqualsMask(this, rhs);
-        IMask<bool> IEqualsMask<ITeleportDestinationGetter>.GetEqualsMask(ITeleportDestinationGetter rhs) => TeleportDestinationCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<TeleportDestination>.GetEqualsMask(TeleportDestination rhs, EqualsMaskHelper.Include include) => TeleportDestinationCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<ITeleportDestinationGetter>.GetEqualsMask(ITeleportDestinationGetter rhs, EqualsMaskHelper.Include include) => TeleportDestinationCommon.GetEqualsMask(this, rhs, include);
         #region To String
         public string ToString(
             string name = null,
@@ -130,8 +130,8 @@ namespace Mutagen.Bethesda.Oblivion
         {
             if (rhs == null) return false;
             if (!this.Destination_Property.Equals(rhs.Destination_Property)) return false;
-            if (this.Position != rhs.Position) return false;
-            if (this.Rotation != rhs.Rotation) return false;
+            if (!this.Position.Equals(rhs.Position)) return false;
+            if (!this.Rotation.Equals(rhs.Rotation)) return false;
             return true;
         }
 
@@ -186,7 +186,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 foreach (var elem in node.Elements())
                 {
-                    Fill_Xml_Internal(
+                    TeleportDestinationCommon.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -500,79 +500,6 @@ namespace Mutagen.Bethesda.Oblivion
                 translationMask: translationMask);
         }
         #endregion
-
-        protected static void Fill_Xml_Internal(
-            TeleportDestination item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            switch (name)
-            {
-                case "Destination":
-                    FormKeyXmlTranslation.Instance.ParseInto(
-                        node: node,
-                        item: item.Destination_Property,
-                        fieldIndex: (int)TeleportDestination_FieldIndex.Destination,
-                        errorMask: errorMask);
-                    break;
-                case "Position":
-                    try
-                    {
-                        errorMask?.PushIndex((int)TeleportDestination_FieldIndex.Position);
-                        if (P3FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out P3Float PositionParse,
-                            errorMask: errorMask))
-                        {
-                            item.Position = PositionParse;
-                        }
-                        else
-                        {
-                            item.Position = default(P3Float);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Rotation":
-                    try
-                    {
-                        errorMask?.PushIndex((int)TeleportDestination_FieldIndex.Rotation);
-                        if (P3FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out P3Float RotationParse,
-                            errorMask: errorMask))
-                        {
-                            item.Rotation = RotationParse;
-                        }
-                        else
-                        {
-                            item.Rotation = default(P3Float);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
 
         #endregion
 
@@ -1563,17 +1490,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static TeleportDestination_Mask<bool> GetEqualsMask(
             this ITeleportDestinationGetter item,
-            ITeleportDestinationGetter rhs)
+            ITeleportDestinationGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new TeleportDestination_Mask<bool>();
-            FillEqualsMask(item, rhs, ret);
+            FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
             return ret;
         }
 
         public static void FillEqualsMask(
             ITeleportDestinationGetter item,
             ITeleportDestinationGetter rhs,
-            TeleportDestination_Mask<bool> ret)
+            TeleportDestination_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
             ret.Destination = item.Destination_Property.FormKey == rhs.Destination_Property.FormKey;
@@ -1682,7 +1615,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         public static void WriteToNode_Xml(
-            ITeleportDestinationGetter item,
+            this ITeleportDestinationGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1713,6 +1646,104 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item.Rotation,
                     fieldIndex: (int)TeleportDestination_FieldIndex.Rotation,
                     errorMask: errorMask);
+            }
+        }
+
+        public static void FillPublic_Xml(
+            this TeleportDestination item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    TeleportDestinationCommon.FillPublicElement_Xml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+
+        public static void FillPublicElement_Xml(
+            this TeleportDestination item,
+            XElement node,
+            string name,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            switch (name)
+            {
+                case "Destination":
+                    FormKeyXmlTranslation.Instance.ParseInto(
+                        node: node,
+                        item: item.Destination_Property,
+                        fieldIndex: (int)TeleportDestination_FieldIndex.Destination,
+                        errorMask: errorMask);
+                    break;
+                case "Position":
+                    try
+                    {
+                        errorMask?.PushIndex((int)TeleportDestination_FieldIndex.Position);
+                        if (P3FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out P3Float PositionParse,
+                            errorMask: errorMask))
+                        {
+                            item.Position = PositionParse;
+                        }
+                        else
+                        {
+                            item.Position = default(P3Float);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Rotation":
+                    try
+                    {
+                        errorMask?.PushIndex((int)TeleportDestination_FieldIndex.Rotation);
+                        if (P3FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out P3Float RotationParse,
+                            errorMask: errorMask))
+                        {
+                            item.Rotation = RotationParse;
+                        }
+                        else
+                        {
+                            item.Rotation = default(P3Float);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                default:
+                    break;
             }
         }
 

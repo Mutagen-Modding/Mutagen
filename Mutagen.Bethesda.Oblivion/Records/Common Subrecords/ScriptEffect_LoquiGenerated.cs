@@ -139,8 +139,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> IEqualsMask<ScriptEffect>.GetEqualsMask(ScriptEffect rhs) => ScriptEffectCommon.GetEqualsMask(this, rhs);
-        IMask<bool> IEqualsMask<IScriptEffectGetter>.GetEqualsMask(IScriptEffectGetter rhs) => ScriptEffectCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<ScriptEffect>.GetEqualsMask(ScriptEffect rhs, EqualsMaskHelper.Include include) => ScriptEffectCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<IScriptEffectGetter>.GetEqualsMask(IScriptEffectGetter rhs, EqualsMaskHelper.Include include) => ScriptEffectCommon.GetEqualsMask(this, rhs, include);
         #region To String
         public string ToString(
             string name = null,
@@ -241,7 +241,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 foreach (var elem in node.Elements())
                 {
-                    Fill_Xml_Internal(
+                    ScriptEffectCommon.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -555,112 +555,6 @@ namespace Mutagen.Bethesda.Oblivion
                 translationMask: translationMask);
         }
         #endregion
-
-        protected static void Fill_Xml_Internal(
-            ScriptEffect item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            switch (name)
-            {
-                case "Script":
-                    FormKeyXmlTranslation.Instance.ParseInto(
-                        node: node,
-                        item: item.Script_Property,
-                        fieldIndex: (int)ScriptEffect_FieldIndex.Script,
-                        errorMask: errorMask);
-                    break;
-                case "MagicSchool":
-                    try
-                    {
-                        errorMask?.PushIndex((int)ScriptEffect_FieldIndex.MagicSchool);
-                        if (EnumXmlTranslation<MagicSchool>.Instance.Parse(
-                            node: node,
-                            item: out MagicSchool MagicSchoolParse,
-                            errorMask: errorMask))
-                        {
-                            item.MagicSchool = MagicSchoolParse;
-                        }
-                        else
-                        {
-                            item.MagicSchool = default(MagicSchool);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "VisualEffect":
-                    FormKeyXmlTranslation.Instance.ParseInto(
-                        node: node,
-                        item: item.VisualEffect_Property,
-                        fieldIndex: (int)ScriptEffect_FieldIndex.VisualEffect,
-                        errorMask: errorMask);
-                    break;
-                case "Flags":
-                    try
-                    {
-                        errorMask?.PushIndex((int)ScriptEffect_FieldIndex.Flags);
-                        if (EnumXmlTranslation<ScriptEffect.Flag>.Instance.Parse(
-                            node: node,
-                            item: out ScriptEffect.Flag FlagsParse,
-                            errorMask: errorMask))
-                        {
-                            item.Flags = FlagsParse;
-                        }
-                        else
-                        {
-                            item.Flags = default(ScriptEffect.Flag);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Name":
-                    try
-                    {
-                        errorMask?.PushIndex((int)ScriptEffect_FieldIndex.Name);
-                        if (StringXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out String NameParse,
-                            errorMask: errorMask))
-                        {
-                            item.Name = NameParse;
-                        }
-                        else
-                        {
-                            item.Name = default(String);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
 
         #endregion
 
@@ -1896,17 +1790,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static ScriptEffect_Mask<bool> GetEqualsMask(
             this IScriptEffectGetter item,
-            IScriptEffectGetter rhs)
+            IScriptEffectGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new ScriptEffect_Mask<bool>();
-            FillEqualsMask(item, rhs, ret);
+            FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
             return ret;
         }
 
         public static void FillEqualsMask(
             IScriptEffectGetter item,
             IScriptEffectGetter rhs,
-            ScriptEffect_Mask<bool> ret)
+            ScriptEffect_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
             ret.Script = item.Script_Property.FormKey == rhs.Script_Property.FormKey;
@@ -2028,7 +1928,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         public static void WriteToNode_Xml(
-            IScriptEffectGetter item,
+            this IScriptEffectGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -2078,6 +1978,137 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item.Name,
                     fieldIndex: (int)ScriptEffect_FieldIndex.Name,
                     errorMask: errorMask);
+            }
+        }
+
+        public static void FillPublic_Xml(
+            this ScriptEffect item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    ScriptEffectCommon.FillPublicElement_Xml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+
+        public static void FillPublicElement_Xml(
+            this ScriptEffect item,
+            XElement node,
+            string name,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            switch (name)
+            {
+                case "Script":
+                    FormKeyXmlTranslation.Instance.ParseInto(
+                        node: node,
+                        item: item.Script_Property,
+                        fieldIndex: (int)ScriptEffect_FieldIndex.Script,
+                        errorMask: errorMask);
+                    break;
+                case "MagicSchool":
+                    try
+                    {
+                        errorMask?.PushIndex((int)ScriptEffect_FieldIndex.MagicSchool);
+                        if (EnumXmlTranslation<MagicSchool>.Instance.Parse(
+                            node: node,
+                            item: out MagicSchool MagicSchoolParse,
+                            errorMask: errorMask))
+                        {
+                            item.MagicSchool = MagicSchoolParse;
+                        }
+                        else
+                        {
+                            item.MagicSchool = default(MagicSchool);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "VisualEffect":
+                    FormKeyXmlTranslation.Instance.ParseInto(
+                        node: node,
+                        item: item.VisualEffect_Property,
+                        fieldIndex: (int)ScriptEffect_FieldIndex.VisualEffect,
+                        errorMask: errorMask);
+                    break;
+                case "Flags":
+                    try
+                    {
+                        errorMask?.PushIndex((int)ScriptEffect_FieldIndex.Flags);
+                        if (EnumXmlTranslation<ScriptEffect.Flag>.Instance.Parse(
+                            node: node,
+                            item: out ScriptEffect.Flag FlagsParse,
+                            errorMask: errorMask))
+                        {
+                            item.Flags = FlagsParse;
+                        }
+                        else
+                        {
+                            item.Flags = default(ScriptEffect.Flag);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Name":
+                    try
+                    {
+                        errorMask?.PushIndex((int)ScriptEffect_FieldIndex.Name);
+                        if (StringXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out String NameParse,
+                            errorMask: errorMask))
+                        {
+                            item.Name = NameParse;
+                        }
+                        else
+                        {
+                            item.Name = default(String);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                default:
+                    break;
             }
         }
 

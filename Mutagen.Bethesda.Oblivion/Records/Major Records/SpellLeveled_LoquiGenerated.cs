@@ -69,8 +69,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> IEqualsMask<SpellLeveled>.GetEqualsMask(SpellLeveled rhs) => SpellLeveledCommon.GetEqualsMask(this, rhs);
-        IMask<bool> IEqualsMask<ISpellLeveledGetter>.GetEqualsMask(ISpellLeveledGetter rhs) => SpellLeveledCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<SpellLeveled>.GetEqualsMask(SpellLeveled rhs, EqualsMaskHelper.Include include) => SpellLeveledCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<ISpellLeveledGetter>.GetEqualsMask(ISpellLeveledGetter rhs, EqualsMaskHelper.Include include) => SpellLeveledCommon.GetEqualsMask(this, rhs, include);
         #region To String
         public string ToString(
             string name = null,
@@ -156,7 +156,13 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 foreach (var elem in node.Elements())
                 {
-                    Fill_Xml_Internal(
+                    FillPrivateElement_Xml(
+                        item: ret,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                    SpellLeveledCommon.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -532,7 +538,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        protected static void Fill_Xml_Internal(
+        protected static void FillPrivateElement_Xml(
             SpellLeveled item,
             XElement node,
             string name,
@@ -542,7 +548,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 default:
-                    Spell.Fill_Xml_Internal(
+                    Spell.FillPrivateElement_Xml(
                         item: item,
                         node: node,
                         name: name,
@@ -1312,17 +1318,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static SpellLeveled_Mask<bool> GetEqualsMask(
             this ISpellLeveledGetter item,
-            ISpellLeveledGetter rhs)
+            ISpellLeveledGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new SpellLeveled_Mask<bool>();
-            FillEqualsMask(item, rhs, ret);
+            FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
             return ret;
         }
 
         public static void FillEqualsMask(
             ISpellLeveledGetter item,
             ISpellLeveledGetter rhs,
-            SpellLeveled_Mask<bool> ret)
+            SpellLeveled_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
             SpellCommon.FillEqualsMask(item, rhs, ret);
@@ -1491,7 +1503,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         public static void WriteToNode_Xml(
-            ISpellLeveledGetter item,
+            this ISpellLeveledGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1501,6 +1513,51 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
+        }
+
+        public static void FillPublic_Xml(
+            this SpellLeveled item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    SpellLeveledCommon.FillPublicElement_Xml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+
+        public static void FillPublicElement_Xml(
+            this SpellLeveled item,
+            XElement node,
+            string name,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            switch (name)
+            {
+                default:
+                    SpellCommon.FillPublicElement_Xml(
+                        item: item,
+                        node: node,
+                        name: name,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                    break;
+            }
         }
 
         #endregion

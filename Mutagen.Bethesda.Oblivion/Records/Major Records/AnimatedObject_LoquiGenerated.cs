@@ -103,8 +103,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> IEqualsMask<AnimatedObject>.GetEqualsMask(AnimatedObject rhs) => AnimatedObjectCommon.GetEqualsMask(this, rhs);
-        IMask<bool> IEqualsMask<IAnimatedObjectGetter>.GetEqualsMask(IAnimatedObjectGetter rhs) => AnimatedObjectCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<AnimatedObject>.GetEqualsMask(AnimatedObject rhs, EqualsMaskHelper.Include include) => AnimatedObjectCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<IAnimatedObjectGetter>.GetEqualsMask(IAnimatedObjectGetter rhs, EqualsMaskHelper.Include include) => AnimatedObjectCommon.GetEqualsMask(this, rhs, include);
         #region To String
         public string ToString(
             string name = null,
@@ -208,7 +208,13 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 foreach (var elem in node.Elements())
                 {
-                    Fill_Xml_Internal(
+                    FillPrivateElement_Xml(
+                        item: ret,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                    AnimatedObjectCommon.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -520,7 +526,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        protected static void Fill_Xml_Internal(
+        protected static void FillPrivateElement_Xml(
             AnimatedObject item,
             XElement node,
             string name,
@@ -529,42 +535,8 @@ namespace Mutagen.Bethesda.Oblivion
         {
             switch (name)
             {
-                case "Model":
-                    try
-                    {
-                        errorMask?.PushIndex((int)AnimatedObject_FieldIndex.Model);
-                        if (LoquiXmlTranslation<Model>.Instance.Parse(
-                            node: node,
-                            item: out Model ModelParse,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)AnimatedObject_FieldIndex.Model)))
-                        {
-                            item.Model = ModelParse;
-                        }
-                        else
-                        {
-                            item.Model = default(Model);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "IdleAnimation":
-                    FormKeyXmlTranslation.Instance.ParseInto(
-                        node: node,
-                        item: item.IdleAnimation_Property,
-                        fieldIndex: (int)AnimatedObject_FieldIndex.IdleAnimation,
-                        errorMask: errorMask);
-                    break;
                 default:
-                    MajorRecord.Fill_Xml_Internal(
+                    MajorRecord.FillPrivateElement_Xml(
                         item: item,
                         node: node,
                         name: name,
@@ -1562,20 +1534,32 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static AnimatedObject_Mask<bool> GetEqualsMask(
             this IAnimatedObjectGetter item,
-            IAnimatedObjectGetter rhs)
+            IAnimatedObjectGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new AnimatedObject_Mask<bool>();
-            FillEqualsMask(item, rhs, ret);
+            FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
             return ret;
         }
 
         public static void FillEqualsMask(
             IAnimatedObjectGetter item,
             IAnimatedObjectGetter rhs,
-            AnimatedObject_Mask<bool> ret)
+            AnimatedObject_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Model = IHasBeenSetExt.LoquiEqualsHelper(item.Model_IsSet, rhs.Model_IsSet, item.Model, rhs.Model, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
+            ret.Model = EqualsMaskHelper.EqualsHelper(
+                item.Model_IsSet,
+                rhs.Model_IsSet,
+                item.Model,
+                rhs.Model,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
+                include);
             ret.IdleAnimation = item.IdleAnimation_Property.FormKey == rhs.IdleAnimation_Property.FormKey;
             MajorRecordCommon.FillEqualsMask(item, rhs, ret);
         }
@@ -1704,7 +1688,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         public static void WriteToNode_Xml(
-            IAnimatedObjectGetter item,
+            this IAnimatedObjectGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1734,6 +1718,85 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item.IdleAnimation_Property?.FormKey,
                     fieldIndex: (int)AnimatedObject_FieldIndex.IdleAnimation,
                     errorMask: errorMask);
+            }
+        }
+
+        public static void FillPublic_Xml(
+            this AnimatedObject item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    AnimatedObjectCommon.FillPublicElement_Xml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+
+        public static void FillPublicElement_Xml(
+            this AnimatedObject item,
+            XElement node,
+            string name,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            switch (name)
+            {
+                case "Model":
+                    try
+                    {
+                        errorMask?.PushIndex((int)AnimatedObject_FieldIndex.Model);
+                        if (LoquiXmlTranslation<Model>.Instance.Parse(
+                            node: node,
+                            item: out Model ModelParse,
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)AnimatedObject_FieldIndex.Model)))
+                        {
+                            item.Model = ModelParse;
+                        }
+                        else
+                        {
+                            item.Model = default(Model);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "IdleAnimation":
+                    FormKeyXmlTranslation.Instance.ParseInto(
+                        node: node,
+                        item: item.IdleAnimation_Property,
+                        fieldIndex: (int)AnimatedObject_FieldIndex.IdleAnimation,
+                        errorMask: errorMask);
+                    break;
+                default:
+                    MajorRecordCommon.FillPublicElement_Xml(
+                        item: item,
+                        node: node,
+                        name: name,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                    break;
             }
         }
 

@@ -47,6 +47,11 @@ namespace Mutagen.Bethesda.Generation
             this.FormIDType = node.GetAttribute<FormIDTypeEnum>("type", defaultVal: FormIDTypeEnum.Normal);
         }
 
+        public override string GenerateEqualsSnippet(Accessor accessor, Accessor rhsAccessor, bool negate = false)
+        {
+            return $"{(negate ? "!" : null)}object.Equals({accessor.DirectAccess}, {rhsAccessor.DirectAccess})";
+        }
+
         public override void GenerateForClass(FileGeneration fg)
         {
             string linkString;

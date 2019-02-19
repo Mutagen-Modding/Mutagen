@@ -1,4 +1,5 @@
 ﻿using Loqui.Internal;
+using Loqui.Xml;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Noggog;
 using System;
@@ -22,30 +23,15 @@ namespace Mutagen.Bethesda.Oblivion
             string path,
             ErrorMaskBuilder errorMask)
         {
-            XElement topNode = new XElement("topnode");
-            int counter = 0;
-            foreach (var cell in this.Items)
-            {
-                using (errorMask.PushIndex(counter))
-                {
-                    try
-                    {
-                        cell.Write_Xml(
-                            topNode,
-                            errorMask: errorMask,
-                            translationMask: null);
-                    }
-                    catch (Exception ex)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                }
-                counter++;
-            }
-            if (topNode.HasElements)
-            {
-                topNode.SaveIfChanged(Path.Combine(path, $"{this.BlockNumber.ToString()}.xml"));
-            }
+            this.Write_Xml(
+                path, 
+                errorMask,
+                translationMask: null);
+        }
+
+        public static CellSubBlock Create_Xml_Folder(FilePath file, int index)
+        {
+            return CellSubBlock.Create_Xml(file.Path);
         }
 
         public object Duplicate(Func<FormKey> getNextFormKey, IList<(MajorRecord Record, FormKey OriginalFormKey)> duplicatedRecordTracker = null)

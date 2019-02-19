@@ -176,8 +176,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> IEqualsMask<Rank>.GetEqualsMask(Rank rhs) => RankCommon.GetEqualsMask(this, rhs);
-        IMask<bool> IEqualsMask<IRankGetter>.GetEqualsMask(IRankGetter rhs) => RankCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<Rank>.GetEqualsMask(Rank rhs, EqualsMaskHelper.Include include) => RankCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<IRankGetter>.GetEqualsMask(IRankGetter rhs, EqualsMaskHelper.Include include) => RankCommon.GetEqualsMask(this, rhs, include);
         #region To String
         public string ToString(
             string name = null,
@@ -297,7 +297,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 foreach (var elem in node.Elements())
                 {
-                    Fill_Xml_Internal(
+                    RankCommon.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -611,124 +611,6 @@ namespace Mutagen.Bethesda.Oblivion
                 translationMask: translationMask);
         }
         #endregion
-
-        protected static void Fill_Xml_Internal(
-            Rank item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            switch (name)
-            {
-                case "RankNumber":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Rank_FieldIndex.RankNumber);
-                        if (Int32XmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Int32 RankNumberParse,
-                            errorMask: errorMask))
-                        {
-                            item.RankNumber = RankNumberParse;
-                        }
-                        else
-                        {
-                            item.RankNumber = default(Int32);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "MaleName":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Rank_FieldIndex.MaleName);
-                        if (StringXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out String MaleNameParse,
-                            errorMask: errorMask))
-                        {
-                            item.MaleName = MaleNameParse;
-                        }
-                        else
-                        {
-                            item.MaleName = default(String);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "FemaleName":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Rank_FieldIndex.FemaleName);
-                        if (StringXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out String FemaleNameParse,
-                            errorMask: errorMask))
-                        {
-                            item.FemaleName = FemaleNameParse;
-                        }
-                        else
-                        {
-                            item.FemaleName = default(String);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Insignia":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Rank_FieldIndex.Insignia);
-                        if (StringXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out String InsigniaParse,
-                            errorMask: errorMask))
-                        {
-                            item.Insignia = InsigniaParse;
-                        }
-                        else
-                        {
-                            item.Insignia = default(String);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
 
         #endregion
 
@@ -1923,17 +1805,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static Rank_Mask<bool> GetEqualsMask(
             this IRankGetter item,
-            IRankGetter rhs)
+            IRankGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new Rank_Mask<bool>();
-            FillEqualsMask(item, rhs, ret);
+            FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
             return ret;
         }
 
         public static void FillEqualsMask(
             IRankGetter item,
             IRankGetter rhs,
-            Rank_Mask<bool> ret)
+            Rank_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
             ret.RankNumber = item.RankNumber_IsSet == rhs.RankNumber_IsSet && item.RankNumber == rhs.RankNumber;
@@ -2052,7 +1940,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         public static void WriteToNode_Xml(
-            IRankGetter item,
+            this IRankGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -2096,6 +1984,149 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item.Insignia,
                     fieldIndex: (int)Rank_FieldIndex.Insignia,
                     errorMask: errorMask);
+            }
+        }
+
+        public static void FillPublic_Xml(
+            this Rank item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    RankCommon.FillPublicElement_Xml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+
+        public static void FillPublicElement_Xml(
+            this Rank item,
+            XElement node,
+            string name,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            switch (name)
+            {
+                case "RankNumber":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Rank_FieldIndex.RankNumber);
+                        if (Int32XmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Int32 RankNumberParse,
+                            errorMask: errorMask))
+                        {
+                            item.RankNumber = RankNumberParse;
+                        }
+                        else
+                        {
+                            item.RankNumber = default(Int32);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "MaleName":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Rank_FieldIndex.MaleName);
+                        if (StringXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out String MaleNameParse,
+                            errorMask: errorMask))
+                        {
+                            item.MaleName = MaleNameParse;
+                        }
+                        else
+                        {
+                            item.MaleName = default(String);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "FemaleName":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Rank_FieldIndex.FemaleName);
+                        if (StringXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out String FemaleNameParse,
+                            errorMask: errorMask))
+                        {
+                            item.FemaleName = FemaleNameParse;
+                        }
+                        else
+                        {
+                            item.FemaleName = default(String);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Insignia":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Rank_FieldIndex.Insignia);
+                        if (StringXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out String InsigniaParse,
+                            errorMask: errorMask))
+                        {
+                            item.Insignia = InsigniaParse;
+                        }
+                        else
+                        {
+                            item.Insignia = default(String);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                default:
+                    break;
             }
         }
 

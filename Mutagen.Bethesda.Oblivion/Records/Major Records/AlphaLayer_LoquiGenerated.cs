@@ -96,8 +96,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> IEqualsMask<AlphaLayer>.GetEqualsMask(AlphaLayer rhs) => AlphaLayerCommon.GetEqualsMask(this, rhs);
-        IMask<bool> IEqualsMask<IAlphaLayerGetter>.GetEqualsMask(IAlphaLayerGetter rhs) => AlphaLayerCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<AlphaLayer>.GetEqualsMask(AlphaLayer rhs, EqualsMaskHelper.Include include) => AlphaLayerCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<IAlphaLayerGetter>.GetEqualsMask(IAlphaLayerGetter rhs, EqualsMaskHelper.Include include) => AlphaLayerCommon.GetEqualsMask(this, rhs, include);
         #region To String
         public string ToString(
             string name = null,
@@ -192,7 +192,13 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 foreach (var elem in node.Elements())
                 {
-                    Fill_Xml_Internal(
+                    FillPrivateElement_Xml(
+                        item: ret,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                    AlphaLayerCommon.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -504,7 +510,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        protected static void Fill_Xml_Internal(
+        protected static void FillPrivateElement_Xml(
             AlphaLayer item,
             XElement node,
             string name,
@@ -513,34 +519,8 @@ namespace Mutagen.Bethesda.Oblivion
         {
             switch (name)
             {
-                case "AlphaLayerData":
-                    try
-                    {
-                        errorMask?.PushIndex((int)AlphaLayer_FieldIndex.AlphaLayerData);
-                        if (ByteArrayXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Byte[] AlphaLayerDataParse,
-                            errorMask: errorMask))
-                        {
-                            item.AlphaLayerData = AlphaLayerDataParse;
-                        }
-                        else
-                        {
-                            item.AlphaLayerData = default(Byte[]);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
                 default:
-                    BaseLayer.Fill_Xml_Internal(
+                    BaseLayer.FillPrivateElement_Xml(
                         item: item,
                         node: node,
                         name: name,
@@ -1412,17 +1392,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static AlphaLayer_Mask<bool> GetEqualsMask(
             this IAlphaLayerGetter item,
-            IAlphaLayerGetter rhs)
+            IAlphaLayerGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new AlphaLayer_Mask<bool>();
-            FillEqualsMask(item, rhs, ret);
+            FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
             return ret;
         }
 
         public static void FillEqualsMask(
             IAlphaLayerGetter item,
             IAlphaLayerGetter rhs,
-            AlphaLayer_Mask<bool> ret)
+            AlphaLayer_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
             ret.AlphaLayerData = item.AlphaLayerData_IsSet == rhs.AlphaLayerData_IsSet && item.AlphaLayerData.EqualsFast(rhs.AlphaLayerData);
@@ -1542,7 +1528,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         public static void WriteToNode_Xml(
-            IAlphaLayerGetter item,
+            this IAlphaLayerGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1561,6 +1547,77 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item.AlphaLayerData,
                     fieldIndex: (int)AlphaLayer_FieldIndex.AlphaLayerData,
                     errorMask: errorMask);
+            }
+        }
+
+        public static void FillPublic_Xml(
+            this AlphaLayer item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    AlphaLayerCommon.FillPublicElement_Xml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+
+        public static void FillPublicElement_Xml(
+            this AlphaLayer item,
+            XElement node,
+            string name,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            switch (name)
+            {
+                case "AlphaLayerData":
+                    try
+                    {
+                        errorMask?.PushIndex((int)AlphaLayer_FieldIndex.AlphaLayerData);
+                        if (ByteArrayXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Byte[] AlphaLayerDataParse,
+                            errorMask: errorMask))
+                        {
+                            item.AlphaLayerData = AlphaLayerDataParse;
+                        }
+                        else
+                        {
+                            item.AlphaLayerData = default(Byte[]);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                default:
+                    BaseLayerCommon.FillPublicElement_Xml(
+                        item: item,
+                        node: node,
+                        name: name,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                    break;
             }
         }
 

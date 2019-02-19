@@ -74,8 +74,8 @@ namespace Mutagen.Bethesda.Tests
 
         #endregion
 
-        IMask<bool> IEqualsMask<Passthrough>.GetEqualsMask(Passthrough rhs) => PassthroughCommon.GetEqualsMask(this, rhs);
-        IMask<bool> IEqualsMask<IPassthroughGetter>.GetEqualsMask(IPassthroughGetter rhs) => PassthroughCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<Passthrough>.GetEqualsMask(Passthrough rhs, EqualsMaskHelper.Include include) => PassthroughCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<IPassthroughGetter>.GetEqualsMask(IPassthroughGetter rhs, EqualsMaskHelper.Include include) => PassthroughCommon.GetEqualsMask(this, rhs, include);
         #region To String
         public override string ToString()
         {
@@ -170,7 +170,7 @@ namespace Mutagen.Bethesda.Tests
             {
                 foreach (var elem in node.Elements())
                 {
-                    Fill_Xml_Internal(
+                    PassthroughCommon.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -484,98 +484,6 @@ namespace Mutagen.Bethesda.Tests
                 translationMask: translationMask);
         }
         #endregion
-
-        protected static void Fill_Xml_Internal(
-            Passthrough item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            switch (name)
-            {
-                case "Do":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Passthrough_FieldIndex.Do);
-                        if (BooleanXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Boolean DoParse,
-                            errorMask: errorMask))
-                        {
-                            item.Do = DoParse;
-                        }
-                        else
-                        {
-                            item.Do = default(Boolean);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Path":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Passthrough_FieldIndex.Path);
-                        if (StringXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out String PathParse,
-                            errorMask: errorMask))
-                        {
-                            item.Path = PathParse;
-                        }
-                        else
-                        {
-                            item.Path = default(String);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "NumMasters":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Passthrough_FieldIndex.NumMasters);
-                        if (ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Byte NumMastersParse,
-                            errorMask: errorMask))
-                        {
-                            item.NumMasters = NumMastersParse;
-                        }
-                        else
-                        {
-                            item.NumMasters = default(Byte);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
 
         #endregion
 
@@ -1118,17 +1026,23 @@ namespace Mutagen.Bethesda.Tests.Internals
 
         public static Passthrough_Mask<bool> GetEqualsMask(
             this IPassthroughGetter item,
-            IPassthroughGetter rhs)
+            IPassthroughGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new Passthrough_Mask<bool>();
-            FillEqualsMask(item, rhs, ret);
+            FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
             return ret;
         }
 
         public static void FillEqualsMask(
             IPassthroughGetter item,
             IPassthroughGetter rhs,
-            Passthrough_Mask<bool> ret)
+            Passthrough_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
             ret.Do = item.Do == rhs.Do;
@@ -1237,7 +1151,7 @@ namespace Mutagen.Bethesda.Tests.Internals
         #endregion
 
         public static void WriteToNode_Xml(
-            IPassthroughGetter item,
+            this IPassthroughGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1268,6 +1182,123 @@ namespace Mutagen.Bethesda.Tests.Internals
                     item: item.NumMasters,
                     fieldIndex: (int)Passthrough_FieldIndex.NumMasters,
                     errorMask: errorMask);
+            }
+        }
+
+        public static void FillPublic_Xml(
+            this Passthrough item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    PassthroughCommon.FillPublicElement_Xml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+
+        public static void FillPublicElement_Xml(
+            this Passthrough item,
+            XElement node,
+            string name,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            switch (name)
+            {
+                case "Do":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Passthrough_FieldIndex.Do);
+                        if (BooleanXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Boolean DoParse,
+                            errorMask: errorMask))
+                        {
+                            item.Do = DoParse;
+                        }
+                        else
+                        {
+                            item.Do = default(Boolean);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Path":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Passthrough_FieldIndex.Path);
+                        if (StringXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out String PathParse,
+                            errorMask: errorMask))
+                        {
+                            item.Path = PathParse;
+                        }
+                        else
+                        {
+                            item.Path = default(String);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "NumMasters":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Passthrough_FieldIndex.NumMasters);
+                        if (ByteXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Byte NumMastersParse,
+                            errorMask: errorMask))
+                        {
+                            item.NumMasters = NumMastersParse;
+                        }
+                        else
+                        {
+                            item.NumMasters = default(Byte);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                default:
+                    break;
             }
         }
 

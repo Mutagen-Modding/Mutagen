@@ -220,8 +220,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> IEqualsMask<Landscape>.GetEqualsMask(Landscape rhs) => LandscapeCommon.GetEqualsMask(this, rhs);
-        IMask<bool> IEqualsMask<ILandscapeGetter>.GetEqualsMask(ILandscapeGetter rhs) => LandscapeCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<Landscape>.GetEqualsMask(Landscape rhs, EqualsMaskHelper.Include include) => LandscapeCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<ILandscapeGetter>.GetEqualsMask(ILandscapeGetter rhs, EqualsMaskHelper.Include include) => LandscapeCommon.GetEqualsMask(this, rhs, include);
         #region To String
         public string ToString(
             string name = null,
@@ -361,7 +361,13 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 foreach (var elem in node.Elements())
                 {
-                    Fill_Xml_Internal(
+                    FillPrivateElement_Xml(
+                        item: ret,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                    LandscapeCommon.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -673,7 +679,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        protected static void Fill_Xml_Internal(
+        protected static void FillPrivateElement_Xml(
             Landscape item,
             XElement node,
             string name,
@@ -682,168 +688,8 @@ namespace Mutagen.Bethesda.Oblivion
         {
             switch (name)
             {
-                case "Unknown":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Landscape_FieldIndex.Unknown);
-                        if (ByteArrayXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Byte[] UnknownParse,
-                            errorMask: errorMask))
-                        {
-                            item.Unknown = UnknownParse;
-                        }
-                        else
-                        {
-                            item.Unknown = default(Byte[]);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "VertexNormals":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Landscape_FieldIndex.VertexNormals);
-                        if (ByteArrayXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Byte[] VertexNormalsParse,
-                            errorMask: errorMask))
-                        {
-                            item.VertexNormals = VertexNormalsParse;
-                        }
-                        else
-                        {
-                            item.VertexNormals = default(Byte[]);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "VertexHeightMap":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Landscape_FieldIndex.VertexHeightMap);
-                        if (ByteArrayXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Byte[] VertexHeightMapParse,
-                            errorMask: errorMask))
-                        {
-                            item.VertexHeightMap = VertexHeightMapParse;
-                        }
-                        else
-                        {
-                            item.VertexHeightMap = default(Byte[]);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "VertexColors":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Landscape_FieldIndex.VertexColors);
-                        if (ByteArrayXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Byte[] VertexColorsParse,
-                            errorMask: errorMask))
-                        {
-                            item.VertexColors = VertexColorsParse;
-                        }
-                        else
-                        {
-                            item.VertexColors = default(Byte[]);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Layers":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Landscape_FieldIndex.Layers);
-                        if (ListXmlTranslation<BaseLayer>.Instance.Parse(
-                            node: node,
-                            enumer: out var LayersItem,
-                            transl: LoquiXmlTranslation<BaseLayer>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.Layers.SetTo(LayersItem);
-                        }
-                        else
-                        {
-                            item.Layers.Unset();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Textures":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Landscape_FieldIndex.Textures);
-                        if (ListXmlTranslation<FormIDLink<LandTexture>>.Instance.Parse(
-                            node: node,
-                            enumer: out var TexturesItem,
-                            transl: FormKeyXmlTranslation.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.Textures.SetTo(TexturesItem);
-                        }
-                        else
-                        {
-                            item.Textures.Unset();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
                 default:
-                    MajorRecord.Fill_Xml_Internal(
+                    MajorRecord.FillPrivateElement_Xml(
                         item: item,
                         node: node,
                         name: name,
@@ -2227,67 +2073,37 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static Landscape_Mask<bool> GetEqualsMask(
             this ILandscapeGetter item,
-            ILandscapeGetter rhs)
+            ILandscapeGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new Landscape_Mask<bool>();
-            FillEqualsMask(item, rhs, ret);
+            FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
             return ret;
         }
 
         public static void FillEqualsMask(
             ILandscapeGetter item,
             ILandscapeGetter rhs,
-            Landscape_Mask<bool> ret)
+            Landscape_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
             ret.Unknown = item.Unknown_IsSet == rhs.Unknown_IsSet && item.Unknown.EqualsFast(rhs.Unknown);
             ret.VertexNormals = item.VertexNormals_IsSet == rhs.VertexNormals_IsSet && item.VertexNormals.EqualsFast(rhs.VertexNormals);
             ret.VertexHeightMap = item.VertexHeightMap_IsSet == rhs.VertexHeightMap_IsSet && item.VertexHeightMap.EqualsFast(rhs.VertexHeightMap);
             ret.VertexColors = item.VertexColors_IsSet == rhs.VertexColors_IsSet && item.VertexColors.EqualsFast(rhs.VertexColors);
-            if (item.Layers.HasBeenSet == rhs.Layers.HasBeenSet)
-            {
-                if (item.Layers.HasBeenSet)
-                {
-                    ret.Layers = new MaskItem<bool, IEnumerable<MaskItem<bool, BaseLayer_Mask<bool>>>>();
-                    ret.Layers.Specific = item.Layers.SelectAgainst<BaseLayer, MaskItem<bool, BaseLayer_Mask<bool>>>(rhs.Layers, ((l, r) =>
-                    {
-                        MaskItem<bool, BaseLayer_Mask<bool>> itemRet;
-                        itemRet = l.LoquiEqualsHelper(r, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
-                        return itemRet;
-                    }
-                    ), out ret.Layers.Overall);
-                    ret.Layers.Overall = ret.Layers.Overall && ret.Layers.Specific.All((b) => b.Overall);
-                }
-                else
-                {
-                    ret.Layers = new MaskItem<bool, IEnumerable<MaskItem<bool, BaseLayer_Mask<bool>>>>();
-                    ret.Layers.Overall = true;
-                }
-            }
-            else
-            {
-                ret.Layers = new MaskItem<bool, IEnumerable<MaskItem<bool, BaseLayer_Mask<bool>>>>();
-                ret.Layers.Overall = false;
-            }
-            if (item.Textures.HasBeenSet == rhs.Textures.HasBeenSet)
-            {
-                if (item.Textures.HasBeenSet)
-                {
-                    ret.Textures = new MaskItem<bool, IEnumerable<bool>>();
-                    ret.Textures.Specific = item.Textures.SelectAgainst<FormIDLink<LandTexture>, bool>(rhs.Textures, ((l, r) => object.Equals(l, r)), out ret.Textures.Overall);
-                    ret.Textures.Overall = ret.Textures.Overall && ret.Textures.Specific.All((b) => b);
-                }
-                else
-                {
-                    ret.Textures = new MaskItem<bool, IEnumerable<bool>>();
-                    ret.Textures.Overall = true;
-                }
-            }
-            else
-            {
-                ret.Textures = new MaskItem<bool, IEnumerable<bool>>();
-                ret.Textures.Overall = false;
-            }
+            ret.Layers = item.Layers.CollectionEqualsHelper(
+                rhs.Layers,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.Textures = item.Textures.CollectionEqualsHelper(
+                rhs.Textures,
+                (l, r) => object.Equals(l, r),
+                include);
             MajorRecordCommon.FillEqualsMask(item, rhs, ret);
         }
 
@@ -2394,8 +2210,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.VertexNormals = item.VertexNormals_IsSet;
             ret.VertexHeightMap = item.VertexHeightMap_IsSet;
             ret.VertexColors = item.VertexColors_IsSet;
-            ret.Layers = new MaskItem<bool, IEnumerable<MaskItem<bool, BaseLayer_Mask<bool>>>>(item.Layers.HasBeenSet, item.Layers.Select((i) => new MaskItem<bool, BaseLayer_Mask<bool>>(true, i.GetHasBeenSetMask())));
-            ret.Textures = new MaskItem<bool, IEnumerable<bool>>(item.Textures.HasBeenSet, null);
+            ret.Layers = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, BaseLayer_Mask<bool>>>>(item.Layers.HasBeenSet, item.Layers.WithIndex().Select((i) => new MaskItemIndexed<bool, BaseLayer_Mask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            ret.Textures = new MaskItem<bool, IEnumerable<(int, bool)>>(item.Textures.HasBeenSet, null);
             return ret;
         }
 
@@ -2466,7 +2282,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         public static void WriteToNode_Xml(
-            ILandscapeGetter item,
+            this ILandscapeGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -2556,6 +2372,211 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             errorMask: listSubMask);
                     }
                     );
+            }
+        }
+
+        public static void FillPublic_Xml(
+            this Landscape item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    LandscapeCommon.FillPublicElement_Xml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+
+        public static void FillPublicElement_Xml(
+            this Landscape item,
+            XElement node,
+            string name,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            switch (name)
+            {
+                case "Unknown":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Landscape_FieldIndex.Unknown);
+                        if (ByteArrayXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Byte[] UnknownParse,
+                            errorMask: errorMask))
+                        {
+                            item.Unknown = UnknownParse;
+                        }
+                        else
+                        {
+                            item.Unknown = default(Byte[]);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "VertexNormals":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Landscape_FieldIndex.VertexNormals);
+                        if (ByteArrayXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Byte[] VertexNormalsParse,
+                            errorMask: errorMask))
+                        {
+                            item.VertexNormals = VertexNormalsParse;
+                        }
+                        else
+                        {
+                            item.VertexNormals = default(Byte[]);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "VertexHeightMap":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Landscape_FieldIndex.VertexHeightMap);
+                        if (ByteArrayXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Byte[] VertexHeightMapParse,
+                            errorMask: errorMask))
+                        {
+                            item.VertexHeightMap = VertexHeightMapParse;
+                        }
+                        else
+                        {
+                            item.VertexHeightMap = default(Byte[]);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "VertexColors":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Landscape_FieldIndex.VertexColors);
+                        if (ByteArrayXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Byte[] VertexColorsParse,
+                            errorMask: errorMask))
+                        {
+                            item.VertexColors = VertexColorsParse;
+                        }
+                        else
+                        {
+                            item.VertexColors = default(Byte[]);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Layers":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Landscape_FieldIndex.Layers);
+                        if (ListXmlTranslation<BaseLayer>.Instance.Parse(
+                            node: node,
+                            enumer: out var LayersItem,
+                            transl: LoquiXmlTranslation<BaseLayer>.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.Layers.SetTo(LayersItem);
+                        }
+                        else
+                        {
+                            item.Layers.Unset();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Textures":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Landscape_FieldIndex.Textures);
+                        if (ListXmlTranslation<FormIDLink<LandTexture>>.Instance.Parse(
+                            node: node,
+                            enumer: out var TexturesItem,
+                            transl: FormKeyXmlTranslation.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.Textures.SetTo(TexturesItem);
+                        }
+                        else
+                        {
+                            item.Textures.Unset();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                default:
+                    MajorRecordCommon.FillPublicElement_Xml(
+                        item: item,
+                        node: node,
+                        name: name,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                    break;
             }
         }
 
@@ -2718,8 +2739,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.VertexNormals = initialValue;
             this.VertexHeightMap = initialValue;
             this.VertexColors = initialValue;
-            this.Layers = new MaskItem<T, IEnumerable<MaskItem<T, BaseLayer_Mask<T>>>>(initialValue, null);
-            this.Textures = new MaskItem<T, IEnumerable<T>>(initialValue, null);
+            this.Layers = new MaskItem<T, IEnumerable<MaskItemIndexed<T, BaseLayer_Mask<T>>>>(initialValue, null);
+            this.Textures = new MaskItem<T, IEnumerable<(int Index, T Value)>>(initialValue, null);
         }
         #endregion
 
@@ -2728,8 +2749,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public T VertexNormals;
         public T VertexHeightMap;
         public T VertexColors;
-        public MaskItem<T, IEnumerable<MaskItem<T, BaseLayer_Mask<T>>>> Layers;
-        public MaskItem<T, IEnumerable<T>> Textures;
+        public MaskItem<T, IEnumerable<MaskItemIndexed<T, BaseLayer_Mask<T>>>> Layers;
+        public MaskItem<T, IEnumerable<(int Index, T Value)>> Textures;
         #endregion
 
         #region Equals
@@ -2793,7 +2814,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     foreach (var item in this.Textures.Specific)
                     {
-                        if (!eval(item)) return false;
+                        if (!eval(item.Value)) return false;
                     }
                 }
             }
@@ -2818,22 +2839,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             obj.VertexColors = eval(this.VertexColors);
             if (Layers != null)
             {
-                obj.Layers = new MaskItem<R, IEnumerable<MaskItem<R, BaseLayer_Mask<R>>>>();
+                obj.Layers = new MaskItem<R, IEnumerable<MaskItemIndexed<R, BaseLayer_Mask<R>>>>();
                 obj.Layers.Overall = eval(this.Layers.Overall);
                 if (Layers.Specific != null)
                 {
-                    List<MaskItem<R, BaseLayer_Mask<R>>> l = new List<MaskItem<R, BaseLayer_Mask<R>>>();
+                    List<MaskItemIndexed<R, BaseLayer_Mask<R>>> l = new List<MaskItemIndexed<R, BaseLayer_Mask<R>>>();
                     obj.Layers.Specific = l;
-                    foreach (var item in Layers.Specific)
+                    foreach (var item in Layers.Specific.WithIndex())
                     {
-                        MaskItem<R, BaseLayer_Mask<R>> mask = default(MaskItem<R, BaseLayer_Mask<R>>);
-                        if (item != null)
+                        MaskItemIndexed<R, BaseLayer_Mask<R>> mask = default;
+                        mask.Index = item.Index;
+                        if (item.Item != null)
                         {
-                            mask = new MaskItem<R, BaseLayer_Mask<R>>();
-                            mask.Overall = eval(item.Overall);
-                            if (item.Specific != null)
+                            mask = new MaskItemIndexed<R, BaseLayer_Mask<R>>(item.Item.Index);
+                            mask.Overall = eval(item.Item.Overall);
+                            if (item.Item.Specific != null)
                             {
-                                mask.Specific = item.Specific.Translate(eval);
+                                mask.Specific = item.Item.Specific.Translate(eval);
                             }
                         }
                         l.Add(mask);
@@ -2842,16 +2864,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (Textures != null)
             {
-                obj.Textures = new MaskItem<R, IEnumerable<R>>();
+                obj.Textures = new MaskItem<R, IEnumerable<(int Index, R Value)>>();
                 obj.Textures.Overall = eval(this.Textures.Overall);
                 if (Textures.Specific != null)
                 {
-                    List<R> l = new List<R>();
+                    List<(int Index, R Item)> l = new List<(int Index, R Item)>();
                     obj.Textures.Specific = l;
-                    foreach (var item in Textures.Specific)
+                    foreach (var item in Textures.Specific.WithIndex())
                     {
-                        R mask = default(R);
-                        mask = eval(item);
+                        (int Index, R Item) mask = default;
+                        mask.Index = item.Index;
+                        mask.Item = eval(item.Item.Value);
                         l.Add(mask);
                     }
                 }
@@ -2968,7 +2991,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Exception VertexHeightMap;
         public Exception VertexColors;
         public MaskItem<Exception, IEnumerable<MaskItem<Exception, BaseLayer_ErrorMask>>> Layers;
-        public MaskItem<Exception, IEnumerable<Exception>> Textures;
+        public MaskItem<Exception, IEnumerable<(int Index, Exception Value)>> Textures;
         #endregion
 
         #region IErrorMask
@@ -3015,7 +3038,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     this.Layers = new MaskItem<Exception, IEnumerable<MaskItem<Exception, BaseLayer_ErrorMask>>>(ex, null);
                     break;
                 case Landscape_FieldIndex.Textures:
-                    this.Textures = new MaskItem<Exception, IEnumerable<Exception>>(ex, null);
+                    this.Textures = new MaskItem<Exception, IEnumerable<(int Index, Exception Value)>>(ex, null);
                     break;
                 default:
                     base.SetNthException(index, ex);
@@ -3044,7 +3067,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     this.Layers = (MaskItem<Exception, IEnumerable<MaskItem<Exception, BaseLayer_ErrorMask>>>)obj;
                     break;
                 case Landscape_FieldIndex.Textures:
-                    this.Textures = (MaskItem<Exception, IEnumerable<Exception>>)obj;
+                    this.Textures = (MaskItem<Exception, IEnumerable<(int Index, Exception Value)>>)obj;
                     break;
                 default:
                     base.SetNthMask(index, obj);
@@ -3156,7 +3179,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.VertexHeightMap = this.VertexHeightMap.Combine(rhs.VertexHeightMap);
             ret.VertexColors = this.VertexColors.Combine(rhs.VertexColors);
             ret.Layers = new MaskItem<Exception, IEnumerable<MaskItem<Exception, BaseLayer_ErrorMask>>>(this.Layers.Overall.Combine(rhs.Layers.Overall), new List<MaskItem<Exception, BaseLayer_ErrorMask>>(this.Layers.Specific.And(rhs.Layers.Specific)));
-            ret.Textures = new MaskItem<Exception, IEnumerable<Exception>>(this.Textures.Overall.Combine(rhs.Textures.Overall), new List<Exception>(this.Textures.Specific.And(rhs.Textures.Specific)));
+            ret.Textures = new MaskItem<Exception, IEnumerable<(int Index, Exception Value)>>(this.Textures.Overall.Combine(rhs.Textures.Overall), new List<(int Index, Exception Value)>(this.Textures.Specific.And(rhs.Textures.Specific)));
             return ret;
         }
         public static Landscape_ErrorMask Combine(Landscape_ErrorMask lhs, Landscape_ErrorMask rhs)

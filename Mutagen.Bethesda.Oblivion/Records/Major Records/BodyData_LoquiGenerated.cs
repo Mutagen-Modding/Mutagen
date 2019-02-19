@@ -120,8 +120,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> IEqualsMask<BodyData>.GetEqualsMask(BodyData rhs) => BodyDataCommon.GetEqualsMask(this, rhs);
-        IMask<bool> IEqualsMask<IBodyDataGetter>.GetEqualsMask(IBodyDataGetter rhs) => BodyDataCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<BodyData>.GetEqualsMask(BodyData rhs, EqualsMaskHelper.Include include) => BodyDataCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<IBodyDataGetter>.GetEqualsMask(IBodyDataGetter rhs, EqualsMaskHelper.Include include) => BodyDataCommon.GetEqualsMask(this, rhs, include);
         #region To String
         public string ToString(
             string name = null,
@@ -223,7 +223,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 foreach (var elem in node.Elements())
                 {
-                    Fill_Xml_Internal(
+                    BodyDataCommon.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -537,75 +537,6 @@ namespace Mutagen.Bethesda.Oblivion
                 translationMask: translationMask);
         }
         #endregion
-
-        protected static void Fill_Xml_Internal(
-            BodyData item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            switch (name)
-            {
-                case "Model":
-                    try
-                    {
-                        errorMask?.PushIndex((int)BodyData_FieldIndex.Model);
-                        if (LoquiXmlTranslation<Model>.Instance.Parse(
-                            node: node,
-                            item: out Model ModelParse,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)BodyData_FieldIndex.Model)))
-                        {
-                            item.Model = ModelParse;
-                        }
-                        else
-                        {
-                            item.Model = default(Model);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "BodyParts":
-                    try
-                    {
-                        errorMask?.PushIndex((int)BodyData_FieldIndex.BodyParts);
-                        if (ListXmlTranslation<BodyPart>.Instance.Parse(
-                            node: node,
-                            enumer: out var BodyPartsItem,
-                            transl: LoquiXmlTranslation<BodyPart>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.BodyParts.SetTo(BodyPartsItem);
-                        }
-                        else
-                        {
-                            item.BodyParts.Unset();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
 
         #endregion
 
@@ -1616,45 +1547,36 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static BodyData_Mask<bool> GetEqualsMask(
             this IBodyDataGetter item,
-            IBodyDataGetter rhs)
+            IBodyDataGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new BodyData_Mask<bool>();
-            FillEqualsMask(item, rhs, ret);
+            FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
             return ret;
         }
 
         public static void FillEqualsMask(
             IBodyDataGetter item,
             IBodyDataGetter rhs,
-            BodyData_Mask<bool> ret)
+            BodyData_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Model = IHasBeenSetExt.LoquiEqualsHelper(item.Model_IsSet, rhs.Model_IsSet, item.Model, rhs.Model, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
-            if (item.BodyParts.HasBeenSet == rhs.BodyParts.HasBeenSet)
-            {
-                if (item.BodyParts.HasBeenSet)
-                {
-                    ret.BodyParts = new MaskItem<bool, IEnumerable<MaskItem<bool, BodyPart_Mask<bool>>>>();
-                    ret.BodyParts.Specific = item.BodyParts.SelectAgainst<BodyPart, MaskItem<bool, BodyPart_Mask<bool>>>(rhs.BodyParts, ((l, r) =>
-                    {
-                        MaskItem<bool, BodyPart_Mask<bool>> itemRet;
-                        itemRet = l.LoquiEqualsHelper(r, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
-                        return itemRet;
-                    }
-                    ), out ret.BodyParts.Overall);
-                    ret.BodyParts.Overall = ret.BodyParts.Overall && ret.BodyParts.Specific.All((b) => b.Overall);
-                }
-                else
-                {
-                    ret.BodyParts = new MaskItem<bool, IEnumerable<MaskItem<bool, BodyPart_Mask<bool>>>>();
-                    ret.BodyParts.Overall = true;
-                }
-            }
-            else
-            {
-                ret.BodyParts = new MaskItem<bool, IEnumerable<MaskItem<bool, BodyPart_Mask<bool>>>>();
-                ret.BodyParts.Overall = false;
-            }
+            ret.Model = EqualsMaskHelper.EqualsHelper(
+                item.Model_IsSet,
+                rhs.Model_IsSet,
+                item.Model,
+                rhs.Model,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
+                include);
+            ret.BodyParts = item.BodyParts.CollectionEqualsHelper(
+                rhs.BodyParts,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
         }
 
         public static string ToString(
@@ -1724,7 +1646,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             var ret = new BodyData_Mask<bool>();
             ret.Model = new MaskItem<bool, Model_Mask<bool>>(item.Model_IsSet, ModelCommon.GetHasBeenSetMask(item.Model));
-            ret.BodyParts = new MaskItem<bool, IEnumerable<MaskItem<bool, BodyPart_Mask<bool>>>>(item.BodyParts.HasBeenSet, item.BodyParts.Select((i) => new MaskItem<bool, BodyPart_Mask<bool>>(true, i.GetHasBeenSetMask())));
+            ret.BodyParts = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, BodyPart_Mask<bool>>>>(item.BodyParts.HasBeenSet, item.BodyParts.WithIndex().Select((i) => new MaskItemIndexed<bool, BodyPart_Mask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
             return ret;
         }
 
@@ -1770,7 +1692,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         public static void WriteToNode_Xml(
-            IBodyDataGetter item,
+            this IBodyDataGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1806,6 +1728,100 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             translationMask: listTranslMask);
                     }
                     );
+            }
+        }
+
+        public static void FillPublic_Xml(
+            this BodyData item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    BodyDataCommon.FillPublicElement_Xml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+
+        public static void FillPublicElement_Xml(
+            this BodyData item,
+            XElement node,
+            string name,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            switch (name)
+            {
+                case "Model":
+                    try
+                    {
+                        errorMask?.PushIndex((int)BodyData_FieldIndex.Model);
+                        if (LoquiXmlTranslation<Model>.Instance.Parse(
+                            node: node,
+                            item: out Model ModelParse,
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)BodyData_FieldIndex.Model)))
+                        {
+                            item.Model = ModelParse;
+                        }
+                        else
+                        {
+                            item.Model = default(Model);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "BodyParts":
+                    try
+                    {
+                        errorMask?.PushIndex((int)BodyData_FieldIndex.BodyParts);
+                        if (ListXmlTranslation<BodyPart>.Instance.Parse(
+                            node: node,
+                            enumer: out var BodyPartsItem,
+                            transl: LoquiXmlTranslation<BodyPart>.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.BodyParts.SetTo(BodyPartsItem);
+                        }
+                        else
+                        {
+                            item.BodyParts.Unset();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                default:
+                    break;
             }
         }
 
@@ -1899,13 +1915,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public BodyData_Mask(T initialValue)
         {
             this.Model = new MaskItem<T, Model_Mask<T>>(initialValue, new Model_Mask<T>(initialValue));
-            this.BodyParts = new MaskItem<T, IEnumerable<MaskItem<T, BodyPart_Mask<T>>>>(initialValue, null);
+            this.BodyParts = new MaskItem<T, IEnumerable<MaskItemIndexed<T, BodyPart_Mask<T>>>>(initialValue, null);
         }
         #endregion
 
         #region Members
         public MaskItem<T, Model_Mask<T>> Model { get; set; }
-        public MaskItem<T, IEnumerable<MaskItem<T, BodyPart_Mask<T>>>> BodyParts;
+        public MaskItem<T, IEnumerable<MaskItemIndexed<T, BodyPart_Mask<T>>>> BodyParts;
         #endregion
 
         #region Equals
@@ -1977,22 +1993,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (BodyParts != null)
             {
-                obj.BodyParts = new MaskItem<R, IEnumerable<MaskItem<R, BodyPart_Mask<R>>>>();
+                obj.BodyParts = new MaskItem<R, IEnumerable<MaskItemIndexed<R, BodyPart_Mask<R>>>>();
                 obj.BodyParts.Overall = eval(this.BodyParts.Overall);
                 if (BodyParts.Specific != null)
                 {
-                    List<MaskItem<R, BodyPart_Mask<R>>> l = new List<MaskItem<R, BodyPart_Mask<R>>>();
+                    List<MaskItemIndexed<R, BodyPart_Mask<R>>> l = new List<MaskItemIndexed<R, BodyPart_Mask<R>>>();
                     obj.BodyParts.Specific = l;
-                    foreach (var item in BodyParts.Specific)
+                    foreach (var item in BodyParts.Specific.WithIndex())
                     {
-                        MaskItem<R, BodyPart_Mask<R>> mask = default(MaskItem<R, BodyPart_Mask<R>>);
-                        if (item != null)
+                        MaskItemIndexed<R, BodyPart_Mask<R>> mask = default;
+                        mask.Index = item.Index;
+                        if (item.Item != null)
                         {
-                            mask = new MaskItem<R, BodyPart_Mask<R>>();
-                            mask.Overall = eval(item.Overall);
-                            if (item.Specific != null)
+                            mask = new MaskItemIndexed<R, BodyPart_Mask<R>>(item.Item.Index);
+                            mask.Overall = eval(item.Item.Overall);
+                            if (item.Item.Specific != null)
                             {
-                                mask.Specific = item.Specific.Translate(eval);
+                                mask.Specific = item.Item.Specific.Translate(eval);
                             }
                         }
                         l.Add(mask);

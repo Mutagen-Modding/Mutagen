@@ -156,8 +156,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> IEqualsMask<FaceGenData>.GetEqualsMask(FaceGenData rhs) => FaceGenDataCommon.GetEqualsMask(this, rhs);
-        IMask<bool> IEqualsMask<IFaceGenDataGetter>.GetEqualsMask(IFaceGenDataGetter rhs) => FaceGenDataCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<FaceGenData>.GetEqualsMask(FaceGenData rhs, EqualsMaskHelper.Include include) => FaceGenDataCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<IFaceGenDataGetter>.GetEqualsMask(IFaceGenDataGetter rhs, EqualsMaskHelper.Include include) => FaceGenDataCommon.GetEqualsMask(this, rhs, include);
         #region To String
         public string ToString(
             string name = null,
@@ -268,7 +268,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 foreach (var elem in node.Elements())
                 {
-                    Fill_Xml_Internal(
+                    FaceGenDataCommon.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -582,98 +582,6 @@ namespace Mutagen.Bethesda.Oblivion
                 translationMask: translationMask);
         }
         #endregion
-
-        protected static void Fill_Xml_Internal(
-            FaceGenData item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            switch (name)
-            {
-                case "SymmetricGeometry":
-                    try
-                    {
-                        errorMask?.PushIndex((int)FaceGenData_FieldIndex.SymmetricGeometry);
-                        if (ByteArrayXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Byte[] SymmetricGeometryParse,
-                            errorMask: errorMask))
-                        {
-                            item.SymmetricGeometry = SymmetricGeometryParse;
-                        }
-                        else
-                        {
-                            item.SymmetricGeometry = default(Byte[]);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "AsymmetricGeometry":
-                    try
-                    {
-                        errorMask?.PushIndex((int)FaceGenData_FieldIndex.AsymmetricGeometry);
-                        if (ByteArrayXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Byte[] AsymmetricGeometryParse,
-                            errorMask: errorMask))
-                        {
-                            item.AsymmetricGeometry = AsymmetricGeometryParse;
-                        }
-                        else
-                        {
-                            item.AsymmetricGeometry = default(Byte[]);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "SymmetricTexture":
-                    try
-                    {
-                        errorMask?.PushIndex((int)FaceGenData_FieldIndex.SymmetricTexture);
-                        if (ByteArrayXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Byte[] SymmetricTextureParse,
-                            errorMask: errorMask))
-                        {
-                            item.SymmetricTexture = SymmetricTextureParse;
-                        }
-                        else
-                        {
-                            item.SymmetricTexture = default(Byte[]);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
 
         #endregion
 
@@ -1765,17 +1673,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static FaceGenData_Mask<bool> GetEqualsMask(
             this IFaceGenDataGetter item,
-            IFaceGenDataGetter rhs)
+            IFaceGenDataGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new FaceGenData_Mask<bool>();
-            FillEqualsMask(item, rhs, ret);
+            FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
             return ret;
         }
 
         public static void FillEqualsMask(
             IFaceGenDataGetter item,
             IFaceGenDataGetter rhs,
-            FaceGenData_Mask<bool> ret)
+            FaceGenData_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
             ret.SymmetricGeometry = item.SymmetricGeometry_IsSet == rhs.SymmetricGeometry_IsSet && item.SymmetricGeometry.EqualsFast(rhs.SymmetricGeometry);
@@ -1887,7 +1801,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         public static void WriteToNode_Xml(
-            IFaceGenDataGetter item,
+            this IFaceGenDataGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1921,6 +1835,123 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item.SymmetricTexture,
                     fieldIndex: (int)FaceGenData_FieldIndex.SymmetricTexture,
                     errorMask: errorMask);
+            }
+        }
+
+        public static void FillPublic_Xml(
+            this FaceGenData item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    FaceGenDataCommon.FillPublicElement_Xml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+
+        public static void FillPublicElement_Xml(
+            this FaceGenData item,
+            XElement node,
+            string name,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            switch (name)
+            {
+                case "SymmetricGeometry":
+                    try
+                    {
+                        errorMask?.PushIndex((int)FaceGenData_FieldIndex.SymmetricGeometry);
+                        if (ByteArrayXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Byte[] SymmetricGeometryParse,
+                            errorMask: errorMask))
+                        {
+                            item.SymmetricGeometry = SymmetricGeometryParse;
+                        }
+                        else
+                        {
+                            item.SymmetricGeometry = default(Byte[]);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "AsymmetricGeometry":
+                    try
+                    {
+                        errorMask?.PushIndex((int)FaceGenData_FieldIndex.AsymmetricGeometry);
+                        if (ByteArrayXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Byte[] AsymmetricGeometryParse,
+                            errorMask: errorMask))
+                        {
+                            item.AsymmetricGeometry = AsymmetricGeometryParse;
+                        }
+                        else
+                        {
+                            item.AsymmetricGeometry = default(Byte[]);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "SymmetricTexture":
+                    try
+                    {
+                        errorMask?.PushIndex((int)FaceGenData_FieldIndex.SymmetricTexture);
+                        if (ByteArrayXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Byte[] SymmetricTextureParse,
+                            errorMask: errorMask))
+                        {
+                            item.SymmetricTexture = SymmetricTextureParse;
+                        }
+                        else
+                        {
+                            item.SymmetricTexture = default(Byte[]);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                default:
+                    break;
             }
         }
 

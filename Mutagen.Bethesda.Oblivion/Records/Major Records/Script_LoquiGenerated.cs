@@ -80,8 +80,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> IEqualsMask<Script>.GetEqualsMask(Script rhs) => ScriptCommon.GetEqualsMask(this, rhs);
-        IMask<bool> IEqualsMask<IScriptGetter>.GetEqualsMask(IScriptGetter rhs) => ScriptCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<Script>.GetEqualsMask(Script rhs, EqualsMaskHelper.Include include) => ScriptCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<IScriptGetter>.GetEqualsMask(IScriptGetter rhs, EqualsMaskHelper.Include include) => ScriptCommon.GetEqualsMask(this, rhs, include);
         #region To String
         public string ToString(
             string name = null,
@@ -176,7 +176,13 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 foreach (var elem in node.Elements())
                 {
-                    Fill_Xml_Internal(
+                    FillPrivateElement_Xml(
+                        item: ret,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                    ScriptCommon.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -488,7 +494,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        protected static void Fill_Xml_Internal(
+        protected static void FillPrivateElement_Xml(
             Script item,
             XElement node,
             string name,
@@ -523,7 +529,7 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     break;
                 default:
-                    MajorRecord.Fill_Xml_Internal(
+                    MajorRecord.FillPrivateElement_Xml(
                         item: item,
                         node: node,
                         name: name,
@@ -1420,20 +1426,32 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static Script_Mask<bool> GetEqualsMask(
             this IScriptGetter item,
-            IScriptGetter rhs)
+            IScriptGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new Script_Mask<bool>();
-            FillEqualsMask(item, rhs, ret);
+            FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
             return ret;
         }
 
         public static void FillEqualsMask(
             IScriptGetter item,
             IScriptGetter rhs,
-            Script_Mask<bool> ret)
+            Script_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Fields = IHasBeenSetExt.LoquiEqualsHelper(item.Fields_IsSet, rhs.Fields_IsSet, item.Fields, rhs.Fields, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
+            ret.Fields = EqualsMaskHelper.EqualsHelper(
+                item.Fields_IsSet,
+                rhs.Fields_IsSet,
+                item.Fields,
+                rhs.Fields,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
+                include);
             MajorRecordCommon.FillEqualsMask(item, rhs, ret);
         }
 
@@ -1555,7 +1573,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         public static void WriteToNode_Xml(
-            IScriptGetter item,
+            this IScriptGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1575,6 +1593,51 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)Script_FieldIndex.Fields,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)Script_FieldIndex.Fields));
+            }
+        }
+
+        public static void FillPublic_Xml(
+            this Script item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    ScriptCommon.FillPublicElement_Xml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+
+        public static void FillPublicElement_Xml(
+            this Script item,
+            XElement node,
+            string name,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            switch (name)
+            {
+                default:
+                    MajorRecordCommon.FillPublicElement_Xml(
+                        item: item,
+                        node: node,
+                        name: name,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                    break;
             }
         }
 

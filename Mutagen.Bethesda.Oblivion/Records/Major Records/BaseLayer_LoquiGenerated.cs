@@ -103,8 +103,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> IEqualsMask<BaseLayer>.GetEqualsMask(BaseLayer rhs) => BaseLayerCommon.GetEqualsMask(this, rhs);
-        IMask<bool> IEqualsMask<IBaseLayerGetter>.GetEqualsMask(IBaseLayerGetter rhs) => BaseLayerCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<BaseLayer>.GetEqualsMask(BaseLayer rhs, EqualsMaskHelper.Include include) => BaseLayerCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<IBaseLayerGetter>.GetEqualsMask(IBaseLayerGetter rhs, EqualsMaskHelper.Include include) => BaseLayerCommon.GetEqualsMask(this, rhs, include);
         #region To String
         public string ToString(
             string name = null,
@@ -194,7 +194,13 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 foreach (var elem in node.Elements())
                 {
-                    Fill_Xml_Internal(
+                    FillPrivateElement_Xml(
+                        item: ret,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                    BaseLayerCommon.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -509,7 +515,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        protected static void Fill_Xml_Internal(
+        protected static void FillPrivateElement_Xml(
             BaseLayer item,
             XElement node,
             string name,
@@ -518,39 +524,6 @@ namespace Mutagen.Bethesda.Oblivion
         {
             switch (name)
             {
-                case "Texture":
-                    FormKeyXmlTranslation.Instance.ParseInto(
-                        node: node,
-                        item: item.Texture_Property,
-                        fieldIndex: (int)BaseLayer_FieldIndex.Texture,
-                        errorMask: errorMask);
-                    break;
-                case "Quadrant":
-                    try
-                    {
-                        errorMask?.PushIndex((int)BaseLayer_FieldIndex.Quadrant);
-                        if (EnumXmlTranslation<AlphaLayer.QuadrantEnum>.Instance.Parse(
-                            node: node,
-                            item: out AlphaLayer.QuadrantEnum QuadrantParse,
-                            errorMask: errorMask))
-                        {
-                            item.Quadrant = QuadrantParse;
-                        }
-                        else
-                        {
-                            item.Quadrant = default(AlphaLayer.QuadrantEnum);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
                 case "LayerNumber":
                     try
                     {
@@ -1608,17 +1581,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static BaseLayer_Mask<bool> GetEqualsMask(
             this IBaseLayerGetter item,
-            IBaseLayerGetter rhs)
+            IBaseLayerGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new BaseLayer_Mask<bool>();
-            FillEqualsMask(item, rhs, ret);
+            FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
             return ret;
         }
 
         public static void FillEqualsMask(
             IBaseLayerGetter item,
             IBaseLayerGetter rhs,
-            BaseLayer_Mask<bool> ret)
+            BaseLayer_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
             ret.Texture = item.Texture_Property.FormKey == rhs.Texture_Property.FormKey;
@@ -1727,7 +1706,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         public static void WriteToNode_Xml(
-            IBaseLayerGetter item,
+            this IBaseLayerGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1758,6 +1737,78 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item.LayerNumber,
                     fieldIndex: (int)BaseLayer_FieldIndex.LayerNumber,
                     errorMask: errorMask);
+            }
+        }
+
+        public static void FillPublic_Xml(
+            this BaseLayer item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    BaseLayerCommon.FillPublicElement_Xml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+
+        public static void FillPublicElement_Xml(
+            this BaseLayer item,
+            XElement node,
+            string name,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            switch (name)
+            {
+                case "Texture":
+                    FormKeyXmlTranslation.Instance.ParseInto(
+                        node: node,
+                        item: item.Texture_Property,
+                        fieldIndex: (int)BaseLayer_FieldIndex.Texture,
+                        errorMask: errorMask);
+                    break;
+                case "Quadrant":
+                    try
+                    {
+                        errorMask?.PushIndex((int)BaseLayer_FieldIndex.Quadrant);
+                        if (EnumXmlTranslation<AlphaLayer.QuadrantEnum>.Instance.Parse(
+                            node: node,
+                            item: out AlphaLayer.QuadrantEnum QuadrantParse,
+                            errorMask: errorMask))
+                        {
+                            item.Quadrant = QuadrantParse;
+                        }
+                        else
+                        {
+                            item.Quadrant = default(AlphaLayer.QuadrantEnum);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                default:
+                    break;
             }
         }
 

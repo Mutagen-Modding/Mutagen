@@ -99,8 +99,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> IEqualsMask<RegionSound>.GetEqualsMask(RegionSound rhs) => RegionSoundCommon.GetEqualsMask(this, rhs);
-        IMask<bool> IEqualsMask<IRegionSoundGetter>.GetEqualsMask(IRegionSoundGetter rhs) => RegionSoundCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<RegionSound>.GetEqualsMask(RegionSound rhs, EqualsMaskHelper.Include include) => RegionSoundCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<IRegionSoundGetter>.GetEqualsMask(IRegionSoundGetter rhs, EqualsMaskHelper.Include include) => RegionSoundCommon.GetEqualsMask(this, rhs, include);
         #region To String
         public string ToString(
             string name = null,
@@ -190,7 +190,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 foreach (var elem in node.Elements())
                 {
-                    Fill_Xml_Internal(
+                    RegionSoundCommon.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -504,79 +504,6 @@ namespace Mutagen.Bethesda.Oblivion
                 translationMask: translationMask);
         }
         #endregion
-
-        protected static void Fill_Xml_Internal(
-            RegionSound item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            switch (name)
-            {
-                case "Sound":
-                    FormKeyXmlTranslation.Instance.ParseInto(
-                        node: node,
-                        item: item.Sound_Property,
-                        fieldIndex: (int)RegionSound_FieldIndex.Sound,
-                        errorMask: errorMask);
-                    break;
-                case "Flags":
-                    try
-                    {
-                        errorMask?.PushIndex((int)RegionSound_FieldIndex.Flags);
-                        if (EnumXmlTranslation<RegionSound.Flag>.Instance.Parse(
-                            node: node,
-                            item: out RegionSound.Flag FlagsParse,
-                            errorMask: errorMask))
-                        {
-                            item.Flags = FlagsParse;
-                        }
-                        else
-                        {
-                            item.Flags = default(RegionSound.Flag);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Chance":
-                    try
-                    {
-                        errorMask?.PushIndex((int)RegionSound_FieldIndex.Chance);
-                        if (FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Single ChanceParse,
-                            errorMask: errorMask))
-                        {
-                            item.Chance = ChanceParse;
-                        }
-                        else
-                        {
-                            item.Chance = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
 
         #endregion
 
@@ -1561,22 +1488,28 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static RegionSound_Mask<bool> GetEqualsMask(
             this IRegionSoundGetter item,
-            IRegionSoundGetter rhs)
+            IRegionSoundGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new RegionSound_Mask<bool>();
-            FillEqualsMask(item, rhs, ret);
+            FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
             return ret;
         }
 
         public static void FillEqualsMask(
             IRegionSoundGetter item,
             IRegionSoundGetter rhs,
-            RegionSound_Mask<bool> ret)
+            RegionSound_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
             ret.Sound = item.Sound_Property.FormKey == rhs.Sound_Property.FormKey;
             ret.Flags = item.Flags == rhs.Flags;
-            ret.Chance = item.Chance == rhs.Chance;
+            ret.Chance = item.Chance.EqualsWithin(rhs.Chance);
         }
 
         public static string ToString(
@@ -1680,7 +1613,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         public static void WriteToNode_Xml(
-            IRegionSoundGetter item,
+            this IRegionSoundGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1711,6 +1644,104 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item.Chance,
                     fieldIndex: (int)RegionSound_FieldIndex.Chance,
                     errorMask: errorMask);
+            }
+        }
+
+        public static void FillPublic_Xml(
+            this RegionSound item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    RegionSoundCommon.FillPublicElement_Xml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+
+        public static void FillPublicElement_Xml(
+            this RegionSound item,
+            XElement node,
+            string name,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            switch (name)
+            {
+                case "Sound":
+                    FormKeyXmlTranslation.Instance.ParseInto(
+                        node: node,
+                        item: item.Sound_Property,
+                        fieldIndex: (int)RegionSound_FieldIndex.Sound,
+                        errorMask: errorMask);
+                    break;
+                case "Flags":
+                    try
+                    {
+                        errorMask?.PushIndex((int)RegionSound_FieldIndex.Flags);
+                        if (EnumXmlTranslation<RegionSound.Flag>.Instance.Parse(
+                            node: node,
+                            item: out RegionSound.Flag FlagsParse,
+                            errorMask: errorMask))
+                        {
+                            item.Flags = FlagsParse;
+                        }
+                        else
+                        {
+                            item.Flags = default(RegionSound.Flag);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Chance":
+                    try
+                    {
+                        errorMask?.PushIndex((int)RegionSound_FieldIndex.Chance);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Single ChanceParse,
+                            errorMask: errorMask))
+                        {
+                            item.Chance = ChanceParse;
+                        }
+                        else
+                        {
+                            item.Chance = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                default:
+                    break;
             }
         }
 

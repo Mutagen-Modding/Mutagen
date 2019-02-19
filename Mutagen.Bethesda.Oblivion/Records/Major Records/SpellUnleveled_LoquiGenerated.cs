@@ -138,8 +138,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> IEqualsMask<SpellUnleveled>.GetEqualsMask(SpellUnleveled rhs) => SpellUnleveledCommon.GetEqualsMask(this, rhs);
-        IMask<bool> IEqualsMask<ISpellUnleveledGetter>.GetEqualsMask(ISpellUnleveledGetter rhs) => SpellUnleveledCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<SpellUnleveled>.GetEqualsMask(SpellUnleveled rhs, EqualsMaskHelper.Include include) => SpellUnleveledCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<ISpellUnleveledGetter>.GetEqualsMask(ISpellUnleveledGetter rhs, EqualsMaskHelper.Include include) => SpellUnleveledCommon.GetEqualsMask(this, rhs, include);
         #region To String
         public string ToString(
             string name = null,
@@ -242,7 +242,13 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 foreach (var elem in node.Elements())
                 {
-                    Fill_Xml_Internal(
+                    FillPrivateElement_Xml(
+                        item: ret,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                    SpellUnleveledCommon.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -618,7 +624,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        protected static void Fill_Xml_Internal(
+        protected static void FillPrivateElement_Xml(
             SpellUnleveled item,
             XElement node,
             string name,
@@ -627,140 +633,8 @@ namespace Mutagen.Bethesda.Oblivion
         {
             switch (name)
             {
-                case "Type":
-                    try
-                    {
-                        errorMask?.PushIndex((int)SpellUnleveled_FieldIndex.Type);
-                        if (EnumXmlTranslation<Spell.SpellType>.Instance.Parse(
-                            node: node,
-                            item: out Spell.SpellType TypeParse,
-                            errorMask: errorMask))
-                        {
-                            item.Type = TypeParse;
-                        }
-                        else
-                        {
-                            item.Type = default(Spell.SpellType);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Cost":
-                    try
-                    {
-                        errorMask?.PushIndex((int)SpellUnleveled_FieldIndex.Cost);
-                        if (UInt32XmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out UInt32 CostParse,
-                            errorMask: errorMask))
-                        {
-                            item.Cost = CostParse;
-                        }
-                        else
-                        {
-                            item.Cost = default(UInt32);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Level":
-                    try
-                    {
-                        errorMask?.PushIndex((int)SpellUnleveled_FieldIndex.Level);
-                        if (EnumXmlTranslation<Spell.SpellLevel>.Instance.Parse(
-                            node: node,
-                            item: out Spell.SpellLevel LevelParse,
-                            errorMask: errorMask))
-                        {
-                            item.Level = LevelParse;
-                        }
-                        else
-                        {
-                            item.Level = default(Spell.SpellLevel);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Flag":
-                    try
-                    {
-                        errorMask?.PushIndex((int)SpellUnleveled_FieldIndex.Flag);
-                        if (EnumXmlTranslation<Spell.SpellFlag>.Instance.Parse(
-                            node: node,
-                            item: out Spell.SpellFlag FlagParse,
-                            errorMask: errorMask))
-                        {
-                            item.Flag = FlagParse;
-                        }
-                        else
-                        {
-                            item.Flag = default(Spell.SpellFlag);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Effects":
-                    try
-                    {
-                        errorMask?.PushIndex((int)SpellUnleveled_FieldIndex.Effects);
-                        if (ListXmlTranslation<Effect>.Instance.Parse(
-                            node: node,
-                            enumer: out var EffectsItem,
-                            transl: LoquiXmlTranslation<Effect>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.Effects.SetTo(EffectsItem);
-                        }
-                        else
-                        {
-                            item.Effects.Unset();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
                 default:
-                    Spell.Fill_Xml_Internal(
+                    Spell.FillPrivateElement_Xml(
                         item: item,
                         node: node,
                         name: name,
@@ -2008,48 +1882,33 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static SpellUnleveled_Mask<bool> GetEqualsMask(
             this ISpellUnleveledGetter item,
-            ISpellUnleveledGetter rhs)
+            ISpellUnleveledGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new SpellUnleveled_Mask<bool>();
-            FillEqualsMask(item, rhs, ret);
+            FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
             return ret;
         }
 
         public static void FillEqualsMask(
             ISpellUnleveledGetter item,
             ISpellUnleveledGetter rhs,
-            SpellUnleveled_Mask<bool> ret)
+            SpellUnleveled_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
             ret.Type = item.Type == rhs.Type;
             ret.Cost = item.Cost == rhs.Cost;
             ret.Level = item.Level == rhs.Level;
             ret.Flag = item.Flag == rhs.Flag;
-            if (item.Effects.HasBeenSet == rhs.Effects.HasBeenSet)
-            {
-                if (item.Effects.HasBeenSet)
-                {
-                    ret.Effects = new MaskItem<bool, IEnumerable<MaskItem<bool, Effect_Mask<bool>>>>();
-                    ret.Effects.Specific = item.Effects.SelectAgainst<Effect, MaskItem<bool, Effect_Mask<bool>>>(rhs.Effects, ((l, r) =>
-                    {
-                        MaskItem<bool, Effect_Mask<bool>> itemRet;
-                        itemRet = l.LoquiEqualsHelper(r, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
-                        return itemRet;
-                    }
-                    ), out ret.Effects.Overall);
-                    ret.Effects.Overall = ret.Effects.Overall && ret.Effects.Specific.All((b) => b.Overall);
-                }
-                else
-                {
-                    ret.Effects = new MaskItem<bool, IEnumerable<MaskItem<bool, Effect_Mask<bool>>>>();
-                    ret.Effects.Overall = true;
-                }
-            }
-            else
-            {
-                ret.Effects = new MaskItem<bool, IEnumerable<MaskItem<bool, Effect_Mask<bool>>>>();
-                ret.Effects.Overall = false;
-            }
+            ret.Effects = item.Effects.CollectionEqualsHelper(
+                rhs.Effects,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
             SpellCommon.FillEqualsMask(item, rhs, ret);
         }
 
@@ -2133,7 +1992,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Cost = true;
             ret.Level = true;
             ret.Flag = true;
-            ret.Effects = new MaskItem<bool, IEnumerable<MaskItem<bool, Effect_Mask<bool>>>>(item.Effects.HasBeenSet, item.Effects.Select((i) => new MaskItem<bool, Effect_Mask<bool>>(true, i.GetHasBeenSetMask())));
+            ret.Effects = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Effect_Mask<bool>>>>(item.Effects.HasBeenSet, item.Effects.WithIndex().Select((i) => new MaskItemIndexed<bool, Effect_Mask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
             return ret;
         }
 
@@ -2256,7 +2115,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         public static void WriteToNode_Xml(
-            ISpellUnleveledGetter item,
+            this ISpellUnleveledGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -2322,6 +2181,183 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             translationMask: listTranslMask);
                     }
                     );
+            }
+        }
+
+        public static void FillPublic_Xml(
+            this SpellUnleveled item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    SpellUnleveledCommon.FillPublicElement_Xml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+
+        public static void FillPublicElement_Xml(
+            this SpellUnleveled item,
+            XElement node,
+            string name,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            switch (name)
+            {
+                case "Type":
+                    try
+                    {
+                        errorMask?.PushIndex((int)SpellUnleveled_FieldIndex.Type);
+                        if (EnumXmlTranslation<Spell.SpellType>.Instance.Parse(
+                            node: node,
+                            item: out Spell.SpellType TypeParse,
+                            errorMask: errorMask))
+                        {
+                            item.Type = TypeParse;
+                        }
+                        else
+                        {
+                            item.Type = default(Spell.SpellType);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Cost":
+                    try
+                    {
+                        errorMask?.PushIndex((int)SpellUnleveled_FieldIndex.Cost);
+                        if (UInt32XmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out UInt32 CostParse,
+                            errorMask: errorMask))
+                        {
+                            item.Cost = CostParse;
+                        }
+                        else
+                        {
+                            item.Cost = default(UInt32);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Level":
+                    try
+                    {
+                        errorMask?.PushIndex((int)SpellUnleveled_FieldIndex.Level);
+                        if (EnumXmlTranslation<Spell.SpellLevel>.Instance.Parse(
+                            node: node,
+                            item: out Spell.SpellLevel LevelParse,
+                            errorMask: errorMask))
+                        {
+                            item.Level = LevelParse;
+                        }
+                        else
+                        {
+                            item.Level = default(Spell.SpellLevel);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Flag":
+                    try
+                    {
+                        errorMask?.PushIndex((int)SpellUnleveled_FieldIndex.Flag);
+                        if (EnumXmlTranslation<Spell.SpellFlag>.Instance.Parse(
+                            node: node,
+                            item: out Spell.SpellFlag FlagParse,
+                            errorMask: errorMask))
+                        {
+                            item.Flag = FlagParse;
+                        }
+                        else
+                        {
+                            item.Flag = default(Spell.SpellFlag);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Effects":
+                    try
+                    {
+                        errorMask?.PushIndex((int)SpellUnleveled_FieldIndex.Effects);
+                        if (ListXmlTranslation<Effect>.Instance.Parse(
+                            node: node,
+                            enumer: out var EffectsItem,
+                            transl: LoquiXmlTranslation<Effect>.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.Effects.SetTo(EffectsItem);
+                        }
+                        else
+                        {
+                            item.Effects.Unset();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                default:
+                    SpellCommon.FillPublicElement_Xml(
+                        item: item,
+                        node: node,
+                        name: name,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                    break;
             }
         }
 
@@ -2455,7 +2491,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.Cost = initialValue;
             this.Level = initialValue;
             this.Flag = initialValue;
-            this.Effects = new MaskItem<T, IEnumerable<MaskItem<T, Effect_Mask<T>>>>(initialValue, null);
+            this.Effects = new MaskItem<T, IEnumerable<MaskItemIndexed<T, Effect_Mask<T>>>>(initialValue, null);
         }
         #endregion
 
@@ -2464,7 +2500,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public T Cost;
         public T Level;
         public T Flag;
-        public MaskItem<T, IEnumerable<MaskItem<T, Effect_Mask<T>>>> Effects;
+        public MaskItem<T, IEnumerable<MaskItemIndexed<T, Effect_Mask<T>>>> Effects;
         #endregion
 
         #region Equals
@@ -2540,22 +2576,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             obj.Flag = eval(this.Flag);
             if (Effects != null)
             {
-                obj.Effects = new MaskItem<R, IEnumerable<MaskItem<R, Effect_Mask<R>>>>();
+                obj.Effects = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Effect_Mask<R>>>>();
                 obj.Effects.Overall = eval(this.Effects.Overall);
                 if (Effects.Specific != null)
                 {
-                    List<MaskItem<R, Effect_Mask<R>>> l = new List<MaskItem<R, Effect_Mask<R>>>();
+                    List<MaskItemIndexed<R, Effect_Mask<R>>> l = new List<MaskItemIndexed<R, Effect_Mask<R>>>();
                     obj.Effects.Specific = l;
-                    foreach (var item in Effects.Specific)
+                    foreach (var item in Effects.Specific.WithIndex())
                     {
-                        MaskItem<R, Effect_Mask<R>> mask = default(MaskItem<R, Effect_Mask<R>>);
-                        if (item != null)
+                        MaskItemIndexed<R, Effect_Mask<R>> mask = default;
+                        mask.Index = item.Index;
+                        if (item.Item != null)
                         {
-                            mask = new MaskItem<R, Effect_Mask<R>>();
-                            mask.Overall = eval(item.Overall);
-                            if (item.Specific != null)
+                            mask = new MaskItemIndexed<R, Effect_Mask<R>>(item.Item.Index);
+                            mask.Overall = eval(item.Item.Overall);
+                            if (item.Item.Specific != null)
                             {
-                                mask.Specific = item.Specific.Translate(eval);
+                                mask.Specific = item.Item.Specific.Translate(eval);
                             }
                         }
                         l.Add(mask);

@@ -119,8 +119,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> IEqualsMask<ScriptMetaSummary>.GetEqualsMask(ScriptMetaSummary rhs) => ScriptMetaSummaryCommon.GetEqualsMask(this, rhs);
-        IMask<bool> IEqualsMask<IScriptMetaSummaryGetter>.GetEqualsMask(IScriptMetaSummaryGetter rhs) => ScriptMetaSummaryCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<ScriptMetaSummary>.GetEqualsMask(ScriptMetaSummary rhs, EqualsMaskHelper.Include include) => ScriptMetaSummaryCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<IScriptMetaSummaryGetter>.GetEqualsMask(IScriptMetaSummaryGetter rhs, EqualsMaskHelper.Include include) => ScriptMetaSummaryCommon.GetEqualsMask(this, rhs, include);
         #region To String
         public string ToString(
             string name = null,
@@ -214,7 +214,13 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 foreach (var elem in node.Elements())
                 {
-                    Fill_Xml_Internal(
+                    FillPrivateElement_Xml(
+                        item: ret,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                    ScriptMetaSummaryCommon.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -529,7 +535,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        protected static void Fill_Xml_Internal(
+        protected static void FillPrivateElement_Xml(
             ScriptMetaSummary item,
             XElement node,
             string name,
@@ -538,110 +544,6 @@ namespace Mutagen.Bethesda.Oblivion
         {
             switch (name)
             {
-                case "Fluff":
-                    try
-                    {
-                        errorMask?.PushIndex((int)ScriptMetaSummary_FieldIndex.Fluff);
-                        if (ByteArrayXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Byte[] FluffParse,
-                            errorMask: errorMask))
-                        {
-                            item.Fluff = FluffParse;
-                        }
-                        else
-                        {
-                            item.Fluff = default(Byte[]);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "RefCount":
-                    try
-                    {
-                        errorMask?.PushIndex((int)ScriptMetaSummary_FieldIndex.RefCount);
-                        if (UInt32XmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out UInt32 RefCountParse,
-                            errorMask: errorMask))
-                        {
-                            item.RefCount = RefCountParse;
-                        }
-                        else
-                        {
-                            item.RefCount = default(UInt32);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "VariableCount":
-                    try
-                    {
-                        errorMask?.PushIndex((int)ScriptMetaSummary_FieldIndex.VariableCount);
-                        if (UInt32XmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out UInt32 VariableCountParse,
-                            errorMask: errorMask))
-                        {
-                            item.VariableCount = VariableCountParse;
-                        }
-                        else
-                        {
-                            item.VariableCount = default(UInt32);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Type":
-                    try
-                    {
-                        errorMask?.PushIndex((int)ScriptMetaSummary_FieldIndex.Type);
-                        if (EnumXmlTranslation<ScriptFields.ScriptType>.Instance.Parse(
-                            node: node,
-                            item: out ScriptFields.ScriptType TypeParse,
-                            errorMask: errorMask))
-                        {
-                            item.Type = TypeParse;
-                        }
-                        else
-                        {
-                            item.Type = default(ScriptFields.ScriptType);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
                 default:
                     break;
             }
@@ -1761,17 +1663,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static ScriptMetaSummary_Mask<bool> GetEqualsMask(
             this IScriptMetaSummaryGetter item,
-            IScriptMetaSummaryGetter rhs)
+            IScriptMetaSummaryGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new ScriptMetaSummary_Mask<bool>();
-            FillEqualsMask(item, rhs, ret);
+            FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
             return ret;
         }
 
         public static void FillEqualsMask(
             IScriptMetaSummaryGetter item,
             IScriptMetaSummaryGetter rhs,
-            ScriptMetaSummary_Mask<bool> ret)
+            ScriptMetaSummary_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
             ret.Fluff = item.Fluff.EqualsFast(rhs.Fluff);
@@ -1892,7 +1800,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         public static void WriteToNode_Xml(
-            IScriptMetaSummaryGetter item,
+            this IScriptMetaSummaryGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1932,6 +1840,149 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item.Type,
                     fieldIndex: (int)ScriptMetaSummary_FieldIndex.Type,
                     errorMask: errorMask);
+            }
+        }
+
+        public static void FillPublic_Xml(
+            this ScriptMetaSummary item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    ScriptMetaSummaryCommon.FillPublicElement_Xml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+
+        public static void FillPublicElement_Xml(
+            this ScriptMetaSummary item,
+            XElement node,
+            string name,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            switch (name)
+            {
+                case "Fluff":
+                    try
+                    {
+                        errorMask?.PushIndex((int)ScriptMetaSummary_FieldIndex.Fluff);
+                        if (ByteArrayXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Byte[] FluffParse,
+                            errorMask: errorMask))
+                        {
+                            item.Fluff = FluffParse;
+                        }
+                        else
+                        {
+                            item.Fluff = default(Byte[]);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "RefCount":
+                    try
+                    {
+                        errorMask?.PushIndex((int)ScriptMetaSummary_FieldIndex.RefCount);
+                        if (UInt32XmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out UInt32 RefCountParse,
+                            errorMask: errorMask))
+                        {
+                            item.RefCount = RefCountParse;
+                        }
+                        else
+                        {
+                            item.RefCount = default(UInt32);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "VariableCount":
+                    try
+                    {
+                        errorMask?.PushIndex((int)ScriptMetaSummary_FieldIndex.VariableCount);
+                        if (UInt32XmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out UInt32 VariableCountParse,
+                            errorMask: errorMask))
+                        {
+                            item.VariableCount = VariableCountParse;
+                        }
+                        else
+                        {
+                            item.VariableCount = default(UInt32);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Type":
+                    try
+                    {
+                        errorMask?.PushIndex((int)ScriptMetaSummary_FieldIndex.Type);
+                        if (EnumXmlTranslation<ScriptFields.ScriptType>.Instance.Parse(
+                            node: node,
+                            item: out ScriptFields.ScriptType TypeParse,
+                            errorMask: errorMask))
+                        {
+                            item.Type = TypeParse;
+                        }
+                        else
+                        {
+                            item.Type = default(ScriptFields.ScriptType);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                default:
+                    break;
             }
         }
 

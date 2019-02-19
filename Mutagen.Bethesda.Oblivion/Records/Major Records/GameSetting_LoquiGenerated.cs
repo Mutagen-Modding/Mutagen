@@ -68,8 +68,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> IEqualsMask<GameSetting>.GetEqualsMask(GameSetting rhs) => GameSettingCommon.GetEqualsMask(this, rhs);
-        IMask<bool> IEqualsMask<IGameSettingGetter>.GetEqualsMask(IGameSettingGetter rhs) => GameSettingCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<GameSetting>.GetEqualsMask(GameSetting rhs, EqualsMaskHelper.Include include) => GameSettingCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<IGameSettingGetter>.GetEqualsMask(IGameSettingGetter rhs, EqualsMaskHelper.Include include) => GameSettingCommon.GetEqualsMask(this, rhs, include);
         #region To String
         public string ToString(
             string name = null,
@@ -454,7 +454,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        protected static void Fill_Xml_Internal(
+        protected static void FillPrivateElement_Xml(
             GameSetting item,
             XElement node,
             string name,
@@ -464,7 +464,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 default:
-                    MajorRecord.Fill_Xml_Internal(
+                    MajorRecord.FillPrivateElement_Xml(
                         item: item,
                         node: node,
                         name: name,
@@ -1016,17 +1016,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static GameSetting_Mask<bool> GetEqualsMask(
             this IGameSettingGetter item,
-            IGameSettingGetter rhs)
+            IGameSettingGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new GameSetting_Mask<bool>();
-            FillEqualsMask(item, rhs, ret);
+            FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
             return ret;
         }
 
         public static void FillEqualsMask(
             IGameSettingGetter item,
             IGameSettingGetter rhs,
-            GameSetting_Mask<bool> ret)
+            GameSetting_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
             MajorRecordCommon.FillEqualsMask(item, rhs, ret);
@@ -1143,7 +1149,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         public static void WriteToNode_Xml(
-            IGameSettingGetter item,
+            this IGameSettingGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1153,6 +1159,51 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
+        }
+
+        public static void FillPublic_Xml(
+            this GameSetting item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    GameSettingCommon.FillPublicElement_Xml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+
+        public static void FillPublicElement_Xml(
+            this GameSetting item,
+            XElement node,
+            string name,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            switch (name)
+            {
+                default:
+                    MajorRecordCommon.FillPublicElement_Xml(
+                        item: item,
+                        node: node,
+                        name: name,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                    break;
+            }
         }
 
         #endregion

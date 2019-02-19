@@ -2,26 +2,26 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>15d211f9066acc5f00155780d1239ffe31eafdf4</Sha>
+         <Sha>92f6a2bc50c46344e063eee0115c8d0812c7c58b</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>02-02-2019 14:45:42</CommitDate>
-         <Description>Merge branch 'master' of https://github.com/Noggog/CSharpExt</Description>
+         <CommitDate>02-26-2019 18:28:19</CommitDate>
+         <Description>More file class improvements</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>8f830ae13ce96c4b89b5c6c2f0e46443b7c41fad</Sha>
+         <Sha>d55a90c0ab6647824bace72e04fe2f8ce6558d4e</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>02-02-2019 14:45:59</CommitDate>
-         <Description>Merge branch 'master' of https://github.com/Noggog/Loqui</Description>
+         <CommitDate>02-25-2019 07:50:43</CommitDate>
+         <Description>transfer</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>
          <Nickname>DynamicData</Nickname>
-         <Sha>d5c2631f1106016c638f568e4503e94ab95ff2ff</Sha>
+         <Sha>f51df5a451e2499b5bdd952bf54b1802429d8a4a</Sha>
          <Path>../DynamicData</Path>
-         <CommitDate>01-17-2019 20:23:22</CommitDate>
-         <Description>CollectionCount convenience selector</Description>
+         <CommitDate>02-05-2019 14:30:31</CommitDate>
+         <Description>Removed uap target framework to avoid some errors</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
    </ParentRepos>

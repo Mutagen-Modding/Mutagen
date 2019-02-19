@@ -220,8 +220,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> IEqualsMask<PlacedCreature>.GetEqualsMask(PlacedCreature rhs) => PlacedCreatureCommon.GetEqualsMask(this, rhs);
-        IMask<bool> IEqualsMask<IPlacedCreatureGetter>.GetEqualsMask(IPlacedCreatureGetter rhs) => PlacedCreatureCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<PlacedCreature>.GetEqualsMask(PlacedCreature rhs, EqualsMaskHelper.Include include) => PlacedCreatureCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<IPlacedCreatureGetter>.GetEqualsMask(IPlacedCreatureGetter rhs, EqualsMaskHelper.Include include) => PlacedCreatureCommon.GetEqualsMask(this, rhs, include);
         #region To String
         public string ToString(
             string name = null,
@@ -290,8 +290,8 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 if (!this.Scale.EqualsWithin(rhs.Scale)) return false;
             }
-            if (this.Position != rhs.Position) return false;
-            if (this.Rotation != rhs.Rotation) return false;
+            if (!this.Position.Equals(rhs.Position)) return false;
+            if (!this.Rotation.Equals(rhs.Rotation)) return false;
             return true;
         }
 
@@ -374,7 +374,13 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 foreach (var elem in node.Elements())
                 {
-                    Fill_Xml_Internal(
+                    FillPrivateElement_Xml(
+                        item: ret,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                    PlacedCreatureCommon.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -686,7 +692,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        protected static void Fill_Xml_Internal(
+        protected static void FillPrivateElement_Xml(
             PlacedCreature item,
             XElement node,
             string name,
@@ -695,186 +701,8 @@ namespace Mutagen.Bethesda.Oblivion
         {
             switch (name)
             {
-                case "Base":
-                    FormKeyXmlTranslation.Instance.ParseInto(
-                        node: node,
-                        item: item.Base_Property,
-                        fieldIndex: (int)PlacedCreature_FieldIndex.Base,
-                        errorMask: errorMask);
-                    break;
-                case "Owner":
-                    FormKeyXmlTranslation.Instance.ParseInto(
-                        node: node,
-                        item: item.Owner_Property,
-                        fieldIndex: (int)PlacedCreature_FieldIndex.Owner,
-                        errorMask: errorMask);
-                    break;
-                case "FactionRank":
-                    try
-                    {
-                        errorMask?.PushIndex((int)PlacedCreature_FieldIndex.FactionRank);
-                        if (Int32XmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Int32 FactionRankParse,
-                            errorMask: errorMask))
-                        {
-                            item.FactionRank = FactionRankParse;
-                        }
-                        else
-                        {
-                            item.FactionRank = default(Int32);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "GlobalVariable":
-                    FormKeyXmlTranslation.Instance.ParseInto(
-                        node: node,
-                        item: item.GlobalVariable_Property,
-                        fieldIndex: (int)PlacedCreature_FieldIndex.GlobalVariable,
-                        errorMask: errorMask);
-                    break;
-                case "EnableParent":
-                    try
-                    {
-                        errorMask?.PushIndex((int)PlacedCreature_FieldIndex.EnableParent);
-                        if (LoquiXmlTranslation<EnableParent>.Instance.Parse(
-                            node: node,
-                            item: out EnableParent EnableParentParse,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)PlacedCreature_FieldIndex.EnableParent)))
-                        {
-                            item.EnableParent = EnableParentParse;
-                        }
-                        else
-                        {
-                            item.EnableParent = default(EnableParent);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "RagdollData":
-                    try
-                    {
-                        errorMask?.PushIndex((int)PlacedCreature_FieldIndex.RagdollData);
-                        if (ByteArrayXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Byte[] RagdollDataParse,
-                            errorMask: errorMask))
-                        {
-                            item.RagdollData = RagdollDataParse;
-                        }
-                        else
-                        {
-                            item.RagdollData = default(Byte[]);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Scale":
-                    try
-                    {
-                        errorMask?.PushIndex((int)PlacedCreature_FieldIndex.Scale);
-                        if (FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Single ScaleParse,
-                            errorMask: errorMask))
-                        {
-                            item.Scale = ScaleParse;
-                        }
-                        else
-                        {
-                            item.Scale = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Position":
-                    try
-                    {
-                        errorMask?.PushIndex((int)PlacedCreature_FieldIndex.Position);
-                        if (P3FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out P3Float PositionParse,
-                            errorMask: errorMask))
-                        {
-                            item.Position = PositionParse;
-                        }
-                        else
-                        {
-                            item.Position = default(P3Float);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Rotation":
-                    try
-                    {
-                        errorMask?.PushIndex((int)PlacedCreature_FieldIndex.Rotation);
-                        if (P3FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out P3Float RotationParse,
-                            errorMask: errorMask))
-                        {
-                            item.Rotation = RotationParse;
-                        }
-                        else
-                        {
-                            item.Rotation = default(P3Float);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
                 default:
-                    MajorRecord.Fill_Xml_Internal(
+                    MajorRecord.FillPrivateElement_Xml(
                         item: item,
                         node: node,
                         name: name,
@@ -2501,26 +2329,38 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static PlacedCreature_Mask<bool> GetEqualsMask(
             this IPlacedCreatureGetter item,
-            IPlacedCreatureGetter rhs)
+            IPlacedCreatureGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new PlacedCreature_Mask<bool>();
-            FillEqualsMask(item, rhs, ret);
+            FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
             return ret;
         }
 
         public static void FillEqualsMask(
             IPlacedCreatureGetter item,
             IPlacedCreatureGetter rhs,
-            PlacedCreature_Mask<bool> ret)
+            PlacedCreature_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
             ret.Base = item.Base_Property.FormKey == rhs.Base_Property.FormKey;
             ret.Owner = item.Owner_Property.FormKey == rhs.Owner_Property.FormKey;
             ret.FactionRank = item.FactionRank_IsSet == rhs.FactionRank_IsSet && item.FactionRank == rhs.FactionRank;
             ret.GlobalVariable = item.GlobalVariable_Property.FormKey == rhs.GlobalVariable_Property.FormKey;
-            ret.EnableParent = IHasBeenSetExt.LoquiEqualsHelper(item.EnableParent_IsSet, rhs.EnableParent_IsSet, item.EnableParent, rhs.EnableParent, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
+            ret.EnableParent = EqualsMaskHelper.EqualsHelper(
+                item.EnableParent_IsSet,
+                rhs.EnableParent_IsSet,
+                item.EnableParent,
+                rhs.EnableParent,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
+                include);
             ret.RagdollData = item.RagdollData_IsSet == rhs.RagdollData_IsSet && item.RagdollData.EqualsFast(rhs.RagdollData);
-            ret.Scale = item.Scale_IsSet == rhs.Scale_IsSet && item.Scale == rhs.Scale;
+            ret.Scale = item.Scale_IsSet == rhs.Scale_IsSet && item.Scale.EqualsWithin(rhs.Scale);
             ret.Position = item.Position == rhs.Position;
             ret.Rotation = item.Rotation == rhs.Rotation;
             MajorRecordCommon.FillEqualsMask(item, rhs, ret);
@@ -2690,7 +2530,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         public static void WriteToNode_Xml(
-            IPlacedCreatureGetter item,
+            this IPlacedCreatureGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -2788,6 +2628,229 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item.Rotation,
                     fieldIndex: (int)PlacedCreature_FieldIndex.Rotation,
                     errorMask: errorMask);
+            }
+        }
+
+        public static void FillPublic_Xml(
+            this PlacedCreature item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    PlacedCreatureCommon.FillPublicElement_Xml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+
+        public static void FillPublicElement_Xml(
+            this PlacedCreature item,
+            XElement node,
+            string name,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            switch (name)
+            {
+                case "Base":
+                    FormKeyXmlTranslation.Instance.ParseInto(
+                        node: node,
+                        item: item.Base_Property,
+                        fieldIndex: (int)PlacedCreature_FieldIndex.Base,
+                        errorMask: errorMask);
+                    break;
+                case "Owner":
+                    FormKeyXmlTranslation.Instance.ParseInto(
+                        node: node,
+                        item: item.Owner_Property,
+                        fieldIndex: (int)PlacedCreature_FieldIndex.Owner,
+                        errorMask: errorMask);
+                    break;
+                case "FactionRank":
+                    try
+                    {
+                        errorMask?.PushIndex((int)PlacedCreature_FieldIndex.FactionRank);
+                        if (Int32XmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Int32 FactionRankParse,
+                            errorMask: errorMask))
+                        {
+                            item.FactionRank = FactionRankParse;
+                        }
+                        else
+                        {
+                            item.FactionRank = default(Int32);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "GlobalVariable":
+                    FormKeyXmlTranslation.Instance.ParseInto(
+                        node: node,
+                        item: item.GlobalVariable_Property,
+                        fieldIndex: (int)PlacedCreature_FieldIndex.GlobalVariable,
+                        errorMask: errorMask);
+                    break;
+                case "EnableParent":
+                    try
+                    {
+                        errorMask?.PushIndex((int)PlacedCreature_FieldIndex.EnableParent);
+                        if (LoquiXmlTranslation<EnableParent>.Instance.Parse(
+                            node: node,
+                            item: out EnableParent EnableParentParse,
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)PlacedCreature_FieldIndex.EnableParent)))
+                        {
+                            item.EnableParent = EnableParentParse;
+                        }
+                        else
+                        {
+                            item.EnableParent = default(EnableParent);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "RagdollData":
+                    try
+                    {
+                        errorMask?.PushIndex((int)PlacedCreature_FieldIndex.RagdollData);
+                        if (ByteArrayXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Byte[] RagdollDataParse,
+                            errorMask: errorMask))
+                        {
+                            item.RagdollData = RagdollDataParse;
+                        }
+                        else
+                        {
+                            item.RagdollData = default(Byte[]);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Scale":
+                    try
+                    {
+                        errorMask?.PushIndex((int)PlacedCreature_FieldIndex.Scale);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Single ScaleParse,
+                            errorMask: errorMask))
+                        {
+                            item.Scale = ScaleParse;
+                        }
+                        else
+                        {
+                            item.Scale = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Position":
+                    try
+                    {
+                        errorMask?.PushIndex((int)PlacedCreature_FieldIndex.Position);
+                        if (P3FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out P3Float PositionParse,
+                            errorMask: errorMask))
+                        {
+                            item.Position = PositionParse;
+                        }
+                        else
+                        {
+                            item.Position = default(P3Float);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Rotation":
+                    try
+                    {
+                        errorMask?.PushIndex((int)PlacedCreature_FieldIndex.Rotation);
+                        if (P3FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out P3Float RotationParse,
+                            errorMask: errorMask))
+                        {
+                            item.Rotation = RotationParse;
+                        }
+                        else
+                        {
+                            item.Rotation = default(P3Float);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                default:
+                    MajorRecordCommon.FillPublicElement_Xml(
+                        item: item,
+                        node: node,
+                        name: name,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                    break;
             }
         }
 

@@ -96,8 +96,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> IEqualsMask<MapData>.GetEqualsMask(MapData rhs) => MapDataCommon.GetEqualsMask(this, rhs);
-        IMask<bool> IEqualsMask<IMapDataGetter>.GetEqualsMask(IMapDataGetter rhs) => MapDataCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<MapData>.GetEqualsMask(MapData rhs, EqualsMaskHelper.Include include) => MapDataCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<IMapDataGetter>.GetEqualsMask(IMapDataGetter rhs, EqualsMaskHelper.Include include) => MapDataCommon.GetEqualsMask(this, rhs, include);
         #region To String
         public string ToString(
             string name = null,
@@ -130,9 +130,9 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Equals(MapData rhs)
         {
             if (rhs == null) return false;
-            if (this.UsableDimensions != rhs.UsableDimensions) return false;
-            if (this.CellCoordinatesNWCell != rhs.CellCoordinatesNWCell) return false;
-            if (this.CellCoordinatesSECell != rhs.CellCoordinatesSECell) return false;
+            if (!this.UsableDimensions.Equals(rhs.UsableDimensions)) return false;
+            if (!this.CellCoordinatesNWCell.Equals(rhs.CellCoordinatesNWCell)) return false;
+            if (!this.CellCoordinatesSECell.Equals(rhs.CellCoordinatesSECell)) return false;
             return true;
         }
 
@@ -187,7 +187,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 foreach (var elem in node.Elements())
                 {
-                    Fill_Xml_Internal(
+                    MapDataCommon.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -501,98 +501,6 @@ namespace Mutagen.Bethesda.Oblivion
                 translationMask: translationMask);
         }
         #endregion
-
-        protected static void Fill_Xml_Internal(
-            MapData item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            switch (name)
-            {
-                case "UsableDimensions":
-                    try
-                    {
-                        errorMask?.PushIndex((int)MapData_FieldIndex.UsableDimensions);
-                        if (P2IntXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out P2Int UsableDimensionsParse,
-                            errorMask: errorMask))
-                        {
-                            item.UsableDimensions = UsableDimensionsParse;
-                        }
-                        else
-                        {
-                            item.UsableDimensions = default(P2Int);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "CellCoordinatesNWCell":
-                    try
-                    {
-                        errorMask?.PushIndex((int)MapData_FieldIndex.CellCoordinatesNWCell);
-                        if (P2Int16XmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out P2Int16 CellCoordinatesNWCellParse,
-                            errorMask: errorMask))
-                        {
-                            item.CellCoordinatesNWCell = CellCoordinatesNWCellParse;
-                        }
-                        else
-                        {
-                            item.CellCoordinatesNWCell = default(P2Int16);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "CellCoordinatesSECell":
-                    try
-                    {
-                        errorMask?.PushIndex((int)MapData_FieldIndex.CellCoordinatesSECell);
-                        if (P2Int16XmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out P2Int16 CellCoordinatesSECellParse,
-                            errorMask: errorMask))
-                        {
-                            item.CellCoordinatesSECell = CellCoordinatesSECellParse;
-                        }
-                        else
-                        {
-                            item.CellCoordinatesSECell = default(P2Int16);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
 
         #endregion
 
@@ -1576,17 +1484,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static MapData_Mask<bool> GetEqualsMask(
             this IMapDataGetter item,
-            IMapDataGetter rhs)
+            IMapDataGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new MapData_Mask<bool>();
-            FillEqualsMask(item, rhs, ret);
+            FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
             return ret;
         }
 
         public static void FillEqualsMask(
             IMapDataGetter item,
             IMapDataGetter rhs,
-            MapData_Mask<bool> ret)
+            MapData_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
             ret.UsableDimensions = item.UsableDimensions == rhs.UsableDimensions;
@@ -1695,7 +1609,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         public static void WriteToNode_Xml(
-            IMapDataGetter item,
+            this IMapDataGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1726,6 +1640,123 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item.CellCoordinatesSECell,
                     fieldIndex: (int)MapData_FieldIndex.CellCoordinatesSECell,
                     errorMask: errorMask);
+            }
+        }
+
+        public static void FillPublic_Xml(
+            this MapData item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    MapDataCommon.FillPublicElement_Xml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+
+        public static void FillPublicElement_Xml(
+            this MapData item,
+            XElement node,
+            string name,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            switch (name)
+            {
+                case "UsableDimensions":
+                    try
+                    {
+                        errorMask?.PushIndex((int)MapData_FieldIndex.UsableDimensions);
+                        if (P2IntXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out P2Int UsableDimensionsParse,
+                            errorMask: errorMask))
+                        {
+                            item.UsableDimensions = UsableDimensionsParse;
+                        }
+                        else
+                        {
+                            item.UsableDimensions = default(P2Int);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "CellCoordinatesNWCell":
+                    try
+                    {
+                        errorMask?.PushIndex((int)MapData_FieldIndex.CellCoordinatesNWCell);
+                        if (P2Int16XmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out P2Int16 CellCoordinatesNWCellParse,
+                            errorMask: errorMask))
+                        {
+                            item.CellCoordinatesNWCell = CellCoordinatesNWCellParse;
+                        }
+                        else
+                        {
+                            item.CellCoordinatesNWCell = default(P2Int16);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "CellCoordinatesSECell":
+                    try
+                    {
+                        errorMask?.PushIndex((int)MapData_FieldIndex.CellCoordinatesSECell);
+                        if (P2Int16XmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out P2Int16 CellCoordinatesSECellParse,
+                            errorMask: errorMask))
+                        {
+                            item.CellCoordinatesSECell = CellCoordinatesSECellParse;
+                        }
+                        else
+                        {
+                            item.CellCoordinatesSECell = default(P2Int16);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                default:
+                    break;
             }
         }
 

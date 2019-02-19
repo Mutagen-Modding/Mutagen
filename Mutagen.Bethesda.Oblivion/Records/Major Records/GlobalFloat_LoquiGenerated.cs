@@ -95,8 +95,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> IEqualsMask<GlobalFloat>.GetEqualsMask(GlobalFloat rhs) => GlobalFloatCommon.GetEqualsMask(this, rhs);
-        IMask<bool> IEqualsMask<IGlobalFloatGetter>.GetEqualsMask(IGlobalFloatGetter rhs) => GlobalFloatCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<GlobalFloat>.GetEqualsMask(GlobalFloat rhs, EqualsMaskHelper.Include include) => GlobalFloatCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<IGlobalFloatGetter>.GetEqualsMask(IGlobalFloatGetter rhs, EqualsMaskHelper.Include include) => GlobalFloatCommon.GetEqualsMask(this, rhs, include);
         #region To String
         public string ToString(
             string name = null,
@@ -191,7 +191,13 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 foreach (var elem in node.Elements())
                 {
-                    Fill_Xml_Internal(
+                    FillPrivateElement_Xml(
+                        item: ret,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                    GlobalFloatCommon.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -535,7 +541,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        protected static void Fill_Xml_Internal(
+        protected static void FillPrivateElement_Xml(
             GlobalFloat item,
             XElement node,
             string name,
@@ -544,34 +550,8 @@ namespace Mutagen.Bethesda.Oblivion
         {
             switch (name)
             {
-                case "Data":
-                    try
-                    {
-                        errorMask?.PushIndex((int)GlobalFloat_FieldIndex.Data);
-                        if (FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Single DataParse,
-                            errorMask: errorMask))
-                        {
-                            item.Data = DataParse;
-                        }
-                        else
-                        {
-                            item.Data = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
                 default:
-                    Global.Fill_Xml_Internal(
+                    Global.FillPrivateElement_Xml(
                         item: item,
                         node: node,
                         name: name,
@@ -1462,20 +1442,26 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static GlobalFloat_Mask<bool> GetEqualsMask(
             this IGlobalFloatGetter item,
-            IGlobalFloatGetter rhs)
+            IGlobalFloatGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new GlobalFloat_Mask<bool>();
-            FillEqualsMask(item, rhs, ret);
+            FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
             return ret;
         }
 
         public static void FillEqualsMask(
             IGlobalFloatGetter item,
             IGlobalFloatGetter rhs,
-            GlobalFloat_Mask<bool> ret)
+            GlobalFloat_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Data = item.Data_IsSet == rhs.Data_IsSet && item.Data == rhs.Data;
+            ret.Data = item.Data_IsSet == rhs.Data_IsSet && item.Data.EqualsWithin(rhs.Data);
             GlobalCommon.FillEqualsMask(item, rhs, ret);
         }
 
@@ -1623,7 +1609,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         public static void WriteToNode_Xml(
-            IGlobalFloatGetter item,
+            this IGlobalFloatGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1642,6 +1628,77 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item.Data,
                     fieldIndex: (int)GlobalFloat_FieldIndex.Data,
                     errorMask: errorMask);
+            }
+        }
+
+        public static void FillPublic_Xml(
+            this GlobalFloat item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    GlobalFloatCommon.FillPublicElement_Xml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+
+        public static void FillPublicElement_Xml(
+            this GlobalFloat item,
+            XElement node,
+            string name,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            switch (name)
+            {
+                case "Data":
+                    try
+                    {
+                        errorMask?.PushIndex((int)GlobalFloat_FieldIndex.Data);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Single DataParse,
+                            errorMask: errorMask))
+                        {
+                            item.Data = DataParse;
+                        }
+                        else
+                        {
+                            item.Data = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                default:
+                    GlobalCommon.FillPublicElement_Xml(
+                        item: item,
+                        node: node,
+                        name: name,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                    break;
             }
         }
 

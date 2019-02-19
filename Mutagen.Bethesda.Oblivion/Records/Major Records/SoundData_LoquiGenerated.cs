@@ -104,8 +104,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> IEqualsMask<SoundData>.GetEqualsMask(SoundData rhs) => SoundDataCommon.GetEqualsMask(this, rhs);
-        IMask<bool> IEqualsMask<ISoundDataGetter>.GetEqualsMask(ISoundDataGetter rhs) => SoundDataCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<SoundData>.GetEqualsMask(SoundData rhs, EqualsMaskHelper.Include include) => SoundDataCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<ISoundDataGetter>.GetEqualsMask(ISoundDataGetter rhs, EqualsMaskHelper.Include include) => SoundDataCommon.GetEqualsMask(this, rhs, include);
         #region To String
         public string ToString(
             string name = null,
@@ -197,7 +197,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 foreach (var elem in node.Elements())
                 {
-                    Fill_Xml_Internal(
+                    SoundDataCommon.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -511,124 +511,6 @@ namespace Mutagen.Bethesda.Oblivion
                 translationMask: translationMask);
         }
         #endregion
-
-        protected static void Fill_Xml_Internal(
-            SoundData item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            switch (name)
-            {
-                case "MinimumAttenuationDistance":
-                    try
-                    {
-                        errorMask?.PushIndex((int)SoundData_FieldIndex.MinimumAttenuationDistance);
-                        if (UInt16XmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out UInt16 MinimumAttenuationDistanceParse,
-                            errorMask: errorMask))
-                        {
-                            item.MinimumAttenuationDistance = MinimumAttenuationDistanceParse;
-                        }
-                        else
-                        {
-                            item.MinimumAttenuationDistance = default(UInt16);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "MaximumAttenuationDistance":
-                    try
-                    {
-                        errorMask?.PushIndex((int)SoundData_FieldIndex.MaximumAttenuationDistance);
-                        if (UInt16XmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out UInt16 MaximumAttenuationDistanceParse,
-                            errorMask: errorMask))
-                        {
-                            item.MaximumAttenuationDistance = MaximumAttenuationDistanceParse;
-                        }
-                        else
-                        {
-                            item.MaximumAttenuationDistance = default(UInt16);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "FrequencyAdjustment":
-                    try
-                    {
-                        errorMask?.PushIndex((int)SoundData_FieldIndex.FrequencyAdjustment);
-                        if (Int8XmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out SByte FrequencyAdjustmentParse,
-                            errorMask: errorMask))
-                        {
-                            item.FrequencyAdjustment = FrequencyAdjustmentParse;
-                        }
-                        else
-                        {
-                            item.FrequencyAdjustment = default(SByte);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Flags":
-                    try
-                    {
-                        errorMask?.PushIndex((int)SoundData_FieldIndex.Flags);
-                        if (EnumXmlTranslation<SoundData.Flag>.Instance.Parse(
-                            node: node,
-                            item: out SoundData.Flag FlagsParse,
-                            errorMask: errorMask))
-                        {
-                            item.Flags = FlagsParse;
-                        }
-                        else
-                        {
-                            item.Flags = default(SoundData.Flag);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
 
         #endregion
 
@@ -1707,17 +1589,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static SoundData_Mask<bool> GetEqualsMask(
             this ISoundDataGetter item,
-            ISoundDataGetter rhs)
+            ISoundDataGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new SoundData_Mask<bool>();
-            FillEqualsMask(item, rhs, ret);
+            FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
             return ret;
         }
 
         public static void FillEqualsMask(
             ISoundDataGetter item,
             ISoundDataGetter rhs,
-            SoundData_Mask<bool> ret)
+            SoundData_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
             ret.MinimumAttenuationDistance = item.MinimumAttenuationDistance == rhs.MinimumAttenuationDistance;
@@ -1832,7 +1720,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         public static void WriteToNode_Xml(
-            ISoundDataGetter item,
+            this ISoundDataGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1872,6 +1760,149 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item.Flags,
                     fieldIndex: (int)SoundData_FieldIndex.Flags,
                     errorMask: errorMask);
+            }
+        }
+
+        public static void FillPublic_Xml(
+            this SoundData item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    SoundDataCommon.FillPublicElement_Xml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+
+        public static void FillPublicElement_Xml(
+            this SoundData item,
+            XElement node,
+            string name,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            switch (name)
+            {
+                case "MinimumAttenuationDistance":
+                    try
+                    {
+                        errorMask?.PushIndex((int)SoundData_FieldIndex.MinimumAttenuationDistance);
+                        if (UInt16XmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out UInt16 MinimumAttenuationDistanceParse,
+                            errorMask: errorMask))
+                        {
+                            item.MinimumAttenuationDistance = MinimumAttenuationDistanceParse;
+                        }
+                        else
+                        {
+                            item.MinimumAttenuationDistance = default(UInt16);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "MaximumAttenuationDistance":
+                    try
+                    {
+                        errorMask?.PushIndex((int)SoundData_FieldIndex.MaximumAttenuationDistance);
+                        if (UInt16XmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out UInt16 MaximumAttenuationDistanceParse,
+                            errorMask: errorMask))
+                        {
+                            item.MaximumAttenuationDistance = MaximumAttenuationDistanceParse;
+                        }
+                        else
+                        {
+                            item.MaximumAttenuationDistance = default(UInt16);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "FrequencyAdjustment":
+                    try
+                    {
+                        errorMask?.PushIndex((int)SoundData_FieldIndex.FrequencyAdjustment);
+                        if (Int8XmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out SByte FrequencyAdjustmentParse,
+                            errorMask: errorMask))
+                        {
+                            item.FrequencyAdjustment = FrequencyAdjustmentParse;
+                        }
+                        else
+                        {
+                            item.FrequencyAdjustment = default(SByte);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Flags":
+                    try
+                    {
+                        errorMask?.PushIndex((int)SoundData_FieldIndex.Flags);
+                        if (EnumXmlTranslation<SoundData.Flag>.Instance.Parse(
+                            node: node,
+                            item: out SoundData.Flag FlagsParse,
+                            errorMask: errorMask))
+                        {
+                            item.Flags = FlagsParse;
+                        }
+                        else
+                        {
+                            item.Flags = default(SoundData.Flag);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                default:
+                    break;
             }
         }
 

@@ -190,8 +190,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> IEqualsMask<DialogResponse>.GetEqualsMask(DialogResponse rhs) => DialogResponseCommon.GetEqualsMask(this, rhs);
-        IMask<bool> IEqualsMask<IDialogResponseGetter>.GetEqualsMask(IDialogResponseGetter rhs) => DialogResponseCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<DialogResponse>.GetEqualsMask(DialogResponse rhs, EqualsMaskHelper.Include include) => DialogResponseCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<IDialogResponseGetter>.GetEqualsMask(IDialogResponseGetter rhs, EqualsMaskHelper.Include include) => DialogResponseCommon.GetEqualsMask(this, rhs, include);
         #region To String
         public string ToString(
             string name = null,
@@ -303,7 +303,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 foreach (var elem in node.Elements())
                 {
-                    Fill_Xml_Internal(
+                    DialogResponseCommon.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -617,202 +617,6 @@ namespace Mutagen.Bethesda.Oblivion
                 translationMask: translationMask);
         }
         #endregion
-
-        protected static void Fill_Xml_Internal(
-            DialogResponse item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            switch (name)
-            {
-                case "Emotion":
-                    try
-                    {
-                        errorMask?.PushIndex((int)DialogResponse_FieldIndex.Emotion);
-                        if (EnumXmlTranslation<EmotionType>.Instance.Parse(
-                            node: node,
-                            item: out EmotionType EmotionParse,
-                            errorMask: errorMask))
-                        {
-                            item.Emotion = EmotionParse;
-                        }
-                        else
-                        {
-                            item.Emotion = default(EmotionType);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "EmotionValue":
-                    try
-                    {
-                        errorMask?.PushIndex((int)DialogResponse_FieldIndex.EmotionValue);
-                        if (Int32XmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Int32 EmotionValueParse,
-                            errorMask: errorMask))
-                        {
-                            item.EmotionValue = EmotionValueParse;
-                        }
-                        else
-                        {
-                            item.EmotionValue = default(Int32);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Fluff1":
-                    try
-                    {
-                        errorMask?.PushIndex((int)DialogResponse_FieldIndex.Fluff1);
-                        if (ByteArrayXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Byte[] Fluff1Parse,
-                            errorMask: errorMask))
-                        {
-                            item.Fluff1 = Fluff1Parse;
-                        }
-                        else
-                        {
-                            item.Fluff1 = default(Byte[]);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ResponseNumber":
-                    try
-                    {
-                        errorMask?.PushIndex((int)DialogResponse_FieldIndex.ResponseNumber);
-                        if (ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Byte ResponseNumberParse,
-                            errorMask: errorMask))
-                        {
-                            item.ResponseNumber = ResponseNumberParse;
-                        }
-                        else
-                        {
-                            item.ResponseNumber = default(Byte);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Fluff2":
-                    try
-                    {
-                        errorMask?.PushIndex((int)DialogResponse_FieldIndex.Fluff2);
-                        if (ByteArrayXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Byte[] Fluff2Parse,
-                            errorMask: errorMask))
-                        {
-                            item.Fluff2 = Fluff2Parse;
-                        }
-                        else
-                        {
-                            item.Fluff2 = default(Byte[]);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ResponseText":
-                    try
-                    {
-                        errorMask?.PushIndex((int)DialogResponse_FieldIndex.ResponseText);
-                        if (StringXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out String ResponseTextParse,
-                            errorMask: errorMask))
-                        {
-                            item.ResponseText = ResponseTextParse;
-                        }
-                        else
-                        {
-                            item.ResponseText = default(String);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ActorNotes":
-                    try
-                    {
-                        errorMask?.PushIndex((int)DialogResponse_FieldIndex.ActorNotes);
-                        if (StringXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out String ActorNotesParse,
-                            errorMask: errorMask))
-                        {
-                            item.ActorNotes = ActorNotesParse;
-                        }
-                        else
-                        {
-                            item.ActorNotes = default(String);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
 
         #endregion
 
@@ -2189,17 +1993,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static DialogResponse_Mask<bool> GetEqualsMask(
             this IDialogResponseGetter item,
-            IDialogResponseGetter rhs)
+            IDialogResponseGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new DialogResponse_Mask<bool>();
-            FillEqualsMask(item, rhs, ret);
+            FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
             return ret;
         }
 
         public static void FillEqualsMask(
             IDialogResponseGetter item,
             IDialogResponseGetter rhs,
-            DialogResponse_Mask<bool> ret)
+            DialogResponse_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
             ret.Emotion = item.Emotion == rhs.Emotion;
@@ -2334,7 +2144,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         public static void WriteToNode_Xml(
-            IDialogResponseGetter item,
+            this IDialogResponseGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -2403,6 +2213,227 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item.ActorNotes,
                     fieldIndex: (int)DialogResponse_FieldIndex.ActorNotes,
                     errorMask: errorMask);
+            }
+        }
+
+        public static void FillPublic_Xml(
+            this DialogResponse item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    DialogResponseCommon.FillPublicElement_Xml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+
+        public static void FillPublicElement_Xml(
+            this DialogResponse item,
+            XElement node,
+            string name,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            switch (name)
+            {
+                case "Emotion":
+                    try
+                    {
+                        errorMask?.PushIndex((int)DialogResponse_FieldIndex.Emotion);
+                        if (EnumXmlTranslation<EmotionType>.Instance.Parse(
+                            node: node,
+                            item: out EmotionType EmotionParse,
+                            errorMask: errorMask))
+                        {
+                            item.Emotion = EmotionParse;
+                        }
+                        else
+                        {
+                            item.Emotion = default(EmotionType);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "EmotionValue":
+                    try
+                    {
+                        errorMask?.PushIndex((int)DialogResponse_FieldIndex.EmotionValue);
+                        if (Int32XmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Int32 EmotionValueParse,
+                            errorMask: errorMask))
+                        {
+                            item.EmotionValue = EmotionValueParse;
+                        }
+                        else
+                        {
+                            item.EmotionValue = default(Int32);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Fluff1":
+                    try
+                    {
+                        errorMask?.PushIndex((int)DialogResponse_FieldIndex.Fluff1);
+                        if (ByteArrayXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Byte[] Fluff1Parse,
+                            errorMask: errorMask))
+                        {
+                            item.Fluff1 = Fluff1Parse;
+                        }
+                        else
+                        {
+                            item.Fluff1 = default(Byte[]);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "ResponseNumber":
+                    try
+                    {
+                        errorMask?.PushIndex((int)DialogResponse_FieldIndex.ResponseNumber);
+                        if (ByteXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Byte ResponseNumberParse,
+                            errorMask: errorMask))
+                        {
+                            item.ResponseNumber = ResponseNumberParse;
+                        }
+                        else
+                        {
+                            item.ResponseNumber = default(Byte);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Fluff2":
+                    try
+                    {
+                        errorMask?.PushIndex((int)DialogResponse_FieldIndex.Fluff2);
+                        if (ByteArrayXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Byte[] Fluff2Parse,
+                            errorMask: errorMask))
+                        {
+                            item.Fluff2 = Fluff2Parse;
+                        }
+                        else
+                        {
+                            item.Fluff2 = default(Byte[]);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "ResponseText":
+                    try
+                    {
+                        errorMask?.PushIndex((int)DialogResponse_FieldIndex.ResponseText);
+                        if (StringXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out String ResponseTextParse,
+                            errorMask: errorMask))
+                        {
+                            item.ResponseText = ResponseTextParse;
+                        }
+                        else
+                        {
+                            item.ResponseText = default(String);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "ActorNotes":
+                    try
+                    {
+                        errorMask?.PushIndex((int)DialogResponse_FieldIndex.ActorNotes);
+                        if (StringXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out String ActorNotesParse,
+                            errorMask: errorMask))
+                        {
+                            item.ActorNotes = ActorNotesParse;
+                        }
+                        else
+                        {
+                            item.ActorNotes = default(String);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                default:
+                    break;
             }
         }
 

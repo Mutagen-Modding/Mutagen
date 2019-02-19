@@ -161,8 +161,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> IEqualsMask<IdleAnimation>.GetEqualsMask(IdleAnimation rhs) => IdleAnimationCommon.GetEqualsMask(this, rhs);
-        IMask<bool> IEqualsMask<IIdleAnimationGetter>.GetEqualsMask(IIdleAnimationGetter rhs) => IdleAnimationCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<IdleAnimation>.GetEqualsMask(IdleAnimation rhs, EqualsMaskHelper.Include include) => IdleAnimationCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<IIdleAnimationGetter>.GetEqualsMask(IIdleAnimationGetter rhs, EqualsMaskHelper.Include include) => IdleAnimationCommon.GetEqualsMask(this, rhs, include);
         #region To String
         public string ToString(
             string name = null,
@@ -284,7 +284,13 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 foreach (var elem in node.Elements())
                 {
-                    Fill_Xml_Internal(
+                    FillPrivateElement_Xml(
+                        item: ret,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                    IdleAnimationCommon.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -596,7 +602,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        protected static void Fill_Xml_Internal(
+        protected static void FillPrivateElement_Xml(
             IdleAnimation item,
             XElement node,
             string name,
@@ -605,117 +611,8 @@ namespace Mutagen.Bethesda.Oblivion
         {
             switch (name)
             {
-                case "Model":
-                    try
-                    {
-                        errorMask?.PushIndex((int)IdleAnimation_FieldIndex.Model);
-                        if (LoquiXmlTranslation<Model>.Instance.Parse(
-                            node: node,
-                            item: out Model ModelParse,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)IdleAnimation_FieldIndex.Model)))
-                        {
-                            item.Model = ModelParse;
-                        }
-                        else
-                        {
-                            item.Model = default(Model);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Conditions":
-                    try
-                    {
-                        errorMask?.PushIndex((int)IdleAnimation_FieldIndex.Conditions);
-                        if (ListXmlTranslation<Condition>.Instance.Parse(
-                            node: node,
-                            enumer: out var ConditionsItem,
-                            transl: LoquiXmlTranslation<Condition>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.Conditions.SetTo(ConditionsItem);
-                        }
-                        else
-                        {
-                            item.Conditions.Unset();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "AnimationGroupSection":
-                    try
-                    {
-                        errorMask?.PushIndex((int)IdleAnimation_FieldIndex.AnimationGroupSection);
-                        if (EnumXmlTranslation<IdleAnimation.AnimationGroupSectionEnum>.Instance.Parse(
-                            node: node,
-                            item: out IdleAnimation.AnimationGroupSectionEnum AnimationGroupSectionParse,
-                            errorMask: errorMask))
-                        {
-                            item.AnimationGroupSection = AnimationGroupSectionParse;
-                        }
-                        else
-                        {
-                            item.AnimationGroupSection = default(IdleAnimation.AnimationGroupSectionEnum);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "RelatedIdleAnimations":
-                    try
-                    {
-                        errorMask?.PushIndex((int)IdleAnimation_FieldIndex.RelatedIdleAnimations);
-                        if (ListXmlTranslation<FormIDLink<IdleAnimation>>.Instance.Parse(
-                            node: node,
-                            enumer: out var RelatedIdleAnimationsItem,
-                            transl: FormKeyXmlTranslation.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.RelatedIdleAnimations.SetTo(RelatedIdleAnimationsItem);
-                        }
-                        else
-                        {
-                            item.RelatedIdleAnimations.Unset();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
                 default:
-                    MajorRecord.Fill_Xml_Internal(
+                    MajorRecord.FillPrivateElement_Xml(
                         item: item,
                         node: node,
                         name: name,
@@ -1904,65 +1801,41 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static IdleAnimation_Mask<bool> GetEqualsMask(
             this IIdleAnimationGetter item,
-            IIdleAnimationGetter rhs)
+            IIdleAnimationGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new IdleAnimation_Mask<bool>();
-            FillEqualsMask(item, rhs, ret);
+            FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
             return ret;
         }
 
         public static void FillEqualsMask(
             IIdleAnimationGetter item,
             IIdleAnimationGetter rhs,
-            IdleAnimation_Mask<bool> ret)
+            IdleAnimation_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Model = IHasBeenSetExt.LoquiEqualsHelper(item.Model_IsSet, rhs.Model_IsSet, item.Model, rhs.Model, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
-            if (item.Conditions.HasBeenSet == rhs.Conditions.HasBeenSet)
-            {
-                if (item.Conditions.HasBeenSet)
-                {
-                    ret.Conditions = new MaskItem<bool, IEnumerable<MaskItem<bool, Condition_Mask<bool>>>>();
-                    ret.Conditions.Specific = item.Conditions.SelectAgainst<Condition, MaskItem<bool, Condition_Mask<bool>>>(rhs.Conditions, ((l, r) =>
-                    {
-                        MaskItem<bool, Condition_Mask<bool>> itemRet;
-                        itemRet = l.LoquiEqualsHelper(r, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
-                        return itemRet;
-                    }
-                    ), out ret.Conditions.Overall);
-                    ret.Conditions.Overall = ret.Conditions.Overall && ret.Conditions.Specific.All((b) => b.Overall);
-                }
-                else
-                {
-                    ret.Conditions = new MaskItem<bool, IEnumerable<MaskItem<bool, Condition_Mask<bool>>>>();
-                    ret.Conditions.Overall = true;
-                }
-            }
-            else
-            {
-                ret.Conditions = new MaskItem<bool, IEnumerable<MaskItem<bool, Condition_Mask<bool>>>>();
-                ret.Conditions.Overall = false;
-            }
+            ret.Model = EqualsMaskHelper.EqualsHelper(
+                item.Model_IsSet,
+                rhs.Model_IsSet,
+                item.Model,
+                rhs.Model,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
+                include);
+            ret.Conditions = item.Conditions.CollectionEqualsHelper(
+                rhs.Conditions,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
             ret.AnimationGroupSection = item.AnimationGroupSection_IsSet == rhs.AnimationGroupSection_IsSet && item.AnimationGroupSection == rhs.AnimationGroupSection;
-            if (item.RelatedIdleAnimations.HasBeenSet == rhs.RelatedIdleAnimations.HasBeenSet)
-            {
-                if (item.RelatedIdleAnimations.HasBeenSet)
-                {
-                    ret.RelatedIdleAnimations = new MaskItem<bool, IEnumerable<bool>>();
-                    ret.RelatedIdleAnimations.Specific = item.RelatedIdleAnimations.SelectAgainst<FormIDLink<IdleAnimation>, bool>(rhs.RelatedIdleAnimations, ((l, r) => object.Equals(l, r)), out ret.RelatedIdleAnimations.Overall);
-                    ret.RelatedIdleAnimations.Overall = ret.RelatedIdleAnimations.Overall && ret.RelatedIdleAnimations.Specific.All((b) => b);
-                }
-                else
-                {
-                    ret.RelatedIdleAnimations = new MaskItem<bool, IEnumerable<bool>>();
-                    ret.RelatedIdleAnimations.Overall = true;
-                }
-            }
-            else
-            {
-                ret.RelatedIdleAnimations = new MaskItem<bool, IEnumerable<bool>>();
-                ret.RelatedIdleAnimations.Overall = false;
-            }
+            ret.RelatedIdleAnimations = item.RelatedIdleAnimations.CollectionEqualsHelper(
+                rhs.RelatedIdleAnimations,
+                (l, r) => object.Equals(l, r),
+                include);
             MajorRecordCommon.FillEqualsMask(item, rhs, ret);
         }
 
@@ -2057,9 +1930,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             var ret = new IdleAnimation_Mask<bool>();
             ret.Model = new MaskItem<bool, Model_Mask<bool>>(item.Model_IsSet, ModelCommon.GetHasBeenSetMask(item.Model));
-            ret.Conditions = new MaskItem<bool, IEnumerable<MaskItem<bool, Condition_Mask<bool>>>>(item.Conditions.HasBeenSet, item.Conditions.Select((i) => new MaskItem<bool, Condition_Mask<bool>>(true, i.GetHasBeenSetMask())));
+            ret.Conditions = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Condition_Mask<bool>>>>(item.Conditions.HasBeenSet, item.Conditions.WithIndex().Select((i) => new MaskItemIndexed<bool, Condition_Mask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
             ret.AnimationGroupSection = item.AnimationGroupSection_IsSet;
-            ret.RelatedIdleAnimations = new MaskItem<bool, IEnumerable<bool>>(item.RelatedIdleAnimations.HasBeenSet, null);
+            ret.RelatedIdleAnimations = new MaskItem<bool, IEnumerable<(int, bool)>>(item.RelatedIdleAnimations.HasBeenSet, null);
             return ret;
         }
 
@@ -2130,7 +2003,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         public static void WriteToNode_Xml(
-            IIdleAnimationGetter item,
+            this IIdleAnimationGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -2201,6 +2074,160 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             errorMask: listSubMask);
                     }
                     );
+            }
+        }
+
+        public static void FillPublic_Xml(
+            this IdleAnimation item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    IdleAnimationCommon.FillPublicElement_Xml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+
+        public static void FillPublicElement_Xml(
+            this IdleAnimation item,
+            XElement node,
+            string name,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            switch (name)
+            {
+                case "Model":
+                    try
+                    {
+                        errorMask?.PushIndex((int)IdleAnimation_FieldIndex.Model);
+                        if (LoquiXmlTranslation<Model>.Instance.Parse(
+                            node: node,
+                            item: out Model ModelParse,
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)IdleAnimation_FieldIndex.Model)))
+                        {
+                            item.Model = ModelParse;
+                        }
+                        else
+                        {
+                            item.Model = default(Model);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Conditions":
+                    try
+                    {
+                        errorMask?.PushIndex((int)IdleAnimation_FieldIndex.Conditions);
+                        if (ListXmlTranslation<Condition>.Instance.Parse(
+                            node: node,
+                            enumer: out var ConditionsItem,
+                            transl: LoquiXmlTranslation<Condition>.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.Conditions.SetTo(ConditionsItem);
+                        }
+                        else
+                        {
+                            item.Conditions.Unset();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "AnimationGroupSection":
+                    try
+                    {
+                        errorMask?.PushIndex((int)IdleAnimation_FieldIndex.AnimationGroupSection);
+                        if (EnumXmlTranslation<IdleAnimation.AnimationGroupSectionEnum>.Instance.Parse(
+                            node: node,
+                            item: out IdleAnimation.AnimationGroupSectionEnum AnimationGroupSectionParse,
+                            errorMask: errorMask))
+                        {
+                            item.AnimationGroupSection = AnimationGroupSectionParse;
+                        }
+                        else
+                        {
+                            item.AnimationGroupSection = default(IdleAnimation.AnimationGroupSectionEnum);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "RelatedIdleAnimations":
+                    try
+                    {
+                        errorMask?.PushIndex((int)IdleAnimation_FieldIndex.RelatedIdleAnimations);
+                        if (ListXmlTranslation<FormIDLink<IdleAnimation>>.Instance.Parse(
+                            node: node,
+                            enumer: out var RelatedIdleAnimationsItem,
+                            transl: FormKeyXmlTranslation.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.RelatedIdleAnimations.SetTo(RelatedIdleAnimationsItem);
+                        }
+                        else
+                        {
+                            item.RelatedIdleAnimations.Unset();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                default:
+                    MajorRecordCommon.FillPublicElement_Xml(
+                        item: item,
+                        node: node,
+                        name: name,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                    break;
             }
         }
 
@@ -2340,17 +2367,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public IdleAnimation_Mask(T initialValue)
         {
             this.Model = new MaskItem<T, Model_Mask<T>>(initialValue, new Model_Mask<T>(initialValue));
-            this.Conditions = new MaskItem<T, IEnumerable<MaskItem<T, Condition_Mask<T>>>>(initialValue, null);
+            this.Conditions = new MaskItem<T, IEnumerable<MaskItemIndexed<T, Condition_Mask<T>>>>(initialValue, null);
             this.AnimationGroupSection = initialValue;
-            this.RelatedIdleAnimations = new MaskItem<T, IEnumerable<T>>(initialValue, null);
+            this.RelatedIdleAnimations = new MaskItem<T, IEnumerable<(int Index, T Value)>>(initialValue, null);
         }
         #endregion
 
         #region Members
         public MaskItem<T, Model_Mask<T>> Model { get; set; }
-        public MaskItem<T, IEnumerable<MaskItem<T, Condition_Mask<T>>>> Conditions;
+        public MaskItem<T, IEnumerable<MaskItemIndexed<T, Condition_Mask<T>>>> Conditions;
         public T AnimationGroupSection;
-        public MaskItem<T, IEnumerable<T>> RelatedIdleAnimations;
+        public MaskItem<T, IEnumerable<(int Index, T Value)>> RelatedIdleAnimations;
         #endregion
 
         #region Equals
@@ -2412,7 +2439,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     foreach (var item in this.RelatedIdleAnimations.Specific)
                     {
-                        if (!eval(item)) return false;
+                        if (!eval(item.Value)) return false;
                     }
                 }
             }
@@ -2442,22 +2469,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (Conditions != null)
             {
-                obj.Conditions = new MaskItem<R, IEnumerable<MaskItem<R, Condition_Mask<R>>>>();
+                obj.Conditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition_Mask<R>>>>();
                 obj.Conditions.Overall = eval(this.Conditions.Overall);
                 if (Conditions.Specific != null)
                 {
-                    List<MaskItem<R, Condition_Mask<R>>> l = new List<MaskItem<R, Condition_Mask<R>>>();
+                    List<MaskItemIndexed<R, Condition_Mask<R>>> l = new List<MaskItemIndexed<R, Condition_Mask<R>>>();
                     obj.Conditions.Specific = l;
-                    foreach (var item in Conditions.Specific)
+                    foreach (var item in Conditions.Specific.WithIndex())
                     {
-                        MaskItem<R, Condition_Mask<R>> mask = default(MaskItem<R, Condition_Mask<R>>);
-                        if (item != null)
+                        MaskItemIndexed<R, Condition_Mask<R>> mask = default;
+                        mask.Index = item.Index;
+                        if (item.Item != null)
                         {
-                            mask = new MaskItem<R, Condition_Mask<R>>();
-                            mask.Overall = eval(item.Overall);
-                            if (item.Specific != null)
+                            mask = new MaskItemIndexed<R, Condition_Mask<R>>(item.Item.Index);
+                            mask.Overall = eval(item.Item.Overall);
+                            if (item.Item.Specific != null)
                             {
-                                mask.Specific = item.Specific.Translate(eval);
+                                mask.Specific = item.Item.Specific.Translate(eval);
                             }
                         }
                         l.Add(mask);
@@ -2467,16 +2495,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             obj.AnimationGroupSection = eval(this.AnimationGroupSection);
             if (RelatedIdleAnimations != null)
             {
-                obj.RelatedIdleAnimations = new MaskItem<R, IEnumerable<R>>();
+                obj.RelatedIdleAnimations = new MaskItem<R, IEnumerable<(int Index, R Value)>>();
                 obj.RelatedIdleAnimations.Overall = eval(this.RelatedIdleAnimations.Overall);
                 if (RelatedIdleAnimations.Specific != null)
                 {
-                    List<R> l = new List<R>();
+                    List<(int Index, R Item)> l = new List<(int Index, R Item)>();
                     obj.RelatedIdleAnimations.Specific = l;
-                    foreach (var item in RelatedIdleAnimations.Specific)
+                    foreach (var item in RelatedIdleAnimations.Specific.WithIndex())
                     {
-                        R mask = default(R);
-                        mask = eval(item);
+                        (int Index, R Item) mask = default;
+                        mask.Index = item.Index;
+                        mask.Item = eval(item.Item.Value);
                         l.Add(mask);
                     }
                 }
@@ -2583,7 +2612,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public MaskItem<Exception, Model_ErrorMask> Model;
         public MaskItem<Exception, IEnumerable<MaskItem<Exception, Condition_ErrorMask>>> Conditions;
         public Exception AnimationGroupSection;
-        public MaskItem<Exception, IEnumerable<Exception>> RelatedIdleAnimations;
+        public MaskItem<Exception, IEnumerable<(int Index, Exception Value)>> RelatedIdleAnimations;
         #endregion
 
         #region IErrorMask
@@ -2620,7 +2649,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     this.AnimationGroupSection = ex;
                     break;
                 case IdleAnimation_FieldIndex.RelatedIdleAnimations:
-                    this.RelatedIdleAnimations = new MaskItem<Exception, IEnumerable<Exception>>(ex, null);
+                    this.RelatedIdleAnimations = new MaskItem<Exception, IEnumerable<(int Index, Exception Value)>>(ex, null);
                     break;
                 default:
                     base.SetNthException(index, ex);
@@ -2643,7 +2672,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     this.AnimationGroupSection = (Exception)obj;
                     break;
                 case IdleAnimation_FieldIndex.RelatedIdleAnimations:
-                    this.RelatedIdleAnimations = (MaskItem<Exception, IEnumerable<Exception>>)obj;
+                    this.RelatedIdleAnimations = (MaskItem<Exception, IEnumerable<(int Index, Exception Value)>>)obj;
                     break;
                 default:
                     base.SetNthMask(index, obj);
@@ -2749,7 +2778,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Model = new MaskItem<Exception, Model_ErrorMask>(this.Model.Overall.Combine(rhs.Model.Overall), ((IErrorMask<Model_ErrorMask>)this.Model.Specific).Combine(rhs.Model.Specific));
             ret.Conditions = new MaskItem<Exception, IEnumerable<MaskItem<Exception, Condition_ErrorMask>>>(this.Conditions.Overall.Combine(rhs.Conditions.Overall), new List<MaskItem<Exception, Condition_ErrorMask>>(this.Conditions.Specific.And(rhs.Conditions.Specific)));
             ret.AnimationGroupSection = this.AnimationGroupSection.Combine(rhs.AnimationGroupSection);
-            ret.RelatedIdleAnimations = new MaskItem<Exception, IEnumerable<Exception>>(this.RelatedIdleAnimations.Overall.Combine(rhs.RelatedIdleAnimations.Overall), new List<Exception>(this.RelatedIdleAnimations.Specific.And(rhs.RelatedIdleAnimations.Specific)));
+            ret.RelatedIdleAnimations = new MaskItem<Exception, IEnumerable<(int Index, Exception Value)>>(this.RelatedIdleAnimations.Overall.Combine(rhs.RelatedIdleAnimations.Overall), new List<(int Index, Exception Value)>(this.RelatedIdleAnimations.Specific.And(rhs.RelatedIdleAnimations.Specific)));
             return ret;
         }
         public static IdleAnimation_ErrorMask Combine(IdleAnimation_ErrorMask lhs, IdleAnimation_ErrorMask rhs)

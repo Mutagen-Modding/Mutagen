@@ -101,8 +101,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> IEqualsMask<QuestStage>.GetEqualsMask(QuestStage rhs) => QuestStageCommon.GetEqualsMask(this, rhs);
-        IMask<bool> IEqualsMask<IQuestStageGetter>.GetEqualsMask(IQuestStageGetter rhs) => QuestStageCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<QuestStage>.GetEqualsMask(QuestStage rhs, EqualsMaskHelper.Include include) => QuestStageCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<IQuestStageGetter>.GetEqualsMask(IQuestStageGetter rhs, EqualsMaskHelper.Include include) => QuestStageCommon.GetEqualsMask(this, rhs, include);
         #region To String
         public string ToString(
             string name = null,
@@ -197,7 +197,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 foreach (var elem in node.Elements())
                 {
-                    Fill_Xml_Internal(
+                    QuestStageCommon.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -511,74 +511,6 @@ namespace Mutagen.Bethesda.Oblivion
                 translationMask: translationMask);
         }
         #endregion
-
-        protected static void Fill_Xml_Internal(
-            QuestStage item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            switch (name)
-            {
-                case "Stage":
-                    try
-                    {
-                        errorMask?.PushIndex((int)QuestStage_FieldIndex.Stage);
-                        if (UInt16XmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out UInt16 StageParse,
-                            errorMask: errorMask))
-                        {
-                            item.Stage = StageParse;
-                        }
-                        else
-                        {
-                            item.Stage = default(UInt16);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "LogEntries":
-                    try
-                    {
-                        errorMask?.PushIndex((int)QuestStage_FieldIndex.LogEntries);
-                        if (ListXmlTranslation<LogEntry>.Instance.Parse(
-                            node: node,
-                            enumer: out var LogEntriesItem,
-                            transl: LoquiXmlTranslation<LogEntry>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.LogEntries.SetTo(LogEntriesItem);
-                        }
-                        else
-                        {
-                            item.LogEntries.Unset();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
 
         #endregion
 
@@ -1584,45 +1516,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static QuestStage_Mask<bool> GetEqualsMask(
             this IQuestStageGetter item,
-            IQuestStageGetter rhs)
+            IQuestStageGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new QuestStage_Mask<bool>();
-            FillEqualsMask(item, rhs, ret);
+            FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
             return ret;
         }
 
         public static void FillEqualsMask(
             IQuestStageGetter item,
             IQuestStageGetter rhs,
-            QuestStage_Mask<bool> ret)
+            QuestStage_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
             ret.Stage = item.Stage == rhs.Stage;
-            if (item.LogEntries.HasBeenSet == rhs.LogEntries.HasBeenSet)
-            {
-                if (item.LogEntries.HasBeenSet)
-                {
-                    ret.LogEntries = new MaskItem<bool, IEnumerable<MaskItem<bool, LogEntry_Mask<bool>>>>();
-                    ret.LogEntries.Specific = item.LogEntries.SelectAgainst<LogEntry, MaskItem<bool, LogEntry_Mask<bool>>>(rhs.LogEntries, ((l, r) =>
-                    {
-                        MaskItem<bool, LogEntry_Mask<bool>> itemRet;
-                        itemRet = l.LoquiEqualsHelper(r, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
-                        return itemRet;
-                    }
-                    ), out ret.LogEntries.Overall);
-                    ret.LogEntries.Overall = ret.LogEntries.Overall && ret.LogEntries.Specific.All((b) => b.Overall);
-                }
-                else
-                {
-                    ret.LogEntries = new MaskItem<bool, IEnumerable<MaskItem<bool, LogEntry_Mask<bool>>>>();
-                    ret.LogEntries.Overall = true;
-                }
-            }
-            else
-            {
-                ret.LogEntries = new MaskItem<bool, IEnumerable<MaskItem<bool, LogEntry_Mask<bool>>>>();
-                ret.LogEntries.Overall = false;
-            }
+            ret.LogEntries = item.LogEntries.CollectionEqualsHelper(
+                rhs.LogEntries,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
         }
 
         public static string ToString(
@@ -1690,7 +1607,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             var ret = new QuestStage_Mask<bool>();
             ret.Stage = true;
-            ret.LogEntries = new MaskItem<bool, IEnumerable<MaskItem<bool, LogEntry_Mask<bool>>>>(item.LogEntries.HasBeenSet, item.LogEntries.Select((i) => new MaskItem<bool, LogEntry_Mask<bool>>(true, i.GetHasBeenSetMask())));
+            ret.LogEntries = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, LogEntry_Mask<bool>>>>(item.LogEntries.HasBeenSet, item.LogEntries.WithIndex().Select((i) => new MaskItemIndexed<bool, LogEntry_Mask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
             return ret;
         }
 
@@ -1736,7 +1653,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         public static void WriteToNode_Xml(
-            IQuestStageGetter item,
+            this IQuestStageGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1770,6 +1687,99 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             translationMask: listTranslMask);
                     }
                     );
+            }
+        }
+
+        public static void FillPublic_Xml(
+            this QuestStage item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    QuestStageCommon.FillPublicElement_Xml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+
+        public static void FillPublicElement_Xml(
+            this QuestStage item,
+            XElement node,
+            string name,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            switch (name)
+            {
+                case "Stage":
+                    try
+                    {
+                        errorMask?.PushIndex((int)QuestStage_FieldIndex.Stage);
+                        if (UInt16XmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out UInt16 StageParse,
+                            errorMask: errorMask))
+                        {
+                            item.Stage = StageParse;
+                        }
+                        else
+                        {
+                            item.Stage = default(UInt16);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "LogEntries":
+                    try
+                    {
+                        errorMask?.PushIndex((int)QuestStage_FieldIndex.LogEntries);
+                        if (ListXmlTranslation<LogEntry>.Instance.Parse(
+                            node: node,
+                            enumer: out var LogEntriesItem,
+                            transl: LoquiXmlTranslation<LogEntry>.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.LogEntries.SetTo(LogEntriesItem);
+                        }
+                        else
+                        {
+                            item.LogEntries.Unset();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                default:
+                    break;
             }
         }
 
@@ -1861,13 +1871,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public QuestStage_Mask(T initialValue)
         {
             this.Stage = initialValue;
-            this.LogEntries = new MaskItem<T, IEnumerable<MaskItem<T, LogEntry_Mask<T>>>>(initialValue, null);
+            this.LogEntries = new MaskItem<T, IEnumerable<MaskItemIndexed<T, LogEntry_Mask<T>>>>(initialValue, null);
         }
         #endregion
 
         #region Members
         public T Stage;
-        public MaskItem<T, IEnumerable<MaskItem<T, LogEntry_Mask<T>>>> LogEntries;
+        public MaskItem<T, IEnumerable<MaskItemIndexed<T, LogEntry_Mask<T>>>> LogEntries;
         #endregion
 
         #region Equals
@@ -1927,22 +1937,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             obj.Stage = eval(this.Stage);
             if (LogEntries != null)
             {
-                obj.LogEntries = new MaskItem<R, IEnumerable<MaskItem<R, LogEntry_Mask<R>>>>();
+                obj.LogEntries = new MaskItem<R, IEnumerable<MaskItemIndexed<R, LogEntry_Mask<R>>>>();
                 obj.LogEntries.Overall = eval(this.LogEntries.Overall);
                 if (LogEntries.Specific != null)
                 {
-                    List<MaskItem<R, LogEntry_Mask<R>>> l = new List<MaskItem<R, LogEntry_Mask<R>>>();
+                    List<MaskItemIndexed<R, LogEntry_Mask<R>>> l = new List<MaskItemIndexed<R, LogEntry_Mask<R>>>();
                     obj.LogEntries.Specific = l;
-                    foreach (var item in LogEntries.Specific)
+                    foreach (var item in LogEntries.Specific.WithIndex())
                     {
-                        MaskItem<R, LogEntry_Mask<R>> mask = default(MaskItem<R, LogEntry_Mask<R>>);
-                        if (item != null)
+                        MaskItemIndexed<R, LogEntry_Mask<R>> mask = default;
+                        mask.Index = item.Index;
+                        if (item.Item != null)
                         {
-                            mask = new MaskItem<R, LogEntry_Mask<R>>();
-                            mask.Overall = eval(item.Overall);
-                            if (item.Specific != null)
+                            mask = new MaskItemIndexed<R, LogEntry_Mask<R>>(item.Item.Index);
+                            mask.Overall = eval(item.Item.Overall);
+                            if (item.Item.Specific != null)
                             {
-                                mask.Specific = item.Specific.Translate(eval);
+                                mask.Specific = item.Item.Specific.Translate(eval);
                             }
                         }
                         l.Add(mask);

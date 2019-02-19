@@ -105,8 +105,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> IEqualsMask<SoundItem>.GetEqualsMask(SoundItem rhs) => SoundItemCommon.GetEqualsMask(this, rhs);
-        IMask<bool> IEqualsMask<ISoundItemGetter>.GetEqualsMask(ISoundItemGetter rhs) => SoundItemCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<SoundItem>.GetEqualsMask(SoundItem rhs, EqualsMaskHelper.Include include) => SoundItemCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<ISoundItemGetter>.GetEqualsMask(ISoundItemGetter rhs, EqualsMaskHelper.Include include) => SoundItemCommon.GetEqualsMask(this, rhs, include);
         #region To String
         public string ToString(
             string name = null,
@@ -208,7 +208,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 foreach (var elem in node.Elements())
                 {
-                    Fill_Xml_Internal(
+                    SoundItemCommon.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -522,53 +522,6 @@ namespace Mutagen.Bethesda.Oblivion
                 translationMask: translationMask);
         }
         #endregion
-
-        protected static void Fill_Xml_Internal(
-            SoundItem item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            switch (name)
-            {
-                case "Sound":
-                    FormKeyXmlTranslation.Instance.ParseInto(
-                        node: node,
-                        item: item.Sound_Property,
-                        fieldIndex: (int)SoundItem_FieldIndex.Sound,
-                        errorMask: errorMask);
-                    break;
-                case "Chance":
-                    try
-                    {
-                        errorMask?.PushIndex((int)SoundItem_FieldIndex.Chance);
-                        if (ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Byte ChanceParse,
-                            errorMask: errorMask))
-                        {
-                            item.Chance = ChanceParse;
-                        }
-                        else
-                        {
-                            item.Chance = default(Byte);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
 
         #endregion
 
@@ -1555,17 +1508,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static SoundItem_Mask<bool> GetEqualsMask(
             this ISoundItemGetter item,
-            ISoundItemGetter rhs)
+            ISoundItemGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new SoundItem_Mask<bool>();
-            FillEqualsMask(item, rhs, ret);
+            FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
             return ret;
         }
 
         public static void FillEqualsMask(
             ISoundItemGetter item,
             ISoundItemGetter rhs,
-            SoundItem_Mask<bool> ret)
+            SoundItem_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
             ret.Sound = item.Sound_Property.FormKey == rhs.Sound_Property.FormKey;
@@ -1670,7 +1629,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         public static void WriteToNode_Xml(
-            ISoundItemGetter item,
+            this ISoundItemGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1694,6 +1653,78 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item.Chance,
                     fieldIndex: (int)SoundItem_FieldIndex.Chance,
                     errorMask: errorMask);
+            }
+        }
+
+        public static void FillPublic_Xml(
+            this SoundItem item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    SoundItemCommon.FillPublicElement_Xml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+
+        public static void FillPublicElement_Xml(
+            this SoundItem item,
+            XElement node,
+            string name,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            switch (name)
+            {
+                case "Sound":
+                    FormKeyXmlTranslation.Instance.ParseInto(
+                        node: node,
+                        item: item.Sound_Property,
+                        fieldIndex: (int)SoundItem_FieldIndex.Sound,
+                        errorMask: errorMask);
+                    break;
+                case "Chance":
+                    try
+                    {
+                        errorMask?.PushIndex((int)SoundItem_FieldIndex.Chance);
+                        if (ByteXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Byte ChanceParse,
+                            errorMask: errorMask))
+                        {
+                            item.Chance = ChanceParse;
+                        }
+                        else
+                        {
+                            item.Chance = default(Byte);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                default:
+                    break;
             }
         }
 

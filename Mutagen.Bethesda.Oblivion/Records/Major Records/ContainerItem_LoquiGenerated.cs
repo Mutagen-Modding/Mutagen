@@ -87,8 +87,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> IEqualsMask<ContainerItem>.GetEqualsMask(ContainerItem rhs) => ContainerItemCommon.GetEqualsMask(this, rhs);
-        IMask<bool> IEqualsMask<IContainerItemGetter>.GetEqualsMask(IContainerItemGetter rhs) => ContainerItemCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<ContainerItem>.GetEqualsMask(ContainerItem rhs, EqualsMaskHelper.Include include) => ContainerItemCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<IContainerItemGetter>.GetEqualsMask(IContainerItemGetter rhs, EqualsMaskHelper.Include include) => ContainerItemCommon.GetEqualsMask(this, rhs, include);
         #region To String
         public string ToString(
             string name = null,
@@ -176,7 +176,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 foreach (var elem in node.Elements())
                 {
-                    Fill_Xml_Internal(
+                    ContainerItemCommon.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -490,53 +490,6 @@ namespace Mutagen.Bethesda.Oblivion
                 translationMask: translationMask);
         }
         #endregion
-
-        protected static void Fill_Xml_Internal(
-            ContainerItem item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            switch (name)
-            {
-                case "Item":
-                    FormKeyXmlTranslation.Instance.ParseInto(
-                        node: node,
-                        item: item.Item_Property,
-                        fieldIndex: (int)ContainerItem_FieldIndex.Item,
-                        errorMask: errorMask);
-                    break;
-                case "Count":
-                    try
-                    {
-                        errorMask?.PushIndex((int)ContainerItem_FieldIndex.Count);
-                        if (UInt32XmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out UInt32 CountParse,
-                            errorMask: errorMask))
-                        {
-                            item.Count = CountParse;
-                        }
-                        else
-                        {
-                            item.Count = default(UInt32);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
 
         #endregion
 
@@ -1453,17 +1406,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static ContainerItem_Mask<bool> GetEqualsMask(
             this IContainerItemGetter item,
-            IContainerItemGetter rhs)
+            IContainerItemGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new ContainerItem_Mask<bool>();
-            FillEqualsMask(item, rhs, ret);
+            FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
             return ret;
         }
 
         public static void FillEqualsMask(
             IContainerItemGetter item,
             IContainerItemGetter rhs,
-            ContainerItem_Mask<bool> ret)
+            ContainerItem_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
             ret.Item = item.Item_Property.FormKey == rhs.Item_Property.FormKey;
@@ -1566,7 +1525,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         public static void WriteToNode_Xml(
-            IContainerItemGetter item,
+            this IContainerItemGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1588,6 +1547,78 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item.Count,
                     fieldIndex: (int)ContainerItem_FieldIndex.Count,
                     errorMask: errorMask);
+            }
+        }
+
+        public static void FillPublic_Xml(
+            this ContainerItem item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    ContainerItemCommon.FillPublicElement_Xml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+
+        public static void FillPublicElement_Xml(
+            this ContainerItem item,
+            XElement node,
+            string name,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            switch (name)
+            {
+                case "Item":
+                    FormKeyXmlTranslation.Instance.ParseInto(
+                        node: node,
+                        item: item.Item_Property,
+                        fieldIndex: (int)ContainerItem_FieldIndex.Item,
+                        errorMask: errorMask);
+                    break;
+                case "Count":
+                    try
+                    {
+                        errorMask?.PushIndex((int)ContainerItem_FieldIndex.Count);
+                        if (UInt32XmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out UInt32 CountParse,
+                            errorMask: errorMask))
+                        {
+                            item.Count = CountParse;
+                        }
+                        else
+                        {
+                            item.Count = default(UInt32);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                default:
+                    break;
             }
         }
 

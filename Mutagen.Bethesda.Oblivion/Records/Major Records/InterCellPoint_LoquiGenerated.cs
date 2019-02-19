@@ -88,8 +88,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> IEqualsMask<InterCellPoint>.GetEqualsMask(InterCellPoint rhs) => InterCellPointCommon.GetEqualsMask(this, rhs);
-        IMask<bool> IEqualsMask<IInterCellPointGetter>.GetEqualsMask(IInterCellPointGetter rhs) => InterCellPointCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<InterCellPoint>.GetEqualsMask(InterCellPoint rhs, EqualsMaskHelper.Include include) => InterCellPointCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<IInterCellPointGetter>.GetEqualsMask(IInterCellPointGetter rhs, EqualsMaskHelper.Include include) => InterCellPointCommon.GetEqualsMask(this, rhs, include);
         #region To String
         public string ToString(
             string name = null,
@@ -123,7 +123,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             if (rhs == null) return false;
             if (this.PointID != rhs.PointID) return false;
-            if (this.Point != rhs.Point) return false;
+            if (!this.Point.Equals(rhs.Point)) return false;
             return true;
         }
 
@@ -177,7 +177,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 foreach (var elem in node.Elements())
                 {
-                    Fill_Xml_Internal(
+                    InterCellPointCommon.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -491,72 +491,6 @@ namespace Mutagen.Bethesda.Oblivion
                 translationMask: translationMask);
         }
         #endregion
-
-        protected static void Fill_Xml_Internal(
-            InterCellPoint item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            switch (name)
-            {
-                case "PointID":
-                    try
-                    {
-                        errorMask?.PushIndex((int)InterCellPoint_FieldIndex.PointID);
-                        if (Int32XmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Int32 PointIDParse,
-                            errorMask: errorMask))
-                        {
-                            item.PointID = PointIDParse;
-                        }
-                        else
-                        {
-                            item.PointID = default(Int32);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Point":
-                    try
-                    {
-                        errorMask?.PushIndex((int)InterCellPoint_FieldIndex.Point);
-                        if (P3FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out P3Float PointParse,
-                            errorMask: errorMask))
-                        {
-                            item.Point = PointParse;
-                        }
-                        else
-                        {
-                            item.Point = default(P3Float);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
 
         #endregion
 
@@ -1457,17 +1391,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static InterCellPoint_Mask<bool> GetEqualsMask(
             this IInterCellPointGetter item,
-            IInterCellPointGetter rhs)
+            IInterCellPointGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new InterCellPoint_Mask<bool>();
-            FillEqualsMask(item, rhs, ret);
+            FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
             return ret;
         }
 
         public static void FillEqualsMask(
             IInterCellPointGetter item,
             IInterCellPointGetter rhs,
-            InterCellPoint_Mask<bool> ret)
+            InterCellPoint_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
             ret.PointID = item.PointID == rhs.PointID;
@@ -1570,7 +1510,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         public static void WriteToNode_Xml(
-            IInterCellPointGetter item,
+            this IInterCellPointGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -1592,6 +1532,97 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item.Point,
                     fieldIndex: (int)InterCellPoint_FieldIndex.Point,
                     errorMask: errorMask);
+            }
+        }
+
+        public static void FillPublic_Xml(
+            this InterCellPoint item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    InterCellPointCommon.FillPublicElement_Xml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+
+        public static void FillPublicElement_Xml(
+            this InterCellPoint item,
+            XElement node,
+            string name,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            switch (name)
+            {
+                case "PointID":
+                    try
+                    {
+                        errorMask?.PushIndex((int)InterCellPoint_FieldIndex.PointID);
+                        if (Int32XmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Int32 PointIDParse,
+                            errorMask: errorMask))
+                        {
+                            item.PointID = PointIDParse;
+                        }
+                        else
+                        {
+                            item.PointID = default(Int32);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Point":
+                    try
+                    {
+                        errorMask?.PushIndex((int)InterCellPoint_FieldIndex.Point);
+                        if (P3FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out P3Float PointParse,
+                            errorMask: errorMask))
+                        {
+                            item.Point = PointParse;
+                        }
+                        else
+                        {
+                            item.Point = default(P3Float);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                default:
+                    break;
             }
         }
 

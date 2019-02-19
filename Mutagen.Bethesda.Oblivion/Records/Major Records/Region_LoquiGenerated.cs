@@ -16,6 +16,7 @@ using ReactiveUI;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Drawing;
+using Loqui.Presentation;
 using DynamicData;
 using CSharpExt.Rx;
 using Mutagen.Bethesda.Oblivion;
@@ -284,8 +285,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> IEqualsMask<Region>.GetEqualsMask(Region rhs) => RegionCommon.GetEqualsMask(this, rhs);
-        IMask<bool> IEqualsMask<IRegionGetter>.GetEqualsMask(IRegionGetter rhs) => RegionCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<Region>.GetEqualsMask(Region rhs, EqualsMaskHelper.Include include) => RegionCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<IRegionGetter>.GetEqualsMask(IRegionGetter rhs, EqualsMaskHelper.Include include) => RegionCommon.GetEqualsMask(this, rhs, include);
         #region To String
         public string ToString(
             string name = null,
@@ -327,7 +328,7 @@ namespace Mutagen.Bethesda.Oblivion
             if (MapColor_IsSet != rhs.MapColor_IsSet) return false;
             if (MapColor_IsSet)
             {
-                if (this.MapColor != rhs.MapColor) return false;
+                if (!this.MapColor.ColorOnlyEquals(rhs.MapColor)) return false;
             }
             if (Worldspace_Property.HasBeenSet != rhs.Worldspace_Property.HasBeenSet) return false;
             if (Worldspace_Property.HasBeenSet)
@@ -452,7 +453,13 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 foreach (var elem in node.Elements())
                 {
-                    Fill_Xml_Internal(
+                    FillPrivateElement_Xml(
+                        item: ret,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                    RegionCommon.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -764,7 +771,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        protected static void Fill_Xml_Internal(
+        protected static void FillPrivateElement_Xml(
             Region item,
             XElement node,
             string name,
@@ -773,230 +780,8 @@ namespace Mutagen.Bethesda.Oblivion
         {
             switch (name)
             {
-                case "Icon":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Region_FieldIndex.Icon);
-                        if (StringXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out String IconParse,
-                            errorMask: errorMask))
-                        {
-                            item.Icon = IconParse;
-                        }
-                        else
-                        {
-                            item.Icon = default(String);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "MapColor":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Region_FieldIndex.MapColor);
-                        if (ColorXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Color MapColorParse,
-                            errorMask: errorMask))
-                        {
-                            item.MapColor = MapColorParse;
-                        }
-                        else
-                        {
-                            item.MapColor = default(Color);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Worldspace":
-                    FormKeyXmlTranslation.Instance.ParseInto(
-                        node: node,
-                        item: item.Worldspace_Property,
-                        fieldIndex: (int)Region_FieldIndex.Worldspace,
-                        errorMask: errorMask);
-                    break;
-                case "Areas":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Region_FieldIndex.Areas);
-                        if (ListXmlTranslation<RegionArea>.Instance.Parse(
-                            node: node,
-                            enumer: out var AreasItem,
-                            transl: LoquiXmlTranslation<RegionArea>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.Areas.SetTo(AreasItem);
-                        }
-                        else
-                        {
-                            item.Areas.Unset();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Objects":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Region_FieldIndex.Objects);
-                        if (LoquiXmlTranslation<RegionDataObjects>.Instance.Parse(
-                            node: node,
-                            item: out RegionDataObjects ObjectsParse,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Region_FieldIndex.Objects)))
-                        {
-                            item.Objects = ObjectsParse;
-                        }
-                        else
-                        {
-                            item.Objects = default(RegionDataObjects);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Weather":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Region_FieldIndex.Weather);
-                        if (LoquiXmlTranslation<RegionDataWeather>.Instance.Parse(
-                            node: node,
-                            item: out RegionDataWeather WeatherParse,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Region_FieldIndex.Weather)))
-                        {
-                            item.Weather = WeatherParse;
-                        }
-                        else
-                        {
-                            item.Weather = default(RegionDataWeather);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "MapName":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Region_FieldIndex.MapName);
-                        if (LoquiXmlTranslation<RegionDataMapName>.Instance.Parse(
-                            node: node,
-                            item: out RegionDataMapName MapNameParse,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Region_FieldIndex.MapName)))
-                        {
-                            item.MapName = MapNameParse;
-                        }
-                        else
-                        {
-                            item.MapName = default(RegionDataMapName);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Grasses":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Region_FieldIndex.Grasses);
-                        if (LoquiXmlTranslation<RegionDataGrasses>.Instance.Parse(
-                            node: node,
-                            item: out RegionDataGrasses GrassesParse,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Region_FieldIndex.Grasses)))
-                        {
-                            item.Grasses = GrassesParse;
-                        }
-                        else
-                        {
-                            item.Grasses = default(RegionDataGrasses);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Sounds":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Region_FieldIndex.Sounds);
-                        if (LoquiXmlTranslation<RegionDataSounds>.Instance.Parse(
-                            node: node,
-                            item: out RegionDataSounds SoundsParse,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Region_FieldIndex.Sounds)))
-                        {
-                            item.Sounds = SoundsParse;
-                        }
-                        else
-                        {
-                            item.Sounds = default(RegionDataSounds);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
                 default:
-                    MajorRecord.Fill_Xml_Internal(
+                    MajorRecord.FillPrivateElement_Xml(
                         item: item,
                         node: node,
                         name: name,
@@ -2724,52 +2509,67 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static Region_Mask<bool> GetEqualsMask(
             this IRegionGetter item,
-            IRegionGetter rhs)
+            IRegionGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new Region_Mask<bool>();
-            FillEqualsMask(item, rhs, ret);
+            FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
             return ret;
         }
 
         public static void FillEqualsMask(
             IRegionGetter item,
             IRegionGetter rhs,
-            Region_Mask<bool> ret)
+            Region_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
             ret.Icon = item.Icon_IsSet == rhs.Icon_IsSet && object.Equals(item.Icon, rhs.Icon);
-            ret.MapColor = item.MapColor_IsSet == rhs.MapColor_IsSet && item.MapColor == rhs.MapColor;
+            ret.MapColor = item.MapColor_IsSet == rhs.MapColor_IsSet && item.MapColor.ColorOnlyEquals(rhs.MapColor);
             ret.Worldspace = item.Worldspace_Property.FormKey == rhs.Worldspace_Property.FormKey;
-            if (item.Areas.HasBeenSet == rhs.Areas.HasBeenSet)
-            {
-                if (item.Areas.HasBeenSet)
-                {
-                    ret.Areas = new MaskItem<bool, IEnumerable<MaskItem<bool, RegionArea_Mask<bool>>>>();
-                    ret.Areas.Specific = item.Areas.SelectAgainst<RegionArea, MaskItem<bool, RegionArea_Mask<bool>>>(rhs.Areas, ((l, r) =>
-                    {
-                        MaskItem<bool, RegionArea_Mask<bool>> itemRet;
-                        itemRet = l.LoquiEqualsHelper(r, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
-                        return itemRet;
-                    }
-                    ), out ret.Areas.Overall);
-                    ret.Areas.Overall = ret.Areas.Overall && ret.Areas.Specific.All((b) => b.Overall);
-                }
-                else
-                {
-                    ret.Areas = new MaskItem<bool, IEnumerable<MaskItem<bool, RegionArea_Mask<bool>>>>();
-                    ret.Areas.Overall = true;
-                }
-            }
-            else
-            {
-                ret.Areas = new MaskItem<bool, IEnumerable<MaskItem<bool, RegionArea_Mask<bool>>>>();
-                ret.Areas.Overall = false;
-            }
-            ret.Objects = IHasBeenSetExt.LoquiEqualsHelper(item.Objects_IsSet, rhs.Objects_IsSet, item.Objects, rhs.Objects, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
-            ret.Weather = IHasBeenSetExt.LoquiEqualsHelper(item.Weather_IsSet, rhs.Weather_IsSet, item.Weather, rhs.Weather, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
-            ret.MapName = IHasBeenSetExt.LoquiEqualsHelper(item.MapName_IsSet, rhs.MapName_IsSet, item.MapName, rhs.MapName, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
-            ret.Grasses = IHasBeenSetExt.LoquiEqualsHelper(item.Grasses_IsSet, rhs.Grasses_IsSet, item.Grasses, rhs.Grasses, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
-            ret.Sounds = IHasBeenSetExt.LoquiEqualsHelper(item.Sounds_IsSet, rhs.Sounds_IsSet, item.Sounds, rhs.Sounds, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
+            ret.Areas = item.Areas.CollectionEqualsHelper(
+                rhs.Areas,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.Objects = EqualsMaskHelper.EqualsHelper(
+                item.Objects_IsSet,
+                rhs.Objects_IsSet,
+                item.Objects,
+                rhs.Objects,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
+                include);
+            ret.Weather = EqualsMaskHelper.EqualsHelper(
+                item.Weather_IsSet,
+                rhs.Weather_IsSet,
+                item.Weather,
+                rhs.Weather,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
+                include);
+            ret.MapName = EqualsMaskHelper.EqualsHelper(
+                item.MapName_IsSet,
+                rhs.MapName_IsSet,
+                item.MapName,
+                rhs.MapName,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
+                include);
+            ret.Grasses = EqualsMaskHelper.EqualsHelper(
+                item.Grasses_IsSet,
+                rhs.Grasses_IsSet,
+                item.Grasses,
+                rhs.Grasses,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
+                include);
+            ret.Sounds = EqualsMaskHelper.EqualsHelper(
+                item.Sounds_IsSet,
+                rhs.Sounds_IsSet,
+                item.Sounds,
+                rhs.Sounds,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
+                include);
             MajorRecordCommon.FillEqualsMask(item, rhs, ret);
         }
 
@@ -2881,7 +2681,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Icon = item.Icon_IsSet;
             ret.MapColor = item.MapColor_IsSet;
             ret.Worldspace = item.Worldspace_Property.HasBeenSet;
-            ret.Areas = new MaskItem<bool, IEnumerable<MaskItem<bool, RegionArea_Mask<bool>>>>(item.Areas.HasBeenSet, item.Areas.Select((i) => new MaskItem<bool, RegionArea_Mask<bool>>(true, i.GetHasBeenSetMask())));
+            ret.Areas = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, RegionArea_Mask<bool>>>>(item.Areas.HasBeenSet, item.Areas.WithIndex().Select((i) => new MaskItemIndexed<bool, RegionArea_Mask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
             ret.Objects = new MaskItem<bool, RegionDataObjects_Mask<bool>>(item.Objects_IsSet, RegionDataObjectsCommon.GetHasBeenSetMask(item.Objects));
             ret.Weather = new MaskItem<bool, RegionDataWeather_Mask<bool>>(item.Weather_IsSet, RegionDataWeatherCommon.GetHasBeenSetMask(item.Weather));
             ret.MapName = new MaskItem<bool, RegionDataMapName_Mask<bool>>(item.MapName_IsSet, RegionDataMapNameCommon.GetHasBeenSetMask(item.MapName));
@@ -2957,7 +2757,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         public static void WriteToNode_Xml(
-            IRegionGetter item,
+            this IRegionGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -3072,6 +2872,273 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)Region_FieldIndex.Sounds,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)Region_FieldIndex.Sounds));
+            }
+        }
+
+        public static void FillPublic_Xml(
+            this Region item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    RegionCommon.FillPublicElement_Xml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+
+        public static void FillPublicElement_Xml(
+            this Region item,
+            XElement node,
+            string name,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            switch (name)
+            {
+                case "Icon":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Region_FieldIndex.Icon);
+                        if (StringXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out String IconParse,
+                            errorMask: errorMask))
+                        {
+                            item.Icon = IconParse;
+                        }
+                        else
+                        {
+                            item.Icon = default(String);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "MapColor":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Region_FieldIndex.MapColor);
+                        if (ColorXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Color MapColorParse,
+                            errorMask: errorMask))
+                        {
+                            item.MapColor = MapColorParse;
+                        }
+                        else
+                        {
+                            item.MapColor = default(Color);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Worldspace":
+                    FormKeyXmlTranslation.Instance.ParseInto(
+                        node: node,
+                        item: item.Worldspace_Property,
+                        fieldIndex: (int)Region_FieldIndex.Worldspace,
+                        errorMask: errorMask);
+                    break;
+                case "Areas":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Region_FieldIndex.Areas);
+                        if (ListXmlTranslation<RegionArea>.Instance.Parse(
+                            node: node,
+                            enumer: out var AreasItem,
+                            transl: LoquiXmlTranslation<RegionArea>.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.Areas.SetTo(AreasItem);
+                        }
+                        else
+                        {
+                            item.Areas.Unset();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Objects":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Region_FieldIndex.Objects);
+                        if (LoquiXmlTranslation<RegionDataObjects>.Instance.Parse(
+                            node: node,
+                            item: out RegionDataObjects ObjectsParse,
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)Region_FieldIndex.Objects)))
+                        {
+                            item.Objects = ObjectsParse;
+                        }
+                        else
+                        {
+                            item.Objects = default(RegionDataObjects);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Weather":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Region_FieldIndex.Weather);
+                        if (LoquiXmlTranslation<RegionDataWeather>.Instance.Parse(
+                            node: node,
+                            item: out RegionDataWeather WeatherParse,
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)Region_FieldIndex.Weather)))
+                        {
+                            item.Weather = WeatherParse;
+                        }
+                        else
+                        {
+                            item.Weather = default(RegionDataWeather);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "MapName":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Region_FieldIndex.MapName);
+                        if (LoquiXmlTranslation<RegionDataMapName>.Instance.Parse(
+                            node: node,
+                            item: out RegionDataMapName MapNameParse,
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)Region_FieldIndex.MapName)))
+                        {
+                            item.MapName = MapNameParse;
+                        }
+                        else
+                        {
+                            item.MapName = default(RegionDataMapName);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Grasses":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Region_FieldIndex.Grasses);
+                        if (LoquiXmlTranslation<RegionDataGrasses>.Instance.Parse(
+                            node: node,
+                            item: out RegionDataGrasses GrassesParse,
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)Region_FieldIndex.Grasses)))
+                        {
+                            item.Grasses = GrassesParse;
+                        }
+                        else
+                        {
+                            item.Grasses = default(RegionDataGrasses);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Sounds":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Region_FieldIndex.Sounds);
+                        if (LoquiXmlTranslation<RegionDataSounds>.Instance.Parse(
+                            node: node,
+                            item: out RegionDataSounds SoundsParse,
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)Region_FieldIndex.Sounds)))
+                        {
+                            item.Sounds = SoundsParse;
+                        }
+                        else
+                        {
+                            item.Sounds = default(RegionDataSounds);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                default:
+                    MajorRecordCommon.FillPublicElement_Xml(
+                        item: item,
+                        node: node,
+                        name: name,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                    break;
             }
         }
 
@@ -3212,7 +3279,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.Icon = initialValue;
             this.MapColor = initialValue;
             this.Worldspace = initialValue;
-            this.Areas = new MaskItem<T, IEnumerable<MaskItem<T, RegionArea_Mask<T>>>>(initialValue, null);
+            this.Areas = new MaskItem<T, IEnumerable<MaskItemIndexed<T, RegionArea_Mask<T>>>>(initialValue, null);
             this.Objects = new MaskItem<T, RegionDataObjects_Mask<T>>(initialValue, new RegionDataObjects_Mask<T>(initialValue));
             this.Weather = new MaskItem<T, RegionDataWeather_Mask<T>>(initialValue, new RegionDataWeather_Mask<T>(initialValue));
             this.MapName = new MaskItem<T, RegionDataMapName_Mask<T>>(initialValue, new RegionDataMapName_Mask<T>(initialValue));
@@ -3225,7 +3292,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public T Icon;
         public T MapColor;
         public T Worldspace;
-        public MaskItem<T, IEnumerable<MaskItem<T, RegionArea_Mask<T>>>> Areas;
+        public MaskItem<T, IEnumerable<MaskItemIndexed<T, RegionArea_Mask<T>>>> Areas;
         public MaskItem<T, RegionDataObjects_Mask<T>> Objects { get; set; }
         public MaskItem<T, RegionDataWeather_Mask<T>> Weather { get; set; }
         public MaskItem<T, RegionDataMapName_Mask<T>> MapName { get; set; }
@@ -3337,22 +3404,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             obj.Worldspace = eval(this.Worldspace);
             if (Areas != null)
             {
-                obj.Areas = new MaskItem<R, IEnumerable<MaskItem<R, RegionArea_Mask<R>>>>();
+                obj.Areas = new MaskItem<R, IEnumerable<MaskItemIndexed<R, RegionArea_Mask<R>>>>();
                 obj.Areas.Overall = eval(this.Areas.Overall);
                 if (Areas.Specific != null)
                 {
-                    List<MaskItem<R, RegionArea_Mask<R>>> l = new List<MaskItem<R, RegionArea_Mask<R>>>();
+                    List<MaskItemIndexed<R, RegionArea_Mask<R>>> l = new List<MaskItemIndexed<R, RegionArea_Mask<R>>>();
                     obj.Areas.Specific = l;
-                    foreach (var item in Areas.Specific)
+                    foreach (var item in Areas.Specific.WithIndex())
                     {
-                        MaskItem<R, RegionArea_Mask<R>> mask = default(MaskItem<R, RegionArea_Mask<R>>);
-                        if (item != null)
+                        MaskItemIndexed<R, RegionArea_Mask<R>> mask = default;
+                        mask.Index = item.Index;
+                        if (item.Item != null)
                         {
-                            mask = new MaskItem<R, RegionArea_Mask<R>>();
-                            mask.Overall = eval(item.Overall);
-                            if (item.Specific != null)
+                            mask = new MaskItemIndexed<R, RegionArea_Mask<R>>(item.Item.Index);
+                            mask.Overall = eval(item.Item.Overall);
+                            if (item.Item.Specific != null)
                             {
-                                mask.Specific = item.Specific.Translate(eval);
+                                mask.Specific = item.Item.Specific.Translate(eval);
                             }
                         }
                         l.Add(mask);

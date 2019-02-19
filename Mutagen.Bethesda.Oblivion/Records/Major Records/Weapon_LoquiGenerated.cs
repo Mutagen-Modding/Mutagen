@@ -284,8 +284,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> IEqualsMask<Weapon>.GetEqualsMask(Weapon rhs) => WeaponCommon.GetEqualsMask(this, rhs);
-        IMask<bool> IEqualsMask<IWeaponGetter>.GetEqualsMask(IWeaponGetter rhs) => WeaponCommon.GetEqualsMask(this, rhs);
+        IMask<bool> IEqualsMask<Weapon>.GetEqualsMask(Weapon rhs, EqualsMaskHelper.Include include) => WeaponCommon.GetEqualsMask(this, rhs, include);
+        IMask<bool> IEqualsMask<IWeaponGetter>.GetEqualsMask(IWeaponGetter rhs, EqualsMaskHelper.Include include) => WeaponCommon.GetEqualsMask(this, rhs, include);
         #region To String
         public string ToString(
             string name = null,
@@ -441,7 +441,13 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 foreach (var elem in node.Elements())
                 {
-                    Fill_Xml_Internal(
+                    FillPrivateElement_Xml(
+                        item: ret,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                    WeaponCommon.FillPublicElement_Xml(
                         item: ret,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -785,7 +791,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        protected static void Fill_Xml_Internal(
+        protected static void FillPrivateElement_Xml(
             Weapon item,
             XElement node,
             string name,
@@ -794,335 +800,8 @@ namespace Mutagen.Bethesda.Oblivion
         {
             switch (name)
             {
-                case "Name":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Weapon_FieldIndex.Name);
-                        if (StringXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out String NameParse,
-                            errorMask: errorMask))
-                        {
-                            item.Name = NameParse;
-                        }
-                        else
-                        {
-                            item.Name = default(String);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Model":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Weapon_FieldIndex.Model);
-                        if (LoquiXmlTranslation<Model>.Instance.Parse(
-                            node: node,
-                            item: out Model ModelParse,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Weapon_FieldIndex.Model)))
-                        {
-                            item.Model = ModelParse;
-                        }
-                        else
-                        {
-                            item.Model = default(Model);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Icon":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Weapon_FieldIndex.Icon);
-                        if (StringXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out String IconParse,
-                            errorMask: errorMask))
-                        {
-                            item.Icon = IconParse;
-                        }
-                        else
-                        {
-                            item.Icon = default(String);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Script":
-                    FormKeyXmlTranslation.Instance.ParseInto(
-                        node: node,
-                        item: item.Script_Property,
-                        fieldIndex: (int)Weapon_FieldIndex.Script,
-                        errorMask: errorMask);
-                    break;
-                case "Enchantment":
-                    FormKeyXmlTranslation.Instance.ParseInto(
-                        node: node,
-                        item: item.Enchantment_Property,
-                        fieldIndex: (int)Weapon_FieldIndex.Enchantment,
-                        errorMask: errorMask);
-                    break;
-                case "EnchantmentPoints":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Weapon_FieldIndex.EnchantmentPoints);
-                        if (UInt16XmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out UInt16 EnchantmentPointsParse,
-                            errorMask: errorMask))
-                        {
-                            item.EnchantmentPoints = EnchantmentPointsParse;
-                        }
-                        else
-                        {
-                            item.EnchantmentPoints = default(UInt16);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Type":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Weapon_FieldIndex.Type);
-                        if (EnumXmlTranslation<Weapon.WeaponType>.Instance.Parse(
-                            node: node,
-                            item: out Weapon.WeaponType TypeParse,
-                            errorMask: errorMask))
-                        {
-                            item.Type = TypeParse;
-                        }
-                        else
-                        {
-                            item.Type = default(Weapon.WeaponType);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Speed":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Weapon_FieldIndex.Speed);
-                        if (FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Single SpeedParse,
-                            errorMask: errorMask))
-                        {
-                            item.Speed = SpeedParse;
-                        }
-                        else
-                        {
-                            item.Speed = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Reach":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Weapon_FieldIndex.Reach);
-                        if (FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Single ReachParse,
-                            errorMask: errorMask))
-                        {
-                            item.Reach = ReachParse;
-                        }
-                        else
-                        {
-                            item.Reach = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Flags":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Weapon_FieldIndex.Flags);
-                        if (EnumXmlTranslation<Weapon.WeaponFlag>.Instance.Parse(
-                            node: node,
-                            item: out Weapon.WeaponFlag FlagsParse,
-                            errorMask: errorMask))
-                        {
-                            item.Flags = FlagsParse;
-                        }
-                        else
-                        {
-                            item.Flags = default(Weapon.WeaponFlag);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Value":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Weapon_FieldIndex.Value);
-                        if (UInt32XmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out UInt32 ValueParse,
-                            errorMask: errorMask))
-                        {
-                            item.Value = ValueParse;
-                        }
-                        else
-                        {
-                            item.Value = default(UInt32);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Health":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Weapon_FieldIndex.Health);
-                        if (UInt32XmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out UInt32 HealthParse,
-                            errorMask: errorMask))
-                        {
-                            item.Health = HealthParse;
-                        }
-                        else
-                        {
-                            item.Health = default(UInt32);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Weight":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Weapon_FieldIndex.Weight);
-                        if (FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Single WeightParse,
-                            errorMask: errorMask))
-                        {
-                            item.Weight = WeightParse;
-                        }
-                        else
-                        {
-                            item.Weight = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Damage":
-                    try
-                    {
-                        errorMask?.PushIndex((int)Weapon_FieldIndex.Damage);
-                        if (UInt16XmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out UInt16 DamageParse,
-                            errorMask: errorMask))
-                        {
-                            item.Damage = DamageParse;
-                        }
-                        else
-                        {
-                            item.Damage = default(UInt16);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
                 default:
-                    ItemAbstract.Fill_Xml_Internal(
+                    ItemAbstract.FillPrivateElement_Xml(
                         item: item,
                         node: node,
                         name: name,
@@ -3120,32 +2799,44 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static Weapon_Mask<bool> GetEqualsMask(
             this IWeaponGetter item,
-            IWeaponGetter rhs)
+            IWeaponGetter rhs,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new Weapon_Mask<bool>();
-            FillEqualsMask(item, rhs, ret);
+            FillEqualsMask(
+                item: item,
+                rhs: rhs,
+                ret: ret,
+                include: include);
             return ret;
         }
 
         public static void FillEqualsMask(
             IWeaponGetter item,
             IWeaponGetter rhs,
-            Weapon_Mask<bool> ret)
+            Weapon_Mask<bool> ret,
+            EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
             ret.Name = item.Name_IsSet == rhs.Name_IsSet && object.Equals(item.Name, rhs.Name);
-            ret.Model = IHasBeenSetExt.LoquiEqualsHelper(item.Model_IsSet, rhs.Model_IsSet, item.Model, rhs.Model, (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs));
+            ret.Model = EqualsMaskHelper.EqualsHelper(
+                item.Model_IsSet,
+                rhs.Model_IsSet,
+                item.Model,
+                rhs.Model,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
+                include);
             ret.Icon = item.Icon_IsSet == rhs.Icon_IsSet && object.Equals(item.Icon, rhs.Icon);
             ret.Script = item.Script_Property.FormKey == rhs.Script_Property.FormKey;
             ret.Enchantment = item.Enchantment_Property.FormKey == rhs.Enchantment_Property.FormKey;
             ret.EnchantmentPoints = item.EnchantmentPoints_IsSet == rhs.EnchantmentPoints_IsSet && item.EnchantmentPoints == rhs.EnchantmentPoints;
             ret.Type = item.Type == rhs.Type;
-            ret.Speed = item.Speed == rhs.Speed;
-            ret.Reach = item.Reach == rhs.Reach;
+            ret.Speed = item.Speed.EqualsWithin(rhs.Speed);
+            ret.Reach = item.Reach.EqualsWithin(rhs.Reach);
             ret.Flags = item.Flags == rhs.Flags;
             ret.Value = item.Value == rhs.Value;
             ret.Health = item.Health == rhs.Health;
-            ret.Weight = item.Weight == rhs.Weight;
+            ret.Weight = item.Weight.EqualsWithin(rhs.Weight);
             ret.Damage = item.Damage == rhs.Damage;
             ItemAbstractCommon.FillEqualsMask(item, rhs, ret);
         }
@@ -3363,7 +3054,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         public static void WriteToNode_Xml(
-            IWeaponGetter item,
+            this IWeaponGetter item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
@@ -3505,6 +3196,378 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item.Damage,
                     fieldIndex: (int)Weapon_FieldIndex.Damage,
                     errorMask: errorMask);
+            }
+        }
+
+        public static void FillPublic_Xml(
+            this Weapon item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            try
+            {
+                foreach (var elem in node.Elements())
+                {
+                    WeaponCommon.FillPublicElement_Xml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask.ReportException(ex);
+            }
+        }
+
+        public static void FillPublicElement_Xml(
+            this Weapon item,
+            XElement node,
+            string name,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            switch (name)
+            {
+                case "Name":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Weapon_FieldIndex.Name);
+                        if (StringXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out String NameParse,
+                            errorMask: errorMask))
+                        {
+                            item.Name = NameParse;
+                        }
+                        else
+                        {
+                            item.Name = default(String);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Model":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Weapon_FieldIndex.Model);
+                        if (LoquiXmlTranslation<Model>.Instance.Parse(
+                            node: node,
+                            item: out Model ModelParse,
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)Weapon_FieldIndex.Model)))
+                        {
+                            item.Model = ModelParse;
+                        }
+                        else
+                        {
+                            item.Model = default(Model);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Icon":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Weapon_FieldIndex.Icon);
+                        if (StringXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out String IconParse,
+                            errorMask: errorMask))
+                        {
+                            item.Icon = IconParse;
+                        }
+                        else
+                        {
+                            item.Icon = default(String);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Script":
+                    FormKeyXmlTranslation.Instance.ParseInto(
+                        node: node,
+                        item: item.Script_Property,
+                        fieldIndex: (int)Weapon_FieldIndex.Script,
+                        errorMask: errorMask);
+                    break;
+                case "Enchantment":
+                    FormKeyXmlTranslation.Instance.ParseInto(
+                        node: node,
+                        item: item.Enchantment_Property,
+                        fieldIndex: (int)Weapon_FieldIndex.Enchantment,
+                        errorMask: errorMask);
+                    break;
+                case "EnchantmentPoints":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Weapon_FieldIndex.EnchantmentPoints);
+                        if (UInt16XmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out UInt16 EnchantmentPointsParse,
+                            errorMask: errorMask))
+                        {
+                            item.EnchantmentPoints = EnchantmentPointsParse;
+                        }
+                        else
+                        {
+                            item.EnchantmentPoints = default(UInt16);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Type":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Weapon_FieldIndex.Type);
+                        if (EnumXmlTranslation<Weapon.WeaponType>.Instance.Parse(
+                            node: node,
+                            item: out Weapon.WeaponType TypeParse,
+                            errorMask: errorMask))
+                        {
+                            item.Type = TypeParse;
+                        }
+                        else
+                        {
+                            item.Type = default(Weapon.WeaponType);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Speed":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Weapon_FieldIndex.Speed);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Single SpeedParse,
+                            errorMask: errorMask))
+                        {
+                            item.Speed = SpeedParse;
+                        }
+                        else
+                        {
+                            item.Speed = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Reach":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Weapon_FieldIndex.Reach);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Single ReachParse,
+                            errorMask: errorMask))
+                        {
+                            item.Reach = ReachParse;
+                        }
+                        else
+                        {
+                            item.Reach = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Flags":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Weapon_FieldIndex.Flags);
+                        if (EnumXmlTranslation<Weapon.WeaponFlag>.Instance.Parse(
+                            node: node,
+                            item: out Weapon.WeaponFlag FlagsParse,
+                            errorMask: errorMask))
+                        {
+                            item.Flags = FlagsParse;
+                        }
+                        else
+                        {
+                            item.Flags = default(Weapon.WeaponFlag);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Value":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Weapon_FieldIndex.Value);
+                        if (UInt32XmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out UInt32 ValueParse,
+                            errorMask: errorMask))
+                        {
+                            item.Value = ValueParse;
+                        }
+                        else
+                        {
+                            item.Value = default(UInt32);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Health":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Weapon_FieldIndex.Health);
+                        if (UInt32XmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out UInt32 HealthParse,
+                            errorMask: errorMask))
+                        {
+                            item.Health = HealthParse;
+                        }
+                        else
+                        {
+                            item.Health = default(UInt32);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Weight":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Weapon_FieldIndex.Weight);
+                        if (FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Single WeightParse,
+                            errorMask: errorMask))
+                        {
+                            item.Weight = WeightParse;
+                        }
+                        else
+                        {
+                            item.Weight = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Damage":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Weapon_FieldIndex.Damage);
+                        if (UInt16XmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out UInt16 DamageParse,
+                            errorMask: errorMask))
+                        {
+                            item.Damage = DamageParse;
+                        }
+                        else
+                        {
+                            item.Damage = default(UInt16);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                default:
+                    ItemAbstractCommon.FillPublicElement_Xml(
+                        item: item,
+                        node: node,
+                        name: name,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                    break;
             }
         }
 
