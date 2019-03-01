@@ -55,6 +55,9 @@ namespace Mutagen.Bethesda.Tests
         #region TestObservable
         public Boolean TestObservable { get; set; }
         #endregion
+        #region TestFolder
+        public Boolean TestFolder { get; set; }
+        #endregion
         #region DataFolder
         public String DataFolder { get; set; }
         #endregion
@@ -124,6 +127,7 @@ namespace Mutagen.Bethesda.Tests
             if (this.DeleteCachesAfter != rhs.DeleteCachesAfter) return false;
             if (this.TestNormal != rhs.TestNormal) return false;
             if (this.TestObservable != rhs.TestObservable) return false;
+            if (this.TestFolder != rhs.TestFolder) return false;
             if (!object.Equals(this.DataFolder, rhs.DataFolder)) return false;
             return true;
         }
@@ -135,6 +139,7 @@ namespace Mutagen.Bethesda.Tests
             ret = HashHelper.GetHashCode(DeleteCachesAfter).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(TestNormal).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(TestObservable).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(TestFolder).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(DataFolder).CombineHashCode(ret);
             return ret;
         }
@@ -632,6 +637,9 @@ namespace Mutagen.Bethesda.Tests
                 case PassthroughSettings_FieldIndex.TestObservable:
                     this.TestObservable = (Boolean)obj;
                     break;
+                case PassthroughSettings_FieldIndex.TestFolder:
+                    this.TestFolder = (Boolean)obj;
+                    break;
                 case PassthroughSettings_FieldIndex.DataFolder:
                     this.DataFolder = (String)obj;
                     break;
@@ -684,6 +692,9 @@ namespace Mutagen.Bethesda.Tests
                 case PassthroughSettings_FieldIndex.TestObservable:
                     obj.TestObservable = (Boolean)pair.Value;
                     break;
+                case PassthroughSettings_FieldIndex.TestFolder:
+                    obj.TestFolder = (Boolean)pair.Value;
+                    break;
                 case PassthroughSettings_FieldIndex.DataFolder:
                     obj.DataFolder = (String)pair.Value;
                     break;
@@ -710,6 +721,8 @@ namespace Mutagen.Bethesda.Tests
 
         new Boolean TestObservable { get; set; }
 
+        new Boolean TestFolder { get; set; }
+
         new String DataFolder { get; set; }
 
     }
@@ -732,6 +745,10 @@ namespace Mutagen.Bethesda.Tests
         Boolean TestObservable { get; }
 
         #endregion
+        #region TestFolder
+        Boolean TestFolder { get; }
+
+        #endregion
         #region DataFolder
         String DataFolder { get; }
 
@@ -752,7 +769,8 @@ namespace Mutagen.Bethesda.Tests.Internals
         DeleteCachesAfter = 1,
         TestNormal = 2,
         TestObservable = 3,
-        DataFolder = 4,
+        TestFolder = 4,
+        DataFolder = 5,
     }
     #endregion
 
@@ -770,9 +788,9 @@ namespace Mutagen.Bethesda.Tests.Internals
 
         public const string GUID = "b6e04291-8a1a-4f43-baa4-0f5fc5074d8b";
 
-        public const ushort AdditionalFieldCount = 5;
+        public const ushort AdditionalFieldCount = 6;
 
-        public const ushort FieldCount = 5;
+        public const ushort FieldCount = 6;
 
         public static readonly Type MaskType = typeof(PassthroughSettings_Mask<>);
 
@@ -808,6 +826,8 @@ namespace Mutagen.Bethesda.Tests.Internals
                     return (ushort)PassthroughSettings_FieldIndex.TestNormal;
                 case "TESTOBSERVABLE":
                     return (ushort)PassthroughSettings_FieldIndex.TestObservable;
+                case "TESTFOLDER":
+                    return (ushort)PassthroughSettings_FieldIndex.TestFolder;
                 case "DATAFOLDER":
                     return (ushort)PassthroughSettings_FieldIndex.DataFolder;
                 default:
@@ -824,6 +844,7 @@ namespace Mutagen.Bethesda.Tests.Internals
                 case PassthroughSettings_FieldIndex.DeleteCachesAfter:
                 case PassthroughSettings_FieldIndex.TestNormal:
                 case PassthroughSettings_FieldIndex.TestObservable:
+                case PassthroughSettings_FieldIndex.TestFolder:
                 case PassthroughSettings_FieldIndex.DataFolder:
                     return false;
                 default:
@@ -840,6 +861,7 @@ namespace Mutagen.Bethesda.Tests.Internals
                 case PassthroughSettings_FieldIndex.DeleteCachesAfter:
                 case PassthroughSettings_FieldIndex.TestNormal:
                 case PassthroughSettings_FieldIndex.TestObservable:
+                case PassthroughSettings_FieldIndex.TestFolder:
                 case PassthroughSettings_FieldIndex.DataFolder:
                     return false;
                 default:
@@ -856,6 +878,7 @@ namespace Mutagen.Bethesda.Tests.Internals
                 case PassthroughSettings_FieldIndex.DeleteCachesAfter:
                 case PassthroughSettings_FieldIndex.TestNormal:
                 case PassthroughSettings_FieldIndex.TestObservable:
+                case PassthroughSettings_FieldIndex.TestFolder:
                 case PassthroughSettings_FieldIndex.DataFolder:
                     return false;
                 default:
@@ -876,6 +899,8 @@ namespace Mutagen.Bethesda.Tests.Internals
                     return "TestNormal";
                 case PassthroughSettings_FieldIndex.TestObservable:
                     return "TestObservable";
+                case PassthroughSettings_FieldIndex.TestFolder:
+                    return "TestFolder";
                 case PassthroughSettings_FieldIndex.DataFolder:
                     return "DataFolder";
                 default:
@@ -892,6 +917,7 @@ namespace Mutagen.Bethesda.Tests.Internals
                 case PassthroughSettings_FieldIndex.DeleteCachesAfter:
                 case PassthroughSettings_FieldIndex.TestNormal:
                 case PassthroughSettings_FieldIndex.TestObservable:
+                case PassthroughSettings_FieldIndex.TestFolder:
                 case PassthroughSettings_FieldIndex.DataFolder:
                     return false;
                 default:
@@ -908,6 +934,7 @@ namespace Mutagen.Bethesda.Tests.Internals
                 case PassthroughSettings_FieldIndex.DeleteCachesAfter:
                 case PassthroughSettings_FieldIndex.TestNormal:
                 case PassthroughSettings_FieldIndex.TestObservable:
+                case PassthroughSettings_FieldIndex.TestFolder:
                 case PassthroughSettings_FieldIndex.DataFolder:
                     return false;
                 default:
@@ -927,6 +954,8 @@ namespace Mutagen.Bethesda.Tests.Internals
                 case PassthroughSettings_FieldIndex.TestNormal:
                     return typeof(Boolean);
                 case PassthroughSettings_FieldIndex.TestObservable:
+                    return typeof(Boolean);
+                case PassthroughSettings_FieldIndex.TestFolder:
                     return typeof(Boolean);
                 case PassthroughSettings_FieldIndex.DataFolder:
                     return typeof(String);
@@ -1001,6 +1030,12 @@ namespace Mutagen.Bethesda.Tests.Internals
                 item.TestObservable = rhs.TestObservable;
                 errorMask?.PopIndex();
             }
+            if (copyMask?.TestFolder ?? true)
+            {
+                errorMask?.PushIndex((int)PassthroughSettings_FieldIndex.TestFolder);
+                item.TestFolder = rhs.TestFolder;
+                errorMask?.PopIndex();
+            }
             if (copyMask?.DataFolder ?? true)
             {
                 errorMask?.PushIndex((int)PassthroughSettings_FieldIndex.DataFolder);
@@ -1024,6 +1059,7 @@ namespace Mutagen.Bethesda.Tests.Internals
                 case PassthroughSettings_FieldIndex.DeleteCachesAfter:
                 case PassthroughSettings_FieldIndex.TestNormal:
                 case PassthroughSettings_FieldIndex.TestObservable:
+                case PassthroughSettings_FieldIndex.TestFolder:
                 case PassthroughSettings_FieldIndex.DataFolder:
                     if (on) break;
                     throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
@@ -1052,6 +1088,9 @@ namespace Mutagen.Bethesda.Tests.Internals
                 case PassthroughSettings_FieldIndex.TestObservable:
                     obj.TestObservable = default(Boolean);
                     break;
+                case PassthroughSettings_FieldIndex.TestFolder:
+                    obj.TestFolder = default(Boolean);
+                    break;
                 case PassthroughSettings_FieldIndex.DataFolder:
                     obj.DataFolder = default(String);
                     break;
@@ -1071,6 +1110,7 @@ namespace Mutagen.Bethesda.Tests.Internals
                 case PassthroughSettings_FieldIndex.DeleteCachesAfter:
                 case PassthroughSettings_FieldIndex.TestNormal:
                 case PassthroughSettings_FieldIndex.TestObservable:
+                case PassthroughSettings_FieldIndex.TestFolder:
                 case PassthroughSettings_FieldIndex.DataFolder:
                     return true;
                 default:
@@ -1093,6 +1133,8 @@ namespace Mutagen.Bethesda.Tests.Internals
                     return obj.TestNormal;
                 case PassthroughSettings_FieldIndex.TestObservable:
                     return obj.TestObservable;
+                case PassthroughSettings_FieldIndex.TestFolder:
+                    return obj.TestFolder;
                 case PassthroughSettings_FieldIndex.DataFolder:
                     return obj.DataFolder;
                 default:
@@ -1108,6 +1150,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             item.DeleteCachesAfter = PassthroughSettings._DeleteCachesAfter_Default;
             item.TestNormal = default(Boolean);
             item.TestObservable = default(Boolean);
+            item.TestFolder = default(Boolean);
             item.DataFolder = default(String);
         }
 
@@ -1136,6 +1179,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             ret.DeleteCachesAfter = item.DeleteCachesAfter == rhs.DeleteCachesAfter;
             ret.TestNormal = item.TestNormal == rhs.TestNormal;
             ret.TestObservable = item.TestObservable == rhs.TestObservable;
+            ret.TestFolder = item.TestFolder == rhs.TestFolder;
             ret.DataFolder = object.Equals(item.DataFolder, rhs.DataFolder);
         }
 
@@ -1182,6 +1226,10 @@ namespace Mutagen.Bethesda.Tests.Internals
                 {
                     fg.AppendLine($"TestObservable => {item.TestObservable}");
                 }
+                if (printMask?.TestFolder ?? true)
+                {
+                    fg.AppendLine($"TestFolder => {item.TestFolder}");
+                }
                 if (printMask?.DataFolder ?? true)
                 {
                     fg.AppendLine($"DataFolder => {item.DataFolder}");
@@ -1204,6 +1252,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             ret.DeleteCachesAfter = true;
             ret.TestNormal = true;
             ret.TestObservable = true;
+            ret.TestFolder = true;
             ret.DataFolder = true;
             return ret;
         }
@@ -1289,6 +1338,15 @@ namespace Mutagen.Bethesda.Tests.Internals
                     name: nameof(item.TestObservable),
                     item: item.TestObservable,
                     fieldIndex: (int)PassthroughSettings_FieldIndex.TestObservable,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)PassthroughSettings_FieldIndex.TestFolder) ?? true))
+            {
+                BooleanXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.TestFolder),
+                    item: item.TestFolder,
+                    fieldIndex: (int)PassthroughSettings_FieldIndex.TestFolder,
                     errorMask: errorMask);
             }
             if ((translationMask?.GetShouldTranslate((int)PassthroughSettings_FieldIndex.DataFolder) ?? true))
@@ -1440,6 +1498,32 @@ namespace Mutagen.Bethesda.Tests.Internals
                         errorMask?.PopIndex();
                     }
                     break;
+                case "TestFolder":
+                    try
+                    {
+                        errorMask?.PushIndex((int)PassthroughSettings_FieldIndex.TestFolder);
+                        if (BooleanXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Boolean TestFolderParse,
+                            errorMask: errorMask))
+                        {
+                            item.TestFolder = TestFolderParse;
+                        }
+                        else
+                        {
+                            item.TestFolder = default(Boolean);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
                 case "DataFolder":
                     try
                     {
@@ -1491,6 +1575,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             this.DeleteCachesAfter = initialValue;
             this.TestNormal = initialValue;
             this.TestObservable = initialValue;
+            this.TestFolder = initialValue;
             this.DataFolder = initialValue;
         }
         #endregion
@@ -1500,6 +1585,7 @@ namespace Mutagen.Bethesda.Tests.Internals
         public T DeleteCachesAfter;
         public T TestNormal;
         public T TestObservable;
+        public T TestFolder;
         public T DataFolder;
         #endregion
 
@@ -1517,6 +1603,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             if (!object.Equals(this.DeleteCachesAfter, rhs.DeleteCachesAfter)) return false;
             if (!object.Equals(this.TestNormal, rhs.TestNormal)) return false;
             if (!object.Equals(this.TestObservable, rhs.TestObservable)) return false;
+            if (!object.Equals(this.TestFolder, rhs.TestFolder)) return false;
             if (!object.Equals(this.DataFolder, rhs.DataFolder)) return false;
             return true;
         }
@@ -1527,6 +1614,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             ret = ret.CombineHashCode(this.DeleteCachesAfter?.GetHashCode());
             ret = ret.CombineHashCode(this.TestNormal?.GetHashCode());
             ret = ret.CombineHashCode(this.TestObservable?.GetHashCode());
+            ret = ret.CombineHashCode(this.TestFolder?.GetHashCode());
             ret = ret.CombineHashCode(this.DataFolder?.GetHashCode());
             return ret;
         }
@@ -1540,6 +1628,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             if (!eval(this.DeleteCachesAfter)) return false;
             if (!eval(this.TestNormal)) return false;
             if (!eval(this.TestObservable)) return false;
+            if (!eval(this.TestFolder)) return false;
             if (!eval(this.DataFolder)) return false;
             return true;
         }
@@ -1559,6 +1648,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             obj.DeleteCachesAfter = eval(this.DeleteCachesAfter);
             obj.TestNormal = eval(this.TestNormal);
             obj.TestObservable = eval(this.TestObservable);
+            obj.TestFolder = eval(this.TestFolder);
             obj.DataFolder = eval(this.DataFolder);
         }
         #endregion
@@ -1604,6 +1694,10 @@ namespace Mutagen.Bethesda.Tests.Internals
                 {
                     fg.AppendLine($"TestObservable => {TestObservable}");
                 }
+                if (printMask?.TestFolder ?? true)
+                {
+                    fg.AppendLine($"TestFolder => {TestFolder}");
+                }
                 if (printMask?.DataFolder ?? true)
                 {
                     fg.AppendLine($"DataFolder => {DataFolder}");
@@ -1635,6 +1729,7 @@ namespace Mutagen.Bethesda.Tests.Internals
         public Exception DeleteCachesAfter;
         public Exception TestNormal;
         public Exception TestObservable;
+        public Exception TestFolder;
         public Exception DataFolder;
         #endregion
 
@@ -1652,6 +1747,8 @@ namespace Mutagen.Bethesda.Tests.Internals
                     return TestNormal;
                 case PassthroughSettings_FieldIndex.TestObservable:
                     return TestObservable;
+                case PassthroughSettings_FieldIndex.TestFolder:
+                    return TestFolder;
                 case PassthroughSettings_FieldIndex.DataFolder:
                     return DataFolder;
                 default:
@@ -1675,6 +1772,9 @@ namespace Mutagen.Bethesda.Tests.Internals
                     break;
                 case PassthroughSettings_FieldIndex.TestObservable:
                     this.TestObservable = ex;
+                    break;
+                case PassthroughSettings_FieldIndex.TestFolder:
+                    this.TestFolder = ex;
                     break;
                 case PassthroughSettings_FieldIndex.DataFolder:
                     this.DataFolder = ex;
@@ -1701,6 +1801,9 @@ namespace Mutagen.Bethesda.Tests.Internals
                 case PassthroughSettings_FieldIndex.TestObservable:
                     this.TestObservable = (Exception)obj;
                     break;
+                case PassthroughSettings_FieldIndex.TestFolder:
+                    this.TestFolder = (Exception)obj;
+                    break;
                 case PassthroughSettings_FieldIndex.DataFolder:
                     this.DataFolder = (Exception)obj;
                     break;
@@ -1716,6 +1819,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             if (DeleteCachesAfter != null) return true;
             if (TestNormal != null) return true;
             if (TestObservable != null) return true;
+            if (TestFolder != null) return true;
             if (DataFolder != null) return true;
             return false;
         }
@@ -1755,6 +1859,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             fg.AppendLine($"DeleteCachesAfter => {DeleteCachesAfter}");
             fg.AppendLine($"TestNormal => {TestNormal}");
             fg.AppendLine($"TestObservable => {TestObservable}");
+            fg.AppendLine($"TestFolder => {TestFolder}");
             fg.AppendLine($"DataFolder => {DataFolder}");
         }
         #endregion
@@ -1767,6 +1872,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             ret.DeleteCachesAfter = this.DeleteCachesAfter.Combine(rhs.DeleteCachesAfter);
             ret.TestNormal = this.TestNormal.Combine(rhs.TestNormal);
             ret.TestObservable = this.TestObservable.Combine(rhs.TestObservable);
+            ret.TestFolder = this.TestFolder.Combine(rhs.TestFolder);
             ret.DataFolder = this.DataFolder.Combine(rhs.DataFolder);
             return ret;
         }
@@ -1798,6 +1904,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             this.DeleteCachesAfter = defaultOn;
             this.TestNormal = defaultOn;
             this.TestObservable = defaultOn;
+            this.TestFolder = defaultOn;
             this.DataFolder = defaultOn;
         }
 
@@ -1806,6 +1913,7 @@ namespace Mutagen.Bethesda.Tests.Internals
         public bool DeleteCachesAfter;
         public bool TestNormal;
         public bool TestObservable;
+        public bool TestFolder;
         public bool DataFolder;
         #endregion
 
@@ -1819,6 +1927,7 @@ namespace Mutagen.Bethesda.Tests.Internals
         public bool DeleteCachesAfter;
         public bool TestNormal;
         public bool TestObservable;
+        public bool TestFolder;
         public bool DataFolder;
         #endregion
 
@@ -1833,6 +1942,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             this.DeleteCachesAfter = defaultOn;
             this.TestNormal = defaultOn;
             this.TestObservable = defaultOn;
+            this.TestFolder = defaultOn;
             this.DataFolder = defaultOn;
         }
 
@@ -1856,6 +1966,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             ret.Add((DeleteCachesAfter, null));
             ret.Add((TestNormal, null));
             ret.Add((TestObservable, null));
+            ret.Add((TestFolder, null));
             ret.Add((DataFolder, null));
         }
     }

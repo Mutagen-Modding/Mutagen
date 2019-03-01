@@ -45,9 +45,6 @@ namespace Mutagen.Bethesda.Tests
         partial void CustomCtor();
         #endregion
 
-        #region TestFolder
-        public Boolean TestFolder { get; set; }
-        #endregion
         #region TestGroupMasks
         public Boolean TestGroupMasks { get; set; }
         #endregion
@@ -143,7 +140,6 @@ namespace Mutagen.Bethesda.Tests
         public bool Equals(TestingSettings rhs)
         {
             if (rhs == null) return false;
-            if (this.TestFolder != rhs.TestFolder) return false;
             if (this.TestGroupMasks != rhs.TestGroupMasks) return false;
             if (this.TestModList != rhs.TestModList) return false;
             if (this.TestFlattenedMod != rhs.TestFlattenedMod) return false;
@@ -156,7 +152,6 @@ namespace Mutagen.Bethesda.Tests
         public override int GetHashCode()
         {
             int ret = 0;
-            ret = HashHelper.GetHashCode(TestFolder).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(TestGroupMasks).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(TestModList).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(TestFlattenedMod).CombineHashCode(ret);
@@ -647,9 +642,6 @@ namespace Mutagen.Bethesda.Tests
             TestingSettings_FieldIndex enu = (TestingSettings_FieldIndex)index;
             switch (enu)
             {
-                case TestingSettings_FieldIndex.TestFolder:
-                    this.TestFolder = (Boolean)obj;
-                    break;
                 case TestingSettings_FieldIndex.TestGroupMasks:
                     this.TestGroupMasks = (Boolean)obj;
                     break;
@@ -705,9 +697,6 @@ namespace Mutagen.Bethesda.Tests
             }
             switch (enu)
             {
-                case TestingSettings_FieldIndex.TestFolder:
-                    obj.TestFolder = (Boolean)pair.Value;
-                    break;
                 case TestingSettings_FieldIndex.TestGroupMasks:
                     obj.TestGroupMasks = (Boolean)pair.Value;
                     break;
@@ -741,8 +730,6 @@ namespace Mutagen.Bethesda.Tests
     #region Interface
     public partial interface ITestingSettings : ITestingSettingsGetter, ILoquiClass<ITestingSettings, ITestingSettingsGetter>, ILoquiClass<TestingSettings, ITestingSettingsGetter>
     {
-        new Boolean TestFolder { get; set; }
-
         new Boolean TestGroupMasks { get; set; }
 
         new Boolean TestModList { get; set; }
@@ -758,10 +745,6 @@ namespace Mutagen.Bethesda.Tests
 
     public partial interface ITestingSettingsGetter : ILoquiObject
     {
-        #region TestFolder
-        Boolean TestFolder { get; }
-
-        #endregion
         #region TestGroupMasks
         Boolean TestGroupMasks { get; }
 
@@ -795,13 +778,12 @@ namespace Mutagen.Bethesda.Tests.Internals
     #region Field Index
     public enum TestingSettings_FieldIndex
     {
-        TestFolder = 0,
-        TestGroupMasks = 1,
-        TestModList = 2,
-        TestFlattenedMod = 3,
-        PassthroughSettings = 4,
-        OblivionESM = 5,
-        OtherPassthroughs = 6,
+        TestGroupMasks = 0,
+        TestModList = 1,
+        TestFlattenedMod = 2,
+        PassthroughSettings = 3,
+        OblivionESM = 4,
+        OtherPassthroughs = 5,
     }
     #endregion
 
@@ -819,9 +801,9 @@ namespace Mutagen.Bethesda.Tests.Internals
 
         public const string GUID = "8238bf49-028c-4e0b-b914-3ade480308ec";
 
-        public const ushort AdditionalFieldCount = 7;
+        public const ushort AdditionalFieldCount = 6;
 
-        public const ushort FieldCount = 7;
+        public const ushort FieldCount = 6;
 
         public static readonly Type MaskType = typeof(TestingSettings_Mask<>);
 
@@ -849,8 +831,6 @@ namespace Mutagen.Bethesda.Tests.Internals
         {
             switch (str.Upper)
             {
-                case "TESTFOLDER":
-                    return (ushort)TestingSettings_FieldIndex.TestFolder;
                 case "TESTGROUPMASKS":
                     return (ushort)TestingSettings_FieldIndex.TestGroupMasks;
                 case "TESTMODLIST":
@@ -875,7 +855,6 @@ namespace Mutagen.Bethesda.Tests.Internals
             {
                 case TestingSettings_FieldIndex.OtherPassthroughs:
                     return true;
-                case TestingSettings_FieldIndex.TestFolder:
                 case TestingSettings_FieldIndex.TestGroupMasks:
                 case TestingSettings_FieldIndex.TestModList:
                 case TestingSettings_FieldIndex.TestFlattenedMod:
@@ -896,7 +875,6 @@ namespace Mutagen.Bethesda.Tests.Internals
                 case TestingSettings_FieldIndex.OblivionESM:
                 case TestingSettings_FieldIndex.OtherPassthroughs:
                     return true;
-                case TestingSettings_FieldIndex.TestFolder:
                 case TestingSettings_FieldIndex.TestGroupMasks:
                 case TestingSettings_FieldIndex.TestModList:
                 case TestingSettings_FieldIndex.TestFlattenedMod:
@@ -911,7 +889,6 @@ namespace Mutagen.Bethesda.Tests.Internals
             TestingSettings_FieldIndex enu = (TestingSettings_FieldIndex)index;
             switch (enu)
             {
-                case TestingSettings_FieldIndex.TestFolder:
                 case TestingSettings_FieldIndex.TestGroupMasks:
                 case TestingSettings_FieldIndex.TestModList:
                 case TestingSettings_FieldIndex.TestFlattenedMod:
@@ -929,8 +906,6 @@ namespace Mutagen.Bethesda.Tests.Internals
             TestingSettings_FieldIndex enu = (TestingSettings_FieldIndex)index;
             switch (enu)
             {
-                case TestingSettings_FieldIndex.TestFolder:
-                    return "TestFolder";
                 case TestingSettings_FieldIndex.TestGroupMasks:
                     return "TestGroupMasks";
                 case TestingSettings_FieldIndex.TestModList:
@@ -953,7 +928,6 @@ namespace Mutagen.Bethesda.Tests.Internals
             TestingSettings_FieldIndex enu = (TestingSettings_FieldIndex)index;
             switch (enu)
             {
-                case TestingSettings_FieldIndex.TestFolder:
                 case TestingSettings_FieldIndex.TestGroupMasks:
                 case TestingSettings_FieldIndex.TestModList:
                 case TestingSettings_FieldIndex.TestFlattenedMod:
@@ -971,7 +945,6 @@ namespace Mutagen.Bethesda.Tests.Internals
             TestingSettings_FieldIndex enu = (TestingSettings_FieldIndex)index;
             switch (enu)
             {
-                case TestingSettings_FieldIndex.TestFolder:
                 case TestingSettings_FieldIndex.TestGroupMasks:
                 case TestingSettings_FieldIndex.TestModList:
                 case TestingSettings_FieldIndex.TestFlattenedMod:
@@ -989,8 +962,6 @@ namespace Mutagen.Bethesda.Tests.Internals
             TestingSettings_FieldIndex enu = (TestingSettings_FieldIndex)index;
             switch (enu)
             {
-                case TestingSettings_FieldIndex.TestFolder:
-                    return typeof(Boolean);
                 case TestingSettings_FieldIndex.TestGroupMasks:
                     return typeof(Boolean);
                 case TestingSettings_FieldIndex.TestModList:
@@ -1050,12 +1021,6 @@ namespace Mutagen.Bethesda.Tests.Internals
             TestingSettings_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {
-            if (copyMask?.TestFolder ?? true)
-            {
-                errorMask?.PushIndex((int)TestingSettings_FieldIndex.TestFolder);
-                item.TestFolder = rhs.TestFolder;
-                errorMask?.PopIndex();
-            }
             if (copyMask?.TestGroupMasks ?? true)
             {
                 errorMask?.PushIndex((int)TestingSettings_FieldIndex.TestGroupMasks);
@@ -1214,7 +1179,6 @@ namespace Mutagen.Bethesda.Tests.Internals
             TestingSettings_FieldIndex enu = (TestingSettings_FieldIndex)index;
             switch (enu)
             {
-                case TestingSettings_FieldIndex.TestFolder:
                 case TestingSettings_FieldIndex.TestGroupMasks:
                 case TestingSettings_FieldIndex.TestModList:
                 case TestingSettings_FieldIndex.TestFlattenedMod:
@@ -1236,9 +1200,6 @@ namespace Mutagen.Bethesda.Tests.Internals
             TestingSettings_FieldIndex enu = (TestingSettings_FieldIndex)index;
             switch (enu)
             {
-                case TestingSettings_FieldIndex.TestFolder:
-                    obj.TestFolder = default(Boolean);
-                    break;
                 case TestingSettings_FieldIndex.TestGroupMasks:
                     obj.TestGroupMasks = default(Boolean);
                     break;
@@ -1269,7 +1230,6 @@ namespace Mutagen.Bethesda.Tests.Internals
             TestingSettings_FieldIndex enu = (TestingSettings_FieldIndex)index;
             switch (enu)
             {
-                case TestingSettings_FieldIndex.TestFolder:
                 case TestingSettings_FieldIndex.TestGroupMasks:
                 case TestingSettings_FieldIndex.TestModList:
                 case TestingSettings_FieldIndex.TestFlattenedMod:
@@ -1289,8 +1249,6 @@ namespace Mutagen.Bethesda.Tests.Internals
             TestingSettings_FieldIndex enu = (TestingSettings_FieldIndex)index;
             switch (enu)
             {
-                case TestingSettings_FieldIndex.TestFolder:
-                    return obj.TestFolder;
                 case TestingSettings_FieldIndex.TestGroupMasks:
                     return obj.TestGroupMasks;
                 case TestingSettings_FieldIndex.TestModList:
@@ -1312,7 +1270,6 @@ namespace Mutagen.Bethesda.Tests.Internals
             ITestingSettings item,
             NotifyingUnsetParameters cmds = null)
         {
-            item.TestFolder = default(Boolean);
             item.TestGroupMasks = default(Boolean);
             item.TestModList = default(Boolean);
             item.TestFlattenedMod = default(Boolean);
@@ -1342,7 +1299,6 @@ namespace Mutagen.Bethesda.Tests.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.TestFolder = item.TestFolder == rhs.TestFolder;
             ret.TestGroupMasks = item.TestGroupMasks == rhs.TestGroupMasks;
             ret.TestModList = item.TestModList == rhs.TestModList;
             ret.TestFlattenedMod = item.TestFlattenedMod == rhs.TestFlattenedMod;
@@ -1381,10 +1337,6 @@ namespace Mutagen.Bethesda.Tests.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
-                if (printMask?.TestFolder ?? true)
-                {
-                    fg.AppendLine($"TestFolder => {item.TestFolder}");
-                }
                 if (printMask?.TestGroupMasks ?? true)
                 {
                     fg.AppendLine($"TestGroupMasks => {item.TestGroupMasks}");
@@ -1437,7 +1389,6 @@ namespace Mutagen.Bethesda.Tests.Internals
         public static TestingSettings_Mask<bool> GetHasBeenSetMask(ITestingSettingsGetter item)
         {
             var ret = new TestingSettings_Mask<bool>();
-            ret.TestFolder = true;
             ret.TestGroupMasks = true;
             ret.TestModList = true;
             ret.TestFlattenedMod = true;
@@ -1494,15 +1445,6 @@ namespace Mutagen.Bethesda.Tests.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
         {
-            if ((translationMask?.GetShouldTranslate((int)TestingSettings_FieldIndex.TestFolder) ?? true))
-            {
-                BooleanXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.TestFolder),
-                    item: item.TestFolder,
-                    fieldIndex: (int)TestingSettings_FieldIndex.TestFolder,
-                    errorMask: errorMask);
-            }
             if ((translationMask?.GetShouldTranslate((int)TestingSettings_FieldIndex.TestGroupMasks) ?? true))
             {
                 BooleanXmlTranslation.Instance.Write(
@@ -1606,32 +1548,6 @@ namespace Mutagen.Bethesda.Tests.Internals
         {
             switch (name)
             {
-                case "TestFolder":
-                    try
-                    {
-                        errorMask?.PushIndex((int)TestingSettings_FieldIndex.TestFolder);
-                        if (BooleanXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Boolean TestFolderParse,
-                            errorMask: errorMask))
-                        {
-                            item.TestFolder = TestFolderParse;
-                        }
-                        else
-                        {
-                            item.TestFolder = default(Boolean);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
                 case "TestGroupMasks":
                     try
                     {
@@ -1813,7 +1729,6 @@ namespace Mutagen.Bethesda.Tests.Internals
 
         public TestingSettings_Mask(T initialValue)
         {
-            this.TestFolder = initialValue;
             this.TestGroupMasks = initialValue;
             this.TestModList = initialValue;
             this.TestFlattenedMod = initialValue;
@@ -1824,7 +1739,6 @@ namespace Mutagen.Bethesda.Tests.Internals
         #endregion
 
         #region Members
-        public T TestFolder;
         public T TestGroupMasks;
         public T TestModList;
         public T TestFlattenedMod;
@@ -1843,7 +1757,6 @@ namespace Mutagen.Bethesda.Tests.Internals
         public bool Equals(TestingSettings_Mask<T> rhs)
         {
             if (rhs == null) return false;
-            if (!object.Equals(this.TestFolder, rhs.TestFolder)) return false;
             if (!object.Equals(this.TestGroupMasks, rhs.TestGroupMasks)) return false;
             if (!object.Equals(this.TestModList, rhs.TestModList)) return false;
             if (!object.Equals(this.TestFlattenedMod, rhs.TestFlattenedMod)) return false;
@@ -1855,7 +1768,6 @@ namespace Mutagen.Bethesda.Tests.Internals
         public override int GetHashCode()
         {
             int ret = 0;
-            ret = ret.CombineHashCode(this.TestFolder?.GetHashCode());
             ret = ret.CombineHashCode(this.TestGroupMasks?.GetHashCode());
             ret = ret.CombineHashCode(this.TestModList?.GetHashCode());
             ret = ret.CombineHashCode(this.TestFlattenedMod?.GetHashCode());
@@ -1870,7 +1782,6 @@ namespace Mutagen.Bethesda.Tests.Internals
         #region All Equal
         public bool AllEqual(Func<T, bool> eval)
         {
-            if (!eval(this.TestFolder)) return false;
             if (!eval(this.TestGroupMasks)) return false;
             if (!eval(this.TestModList)) return false;
             if (!eval(this.TestFlattenedMod)) return false;
@@ -1910,7 +1821,6 @@ namespace Mutagen.Bethesda.Tests.Internals
 
         protected void Translate_InternalFill<R>(TestingSettings_Mask<R> obj, Func<T, R> eval)
         {
-            obj.TestFolder = eval(this.TestFolder);
             obj.TestGroupMasks = eval(this.TestGroupMasks);
             obj.TestModList = eval(this.TestModList);
             obj.TestFlattenedMod = eval(this.TestFlattenedMod);
@@ -1986,10 +1896,6 @@ namespace Mutagen.Bethesda.Tests.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
-                if (printMask?.TestFolder ?? true)
-                {
-                    fg.AppendLine($"TestFolder => {TestFolder}");
-                }
                 if (printMask?.TestGroupMasks ?? true)
                 {
                     fg.AppendLine($"TestGroupMasks => {TestGroupMasks}");
@@ -2058,7 +1964,6 @@ namespace Mutagen.Bethesda.Tests.Internals
                 return _warnings;
             }
         }
-        public Exception TestFolder;
         public Exception TestGroupMasks;
         public Exception TestModList;
         public Exception TestFlattenedMod;
@@ -2073,8 +1978,6 @@ namespace Mutagen.Bethesda.Tests.Internals
             TestingSettings_FieldIndex enu = (TestingSettings_FieldIndex)index;
             switch (enu)
             {
-                case TestingSettings_FieldIndex.TestFolder:
-                    return TestFolder;
                 case TestingSettings_FieldIndex.TestGroupMasks:
                     return TestGroupMasks;
                 case TestingSettings_FieldIndex.TestModList:
@@ -2097,9 +2000,6 @@ namespace Mutagen.Bethesda.Tests.Internals
             TestingSettings_FieldIndex enu = (TestingSettings_FieldIndex)index;
             switch (enu)
             {
-                case TestingSettings_FieldIndex.TestFolder:
-                    this.TestFolder = ex;
-                    break;
                 case TestingSettings_FieldIndex.TestGroupMasks:
                     this.TestGroupMasks = ex;
                     break;
@@ -2128,9 +2028,6 @@ namespace Mutagen.Bethesda.Tests.Internals
             TestingSettings_FieldIndex enu = (TestingSettings_FieldIndex)index;
             switch (enu)
             {
-                case TestingSettings_FieldIndex.TestFolder:
-                    this.TestFolder = (Exception)obj;
-                    break;
                 case TestingSettings_FieldIndex.TestGroupMasks:
                     this.TestGroupMasks = (Exception)obj;
                     break;
@@ -2157,7 +2054,6 @@ namespace Mutagen.Bethesda.Tests.Internals
         public bool IsInError()
         {
             if (Overall != null) return true;
-            if (TestFolder != null) return true;
             if (TestGroupMasks != null) return true;
             if (TestModList != null) return true;
             if (TestFlattenedMod != null) return true;
@@ -2198,7 +2094,6 @@ namespace Mutagen.Bethesda.Tests.Internals
         }
         protected void ToString_FillInternal(FileGeneration fg)
         {
-            fg.AppendLine($"TestFolder => {TestFolder}");
             fg.AppendLine($"TestGroupMasks => {TestGroupMasks}");
             fg.AppendLine($"TestModList => {TestModList}");
             fg.AppendLine($"TestFlattenedMod => {TestFlattenedMod}");
@@ -2233,7 +2128,6 @@ namespace Mutagen.Bethesda.Tests.Internals
         public TestingSettings_ErrorMask Combine(TestingSettings_ErrorMask rhs)
         {
             var ret = new TestingSettings_ErrorMask();
-            ret.TestFolder = this.TestFolder.Combine(rhs.TestFolder);
             ret.TestGroupMasks = this.TestGroupMasks.Combine(rhs.TestGroupMasks);
             ret.TestModList = this.TestModList.Combine(rhs.TestModList);
             ret.TestFlattenedMod = this.TestFlattenedMod.Combine(rhs.TestFlattenedMod);
@@ -2266,7 +2160,6 @@ namespace Mutagen.Bethesda.Tests.Internals
 
         public TestingSettings_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
         {
-            this.TestFolder = defaultOn;
             this.TestGroupMasks = defaultOn;
             this.TestModList = defaultOn;
             this.TestFlattenedMod = defaultOn;
@@ -2276,7 +2169,6 @@ namespace Mutagen.Bethesda.Tests.Internals
         }
 
         #region Members
-        public bool TestFolder;
         public bool TestGroupMasks;
         public bool TestModList;
         public bool TestFlattenedMod;
@@ -2291,7 +2183,6 @@ namespace Mutagen.Bethesda.Tests.Internals
     {
         #region Members
         private TranslationCrystal _crystal;
-        public bool TestFolder;
         public bool TestGroupMasks;
         public bool TestModList;
         public bool TestFlattenedMod;
@@ -2307,7 +2198,6 @@ namespace Mutagen.Bethesda.Tests.Internals
 
         public TestingSettings_TranslationMask(bool defaultOn)
         {
-            this.TestFolder = defaultOn;
             this.TestGroupMasks = defaultOn;
             this.TestModList = defaultOn;
             this.TestFlattenedMod = defaultOn;
@@ -2332,7 +2222,6 @@ namespace Mutagen.Bethesda.Tests.Internals
 
         protected void GetCrystal(List<(bool On, TranslationCrystal SubCrystal)> ret)
         {
-            ret.Add((TestFolder, null));
             ret.Add((TestGroupMasks, null));
             ret.Add((TestModList, null));
             ret.Add((TestFlattenedMod, null));
