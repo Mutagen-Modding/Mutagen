@@ -2572,32 +2572,35 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     );
             }
-            if ((translationMask?.GetShouldTranslate((int)SigilStone_FieldIndex.Uses) ?? true))
+            if (item.DATADataTypeState.HasFlag(SigilStone.DATADataType.Has))
             {
-                ByteXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Uses),
-                    item: item.Uses,
-                    fieldIndex: (int)SigilStone_FieldIndex.Uses,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)SigilStone_FieldIndex.Value) ?? true))
-            {
-                UInt32XmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Value),
-                    item: item.Value,
-                    fieldIndex: (int)SigilStone_FieldIndex.Value,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)SigilStone_FieldIndex.Weight) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Weight),
-                    item: item.Weight,
-                    fieldIndex: (int)SigilStone_FieldIndex.Weight,
-                    errorMask: errorMask);
+                if ((translationMask?.GetShouldTranslate((int)SigilStone_FieldIndex.Uses) ?? true))
+                {
+                    ByteXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.Uses),
+                        item: item.Uses,
+                        fieldIndex: (int)SigilStone_FieldIndex.Uses,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)SigilStone_FieldIndex.Value) ?? true))
+                {
+                    UInt32XmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.Value),
+                        item: item.Value,
+                        fieldIndex: (int)SigilStone_FieldIndex.Value,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)SigilStone_FieldIndex.Weight) ?? true))
+                {
+                    FloatXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.Weight),
+                        item: item.Weight,
+                        fieldIndex: (int)SigilStone_FieldIndex.Weight,
+                        errorMask: errorMask);
+                }
             }
         }
 

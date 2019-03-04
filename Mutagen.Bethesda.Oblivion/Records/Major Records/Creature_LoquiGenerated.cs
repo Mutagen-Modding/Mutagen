@@ -7100,68 +7100,71 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)Creature_FieldIndex.NIFT,
                     errorMask: errorMask);
             }
-            if ((translationMask?.GetShouldTranslate((int)Creature_FieldIndex.Flags) ?? true))
+            if (item.ACBSDataTypeState.HasFlag(Creature.ACBSDataType.Has))
             {
-                EnumXmlTranslation<Creature.CreatureFlag>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Flags),
-                    item: item.Flags,
-                    fieldIndex: (int)Creature_FieldIndex.Flags,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Creature_FieldIndex.BaseSpellPoints) ?? true))
-            {
-                UInt16XmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.BaseSpellPoints),
-                    item: item.BaseSpellPoints,
-                    fieldIndex: (int)Creature_FieldIndex.BaseSpellPoints,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Creature_FieldIndex.Fatigue) ?? true))
-            {
-                UInt16XmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Fatigue),
-                    item: item.Fatigue,
-                    fieldIndex: (int)Creature_FieldIndex.Fatigue,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Creature_FieldIndex.BarterGold) ?? true))
-            {
-                UInt16XmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.BarterGold),
-                    item: item.BarterGold,
-                    fieldIndex: (int)Creature_FieldIndex.BarterGold,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Creature_FieldIndex.LevelOffset) ?? true))
-            {
-                Int16XmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.LevelOffset),
-                    item: item.LevelOffset,
-                    fieldIndex: (int)Creature_FieldIndex.LevelOffset,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Creature_FieldIndex.CalcMin) ?? true))
-            {
-                UInt16XmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.CalcMin),
-                    item: item.CalcMin,
-                    fieldIndex: (int)Creature_FieldIndex.CalcMin,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Creature_FieldIndex.CalcMax) ?? true))
-            {
-                UInt16XmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.CalcMax),
-                    item: item.CalcMax,
-                    fieldIndex: (int)Creature_FieldIndex.CalcMax,
-                    errorMask: errorMask);
+                if ((translationMask?.GetShouldTranslate((int)Creature_FieldIndex.Flags) ?? true))
+                {
+                    EnumXmlTranslation<Creature.CreatureFlag>.Instance.Write(
+                        node: node,
+                        name: nameof(item.Flags),
+                        item: item.Flags,
+                        fieldIndex: (int)Creature_FieldIndex.Flags,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Creature_FieldIndex.BaseSpellPoints) ?? true))
+                {
+                    UInt16XmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.BaseSpellPoints),
+                        item: item.BaseSpellPoints,
+                        fieldIndex: (int)Creature_FieldIndex.BaseSpellPoints,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Creature_FieldIndex.Fatigue) ?? true))
+                {
+                    UInt16XmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.Fatigue),
+                        item: item.Fatigue,
+                        fieldIndex: (int)Creature_FieldIndex.Fatigue,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Creature_FieldIndex.BarterGold) ?? true))
+                {
+                    UInt16XmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.BarterGold),
+                        item: item.BarterGold,
+                        fieldIndex: (int)Creature_FieldIndex.BarterGold,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Creature_FieldIndex.LevelOffset) ?? true))
+                {
+                    Int16XmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.LevelOffset),
+                        item: item.LevelOffset,
+                        fieldIndex: (int)Creature_FieldIndex.LevelOffset,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Creature_FieldIndex.CalcMin) ?? true))
+                {
+                    UInt16XmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.CalcMin),
+                        item: item.CalcMin,
+                        fieldIndex: (int)Creature_FieldIndex.CalcMin,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Creature_FieldIndex.CalcMax) ?? true))
+                {
+                    UInt16XmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.CalcMax),
+                        item: item.CalcMax,
+                        fieldIndex: (int)Creature_FieldIndex.CalcMax,
+                        errorMask: errorMask);
+                }
             }
             if (item.Factions.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)Creature_FieldIndex.Factions) ?? true))
@@ -7204,68 +7207,71 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)Creature_FieldIndex.Script,
                     errorMask: errorMask);
             }
-            if ((translationMask?.GetShouldTranslate((int)Creature_FieldIndex.Aggression) ?? true))
+            if (item.AIDTDataTypeState.HasFlag(Creature.AIDTDataType.Has))
             {
-                ByteXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Aggression),
-                    item: item.Aggression,
-                    fieldIndex: (int)Creature_FieldIndex.Aggression,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Creature_FieldIndex.Confidence) ?? true))
-            {
-                ByteXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Confidence),
-                    item: item.Confidence,
-                    fieldIndex: (int)Creature_FieldIndex.Confidence,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Creature_FieldIndex.EnergyLevel) ?? true))
-            {
-                ByteXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.EnergyLevel),
-                    item: item.EnergyLevel,
-                    fieldIndex: (int)Creature_FieldIndex.EnergyLevel,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Creature_FieldIndex.Responsibility) ?? true))
-            {
-                ByteXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Responsibility),
-                    item: item.Responsibility,
-                    fieldIndex: (int)Creature_FieldIndex.Responsibility,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Creature_FieldIndex.BuySellServices) ?? true))
-            {
-                EnumXmlTranslation<NPC.BuySellServiceFlag>.Instance.Write(
-                    node: node,
-                    name: nameof(item.BuySellServices),
-                    item: item.BuySellServices,
-                    fieldIndex: (int)Creature_FieldIndex.BuySellServices,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Creature_FieldIndex.Teaches) ?? true))
-            {
-                EnumXmlTranslation<Skill>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Teaches),
-                    item: item.Teaches,
-                    fieldIndex: (int)Creature_FieldIndex.Teaches,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Creature_FieldIndex.MaximumTrainingLevel) ?? true))
-            {
-                ByteXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.MaximumTrainingLevel),
-                    item: item.MaximumTrainingLevel,
-                    fieldIndex: (int)Creature_FieldIndex.MaximumTrainingLevel,
-                    errorMask: errorMask);
+                if ((translationMask?.GetShouldTranslate((int)Creature_FieldIndex.Aggression) ?? true))
+                {
+                    ByteXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.Aggression),
+                        item: item.Aggression,
+                        fieldIndex: (int)Creature_FieldIndex.Aggression,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Creature_FieldIndex.Confidence) ?? true))
+                {
+                    ByteXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.Confidence),
+                        item: item.Confidence,
+                        fieldIndex: (int)Creature_FieldIndex.Confidence,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Creature_FieldIndex.EnergyLevel) ?? true))
+                {
+                    ByteXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.EnergyLevel),
+                        item: item.EnergyLevel,
+                        fieldIndex: (int)Creature_FieldIndex.EnergyLevel,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Creature_FieldIndex.Responsibility) ?? true))
+                {
+                    ByteXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.Responsibility),
+                        item: item.Responsibility,
+                        fieldIndex: (int)Creature_FieldIndex.Responsibility,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Creature_FieldIndex.BuySellServices) ?? true))
+                {
+                    EnumXmlTranslation<NPC.BuySellServiceFlag>.Instance.Write(
+                        node: node,
+                        name: nameof(item.BuySellServices),
+                        item: item.BuySellServices,
+                        fieldIndex: (int)Creature_FieldIndex.BuySellServices,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Creature_FieldIndex.Teaches) ?? true))
+                {
+                    EnumXmlTranslation<Skill>.Instance.Write(
+                        node: node,
+                        name: nameof(item.Teaches),
+                        item: item.Teaches,
+                        fieldIndex: (int)Creature_FieldIndex.Teaches,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Creature_FieldIndex.MaximumTrainingLevel) ?? true))
+                {
+                    ByteXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.MaximumTrainingLevel),
+                        item: item.MaximumTrainingLevel,
+                        fieldIndex: (int)Creature_FieldIndex.MaximumTrainingLevel,
+                        errorMask: errorMask);
+                }
             }
             if (item.AIPackages.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)Creature_FieldIndex.AIPackages) ?? true))
@@ -7307,140 +7313,143 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     );
             }
-            if ((translationMask?.GetShouldTranslate((int)Creature_FieldIndex.CreatureType) ?? true))
+            if (item.DATADataTypeState.HasFlag(Creature.DATADataType.Has))
             {
-                EnumXmlTranslation<Creature.CreatureTypeEnum>.Instance.Write(
-                    node: node,
-                    name: nameof(item.CreatureType),
-                    item: item.CreatureType,
-                    fieldIndex: (int)Creature_FieldIndex.CreatureType,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Creature_FieldIndex.CombatSkill) ?? true))
-            {
-                ByteXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.CombatSkill),
-                    item: item.CombatSkill,
-                    fieldIndex: (int)Creature_FieldIndex.CombatSkill,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Creature_FieldIndex.MagicSkill) ?? true))
-            {
-                ByteXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.MagicSkill),
-                    item: item.MagicSkill,
-                    fieldIndex: (int)Creature_FieldIndex.MagicSkill,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Creature_FieldIndex.StealthSkill) ?? true))
-            {
-                ByteXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.StealthSkill),
-                    item: item.StealthSkill,
-                    fieldIndex: (int)Creature_FieldIndex.StealthSkill,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Creature_FieldIndex.SoulLevel) ?? true))
-            {
-                EnumXmlTranslation<SoulLevel>.Instance.Write(
-                    node: node,
-                    name: nameof(item.SoulLevel),
-                    item: item.SoulLevel,
-                    fieldIndex: (int)Creature_FieldIndex.SoulLevel,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Creature_FieldIndex.Health) ?? true))
-            {
-                UInt32XmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Health),
-                    item: item.Health,
-                    fieldIndex: (int)Creature_FieldIndex.Health,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Creature_FieldIndex.AttackDamage) ?? true))
-            {
-                UInt16XmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.AttackDamage),
-                    item: item.AttackDamage,
-                    fieldIndex: (int)Creature_FieldIndex.AttackDamage,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Creature_FieldIndex.Strength) ?? true))
-            {
-                ByteXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Strength),
-                    item: item.Strength,
-                    fieldIndex: (int)Creature_FieldIndex.Strength,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Creature_FieldIndex.Intelligence) ?? true))
-            {
-                ByteXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Intelligence),
-                    item: item.Intelligence,
-                    fieldIndex: (int)Creature_FieldIndex.Intelligence,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Creature_FieldIndex.Willpower) ?? true))
-            {
-                ByteXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Willpower),
-                    item: item.Willpower,
-                    fieldIndex: (int)Creature_FieldIndex.Willpower,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Creature_FieldIndex.Agility) ?? true))
-            {
-                ByteXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Agility),
-                    item: item.Agility,
-                    fieldIndex: (int)Creature_FieldIndex.Agility,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Creature_FieldIndex.Speed) ?? true))
-            {
-                ByteXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Speed),
-                    item: item.Speed,
-                    fieldIndex: (int)Creature_FieldIndex.Speed,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Creature_FieldIndex.Endurance) ?? true))
-            {
-                ByteXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Endurance),
-                    item: item.Endurance,
-                    fieldIndex: (int)Creature_FieldIndex.Endurance,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Creature_FieldIndex.Personality) ?? true))
-            {
-                ByteXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Personality),
-                    item: item.Personality,
-                    fieldIndex: (int)Creature_FieldIndex.Personality,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Creature_FieldIndex.Luck) ?? true))
-            {
-                ByteXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Luck),
-                    item: item.Luck,
-                    fieldIndex: (int)Creature_FieldIndex.Luck,
-                    errorMask: errorMask);
+                if ((translationMask?.GetShouldTranslate((int)Creature_FieldIndex.CreatureType) ?? true))
+                {
+                    EnumXmlTranslation<Creature.CreatureTypeEnum>.Instance.Write(
+                        node: node,
+                        name: nameof(item.CreatureType),
+                        item: item.CreatureType,
+                        fieldIndex: (int)Creature_FieldIndex.CreatureType,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Creature_FieldIndex.CombatSkill) ?? true))
+                {
+                    ByteXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.CombatSkill),
+                        item: item.CombatSkill,
+                        fieldIndex: (int)Creature_FieldIndex.CombatSkill,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Creature_FieldIndex.MagicSkill) ?? true))
+                {
+                    ByteXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.MagicSkill),
+                        item: item.MagicSkill,
+                        fieldIndex: (int)Creature_FieldIndex.MagicSkill,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Creature_FieldIndex.StealthSkill) ?? true))
+                {
+                    ByteXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.StealthSkill),
+                        item: item.StealthSkill,
+                        fieldIndex: (int)Creature_FieldIndex.StealthSkill,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Creature_FieldIndex.SoulLevel) ?? true))
+                {
+                    EnumXmlTranslation<SoulLevel>.Instance.Write(
+                        node: node,
+                        name: nameof(item.SoulLevel),
+                        item: item.SoulLevel,
+                        fieldIndex: (int)Creature_FieldIndex.SoulLevel,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Creature_FieldIndex.Health) ?? true))
+                {
+                    UInt32XmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.Health),
+                        item: item.Health,
+                        fieldIndex: (int)Creature_FieldIndex.Health,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Creature_FieldIndex.AttackDamage) ?? true))
+                {
+                    UInt16XmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.AttackDamage),
+                        item: item.AttackDamage,
+                        fieldIndex: (int)Creature_FieldIndex.AttackDamage,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Creature_FieldIndex.Strength) ?? true))
+                {
+                    ByteXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.Strength),
+                        item: item.Strength,
+                        fieldIndex: (int)Creature_FieldIndex.Strength,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Creature_FieldIndex.Intelligence) ?? true))
+                {
+                    ByteXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.Intelligence),
+                        item: item.Intelligence,
+                        fieldIndex: (int)Creature_FieldIndex.Intelligence,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Creature_FieldIndex.Willpower) ?? true))
+                {
+                    ByteXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.Willpower),
+                        item: item.Willpower,
+                        fieldIndex: (int)Creature_FieldIndex.Willpower,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Creature_FieldIndex.Agility) ?? true))
+                {
+                    ByteXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.Agility),
+                        item: item.Agility,
+                        fieldIndex: (int)Creature_FieldIndex.Agility,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Creature_FieldIndex.Speed) ?? true))
+                {
+                    ByteXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.Speed),
+                        item: item.Speed,
+                        fieldIndex: (int)Creature_FieldIndex.Speed,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Creature_FieldIndex.Endurance) ?? true))
+                {
+                    ByteXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.Endurance),
+                        item: item.Endurance,
+                        fieldIndex: (int)Creature_FieldIndex.Endurance,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Creature_FieldIndex.Personality) ?? true))
+                {
+                    ByteXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.Personality),
+                        item: item.Personality,
+                        fieldIndex: (int)Creature_FieldIndex.Personality,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Creature_FieldIndex.Luck) ?? true))
+                {
+                    ByteXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.Luck),
+                        item: item.Luck,
+                        fieldIndex: (int)Creature_FieldIndex.Luck,
+                        errorMask: errorMask);
+                }
             }
             if (item.AttackReach_IsSet
                 && (translationMask?.GetShouldTranslate((int)Creature_FieldIndex.AttackReach) ?? true))

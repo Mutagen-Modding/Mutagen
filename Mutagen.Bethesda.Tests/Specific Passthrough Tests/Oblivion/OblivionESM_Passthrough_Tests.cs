@@ -89,36 +89,39 @@ namespace Mutagen.Bethesda.Tests
             }
         }
 
-        public static async Task OblivionESM_Folder_Reimport(PassthroughSettings settings, Passthrough passthrough)
+        public static async Task OblivionESM_Folder_Reimport(PassthroughSettings settings, Passthrough passthrough, Oblivion_Passthrough_Test oblivPassthrough)
         {
-            using (var tmp = new TempFolder("Mutagen_Oblivion_XmlFolder", deleteAfter: false))
+            using (var processedTmp = await oblivPassthrough.SetupProcessedFiles())
             {
-                var sourcePath = Path.Combine(settings.DataFolder, passthrough.Path);
-                //var mod = OblivionMod.Create_Binary(
-                //    sourcePath,
-                //    modKey: Mutagen.Bethesda.Oblivion.Constants.Oblivion,
-                //    errorMask: out var inputErrMask);
-                //Assert.False(inputErrMask?.IsInError() ?? false);
-                ////var exportMask = await mod.Write_XmlFolder(
-                ////    tmp.Dir);
-                ////Assert.False(exportMask?.IsInError() ?? false);
-                //var reimport = await OblivionMod.Create_Xml_Folder(
-                //    tmp.Dir);
-                //var eqMask = reimport.Mod.GetEqualsMask(mod, include: Loqui.EqualsMaskHelper.Include.OnlyFailures);
-                //Assert.True(eqMask.AllEqual(b => b));
-                var reexportPath = Path.Combine(tmp.Dir.Path, "Reexport");
-                //reimport.Mod.Write_Binary(
-                //    reexportPath,
-                //    modKey: Mutagen.Bethesda.Oblivion.Constants.Oblivion);
-                using (var stream = new BinaryReadStream(@"C:\Users\Leviathan1753\AppData\Local\Temp\Mutagen_Binary_Tests\Oblivion.esm\Oblivion.esm_Processed"))
+                using (var tmp = new TempFolder("Mutagen_Oblivion_XmlFolder", deleteAfter: false))
                 {
-                    var eqException = Passthrough_Tests.AssertFilesEqual(
-                        stream,
+                    var sourcePath = oblivPassthrough.ProcessedPath(processedTmp);
+                    //var mod = OblivionMod.Create_Binary(
+                    //    sourcePath,
+                    //    modKey: Mutagen.Bethesda.Oblivion.Constants.Oblivion,
+                    //    errorMask: out var inputErrMask);
+                    //Assert.False(inputErrMask?.IsInError() ?? false);
+                    //var exportMask = await mod.Write_XmlFolder(
+                    //    tmp.Dir);
+                    //Assert.False(exportMask?.IsInError() ?? false);
+                    var reimport = await OblivionMod.Create_Xml_Folder(
+                        tmp.Dir);
+                    //var eqMask = reimport.Mod.GetEqualsMask(mod, include: Loqui.EqualsMaskHelper.Include.OnlyFailures);
+                    //Assert.True(eqMask.AllEqual(b => b));
+                    var reexportPath = Path.Combine(tmp.Dir.Path, "Reexport");
+                    reimport.Mod.Write_Binary(
                         reexportPath,
-                        amountToReport: 15);
-                    if (eqException.Exception != null)
+                        modKey: Mutagen.Bethesda.Oblivion.Constants.Oblivion);
+                    using (var stream = new BinaryReadStream(sourcePath))
                     {
-                        throw eqException.Exception;
+                        var eqException = Passthrough_Tests.AssertFilesEqual(
+                            stream,
+                            reexportPath,
+                            amountToReport: 15);
+                        if (eqException.Exception != null)
+                        {
+                            throw eqException.Exception;
+                        }
                     }
                 }
             }

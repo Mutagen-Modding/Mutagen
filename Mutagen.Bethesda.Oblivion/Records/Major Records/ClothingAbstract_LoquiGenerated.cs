@@ -3049,23 +3049,26 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)ClothingAbstract_FieldIndex.EnchantmentPoints,
                     errorMask: errorMask);
             }
-            if ((translationMask?.GetShouldTranslate((int)ClothingAbstract_FieldIndex.BipedFlags) ?? true))
+            if (item.BMDTDataTypeState.HasFlag(ClothingAbstract.BMDTDataType.Has))
             {
-                EnumXmlTranslation<BipedFlag>.Instance.Write(
-                    node: node,
-                    name: nameof(item.BipedFlags),
-                    item: item.BipedFlags,
-                    fieldIndex: (int)ClothingAbstract_FieldIndex.BipedFlags,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)ClothingAbstract_FieldIndex.Flags) ?? true))
-            {
-                EnumXmlTranslation<EquipmentFlag>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Flags),
-                    item: item.Flags,
-                    fieldIndex: (int)ClothingAbstract_FieldIndex.Flags,
-                    errorMask: errorMask);
+                if ((translationMask?.GetShouldTranslate((int)ClothingAbstract_FieldIndex.BipedFlags) ?? true))
+                {
+                    EnumXmlTranslation<BipedFlag>.Instance.Write(
+                        node: node,
+                        name: nameof(item.BipedFlags),
+                        item: item.BipedFlags,
+                        fieldIndex: (int)ClothingAbstract_FieldIndex.BipedFlags,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)ClothingAbstract_FieldIndex.Flags) ?? true))
+                {
+                    EnumXmlTranslation<EquipmentFlag>.Instance.Write(
+                        node: node,
+                        name: nameof(item.Flags),
+                        item: item.Flags,
+                        fieldIndex: (int)ClothingAbstract_FieldIndex.Flags,
+                        errorMask: errorMask);
+                }
             }
             if (item.MaleBipedModel_IsSet
                 && (translationMask?.GetShouldTranslate((int)ClothingAbstract_FieldIndex.MaleBipedModel) ?? true))

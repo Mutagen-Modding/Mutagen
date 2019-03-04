@@ -2803,68 +2803,71 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)Climate_FieldIndex.Model));
             }
-            if ((translationMask?.GetShouldTranslate((int)Climate_FieldIndex.SunriseBegin) ?? true))
+            if (item.TNAMDataTypeState.HasFlag(Climate.TNAMDataType.Has))
             {
-                DateTimeXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.SunriseBegin),
-                    item: item.SunriseBegin,
-                    fieldIndex: (int)Climate_FieldIndex.SunriseBegin,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Climate_FieldIndex.SunriseEnd) ?? true))
-            {
-                DateTimeXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.SunriseEnd),
-                    item: item.SunriseEnd,
-                    fieldIndex: (int)Climate_FieldIndex.SunriseEnd,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Climate_FieldIndex.SunsetBegin) ?? true))
-            {
-                DateTimeXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.SunsetBegin),
-                    item: item.SunsetBegin,
-                    fieldIndex: (int)Climate_FieldIndex.SunsetBegin,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Climate_FieldIndex.SunsetEnd) ?? true))
-            {
-                DateTimeXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.SunsetEnd),
-                    item: item.SunsetEnd,
-                    fieldIndex: (int)Climate_FieldIndex.SunsetEnd,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Climate_FieldIndex.Volatility) ?? true))
-            {
-                ByteXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Volatility),
-                    item: item.Volatility,
-                    fieldIndex: (int)Climate_FieldIndex.Volatility,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Climate_FieldIndex.Phase) ?? true))
-            {
-                EnumXmlTranslation<Climate.MoonPhase>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Phase),
-                    item: item.Phase,
-                    fieldIndex: (int)Climate_FieldIndex.Phase,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Climate_FieldIndex.PhaseLength) ?? true))
-            {
-                ByteXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.PhaseLength),
-                    item: item.PhaseLength,
-                    fieldIndex: (int)Climate_FieldIndex.PhaseLength,
-                    errorMask: errorMask);
+                if ((translationMask?.GetShouldTranslate((int)Climate_FieldIndex.SunriseBegin) ?? true))
+                {
+                    DateTimeXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.SunriseBegin),
+                        item: item.SunriseBegin,
+                        fieldIndex: (int)Climate_FieldIndex.SunriseBegin,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Climate_FieldIndex.SunriseEnd) ?? true))
+                {
+                    DateTimeXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.SunriseEnd),
+                        item: item.SunriseEnd,
+                        fieldIndex: (int)Climate_FieldIndex.SunriseEnd,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Climate_FieldIndex.SunsetBegin) ?? true))
+                {
+                    DateTimeXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.SunsetBegin),
+                        item: item.SunsetBegin,
+                        fieldIndex: (int)Climate_FieldIndex.SunsetBegin,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Climate_FieldIndex.SunsetEnd) ?? true))
+                {
+                    DateTimeXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.SunsetEnd),
+                        item: item.SunsetEnd,
+                        fieldIndex: (int)Climate_FieldIndex.SunsetEnd,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Climate_FieldIndex.Volatility) ?? true))
+                {
+                    ByteXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.Volatility),
+                        item: item.Volatility,
+                        fieldIndex: (int)Climate_FieldIndex.Volatility,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Climate_FieldIndex.Phase) ?? true))
+                {
+                    EnumXmlTranslation<Climate.MoonPhase>.Instance.Write(
+                        node: node,
+                        name: nameof(item.Phase),
+                        item: item.Phase,
+                        fieldIndex: (int)Climate_FieldIndex.Phase,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Climate_FieldIndex.PhaseLength) ?? true))
+                {
+                    ByteXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.PhaseLength),
+                        item: item.PhaseLength,
+                        fieldIndex: (int)Climate_FieldIndex.PhaseLength,
+                        errorMask: errorMask);
+                }
             }
         }
 

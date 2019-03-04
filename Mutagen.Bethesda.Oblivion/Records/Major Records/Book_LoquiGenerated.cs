@@ -2900,41 +2900,44 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)Book_FieldIndex.Description,
                     errorMask: errorMask);
             }
-            if ((translationMask?.GetShouldTranslate((int)Book_FieldIndex.Flags) ?? true))
+            if (item.DATADataTypeState.HasFlag(Book.DATADataType.Has))
             {
-                EnumXmlTranslation<Book.BookFlag>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Flags),
-                    item: item.Flags,
-                    fieldIndex: (int)Book_FieldIndex.Flags,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Book_FieldIndex.Teaches) ?? true))
-            {
-                EnumXmlTranslation<Skill>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Teaches),
-                    item: item.Teaches,
-                    fieldIndex: (int)Book_FieldIndex.Teaches,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Book_FieldIndex.Value) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Value),
-                    item: item.Value,
-                    fieldIndex: (int)Book_FieldIndex.Value,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Book_FieldIndex.Weight) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Weight),
-                    item: item.Weight,
-                    fieldIndex: (int)Book_FieldIndex.Weight,
-                    errorMask: errorMask);
+                if ((translationMask?.GetShouldTranslate((int)Book_FieldIndex.Flags) ?? true))
+                {
+                    EnumXmlTranslation<Book.BookFlag>.Instance.Write(
+                        node: node,
+                        name: nameof(item.Flags),
+                        item: item.Flags,
+                        fieldIndex: (int)Book_FieldIndex.Flags,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Book_FieldIndex.Teaches) ?? true))
+                {
+                    EnumXmlTranslation<Skill>.Instance.Write(
+                        node: node,
+                        name: nameof(item.Teaches),
+                        item: item.Teaches,
+                        fieldIndex: (int)Book_FieldIndex.Teaches,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Book_FieldIndex.Value) ?? true))
+                {
+                    FloatXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.Value),
+                        item: item.Value,
+                        fieldIndex: (int)Book_FieldIndex.Value,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Book_FieldIndex.Weight) ?? true))
+                {
+                    FloatXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.Weight),
+                        item: item.Weight,
+                        fieldIndex: (int)Book_FieldIndex.Weight,
+                        errorMask: errorMask);
+                }
             }
         }
 

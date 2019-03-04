@@ -4622,79 +4622,82 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     );
             }
-            if ((translationMask?.GetShouldTranslate((int)Race_FieldIndex.SkillBoosts) ?? true))
+            if (item.DATADataTypeState.HasFlag(Race.DATADataType.Has))
             {
-                ListXmlTranslation<SkillBoost>.Instance.Write(
-                    node: node,
-                    name: nameof(item.SkillBoosts),
-                    item: item.SkillBoosts,
-                    fieldIndex: (int)Race_FieldIndex.SkillBoosts,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Race_FieldIndex.SkillBoosts),
-                    transl: (XElement subNode, SkillBoost subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
-                    {
-                        LoquiXmlTranslation<SkillBoost>.Instance.Write(
-                            node: subNode,
-                            item: subItem,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
-                    }
-                    );
-            }
-            if ((translationMask?.GetShouldTranslate((int)Race_FieldIndex.Fluff) ?? true))
-            {
-                ByteArrayXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Fluff),
-                    item: item.Fluff,
-                    fieldIndex: (int)Race_FieldIndex.Fluff,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Race_FieldIndex.MaleHeight) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.MaleHeight),
-                    item: item.MaleHeight,
-                    fieldIndex: (int)Race_FieldIndex.MaleHeight,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Race_FieldIndex.FemaleHeight) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.FemaleHeight),
-                    item: item.FemaleHeight,
-                    fieldIndex: (int)Race_FieldIndex.FemaleHeight,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Race_FieldIndex.MaleWeight) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.MaleWeight),
-                    item: item.MaleWeight,
-                    fieldIndex: (int)Race_FieldIndex.MaleWeight,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Race_FieldIndex.FemaleWeight) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.FemaleWeight),
-                    item: item.FemaleWeight,
-                    fieldIndex: (int)Race_FieldIndex.FemaleWeight,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Race_FieldIndex.Flags) ?? true))
-            {
-                EnumXmlTranslation<Race.Flag>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Flags),
-                    item: item.Flags,
-                    fieldIndex: (int)Race_FieldIndex.Flags,
-                    errorMask: errorMask);
+                if ((translationMask?.GetShouldTranslate((int)Race_FieldIndex.SkillBoosts) ?? true))
+                {
+                    ListXmlTranslation<SkillBoost>.Instance.Write(
+                        node: node,
+                        name: nameof(item.SkillBoosts),
+                        item: item.SkillBoosts,
+                        fieldIndex: (int)Race_FieldIndex.SkillBoosts,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)Race_FieldIndex.SkillBoosts),
+                        transl: (XElement subNode, SkillBoost subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
+                        {
+                            LoquiXmlTranslation<SkillBoost>.Instance.Write(
+                                node: subNode,
+                                item: subItem,
+                                name: null,
+                                errorMask: listSubMask,
+                                translationMask: listTranslMask);
+                        }
+                        );
+                }
+                if ((translationMask?.GetShouldTranslate((int)Race_FieldIndex.Fluff) ?? true))
+                {
+                    ByteArrayXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.Fluff),
+                        item: item.Fluff,
+                        fieldIndex: (int)Race_FieldIndex.Fluff,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Race_FieldIndex.MaleHeight) ?? true))
+                {
+                    FloatXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.MaleHeight),
+                        item: item.MaleHeight,
+                        fieldIndex: (int)Race_FieldIndex.MaleHeight,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Race_FieldIndex.FemaleHeight) ?? true))
+                {
+                    FloatXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.FemaleHeight),
+                        item: item.FemaleHeight,
+                        fieldIndex: (int)Race_FieldIndex.FemaleHeight,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Race_FieldIndex.MaleWeight) ?? true))
+                {
+                    FloatXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.MaleWeight),
+                        item: item.MaleWeight,
+                        fieldIndex: (int)Race_FieldIndex.MaleWeight,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Race_FieldIndex.FemaleWeight) ?? true))
+                {
+                    FloatXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.FemaleWeight),
+                        item: item.FemaleWeight,
+                        fieldIndex: (int)Race_FieldIndex.FemaleWeight,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Race_FieldIndex.Flags) ?? true))
+                {
+                    EnumXmlTranslation<Race.Flag>.Instance.Write(
+                        node: node,
+                        name: nameof(item.Flags),
+                        item: item.Flags,
+                        fieldIndex: (int)Race_FieldIndex.Flags,
+                        errorMask: errorMask);
+                }
             }
             if (item.Voices_IsSet
                 && (translationMask?.GetShouldTranslate((int)Race_FieldIndex.Voices) ?? true))

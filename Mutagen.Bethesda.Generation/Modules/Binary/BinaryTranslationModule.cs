@@ -702,7 +702,7 @@ namespace Mutagen.Bethesda.Generation
                             fg.AppendLine($"if (dataFrame.TotalLength > {subField.Range.DataSetSizeMin})");
                             fg.AppendLine("{");
                             fg.Depth++;
-                            fg.AppendLine($"item.{set.StateName} |= {set.EnumName}.Range{subField.RangeIndex};");
+                            fg.AppendLine($"item.{set.StateName} |= {obj.Name}.{set.EnumName}.Range{subField.RangeIndex};");
                         }
                         if (subField.Range == null && isInRange)
                         {

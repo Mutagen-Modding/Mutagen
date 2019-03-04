@@ -2910,50 +2910,53 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)SkillRecord_FieldIndex.Icon,
                     errorMask: errorMask);
             }
-            if ((translationMask?.GetShouldTranslate((int)SkillRecord_FieldIndex.Action) ?? true))
+            if (item.DATADataTypeState.HasFlag(SkillRecord.DATADataType.Has))
             {
-                EnumXmlTranslation<ActorValue>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Action),
-                    item: item.Action,
-                    fieldIndex: (int)SkillRecord_FieldIndex.Action,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)SkillRecord_FieldIndex.Attribute) ?? true))
-            {
-                EnumXmlTranslation<ActorValue>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Attribute),
-                    item: item.Attribute,
-                    fieldIndex: (int)SkillRecord_FieldIndex.Attribute,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)SkillRecord_FieldIndex.Specialization) ?? true))
-            {
-                EnumXmlTranslation<Specialization>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Specialization),
-                    item: item.Specialization,
-                    fieldIndex: (int)SkillRecord_FieldIndex.Specialization,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)SkillRecord_FieldIndex.UseValueFirst) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.UseValueFirst),
-                    item: item.UseValueFirst,
-                    fieldIndex: (int)SkillRecord_FieldIndex.UseValueFirst,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)SkillRecord_FieldIndex.UseValueSecond) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.UseValueSecond),
-                    item: item.UseValueSecond,
-                    fieldIndex: (int)SkillRecord_FieldIndex.UseValueSecond,
-                    errorMask: errorMask);
+                if ((translationMask?.GetShouldTranslate((int)SkillRecord_FieldIndex.Action) ?? true))
+                {
+                    EnumXmlTranslation<ActorValue>.Instance.Write(
+                        node: node,
+                        name: nameof(item.Action),
+                        item: item.Action,
+                        fieldIndex: (int)SkillRecord_FieldIndex.Action,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)SkillRecord_FieldIndex.Attribute) ?? true))
+                {
+                    EnumXmlTranslation<ActorValue>.Instance.Write(
+                        node: node,
+                        name: nameof(item.Attribute),
+                        item: item.Attribute,
+                        fieldIndex: (int)SkillRecord_FieldIndex.Attribute,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)SkillRecord_FieldIndex.Specialization) ?? true))
+                {
+                    EnumXmlTranslation<Specialization>.Instance.Write(
+                        node: node,
+                        name: nameof(item.Specialization),
+                        item: item.Specialization,
+                        fieldIndex: (int)SkillRecord_FieldIndex.Specialization,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)SkillRecord_FieldIndex.UseValueFirst) ?? true))
+                {
+                    FloatXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.UseValueFirst),
+                        item: item.UseValueFirst,
+                        fieldIndex: (int)SkillRecord_FieldIndex.UseValueFirst,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)SkillRecord_FieldIndex.UseValueSecond) ?? true))
+                {
+                    FloatXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.UseValueSecond),
+                        item: item.UseValueSecond,
+                        fieldIndex: (int)SkillRecord_FieldIndex.UseValueSecond,
+                        errorMask: errorMask);
+                }
             }
             if (item.ApprenticeText_IsSet
                 && (translationMask?.GetShouldTranslate((int)SkillRecord_FieldIndex.ApprenticeText) ?? true))

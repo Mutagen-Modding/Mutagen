@@ -370,6 +370,7 @@ namespace Mutagen.Bethesda.Oblivion
             var ret = new DialogItem();
             try
             {
+                ret.DATADataTypeState |= DialogItem.DATADataType.Break0;
                 foreach (var elem in node.Elements())
                 {
                     FillPrivateElement_Xml(
@@ -2667,23 +2668,29 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
-            if ((translationMask?.GetShouldTranslate((int)DialogItem_FieldIndex.DialogType) ?? true))
+            if (item.DATADataTypeState.HasFlag(DialogItem.DATADataType.Has))
             {
-                EnumXmlTranslation<DialogType>.Instance.Write(
-                    node: node,
-                    name: nameof(item.DialogType),
-                    item: item.DialogType,
-                    fieldIndex: (int)DialogItem_FieldIndex.DialogType,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)DialogItem_FieldIndex.Flags) ?? true))
-            {
-                EnumXmlTranslation<DialogItem.Flag>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Flags),
-                    item: item.Flags,
-                    fieldIndex: (int)DialogItem_FieldIndex.Flags,
-                    errorMask: errorMask);
+                if ((translationMask?.GetShouldTranslate((int)DialogItem_FieldIndex.DialogType) ?? true))
+                {
+                    EnumXmlTranslation<DialogType>.Instance.Write(
+                        node: node,
+                        name: nameof(item.DialogType),
+                        item: item.DialogType,
+                        fieldIndex: (int)DialogItem_FieldIndex.DialogType,
+                        errorMask: errorMask);
+                }
+                if (!item.DATADataTypeState.HasFlag(DialogItem.DATADataType.Break0))
+                {
+                    if ((translationMask?.GetShouldTranslate((int)DialogItem_FieldIndex.Flags) ?? true))
+                    {
+                        EnumXmlTranslation<DialogItem.Flag>.Instance.Write(
+                            node: node,
+                            name: nameof(item.Flags),
+                            item: item.Flags,
+                            fieldIndex: (int)DialogItem_FieldIndex.Flags,
+                            errorMask: errorMask);
+                    }
+                }
             }
             if (item.Quest_Property.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)DialogItem_FieldIndex.Quest) ?? true))
@@ -2905,6 +2912,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         errorMask?.PopIndex();
                     }
+                    item.DATADataTypeState &= ~DialogItem.DATADataType.Break0;
                     break;
                 case "Quest":
                     FormKeyXmlTranslation.Instance.ParseInto(

@@ -446,6 +446,7 @@ namespace Mutagen.Bethesda.Oblivion
             var ret = new Light();
             try
             {
+                ret.DATADataTypeState |= Light.DATADataType.Range0;
                 foreach (var elem in node.Elements())
                 {
                     FillPrivateElement_Xml(
@@ -1410,7 +1411,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         if (dataFrame.TotalLength > 24)
                         {
-                            item.DATADataTypeState |= DATADataType.Range0;
+                            item.DATADataTypeState |= Light.DATADataType.Range0;
                             try
                             {
                                 errorMask?.PushIndex((int)Light_FieldIndex.FalloffExponent);
@@ -3118,77 +3119,83 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)Light_FieldIndex.Icon,
                     errorMask: errorMask);
             }
-            if ((translationMask?.GetShouldTranslate((int)Light_FieldIndex.Time) ?? true))
+            if (item.DATADataTypeState.HasFlag(Light.DATADataType.Has))
             {
-                Int32XmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Time),
-                    item: item.Time,
-                    fieldIndex: (int)Light_FieldIndex.Time,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Light_FieldIndex.Radius) ?? true))
-            {
-                UInt32XmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Radius),
-                    item: item.Radius,
-                    fieldIndex: (int)Light_FieldIndex.Radius,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Light_FieldIndex.Color) ?? true))
-            {
-                ColorXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Color),
-                    item: item.Color,
-                    fieldIndex: (int)Light_FieldIndex.Color,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Light_FieldIndex.Flags) ?? true))
-            {
-                EnumXmlTranslation<Light.LightFlag>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Flags),
-                    item: item.Flags,
-                    fieldIndex: (int)Light_FieldIndex.Flags,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Light_FieldIndex.FalloffExponent) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.FalloffExponent),
-                    item: item.FalloffExponent,
-                    fieldIndex: (int)Light_FieldIndex.FalloffExponent,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Light_FieldIndex.FOV) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.FOV),
-                    item: item.FOV,
-                    fieldIndex: (int)Light_FieldIndex.FOV,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Light_FieldIndex.Value) ?? true))
-            {
-                UInt32XmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Value),
-                    item: item.Value,
-                    fieldIndex: (int)Light_FieldIndex.Value,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Light_FieldIndex.Weight) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Weight),
-                    item: item.Weight,
-                    fieldIndex: (int)Light_FieldIndex.Weight,
-                    errorMask: errorMask);
+                if ((translationMask?.GetShouldTranslate((int)Light_FieldIndex.Time) ?? true))
+                {
+                    Int32XmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.Time),
+                        item: item.Time,
+                        fieldIndex: (int)Light_FieldIndex.Time,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Light_FieldIndex.Radius) ?? true))
+                {
+                    UInt32XmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.Radius),
+                        item: item.Radius,
+                        fieldIndex: (int)Light_FieldIndex.Radius,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Light_FieldIndex.Color) ?? true))
+                {
+                    ColorXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.Color),
+                        item: item.Color,
+                        fieldIndex: (int)Light_FieldIndex.Color,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Light_FieldIndex.Flags) ?? true))
+                {
+                    EnumXmlTranslation<Light.LightFlag>.Instance.Write(
+                        node: node,
+                        name: nameof(item.Flags),
+                        item: item.Flags,
+                        fieldIndex: (int)Light_FieldIndex.Flags,
+                        errorMask: errorMask);
+                }
+                if (item.DATADataTypeState.HasFlag(Light.DATADataType.Range0))
+                {
+                    if ((translationMask?.GetShouldTranslate((int)Light_FieldIndex.FalloffExponent) ?? true))
+                    {
+                        FloatXmlTranslation.Instance.Write(
+                            node: node,
+                            name: nameof(item.FalloffExponent),
+                            item: item.FalloffExponent,
+                            fieldIndex: (int)Light_FieldIndex.FalloffExponent,
+                            errorMask: errorMask);
+                    }
+                    if ((translationMask?.GetShouldTranslate((int)Light_FieldIndex.FOV) ?? true))
+                    {
+                        FloatXmlTranslation.Instance.Write(
+                            node: node,
+                            name: nameof(item.FOV),
+                            item: item.FOV,
+                            fieldIndex: (int)Light_FieldIndex.FOV,
+                            errorMask: errorMask);
+                    }
+                }
+                if ((translationMask?.GetShouldTranslate((int)Light_FieldIndex.Value) ?? true))
+                {
+                    UInt32XmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.Value),
+                        item: item.Value,
+                        fieldIndex: (int)Light_FieldIndex.Value,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Light_FieldIndex.Weight) ?? true))
+                {
+                    FloatXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.Weight),
+                        item: item.Weight,
+                        fieldIndex: (int)Light_FieldIndex.Weight,
+                        errorMask: errorMask);
+                }
             }
             if (item.Fade_IsSet
                 && (translationMask?.GetShouldTranslate((int)Light_FieldIndex.Fade) ?? true))
@@ -3461,6 +3468,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         errorMask?.PopIndex();
                     }
+                    item.DATADataTypeState &= ~Light.DATADataType.Range0;
                     break;
                 case "FOV":
                     try

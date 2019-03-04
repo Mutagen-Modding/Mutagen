@@ -2303,23 +2303,26 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)Miscellaneous_FieldIndex.Script,
                     errorMask: errorMask);
             }
-            if ((translationMask?.GetShouldTranslate((int)Miscellaneous_FieldIndex.Value) ?? true))
+            if (item.DATADataTypeState.HasFlag(Miscellaneous.DATADataType.Has))
             {
-                Int32XmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Value),
-                    item: item.Value,
-                    fieldIndex: (int)Miscellaneous_FieldIndex.Value,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Miscellaneous_FieldIndex.Weight) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Weight),
-                    item: item.Weight,
-                    fieldIndex: (int)Miscellaneous_FieldIndex.Weight,
-                    errorMask: errorMask);
+                if ((translationMask?.GetShouldTranslate((int)Miscellaneous_FieldIndex.Value) ?? true))
+                {
+                    Int32XmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.Value),
+                        item: item.Value,
+                        fieldIndex: (int)Miscellaneous_FieldIndex.Value,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Miscellaneous_FieldIndex.Weight) ?? true))
+                {
+                    FloatXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.Weight),
+                        item: item.Weight,
+                        fieldIndex: (int)Miscellaneous_FieldIndex.Weight,
+                        errorMask: errorMask);
+                }
             }
         }
 

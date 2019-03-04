@@ -109,6 +109,7 @@
     <Compile Include="Modules\Mutagen Module\TriggeringRecordModule.cs" />
     <Compile Include="Modules\XML\DataTypeXmlTranslationGeneration.cs" />
     <Compile Include="Modules\XML\FormIDLinkXmlTranslationGeneration.cs" />
+    <Compile Include="Modules\XML\MutagenXmlModule.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

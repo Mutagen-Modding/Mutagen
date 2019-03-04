@@ -2324,23 +2324,26 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
-            if ((translationMask?.GetShouldTranslate((int)AIPackage_FieldIndex.Flags) ?? true))
+            if (item.PKDTDataTypeState.HasFlag(AIPackage.PKDTDataType.Has))
             {
-                EnumXmlTranslation<AIPackage.Flag>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Flags),
-                    item: item.Flags,
-                    fieldIndex: (int)AIPackage_FieldIndex.Flags,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)AIPackage_FieldIndex.GeneralType) ?? true))
-            {
-                EnumXmlTranslation<AIPackage.GeneralTypeEnum>.Instance.Write(
-                    node: node,
-                    name: nameof(item.GeneralType),
-                    item: item.GeneralType,
-                    fieldIndex: (int)AIPackage_FieldIndex.GeneralType,
-                    errorMask: errorMask);
+                if ((translationMask?.GetShouldTranslate((int)AIPackage_FieldIndex.Flags) ?? true))
+                {
+                    EnumXmlTranslation<AIPackage.Flag>.Instance.Write(
+                        node: node,
+                        name: nameof(item.Flags),
+                        item: item.Flags,
+                        fieldIndex: (int)AIPackage_FieldIndex.Flags,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)AIPackage_FieldIndex.GeneralType) ?? true))
+                {
+                    EnumXmlTranslation<AIPackage.GeneralTypeEnum>.Instance.Write(
+                        node: node,
+                        name: nameof(item.GeneralType),
+                        item: item.GeneralType,
+                        fieldIndex: (int)AIPackage_FieldIndex.GeneralType,
+                        errorMask: errorMask);
+                }
             }
             if (item.Location_IsSet
                 && (translationMask?.GetShouldTranslate((int)AIPackage_FieldIndex.Location) ?? true))

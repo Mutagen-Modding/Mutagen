@@ -2495,23 +2495,26 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)Quest_FieldIndex.Icon,
                     errorMask: errorMask);
             }
-            if ((translationMask?.GetShouldTranslate((int)Quest_FieldIndex.Flags) ?? true))
+            if (item.DATADataTypeState.HasFlag(Quest.DATADataType.Has))
             {
-                EnumXmlTranslation<Quest.Flag>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Flags),
-                    item: item.Flags,
-                    fieldIndex: (int)Quest_FieldIndex.Flags,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Quest_FieldIndex.Priority) ?? true))
-            {
-                ByteXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Priority),
-                    item: item.Priority,
-                    fieldIndex: (int)Quest_FieldIndex.Priority,
-                    errorMask: errorMask);
+                if ((translationMask?.GetShouldTranslate((int)Quest_FieldIndex.Flags) ?? true))
+                {
+                    EnumXmlTranslation<Quest.Flag>.Instance.Write(
+                        node: node,
+                        name: nameof(item.Flags),
+                        item: item.Flags,
+                        fieldIndex: (int)Quest_FieldIndex.Flags,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Quest_FieldIndex.Priority) ?? true))
+                {
+                    ByteXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.Priority),
+                        item: item.Priority,
+                        fieldIndex: (int)Quest_FieldIndex.Priority,
+                        errorMask: errorMask);
+                }
             }
             if (item.Conditions.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)Quest_FieldIndex.Conditions) ?? true))

@@ -2130,41 +2130,44 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)Enchantment_FieldIndex.Name,
                     errorMask: errorMask);
             }
-            if ((translationMask?.GetShouldTranslate((int)Enchantment_FieldIndex.Type) ?? true))
+            if (item.ENITDataTypeState.HasFlag(Enchantment.ENITDataType.Has))
             {
-                EnumXmlTranslation<Enchantment.EnchantmentType>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Type),
-                    item: item.Type,
-                    fieldIndex: (int)Enchantment_FieldIndex.Type,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Enchantment_FieldIndex.ChargeAmount) ?? true))
-            {
-                UInt32XmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.ChargeAmount),
-                    item: item.ChargeAmount,
-                    fieldIndex: (int)Enchantment_FieldIndex.ChargeAmount,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Enchantment_FieldIndex.EnchantCost) ?? true))
-            {
-                UInt32XmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.EnchantCost),
-                    item: item.EnchantCost,
-                    fieldIndex: (int)Enchantment_FieldIndex.EnchantCost,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Enchantment_FieldIndex.Flags) ?? true))
-            {
-                EnumXmlTranslation<Enchantment.Flag>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Flags),
-                    item: item.Flags,
-                    fieldIndex: (int)Enchantment_FieldIndex.Flags,
-                    errorMask: errorMask);
+                if ((translationMask?.GetShouldTranslate((int)Enchantment_FieldIndex.Type) ?? true))
+                {
+                    EnumXmlTranslation<Enchantment.EnchantmentType>.Instance.Write(
+                        node: node,
+                        name: nameof(item.Type),
+                        item: item.Type,
+                        fieldIndex: (int)Enchantment_FieldIndex.Type,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Enchantment_FieldIndex.ChargeAmount) ?? true))
+                {
+                    UInt32XmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.ChargeAmount),
+                        item: item.ChargeAmount,
+                        fieldIndex: (int)Enchantment_FieldIndex.ChargeAmount,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Enchantment_FieldIndex.EnchantCost) ?? true))
+                {
+                    UInt32XmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.EnchantCost),
+                        item: item.EnchantCost,
+                        fieldIndex: (int)Enchantment_FieldIndex.EnchantCost,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Enchantment_FieldIndex.Flags) ?? true))
+                {
+                    EnumXmlTranslation<Enchantment.Flag>.Instance.Write(
+                        node: node,
+                        name: nameof(item.Flags),
+                        item: item.Flags,
+                        fieldIndex: (int)Enchantment_FieldIndex.Flags,
+                        errorMask: errorMask);
+                }
             }
             if (item.Effects.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)Enchantment_FieldIndex.Effects) ?? true))

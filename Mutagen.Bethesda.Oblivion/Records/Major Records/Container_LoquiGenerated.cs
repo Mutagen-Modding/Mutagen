@@ -2451,23 +2451,26 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     );
             }
-            if ((translationMask?.GetShouldTranslate((int)Container_FieldIndex.Flags) ?? true))
+            if (item.DATADataTypeState.HasFlag(Container.DATADataType.Has))
             {
-                EnumXmlTranslation<Container.ContainerFlag>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Flags),
-                    item: item.Flags,
-                    fieldIndex: (int)Container_FieldIndex.Flags,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Container_FieldIndex.Weight) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Weight),
-                    item: item.Weight,
-                    fieldIndex: (int)Container_FieldIndex.Weight,
-                    errorMask: errorMask);
+                if ((translationMask?.GetShouldTranslate((int)Container_FieldIndex.Flags) ?? true))
+                {
+                    EnumXmlTranslation<Container.ContainerFlag>.Instance.Write(
+                        node: node,
+                        name: nameof(item.Flags),
+                        item: item.Flags,
+                        fieldIndex: (int)Container_FieldIndex.Flags,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Container_FieldIndex.Weight) ?? true))
+                {
+                    FloatXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.Weight),
+                        item: item.Weight,
+                        fieldIndex: (int)Container_FieldIndex.Weight,
+                        errorMask: errorMask);
+                }
             }
             if (item.OpenSound_Property.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)Container_FieldIndex.OpenSound) ?? true))

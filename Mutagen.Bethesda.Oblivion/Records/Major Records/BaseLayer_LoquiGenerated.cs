@@ -1711,32 +1711,35 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
         {
-            if ((translationMask?.GetShouldTranslate((int)BaseLayer_FieldIndex.Texture) ?? true))
+            if (item.BTXTDataTypeState.HasFlag(BaseLayer.BTXTDataType.Has))
             {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Texture),
-                    item: item.Texture_Property?.FormKey,
-                    fieldIndex: (int)BaseLayer_FieldIndex.Texture,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)BaseLayer_FieldIndex.Quadrant) ?? true))
-            {
-                EnumXmlTranslation<AlphaLayer.QuadrantEnum>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Quadrant),
-                    item: item.Quadrant,
-                    fieldIndex: (int)BaseLayer_FieldIndex.Quadrant,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)BaseLayer_FieldIndex.LayerNumber) ?? true))
-            {
-                UInt16XmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.LayerNumber),
-                    item: item.LayerNumber,
-                    fieldIndex: (int)BaseLayer_FieldIndex.LayerNumber,
-                    errorMask: errorMask);
+                if ((translationMask?.GetShouldTranslate((int)BaseLayer_FieldIndex.Texture) ?? true))
+                {
+                    FormKeyXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.Texture),
+                        item: item.Texture_Property?.FormKey,
+                        fieldIndex: (int)BaseLayer_FieldIndex.Texture,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)BaseLayer_FieldIndex.Quadrant) ?? true))
+                {
+                    EnumXmlTranslation<AlphaLayer.QuadrantEnum>.Instance.Write(
+                        node: node,
+                        name: nameof(item.Quadrant),
+                        item: item.Quadrant,
+                        fieldIndex: (int)BaseLayer_FieldIndex.Quadrant,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)BaseLayer_FieldIndex.LayerNumber) ?? true))
+                {
+                    UInt16XmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.LayerNumber),
+                        item: item.LayerNumber,
+                        fieldIndex: (int)BaseLayer_FieldIndex.LayerNumber,
+                        errorMask: errorMask);
+                }
             }
         }
 

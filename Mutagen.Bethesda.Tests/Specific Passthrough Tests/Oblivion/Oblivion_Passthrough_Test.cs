@@ -20,6 +20,7 @@ namespace Mutagen.Bethesda.Tests
         public string FilePath { get; set; }
         public ModKey ModKey { get; }
         public byte NumMasters { get; }
+        public string ProcessedPath(TempFolder tmp) => Path.Combine(tmp.Dir.Path, $"{this.Nickname}_Processed");
         private PassthroughSettings settings;
 
         public Oblivion_Passthrough_Test(PassthroughSettings settings, Passthrough passthrough)
@@ -1161,7 +1162,7 @@ namespace Mutagen.Bethesda.Tests
         private void ProcessFormIDList(
             BinaryReadStream stream,
             BinaryFileProcessor.Config instr,
-            RecordType recordType, 
+            RecordType recordType,
             string str,
             RangeInt64 loc,
             byte numMasters)
@@ -1340,112 +1341,123 @@ namespace Mutagen.Bethesda.Tests
         }
         #endregion
 
+        public async Task<TempFolder> SetupProcessedFiles()
+        {
+            var tmp = new TempFolder(new DirectoryInfo(Path.Combine(Path.GetTempPath(), $"Mutagen_Binary_Tests/{Nickname}")), deleteAfter: settings.DeleteCachesAfter);
+
+            var outputPath = Path.Combine(tmp.Dir.Path, $"{this.Nickname}_NormalExport");
+            var observableOutputPath = Path.Combine(tmp.Dir.Path, $"{this.Nickname}_ObservableExport");
+            var uncompressedPath = Path.Combine(tmp.Dir.Path, $"{this.Nickname}_Uncompressed");
+            var alignedPath = Path.Combine(tmp.Dir.Path, $"{this.Nickname}_Aligned");
+            var orderedPath = Path.Combine(tmp.Dir.Path, $"{this.Nickname}_Ordered");
+            var preprocessedPath = alignedPath;
+            var processedPath = ProcessedPath(tmp);
+
+            if (!settings.ReuseCaches || !File.Exists(uncompressedPath))
+            {
+                using (var outStream = new FileStream(uncompressedPath, FileMode.Create, FileAccess.Write))
+                {
+                    ModDecompressor.Decompress(
+                        streamCreator: () => File.OpenRead(this.FilePath),
+                        outputStream: outStream);
+                }
+            }
+
+            if (!settings.ReuseCaches || !File.Exists(orderedPath))
+            {
+                using (var outStream = new FileStream(orderedPath, FileMode.Create))
+                {
+                    ModRecordSorter.Sort(
+                        streamCreator: () => File.OpenRead(uncompressedPath),
+                        outputStream: outStream);
+                }
+            }
+
+            await ImportExport(
+                settings: settings,
+                tmp: tmp,
+                inputPath: orderedPath,
+                outputPathStraight: outputPath,
+                outputPathObservable: observableOutputPath);
+
+            if (!settings.ReuseCaches || !File.Exists(alignedPath))
+            {
+                ModRecordAligner.Align(
+                    inputPath: orderedPath,
+                    outputPath: alignedPath,
+                    alignmentRules: GetAlignmentRules(),
+                    temp: tmp);
+            }
+
+            BinaryFileProcessor.Config instructions;
+            if (!settings.ReuseCaches || !File.Exists(processedPath))
+            {
+                var alignedFileLocs = RecordLocator.GetFileLocations(preprocessedPath);
+
+                Dictionary<long, uint> lengthTracker = new Dictionary<long, uint>();
+
+                using (var reader = new BinaryReadStream(preprocessedPath))
+                {
+                    foreach (var grup in alignedFileLocs.GrupLocations.And(alignedFileLocs.ListedRecords.Keys))
+                    {
+                        reader.Position = grup + 4;
+                        lengthTracker[grup] = reader.ReadUInt32();
+                    }
+                }
+
+                instructions = GetInstructions(
+                    lengthTracker,
+                    alignedFileLocs);
+
+                using (var stream = new BinaryReadStream(preprocessedPath))
+                {
+                    foreach (var rec in RecordLocator.GetFileLocations(this.FilePath).ListedRecords)
+                    {
+                        AddDynamicProcessorInstructions(
+                            stream: stream,
+                            formID: rec.Value.FormID,
+                            recType: rec.Value.Record,
+                            instr: instructions,
+                            loc: alignedFileLocs[rec.Value.FormID],
+                            fileLocs: alignedFileLocs,
+                            lengthTracker: lengthTracker,
+                            numMasters: this.NumMasters);
+                    }
+                }
+
+                using (var reader = new BinaryReadStream(preprocessedPath))
+                {
+                    foreach (var grup in lengthTracker)
+                    {
+                        reader.Position = grup.Key + 4;
+                        if (grup.Value == reader.ReadUInt32()) continue;
+                        instructions.SetSubstitution(
+                            loc: grup.Key + 4,
+                            sub: BitConverter.GetBytes(grup.Value));
+                    }
+                }
+
+                using (var processor = new BinaryFileProcessor(
+                    new FileStream(preprocessedPath, FileMode.Open, FileAccess.Read),
+                    instructions))
+                {
+                    using (var outStream = new FileStream(processedPath, FileMode.Create, FileAccess.Write))
+                    {
+                        processor.CopyTo(outStream);
+                    }
+                }
+            }
+
+            return tmp;
+        }
+
         public async Task BinaryPassthroughTest()
         {
-            using (var tmp = new TempFolder(new DirectoryInfo(Path.Combine(Path.GetTempPath(), $"Mutagen_Binary_Tests/{Nickname}")), deleteAfter: settings.DeleteCachesAfter))
+            using (var tmp = await SetupProcessedFiles())
             {
                 var outputPath = Path.Combine(tmp.Dir.Path, $"{this.Nickname}_NormalExport");
+                var processedPath = ProcessedPath(tmp);
                 var observableOutputPath = Path.Combine(tmp.Dir.Path, $"{this.Nickname}_ObservableExport");
-                var uncompressedPath = Path.Combine(tmp.Dir.Path, $"{this.Nickname}_Uncompressed");
-                var alignedPath = Path.Combine(tmp.Dir.Path, $"{this.Nickname}_Aligned");
-                var orderedPath = Path.Combine(tmp.Dir.Path, $"{this.Nickname}_Ordered");
-                var preprocessedPath = alignedPath;
-                var processedPath = Path.Combine(tmp.Dir.Path, $"{this.Nickname}_Processed");
-
-                if (!settings.ReuseCaches || !File.Exists(uncompressedPath))
-                {
-                    using (var outStream = new FileStream(uncompressedPath, FileMode.Create, FileAccess.Write))
-                    {
-                        ModDecompressor.Decompress(
-                            streamCreator: () => File.OpenRead(this.FilePath),
-                            outputStream: outStream);
-                    }
-                }
-
-                if (!settings.ReuseCaches || !File.Exists(orderedPath))
-                {
-                    using (var outStream = new FileStream(orderedPath, FileMode.Create))
-                    {
-                        ModRecordSorter.Sort(
-                            streamCreator: () => File.OpenRead(uncompressedPath),
-                            outputStream: outStream);
-                    }
-                }
-
-                await ImportExport(
-                    settings: settings,
-                    tmp: tmp,
-                    inputPath: orderedPath,
-                    outputPathStraight: outputPath,
-                    outputPathObservable: observableOutputPath);
-
-                if (!settings.ReuseCaches || !File.Exists(alignedPath))
-                {
-                    ModRecordAligner.Align(
-                        inputPath: orderedPath,
-                        outputPath: alignedPath,
-                        alignmentRules: GetAlignmentRules(),
-                        temp: tmp);
-                }
-
-                BinaryFileProcessor.Config instructions;
-                if (!settings.ReuseCaches || !File.Exists(processedPath))
-                {
-                    var alignedFileLocs = RecordLocator.GetFileLocations(preprocessedPath);
-
-                    Dictionary<long, uint> lengthTracker = new Dictionary<long, uint>();
-
-                    using (var reader = new BinaryReadStream(preprocessedPath))
-                    {
-                        foreach (var grup in alignedFileLocs.GrupLocations.And(alignedFileLocs.ListedRecords.Keys))
-                        {
-                            reader.Position = grup + 4;
-                            lengthTracker[grup] = reader.ReadUInt32();
-                        }
-                    }
-
-                    instructions = GetInstructions(
-                        lengthTracker,
-                        alignedFileLocs);
-
-                    using (var stream = new BinaryReadStream(preprocessedPath))
-                    {
-                        foreach (var rec in RecordLocator.GetFileLocations(this.FilePath).ListedRecords)
-                        {
-                            AddDynamicProcessorInstructions(
-                                stream: stream,
-                                formID: rec.Value.FormID,
-                                recType: rec.Value.Record,
-                                instr: instructions,
-                                loc: alignedFileLocs[rec.Value.FormID],
-                                fileLocs: alignedFileLocs,
-                                lengthTracker: lengthTracker,
-                                numMasters: this.NumMasters);
-                        }
-                    }
-
-                    using (var reader = new BinaryReadStream(preprocessedPath))
-                    {
-                        foreach (var grup in lengthTracker)
-                        {
-                            reader.Position = grup.Key + 4;
-                            if (grup.Value == reader.ReadUInt32()) continue;
-                            instructions.SetSubstitution(
-                                loc: grup.Key + 4,
-                                sub: BitConverter.GetBytes(grup.Value));
-                        }
-                    }
-
-                    using (var processor = new BinaryFileProcessor(
-                        new FileStream(preprocessedPath, FileMode.Open, FileAccess.Read),
-                        instructions))
-                    {
-                        using (var outStream = new FileStream(processedPath, FileMode.Create, FileAccess.Write))
-                        {
-                            processor.CopyTo(outStream);
-                        }
-                    }
-                }
 
                 if (settings.TestNormal)
                 {

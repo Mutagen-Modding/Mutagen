@@ -2948,23 +2948,26 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)PlacedNPC_FieldIndex.Scale,
                     errorMask: errorMask);
             }
-            if ((translationMask?.GetShouldTranslate((int)PlacedNPC_FieldIndex.Position) ?? true))
+            if (item.DATADataTypeState.HasFlag(PlacedNPC.DATADataType.Has))
             {
-                P3FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Position),
-                    item: item.Position,
-                    fieldIndex: (int)PlacedNPC_FieldIndex.Position,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)PlacedNPC_FieldIndex.Rotation) ?? true))
-            {
-                P3FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Rotation),
-                    item: item.Rotation,
-                    fieldIndex: (int)PlacedNPC_FieldIndex.Rotation,
-                    errorMask: errorMask);
+                if ((translationMask?.GetShouldTranslate((int)PlacedNPC_FieldIndex.Position) ?? true))
+                {
+                    P3FloatXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.Position),
+                        item: item.Position,
+                        fieldIndex: (int)PlacedNPC_FieldIndex.Position,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)PlacedNPC_FieldIndex.Rotation) ?? true))
+                {
+                    P3FloatXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.Rotation),
+                        item: item.Rotation,
+                        fieldIndex: (int)PlacedNPC_FieldIndex.Rotation,
+                        errorMask: errorMask);
+                }
             }
         }
 

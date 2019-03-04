@@ -454,6 +454,7 @@ namespace Mutagen.Bethesda.Oblivion
             var ret = new MagicEffect();
             try
             {
+                ret.DATADataTypeState |= MagicEffect.DATADataType.Break0;
                 foreach (var elem in node.Elements())
                 {
                     FillPrivateElement_Xml(
@@ -3175,96 +3176,102 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)MagicEffect_FieldIndex.Model));
             }
-            if ((translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.Flags) ?? true))
+            if (item.DATADataTypeState.HasFlag(MagicEffect.DATADataType.Has))
             {
-                EnumXmlTranslation<MagicEffect.MagicFlag>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Flags),
-                    item: item.Flags,
-                    fieldIndex: (int)MagicEffect_FieldIndex.Flags,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.BaseCost) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.BaseCost),
-                    item: item.BaseCost,
-                    fieldIndex: (int)MagicEffect_FieldIndex.BaseCost,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.Unused) ?? true))
-            {
-                ByteArrayXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Unused),
-                    item: item.Unused,
-                    fieldIndex: (int)MagicEffect_FieldIndex.Unused,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.MagicSchool) ?? true))
-            {
-                EnumXmlTranslation<MagicSchool>.Instance.Write(
-                    node: node,
-                    name: nameof(item.MagicSchool),
-                    item: item.MagicSchool,
-                    fieldIndex: (int)MagicEffect_FieldIndex.MagicSchool,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.Resistance) ?? true))
-            {
-                EnumXmlTranslation<Resistance>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Resistance),
-                    item: item.Resistance,
-                    fieldIndex: (int)MagicEffect_FieldIndex.Resistance,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.CounterEffectCount) ?? true))
-            {
-                UInt32XmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.CounterEffectCount),
-                    item: item.CounterEffectCount,
-                    fieldIndex: (int)MagicEffect_FieldIndex.CounterEffectCount,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.Light) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Light),
-                    item: item.Light_Property?.FormKey,
-                    fieldIndex: (int)MagicEffect_FieldIndex.Light,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.ProjectileSpeed) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.ProjectileSpeed),
-                    item: item.ProjectileSpeed,
-                    fieldIndex: (int)MagicEffect_FieldIndex.ProjectileSpeed,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.EffectShader) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.EffectShader),
-                    item: item.EffectShader_Property?.FormKey,
-                    fieldIndex: (int)MagicEffect_FieldIndex.EffectShader,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.SubData) ?? true))
-            {
-                LoquiXmlTranslation<MagicEffectSubData>.Instance.Write(
-                    node: node,
-                    item: item.SubData,
-                    name: nameof(item.SubData),
-                    fieldIndex: (int)MagicEffect_FieldIndex.SubData,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)MagicEffect_FieldIndex.SubData));
+                if ((translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.Flags) ?? true))
+                {
+                    EnumXmlTranslation<MagicEffect.MagicFlag>.Instance.Write(
+                        node: node,
+                        name: nameof(item.Flags),
+                        item: item.Flags,
+                        fieldIndex: (int)MagicEffect_FieldIndex.Flags,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.BaseCost) ?? true))
+                {
+                    FloatXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.BaseCost),
+                        item: item.BaseCost,
+                        fieldIndex: (int)MagicEffect_FieldIndex.BaseCost,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.Unused) ?? true))
+                {
+                    ByteArrayXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.Unused),
+                        item: item.Unused,
+                        fieldIndex: (int)MagicEffect_FieldIndex.Unused,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.MagicSchool) ?? true))
+                {
+                    EnumXmlTranslation<MagicSchool>.Instance.Write(
+                        node: node,
+                        name: nameof(item.MagicSchool),
+                        item: item.MagicSchool,
+                        fieldIndex: (int)MagicEffect_FieldIndex.MagicSchool,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.Resistance) ?? true))
+                {
+                    EnumXmlTranslation<Resistance>.Instance.Write(
+                        node: node,
+                        name: nameof(item.Resistance),
+                        item: item.Resistance,
+                        fieldIndex: (int)MagicEffect_FieldIndex.Resistance,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.CounterEffectCount) ?? true))
+                {
+                    UInt32XmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.CounterEffectCount),
+                        item: item.CounterEffectCount,
+                        fieldIndex: (int)MagicEffect_FieldIndex.CounterEffectCount,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.Light) ?? true))
+                {
+                    FormKeyXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.Light),
+                        item: item.Light_Property?.FormKey,
+                        fieldIndex: (int)MagicEffect_FieldIndex.Light,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.ProjectileSpeed) ?? true))
+                {
+                    FloatXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.ProjectileSpeed),
+                        item: item.ProjectileSpeed,
+                        fieldIndex: (int)MagicEffect_FieldIndex.ProjectileSpeed,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.EffectShader) ?? true))
+                {
+                    FormKeyXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.EffectShader),
+                        item: item.EffectShader_Property?.FormKey,
+                        fieldIndex: (int)MagicEffect_FieldIndex.EffectShader,
+                        errorMask: errorMask);
+                }
+                if (!item.DATADataTypeState.HasFlag(MagicEffect.DATADataType.Break0))
+                {
+                    if ((translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.SubData) ?? true))
+                    {
+                        LoquiXmlTranslation<MagicEffectSubData>.Instance.Write(
+                            node: node,
+                            item: item.SubData,
+                            name: nameof(item.SubData),
+                            fieldIndex: (int)MagicEffect_FieldIndex.SubData,
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)MagicEffect_FieldIndex.SubData));
+                    }
+                }
             }
             if (item.CounterEffects.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.CounterEffects) ?? true))
@@ -3649,6 +3656,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         errorMask?.PopIndex();
                     }
+                    item.DATADataTypeState &= ~MagicEffect.DATADataType.Break0;
                     break;
                 case "CounterEffects":
                     try

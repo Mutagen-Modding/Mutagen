@@ -3125,77 +3125,80 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)Weapon_FieldIndex.EnchantmentPoints,
                     errorMask: errorMask);
             }
-            if ((translationMask?.GetShouldTranslate((int)Weapon_FieldIndex.Type) ?? true))
+            if (item.DATADataTypeState.HasFlag(Weapon.DATADataType.Has))
             {
-                EnumXmlTranslation<Weapon.WeaponType>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Type),
-                    item: item.Type,
-                    fieldIndex: (int)Weapon_FieldIndex.Type,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Weapon_FieldIndex.Speed) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Speed),
-                    item: item.Speed,
-                    fieldIndex: (int)Weapon_FieldIndex.Speed,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Weapon_FieldIndex.Reach) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Reach),
-                    item: item.Reach,
-                    fieldIndex: (int)Weapon_FieldIndex.Reach,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Weapon_FieldIndex.Flags) ?? true))
-            {
-                EnumXmlTranslation<Weapon.WeaponFlag>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Flags),
-                    item: item.Flags,
-                    fieldIndex: (int)Weapon_FieldIndex.Flags,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Weapon_FieldIndex.Value) ?? true))
-            {
-                UInt32XmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Value),
-                    item: item.Value,
-                    fieldIndex: (int)Weapon_FieldIndex.Value,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Weapon_FieldIndex.Health) ?? true))
-            {
-                UInt32XmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Health),
-                    item: item.Health,
-                    fieldIndex: (int)Weapon_FieldIndex.Health,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Weapon_FieldIndex.Weight) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Weight),
-                    item: item.Weight,
-                    fieldIndex: (int)Weapon_FieldIndex.Weight,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Weapon_FieldIndex.Damage) ?? true))
-            {
-                UInt16XmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Damage),
-                    item: item.Damage,
-                    fieldIndex: (int)Weapon_FieldIndex.Damage,
-                    errorMask: errorMask);
+                if ((translationMask?.GetShouldTranslate((int)Weapon_FieldIndex.Type) ?? true))
+                {
+                    EnumXmlTranslation<Weapon.WeaponType>.Instance.Write(
+                        node: node,
+                        name: nameof(item.Type),
+                        item: item.Type,
+                        fieldIndex: (int)Weapon_FieldIndex.Type,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Weapon_FieldIndex.Speed) ?? true))
+                {
+                    FloatXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.Speed),
+                        item: item.Speed,
+                        fieldIndex: (int)Weapon_FieldIndex.Speed,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Weapon_FieldIndex.Reach) ?? true))
+                {
+                    FloatXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.Reach),
+                        item: item.Reach,
+                        fieldIndex: (int)Weapon_FieldIndex.Reach,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Weapon_FieldIndex.Flags) ?? true))
+                {
+                    EnumXmlTranslation<Weapon.WeaponFlag>.Instance.Write(
+                        node: node,
+                        name: nameof(item.Flags),
+                        item: item.Flags,
+                        fieldIndex: (int)Weapon_FieldIndex.Flags,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Weapon_FieldIndex.Value) ?? true))
+                {
+                    UInt32XmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.Value),
+                        item: item.Value,
+                        fieldIndex: (int)Weapon_FieldIndex.Value,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Weapon_FieldIndex.Health) ?? true))
+                {
+                    UInt32XmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.Health),
+                        item: item.Health,
+                        fieldIndex: (int)Weapon_FieldIndex.Health,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Weapon_FieldIndex.Weight) ?? true))
+                {
+                    FloatXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.Weight),
+                        item: item.Weight,
+                        fieldIndex: (int)Weapon_FieldIndex.Weight,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Weapon_FieldIndex.Damage) ?? true))
+                {
+                    UInt16XmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.Damage),
+                        item: item.Damage,
+                        fieldIndex: (int)Weapon_FieldIndex.Damage,
+                        errorMask: errorMask);
+                }
             }
         }
 

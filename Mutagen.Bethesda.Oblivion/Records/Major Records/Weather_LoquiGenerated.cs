@@ -5199,284 +5199,293 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     );
             }
-            if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.FogDayNear) ?? true))
+            if (item.FNAMDataTypeState.HasFlag(Weather.FNAMDataType.Has))
             {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.FogDayNear),
-                    item: item.FogDayNear,
-                    fieldIndex: (int)Weather_FieldIndex.FogDayNear,
-                    errorMask: errorMask);
+                if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.FogDayNear) ?? true))
+                {
+                    FloatXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.FogDayNear),
+                        item: item.FogDayNear,
+                        fieldIndex: (int)Weather_FieldIndex.FogDayNear,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.FogDayFar) ?? true))
+                {
+                    FloatXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.FogDayFar),
+                        item: item.FogDayFar,
+                        fieldIndex: (int)Weather_FieldIndex.FogDayFar,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.FogNightNear) ?? true))
+                {
+                    FloatXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.FogNightNear),
+                        item: item.FogNightNear,
+                        fieldIndex: (int)Weather_FieldIndex.FogNightNear,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.FogNightFar) ?? true))
+                {
+                    FloatXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.FogNightFar),
+                        item: item.FogNightFar,
+                        fieldIndex: (int)Weather_FieldIndex.FogNightFar,
+                        errorMask: errorMask);
+                }
             }
-            if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.FogDayFar) ?? true))
+            if (item.HNAMDataTypeState.HasFlag(Weather.HNAMDataType.Has))
             {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.FogDayFar),
-                    item: item.FogDayFar,
-                    fieldIndex: (int)Weather_FieldIndex.FogDayFar,
-                    errorMask: errorMask);
+                if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.HdrEyeAdaptSpeed) ?? true))
+                {
+                    FloatXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.HdrEyeAdaptSpeed),
+                        item: item.HdrEyeAdaptSpeed,
+                        fieldIndex: (int)Weather_FieldIndex.HdrEyeAdaptSpeed,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.HdrBlurRadius) ?? true))
+                {
+                    FloatXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.HdrBlurRadius),
+                        item: item.HdrBlurRadius,
+                        fieldIndex: (int)Weather_FieldIndex.HdrBlurRadius,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.HdrBlurPasses) ?? true))
+                {
+                    FloatXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.HdrBlurPasses),
+                        item: item.HdrBlurPasses,
+                        fieldIndex: (int)Weather_FieldIndex.HdrBlurPasses,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.HdrEmissiveMult) ?? true))
+                {
+                    FloatXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.HdrEmissiveMult),
+                        item: item.HdrEmissiveMult,
+                        fieldIndex: (int)Weather_FieldIndex.HdrEmissiveMult,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.HdrTargetLum) ?? true))
+                {
+                    FloatXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.HdrTargetLum),
+                        item: item.HdrTargetLum,
+                        fieldIndex: (int)Weather_FieldIndex.HdrTargetLum,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.HdrUpperLumClamp) ?? true))
+                {
+                    FloatXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.HdrUpperLumClamp),
+                        item: item.HdrUpperLumClamp,
+                        fieldIndex: (int)Weather_FieldIndex.HdrUpperLumClamp,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.HdrBrightScale) ?? true))
+                {
+                    FloatXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.HdrBrightScale),
+                        item: item.HdrBrightScale,
+                        fieldIndex: (int)Weather_FieldIndex.HdrBrightScale,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.HdrBrightClamp) ?? true))
+                {
+                    FloatXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.HdrBrightClamp),
+                        item: item.HdrBrightClamp,
+                        fieldIndex: (int)Weather_FieldIndex.HdrBrightClamp,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.HdrLumRampNoTex) ?? true))
+                {
+                    FloatXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.HdrLumRampNoTex),
+                        item: item.HdrLumRampNoTex,
+                        fieldIndex: (int)Weather_FieldIndex.HdrLumRampNoTex,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.HdrLumRampMin) ?? true))
+                {
+                    FloatXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.HdrLumRampMin),
+                        item: item.HdrLumRampMin,
+                        fieldIndex: (int)Weather_FieldIndex.HdrLumRampMin,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.HdrLumRampMax) ?? true))
+                {
+                    FloatXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.HdrLumRampMax),
+                        item: item.HdrLumRampMax,
+                        fieldIndex: (int)Weather_FieldIndex.HdrLumRampMax,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.HdrSunlightDimmer) ?? true))
+                {
+                    FloatXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.HdrSunlightDimmer),
+                        item: item.HdrSunlightDimmer,
+                        fieldIndex: (int)Weather_FieldIndex.HdrSunlightDimmer,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.HdrGrassDimmer) ?? true))
+                {
+                    FloatXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.HdrGrassDimmer),
+                        item: item.HdrGrassDimmer,
+                        fieldIndex: (int)Weather_FieldIndex.HdrGrassDimmer,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.HdrTreeDimmer) ?? true))
+                {
+                    FloatXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.HdrTreeDimmer),
+                        item: item.HdrTreeDimmer,
+                        fieldIndex: (int)Weather_FieldIndex.HdrTreeDimmer,
+                        errorMask: errorMask);
+                }
             }
-            if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.FogNightNear) ?? true))
+            if (item.DATADataTypeState.HasFlag(Weather.DATADataType.Has))
             {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.FogNightNear),
-                    item: item.FogNightNear,
-                    fieldIndex: (int)Weather_FieldIndex.FogNightNear,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.FogNightFar) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.FogNightFar),
-                    item: item.FogNightFar,
-                    fieldIndex: (int)Weather_FieldIndex.FogNightFar,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.HdrEyeAdaptSpeed) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.HdrEyeAdaptSpeed),
-                    item: item.HdrEyeAdaptSpeed,
-                    fieldIndex: (int)Weather_FieldIndex.HdrEyeAdaptSpeed,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.HdrBlurRadius) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.HdrBlurRadius),
-                    item: item.HdrBlurRadius,
-                    fieldIndex: (int)Weather_FieldIndex.HdrBlurRadius,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.HdrBlurPasses) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.HdrBlurPasses),
-                    item: item.HdrBlurPasses,
-                    fieldIndex: (int)Weather_FieldIndex.HdrBlurPasses,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.HdrEmissiveMult) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.HdrEmissiveMult),
-                    item: item.HdrEmissiveMult,
-                    fieldIndex: (int)Weather_FieldIndex.HdrEmissiveMult,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.HdrTargetLum) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.HdrTargetLum),
-                    item: item.HdrTargetLum,
-                    fieldIndex: (int)Weather_FieldIndex.HdrTargetLum,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.HdrUpperLumClamp) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.HdrUpperLumClamp),
-                    item: item.HdrUpperLumClamp,
-                    fieldIndex: (int)Weather_FieldIndex.HdrUpperLumClamp,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.HdrBrightScale) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.HdrBrightScale),
-                    item: item.HdrBrightScale,
-                    fieldIndex: (int)Weather_FieldIndex.HdrBrightScale,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.HdrBrightClamp) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.HdrBrightClamp),
-                    item: item.HdrBrightClamp,
-                    fieldIndex: (int)Weather_FieldIndex.HdrBrightClamp,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.HdrLumRampNoTex) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.HdrLumRampNoTex),
-                    item: item.HdrLumRampNoTex,
-                    fieldIndex: (int)Weather_FieldIndex.HdrLumRampNoTex,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.HdrLumRampMin) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.HdrLumRampMin),
-                    item: item.HdrLumRampMin,
-                    fieldIndex: (int)Weather_FieldIndex.HdrLumRampMin,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.HdrLumRampMax) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.HdrLumRampMax),
-                    item: item.HdrLumRampMax,
-                    fieldIndex: (int)Weather_FieldIndex.HdrLumRampMax,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.HdrSunlightDimmer) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.HdrSunlightDimmer),
-                    item: item.HdrSunlightDimmer,
-                    fieldIndex: (int)Weather_FieldIndex.HdrSunlightDimmer,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.HdrGrassDimmer) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.HdrGrassDimmer),
-                    item: item.HdrGrassDimmer,
-                    fieldIndex: (int)Weather_FieldIndex.HdrGrassDimmer,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.HdrTreeDimmer) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.HdrTreeDimmer),
-                    item: item.HdrTreeDimmer,
-                    fieldIndex: (int)Weather_FieldIndex.HdrTreeDimmer,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.WindSpeed) ?? true))
-            {
-                ByteXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.WindSpeed),
-                    item: item.WindSpeed,
-                    fieldIndex: (int)Weather_FieldIndex.WindSpeed,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.CloudSpeedLower) ?? true))
-            {
-                ByteXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.CloudSpeedLower),
-                    item: item.CloudSpeedLower,
-                    fieldIndex: (int)Weather_FieldIndex.CloudSpeedLower,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.CloudSpeedUpper) ?? true))
-            {
-                ByteXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.CloudSpeedUpper),
-                    item: item.CloudSpeedUpper,
-                    fieldIndex: (int)Weather_FieldIndex.CloudSpeedUpper,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.TransDelta) ?? true))
-            {
-                ByteXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.TransDelta),
-                    item: item.TransDelta,
-                    fieldIndex: (int)Weather_FieldIndex.TransDelta,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.SunGlare) ?? true))
-            {
-                ByteXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.SunGlare),
-                    item: item.SunGlare,
-                    fieldIndex: (int)Weather_FieldIndex.SunGlare,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.SunDamage) ?? true))
-            {
-                ByteXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.SunDamage),
-                    item: item.SunDamage,
-                    fieldIndex: (int)Weather_FieldIndex.SunDamage,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.PrecipitationBeginFadeIn) ?? true))
-            {
-                ByteXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.PrecipitationBeginFadeIn),
-                    item: item.PrecipitationBeginFadeIn,
-                    fieldIndex: (int)Weather_FieldIndex.PrecipitationBeginFadeIn,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.PrecipitationEndFadeOut) ?? true))
-            {
-                ByteXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.PrecipitationEndFadeOut),
-                    item: item.PrecipitationEndFadeOut,
-                    fieldIndex: (int)Weather_FieldIndex.PrecipitationEndFadeOut,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.ThunderLightningBeginFadeIn) ?? true))
-            {
-                ByteXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.ThunderLightningBeginFadeIn),
-                    item: item.ThunderLightningBeginFadeIn,
-                    fieldIndex: (int)Weather_FieldIndex.ThunderLightningBeginFadeIn,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.ThunderLightningEndFadeOut) ?? true))
-            {
-                ByteXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.ThunderLightningEndFadeOut),
-                    item: item.ThunderLightningEndFadeOut,
-                    fieldIndex: (int)Weather_FieldIndex.ThunderLightningEndFadeOut,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.ThunderLightningFrequency) ?? true))
-            {
-                ByteXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.ThunderLightningFrequency),
-                    item: item.ThunderLightningFrequency,
-                    fieldIndex: (int)Weather_FieldIndex.ThunderLightningFrequency,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.Classification) ?? true))
-            {
-                EnumXmlTranslation<Weather.WeatherClassification>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Classification),
-                    item: item.Classification,
-                    fieldIndex: (int)Weather_FieldIndex.Classification,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.LightningColor) ?? true))
-            {
-                ColorXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.LightningColor),
-                    item: item.LightningColor,
-                    fieldIndex: (int)Weather_FieldIndex.LightningColor,
-                    errorMask: errorMask);
+                if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.WindSpeed) ?? true))
+                {
+                    ByteXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.WindSpeed),
+                        item: item.WindSpeed,
+                        fieldIndex: (int)Weather_FieldIndex.WindSpeed,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.CloudSpeedLower) ?? true))
+                {
+                    ByteXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.CloudSpeedLower),
+                        item: item.CloudSpeedLower,
+                        fieldIndex: (int)Weather_FieldIndex.CloudSpeedLower,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.CloudSpeedUpper) ?? true))
+                {
+                    ByteXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.CloudSpeedUpper),
+                        item: item.CloudSpeedUpper,
+                        fieldIndex: (int)Weather_FieldIndex.CloudSpeedUpper,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.TransDelta) ?? true))
+                {
+                    ByteXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.TransDelta),
+                        item: item.TransDelta,
+                        fieldIndex: (int)Weather_FieldIndex.TransDelta,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.SunGlare) ?? true))
+                {
+                    ByteXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.SunGlare),
+                        item: item.SunGlare,
+                        fieldIndex: (int)Weather_FieldIndex.SunGlare,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.SunDamage) ?? true))
+                {
+                    ByteXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.SunDamage),
+                        item: item.SunDamage,
+                        fieldIndex: (int)Weather_FieldIndex.SunDamage,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.PrecipitationBeginFadeIn) ?? true))
+                {
+                    ByteXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.PrecipitationBeginFadeIn),
+                        item: item.PrecipitationBeginFadeIn,
+                        fieldIndex: (int)Weather_FieldIndex.PrecipitationBeginFadeIn,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.PrecipitationEndFadeOut) ?? true))
+                {
+                    ByteXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.PrecipitationEndFadeOut),
+                        item: item.PrecipitationEndFadeOut,
+                        fieldIndex: (int)Weather_FieldIndex.PrecipitationEndFadeOut,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.ThunderLightningBeginFadeIn) ?? true))
+                {
+                    ByteXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.ThunderLightningBeginFadeIn),
+                        item: item.ThunderLightningBeginFadeIn,
+                        fieldIndex: (int)Weather_FieldIndex.ThunderLightningBeginFadeIn,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.ThunderLightningEndFadeOut) ?? true))
+                {
+                    ByteXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.ThunderLightningEndFadeOut),
+                        item: item.ThunderLightningEndFadeOut,
+                        fieldIndex: (int)Weather_FieldIndex.ThunderLightningEndFadeOut,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.ThunderLightningFrequency) ?? true))
+                {
+                    ByteXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.ThunderLightningFrequency),
+                        item: item.ThunderLightningFrequency,
+                        fieldIndex: (int)Weather_FieldIndex.ThunderLightningFrequency,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.Classification) ?? true))
+                {
+                    EnumXmlTranslation<Weather.WeatherClassification>.Instance.Write(
+                        node: node,
+                        name: nameof(item.Classification),
+                        item: item.Classification,
+                        fieldIndex: (int)Weather_FieldIndex.Classification,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.LightningColor) ?? true))
+                {
+                    ColorXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.LightningColor),
+                        item: item.LightningColor,
+                        fieldIndex: (int)Weather_FieldIndex.LightningColor,
+                        errorMask: errorMask);
+                }
             }
             if (item.Sounds.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)Weather_FieldIndex.Sounds) ?? true))

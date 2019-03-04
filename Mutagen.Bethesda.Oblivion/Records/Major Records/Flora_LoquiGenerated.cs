@@ -2376,41 +2376,44 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)Flora_FieldIndex.Ingredient,
                     errorMask: errorMask);
             }
-            if ((translationMask?.GetShouldTranslate((int)Flora_FieldIndex.Spring) ?? true))
+            if (item.PFPCDataTypeState.HasFlag(Flora.PFPCDataType.Has))
             {
-                ByteXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Spring),
-                    item: item.Spring,
-                    fieldIndex: (int)Flora_FieldIndex.Spring,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Flora_FieldIndex.Summer) ?? true))
-            {
-                ByteXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Summer),
-                    item: item.Summer,
-                    fieldIndex: (int)Flora_FieldIndex.Summer,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Flora_FieldIndex.Fall) ?? true))
-            {
-                ByteXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Fall),
-                    item: item.Fall,
-                    fieldIndex: (int)Flora_FieldIndex.Fall,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Flora_FieldIndex.Winter) ?? true))
-            {
-                ByteXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Winter),
-                    item: item.Winter,
-                    fieldIndex: (int)Flora_FieldIndex.Winter,
-                    errorMask: errorMask);
+                if ((translationMask?.GetShouldTranslate((int)Flora_FieldIndex.Spring) ?? true))
+                {
+                    ByteXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.Spring),
+                        item: item.Spring,
+                        fieldIndex: (int)Flora_FieldIndex.Spring,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Flora_FieldIndex.Summer) ?? true))
+                {
+                    ByteXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.Summer),
+                        item: item.Summer,
+                        fieldIndex: (int)Flora_FieldIndex.Summer,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Flora_FieldIndex.Fall) ?? true))
+                {
+                    ByteXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.Fall),
+                        item: item.Fall,
+                        fieldIndex: (int)Flora_FieldIndex.Fall,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Flora_FieldIndex.Winter) ?? true))
+                {
+                    ByteXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.Winter),
+                        item: item.Winter,
+                        fieldIndex: (int)Flora_FieldIndex.Winter,
+                        errorMask: errorMask);
+                }
             }
         }
 

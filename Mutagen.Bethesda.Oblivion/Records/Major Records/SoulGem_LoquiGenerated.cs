@@ -2583,23 +2583,26 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)SoulGem_FieldIndex.Script,
                     errorMask: errorMask);
             }
-            if ((translationMask?.GetShouldTranslate((int)SoulGem_FieldIndex.Value) ?? true))
+            if (item.DATADataTypeState.HasFlag(SoulGem.DATADataType.Has))
             {
-                UInt32XmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Value),
-                    item: item.Value,
-                    fieldIndex: (int)SoulGem_FieldIndex.Value,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)SoulGem_FieldIndex.Weight) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Weight),
-                    item: item.Weight,
-                    fieldIndex: (int)SoulGem_FieldIndex.Weight,
-                    errorMask: errorMask);
+                if ((translationMask?.GetShouldTranslate((int)SoulGem_FieldIndex.Value) ?? true))
+                {
+                    UInt32XmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.Value),
+                        item: item.Value,
+                        fieldIndex: (int)SoulGem_FieldIndex.Value,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)SoulGem_FieldIndex.Weight) ?? true))
+                {
+                    FloatXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.Weight),
+                        item: item.Weight,
+                        fieldIndex: (int)SoulGem_FieldIndex.Weight,
+                        errorMask: errorMask);
+                }
             }
             if (item.ContainedSoul_IsSet
                 && (translationMask?.GetShouldTranslate((int)SoulGem_FieldIndex.ContainedSoul) ?? true))

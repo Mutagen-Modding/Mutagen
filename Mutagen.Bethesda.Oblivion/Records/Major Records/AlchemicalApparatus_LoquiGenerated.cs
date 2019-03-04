@@ -2491,41 +2491,44 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)AlchemicalApparatus_FieldIndex.Script,
                     errorMask: errorMask);
             }
-            if ((translationMask?.GetShouldTranslate((int)AlchemicalApparatus_FieldIndex.Type) ?? true))
+            if (item.DATADataTypeState.HasFlag(AlchemicalApparatus.DATADataType.Has))
             {
-                EnumXmlTranslation<AlchemicalApparatus.ApparatusType>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Type),
-                    item: item.Type,
-                    fieldIndex: (int)AlchemicalApparatus_FieldIndex.Type,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)AlchemicalApparatus_FieldIndex.Value) ?? true))
-            {
-                UInt32XmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Value),
-                    item: item.Value,
-                    fieldIndex: (int)AlchemicalApparatus_FieldIndex.Value,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)AlchemicalApparatus_FieldIndex.Weight) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Weight),
-                    item: item.Weight,
-                    fieldIndex: (int)AlchemicalApparatus_FieldIndex.Weight,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)AlchemicalApparatus_FieldIndex.Quality) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Quality),
-                    item: item.Quality,
-                    fieldIndex: (int)AlchemicalApparatus_FieldIndex.Quality,
-                    errorMask: errorMask);
+                if ((translationMask?.GetShouldTranslate((int)AlchemicalApparatus_FieldIndex.Type) ?? true))
+                {
+                    EnumXmlTranslation<AlchemicalApparatus.ApparatusType>.Instance.Write(
+                        node: node,
+                        name: nameof(item.Type),
+                        item: item.Type,
+                        fieldIndex: (int)AlchemicalApparatus_FieldIndex.Type,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)AlchemicalApparatus_FieldIndex.Value) ?? true))
+                {
+                    UInt32XmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.Value),
+                        item: item.Value,
+                        fieldIndex: (int)AlchemicalApparatus_FieldIndex.Value,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)AlchemicalApparatus_FieldIndex.Weight) ?? true))
+                {
+                    FloatXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.Weight),
+                        item: item.Weight,
+                        fieldIndex: (int)AlchemicalApparatus_FieldIndex.Weight,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)AlchemicalApparatus_FieldIndex.Quality) ?? true))
+                {
+                    FloatXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.Quality),
+                        item: item.Quality,
+                        fieldIndex: (int)AlchemicalApparatus_FieldIndex.Quality,
+                        errorMask: errorMask);
+                }
             }
         }
 

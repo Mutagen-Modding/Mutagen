@@ -2561,95 +2561,98 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)Grass_FieldIndex.Model));
             }
-            if ((translationMask?.GetShouldTranslate((int)Grass_FieldIndex.Density) ?? true))
+            if (item.DATADataTypeState.HasFlag(Grass.DATADataType.Has))
             {
-                ByteXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Density),
-                    item: item.Density,
-                    fieldIndex: (int)Grass_FieldIndex.Density,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Grass_FieldIndex.MinSlope) ?? true))
-            {
-                ByteXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.MinSlope),
-                    item: item.MinSlope,
-                    fieldIndex: (int)Grass_FieldIndex.MinSlope,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Grass_FieldIndex.MaxSlope) ?? true))
-            {
-                ByteXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.MaxSlope),
-                    item: item.MaxSlope,
-                    fieldIndex: (int)Grass_FieldIndex.MaxSlope,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Grass_FieldIndex.UnitFromWaterAmount) ?? true))
-            {
-                UInt16XmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.UnitFromWaterAmount),
-                    item: item.UnitFromWaterAmount,
-                    fieldIndex: (int)Grass_FieldIndex.UnitFromWaterAmount,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Grass_FieldIndex.UnitFromWaterMode) ?? true))
-            {
-                EnumXmlTranslation<Grass.UnitFromWaterType>.Instance.Write(
-                    node: node,
-                    name: nameof(item.UnitFromWaterMode),
-                    item: item.UnitFromWaterMode,
-                    fieldIndex: (int)Grass_FieldIndex.UnitFromWaterMode,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Grass_FieldIndex.PositionRange) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.PositionRange),
-                    item: item.PositionRange,
-                    fieldIndex: (int)Grass_FieldIndex.PositionRange,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Grass_FieldIndex.HeightRange) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.HeightRange),
-                    item: item.HeightRange,
-                    fieldIndex: (int)Grass_FieldIndex.HeightRange,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Grass_FieldIndex.ColorRange) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.ColorRange),
-                    item: item.ColorRange,
-                    fieldIndex: (int)Grass_FieldIndex.ColorRange,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Grass_FieldIndex.WavePeriod) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.WavePeriod),
-                    item: item.WavePeriod,
-                    fieldIndex: (int)Grass_FieldIndex.WavePeriod,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Grass_FieldIndex.Flags) ?? true))
-            {
-                EnumXmlTranslation<Grass.GrassFlag>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Flags),
-                    item: item.Flags,
-                    fieldIndex: (int)Grass_FieldIndex.Flags,
-                    errorMask: errorMask);
+                if ((translationMask?.GetShouldTranslate((int)Grass_FieldIndex.Density) ?? true))
+                {
+                    ByteXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.Density),
+                        item: item.Density,
+                        fieldIndex: (int)Grass_FieldIndex.Density,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Grass_FieldIndex.MinSlope) ?? true))
+                {
+                    ByteXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.MinSlope),
+                        item: item.MinSlope,
+                        fieldIndex: (int)Grass_FieldIndex.MinSlope,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Grass_FieldIndex.MaxSlope) ?? true))
+                {
+                    ByteXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.MaxSlope),
+                        item: item.MaxSlope,
+                        fieldIndex: (int)Grass_FieldIndex.MaxSlope,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Grass_FieldIndex.UnitFromWaterAmount) ?? true))
+                {
+                    UInt16XmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.UnitFromWaterAmount),
+                        item: item.UnitFromWaterAmount,
+                        fieldIndex: (int)Grass_FieldIndex.UnitFromWaterAmount,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Grass_FieldIndex.UnitFromWaterMode) ?? true))
+                {
+                    EnumXmlTranslation<Grass.UnitFromWaterType>.Instance.Write(
+                        node: node,
+                        name: nameof(item.UnitFromWaterMode),
+                        item: item.UnitFromWaterMode,
+                        fieldIndex: (int)Grass_FieldIndex.UnitFromWaterMode,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Grass_FieldIndex.PositionRange) ?? true))
+                {
+                    FloatXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.PositionRange),
+                        item: item.PositionRange,
+                        fieldIndex: (int)Grass_FieldIndex.PositionRange,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Grass_FieldIndex.HeightRange) ?? true))
+                {
+                    FloatXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.HeightRange),
+                        item: item.HeightRange,
+                        fieldIndex: (int)Grass_FieldIndex.HeightRange,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Grass_FieldIndex.ColorRange) ?? true))
+                {
+                    FloatXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.ColorRange),
+                        item: item.ColorRange,
+                        fieldIndex: (int)Grass_FieldIndex.ColorRange,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Grass_FieldIndex.WavePeriod) ?? true))
+                {
+                    FloatXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.WavePeriod),
+                        item: item.WavePeriod,
+                        fieldIndex: (int)Grass_FieldIndex.WavePeriod,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Grass_FieldIndex.Flags) ?? true))
+                {
+                    EnumXmlTranslation<Grass.GrassFlag>.Instance.Write(
+                        node: node,
+                        name: nameof(item.Flags),
+                        item: item.Flags,
+                        fieldIndex: (int)Grass_FieldIndex.Flags,
+                        errorMask: errorMask);
+                }
             }
         }
 

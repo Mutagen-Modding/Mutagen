@@ -2856,95 +2856,101 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     );
             }
-            if ((translationMask?.GetShouldTranslate((int)Tree_FieldIndex.LeafCurvature) ?? true))
+            if (item.CNAMDataTypeState.HasFlag(Tree.CNAMDataType.Has))
             {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.LeafCurvature),
-                    item: item.LeafCurvature,
-                    fieldIndex: (int)Tree_FieldIndex.LeafCurvature,
-                    errorMask: errorMask);
+                if ((translationMask?.GetShouldTranslate((int)Tree_FieldIndex.LeafCurvature) ?? true))
+                {
+                    FloatXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.LeafCurvature),
+                        item: item.LeafCurvature,
+                        fieldIndex: (int)Tree_FieldIndex.LeafCurvature,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Tree_FieldIndex.MinimumLeafAngle) ?? true))
+                {
+                    FloatXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.MinimumLeafAngle),
+                        item: item.MinimumLeafAngle,
+                        fieldIndex: (int)Tree_FieldIndex.MinimumLeafAngle,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Tree_FieldIndex.MaximumLeafAngle) ?? true))
+                {
+                    FloatXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.MaximumLeafAngle),
+                        item: item.MaximumLeafAngle,
+                        fieldIndex: (int)Tree_FieldIndex.MaximumLeafAngle,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Tree_FieldIndex.BranchDimmingValue) ?? true))
+                {
+                    FloatXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.BranchDimmingValue),
+                        item: item.BranchDimmingValue,
+                        fieldIndex: (int)Tree_FieldIndex.BranchDimmingValue,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Tree_FieldIndex.LeafDimmingValue) ?? true))
+                {
+                    FloatXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.LeafDimmingValue),
+                        item: item.LeafDimmingValue,
+                        fieldIndex: (int)Tree_FieldIndex.LeafDimmingValue,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Tree_FieldIndex.ShadowRadius) ?? true))
+                {
+                    Int32XmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.ShadowRadius),
+                        item: item.ShadowRadius,
+                        fieldIndex: (int)Tree_FieldIndex.ShadowRadius,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Tree_FieldIndex.RockingSpeed) ?? true))
+                {
+                    FloatXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.RockingSpeed),
+                        item: item.RockingSpeed,
+                        fieldIndex: (int)Tree_FieldIndex.RockingSpeed,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Tree_FieldIndex.RustleSpeed) ?? true))
+                {
+                    FloatXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.RustleSpeed),
+                        item: item.RustleSpeed,
+                        fieldIndex: (int)Tree_FieldIndex.RustleSpeed,
+                        errorMask: errorMask);
+                }
             }
-            if ((translationMask?.GetShouldTranslate((int)Tree_FieldIndex.MinimumLeafAngle) ?? true))
+            if (item.BNAMDataTypeState.HasFlag(Tree.BNAMDataType.Has))
             {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.MinimumLeafAngle),
-                    item: item.MinimumLeafAngle,
-                    fieldIndex: (int)Tree_FieldIndex.MinimumLeafAngle,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Tree_FieldIndex.MaximumLeafAngle) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.MaximumLeafAngle),
-                    item: item.MaximumLeafAngle,
-                    fieldIndex: (int)Tree_FieldIndex.MaximumLeafAngle,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Tree_FieldIndex.BranchDimmingValue) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.BranchDimmingValue),
-                    item: item.BranchDimmingValue,
-                    fieldIndex: (int)Tree_FieldIndex.BranchDimmingValue,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Tree_FieldIndex.LeafDimmingValue) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.LeafDimmingValue),
-                    item: item.LeafDimmingValue,
-                    fieldIndex: (int)Tree_FieldIndex.LeafDimmingValue,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Tree_FieldIndex.ShadowRadius) ?? true))
-            {
-                Int32XmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.ShadowRadius),
-                    item: item.ShadowRadius,
-                    fieldIndex: (int)Tree_FieldIndex.ShadowRadius,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Tree_FieldIndex.RockingSpeed) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.RockingSpeed),
-                    item: item.RockingSpeed,
-                    fieldIndex: (int)Tree_FieldIndex.RockingSpeed,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Tree_FieldIndex.RustleSpeed) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.RustleSpeed),
-                    item: item.RustleSpeed,
-                    fieldIndex: (int)Tree_FieldIndex.RustleSpeed,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Tree_FieldIndex.BillboardWidth) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.BillboardWidth),
-                    item: item.BillboardWidth,
-                    fieldIndex: (int)Tree_FieldIndex.BillboardWidth,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Tree_FieldIndex.BillboardHeight) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.BillboardHeight),
-                    item: item.BillboardHeight,
-                    fieldIndex: (int)Tree_FieldIndex.BillboardHeight,
-                    errorMask: errorMask);
+                if ((translationMask?.GetShouldTranslate((int)Tree_FieldIndex.BillboardWidth) ?? true))
+                {
+                    FloatXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.BillboardWidth),
+                        item: item.BillboardWidth,
+                        fieldIndex: (int)Tree_FieldIndex.BillboardWidth,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Tree_FieldIndex.BillboardHeight) ?? true))
+                {
+                    FloatXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.BillboardHeight),
+                        item: item.BillboardHeight,
+                        fieldIndex: (int)Tree_FieldIndex.BillboardHeight,
+                        errorMask: errorMask);
+                }
             }
         }
 

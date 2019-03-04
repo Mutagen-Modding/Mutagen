@@ -2611,23 +2611,26 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)PlacedCreature_FieldIndex.Scale,
                     errorMask: errorMask);
             }
-            if ((translationMask?.GetShouldTranslate((int)PlacedCreature_FieldIndex.Position) ?? true))
+            if (item.DATADataTypeState.HasFlag(PlacedCreature.DATADataType.Has))
             {
-                P3FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Position),
-                    item: item.Position,
-                    fieldIndex: (int)PlacedCreature_FieldIndex.Position,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)PlacedCreature_FieldIndex.Rotation) ?? true))
-            {
-                P3FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Rotation),
-                    item: item.Rotation,
-                    fieldIndex: (int)PlacedCreature_FieldIndex.Rotation,
-                    errorMask: errorMask);
+                if ((translationMask?.GetShouldTranslate((int)PlacedCreature_FieldIndex.Position) ?? true))
+                {
+                    P3FloatXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.Position),
+                        item: item.Position,
+                        fieldIndex: (int)PlacedCreature_FieldIndex.Position,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)PlacedCreature_FieldIndex.Rotation) ?? true))
+                {
+                    P3FloatXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.Rotation),
+                        item: item.Rotation,
+                        fieldIndex: (int)PlacedCreature_FieldIndex.Rotation,
+                        errorMask: errorMask);
+                }
             }
         }
 

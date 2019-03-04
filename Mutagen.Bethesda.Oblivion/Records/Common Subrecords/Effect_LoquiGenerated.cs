@@ -2169,59 +2169,62 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
         {
-            if ((translationMask?.GetShouldTranslate((int)Effect_FieldIndex.MagicEffect) ?? true))
+            if (item.EFITDataTypeState.HasFlag(Effect.EFITDataType.Has))
             {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.MagicEffect),
-                    item: item.MagicEffect_Property?.FormKey,
-                    fieldIndex: (int)Effect_FieldIndex.MagicEffect,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Effect_FieldIndex.Magnitude) ?? true))
-            {
-                UInt32XmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Magnitude),
-                    item: item.Magnitude,
-                    fieldIndex: (int)Effect_FieldIndex.Magnitude,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Effect_FieldIndex.Area) ?? true))
-            {
-                UInt32XmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Area),
-                    item: item.Area,
-                    fieldIndex: (int)Effect_FieldIndex.Area,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Effect_FieldIndex.Duration) ?? true))
-            {
-                UInt32XmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Duration),
-                    item: item.Duration,
-                    fieldIndex: (int)Effect_FieldIndex.Duration,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Effect_FieldIndex.Type) ?? true))
-            {
-                EnumXmlTranslation<Effect.EffectType>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Type),
-                    item: item.Type,
-                    fieldIndex: (int)Effect_FieldIndex.Type,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Effect_FieldIndex.ActorValue) ?? true))
-            {
-                EnumXmlTranslation<ActorValueExtended>.Instance.Write(
-                    node: node,
-                    name: nameof(item.ActorValue),
-                    item: item.ActorValue,
-                    fieldIndex: (int)Effect_FieldIndex.ActorValue,
-                    errorMask: errorMask);
+                if ((translationMask?.GetShouldTranslate((int)Effect_FieldIndex.MagicEffect) ?? true))
+                {
+                    FormKeyXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.MagicEffect),
+                        item: item.MagicEffect_Property?.FormKey,
+                        fieldIndex: (int)Effect_FieldIndex.MagicEffect,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Effect_FieldIndex.Magnitude) ?? true))
+                {
+                    UInt32XmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.Magnitude),
+                        item: item.Magnitude,
+                        fieldIndex: (int)Effect_FieldIndex.Magnitude,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Effect_FieldIndex.Area) ?? true))
+                {
+                    UInt32XmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.Area),
+                        item: item.Area,
+                        fieldIndex: (int)Effect_FieldIndex.Area,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Effect_FieldIndex.Duration) ?? true))
+                {
+                    UInt32XmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.Duration),
+                        item: item.Duration,
+                        fieldIndex: (int)Effect_FieldIndex.Duration,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Effect_FieldIndex.Type) ?? true))
+                {
+                    EnumXmlTranslation<Effect.EffectType>.Instance.Write(
+                        node: node,
+                        name: nameof(item.Type),
+                        item: item.Type,
+                        fieldIndex: (int)Effect_FieldIndex.Type,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Effect_FieldIndex.ActorValue) ?? true))
+                {
+                    EnumXmlTranslation<ActorValueExtended>.Instance.Write(
+                        node: node,
+                        name: nameof(item.ActorValue),
+                        item: item.ActorValue,
+                        fieldIndex: (int)Effect_FieldIndex.ActorValue,
+                        errorMask: errorMask);
+                }
             }
             if (item.ScriptEffect_IsSet
                 && (translationMask?.GetShouldTranslate((int)Effect_FieldIndex.ScriptEffect) ?? true))

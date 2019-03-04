@@ -2125,41 +2125,44 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
-            if ((translationMask?.GetShouldTranslate((int)SpellUnleveled_FieldIndex.Type) ?? true))
+            if (item.SPITDataTypeState.HasFlag(SpellUnleveled.SPITDataType.Has))
             {
-                EnumXmlTranslation<Spell.SpellType>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Type),
-                    item: item.Type,
-                    fieldIndex: (int)SpellUnleveled_FieldIndex.Type,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)SpellUnleveled_FieldIndex.Cost) ?? true))
-            {
-                UInt32XmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Cost),
-                    item: item.Cost,
-                    fieldIndex: (int)SpellUnleveled_FieldIndex.Cost,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)SpellUnleveled_FieldIndex.Level) ?? true))
-            {
-                EnumXmlTranslation<Spell.SpellLevel>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Level),
-                    item: item.Level,
-                    fieldIndex: (int)SpellUnleveled_FieldIndex.Level,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)SpellUnleveled_FieldIndex.Flag) ?? true))
-            {
-                EnumXmlTranslation<Spell.SpellFlag>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Flag),
-                    item: item.Flag,
-                    fieldIndex: (int)SpellUnleveled_FieldIndex.Flag,
-                    errorMask: errorMask);
+                if ((translationMask?.GetShouldTranslate((int)SpellUnleveled_FieldIndex.Type) ?? true))
+                {
+                    EnumXmlTranslation<Spell.SpellType>.Instance.Write(
+                        node: node,
+                        name: nameof(item.Type),
+                        item: item.Type,
+                        fieldIndex: (int)SpellUnleveled_FieldIndex.Type,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)SpellUnleveled_FieldIndex.Cost) ?? true))
+                {
+                    UInt32XmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.Cost),
+                        item: item.Cost,
+                        fieldIndex: (int)SpellUnleveled_FieldIndex.Cost,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)SpellUnleveled_FieldIndex.Level) ?? true))
+                {
+                    EnumXmlTranslation<Spell.SpellLevel>.Instance.Write(
+                        node: node,
+                        name: nameof(item.Level),
+                        item: item.Level,
+                        fieldIndex: (int)SpellUnleveled_FieldIndex.Level,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)SpellUnleveled_FieldIndex.Flag) ?? true))
+                {
+                    EnumXmlTranslation<Spell.SpellFlag>.Instance.Write(
+                        node: node,
+                        name: nameof(item.Flag),
+                        item: item.Flag,
+                        fieldIndex: (int)SpellUnleveled_FieldIndex.Flag,
+                        errorMask: errorMask);
+                }
             }
             if (item.Effects.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)SpellUnleveled_FieldIndex.Effects) ?? true))

@@ -1705,32 +1705,35 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
-            if ((translationMask?.GetShouldTranslate((int)Subspace_FieldIndex.X) ?? true))
+            if (item.DNAMDataTypeState.HasFlag(Subspace.DNAMDataType.Has))
             {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.X),
-                    item: item.X,
-                    fieldIndex: (int)Subspace_FieldIndex.X,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Subspace_FieldIndex.Y) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Y),
-                    item: item.Y,
-                    fieldIndex: (int)Subspace_FieldIndex.Y,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Subspace_FieldIndex.Z) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Z),
-                    item: item.Z,
-                    fieldIndex: (int)Subspace_FieldIndex.Z,
-                    errorMask: errorMask);
+                if ((translationMask?.GetShouldTranslate((int)Subspace_FieldIndex.X) ?? true))
+                {
+                    FloatXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.X),
+                        item: item.X,
+                        fieldIndex: (int)Subspace_FieldIndex.X,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Subspace_FieldIndex.Y) ?? true))
+                {
+                    FloatXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.Y),
+                        item: item.Y,
+                        fieldIndex: (int)Subspace_FieldIndex.Y,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Subspace_FieldIndex.Z) ?? true))
+                {
+                    FloatXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.Z),
+                        item: item.Z,
+                        fieldIndex: (int)Subspace_FieldIndex.Z,
+                        errorMask: errorMask);
+                }
             }
         }
 

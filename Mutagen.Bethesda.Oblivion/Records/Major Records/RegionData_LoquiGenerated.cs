@@ -1500,32 +1500,35 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
         {
-            if ((translationMask?.GetShouldTranslate((int)RegionData_FieldIndex.DataType) ?? true))
+            if (item.RDATDataTypeState.HasFlag(RegionData.RDATDataType.Has))
             {
-                EnumXmlTranslation<RegionData.RegionDataType>.Instance.Write(
-                    node: node,
-                    name: nameof(item.DataType),
-                    item: item.DataType,
-                    fieldIndex: (int)RegionData_FieldIndex.DataType,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)RegionData_FieldIndex.Flags) ?? true))
-            {
-                EnumXmlTranslation<RegionData.RegionDataFlag>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Flags),
-                    item: item.Flags,
-                    fieldIndex: (int)RegionData_FieldIndex.Flags,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)RegionData_FieldIndex.Priority) ?? true))
-            {
-                ByteXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Priority),
-                    item: item.Priority,
-                    fieldIndex: (int)RegionData_FieldIndex.Priority,
-                    errorMask: errorMask);
+                if ((translationMask?.GetShouldTranslate((int)RegionData_FieldIndex.DataType) ?? true))
+                {
+                    EnumXmlTranslation<RegionData.RegionDataType>.Instance.Write(
+                        node: node,
+                        name: nameof(item.DataType),
+                        item: item.DataType,
+                        fieldIndex: (int)RegionData_FieldIndex.DataType,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)RegionData_FieldIndex.Flags) ?? true))
+                {
+                    EnumXmlTranslation<RegionData.RegionDataFlag>.Instance.Write(
+                        node: node,
+                        name: nameof(item.Flags),
+                        item: item.Flags,
+                        fieldIndex: (int)RegionData_FieldIndex.Flags,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)RegionData_FieldIndex.Priority) ?? true))
+                {
+                    ByteXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.Priority),
+                        item: item.Priority,
+                        fieldIndex: (int)RegionData_FieldIndex.Priority,
+                        errorMask: errorMask);
+                }
             }
         }
 

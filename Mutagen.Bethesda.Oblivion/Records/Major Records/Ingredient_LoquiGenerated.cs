@@ -2607,23 +2607,26 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)Ingredient_FieldIndex.Weight,
                     errorMask: errorMask);
             }
-            if ((translationMask?.GetShouldTranslate((int)Ingredient_FieldIndex.Value) ?? true))
+            if (item.ENITDataTypeState.HasFlag(Ingredient.ENITDataType.Has))
             {
-                UInt32XmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Value),
-                    item: item.Value,
-                    fieldIndex: (int)Ingredient_FieldIndex.Value,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Ingredient_FieldIndex.Flags) ?? true))
-            {
-                EnumXmlTranslation<IngredientFlag>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Flags),
-                    item: item.Flags,
-                    fieldIndex: (int)Ingredient_FieldIndex.Flags,
-                    errorMask: errorMask);
+                if ((translationMask?.GetShouldTranslate((int)Ingredient_FieldIndex.Value) ?? true))
+                {
+                    UInt32XmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.Value),
+                        item: item.Value,
+                        fieldIndex: (int)Ingredient_FieldIndex.Value,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Ingredient_FieldIndex.Flags) ?? true))
+                {
+                    EnumXmlTranslation<IngredientFlag>.Instance.Write(
+                        node: node,
+                        name: nameof(item.Flags),
+                        item: item.Flags,
+                        fieldIndex: (int)Ingredient_FieldIndex.Flags,
+                        errorMask: errorMask);
+                }
             }
             if (item.Effects.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)Ingredient_FieldIndex.Effects) ?? true))

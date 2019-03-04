@@ -19,7 +19,7 @@ namespace Mutagen.Bethesda.Generation
 
         static void GenerateRecords()
         { 
-            LoquiGenerator gen = new LoquiGenerator()
+            LoquiGenerator gen = new LoquiGenerator(typical: false)
             {
                 RaisePropertyChangedDefault = false,
                 NotifyingDefault = NotifyingType.ReactiveUI,
@@ -27,6 +27,12 @@ namespace Mutagen.Bethesda.Generation
                 HasBeenSetDefault = true,
                 ToStringDefault = false,
             };
+            gen.AddTypicalTypeAssociations();
+            gen.XmlTranslation = new MutagenXmlModule(gen);
+            gen.Add(gen.XmlTranslation);
+            gen.Add(gen.MaskModule);
+            gen.Add(gen.ObjectCentralizationModule);
+            gen.Add(new ReactiveModule());
             gen.Namespaces.Add("Mutagen.Bethesda.Internals");
             gen.XmlTranslation.ShouldGenerateXSD = false;
             gen.XmlTranslation.ExportWithIGetter = false;

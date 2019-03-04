@@ -355,6 +355,7 @@ namespace Mutagen.Bethesda.Oblivion
             var ret = new Class();
             try
             {
+                ret.DATADataTypeState |= Class.DATADataType.Break0;
                 foreach (var elem in node.Elements())
                 {
                     FillPrivateElement_Xml(
@@ -2508,80 +2509,86 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)Class_FieldIndex.Icon,
                     errorMask: errorMask);
             }
-            if ((translationMask?.GetShouldTranslate((int)Class_FieldIndex.PrimaryAttributes) ?? true))
+            if (item.DATADataTypeState.HasFlag(Class.DATADataType.Has))
             {
-                ListXmlTranslation<ActorValue>.Instance.Write(
-                    node: node,
-                    name: nameof(item.PrimaryAttributes),
-                    item: item.PrimaryAttributes,
-                    fieldIndex: (int)Class_FieldIndex.PrimaryAttributes,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Class_FieldIndex.PrimaryAttributes),
-                    transl: (XElement subNode, ActorValue subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
+                if ((translationMask?.GetShouldTranslate((int)Class_FieldIndex.PrimaryAttributes) ?? true))
+                {
+                    ListXmlTranslation<ActorValue>.Instance.Write(
+                        node: node,
+                        name: nameof(item.PrimaryAttributes),
+                        item: item.PrimaryAttributes,
+                        fieldIndex: (int)Class_FieldIndex.PrimaryAttributes,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)Class_FieldIndex.PrimaryAttributes),
+                        transl: (XElement subNode, ActorValue subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
+                        {
+                            EnumXmlTranslation<ActorValue>.Instance.Write(
+                                node: subNode,
+                                name: null,
+                                item: subItem,
+                                errorMask: listSubMask);
+                        }
+                        );
+                }
+                if ((translationMask?.GetShouldTranslate((int)Class_FieldIndex.Specialization) ?? true))
+                {
+                    EnumXmlTranslation<Class.SpecializationFlag>.Instance.Write(
+                        node: node,
+                        name: nameof(item.Specialization),
+                        item: item.Specialization,
+                        fieldIndex: (int)Class_FieldIndex.Specialization,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Class_FieldIndex.SecondaryAttributes) ?? true))
+                {
+                    ListXmlTranslation<ActorValue>.Instance.Write(
+                        node: node,
+                        name: nameof(item.SecondaryAttributes),
+                        item: item.SecondaryAttributes,
+                        fieldIndex: (int)Class_FieldIndex.SecondaryAttributes,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)Class_FieldIndex.SecondaryAttributes),
+                        transl: (XElement subNode, ActorValue subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
+                        {
+                            EnumXmlTranslation<ActorValue>.Instance.Write(
+                                node: subNode,
+                                name: null,
+                                item: subItem,
+                                errorMask: listSubMask);
+                        }
+                        );
+                }
+                if ((translationMask?.GetShouldTranslate((int)Class_FieldIndex.Flags) ?? true))
+                {
+                    EnumXmlTranslation<ClassFlag>.Instance.Write(
+                        node: node,
+                        name: nameof(item.Flags),
+                        item: item.Flags,
+                        fieldIndex: (int)Class_FieldIndex.Flags,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Class_FieldIndex.ClassServices) ?? true))
+                {
+                    EnumXmlTranslation<ClassService>.Instance.Write(
+                        node: node,
+                        name: nameof(item.ClassServices),
+                        item: item.ClassServices,
+                        fieldIndex: (int)Class_FieldIndex.ClassServices,
+                        errorMask: errorMask);
+                }
+                if (!item.DATADataTypeState.HasFlag(Class.DATADataType.Break0))
+                {
+                    if ((translationMask?.GetShouldTranslate((int)Class_FieldIndex.Training) ?? true))
                     {
-                        EnumXmlTranslation<ActorValue>.Instance.Write(
-                            node: subNode,
-                            name: null,
-                            item: subItem,
-                            errorMask: listSubMask);
+                        LoquiXmlTranslation<ClassTraining>.Instance.Write(
+                            node: node,
+                            item: item.Training,
+                            name: nameof(item.Training),
+                            fieldIndex: (int)Class_FieldIndex.Training,
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)Class_FieldIndex.Training));
                     }
-                    );
-            }
-            if ((translationMask?.GetShouldTranslate((int)Class_FieldIndex.Specialization) ?? true))
-            {
-                EnumXmlTranslation<Class.SpecializationFlag>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Specialization),
-                    item: item.Specialization,
-                    fieldIndex: (int)Class_FieldIndex.Specialization,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Class_FieldIndex.SecondaryAttributes) ?? true))
-            {
-                ListXmlTranslation<ActorValue>.Instance.Write(
-                    node: node,
-                    name: nameof(item.SecondaryAttributes),
-                    item: item.SecondaryAttributes,
-                    fieldIndex: (int)Class_FieldIndex.SecondaryAttributes,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Class_FieldIndex.SecondaryAttributes),
-                    transl: (XElement subNode, ActorValue subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
-                    {
-                        EnumXmlTranslation<ActorValue>.Instance.Write(
-                            node: subNode,
-                            name: null,
-                            item: subItem,
-                            errorMask: listSubMask);
-                    }
-                    );
-            }
-            if ((translationMask?.GetShouldTranslate((int)Class_FieldIndex.Flags) ?? true))
-            {
-                EnumXmlTranslation<ClassFlag>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Flags),
-                    item: item.Flags,
-                    fieldIndex: (int)Class_FieldIndex.Flags,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Class_FieldIndex.ClassServices) ?? true))
-            {
-                EnumXmlTranslation<ClassService>.Instance.Write(
-                    node: node,
-                    name: nameof(item.ClassServices),
-                    item: item.ClassServices,
-                    fieldIndex: (int)Class_FieldIndex.ClassServices,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Class_FieldIndex.Training) ?? true))
-            {
-                LoquiXmlTranslation<ClassTraining>.Instance.Write(
-                    node: node,
-                    item: item.Training,
-                    name: nameof(item.Training),
-                    fieldIndex: (int)Class_FieldIndex.Training,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Class_FieldIndex.Training));
+                }
             }
         }
 
@@ -2857,6 +2864,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         errorMask?.PopIndex();
                     }
+                    item.DATADataTypeState &= ~Class.DATADataType.Break0;
                     break;
                 default:
                     MajorRecordCommon.FillPublicElement_Xml(

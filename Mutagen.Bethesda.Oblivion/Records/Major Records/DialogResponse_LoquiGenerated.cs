@@ -2149,50 +2149,53 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
         {
-            if ((translationMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.Emotion) ?? true))
+            if (item.TRDTDataTypeState.HasFlag(DialogResponse.TRDTDataType.Has))
             {
-                EnumXmlTranslation<EmotionType>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Emotion),
-                    item: item.Emotion,
-                    fieldIndex: (int)DialogResponse_FieldIndex.Emotion,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.EmotionValue) ?? true))
-            {
-                Int32XmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.EmotionValue),
-                    item: item.EmotionValue,
-                    fieldIndex: (int)DialogResponse_FieldIndex.EmotionValue,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.Fluff1) ?? true))
-            {
-                ByteArrayXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Fluff1),
-                    item: item.Fluff1,
-                    fieldIndex: (int)DialogResponse_FieldIndex.Fluff1,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.ResponseNumber) ?? true))
-            {
-                ByteXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.ResponseNumber),
-                    item: item.ResponseNumber,
-                    fieldIndex: (int)DialogResponse_FieldIndex.ResponseNumber,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.Fluff2) ?? true))
-            {
-                ByteArrayXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Fluff2),
-                    item: item.Fluff2,
-                    fieldIndex: (int)DialogResponse_FieldIndex.Fluff2,
-                    errorMask: errorMask);
+                if ((translationMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.Emotion) ?? true))
+                {
+                    EnumXmlTranslation<EmotionType>.Instance.Write(
+                        node: node,
+                        name: nameof(item.Emotion),
+                        item: item.Emotion,
+                        fieldIndex: (int)DialogResponse_FieldIndex.Emotion,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.EmotionValue) ?? true))
+                {
+                    Int32XmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.EmotionValue),
+                        item: item.EmotionValue,
+                        fieldIndex: (int)DialogResponse_FieldIndex.EmotionValue,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.Fluff1) ?? true))
+                {
+                    ByteArrayXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.Fluff1),
+                        item: item.Fluff1,
+                        fieldIndex: (int)DialogResponse_FieldIndex.Fluff1,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.ResponseNumber) ?? true))
+                {
+                    ByteXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.ResponseNumber),
+                        item: item.ResponseNumber,
+                        fieldIndex: (int)DialogResponse_FieldIndex.ResponseNumber,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.Fluff2) ?? true))
+                {
+                    ByteArrayXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.Fluff2),
+                        item: item.Fluff2,
+                        fieldIndex: (int)DialogResponse_FieldIndex.Fluff2,
+                        errorMask: errorMask);
+                }
             }
             if (item.ResponseText_IsSet
                 && (translationMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.ResponseText) ?? true))

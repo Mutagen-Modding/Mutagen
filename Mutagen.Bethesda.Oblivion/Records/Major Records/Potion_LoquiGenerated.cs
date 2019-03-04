@@ -2607,23 +2607,26 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)Potion_FieldIndex.Weight,
                     errorMask: errorMask);
             }
-            if ((translationMask?.GetShouldTranslate((int)Potion_FieldIndex.Value) ?? true))
+            if (item.ENITDataTypeState.HasFlag(Potion.ENITDataType.Has))
             {
-                UInt32XmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Value),
-                    item: item.Value,
-                    fieldIndex: (int)Potion_FieldIndex.Value,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Potion_FieldIndex.Flags) ?? true))
-            {
-                EnumXmlTranslation<IngredientFlag>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Flags),
-                    item: item.Flags,
-                    fieldIndex: (int)Potion_FieldIndex.Flags,
-                    errorMask: errorMask);
+                if ((translationMask?.GetShouldTranslate((int)Potion_FieldIndex.Value) ?? true))
+                {
+                    UInt32XmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.Value),
+                        item: item.Value,
+                        fieldIndex: (int)Potion_FieldIndex.Value,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Potion_FieldIndex.Flags) ?? true))
+                {
+                    EnumXmlTranslation<IngredientFlag>.Instance.Write(
+                        node: node,
+                        name: nameof(item.Flags),
+                        item: item.Flags,
+                        fieldIndex: (int)Potion_FieldIndex.Flags,
+                        errorMask: errorMask);
+                }
             }
             if (item.Effects.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)Potion_FieldIndex.Effects) ?? true))

@@ -239,6 +239,8 @@ namespace Mutagen.Bethesda.Oblivion
             var ret = new ScriptEffect();
             try
             {
+                ret.SCITDataTypeState |= ScriptEffect.SCITDataType.Break0;
+                ret.SCITDataTypeState |= ScriptEffect.SCITDataType.Break1;
                 foreach (var elem in node.Elements())
                 {
                     ScriptEffectCommon.FillPublicElement_Xml(
@@ -1933,41 +1935,50 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
         {
-            if ((translationMask?.GetShouldTranslate((int)ScriptEffect_FieldIndex.Script) ?? true))
+            if (item.SCITDataTypeState.HasFlag(ScriptEffect.SCITDataType.Has))
             {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Script),
-                    item: item.Script_Property?.FormKey,
-                    fieldIndex: (int)ScriptEffect_FieldIndex.Script,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)ScriptEffect_FieldIndex.MagicSchool) ?? true))
-            {
-                EnumXmlTranslation<MagicSchool>.Instance.Write(
-                    node: node,
-                    name: nameof(item.MagicSchool),
-                    item: item.MagicSchool,
-                    fieldIndex: (int)ScriptEffect_FieldIndex.MagicSchool,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)ScriptEffect_FieldIndex.VisualEffect) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.VisualEffect),
-                    item: item.VisualEffect_Property?.FormKey,
-                    fieldIndex: (int)ScriptEffect_FieldIndex.VisualEffect,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)ScriptEffect_FieldIndex.Flags) ?? true))
-            {
-                EnumXmlTranslation<ScriptEffect.Flag>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Flags),
-                    item: item.Flags,
-                    fieldIndex: (int)ScriptEffect_FieldIndex.Flags,
-                    errorMask: errorMask);
+                if ((translationMask?.GetShouldTranslate((int)ScriptEffect_FieldIndex.Script) ?? true))
+                {
+                    FormKeyXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.Script),
+                        item: item.Script_Property?.FormKey,
+                        fieldIndex: (int)ScriptEffect_FieldIndex.Script,
+                        errorMask: errorMask);
+                }
+                if (!item.SCITDataTypeState.HasFlag(ScriptEffect.SCITDataType.Break0))
+                {
+                    if ((translationMask?.GetShouldTranslate((int)ScriptEffect_FieldIndex.MagicSchool) ?? true))
+                    {
+                        EnumXmlTranslation<MagicSchool>.Instance.Write(
+                            node: node,
+                            name: nameof(item.MagicSchool),
+                            item: item.MagicSchool,
+                            fieldIndex: (int)ScriptEffect_FieldIndex.MagicSchool,
+                            errorMask: errorMask);
+                    }
+                    if ((translationMask?.GetShouldTranslate((int)ScriptEffect_FieldIndex.VisualEffect) ?? true))
+                    {
+                        FormKeyXmlTranslation.Instance.Write(
+                            node: node,
+                            name: nameof(item.VisualEffect),
+                            item: item.VisualEffect_Property?.FormKey,
+                            fieldIndex: (int)ScriptEffect_FieldIndex.VisualEffect,
+                            errorMask: errorMask);
+                    }
+                    if (!item.SCITDataTypeState.HasFlag(ScriptEffect.SCITDataType.Break1))
+                    {
+                        if ((translationMask?.GetShouldTranslate((int)ScriptEffect_FieldIndex.Flags) ?? true))
+                        {
+                            EnumXmlTranslation<ScriptEffect.Flag>.Instance.Write(
+                                node: node,
+                                name: nameof(item.Flags),
+                                item: item.Flags,
+                                fieldIndex: (int)ScriptEffect_FieldIndex.Flags,
+                                errorMask: errorMask);
+                        }
+                    }
+                }
             }
             if (item.Name_IsSet
                 && (translationMask?.GetShouldTranslate((int)ScriptEffect_FieldIndex.Name) ?? true))
@@ -2047,6 +2058,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         errorMask?.PopIndex();
                     }
+                    item.SCITDataTypeState &= ~ScriptEffect.SCITDataType.Break0;
                     break;
                 case "VisualEffect":
                     FormKeyXmlTranslation.Instance.ParseInto(
@@ -2080,6 +2092,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         errorMask?.PopIndex();
                     }
+                    item.SCITDataTypeState &= ~ScriptEffect.SCITDataType.Break1;
                     break;
                 case "Name":
                     try
