@@ -1933,7 +1933,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         public static void WriteToNode_Xml(
-            this IMagicEffectSubDataGetter item,
+            this MagicEffectSubData item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)

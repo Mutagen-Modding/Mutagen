@@ -2870,7 +2870,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         public static void WriteToNode_Xml(
-            this ISkillRecordGetter item,
+            this SkillRecord item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)

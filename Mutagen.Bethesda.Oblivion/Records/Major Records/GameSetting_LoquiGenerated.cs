@@ -1149,7 +1149,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         public static void WriteToNode_Xml(
-            this IGameSettingGetter item,
+            this GameSetting item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)

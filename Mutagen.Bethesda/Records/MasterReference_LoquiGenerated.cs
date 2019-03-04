@@ -1602,7 +1602,7 @@ namespace Mutagen.Bethesda.Internals
         #endregion
 
         public static void WriteToNode_Xml(
-            this IMasterReferenceGetter item,
+            this MasterReference item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)

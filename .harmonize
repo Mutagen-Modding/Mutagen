@@ -10,10 +10,10 @@
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>d55a90c0ab6647824bace72e04fe2f8ce6558d4e</Sha>
+         <Sha>fff8457f6d6e8f229c400c5c6c3aa3cbe0359e13</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>02-25-2019 07:50:43</CommitDate>
-         <Description>transfer</Description>
+         <CommitDate>03-03-2019 18:46:54</CommitDate>
+         <Description>XmlTranslationModule.GenerateWriteToNode virtual</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>

@@ -1525,7 +1525,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         public static void WriteToNode_Xml(
-            this IWeatherSoundGetter item,
+            this WeatherSound item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)

@@ -1695,7 +1695,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         public static void WriteToNode_Xml(
-            this ISubspaceGetter item,
+            this Subspace item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)

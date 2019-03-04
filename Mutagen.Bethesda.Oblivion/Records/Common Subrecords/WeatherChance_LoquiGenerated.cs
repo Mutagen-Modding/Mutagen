@@ -1519,7 +1519,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         public static void WriteToNode_Xml(
-            this IWeatherChanceGetter item,
+            this WeatherChance item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)

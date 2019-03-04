@@ -1510,7 +1510,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         public static void WriteToNode_Xml(
-            this ISkillBoostGetter item,
+            this SkillBoost item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)

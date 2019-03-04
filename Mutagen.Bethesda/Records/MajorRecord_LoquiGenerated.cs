@@ -1823,7 +1823,7 @@ namespace Mutagen.Bethesda.Internals
         #endregion
 
         public static void WriteToNode_Xml(
-            this IMajorRecordGetter item,
+            this MajorRecord item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)

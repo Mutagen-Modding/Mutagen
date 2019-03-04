@@ -2120,7 +2120,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         public static void WriteToNode_Xml(
-            this ILeveledCreatureGetter item,
+            this LeveledCreature item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)

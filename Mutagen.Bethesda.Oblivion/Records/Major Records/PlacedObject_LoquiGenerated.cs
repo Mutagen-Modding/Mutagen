@@ -4767,7 +4767,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         public static void WriteToNode_Xml(
-            this IPlacedObjectGetter item,
+            this PlacedObject item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)

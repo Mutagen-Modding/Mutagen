@@ -1830,7 +1830,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         public static void WriteToNode_Xml(
-            this IFacePartGetter item,
+            this FacePart item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)

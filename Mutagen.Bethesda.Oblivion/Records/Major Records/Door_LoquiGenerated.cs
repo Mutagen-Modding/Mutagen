@@ -2395,7 +2395,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         public static void WriteToNode_Xml(
-            this IDoorGetter item,
+            this Door item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)

@@ -1552,7 +1552,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         public static void WriteToNode_Xml(
-            this IRegionDataWeatherGetter item,
+            this RegionDataWeather item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)

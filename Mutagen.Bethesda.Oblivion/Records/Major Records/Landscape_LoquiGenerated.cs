@@ -2282,7 +2282,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         public static void WriteToNode_Xml(
-            this ILandscapeGetter item,
+            this Landscape item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)

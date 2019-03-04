@@ -2540,7 +2540,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         public static void WriteToNode_Xml(
-            this IGrassGetter item,
+            this Grass item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)

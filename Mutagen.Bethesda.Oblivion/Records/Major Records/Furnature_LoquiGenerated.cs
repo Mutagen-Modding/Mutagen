@@ -1972,7 +1972,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         public static void WriteToNode_Xml(
-            this IFurnatureGetter item,
+            this Furnature item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)

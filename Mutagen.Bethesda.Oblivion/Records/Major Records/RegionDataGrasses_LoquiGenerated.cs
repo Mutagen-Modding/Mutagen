@@ -1529,7 +1529,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         public static void WriteToNode_Xml(
-            this IRegionDataGrassesGetter item,
+            this RegionDataGrasses item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)

@@ -3229,7 +3229,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         public static void WriteToNode_Xml(
-            this ICombatStyleAdvancedGetter item,
+            this CombatStyleAdvanced item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)

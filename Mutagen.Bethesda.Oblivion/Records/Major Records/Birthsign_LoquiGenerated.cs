@@ -1971,7 +1971,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         public static void WriteToNode_Xml(
-            this IBirthsignGetter item,
+            this Birthsign item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)

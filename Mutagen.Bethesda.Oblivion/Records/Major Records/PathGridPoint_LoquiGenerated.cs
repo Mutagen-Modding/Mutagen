@@ -1621,7 +1621,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         public static void WriteToNode_Xml(
-            this IPathGridPointGetter item,
+            this PathGridPoint item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)

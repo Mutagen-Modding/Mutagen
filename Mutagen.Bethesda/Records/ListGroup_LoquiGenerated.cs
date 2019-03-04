@@ -1782,7 +1782,7 @@ namespace Mutagen.Bethesda.Internals
         #endregion
 
         public static void WriteToNode_Xml<T>(
-            this IListGroupGetter<T> item,
+            this ListGroup<T> item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)

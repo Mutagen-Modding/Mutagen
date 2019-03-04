@@ -3775,7 +3775,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         public static void WriteToNode_Xml(
-            this ICellGetter item,
+            this Cell item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)

@@ -1904,7 +1904,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         public static void WriteToNode_Xml(
-            this IWorldspaceSubBlockGetter item,
+            this WorldspaceSubBlock item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)

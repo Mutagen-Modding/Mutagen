@@ -1990,7 +1990,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         public static void WriteToNode_Xml<T>(
-            this ILeveledEntryGetter<T> item,
+            this LeveledEntry<T> item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)

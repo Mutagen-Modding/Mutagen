@@ -1525,7 +1525,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         public static void WriteToNode_Xml(
-            this IRaceRelationGetter item,
+            this RaceRelation item,
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
