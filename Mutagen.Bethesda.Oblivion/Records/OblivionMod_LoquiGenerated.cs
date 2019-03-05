@@ -645,6 +645,11 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask: errorMask,
                         translationMask: translationMask);
                 }
+                foreach (var link in ret.Links)
+                {
+                    if (link.Linked) continue;
+                    link.Link(modList: null, sourceMod: ret);
+                }
             }
             catch (Exception ex)
             when (errorMask != null)
@@ -2878,6 +2883,11 @@ namespace Mutagen.Bethesda.Oblivion
                 name: nameof(EffectShaders),
                 errorMask: errorMaskBuilder,
                 index: (int)OblivionMod_FieldIndex.EffectShaders);
+            foreach (var link in ret.Links)
+            {
+                if (link.Linked) continue;
+                link.Link(modList: null, sourceMod: ret);
+            }
             return (ret, null);
         }
         public async Task<OblivionMod_ErrorMask> Write_XmlFolder(

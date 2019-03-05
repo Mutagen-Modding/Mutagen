@@ -224,6 +224,7 @@ namespace Mutagen.Bethesda.Generation
                             }
                         }
                     }
+                    BinaryTranslationModule.GenerateModLinking(obj, fg);
                 }
                 fg.AppendLine("catch (Exception ex)");
                 fg.AppendLine("when (errorMask != null)");

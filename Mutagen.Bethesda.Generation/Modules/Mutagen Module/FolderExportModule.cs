@@ -86,6 +86,7 @@ namespace Mutagen.Bethesda.Generation
                             break;
                     }
                 }
+                BinaryTranslationModule.GenerateModLinking(obj, fg);
                 fg.AppendLine("return (ret, null);");
             }
 

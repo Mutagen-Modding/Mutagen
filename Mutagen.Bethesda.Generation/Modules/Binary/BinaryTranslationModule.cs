@@ -604,7 +604,7 @@ namespace Mutagen.Bethesda.Generation
             }
         }
 
-        private void GenerateModLinking(ObjectGeneration obj, FileGeneration fg)
+        public static void GenerateModLinking(ObjectGeneration obj, FileGeneration fg)
         {
             if (obj.GetObjectType() != ObjectType.Mod) return;
             fg.AppendLine("foreach (var link in ret.Links)");
