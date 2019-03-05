@@ -105,7 +105,8 @@ namespace Mutagen.Bethesda.Tests
                     //    tmp.Dir);
                     //Assert.False(exportMask?.IsInError() ?? false);
                     var reimport = await OblivionMod.Create_Xml_Folder(
-                        tmp.Dir);
+                        dir: tmp.Dir,
+                        modKey: Mutagen.Bethesda.Oblivion.Constants.Oblivion);
                     //var eqMask = reimport.Mod.GetEqualsMask(mod, include: Loqui.EqualsMaskHelper.Include.OnlyFailures);
                     //Assert.True(eqMask.AllEqual(b => b));
                     var reexportPath = Path.Combine(tmp.Dir.Path, "Reexport");

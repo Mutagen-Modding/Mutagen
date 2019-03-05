@@ -44,12 +44,13 @@ namespace Mutagen.Bethesda.Generation
                 $"public static async Task<({obj.Name} Mod, {obj.Mask(MaskType.Error)} ErrorMask)> Create_Xml_Folder"))
             {
                 args.Add("DirectoryPath dir");
+                args.Add("ModKey modKey");
                 args.Add("bool doMasks = true");
             }
             using (new BraceWrapper(fg))
             {
                 fg.AppendLine($"ErrorMaskBuilder errorMaskBuilder = null;");
-                fg.AppendLine($"var ret = new {obj.Name}();");
+                fg.AppendLine($"var ret = new {obj.Name}(modKey);");
                 foreach (var field in obj.IterateFields())
                 {
                     if (!(field is LoquiType loqui))

@@ -2595,10 +2595,11 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static async Task<(OblivionMod Mod, OblivionMod_ErrorMask ErrorMask)> Create_Xml_Folder(
             DirectoryPath dir,
+            ModKey modKey,
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = null;
-            var ret = new OblivionMod();
+            var ret = new OblivionMod(modKey);
             ret.TES4.CopyFieldsFrom(TES4.Create_Xml(
                 path: Path.Combine(dir.Path, "TES4.xml"),
                 errorMask: errorMaskBuilder,
