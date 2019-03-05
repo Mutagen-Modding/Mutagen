@@ -74,7 +74,7 @@ namespace Mutagen.Bethesda.Binary
         {
             this.WriteValue(
                 writer,
-                item.EDID);
+                item.Linked ? item.EDID : EDIDLink<T>.UNLINKED);
         }
 
         public void Write<T>(
