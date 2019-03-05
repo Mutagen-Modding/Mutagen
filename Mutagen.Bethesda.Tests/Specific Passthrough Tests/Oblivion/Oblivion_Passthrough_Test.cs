@@ -22,6 +22,7 @@ namespace Mutagen.Bethesda.Tests
         public byte NumMasters { get; }
         public string ProcessedPath(TempFolder tmp) => Path.Combine(tmp.Dir.Path, $"{this.Nickname}_Processed");
         private PassthroughSettings settings;
+        private HashSet<string> magicEffectEDIDs = new HashSet<string>();
 
         public Oblivion_Passthrough_Test(PassthroughSettings settings, Passthrough passthrough)
         {
@@ -227,6 +228,11 @@ namespace Mutagen.Bethesda.Tests
             ProcessLights(stream, formID, recType, instr, loc, fileLocs, lengthTracker);
             ProcessSpell(stream, formID, recType, instr, loc, fileLocs, numMasters, lengthTracker);
             ProcessMisindexedRecords(stream, formID, instr, loc, numMasters);
+            ProcessMagicEffects(stream, formID, recType, instr, loc, fileLocs, lengthTracker);
+            ProcessEnchantments(stream, formID, recType, instr, loc, fileLocs, lengthTracker);
+            ProcessIngredient(stream, formID, recType, instr, loc, fileLocs, lengthTracker);
+            ProcessPotion(stream, formID, recType, instr, loc, fileLocs, lengthTracker);
+            ProcessSigilStone(stream, formID, recType, instr, loc, fileLocs, lengthTracker);
         }
 
         private void ProcessLengths(
@@ -1157,33 +1163,7 @@ namespace Mutagen.Bethesda.Tests
                     pos: loc.Min + scitIndex + 6,
                     numMasters: numMasters);
             }
-        }
-
-        private void ProcessFormIDList(
-            BinaryReadStream stream,
-            BinaryFileProcessor.Config instr,
-            RecordType recordType,
-            string str,
-            RangeInt64 loc,
-            byte numMasters)
-        {
-            var dataIndex = str.IndexOf(recordType.Type);
-            if (dataIndex != -1)
-            {
-                stream.Position = loc.Min + dataIndex + 4;
-                var len = stream.ReadUInt16();
-                var formIDIndex = stream.Position;
-                while (len > 0)
-                {
-                    ProcessFormID(
-                        stream,
-                        instr,
-                        formIDIndex,
-                        numMasters);
-                    len -= 4;
-                    formIDIndex += 4;
-                }
-            }
+            ProcessEffectsList(stream, formID, recType, instr, loc);
         }
 
         private bool DynamicMove(
@@ -1339,6 +1319,159 @@ namespace Mutagen.Bethesda.Tests
                 index = dataIndex + 4;
             }
         }
+
+        private void LookForMagicEffects(
+            BinaryReadStream stream,
+            FormID formID,
+            RecordType recType,
+            BinaryFileProcessor.Config instr,
+            RangeInt64 loc)
+        {
+            if (!MagicEffect_Registration.MGEF_HEADER.Equals(recType)) return;
+
+            stream.Position = loc.Min;
+            var str = stream.ReadString((int)loc.Width + Constants.RECORD_HEADER_LENGTH);
+
+            var edidIndex = str.IndexOf("EDID");
+            if (edidIndex != -1)
+            {
+                stream.Position = loc.Min + edidIndex;
+                stream.Position += 4;
+                var len = stream.ReadUInt16();
+                var edid = stream.ReadString(len - 1);
+                magicEffectEDIDs.Add(edid);
+            }
+        }
+
+        private void ProcessMagicEDID(
+            BinaryReadStream stream,
+            BinaryFileProcessor.Config instr)
+        {
+            var startLoc = stream.Position;
+            var edid = stream.ReadString(4);
+            if (!magicEffectEDIDs.Contains(edid))
+            {
+                instr.SetSubstitution(
+                    startLoc,
+                    new byte[4]);
+            }
+        }
+
+        private void ProcessMagicEffects(
+            BinaryReadStream stream,
+            FormID formID,
+            RecordType recType,
+            BinaryFileProcessor.Config instr,
+            RangeInt64 loc,
+            RecordLocator.FileLocations fileLocs,
+            Dictionary<long, uint> lengthTracker)
+        {
+            if (!MagicEffect_Registration.MGEF_HEADER.Equals(recType)) return;
+
+            stream.Position = loc.Min;
+            var str = stream.ReadString((int)loc.Width + Constants.RECORD_HEADER_LENGTH);
+
+            var edidForms = str.IndexOf("ESCE");
+            if (edidForms != -1)
+            {
+                stream.Position = loc.Min + edidForms;
+                stream.Position += 4;
+                var len = stream.ReadUInt16();
+                if (len % 4 != 0)
+                {
+                    throw new ArgumentException();
+                }
+                while (len > 0)
+                {
+                    ProcessMagicEDID(
+                        stream,
+                        instr);
+                    len -= 4;
+                }
+            }
+        }
+
+        private void ProcessEffectsList(
+            BinaryReadStream stream,
+            FormID formID,
+            RecordType recType,
+            BinaryFileProcessor.Config instr,
+            RangeInt64 loc)
+        {
+            stream.Position = loc.Min;
+            var str = stream.ReadString((int)loc.Width + Constants.RECORD_HEADER_LENGTH);
+
+            foreach (var index in IterateTypes(str, new RecordType("EFIT")))
+            {
+                stream.Position = loc.Min + index + 6;
+                ProcessMagicEDID(
+                    stream,
+                    instr);
+            }
+
+            foreach (var index in IterateTypes(str, new RecordType("SCIT")))
+            {
+                stream.Position = loc.Min + index + 4;
+                var len = stream.ReadUInt16();
+                if (len <= 4) continue;
+                stream.Position = loc.Min + index + 14;
+                ProcessMagicEDID(
+                    stream,
+                    instr);
+            }
+        }
+
+        private void ProcessEnchantments(
+            BinaryReadStream stream,
+            FormID formID,
+            RecordType recType,
+            BinaryFileProcessor.Config instr,
+            RangeInt64 loc,
+            RecordLocator.FileLocations fileLocs,
+            Dictionary<long, uint> lengthTracker)
+        {
+            if (!Enchantment_Registration.ENCH_HEADER.Equals(recType)) return;
+            ProcessEffectsList(stream, formID, recType, instr, loc);
+        }
+
+        private void ProcessIngredient(
+            BinaryReadStream stream,
+            FormID formID,
+            RecordType recType,
+            BinaryFileProcessor.Config instr,
+            RangeInt64 loc,
+            RecordLocator.FileLocations fileLocs,
+            Dictionary<long, uint> lengthTracker)
+        {
+            if (!Ingredient_Registration.INGR_HEADER.Equals(recType)) return;
+            ProcessEffectsList(stream, formID, recType, instr, loc);
+        }
+
+        private void ProcessPotion(
+            BinaryReadStream stream,
+            FormID formID,
+            RecordType recType,
+            BinaryFileProcessor.Config instr,
+            RangeInt64 loc,
+            RecordLocator.FileLocations fileLocs,
+            Dictionary<long, uint> lengthTracker)
+        {
+            if (!Potion_Registration.ALCH_HEADER.Equals(recType)) return;
+            ProcessEffectsList(stream, formID, recType, instr, loc);
+        }
+
+        private void ProcessSigilStone(
+            BinaryReadStream stream,
+            FormID formID,
+            RecordType recType,
+            BinaryFileProcessor.Config instr,
+            RangeInt64 loc,
+            RecordLocator.FileLocations fileLocs,
+            Dictionary<long, uint> lengthTracker)
+        {
+            if (!SigilStone_Registration.SGST_HEADER.Equals(recType)) return;
+            ProcessEffectsList(stream, formID, recType, instr, loc);
+        }
         #endregion
 
         public async Task<TempFolder> SetupProcessedFiles()
@@ -1411,7 +1544,17 @@ namespace Mutagen.Bethesda.Tests
 
                 using (var stream = new BinaryReadStream(preprocessedPath))
                 {
-                    foreach (var rec in RecordLocator.GetFileLocations(this.FilePath).ListedRecords)
+                    var fileLocs = RecordLocator.GetFileLocations(this.FilePath);
+                    foreach (var rec in fileLocs.ListedRecords)
+                    {
+                        LookForMagicEffects(
+                            stream: stream,
+                            formID: rec.Value.FormID,
+                            recType: rec.Value.Record,
+                            instr: instructions,
+                            loc: alignedFileLocs[rec.Value.FormID]);
+                    }
+                    foreach (var rec in fileLocs.ListedRecords)
                     {
                         AddDynamicProcessorInstructions(
                             stream: stream,
