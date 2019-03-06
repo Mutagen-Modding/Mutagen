@@ -7776,6 +7776,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         errorMask?.PopIndex();
                     }
+                    item.ACBSDataTypeState |= Creature.ACBSDataType.Has;
                     break;
                 case "BaseSpellPoints":
                     try
@@ -8000,6 +8001,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         errorMask?.PopIndex();
                     }
+                    item.AIDTDataTypeState |= Creature.AIDTDataType.Has;
                     break;
                 case "Confidence":
                     try
@@ -8238,6 +8240,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         errorMask?.PopIndex();
                     }
+                    item.DATADataTypeState |= Creature.DATADataType.Has;
                     break;
                 case "CombatSkill":
                     try

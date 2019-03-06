@@ -3209,6 +3209,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         errorMask?.PopIndex();
                     }
+                    item.DATADataTypeState |= PlacedNPC.DATADataType.Has;
                     break;
                 case "Rotation":
                     try

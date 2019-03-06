@@ -2460,6 +2460,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         errorMask?.PopIndex();
                     }
+                    item.PKDTDataTypeState |= AIPackage.PKDTDataType.Has;
                     break;
                 case "GeneralType":
                     try

@@ -5026,6 +5026,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         errorMask?.PopIndex();
                     }
+                    item.DATADataTypeState |= Race.DATADataType.Has;
                     break;
                 case "Fluff":
                     try

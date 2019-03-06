@@ -1810,6 +1810,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         item: item.Target_Property,
                         fieldIndex: (int)QuestTarget_FieldIndex.Target,
                         errorMask: errorMask);
+                    item.QSTADataTypeState |= QuestTarget.QSTADataType.Has;
                     break;
                 case "Flags":
                     try

@@ -2742,6 +2742,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         errorMask?.PopIndex();
                     }
+                    item.DATADataTypeState |= Grass.DATADataType.Has;
                     break;
                 case "MinSlope":
                     try

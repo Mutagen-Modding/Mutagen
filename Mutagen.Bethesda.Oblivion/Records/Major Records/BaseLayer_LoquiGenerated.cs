@@ -1783,6 +1783,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         item: item.Texture_Property,
                         fieldIndex: (int)BaseLayer_FieldIndex.Texture,
                         errorMask: errorMask);
+                    item.BTXTDataTypeState |= BaseLayer.BTXTDataType.Has;
                     break;
                 case "Quadrant":
                     try

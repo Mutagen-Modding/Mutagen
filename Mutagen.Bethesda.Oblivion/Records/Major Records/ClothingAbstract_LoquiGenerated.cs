@@ -3261,6 +3261,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         errorMask?.PopIndex();
                     }
+                    item.BMDTDataTypeState |= ClothingAbstract.BMDTDataType.Has;
                     break;
                 case "Flags":
                     try

@@ -3364,6 +3364,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         errorMask?.PopIndex();
                     }
+                    item.DATADataTypeState |= Light.DATADataType.Has;
                     break;
                 case "Radius":
                     try

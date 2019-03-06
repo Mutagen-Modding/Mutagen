@@ -5482,6 +5482,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         errorMask?.PopIndex();
                     }
+                    item.CSTDDataTypeState |= CombatStyle.CSTDDataType.Has;
                     break;
                 case "LeftRightPercentChance":
                     try

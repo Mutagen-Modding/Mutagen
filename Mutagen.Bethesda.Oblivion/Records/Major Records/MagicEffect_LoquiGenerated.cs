@@ -3459,6 +3459,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         errorMask?.PopIndex();
                     }
+                    item.DATADataTypeState |= MagicEffect.DATADataType.Has;
                     break;
                 case "BaseCost":
                     try

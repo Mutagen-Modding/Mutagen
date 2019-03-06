@@ -7659,6 +7659,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         errorMask?.PopIndex();
                     }
+                    item.DATADataTypeState |= EffectShader.DATADataType.Has;
                     break;
                 case "MembraneShaderSourceBlendMode":
                     try

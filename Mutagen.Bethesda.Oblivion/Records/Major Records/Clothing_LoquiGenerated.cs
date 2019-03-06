@@ -1874,6 +1874,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         errorMask?.PopIndex();
                     }
+                    item.DATADataTypeState |= Clothing.DATADataType.Has;
                     break;
                 case "Weight":
                     try

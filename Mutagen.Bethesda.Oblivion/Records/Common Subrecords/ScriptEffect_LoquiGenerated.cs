@@ -2032,6 +2032,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         item: item.Script_Property,
                         fieldIndex: (int)ScriptEffect_FieldIndex.Script,
                         errorMask: errorMask);
+                    item.SCITDataTypeState |= ScriptEffect.SCITDataType.Has;
                     break;
                 case "MagicSchool":
                     try

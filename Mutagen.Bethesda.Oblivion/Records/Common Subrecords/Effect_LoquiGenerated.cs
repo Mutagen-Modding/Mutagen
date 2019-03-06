@@ -2279,6 +2279,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         item: item.MagicEffect_Property,
                         fieldIndex: (int)Effect_FieldIndex.MagicEffect,
                         errorMask: errorMask);
+                    item.EFITDataTypeState |= Effect.EFITDataType.Has;
                     break;
                 case "Magnitude":
                     try

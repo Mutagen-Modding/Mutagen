@@ -2086,6 +2086,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         errorMask?.PopIndex();
                     }
+                    item.DATADataTypeState |= Armor.DATADataType.Has;
                     break;
                 case "Value":
                     try

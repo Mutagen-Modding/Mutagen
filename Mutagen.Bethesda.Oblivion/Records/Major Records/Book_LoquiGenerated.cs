@@ -3145,6 +3145,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         errorMask?.PopIndex();
                     }
+                    item.DATADataTypeState |= Book.DATADataType.Has;
                     break;
                 case "Teaches":
                     try

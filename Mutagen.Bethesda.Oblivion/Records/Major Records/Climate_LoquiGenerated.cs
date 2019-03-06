@@ -3037,6 +3037,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         errorMask?.PopIndex();
                     }
+                    item.TNAMDataTypeState |= Climate.TNAMDataType.Has;
                     break;
                 case "SunriseEnd":
                     try

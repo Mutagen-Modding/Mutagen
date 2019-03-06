@@ -2822,6 +2822,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         errorMask?.PopIndex();
                     }
+                    item.ENITDataTypeState |= Potion.ENITDataType.Has;
                     break;
                 case "Flags":
                     try

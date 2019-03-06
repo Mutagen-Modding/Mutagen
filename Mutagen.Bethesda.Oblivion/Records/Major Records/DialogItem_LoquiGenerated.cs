@@ -2886,6 +2886,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         errorMask?.PopIndex();
                     }
+                    item.DATADataTypeState |= DialogItem.DATADataType.Has;
                     break;
                 case "Flags":
                     try

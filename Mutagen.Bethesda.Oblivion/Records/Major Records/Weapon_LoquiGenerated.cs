@@ -3380,6 +3380,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         errorMask?.PopIndex();
                     }
+                    item.DATADataTypeState |= Weapon.DATADataType.Has;
                     break;
                 case "Speed":
                     try

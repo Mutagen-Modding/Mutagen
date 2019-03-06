@@ -2277,6 +2277,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         errorMask?.PopIndex();
                     }
+                    item.ENITDataTypeState |= Enchantment.ENITDataType.Has;
                     break;
                 case "ChargeAmount":
                     try

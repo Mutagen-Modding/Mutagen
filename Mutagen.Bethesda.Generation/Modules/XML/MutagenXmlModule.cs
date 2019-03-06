@@ -142,6 +142,10 @@ namespace Mutagen.Bethesda.Generation
 
         private void HandleDataTypeParsing(ObjectGeneration obj, FileGeneration fg, DataType set, DataType.DataTypeIteration subField, ref bool isInRange)
         {
+            if (subField.FieldIndex == 0)
+            {
+                fg.AppendLine($"item.{set.StateName} |= {obj.Name}.{set.EnumName}.Has;");
+            }
             if (subField.BreakIndex != -1)
             {
                 fg.AppendLine($"item.{set.StateName} &= ~{obj.Name}.{set.EnumName}.Break{subField.BreakIndex};");

@@ -536,6 +536,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PopIndex();
                     }
+                    item.RDATDataTypeState |= RegionData.RDATDataType.Has;
                     break;
                 default:
                     break;

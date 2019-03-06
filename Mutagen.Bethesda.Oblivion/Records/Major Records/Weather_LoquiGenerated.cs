@@ -5676,6 +5676,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         errorMask?.PopIndex();
                     }
+                    item.FNAMDataTypeState |= Weather.FNAMDataType.Has;
                     break;
                 case "FogDayFar":
                     try
@@ -5780,6 +5781,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         errorMask?.PopIndex();
                     }
+                    item.HNAMDataTypeState |= Weather.HNAMDataType.Has;
                     break;
                 case "HdrBlurRadius":
                     try
@@ -6144,6 +6146,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         errorMask?.PopIndex();
                     }
+                    item.DATADataTypeState |= Weather.DATADataType.Has;
                     break;
                 case "CloudSpeedLower":
                     try

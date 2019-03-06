@@ -2246,6 +2246,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         errorMask?.PopIndex();
                     }
+                    item.SPITDataTypeState |= SpellUnleveled.SPITDataType.Has;
                     break;
                 case "Cost":
                     try

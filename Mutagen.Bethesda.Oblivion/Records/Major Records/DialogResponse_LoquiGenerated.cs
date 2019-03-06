@@ -2278,6 +2278,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         errorMask?.PopIndex();
                     }
+                    item.TRDTDataTypeState |= DialogResponse.TRDTDataType.Has;
                     break;
                 case "EmotionValue":
                     try

@@ -2641,6 +2641,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         errorMask?.PopIndex();
                     }
+                    item.DATADataTypeState |= Container.DATADataType.Has;
                     break;
                 case "Weight":
                     try

@@ -3094,6 +3094,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         errorMask?.PopIndex();
                     }
+                    item.CNAMDataTypeState |= Tree.CNAMDataType.Has;
                     break;
                 case "MinimumLeafAngle":
                     try
@@ -3302,6 +3303,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         errorMask?.PopIndex();
                     }
+                    item.BNAMDataTypeState |= Tree.BNAMDataType.Has;
                     break;
                 case "BillboardHeight":
                     try

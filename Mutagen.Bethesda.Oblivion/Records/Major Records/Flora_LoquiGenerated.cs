@@ -2543,6 +2543,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         errorMask?.PopIndex();
                     }
+                    item.PFPCDataTypeState |= Flora.PFPCDataType.Has;
                     break;
                 case "Summer":
                     try

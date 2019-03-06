@@ -3137,6 +3137,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         errorMask?.PopIndex();
                     }
+                    item.DATADataTypeState |= SkillRecord.DATADataType.Has;
                     break;
                 case "Attribute":
                     try

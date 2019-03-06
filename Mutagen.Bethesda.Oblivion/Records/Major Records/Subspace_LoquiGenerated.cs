@@ -1796,6 +1796,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         errorMask?.PopIndex();
                     }
+                    item.DNAMDataTypeState |= Subspace.DNAMDataType.Has;
                     break;
                 case "Y":
                     try

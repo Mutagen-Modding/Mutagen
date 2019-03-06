@@ -2731,6 +2731,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         errorMask?.PopIndex();
                     }
+                    item.DATADataTypeState |= Class.DATADataType.Has;
                     break;
                 case "Specialization":
                     try

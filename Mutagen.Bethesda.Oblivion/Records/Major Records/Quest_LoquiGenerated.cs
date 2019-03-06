@@ -2699,6 +2699,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         errorMask?.PopIndex();
                     }
+                    item.DATADataTypeState |= Quest.DATADataType.Has;
                     break;
                 case "Priority":
                     try
