@@ -1409,6 +1409,14 @@ namespace Mutagen.Bethesda.Tests
                     instr);
             }
 
+            foreach (var index in IterateTypes(str, new RecordType("EFID")))
+            {
+                stream.Position = loc.Min + index + 6;
+                ProcessMagicEDID(
+                    stream,
+                    instr);
+            }
+
             foreach (var index in IterateTypes(str, new RecordType("SCIT")))
             {
                 stream.Position = loc.Min + index + 4;
