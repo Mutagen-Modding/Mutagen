@@ -153,7 +153,7 @@ namespace Mutagen.Bethesda.Generation
             if (subField.Range != null && !isInRange)
             {
                 isInRange = true;
-                fg.AppendLine($"item.{set.StateName} &= ~{obj.Name}.{set.EnumName}.Range{subField.RangeIndex};");
+                fg.AppendLine($"item.{set.StateName} |= {obj.Name}.{set.EnumName}.Range{subField.RangeIndex};");
             }
             if (subField.Range == null && isInRange)
             {
@@ -190,10 +190,6 @@ namespace Mutagen.Bethesda.Generation
                         for (int i = 0; i < set.BreakIndices.Count; i++)
                         {
                             fg.AppendLine($"ret.{set.StateName} |= {obj.Name}.{set.EnumName}.Break{i};");
-                        }
-                        for (int i = 0; i < set.RangeIndices.Count; i++)
-                        {
-                            fg.AppendLine($"ret.{set.StateName} |= {obj.Name}.{set.EnumName}.Range{i};");
                         }
                     }
 

@@ -446,7 +446,6 @@ namespace Mutagen.Bethesda.Oblivion
             var ret = new Light();
             try
             {
-                ret.DATADataTypeState |= Light.DATADataType.Range0;
                 foreach (var elem in node.Elements())
                 {
                     FillPrivateElement_Xml(
@@ -3469,7 +3468,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         errorMask?.PopIndex();
                     }
-                    item.DATADataTypeState &= ~Light.DATADataType.Range0;
+                    item.DATADataTypeState |= Light.DATADataType.Range0;
                     break;
                 case "FOV":
                     try
