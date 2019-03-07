@@ -30,58 +30,5 @@ namespace Mutagen.Bethesda.Oblivion
             UniformScaling = 0x02,
             FitToSlope = 0x04
         }
-
-        private byte[] _buffer1;
-        private byte[] _buffer2;
-
-        static partial void FillBinary_MaxSlope_Custom(MutagenFrame frame, Grass item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
-        {
-            item.MaxSlope = Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                frame: frame.Spawn(snapToFinalPosition: false),
-                errorMask: errorMask);
-            item._buffer1 = frame.Reader.ReadBytes(1);
-        }
-
-        static partial void WriteBinary_MaxSlope_Custom(MutagenWriter writer, Grass item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
-        {
-            Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.MaxSlope,
-                fieldIndex: (int)Grass_FieldIndex.MaxSlope,
-                errorMask: errorMask);
-            if (item._buffer1 != null)
-            {
-                writer.Write(item._buffer1);
-            }
-            else
-            {
-                writer.WriteZeros(1);
-            }
-        }
-
-        static partial void FillBinary_UnitFromWaterAmount_Custom(MutagenFrame frame, Grass item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
-        {
-            item.UnitFromWaterAmount = Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Parse(
-                frame: frame.Spawn(snapToFinalPosition: false),
-                errorMask: errorMask);
-            item._buffer2 = frame.Reader.ReadBytes(2);
-        }
-
-        static partial void WriteBinary_UnitFromWaterAmount_Custom(MutagenWriter writer, Grass item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
-        {
-            Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.UnitFromWaterAmount,
-                fieldIndex: (int)Grass_FieldIndex.UnitFromWaterAmount,
-                errorMask: errorMask);
-            if (item._buffer2 != null)
-            {
-                writer.Write(item._buffer2);
-            }
-            else
-            {
-                writer.WriteZeros(2);
-            }
-        }
     }
 }

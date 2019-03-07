@@ -113,6 +113,18 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
         #endregion
+        #region Fluff1
+        private Byte _Fluff1;
+        public Byte Fluff1
+        {
+            get => this._Fluff1;
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.RaiseAndSetIfChanged(ref this._Fluff1, value, nameof(Fluff1));
+            }
+        }
+        #endregion
         #region UnitFromWaterAmount
         private UInt16 _UnitFromWaterAmount;
         public UInt16 UnitFromWaterAmount
@@ -122,6 +134,18 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 this.DATADataTypeState |= DATADataType.Has;
                 this.RaiseAndSetIfChanged(ref this._UnitFromWaterAmount, value, nameof(UnitFromWaterAmount));
+            }
+        }
+        #endregion
+        #region Fluff2
+        private UInt16 _Fluff2;
+        public UInt16 Fluff2
+        {
+            get => this._Fluff2;
+            set
+            {
+                this.DATADataTypeState |= DATADataType.Has;
+                this.RaiseAndSetIfChanged(ref this._Fluff2, value, nameof(Fluff2));
             }
         }
         #endregion
@@ -259,7 +283,9 @@ namespace Mutagen.Bethesda.Oblivion
             if (this.Density != rhs.Density) return false;
             if (this.MinSlope != rhs.MinSlope) return false;
             if (this.MaxSlope != rhs.MaxSlope) return false;
+            if (this.Fluff1 != rhs.Fluff1) return false;
             if (this.UnitFromWaterAmount != rhs.UnitFromWaterAmount) return false;
+            if (this.Fluff2 != rhs.Fluff2) return false;
             if (this.UnitFromWaterMode != rhs.UnitFromWaterMode) return false;
             if (!this.PositionRange.EqualsWithin(rhs.PositionRange)) return false;
             if (!this.HeightRange.EqualsWithin(rhs.HeightRange)) return false;
@@ -279,7 +305,9 @@ namespace Mutagen.Bethesda.Oblivion
             ret = HashHelper.GetHashCode(Density).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(MinSlope).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(MaxSlope).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(Fluff1).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(UnitFromWaterAmount).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(Fluff2).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(UnitFromWaterMode).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(PositionRange).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(HeightRange).CombineHashCode(ret);
@@ -681,7 +709,9 @@ namespace Mutagen.Bethesda.Oblivion
                 case Grass_FieldIndex.Density:
                 case Grass_FieldIndex.MinSlope:
                 case Grass_FieldIndex.MaxSlope:
+                case Grass_FieldIndex.Fluff1:
                 case Grass_FieldIndex.UnitFromWaterAmount:
+                case Grass_FieldIndex.Fluff2:
                 case Grass_FieldIndex.UnitFromWaterMode:
                 case Grass_FieldIndex.PositionRange:
                 case Grass_FieldIndex.HeightRange:
@@ -984,56 +1014,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        static partial void FillBinary_MaxSlope_Custom(
-            MutagenFrame frame,
-            Grass item,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask);
-
-        static partial void WriteBinary_MaxSlope_Custom(
-            MutagenWriter writer,
-            Grass item,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask);
-
-        public static void WriteBinary_MaxSlope(
-            MutagenWriter writer,
-            Grass item,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask)
-        {
-            WriteBinary_MaxSlope_Custom(
-                writer: writer,
-                item: item,
-                masterReferences: masterReferences,
-                errorMask: errorMask);
-        }
-
-        static partial void FillBinary_UnitFromWaterAmount_Custom(
-            MutagenFrame frame,
-            Grass item,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask);
-
-        static partial void WriteBinary_UnitFromWaterAmount_Custom(
-            MutagenWriter writer,
-            Grass item,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask);
-
-        public static void WriteBinary_UnitFromWaterAmount(
-            MutagenWriter writer,
-            Grass item,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask)
-        {
-            WriteBinary_UnitFromWaterAmount_Custom(
-                writer: writer,
-                item: item,
-                masterReferences: masterReferences,
-                errorMask: errorMask);
-        }
-
         protected static void Fill_Binary_Structs(
             Grass item,
             MutagenFrame frame,
@@ -1143,16 +1123,102 @@ namespace Mutagen.Bethesda.Oblivion
                         {
                             errorMask?.PopIndex();
                         }
-                        FillBinary_MaxSlope_Custom(
-                            frame: dataFrame,
-                            item: item,
-                            masterReferences: masterReferences,
-                            errorMask: errorMask);
-                        FillBinary_UnitFromWaterAmount_Custom(
-                            frame: dataFrame,
-                            item: item,
-                            masterReferences: masterReferences,
-                            errorMask: errorMask);
+                        try
+                        {
+                            errorMask?.PushIndex((int)Grass_FieldIndex.MaxSlope);
+                            if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                                frame: dataFrame.Spawn(snapToFinalPosition: false),
+                                item: out Byte MaxSlopeParse,
+                                errorMask: errorMask))
+                            {
+                                item.MaxSlope = MaxSlopeParse;
+                            }
+                            else
+                            {
+                                item.MaxSlope = default(Byte);
+                            }
+                        }
+                        catch (Exception ex)
+                        when (errorMask != null)
+                        {
+                            errorMask.ReportException(ex);
+                        }
+                        finally
+                        {
+                            errorMask?.PopIndex();
+                        }
+                        try
+                        {
+                            errorMask?.PushIndex((int)Grass_FieldIndex.Fluff1);
+                            if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                                frame: dataFrame.Spawn(snapToFinalPosition: false),
+                                item: out Byte Fluff1Parse,
+                                errorMask: errorMask))
+                            {
+                                item.Fluff1 = Fluff1Parse;
+                            }
+                            else
+                            {
+                                item.Fluff1 = default(Byte);
+                            }
+                        }
+                        catch (Exception ex)
+                        when (errorMask != null)
+                        {
+                            errorMask.ReportException(ex);
+                        }
+                        finally
+                        {
+                            errorMask?.PopIndex();
+                        }
+                        try
+                        {
+                            errorMask?.PushIndex((int)Grass_FieldIndex.UnitFromWaterAmount);
+                            if (Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Parse(
+                                frame: dataFrame.Spawn(snapToFinalPosition: false),
+                                item: out UInt16 UnitFromWaterAmountParse,
+                                errorMask: errorMask))
+                            {
+                                item.UnitFromWaterAmount = UnitFromWaterAmountParse;
+                            }
+                            else
+                            {
+                                item.UnitFromWaterAmount = default(UInt16);
+                            }
+                        }
+                        catch (Exception ex)
+                        when (errorMask != null)
+                        {
+                            errorMask.ReportException(ex);
+                        }
+                        finally
+                        {
+                            errorMask?.PopIndex();
+                        }
+                        try
+                        {
+                            errorMask?.PushIndex((int)Grass_FieldIndex.Fluff2);
+                            if (Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Parse(
+                                frame: dataFrame.Spawn(snapToFinalPosition: false),
+                                item: out UInt16 Fluff2Parse,
+                                errorMask: errorMask))
+                            {
+                                item.Fluff2 = Fluff2Parse;
+                            }
+                            else
+                            {
+                                item.Fluff2 = default(UInt16);
+                            }
+                        }
+                        catch (Exception ex)
+                        when (errorMask != null)
+                        {
+                            errorMask.ReportException(ex);
+                        }
+                        finally
+                        {
+                            errorMask?.PopIndex();
+                        }
                         try
                         {
                             errorMask?.PushIndex((int)Grass_FieldIndex.UnitFromWaterMode);
@@ -1444,8 +1510,14 @@ namespace Mutagen.Bethesda.Oblivion
                 case Grass_FieldIndex.MaxSlope:
                     this.MaxSlope = (Byte)obj;
                     break;
+                case Grass_FieldIndex.Fluff1:
+                    this.Fluff1 = (Byte)obj;
+                    break;
                 case Grass_FieldIndex.UnitFromWaterAmount:
                     this.UnitFromWaterAmount = (UInt16)obj;
+                    break;
+                case Grass_FieldIndex.Fluff2:
+                    this.Fluff2 = (UInt16)obj;
                     break;
                 case Grass_FieldIndex.UnitFromWaterMode:
                     this.UnitFromWaterMode = (Grass.UnitFromWaterType)obj;
@@ -1508,8 +1580,14 @@ namespace Mutagen.Bethesda.Oblivion
                 case Grass_FieldIndex.MaxSlope:
                     obj.MaxSlope = (Byte)pair.Value;
                     break;
+                case Grass_FieldIndex.Fluff1:
+                    obj.Fluff1 = (Byte)pair.Value;
+                    break;
                 case Grass_FieldIndex.UnitFromWaterAmount:
                     obj.UnitFromWaterAmount = (UInt16)pair.Value;
+                    break;
+                case Grass_FieldIndex.Fluff2:
+                    obj.Fluff2 = (UInt16)pair.Value;
                     break;
                 case Grass_FieldIndex.UnitFromWaterMode:
                     obj.UnitFromWaterMode = (Grass.UnitFromWaterType)pair.Value;
@@ -1555,7 +1633,11 @@ namespace Mutagen.Bethesda.Oblivion
 
         new Byte MaxSlope { get; set; }
 
+        new Byte Fluff1 { get; set; }
+
         new UInt16 UnitFromWaterAmount { get; set; }
+
+        new UInt16 Fluff2 { get; set; }
 
         new Grass.UnitFromWaterType UnitFromWaterMode { get; set; }
 
@@ -1590,8 +1672,16 @@ namespace Mutagen.Bethesda.Oblivion
         Byte MaxSlope { get; }
 
         #endregion
+        #region Fluff1
+        Byte Fluff1 { get; }
+
+        #endregion
         #region UnitFromWaterAmount
         UInt16 UnitFromWaterAmount { get; }
+
+        #endregion
+        #region Fluff2
+        UInt16 Fluff2 { get; }
 
         #endregion
         #region UnitFromWaterMode
@@ -1639,13 +1729,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         Density = 6,
         MinSlope = 7,
         MaxSlope = 8,
-        UnitFromWaterAmount = 9,
-        UnitFromWaterMode = 10,
-        PositionRange = 11,
-        HeightRange = 12,
-        ColorRange = 13,
-        WavePeriod = 14,
-        Flags = 15,
+        Fluff1 = 9,
+        UnitFromWaterAmount = 10,
+        Fluff2 = 11,
+        UnitFromWaterMode = 12,
+        PositionRange = 13,
+        HeightRange = 14,
+        ColorRange = 15,
+        WavePeriod = 16,
+        Flags = 17,
     }
     #endregion
 
@@ -1663,9 +1755,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const string GUID = "08091e89-54fe-4950-b16d-c11d6c7faef3";
 
-        public const ushort AdditionalFieldCount = 11;
+        public const ushort AdditionalFieldCount = 13;
 
-        public const ushort FieldCount = 16;
+        public const ushort FieldCount = 18;
 
         public static readonly Type MaskType = typeof(Grass_Mask<>);
 
@@ -1701,8 +1793,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (ushort)Grass_FieldIndex.MinSlope;
                 case "MAXSLOPE":
                     return (ushort)Grass_FieldIndex.MaxSlope;
+                case "FLUFF1":
+                    return (ushort)Grass_FieldIndex.Fluff1;
                 case "UNITFROMWATERAMOUNT":
                     return (ushort)Grass_FieldIndex.UnitFromWaterAmount;
+                case "FLUFF2":
+                    return (ushort)Grass_FieldIndex.Fluff2;
                 case "UNITFROMWATERMODE":
                     return (ushort)Grass_FieldIndex.UnitFromWaterMode;
                 case "POSITIONRANGE":
@@ -1729,7 +1825,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Grass_FieldIndex.Density:
                 case Grass_FieldIndex.MinSlope:
                 case Grass_FieldIndex.MaxSlope:
+                case Grass_FieldIndex.Fluff1:
                 case Grass_FieldIndex.UnitFromWaterAmount:
+                case Grass_FieldIndex.Fluff2:
                 case Grass_FieldIndex.UnitFromWaterMode:
                 case Grass_FieldIndex.PositionRange:
                 case Grass_FieldIndex.HeightRange:
@@ -1752,7 +1850,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Grass_FieldIndex.Density:
                 case Grass_FieldIndex.MinSlope:
                 case Grass_FieldIndex.MaxSlope:
+                case Grass_FieldIndex.Fluff1:
                 case Grass_FieldIndex.UnitFromWaterAmount:
+                case Grass_FieldIndex.Fluff2:
                 case Grass_FieldIndex.UnitFromWaterMode:
                 case Grass_FieldIndex.PositionRange:
                 case Grass_FieldIndex.HeightRange:
@@ -1774,7 +1874,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Grass_FieldIndex.Density:
                 case Grass_FieldIndex.MinSlope:
                 case Grass_FieldIndex.MaxSlope:
+                case Grass_FieldIndex.Fluff1:
                 case Grass_FieldIndex.UnitFromWaterAmount:
+                case Grass_FieldIndex.Fluff2:
                 case Grass_FieldIndex.UnitFromWaterMode:
                 case Grass_FieldIndex.PositionRange:
                 case Grass_FieldIndex.HeightRange:
@@ -1800,8 +1902,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return "MinSlope";
                 case Grass_FieldIndex.MaxSlope:
                     return "MaxSlope";
+                case Grass_FieldIndex.Fluff1:
+                    return "Fluff1";
                 case Grass_FieldIndex.UnitFromWaterAmount:
                     return "UnitFromWaterAmount";
+                case Grass_FieldIndex.Fluff2:
+                    return "Fluff2";
                 case Grass_FieldIndex.UnitFromWaterMode:
                     return "UnitFromWaterMode";
                 case Grass_FieldIndex.PositionRange:
@@ -1828,7 +1934,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Grass_FieldIndex.Density:
                 case Grass_FieldIndex.MinSlope:
                 case Grass_FieldIndex.MaxSlope:
+                case Grass_FieldIndex.Fluff1:
                 case Grass_FieldIndex.UnitFromWaterAmount:
+                case Grass_FieldIndex.Fluff2:
                 case Grass_FieldIndex.UnitFromWaterMode:
                 case Grass_FieldIndex.PositionRange:
                 case Grass_FieldIndex.HeightRange:
@@ -1850,7 +1958,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Grass_FieldIndex.Density:
                 case Grass_FieldIndex.MinSlope:
                 case Grass_FieldIndex.MaxSlope:
+                case Grass_FieldIndex.Fluff1:
                 case Grass_FieldIndex.UnitFromWaterAmount:
+                case Grass_FieldIndex.Fluff2:
                 case Grass_FieldIndex.UnitFromWaterMode:
                 case Grass_FieldIndex.PositionRange:
                 case Grass_FieldIndex.HeightRange:
@@ -1876,7 +1986,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return typeof(Byte);
                 case Grass_FieldIndex.MaxSlope:
                     return typeof(Byte);
+                case Grass_FieldIndex.Fluff1:
+                    return typeof(Byte);
                 case Grass_FieldIndex.UnitFromWaterAmount:
+                    return typeof(UInt16);
+                case Grass_FieldIndex.Fluff2:
                     return typeof(UInt16);
                 case Grass_FieldIndex.UnitFromWaterMode:
                     return typeof(Grass.UnitFromWaterType);
@@ -2055,12 +2169,46 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
+            if (copyMask?.Fluff1 ?? true)
+            {
+                errorMask?.PushIndex((int)Grass_FieldIndex.Fluff1);
+                try
+                {
+                    item.Fluff1 = rhs.Fluff1;
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
             if (copyMask?.UnitFromWaterAmount ?? true)
             {
                 errorMask?.PushIndex((int)Grass_FieldIndex.UnitFromWaterAmount);
                 try
                 {
                     item.UnitFromWaterAmount = rhs.UnitFromWaterAmount;
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if (copyMask?.Fluff2 ?? true)
+            {
+                errorMask?.PushIndex((int)Grass_FieldIndex.Fluff2);
+                try
+                {
+                    item.Fluff2 = rhs.Fluff2;
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2190,7 +2338,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Grass_FieldIndex.Density:
                 case Grass_FieldIndex.MinSlope:
                 case Grass_FieldIndex.MaxSlope:
+                case Grass_FieldIndex.Fluff1:
                 case Grass_FieldIndex.UnitFromWaterAmount:
+                case Grass_FieldIndex.Fluff2:
                 case Grass_FieldIndex.UnitFromWaterMode:
                 case Grass_FieldIndex.PositionRange:
                 case Grass_FieldIndex.HeightRange:
@@ -2228,8 +2378,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Grass_FieldIndex.MaxSlope:
                     obj.MaxSlope = default(Byte);
                     break;
+                case Grass_FieldIndex.Fluff1:
+                    obj.Fluff1 = default(Byte);
+                    break;
                 case Grass_FieldIndex.UnitFromWaterAmount:
                     obj.UnitFromWaterAmount = default(UInt16);
+                    break;
+                case Grass_FieldIndex.Fluff2:
+                    obj.Fluff2 = default(UInt16);
                     break;
                 case Grass_FieldIndex.UnitFromWaterMode:
                     obj.UnitFromWaterMode = default(Grass.UnitFromWaterType);
@@ -2265,7 +2421,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Grass_FieldIndex.Density:
                 case Grass_FieldIndex.MinSlope:
                 case Grass_FieldIndex.MaxSlope:
+                case Grass_FieldIndex.Fluff1:
                 case Grass_FieldIndex.UnitFromWaterAmount:
+                case Grass_FieldIndex.Fluff2:
                 case Grass_FieldIndex.UnitFromWaterMode:
                 case Grass_FieldIndex.PositionRange:
                 case Grass_FieldIndex.HeightRange:
@@ -2295,8 +2453,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return obj.MinSlope;
                 case Grass_FieldIndex.MaxSlope:
                     return obj.MaxSlope;
+                case Grass_FieldIndex.Fluff1:
+                    return obj.Fluff1;
                 case Grass_FieldIndex.UnitFromWaterAmount:
                     return obj.UnitFromWaterAmount;
+                case Grass_FieldIndex.Fluff2:
+                    return obj.Fluff2;
                 case Grass_FieldIndex.UnitFromWaterMode:
                     return obj.UnitFromWaterMode;
                 case Grass_FieldIndex.PositionRange:
@@ -2322,7 +2484,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Density = default(Byte);
             item.MinSlope = default(Byte);
             item.MaxSlope = default(Byte);
+            item.Fluff1 = default(Byte);
             item.UnitFromWaterAmount = default(UInt16);
+            item.Fluff2 = default(UInt16);
             item.UnitFromWaterMode = default(Grass.UnitFromWaterType);
             item.PositionRange = default(Single);
             item.HeightRange = default(Single);
@@ -2362,7 +2526,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Density = item.Density == rhs.Density;
             ret.MinSlope = item.MinSlope == rhs.MinSlope;
             ret.MaxSlope = item.MaxSlope == rhs.MaxSlope;
+            ret.Fluff1 = item.Fluff1 == rhs.Fluff1;
             ret.UnitFromWaterAmount = item.UnitFromWaterAmount == rhs.UnitFromWaterAmount;
+            ret.Fluff2 = item.Fluff2 == rhs.Fluff2;
             ret.UnitFromWaterMode = item.UnitFromWaterMode == rhs.UnitFromWaterMode;
             ret.PositionRange = item.PositionRange.EqualsWithin(rhs.PositionRange);
             ret.HeightRange = item.HeightRange.EqualsWithin(rhs.HeightRange);
@@ -2415,9 +2581,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     fg.AppendLine($"MaxSlope => {item.MaxSlope}");
                 }
+                if (printMask?.Fluff1 ?? true)
+                {
+                    fg.AppendLine($"Fluff1 => {item.Fluff1}");
+                }
                 if (printMask?.UnitFromWaterAmount ?? true)
                 {
                     fg.AppendLine($"UnitFromWaterAmount => {item.UnitFromWaterAmount}");
+                }
+                if (printMask?.Fluff2 ?? true)
+                {
+                    fg.AppendLine($"Fluff2 => {item.Fluff2}");
                 }
                 if (printMask?.UnitFromWaterMode ?? true)
                 {
@@ -2463,7 +2637,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Density = true;
             ret.MinSlope = true;
             ret.MaxSlope = true;
+            ret.Fluff1 = true;
             ret.UnitFromWaterAmount = true;
+            ret.Fluff2 = true;
             ret.UnitFromWaterMode = true;
             ret.PositionRange = true;
             ret.HeightRange = true;
@@ -2590,6 +2766,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         fieldIndex: (int)Grass_FieldIndex.MaxSlope,
                         errorMask: errorMask);
                 }
+                if ((translationMask?.GetShouldTranslate((int)Grass_FieldIndex.Fluff1) ?? true))
+                {
+                    ByteXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.Fluff1),
+                        item: item.Fluff1,
+                        fieldIndex: (int)Grass_FieldIndex.Fluff1,
+                        errorMask: errorMask);
+                }
                 if ((translationMask?.GetShouldTranslate((int)Grass_FieldIndex.UnitFromWaterAmount) ?? true))
                 {
                     UInt16XmlTranslation.Instance.Write(
@@ -2597,6 +2782,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         name: nameof(item.UnitFromWaterAmount),
                         item: item.UnitFromWaterAmount,
                         fieldIndex: (int)Grass_FieldIndex.UnitFromWaterAmount,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Grass_FieldIndex.Fluff2) ?? true))
+                {
+                    UInt16XmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.Fluff2),
+                        item: item.Fluff2,
+                        fieldIndex: (int)Grass_FieldIndex.Fluff2,
                         errorMask: errorMask);
                 }
                 if ((translationMask?.GetShouldTranslate((int)Grass_FieldIndex.UnitFromWaterMode) ?? true))
@@ -2796,6 +2990,32 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask?.PopIndex();
                     }
                     break;
+                case "Fluff1":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Grass_FieldIndex.Fluff1);
+                        if (ByteXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Byte Fluff1Parse,
+                            errorMask: errorMask))
+                        {
+                            item.Fluff1 = Fluff1Parse;
+                        }
+                        else
+                        {
+                            item.Fluff1 = default(Byte);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
                 case "UnitFromWaterAmount":
                     try
                     {
@@ -2810,6 +3030,32 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         else
                         {
                             item.UnitFromWaterAmount = default(UInt16);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Fluff2":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Grass_FieldIndex.Fluff2);
+                        if (UInt16XmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out UInt16 Fluff2Parse,
+                            errorMask: errorMask))
+                        {
+                            item.Fluff2 = Fluff2Parse;
+                        }
+                        else
+                        {
+                            item.Fluff2 = default(UInt16);
                         }
                     }
                     catch (Exception ex)
@@ -3074,16 +3320,26 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         item: item.MinSlope,
                         fieldIndex: (int)Grass_FieldIndex.MinSlope,
                         errorMask: errorMask);
-                    Grass.WriteBinary_MaxSlope(
+                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item,
-                        errorMask: errorMask,
-                        masterReferences: masterReferences);
-                    Grass.WriteBinary_UnitFromWaterAmount(
+                        item: item.MaxSlope,
+                        fieldIndex: (int)Grass_FieldIndex.MaxSlope,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item,
-                        errorMask: errorMask,
-                        masterReferences: masterReferences);
+                        item: item.Fluff1,
+                        fieldIndex: (int)Grass_FieldIndex.Fluff1,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.UnitFromWaterAmount,
+                        fieldIndex: (int)Grass_FieldIndex.UnitFromWaterAmount,
+                        errorMask: errorMask);
+                    Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.Fluff2,
+                        fieldIndex: (int)Grass_FieldIndex.Fluff2,
+                        errorMask: errorMask);
                     Mutagen.Bethesda.Binary.EnumBinaryTranslation<Grass.UnitFromWaterType>.Instance.Write(
                         writer,
                         item.UnitFromWaterMode,
@@ -3140,7 +3396,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.Density = initialValue;
             this.MinSlope = initialValue;
             this.MaxSlope = initialValue;
+            this.Fluff1 = initialValue;
             this.UnitFromWaterAmount = initialValue;
+            this.Fluff2 = initialValue;
             this.UnitFromWaterMode = initialValue;
             this.PositionRange = initialValue;
             this.HeightRange = initialValue;
@@ -3155,7 +3413,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public T Density;
         public T MinSlope;
         public T MaxSlope;
+        public T Fluff1;
         public T UnitFromWaterAmount;
+        public T Fluff2;
         public T UnitFromWaterMode;
         public T PositionRange;
         public T HeightRange;
@@ -3179,7 +3439,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (!object.Equals(this.Density, rhs.Density)) return false;
             if (!object.Equals(this.MinSlope, rhs.MinSlope)) return false;
             if (!object.Equals(this.MaxSlope, rhs.MaxSlope)) return false;
+            if (!object.Equals(this.Fluff1, rhs.Fluff1)) return false;
             if (!object.Equals(this.UnitFromWaterAmount, rhs.UnitFromWaterAmount)) return false;
+            if (!object.Equals(this.Fluff2, rhs.Fluff2)) return false;
             if (!object.Equals(this.UnitFromWaterMode, rhs.UnitFromWaterMode)) return false;
             if (!object.Equals(this.PositionRange, rhs.PositionRange)) return false;
             if (!object.Equals(this.HeightRange, rhs.HeightRange)) return false;
@@ -3195,7 +3457,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret = ret.CombineHashCode(this.Density?.GetHashCode());
             ret = ret.CombineHashCode(this.MinSlope?.GetHashCode());
             ret = ret.CombineHashCode(this.MaxSlope?.GetHashCode());
+            ret = ret.CombineHashCode(this.Fluff1?.GetHashCode());
             ret = ret.CombineHashCode(this.UnitFromWaterAmount?.GetHashCode());
+            ret = ret.CombineHashCode(this.Fluff2?.GetHashCode());
             ret = ret.CombineHashCode(this.UnitFromWaterMode?.GetHashCode());
             ret = ret.CombineHashCode(this.PositionRange?.GetHashCode());
             ret = ret.CombineHashCode(this.HeightRange?.GetHashCode());
@@ -3220,7 +3484,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (!eval(this.Density)) return false;
             if (!eval(this.MinSlope)) return false;
             if (!eval(this.MaxSlope)) return false;
+            if (!eval(this.Fluff1)) return false;
             if (!eval(this.UnitFromWaterAmount)) return false;
+            if (!eval(this.Fluff2)) return false;
             if (!eval(this.UnitFromWaterMode)) return false;
             if (!eval(this.PositionRange)) return false;
             if (!eval(this.HeightRange)) return false;
@@ -3254,7 +3520,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             obj.Density = eval(this.Density);
             obj.MinSlope = eval(this.MinSlope);
             obj.MaxSlope = eval(this.MaxSlope);
+            obj.Fluff1 = eval(this.Fluff1);
             obj.UnitFromWaterAmount = eval(this.UnitFromWaterAmount);
+            obj.Fluff2 = eval(this.Fluff2);
             obj.UnitFromWaterMode = eval(this.UnitFromWaterMode);
             obj.PositionRange = eval(this.PositionRange);
             obj.HeightRange = eval(this.HeightRange);
@@ -3306,9 +3574,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     fg.AppendLine($"MaxSlope => {MaxSlope}");
                 }
+                if (printMask?.Fluff1 ?? true)
+                {
+                    fg.AppendLine($"Fluff1 => {Fluff1}");
+                }
                 if (printMask?.UnitFromWaterAmount ?? true)
                 {
                     fg.AppendLine($"UnitFromWaterAmount => {UnitFromWaterAmount}");
+                }
+                if (printMask?.Fluff2 ?? true)
+                {
+                    fg.AppendLine($"Fluff2 => {Fluff2}");
                 }
                 if (printMask?.UnitFromWaterMode ?? true)
                 {
@@ -3348,7 +3624,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Exception Density;
         public Exception MinSlope;
         public Exception MaxSlope;
+        public Exception Fluff1;
         public Exception UnitFromWaterAmount;
+        public Exception Fluff2;
         public Exception UnitFromWaterMode;
         public Exception PositionRange;
         public Exception HeightRange;
@@ -3371,8 +3649,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return MinSlope;
                 case Grass_FieldIndex.MaxSlope:
                     return MaxSlope;
+                case Grass_FieldIndex.Fluff1:
+                    return Fluff1;
                 case Grass_FieldIndex.UnitFromWaterAmount:
                     return UnitFromWaterAmount;
+                case Grass_FieldIndex.Fluff2:
+                    return Fluff2;
                 case Grass_FieldIndex.UnitFromWaterMode:
                     return UnitFromWaterMode;
                 case Grass_FieldIndex.PositionRange:
@@ -3407,8 +3689,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Grass_FieldIndex.MaxSlope:
                     this.MaxSlope = ex;
                     break;
+                case Grass_FieldIndex.Fluff1:
+                    this.Fluff1 = ex;
+                    break;
                 case Grass_FieldIndex.UnitFromWaterAmount:
                     this.UnitFromWaterAmount = ex;
+                    break;
+                case Grass_FieldIndex.Fluff2:
+                    this.Fluff2 = ex;
                     break;
                 case Grass_FieldIndex.UnitFromWaterMode:
                     this.UnitFromWaterMode = ex;
@@ -3451,8 +3739,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Grass_FieldIndex.MaxSlope:
                     this.MaxSlope = (Exception)obj;
                     break;
+                case Grass_FieldIndex.Fluff1:
+                    this.Fluff1 = (Exception)obj;
+                    break;
                 case Grass_FieldIndex.UnitFromWaterAmount:
                     this.UnitFromWaterAmount = (Exception)obj;
+                    break;
+                case Grass_FieldIndex.Fluff2:
+                    this.Fluff2 = (Exception)obj;
                     break;
                 case Grass_FieldIndex.UnitFromWaterMode:
                     this.UnitFromWaterMode = (Exception)obj;
@@ -3485,7 +3779,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (Density != null) return true;
             if (MinSlope != null) return true;
             if (MaxSlope != null) return true;
+            if (Fluff1 != null) return true;
             if (UnitFromWaterAmount != null) return true;
+            if (Fluff2 != null) return true;
             if (UnitFromWaterMode != null) return true;
             if (PositionRange != null) return true;
             if (HeightRange != null) return true;
@@ -3531,7 +3827,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             fg.AppendLine($"Density => {Density}");
             fg.AppendLine($"MinSlope => {MinSlope}");
             fg.AppendLine($"MaxSlope => {MaxSlope}");
+            fg.AppendLine($"Fluff1 => {Fluff1}");
             fg.AppendLine($"UnitFromWaterAmount => {UnitFromWaterAmount}");
+            fg.AppendLine($"Fluff2 => {Fluff2}");
             fg.AppendLine($"UnitFromWaterMode => {UnitFromWaterMode}");
             fg.AppendLine($"PositionRange => {PositionRange}");
             fg.AppendLine($"HeightRange => {HeightRange}");
@@ -3549,7 +3847,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Density = this.Density.Combine(rhs.Density);
             ret.MinSlope = this.MinSlope.Combine(rhs.MinSlope);
             ret.MaxSlope = this.MaxSlope.Combine(rhs.MaxSlope);
+            ret.Fluff1 = this.Fluff1.Combine(rhs.Fluff1);
             ret.UnitFromWaterAmount = this.UnitFromWaterAmount.Combine(rhs.UnitFromWaterAmount);
+            ret.Fluff2 = this.Fluff2.Combine(rhs.Fluff2);
             ret.UnitFromWaterMode = this.UnitFromWaterMode.Combine(rhs.UnitFromWaterMode);
             ret.PositionRange = this.PositionRange.Combine(rhs.PositionRange);
             ret.HeightRange = this.HeightRange.Combine(rhs.HeightRange);
@@ -3586,7 +3886,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.Density = defaultOn;
             this.MinSlope = defaultOn;
             this.MaxSlope = defaultOn;
+            this.Fluff1 = defaultOn;
             this.UnitFromWaterAmount = defaultOn;
+            this.Fluff2 = defaultOn;
             this.UnitFromWaterMode = defaultOn;
             this.PositionRange = defaultOn;
             this.HeightRange = defaultOn;
@@ -3600,7 +3902,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool Density;
         public bool MinSlope;
         public bool MaxSlope;
+        public bool Fluff1;
         public bool UnitFromWaterAmount;
+        public bool Fluff2;
         public bool UnitFromWaterMode;
         public bool PositionRange;
         public bool HeightRange;
@@ -3618,7 +3922,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool Density;
         public bool MinSlope;
         public bool MaxSlope;
+        public bool Fluff1;
         public bool UnitFromWaterAmount;
+        public bool Fluff2;
         public bool UnitFromWaterMode;
         public bool PositionRange;
         public bool HeightRange;
@@ -3640,7 +3946,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.Density = defaultOn;
             this.MinSlope = defaultOn;
             this.MaxSlope = defaultOn;
+            this.Fluff1 = defaultOn;
             this.UnitFromWaterAmount = defaultOn;
+            this.Fluff2 = defaultOn;
             this.UnitFromWaterMode = defaultOn;
             this.PositionRange = defaultOn;
             this.HeightRange = defaultOn;
@@ -3658,7 +3966,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Add((Density, null));
             ret.Add((MinSlope, null));
             ret.Add((MaxSlope, null));
+            ret.Add((Fluff1, null));
             ret.Add((UnitFromWaterAmount, null));
+            ret.Add((Fluff2, null));
             ret.Add((UnitFromWaterMode, null));
             ret.Add((PositionRange, null));
             ret.Add((HeightRange, null));
