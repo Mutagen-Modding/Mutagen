@@ -18,11 +18,6 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public partial class Cell
     {
-        private byte[] _overallTimeStamp;
-        private byte[] _persistentTimeStamp;
-        private byte[] _temporaryTimeStamp;
-        private byte[] _visibleWhenDistantTimeStamp;
-
         [Flags]
         public enum Flag
         {
@@ -35,16 +30,6 @@ namespace Mutagen.Bethesda.Oblivion
             BehaveLikeExteriod = 0x0080,
         }
 
-        private static readonly Cell_TranslationMask XmlFolderTranslation = new Cell_TranslationMask(true)
-        {
-            Temporary = false,
-            Persistent = false,
-            VisibleWhenDistant = false,
-            PathGrid = new MaskItem<bool, PathGrid_TranslationMask>(false, null),
-            Landscape = new MaskItem<bool, Landscape_TranslationMask>(false, null)
-        };
-        private static readonly TranslationCrystal XmlFolderTranslationCrystal = XmlFolderTranslation.GetCrystal();
-
         static partial void CustomBinaryEnd_Import(MutagenFrame frame, Cell obj, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
         {
             if (frame.Reader.Complete) return;
@@ -55,7 +40,7 @@ namespace Mutagen.Bethesda.Oblivion
             var grupType = (GroupTypeEnum)frame.Reader.ReadInt32();
             if (grupType == GroupTypeEnum.CellChildren)
             {
-                obj._overallTimeStamp = frame.Reader.ReadBytes(4);
+                obj.Timestamp = frame.Reader.ReadBytes(4);
                 if (formKey != obj.FormKey)
                 {
                     throw new ArgumentException("Cell children group did not match the FormID of the parent cell.");
@@ -135,11 +120,11 @@ namespace Mutagen.Bethesda.Oblivion
             frame.Reader.Position += 4;
             if (persistentParse)
             {
-                obj._persistentTimeStamp = frame.Reader.ReadBytes(4);
+                obj.PersistentTimestamp = frame.Reader.ReadBytes(4);
             }
             else
             {
-                obj._visibleWhenDistantTimeStamp = frame.Reader.ReadBytes(4);
+                obj.VisibleWhenDistantTimestamp = frame.Reader.ReadBytes(4);
             }
             Mutagen.Bethesda.Binary.ListBinaryTranslation<IPlaced>.Instance.ParseRepeatedItem(
                 frame: frame,
@@ -238,7 +223,7 @@ namespace Mutagen.Bethesda.Oblivion
                 throw new ArgumentException("Cell children group did not match the FormID of the parent cell.");
             }
             frame.Reader.Position += 4;
-            obj._temporaryTimeStamp = frame.Reader.ReadBytes(4);
+            obj.TemporaryTimestamp = frame.Reader.ReadBytes(4);
             Mutagen.Bethesda.Binary.ListBinaryTranslation<IPlaced>.Instance.ParseRepeatedItem(
                 frame: frame,
                 item: obj.Temporary,
@@ -311,14 +296,7 @@ namespace Mutagen.Bethesda.Oblivion
                     masterReferences,
                     errorMask);
                 writer.Write((int)GroupTypeEnum.CellChildren);
-                if (obj._overallTimeStamp != null)
-                {
-                    writer.Write(obj._overallTimeStamp);
-                }
-                else
-                {
-                    writer.WriteZeros(4);
-                }
+                writer.Write(obj.Timestamp);
                 if (obj.Persistent.Count > 0)
                 {
                     using (HeaderExport.ExportHeader(writer, Group_Registration.GRUP_HEADER, ObjectType.Group))
@@ -329,14 +307,7 @@ namespace Mutagen.Bethesda.Oblivion
                             masterReferences,
                             errorMask);
                         writer.Write((int)GroupTypeEnum.CellPersistentChildren);
-                        if (obj._persistentTimeStamp != null)
-                        {
-                            writer.Write(obj._persistentTimeStamp);
-                        }
-                        else
-                        {
-                            writer.WriteZeros(4);
-                        }
+                        writer.Write(obj.PersistentTimestamp);
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IPlaced>.Instance.Write(
                             writer: writer,
                             items: obj.Persistent,
@@ -364,14 +335,7 @@ namespace Mutagen.Bethesda.Oblivion
                             masterReferences,
                             errorMask);
                         writer.Write((int)GroupTypeEnum.CellTemporaryChildren);
-                        if (obj._temporaryTimeStamp != null)
-                        {
-                            writer.Write(obj._temporaryTimeStamp);
-                        }
-                        else
-                        {
-                            writer.WriteZeros(4);
-                        }
+                        writer.Write(obj.TemporaryTimestamp);
                         if (obj.Landscape_IsSet)
                         {
                             LoquiBinaryTranslation<Landscape>.Instance.Write(
@@ -415,14 +379,7 @@ namespace Mutagen.Bethesda.Oblivion
                             masterReferences,
                             errorMask);
                         writer.Write((int)GroupTypeEnum.CellVisibleDistantChildren);
-                        if (obj._visibleWhenDistantTimeStamp != null)
-                        {
-                            writer.Write(obj._visibleWhenDistantTimeStamp);
-                        }
-                        else
-                        {
-                            writer.WriteZeros(4);
-                        }
+                        writer.Write(obj.VisibleWhenDistantTimestamp);
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IPlaced>.Instance.Write(
                             writer: writer,
                             items: obj.VisibleWhenDistant,
