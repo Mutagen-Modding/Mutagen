@@ -47,7 +47,11 @@ namespace Mutagen.Bethesda.Oblivion
         {
             using (HeaderExport.ExportSubRecordHeader(writer, Effect_Registration.EFID_HEADER))
             {
-                writer.Write(item.MagicEffect_Property.EDID.Type);
+                Mutagen.Bethesda.Binary.RecordTypeBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.MagicEffect_Property,
+                    fieldIndex: (int)Effect_FieldIndex.MagicEffect,
+                    errorMask: errorMask);
             }
         }
     }
