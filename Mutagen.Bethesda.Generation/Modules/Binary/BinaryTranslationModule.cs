@@ -276,6 +276,7 @@ namespace Mutagen.Bethesda.Generation
                         if (field is SetMarkerType) continue;
                         if (field.TryGetFieldData(out var fieldData)
                             && fieldData.HasTrigger) continue;
+                        if (fieldData.NoBinary) continue;
                         if (field.Derivative && !fieldData.CustomBinary) continue;
                         if (!this.TryGetTypeGeneration(field.GetType(), out var generator))
                         {
