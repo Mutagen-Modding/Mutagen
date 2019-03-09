@@ -2122,7 +2122,7 @@ namespace Mutagen.Bethesda.Internals
                     foreach (var item in this.Items.Specific)
                     {
                         if (!eval(item.Overall)) return false;
-                        throw new NotImplementedException();
+                        if (!item.Specific.AllEqual(eval)) return false;
                     }
                 }
             }

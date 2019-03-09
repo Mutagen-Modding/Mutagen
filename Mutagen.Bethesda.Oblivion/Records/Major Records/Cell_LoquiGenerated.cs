@@ -5254,7 +5254,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     foreach (var item in this.Persistent.Specific)
                     {
                         if (!eval(item.Overall)) return false;
-                        throw new NotImplementedException();
+                        if (!item.Specific.AllEqual(eval)) return false;
                     }
                 }
             }
@@ -5267,7 +5267,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     foreach (var item in this.Temporary.Specific)
                     {
                         if (!eval(item.Overall)) return false;
-                        throw new NotImplementedException();
+                        if (!item.Specific.AllEqual(eval)) return false;
                     }
                 }
             }
@@ -5280,7 +5280,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     foreach (var item in this.VisibleWhenDistant.Specific)
                     {
                         if (!eval(item.Overall)) return false;
-                        throw new NotImplementedException();
+                        if (!item.Specific.AllEqual(eval)) return false;
                     }
                 }
             }

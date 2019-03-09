@@ -10,10 +10,10 @@
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>05316ab0efa2f4e25ec920e981536124f8eb9d3b</Sha>
+         <Sha>e755cc62d4fb3249c7791802c92e68560f5c1869</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>03-03-2019 23:31:28</CommitDate>
-         <Description>XmlTranslationModule fill element virtuals</Description>
+         <CommitDate>03-10-2019 03:19:20</CommitDate>
+         <Description>Implemented equals mask for generic loquis</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>
