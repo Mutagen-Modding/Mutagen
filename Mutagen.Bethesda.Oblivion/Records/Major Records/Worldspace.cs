@@ -268,6 +268,79 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
+        public static bool TryCreate_Xml_Folder(
+            DirectoryPath dir,
+            out Worldspace ret,
+            ErrorMaskBuilder errorMask)
+        {
+            var path = Path.Combine(dir.Path, $"{nameof(Worldspace)}.xml");
+            if (!File.Exists(path))
+            {
+                ret = default;
+                return false;
+            }
+            ret = Create_Xml(
+                path: path,
+                errorMask: errorMask,
+                translationMask: XmlFolderTranslation);
+            var roadPath = Path.Combine(dir.Path, $"{nameof(Road)}.xml");
+            if (File.Exists(roadPath))
+            {
+                ret.Road = Road.Create_Xml(
+                    roadPath,
+                    translationMask: null,
+                    errorMask: errorMask);
+            }
+            var topCellpath = Path.Combine(dir.Path, $"{nameof(TopCell)}.xml");
+            if (File.Exists(roadPath))
+            {
+                ret.TopCell = Cell.Create_Xml(
+                    topCellpath,
+                    translationMask: null,
+                    errorMask: errorMask);
+            }
+            var subCellsDir = new DirectoryPath(Path.Combine(dir.Path, $"SubCells"));
+            if (!subCellsDir.Exists) return true;
+
+            bool TryGetIndices(string str, out short x, out short y)
+            {
+                var split = str.Split(',');
+                x = -1;
+                y = -1;
+                if (split.Length != 2) return false;
+                split[0] = split[0].Trim();
+                split[1] = split[1].Trim();
+                if (split[0].Length < 2 || split[1].Length < 2) return false;
+                if (!split[0].EndsWith("Y")) return false;
+                if (!split[1].EndsWith("X")) return false;
+                return short.TryParse(split[0].Substring(0, split[0].Length - 1), out y)
+                    && short.TryParse(split[1].Substring(0, split[1].Length - 1), out x);
+            }
+
+            foreach (var blockDir in subCellsDir.EnumerateDirectories(includeSelf: false, recursive: false))
+            {
+                if (!TryGetIndices(blockDir.Name, out var blockX, out var blockY)) continue;
+                WorldspaceBlock wb = new WorldspaceBlock()
+                {
+                    BlockNumberX = blockX,
+                    BlockNumberY = blockY,
+                };
+                ret.SubCells.Add(wb);
+                foreach (var subBlockFile in blockDir.EnumerateFiles())
+                {
+                    if (!TryGetIndices(subBlockFile.NameWithoutExtension, out var subBlockX, out var subBlockY)) continue;
+                    WorldspaceSubBlock wsb = WorldspaceSubBlock.Create_Xml(
+                        path: subBlockFile.Path,
+                        errorMask: errorMask,
+                        translationMask: null);
+                    wsb.BlockNumberX = subBlockX;
+                    wsb.BlockNumberY = subBlockY;
+                    wb.Items.Add(wsb);
+                }
+            }
+            return true;
+        }
+
         public override void Write_Xml_Folder(
             DirectoryPath? dir, 
             string name, 
@@ -275,7 +348,7 @@ namespace Mutagen.Bethesda.Oblivion
             int counter,
             ErrorMaskBuilder errorMask)
         {
-            dir = new DirectoryPath(Path.Combine(dir.Value.Path, Path.Combine(name, $"{counter} - {this.FormKey.IDString()} - {this.EditorID}")));
+            dir = new DirectoryPath(Path.Combine(dir.Value.Path, $"{counter} - {this.FormKey.IDString()} - {this.EditorID}"));
             dir.Value.Create();
 
             Write_Xml(
@@ -306,30 +379,10 @@ namespace Mutagen.Bethesda.Oblivion
                     if (subBlock.Items.Count == 0) continue;
                     var parentDir = new DirectoryInfo(Path.Combine(dir.Value.Path, $"SubCells/{block.BlockNumberY}Y, {block.BlockNumberX}X/"));
                     parentDir.Create();
-                    XElement topNode = new XElement("topNode");
-                    int subCellCounter = 0;
-                    foreach (var cell in subBlock.Items)
-                    {
-                        using (errorMask.PushIndex(subCellCounter))
-                        {
-                            try
-                            {
-                                cell.Write_Xml(
-                                    topNode,
-                                    errorMask: errorMask,
-                                    translationMask: null);
-                            }
-                            catch (Exception ex)
-                            {
-                                errorMask.ReportException(ex);
-                            }
-                        }
-                        subCellCounter++;
-                    }
-                    if (topNode.HasElements)
-                    {
-                        topNode.SaveIfChanged(Path.Combine(parentDir.FullName, $"{subBlock.BlockNumberY}Y, {subBlock.BlockNumberX}X.xml"));
-                    }
+                    subBlock.Write_Xml(
+                        path: Path.Combine(parentDir.FullName, $"{subBlock.BlockNumberY}Y, {subBlock.BlockNumberX}X.xml"),
+                        translationMask: null,
+                        errorMask: errorMask);
                 }
             }
         }

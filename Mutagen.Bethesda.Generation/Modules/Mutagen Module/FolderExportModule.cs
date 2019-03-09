@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace Mutagen.Bethesda.Generation
 {
@@ -20,16 +21,23 @@ namespace Mutagen.Bethesda.Generation
             };
         }
 
+        public override async Task PostFieldLoad(ObjectGeneration obj, TypeGeneration field, XElement node)
+        {
+            await base.PostFieldLoad(obj, field, node);
+            field.GetFieldData().CustomFolder = node.TryGetAttribute<bool>("customFolder", out var customFolder) && customFolder;
+        }
+
         public override async Task GenerateInClass(ObjectGeneration obj, FileGeneration fg)
         {
             await base.GenerateInClass(obj, fg);
+
             switch (obj.GetObjectType())
             {
                 case ObjectType.Record:
                     await GenerateForRecord(obj, fg);
                     break;
                 case ObjectType.Mod:
-                    GenerateForMod(obj, fg);
+                    await GenerateForMod(obj, fg);
                     break;
                 case ObjectType.Subrecord:
                 case ObjectType.Group:
@@ -38,8 +46,37 @@ namespace Mutagen.Bethesda.Generation
             }
         }
 
-        private void GenerateForMod(ObjectGeneration obj, FileGeneration fg)
+        private async Task GenerateForMod(ObjectGeneration obj, FileGeneration fg)
         {
+            foreach (var field in obj.IterateFields())
+            {
+                if (!field.GetFieldData().CustomFolder) continue;
+                using (var args = new ArgsWrapper(fg,
+                    $"partial void Write_Xml_Folder_{field.Name}"))
+                {
+                    args.Add("DirectoryPath dir");
+                    args.Add("string name");
+                    args.Add("int index");
+                    args.Add($"ErrorMaskBuilder errorMask");
+                }
+                fg.AppendLine();
+
+                LoquiType loqui = field as LoquiType;
+                if (!loqui.TryGetSpecificationAsObject("T", out var subObj))
+                {
+                    throw new ArgumentException();
+                }
+                using (var args = new ArgsWrapper(fg,
+                    $"partial void Create_Xml_Folder_{field.Name}"))
+                {
+                    args.Add("DirectoryPath dir");
+                    args.Add("string name");
+                    args.Add("int index");
+                    args.Add($"ErrorMaskBuilder errorMask");
+                }
+                fg.AppendLine();
+            }
+
             using (var args = new FunctionWrapper(fg,
                 $"public static async Task<({obj.Name} Mod, {obj.Mask(MaskType.Error)} ErrorMask)> Create_Xml_Folder"))
             {
@@ -53,6 +90,18 @@ namespace Mutagen.Bethesda.Generation
                 fg.AppendLine($"var ret = new {obj.Name}(modKey);");
                 foreach (var field in obj.IterateFields())
                 {
+                    if (field.GetFieldData().CustomFolder)
+                    {
+                        using (var args = new ArgsWrapper(fg,
+                            $"ret.Create_Xml_Folder_{field.Name}"))
+                        {
+                            args.Add("dir: dir");
+                            args.Add($"name: nameof({field.Name})");
+                            args.Add($"index: (int){field.IndexEnumName}");
+                            args.Add($"errorMask: errorMaskBuilder");
+                        }
+                        continue;
+                    }
                     if (!(field is LoquiType loqui))
                     {
                         throw new ArgumentException();
@@ -75,7 +124,7 @@ namespace Mutagen.Bethesda.Generation
                         case ObjectType.Group:
                             if (!loqui.TryGetSpecificationAsObject("T", out var subObj)) continue;
                             using (var args = new ArgsWrapper(fg,
-                                $"await ret.{field.Name}.Create_Xml_Folder<{subObj.Name}>"))
+                                $"ret.{field.Name}.Create_Xml_Folder<{subObj.Name}>"))
                             {
                                 args.Add($"dir: dir");
                                 args.Add($"name: nameof({field.Name})");
@@ -90,6 +139,7 @@ namespace Mutagen.Bethesda.Generation
                 BinaryTranslationModule.GenerateModLinking(obj, fg);
                 fg.AppendLine("return (ret, null);");
             }
+            fg.AppendLine();
 
             using (var args = new FunctionWrapper(fg,
                 $"public async Task<{obj.Mask(MaskType.Error)}> Write_XmlFolder"))
@@ -106,6 +156,18 @@ namespace Mutagen.Bethesda.Generation
                     if (!(field is LoquiType loqui))
                     {
                         throw new ArgumentException();
+                    }
+                    if (field.GetFieldData().CustomFolder)
+                    {
+                        using (var args = new ArgsWrapper(fg,
+                            $"Write_Xml_Folder_{field.Name}"))
+                        {
+                            args.Add("dir: dir");
+                            args.Add($"name: nameof({field.Name})"); ;
+                            args.Add($"index: (int){field.IndexEnumName}");
+                            args.Add($"errorMask: errorMaskBuilder");
+                        }
+                        continue;
                     }
                     switch (loqui.TargetObjectGeneration.GetObjectType())
                     {

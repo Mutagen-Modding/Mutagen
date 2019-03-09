@@ -2593,6 +2593,18 @@ namespace Mutagen.Bethesda.Oblivion
                 cmds);
         }
 
+        partial void Write_Xml_Folder_Worldspaces(
+            DirectoryPath dir,
+            string name,
+            int index,
+            ErrorMaskBuilder errorMask);
+
+        partial void Create_Xml_Folder_Worldspaces(
+            DirectoryPath dir,
+            string name,
+            int index,
+            ErrorMaskBuilder errorMask);
+
         public static async Task<(OblivionMod Mod, OblivionMod_ErrorMask ErrorMask)> Create_Xml_Folder(
             DirectoryPath dir,
             ModKey modKey,
@@ -2604,282 +2616,282 @@ namespace Mutagen.Bethesda.Oblivion
                 path: Path.Combine(dir.Path, "TES4.xml"),
                 errorMask: errorMaskBuilder,
                 translationMask: null));
-            await ret.GameSettings.Create_Xml_Folder<GameSetting>(
+            ret.GameSettings.Create_Xml_Folder<GameSetting>(
                 dir: dir,
                 name: nameof(GameSettings),
                 errorMask: errorMaskBuilder,
                 index: (int)OblivionMod_FieldIndex.GameSettings);
-            await ret.Globals.Create_Xml_Folder<Global>(
+            ret.Globals.Create_Xml_Folder<Global>(
                 dir: dir,
                 name: nameof(Globals),
                 errorMask: errorMaskBuilder,
                 index: (int)OblivionMod_FieldIndex.Globals);
-            await ret.Classes.Create_Xml_Folder<Class>(
+            ret.Classes.Create_Xml_Folder<Class>(
                 dir: dir,
                 name: nameof(Classes),
                 errorMask: errorMaskBuilder,
                 index: (int)OblivionMod_FieldIndex.Classes);
-            await ret.Factions.Create_Xml_Folder<Faction>(
+            ret.Factions.Create_Xml_Folder<Faction>(
                 dir: dir,
                 name: nameof(Factions),
                 errorMask: errorMaskBuilder,
                 index: (int)OblivionMod_FieldIndex.Factions);
-            await ret.Hairs.Create_Xml_Folder<Hair>(
+            ret.Hairs.Create_Xml_Folder<Hair>(
                 dir: dir,
                 name: nameof(Hairs),
                 errorMask: errorMaskBuilder,
                 index: (int)OblivionMod_FieldIndex.Hairs);
-            await ret.Eyes.Create_Xml_Folder<Eye>(
+            ret.Eyes.Create_Xml_Folder<Eye>(
                 dir: dir,
                 name: nameof(Eyes),
                 errorMask: errorMaskBuilder,
                 index: (int)OblivionMod_FieldIndex.Eyes);
-            await ret.Races.Create_Xml_Folder<Race>(
+            ret.Races.Create_Xml_Folder<Race>(
                 dir: dir,
                 name: nameof(Races),
                 errorMask: errorMaskBuilder,
                 index: (int)OblivionMod_FieldIndex.Races);
-            await ret.Sounds.Create_Xml_Folder<Sound>(
+            ret.Sounds.Create_Xml_Folder<Sound>(
                 dir: dir,
                 name: nameof(Sounds),
                 errorMask: errorMaskBuilder,
                 index: (int)OblivionMod_FieldIndex.Sounds);
-            await ret.Skills.Create_Xml_Folder<SkillRecord>(
+            ret.Skills.Create_Xml_Folder<SkillRecord>(
                 dir: dir,
                 name: nameof(Skills),
                 errorMask: errorMaskBuilder,
                 index: (int)OblivionMod_FieldIndex.Skills);
-            await ret.MagicEffects.Create_Xml_Folder<MagicEffect>(
+            ret.MagicEffects.Create_Xml_Folder<MagicEffect>(
                 dir: dir,
                 name: nameof(MagicEffects),
                 errorMask: errorMaskBuilder,
                 index: (int)OblivionMod_FieldIndex.MagicEffects);
-            await ret.Scripts.Create_Xml_Folder<Script>(
+            ret.Scripts.Create_Xml_Folder<Script>(
                 dir: dir,
                 name: nameof(Scripts),
                 errorMask: errorMaskBuilder,
                 index: (int)OblivionMod_FieldIndex.Scripts);
-            await ret.LandTextures.Create_Xml_Folder<LandTexture>(
+            ret.LandTextures.Create_Xml_Folder<LandTexture>(
                 dir: dir,
                 name: nameof(LandTextures),
                 errorMask: errorMaskBuilder,
                 index: (int)OblivionMod_FieldIndex.LandTextures);
-            await ret.Enchantments.Create_Xml_Folder<Enchantment>(
+            ret.Enchantments.Create_Xml_Folder<Enchantment>(
                 dir: dir,
                 name: nameof(Enchantments),
                 errorMask: errorMaskBuilder,
                 index: (int)OblivionMod_FieldIndex.Enchantments);
-            await ret.Spells.Create_Xml_Folder<SpellUnleveled>(
+            ret.Spells.Create_Xml_Folder<SpellUnleveled>(
                 dir: dir,
                 name: nameof(Spells),
                 errorMask: errorMaskBuilder,
                 index: (int)OblivionMod_FieldIndex.Spells);
-            await ret.Birthsigns.Create_Xml_Folder<Birthsign>(
+            ret.Birthsigns.Create_Xml_Folder<Birthsign>(
                 dir: dir,
                 name: nameof(Birthsigns),
                 errorMask: errorMaskBuilder,
                 index: (int)OblivionMod_FieldIndex.Birthsigns);
-            await ret.Activators.Create_Xml_Folder<Activator>(
+            ret.Activators.Create_Xml_Folder<Activator>(
                 dir: dir,
                 name: nameof(Activators),
                 errorMask: errorMaskBuilder,
                 index: (int)OblivionMod_FieldIndex.Activators);
-            await ret.AlchemicalApparatus.Create_Xml_Folder<AlchemicalApparatus>(
+            ret.AlchemicalApparatus.Create_Xml_Folder<AlchemicalApparatus>(
                 dir: dir,
                 name: nameof(AlchemicalApparatus),
                 errorMask: errorMaskBuilder,
                 index: (int)OblivionMod_FieldIndex.AlchemicalApparatus);
-            await ret.Armors.Create_Xml_Folder<Armor>(
+            ret.Armors.Create_Xml_Folder<Armor>(
                 dir: dir,
                 name: nameof(Armors),
                 errorMask: errorMaskBuilder,
                 index: (int)OblivionMod_FieldIndex.Armors);
-            await ret.Books.Create_Xml_Folder<Book>(
+            ret.Books.Create_Xml_Folder<Book>(
                 dir: dir,
                 name: nameof(Books),
                 errorMask: errorMaskBuilder,
                 index: (int)OblivionMod_FieldIndex.Books);
-            await ret.Clothes.Create_Xml_Folder<Clothing>(
+            ret.Clothes.Create_Xml_Folder<Clothing>(
                 dir: dir,
                 name: nameof(Clothes),
                 errorMask: errorMaskBuilder,
                 index: (int)OblivionMod_FieldIndex.Clothes);
-            await ret.Containers.Create_Xml_Folder<Container>(
+            ret.Containers.Create_Xml_Folder<Container>(
                 dir: dir,
                 name: nameof(Containers),
                 errorMask: errorMaskBuilder,
                 index: (int)OblivionMod_FieldIndex.Containers);
-            await ret.Doors.Create_Xml_Folder<Door>(
+            ret.Doors.Create_Xml_Folder<Door>(
                 dir: dir,
                 name: nameof(Doors),
                 errorMask: errorMaskBuilder,
                 index: (int)OblivionMod_FieldIndex.Doors);
-            await ret.Ingredients.Create_Xml_Folder<Ingredient>(
+            ret.Ingredients.Create_Xml_Folder<Ingredient>(
                 dir: dir,
                 name: nameof(Ingredients),
                 errorMask: errorMaskBuilder,
                 index: (int)OblivionMod_FieldIndex.Ingredients);
-            await ret.Lights.Create_Xml_Folder<Light>(
+            ret.Lights.Create_Xml_Folder<Light>(
                 dir: dir,
                 name: nameof(Lights),
                 errorMask: errorMaskBuilder,
                 index: (int)OblivionMod_FieldIndex.Lights);
-            await ret.Miscellaneous.Create_Xml_Folder<Miscellaneous>(
+            ret.Miscellaneous.Create_Xml_Folder<Miscellaneous>(
                 dir: dir,
                 name: nameof(Miscellaneous),
                 errorMask: errorMaskBuilder,
                 index: (int)OblivionMod_FieldIndex.Miscellaneous);
-            await ret.Statics.Create_Xml_Folder<Static>(
+            ret.Statics.Create_Xml_Folder<Static>(
                 dir: dir,
                 name: nameof(Statics),
                 errorMask: errorMaskBuilder,
                 index: (int)OblivionMod_FieldIndex.Statics);
-            await ret.Grasses.Create_Xml_Folder<Grass>(
+            ret.Grasses.Create_Xml_Folder<Grass>(
                 dir: dir,
                 name: nameof(Grasses),
                 errorMask: errorMaskBuilder,
                 index: (int)OblivionMod_FieldIndex.Grasses);
-            await ret.Trees.Create_Xml_Folder<Tree>(
+            ret.Trees.Create_Xml_Folder<Tree>(
                 dir: dir,
                 name: nameof(Trees),
                 errorMask: errorMaskBuilder,
                 index: (int)OblivionMod_FieldIndex.Trees);
-            await ret.Flora.Create_Xml_Folder<Flora>(
+            ret.Flora.Create_Xml_Folder<Flora>(
                 dir: dir,
                 name: nameof(Flora),
                 errorMask: errorMaskBuilder,
                 index: (int)OblivionMod_FieldIndex.Flora);
-            await ret.Furnature.Create_Xml_Folder<Furnature>(
+            ret.Furnature.Create_Xml_Folder<Furnature>(
                 dir: dir,
                 name: nameof(Furnature),
                 errorMask: errorMaskBuilder,
                 index: (int)OblivionMod_FieldIndex.Furnature);
-            await ret.Weapons.Create_Xml_Folder<Weapon>(
+            ret.Weapons.Create_Xml_Folder<Weapon>(
                 dir: dir,
                 name: nameof(Weapons),
                 errorMask: errorMaskBuilder,
                 index: (int)OblivionMod_FieldIndex.Weapons);
-            await ret.Ammo.Create_Xml_Folder<Ammo>(
+            ret.Ammo.Create_Xml_Folder<Ammo>(
                 dir: dir,
                 name: nameof(Ammo),
                 errorMask: errorMaskBuilder,
                 index: (int)OblivionMod_FieldIndex.Ammo);
-            await ret.NPCs.Create_Xml_Folder<NPC>(
+            ret.NPCs.Create_Xml_Folder<NPC>(
                 dir: dir,
                 name: nameof(NPCs),
                 errorMask: errorMaskBuilder,
                 index: (int)OblivionMod_FieldIndex.NPCs);
-            await ret.Creatures.Create_Xml_Folder<Creature>(
+            ret.Creatures.Create_Xml_Folder<Creature>(
                 dir: dir,
                 name: nameof(Creatures),
                 errorMask: errorMaskBuilder,
                 index: (int)OblivionMod_FieldIndex.Creatures);
-            await ret.LeveledCreatures.Create_Xml_Folder<LeveledCreature>(
+            ret.LeveledCreatures.Create_Xml_Folder<LeveledCreature>(
                 dir: dir,
                 name: nameof(LeveledCreatures),
                 errorMask: errorMaskBuilder,
                 index: (int)OblivionMod_FieldIndex.LeveledCreatures);
-            await ret.SoulGems.Create_Xml_Folder<SoulGem>(
+            ret.SoulGems.Create_Xml_Folder<SoulGem>(
                 dir: dir,
                 name: nameof(SoulGems),
                 errorMask: errorMaskBuilder,
                 index: (int)OblivionMod_FieldIndex.SoulGems);
-            await ret.Keys.Create_Xml_Folder<Key>(
+            ret.Keys.Create_Xml_Folder<Key>(
                 dir: dir,
                 name: nameof(Keys),
                 errorMask: errorMaskBuilder,
                 index: (int)OblivionMod_FieldIndex.Keys);
-            await ret.Potions.Create_Xml_Folder<Potion>(
+            ret.Potions.Create_Xml_Folder<Potion>(
                 dir: dir,
                 name: nameof(Potions),
                 errorMask: errorMaskBuilder,
                 index: (int)OblivionMod_FieldIndex.Potions);
-            await ret.Subspaces.Create_Xml_Folder<Subspace>(
+            ret.Subspaces.Create_Xml_Folder<Subspace>(
                 dir: dir,
                 name: nameof(Subspaces),
                 errorMask: errorMaskBuilder,
                 index: (int)OblivionMod_FieldIndex.Subspaces);
-            await ret.SigilStones.Create_Xml_Folder<SigilStone>(
+            ret.SigilStones.Create_Xml_Folder<SigilStone>(
                 dir: dir,
                 name: nameof(SigilStones),
                 errorMask: errorMaskBuilder,
                 index: (int)OblivionMod_FieldIndex.SigilStones);
-            await ret.LeveledItems.Create_Xml_Folder<LeveledItem>(
+            ret.LeveledItems.Create_Xml_Folder<LeveledItem>(
                 dir: dir,
                 name: nameof(LeveledItems),
                 errorMask: errorMaskBuilder,
                 index: (int)OblivionMod_FieldIndex.LeveledItems);
-            await ret.Weathers.Create_Xml_Folder<Weather>(
+            ret.Weathers.Create_Xml_Folder<Weather>(
                 dir: dir,
                 name: nameof(Weathers),
                 errorMask: errorMaskBuilder,
                 index: (int)OblivionMod_FieldIndex.Weathers);
-            await ret.Climates.Create_Xml_Folder<Climate>(
+            ret.Climates.Create_Xml_Folder<Climate>(
                 dir: dir,
                 name: nameof(Climates),
                 errorMask: errorMaskBuilder,
                 index: (int)OblivionMod_FieldIndex.Climates);
-            await ret.Regions.Create_Xml_Folder<Region>(
+            ret.Regions.Create_Xml_Folder<Region>(
                 dir: dir,
                 name: nameof(Regions),
                 errorMask: errorMaskBuilder,
                 index: (int)OblivionMod_FieldIndex.Regions);
-            await ret.Cells.Create_Xml_Folder<CellBlock>(
+            ret.Cells.Create_Xml_Folder<CellBlock>(
                 dir: dir,
                 name: nameof(Cells),
                 errorMask: errorMaskBuilder,
                 index: (int)OblivionMod_FieldIndex.Cells);
-            await ret.Worldspaces.Create_Xml_Folder<Worldspace>(
+            ret.Create_Xml_Folder_Worldspaces(
                 dir: dir,
                 name: nameof(Worldspaces),
-                errorMask: errorMaskBuilder,
-                index: (int)OblivionMod_FieldIndex.Worldspaces);
-            await ret.DialogTopics.Create_Xml_Folder<DialogTopic>(
+                index: (int)OblivionMod_FieldIndex.Worldspaces,
+                errorMask: errorMaskBuilder);
+            ret.DialogTopics.Create_Xml_Folder<DialogTopic>(
                 dir: dir,
                 name: nameof(DialogTopics),
                 errorMask: errorMaskBuilder,
                 index: (int)OblivionMod_FieldIndex.DialogTopics);
-            await ret.Quests.Create_Xml_Folder<Quest>(
+            ret.Quests.Create_Xml_Folder<Quest>(
                 dir: dir,
                 name: nameof(Quests),
                 errorMask: errorMaskBuilder,
                 index: (int)OblivionMod_FieldIndex.Quests);
-            await ret.IdleAnimations.Create_Xml_Folder<IdleAnimation>(
+            ret.IdleAnimations.Create_Xml_Folder<IdleAnimation>(
                 dir: dir,
                 name: nameof(IdleAnimations),
                 errorMask: errorMaskBuilder,
                 index: (int)OblivionMod_FieldIndex.IdleAnimations);
-            await ret.AIPackages.Create_Xml_Folder<AIPackage>(
+            ret.AIPackages.Create_Xml_Folder<AIPackage>(
                 dir: dir,
                 name: nameof(AIPackages),
                 errorMask: errorMaskBuilder,
                 index: (int)OblivionMod_FieldIndex.AIPackages);
-            await ret.CombatStyles.Create_Xml_Folder<CombatStyle>(
+            ret.CombatStyles.Create_Xml_Folder<CombatStyle>(
                 dir: dir,
                 name: nameof(CombatStyles),
                 errorMask: errorMaskBuilder,
                 index: (int)OblivionMod_FieldIndex.CombatStyles);
-            await ret.LoadScreens.Create_Xml_Folder<LoadScreen>(
+            ret.LoadScreens.Create_Xml_Folder<LoadScreen>(
                 dir: dir,
                 name: nameof(LoadScreens),
                 errorMask: errorMaskBuilder,
                 index: (int)OblivionMod_FieldIndex.LoadScreens);
-            await ret.LeveledSpells.Create_Xml_Folder<LeveledSpell>(
+            ret.LeveledSpells.Create_Xml_Folder<LeveledSpell>(
                 dir: dir,
                 name: nameof(LeveledSpells),
                 errorMask: errorMaskBuilder,
                 index: (int)OblivionMod_FieldIndex.LeveledSpells);
-            await ret.AnimatedObjects.Create_Xml_Folder<AnimatedObject>(
+            ret.AnimatedObjects.Create_Xml_Folder<AnimatedObject>(
                 dir: dir,
                 name: nameof(AnimatedObjects),
                 errorMask: errorMaskBuilder,
                 index: (int)OblivionMod_FieldIndex.AnimatedObjects);
-            await ret.Waters.Create_Xml_Folder<Water>(
+            ret.Waters.Create_Xml_Folder<Water>(
                 dir: dir,
                 name: nameof(Waters),
                 errorMask: errorMaskBuilder,
                 index: (int)OblivionMod_FieldIndex.Waters);
-            await ret.EffectShaders.Create_Xml_Folder<EffectShader>(
+            ret.EffectShaders.Create_Xml_Folder<EffectShader>(
                 dir: dir,
                 name: nameof(EffectShaders),
                 errorMask: errorMaskBuilder,
@@ -2891,6 +2903,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
             return (ret, null);
         }
+
         public async Task<OblivionMod_ErrorMask> Write_XmlFolder(
             DirectoryPath dir,
             bool doMasks = true)
@@ -3126,11 +3139,11 @@ namespace Mutagen.Bethesda.Oblivion
                 name: nameof(Cells),
                 errorMask: errorMaskBuilder,
                 index: (int)OblivionMod_FieldIndex.Cells);
-            await Worldspaces.Write_Xml_Folder<Worldspace, Worldspace_ErrorMask>(
-                dir: dir.Path,
+            Write_Xml_Folder_Worldspaces(
+                dir: dir,
                 name: nameof(Worldspaces),
-                errorMask: errorMaskBuilder,
-                index: (int)OblivionMod_FieldIndex.Worldspaces);
+                index: (int)OblivionMod_FieldIndex.Worldspaces,
+                errorMask: errorMaskBuilder);
             await DialogTopics.Write_Xml_Folder<DialogTopic, DialogTopic_ErrorMask>(
                 dir: dir.Path,
                 name: nameof(DialogTopics),

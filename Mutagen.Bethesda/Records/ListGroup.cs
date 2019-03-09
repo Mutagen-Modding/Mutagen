@@ -47,7 +47,7 @@ namespace Mutagen.Bethesda
 
     public static class ListGroupExt
     {
-        public static async Task Create_Xml_Folder<T>(
+        public static void Create_Xml_Folder<T>(
             this ListGroup<T> group,
             DirectoryPath dir,
             string name,

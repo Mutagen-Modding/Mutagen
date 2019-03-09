@@ -81,7 +81,7 @@ namespace Mutagen.Bethesda
         };
         public static readonly TranslationCrystal XmlFolderTranslationCrystal = XmlFolderTranslationMask.GetCrystal();
 
-        public static async Task Create_Xml_Folder<T>(
+        public static void Create_Xml_Folder<T>(
             this Group<T> group,
             DirectoryPath dir,
             string name,

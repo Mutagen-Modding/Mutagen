@@ -22,6 +22,7 @@ namespace Mutagen.Bethesda.Generation
         public bool Vestigial;
         public bool CustomBinary;
         public bool NoBinary;
+        public bool CustomFolder;
         public Dictionary<RecordType, ObjectGeneration> SubLoquiTypes = new Dictionary<RecordType, ObjectGeneration>();
         public IEnumerable<KeyValuePair<IEnumerable<RecordType>, TypeGeneration>> GenerationTypes => GetGenerationTypes();
         public bool IsTriggerForObject;

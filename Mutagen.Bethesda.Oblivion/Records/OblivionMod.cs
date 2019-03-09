@@ -13,6 +13,11 @@ using CSharpExt.Rx;
 using DynamicData;
 using System.Collections.ObjectModel;
 using System.Threading;
+using Loqui.Internal;
+using Mutagen.Bethesda.Internals;
+using System.IO;
+using System.Xml.Linq;
+using Loqui.Xml;
 
 namespace Mutagen.Bethesda.Oblivion
 {
@@ -156,6 +161,99 @@ namespace Mutagen.Bethesda.Oblivion
             // Tally Dialog Group Counts
             count += this.DialogTopics.Items.Count;
             setter(count);
+        }
+
+        partial void Create_Xml_Folder_Worldspaces(DirectoryPath dir, string name, int index, ErrorMaskBuilder errorMask)
+        {
+            dir = new DirectoryPath(Path.Combine(dir.Path, nameof(this.Worldspaces)));
+            using (errorMask?.PushIndex(index))
+            {
+                using (errorMask?.PushIndex((int)Group_FieldIndex.Items))
+                {
+                    try
+                    {
+                        var path = Path.Combine(dir.Path, $"Group.xml");
+                        if (File.Exists(path))
+                        {
+                            XElement elem = XElement.Load(path);
+                            if (elem.Name != "Group")
+                            {
+                                throw new ArgumentException("XML file did not have \"Group\" top node.");
+                            }
+                            this.Worldspaces.FillPublic_Xml(
+                                elem,
+                                errorMask,
+                                translationMask: GroupExt.XmlFolderTranslationCrystal);
+                        }
+
+                        int i = 0;
+                        foreach (var subDir in dir.EnumerateDirectories(includeSelf: false, recursive: false)
+                            .OrderBy(d => d.Name))
+                        {
+                            using (errorMask?.PushIndex(i++))
+                            {
+                                if (Worldspace.TryCreate_Xml_Folder(subDir, out var ws, errorMask))
+                                {
+                                    this.Worldspaces.Items.Set(ws);
+                                }
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                }
+            }
+        }
+
+        partial void Write_Xml_Folder_Worldspaces(DirectoryPath dir, string name, int index, ErrorMaskBuilder errorMask)
+        {
+            dir = new DirectoryPath(Path.Combine(dir.Path, nameof(this.Worldspaces)));
+            using (errorMask?.PushIndex(index))
+            {
+                using (errorMask?.PushIndex((int)Group_FieldIndex.Items))
+                {
+                    XElement topNode = new XElement("Group");
+                    this.Worldspaces.WriteToNode_Xml(
+                        topNode,
+                        errorMask,
+                        translationMask: GroupExt.XmlFolderTranslationCrystal);
+                    int counter = 0;
+                    XElement items = new XElement("Items");
+                    foreach (var item in this.Worldspaces.Items.Items)
+                    {
+                        using (errorMask.PushIndex(counter))
+                        {
+                            try
+                            {
+                                item.Write_Xml_Folder(
+                                    node: items,
+                                    name: name,
+                                    counter: counter,
+                                    dir: dir,
+                                    errorMask: errorMask);
+                            }
+                            catch (Exception ex)
+                            when (errorMask != null)
+                            {
+                                errorMask.ReportException(ex);
+                            }
+                        }
+                        counter++;
+                    }
+                    if (items.HasElements)
+                    {
+                        topNode.Add(items);
+                    }
+                    if (topNode.HasElements)
+                    {
+                        dir.Create();
+                        topNode.SaveIfChanged(Path.Combine(dir.Path, $"Group.xml"));
+                    }
+                }
+            }
         }
     }
 }
