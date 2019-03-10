@@ -37,6 +37,21 @@ namespace Mutagen.Bethesda.Oblivion
         };
         private static readonly TranslationCrystal XmlFolderTranslationCrystal = XmlFolderTranslation.GetCrystal();
 
+        private static readonly WorldspaceBlock_TranslationMask BlockXmlFolderTranslation = new WorldspaceBlock_TranslationMask(true)
+        {
+            Items = new MaskItem<bool, WorldspaceSubBlock_TranslationMask>(false, null),
+            BlockNumberX = false,
+            BlockNumberY = false,
+        };
+        private static readonly TranslationCrystal BlockXmlFolderTranslationCrystal = BlockXmlFolderTranslation.GetCrystal();
+
+        private static readonly WorldspaceSubBlock_TranslationMask SubBlockXmlFolderTranslation = new WorldspaceSubBlock_TranslationMask(true)
+        {
+            BlockNumberX = false,
+            BlockNumberY = false,
+        };
+        private static readonly TranslationCrystal SubBlockXmlFolderTranslationCrystal = SubBlockXmlFolderTranslation.GetCrystal();
+
         private static WorldspaceBlock_CopyMask duplicateBlockCopyMask = new WorldspaceBlock_CopyMask(true)
         {
             Items = new MaskItem<CopyOption, WorldspaceSubBlock_CopyMask>(CopyOption.Skip, null)
@@ -308,31 +323,68 @@ namespace Mutagen.Bethesda.Oblivion
                 x = -1;
                 y = -1;
                 if (split.Length != 2) return false;
-                split[0] = split[0].Trim();
-                split[1] = split[1].Trim();
+                int prefixIndex = split[0].IndexOf(" - (");
+                if (prefixIndex == -1) return false;
+                if (!split[1].EndsWith(")")) return false;
+                split[0] = split[0].Substring(prefixIndex + 4).Trim();
+                split[1] = split[1].Substring(0, split[1].Length - 1).Trim();
                 if (split[0].Length < 2 || split[1].Length < 2) return false;
-                if (!split[0].EndsWith("Y")) return false;
-                if (!split[1].EndsWith("X")) return false;
-                return short.TryParse(split[0].Substring(0, split[0].Length - 1), out y)
-                    && short.TryParse(split[1].Substring(0, split[1].Length - 1), out x);
+                if (!split[0].EndsWith("X")) return false;
+                if (!split[1].EndsWith("Y")) return false;
+                return short.TryParse(split[0].Substring(0, split[0].Length - 1), out x)
+                    && short.TryParse(split[1].Substring(0, split[1].Length - 1), out y);
             }
 
-            foreach (var blockDir in subCellsDir.EnumerateDirectories(includeSelf: false, recursive: false))
+            bool TryGetItemIndex(string str, out int index)
+            {
+                string[] split = str.Split('-');
+                if (split.Length < 2
+                    || !int.TryParse(split[0].Trim(), out index))
+                {
+                    index = -1;
+                    return false;
+                }
+                return true;
+            }
+
+            foreach (var blockDir in subCellsDir.EnumerateDirectories(includeSelf: false, recursive: false)
+                .SelectWhere(d =>
+                {
+                    if (TryGetItemIndex(d.Name, out var index))
+                    {
+                        return TryGet<(int Index, DirectoryPath Dir)>.Succeed((index, d));
+                    }
+                    return TryGet<(int Index, DirectoryPath Dir)>.Failure;
+                })
+                .OrderBy(d => d.Index)
+                .Select(d => d.Dir))
             {
                 if (!TryGetIndices(blockDir.Name, out var blockX, out var blockY)) continue;
-                WorldspaceBlock wb = new WorldspaceBlock()
-                {
-                    BlockNumberX = blockX,
-                    BlockNumberY = blockY,
-                };
+                WorldspaceBlock wb = WorldspaceBlock.Create_Xml(
+                    path: Path.Combine(blockDir.Path, "Group.xml"),
+                    errorMask: errorMask,
+                    translationMask: BlockXmlFolderTranslation);
+                wb.BlockNumberX = blockX;
+                wb.BlockNumberY = blockY;
                 ret.SubCells.Add(wb);
-                foreach (var subBlockFile in blockDir.EnumerateFiles())
+
+                foreach (var subBlockFile in blockDir.EnumerateFiles()
+                    .SelectWhere(d =>
+                    {
+                        if (TryGetItemIndex(d.Name, out var index))
+                        {
+                            return TryGet<(int Index, FilePath File)>.Succeed((index, d));
+                        }
+                        return TryGet<(int Index, FilePath File)>.Failure;
+                    })
+                    .OrderBy(d => d.Index)
+                    .Select(d => d.File))
                 {
                     if (!TryGetIndices(subBlockFile.NameWithoutExtension, out var subBlockX, out var subBlockY)) continue;
                     WorldspaceSubBlock wsb = WorldspaceSubBlock.Create_Xml(
                         path: subBlockFile.Path,
                         errorMask: errorMask,
-                        translationMask: null);
+                        translationMask: SubBlockXmlFolderTranslation);
                     wsb.BlockNumberX = subBlockX;
                     wsb.BlockNumberY = subBlockY;
                     wb.Items.Add(wsb);
@@ -372,16 +424,22 @@ namespace Mutagen.Bethesda.Oblivion
                     errorMask: errorMask,
                     translationMask: null);
             }
+            int blockCount = 0;
             foreach (var block in this.SubCellsEnumerable)
             {
+                var blockDir = new DirectoryPath(Path.Combine(dir.Value.Path, $"SubCells/{blockCount++} - ({block.BlockNumberY}X, {block.BlockNumberX}Y)/"));
+                blockDir.Create();
+                int subBlockCount = 0;
+                block.Write_Xml(
+                    Path.Combine(blockDir.Path, "Group.xml"),
+                    errorMask: errorMask,
+                    translationMask: BlockXmlFolderTranslationCrystal);
                 foreach (var subBlock in block.Items)
                 {
                     if (subBlock.Items.Count == 0) continue;
-                    var parentDir = new DirectoryInfo(Path.Combine(dir.Value.Path, $"SubCells/{block.BlockNumberY}Y, {block.BlockNumberX}X/"));
-                    parentDir.Create();
                     subBlock.Write_Xml(
-                        path: Path.Combine(parentDir.FullName, $"{subBlock.BlockNumberY}Y, {subBlock.BlockNumberX}X.xml"),
-                        translationMask: null,
+                        path: Path.Combine(blockDir.Path, $"{subBlockCount++} - ({subBlock.BlockNumberX}X, {subBlock.BlockNumberY}Y).xml"),
+                        translationMask: SubBlockXmlFolderTranslationCrystal,
                         errorMask: errorMask);
                 }
             }
