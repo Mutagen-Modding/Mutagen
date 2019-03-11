@@ -17,6 +17,7 @@
       <ByteArray name="OffsetData" recordType="OFST" customBinary="true" />
       <RefDirect name="Road" refName="Road" noBinary="true" />
       <RefDirect name="TopCell" refName="Cell" noBinary="true" />
+      <ByteArray name="SubCellsTimestamp" noBinary="true" length="4" nullable="NotNull" />
       <RefList name="SubCells" refName="WorldspaceBlock" noBinary="true" />
     </Fields>
   </Object>

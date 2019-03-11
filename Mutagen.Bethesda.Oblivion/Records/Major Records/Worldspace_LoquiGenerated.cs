@@ -338,6 +338,21 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Cell IWorldspaceGetter.TopCell => this.TopCell;
         #endregion
+        #region SubCellsTimestamp
+        private Byte[] _SubCellsTimestamp = new byte[4];
+        public Byte[] SubCellsTimestamp
+        {
+            get => _SubCellsTimestamp;
+            set
+            {
+                this._SubCellsTimestamp = value;
+                if (value == null)
+                {
+                    this._SubCellsTimestamp = new byte[4];
+                }
+            }
+        }
+        #endregion
         #region SubCells
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly SourceSetList<WorldspaceBlock> _SubCells = new SourceSetList<WorldspaceBlock>();
@@ -475,6 +490,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 if (!object.Equals(this.TopCell, rhs.TopCell)) return false;
             }
+            if (!this.SubCellsTimestamp.EqualsFast(rhs.SubCellsTimestamp)) return false;
             if (SubCells.HasBeenSet != rhs.SubCells.HasBeenSet) return false;
             if (SubCells.HasBeenSet)
             {
@@ -538,6 +554,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 ret = HashHelper.GetHashCode(TopCell).CombineHashCode(ret);
             }
+            ret = HashHelper.GetHashCode(SubCellsTimestamp).CombineHashCode(ret);
             if (SubCells.HasBeenSet)
             {
                 ret = HashHelper.GetHashCode(SubCells).CombineHashCode(ret);
@@ -983,6 +1000,8 @@ namespace Mutagen.Bethesda.Oblivion
                     return Water_Property.HasBeenSet;
                 case Worldspace_FieldIndex.SubCells:
                     return SubCells.HasBeenSet;
+                case Worldspace_FieldIndex.SubCellsTimestamp:
+                    return true;
                 default:
                     return base.GetHasBeenSet(index);
             }
@@ -1877,6 +1896,9 @@ namespace Mutagen.Bethesda.Oblivion
                 case Worldspace_FieldIndex.TopCell:
                     this.TopCell = (Cell)obj;
                     break;
+                case Worldspace_FieldIndex.SubCellsTimestamp:
+                    this.SubCellsTimestamp = (Byte[])obj;
+                    break;
                 case Worldspace_FieldIndex.SubCells:
                     this._SubCells.SetTo((IEnumerable<WorldspaceBlock>)obj);
                     break;
@@ -1956,6 +1978,9 @@ namespace Mutagen.Bethesda.Oblivion
                 case Worldspace_FieldIndex.TopCell:
                     obj.TopCell = (Cell)pair.Value;
                     break;
+                case Worldspace_FieldIndex.SubCellsTimestamp:
+                    obj.SubCellsTimestamp = (Byte[])pair.Value;
+                    break;
                 case Worldspace_FieldIndex.SubCells:
                     obj._SubCells.SetTo((IEnumerable<WorldspaceBlock>)pair.Value);
                     break;
@@ -2027,6 +2052,8 @@ namespace Mutagen.Bethesda.Oblivion
         void TopCell_Set(Cell item, bool hasBeenSet = true);
         void TopCell_Unset();
 
+        new Byte[] SubCellsTimestamp { get; set; }
+
         new ISourceSetList<WorldspaceBlock> SubCells { get; }
     }
 
@@ -2097,6 +2124,10 @@ namespace Mutagen.Bethesda.Oblivion
         bool TopCell_IsSet { get; }
 
         #endregion
+        #region SubCellsTimestamp
+        Byte[] SubCellsTimestamp { get; }
+
+        #endregion
         #region SubCells
         IObservableSetList<WorldspaceBlock> SubCells { get; }
         #endregion
@@ -2130,7 +2161,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         OffsetData = 15,
         Road = 16,
         TopCell = 17,
-        SubCells = 18,
+        SubCellsTimestamp = 18,
+        SubCells = 19,
     }
     #endregion
 
@@ -2148,9 +2180,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const string GUID = "d95e86a2-5fdd-4bb1-a2b9-c16161ef2f62";
 
-        public const ushort AdditionalFieldCount = 14;
+        public const ushort AdditionalFieldCount = 15;
 
-        public const ushort FieldCount = 19;
+        public const ushort FieldCount = 20;
 
         public static readonly Type MaskType = typeof(Worldspace_Mask<>);
 
@@ -2204,6 +2236,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (ushort)Worldspace_FieldIndex.Road;
                 case "TOPCELL":
                     return (ushort)Worldspace_FieldIndex.TopCell;
+                case "SUBCELLSTIMESTAMP":
+                    return (ushort)Worldspace_FieldIndex.SubCellsTimestamp;
                 case "SUBCELLS":
                     return (ushort)Worldspace_FieldIndex.SubCells;
                 default:
@@ -2231,6 +2265,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Worldspace_FieldIndex.OffsetData:
                 case Worldspace_FieldIndex.Road:
                 case Worldspace_FieldIndex.TopCell:
+                case Worldspace_FieldIndex.SubCellsTimestamp:
                     return false;
                 default:
                     return Place_Registration.GetNthIsEnumerable(index);
@@ -2257,6 +2292,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Worldspace_FieldIndex.ObjectBoundsMax:
                 case Worldspace_FieldIndex.Music:
                 case Worldspace_FieldIndex.OffsetData:
+                case Worldspace_FieldIndex.SubCellsTimestamp:
                     return false;
                 default:
                     return Place_Registration.GetNthIsLoqui(index);
@@ -2281,6 +2317,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Worldspace_FieldIndex.OffsetData:
                 case Worldspace_FieldIndex.Road:
                 case Worldspace_FieldIndex.TopCell:
+                case Worldspace_FieldIndex.SubCellsTimestamp:
                 case Worldspace_FieldIndex.SubCells:
                     return false;
                 default:
@@ -2319,6 +2356,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return "Road";
                 case Worldspace_FieldIndex.TopCell:
                     return "TopCell";
+                case Worldspace_FieldIndex.SubCellsTimestamp:
+                    return "SubCellsTimestamp";
                 case Worldspace_FieldIndex.SubCells:
                     return "SubCells";
                 default:
@@ -2344,6 +2383,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Worldspace_FieldIndex.OffsetData:
                 case Worldspace_FieldIndex.Road:
                 case Worldspace_FieldIndex.TopCell:
+                case Worldspace_FieldIndex.SubCellsTimestamp:
                 case Worldspace_FieldIndex.SubCells:
                     return false;
                 default:
@@ -2369,6 +2409,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Worldspace_FieldIndex.OffsetData:
                 case Worldspace_FieldIndex.Road:
                 case Worldspace_FieldIndex.TopCell:
+                case Worldspace_FieldIndex.SubCellsTimestamp:
                 case Worldspace_FieldIndex.SubCells:
                     return false;
                 default:
@@ -2407,6 +2448,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return typeof(Road);
                 case Worldspace_FieldIndex.TopCell:
                     return typeof(Cell);
+                case Worldspace_FieldIndex.SubCellsTimestamp:
+                    return typeof(Byte[]);
                 case Worldspace_FieldIndex.SubCells:
                     return typeof(SourceSetList<WorldspaceBlock>);
                 default:
@@ -2431,7 +2474,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType CELL_HEADER = new RecordType("CELL");
         public static readonly RecordType GRUP_HEADER = new RecordType("GRUP");
         public static readonly RecordType TRIGGERING_RECORD_TYPE = WRLD_HEADER;
-        public const int NumStructFields = 0;
+        public const int NumStructFields = 1;
         public const int NumTypedFields = 14;
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -2914,6 +2957,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
+            if (copyMask?.SubCellsTimestamp ?? true)
+            {
+                errorMask?.PushIndex((int)Worldspace_FieldIndex.SubCellsTimestamp);
+                try
+                {
+                    item.SubCellsTimestamp = rhs.SubCellsTimestamp;
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
             if (copyMask?.SubCells.Overall != CopyOption.Skip)
             {
                 errorMask?.PushIndex((int)Worldspace_FieldIndex.SubCells);
@@ -2962,6 +3022,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Worldspace_FieldIndex enu = (Worldspace_FieldIndex)index;
             switch (enu)
             {
+                case Worldspace_FieldIndex.SubCellsTimestamp:
+                    if (on) break;
+                    throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
                 case Worldspace_FieldIndex.Name:
                     obj.Name_IsSet = on;
                     break;
@@ -3057,6 +3120,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Worldspace_FieldIndex.TopCell:
                     obj.TopCell_Unset();
                     break;
+                case Worldspace_FieldIndex.SubCellsTimestamp:
+                    obj.SubCellsTimestamp = default(Byte[]);
+                    break;
                 case Worldspace_FieldIndex.SubCells:
                     obj.SubCells.Unset();
                     break;
@@ -3073,6 +3139,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Worldspace_FieldIndex enu = (Worldspace_FieldIndex)index;
             switch (enu)
             {
+                case Worldspace_FieldIndex.SubCellsTimestamp:
+                    return true;
                 case Worldspace_FieldIndex.Name:
                     return obj.Name_IsSet;
                 case Worldspace_FieldIndex.Parent:
@@ -3139,6 +3207,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return obj.Road;
                 case Worldspace_FieldIndex.TopCell:
                     return obj.TopCell;
+                case Worldspace_FieldIndex.SubCellsTimestamp:
+                    return obj.SubCellsTimestamp;
                 case Worldspace_FieldIndex.SubCells:
                     return obj.SubCells;
                 default:
@@ -3163,6 +3233,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.OffsetData_Unset();
             item.Road_Unset();
             item.TopCell_Unset();
+            item.SubCellsTimestamp = default(Byte[]);
             item.SubCells.Unset();
         }
 
@@ -3218,6 +3289,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 rhs.TopCell,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
                 include);
+            ret.SubCellsTimestamp = item.SubCellsTimestamp.EqualsFast(rhs.SubCellsTimestamp);
             ret.SubCells = item.SubCells.CollectionEqualsHelper(
                 rhs.SubCells,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
@@ -3304,6 +3376,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.TopCell?.ToString(fg, "TopCell");
                 }
+                if (printMask?.SubCellsTimestamp ?? true)
+                {
+                    fg.AppendLine($"SubCellsTimestamp => {item.SubCellsTimestamp}");
+                }
                 if (printMask?.SubCells?.Overall ?? true)
                 {
                     fg.AppendLine("SubCells =>");
@@ -3366,6 +3442,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.OffsetData = item.OffsetData_IsSet;
             ret.Road = new MaskItem<bool, Road_Mask<bool>>(item.Road_IsSet, RoadCommon.GetHasBeenSetMask(item.Road));
             ret.TopCell = new MaskItem<bool, Cell_Mask<bool>>(item.TopCell_IsSet, CellCommon.GetHasBeenSetMask(item.TopCell));
+            ret.SubCellsTimestamp = true;
             ret.SubCells = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, WorldspaceBlock_Mask<bool>>>>(item.SubCells.HasBeenSet, item.SubCells.WithIndex().Select((i) => new MaskItemIndexed<bool, WorldspaceBlock_Mask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
             return ret;
         }
@@ -3604,6 +3681,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)Worldspace_FieldIndex.TopCell,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)Worldspace_FieldIndex.TopCell));
+            }
+            if ((translationMask?.GetShouldTranslate((int)Worldspace_FieldIndex.SubCellsTimestamp) ?? true))
+            {
+                ByteArrayXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.SubCellsTimestamp),
+                    item: item.SubCellsTimestamp,
+                    fieldIndex: (int)Worldspace_FieldIndex.SubCellsTimestamp,
+                    errorMask: errorMask);
             }
             if (item.SubCells.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)Worldspace_FieldIndex.SubCells) ?? true))
@@ -3946,6 +4032,32 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask?.PopIndex();
                     }
                     break;
+                case "SubCellsTimestamp":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Worldspace_FieldIndex.SubCellsTimestamp);
+                        if (ByteArrayXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Byte[] SubCellsTimestampParse,
+                            errorMask: errorMask))
+                        {
+                            item.SubCellsTimestamp = SubCellsTimestampParse;
+                        }
+                        else
+                        {
+                            item.SubCellsTimestamp = default(Byte[]);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
                 case "SubCells":
                     try
                     {
@@ -4019,7 +4131,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: Worldspace_Registration.WRLD_HEADER,
                 type: ObjectType.Record))
             {
-                MajorRecordCommon.Write_Binary_Embedded(
+                Write_Binary_Embedded(
                     item: item,
                     writer: writer,
                     errorMask: errorMask,
@@ -4038,6 +4150,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 masterReferences: masterReferences);
         }
         #endregion
+
+        public static void Write_Binary_Embedded(
+            Worldspace item,
+            MutagenWriter writer,
+            ErrorMaskBuilder errorMask,
+            MasterReferences masterReferences)
+        {
+            MajorRecordCommon.Write_Binary_Embedded(
+                item: item,
+                writer: writer,
+                errorMask: errorMask,
+                masterReferences: masterReferences);
+        }
 
         public static void Write_Binary_RecordTypes(
             Worldspace item,
@@ -4197,6 +4322,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.OffsetData = initialValue;
             this.Road = new MaskItem<T, Road_Mask<T>>(initialValue, new Road_Mask<T>(initialValue));
             this.TopCell = new MaskItem<T, Cell_Mask<T>>(initialValue, new Cell_Mask<T>(initialValue));
+            this.SubCellsTimestamp = initialValue;
             this.SubCells = new MaskItem<T, IEnumerable<MaskItemIndexed<T, WorldspaceBlock_Mask<T>>>>(initialValue, null);
         }
         #endregion
@@ -4215,6 +4341,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public T OffsetData;
         public MaskItem<T, Road_Mask<T>> Road { get; set; }
         public MaskItem<T, Cell_Mask<T>> TopCell { get; set; }
+        public T SubCellsTimestamp;
         public MaskItem<T, IEnumerable<MaskItemIndexed<T, WorldspaceBlock_Mask<T>>>> SubCells;
         #endregion
 
@@ -4242,6 +4369,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (!object.Equals(this.OffsetData, rhs.OffsetData)) return false;
             if (!object.Equals(this.Road, rhs.Road)) return false;
             if (!object.Equals(this.TopCell, rhs.TopCell)) return false;
+            if (!object.Equals(this.SubCellsTimestamp, rhs.SubCellsTimestamp)) return false;
             if (!object.Equals(this.SubCells, rhs.SubCells)) return false;
             return true;
         }
@@ -4261,6 +4389,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret = ret.CombineHashCode(this.OffsetData?.GetHashCode());
             ret = ret.CombineHashCode(this.Road?.GetHashCode());
             ret = ret.CombineHashCode(this.TopCell?.GetHashCode());
+            ret = ret.CombineHashCode(this.SubCellsTimestamp?.GetHashCode());
             ret = ret.CombineHashCode(this.SubCells?.GetHashCode());
             ret = ret.CombineHashCode(base.GetHashCode());
             return ret;
@@ -4297,6 +4426,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 if (!eval(this.TopCell.Overall)) return false;
                 if (this.TopCell.Specific != null && !this.TopCell.Specific.AllEqual(eval)) return false;
             }
+            if (!eval(this.SubCellsTimestamp)) return false;
             if (this.SubCells != null)
             {
                 if (!eval(this.SubCells.Overall)) return false;
@@ -4361,6 +4491,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.TopCell.Specific = this.TopCell.Specific.Translate(eval);
                 }
             }
+            obj.SubCellsTimestamp = eval(this.SubCellsTimestamp);
             if (SubCells != null)
             {
                 obj.SubCells = new MaskItem<R, IEnumerable<MaskItemIndexed<R, WorldspaceBlock_Mask<R>>>>();
@@ -4468,6 +4599,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     TopCell?.ToString(fg);
                 }
+                if (printMask?.SubCellsTimestamp ?? true)
+                {
+                    fg.AppendLine($"SubCellsTimestamp => {SubCellsTimestamp}");
+                }
                 if (printMask?.SubCells?.Overall ?? true)
                 {
                     fg.AppendLine("SubCells =>");
@@ -4516,6 +4651,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Exception OffsetData;
         public MaskItem<Exception, Road_ErrorMask> Road;
         public MaskItem<Exception, Cell_ErrorMask> TopCell;
+        public Exception SubCellsTimestamp;
         public MaskItem<Exception, IEnumerable<MaskItem<Exception, WorldspaceBlock_ErrorMask>>> SubCells;
         #endregion
 
@@ -4551,6 +4687,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return Road;
                 case Worldspace_FieldIndex.TopCell:
                     return TopCell;
+                case Worldspace_FieldIndex.SubCellsTimestamp:
+                    return SubCellsTimestamp;
                 case Worldspace_FieldIndex.SubCells:
                     return SubCells;
                 default:
@@ -4601,6 +4739,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     break;
                 case Worldspace_FieldIndex.TopCell:
                     this.TopCell = new MaskItem<Exception, Cell_ErrorMask>(ex, null);
+                    break;
+                case Worldspace_FieldIndex.SubCellsTimestamp:
+                    this.SubCellsTimestamp = ex;
                     break;
                 case Worldspace_FieldIndex.SubCells:
                     this.SubCells = new MaskItem<Exception, IEnumerable<MaskItem<Exception, WorldspaceBlock_ErrorMask>>>(ex, null);
@@ -4655,6 +4796,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Worldspace_FieldIndex.TopCell:
                     this.TopCell = (MaskItem<Exception, Cell_ErrorMask>)obj;
                     break;
+                case Worldspace_FieldIndex.SubCellsTimestamp:
+                    this.SubCellsTimestamp = (Exception)obj;
+                    break;
                 case Worldspace_FieldIndex.SubCells:
                     this.SubCells = (MaskItem<Exception, IEnumerable<MaskItem<Exception, WorldspaceBlock_ErrorMask>>>)obj;
                     break;
@@ -4680,6 +4824,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (OffsetData != null) return true;
             if (Road != null) return true;
             if (TopCell != null) return true;
+            if (SubCellsTimestamp != null) return true;
             if (SubCells != null) return true;
             return false;
         }
@@ -4729,6 +4874,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             fg.AppendLine($"OffsetData => {OffsetData}");
             Road?.ToString(fg);
             TopCell?.ToString(fg);
+            fg.AppendLine($"SubCellsTimestamp => {SubCellsTimestamp}");
             fg.AppendLine("SubCells =>");
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
@@ -4771,6 +4917,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.OffsetData = this.OffsetData.Combine(rhs.OffsetData);
             ret.Road = new MaskItem<Exception, Road_ErrorMask>(this.Road.Overall.Combine(rhs.Road.Overall), ((IErrorMask<Road_ErrorMask>)this.Road.Specific).Combine(rhs.Road.Specific));
             ret.TopCell = new MaskItem<Exception, Cell_ErrorMask>(this.TopCell.Overall.Combine(rhs.TopCell.Overall), ((IErrorMask<Cell_ErrorMask>)this.TopCell.Specific).Combine(rhs.TopCell.Specific));
+            ret.SubCellsTimestamp = this.SubCellsTimestamp.Combine(rhs.SubCellsTimestamp);
             ret.SubCells = new MaskItem<Exception, IEnumerable<MaskItem<Exception, WorldspaceBlock_ErrorMask>>>(this.SubCells.Overall.Combine(rhs.SubCells.Overall), new List<MaskItem<Exception, WorldspaceBlock_ErrorMask>>(this.SubCells.Specific.And(rhs.SubCells.Specific)));
             return ret;
         }
@@ -4811,6 +4958,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.OffsetData = defaultOn;
             this.Road = new MaskItem<CopyOption, Road_CopyMask>(deepCopyOption, default);
             this.TopCell = new MaskItem<CopyOption, Cell_CopyMask>(deepCopyOption, default);
+            this.SubCellsTimestamp = defaultOn;
             this.SubCells = new MaskItem<CopyOption, WorldspaceBlock_CopyMask>(deepCopyOption, default);
         }
 
@@ -4828,6 +4976,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool OffsetData;
         public MaskItem<CopyOption, Road_CopyMask> Road;
         public MaskItem<CopyOption, Cell_CopyMask> TopCell;
+        public bool SubCellsTimestamp;
         public MaskItem<CopyOption, WorldspaceBlock_CopyMask> SubCells;
         #endregion
 
@@ -4849,6 +4998,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool OffsetData;
         public MaskItem<bool, Road_TranslationMask> Road;
         public MaskItem<bool, Cell_TranslationMask> TopCell;
+        public bool SubCellsTimestamp;
         public MaskItem<bool, WorldspaceBlock_TranslationMask> SubCells;
         #endregion
 
@@ -4874,6 +5024,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.OffsetData = defaultOn;
             this.Road = new MaskItem<bool, Road_TranslationMask>(defaultOn, null);
             this.TopCell = new MaskItem<bool, Cell_TranslationMask>(defaultOn, null);
+            this.SubCellsTimestamp = defaultOn;
             this.SubCells = new MaskItem<bool, WorldspaceBlock_TranslationMask>(defaultOn, null);
         }
 
@@ -4895,6 +5046,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Add((OffsetData, null));
             ret.Add((Road?.Overall ?? true, Road?.Specific?.GetCrystal()));
             ret.Add((TopCell?.Overall ?? true, TopCell?.Specific?.GetCrystal()));
+            ret.Add((SubCellsTimestamp, null));
             ret.Add((SubCells?.Overall ?? true, SubCells?.Specific?.GetCrystal()));
         }
     }

@@ -17,7 +17,6 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public partial class Worldspace
     {
-        private byte[] _timeStamp;
         private bool usingOffsetLength;
 
         [Flags]
@@ -151,7 +150,7 @@ namespace Mutagen.Bethesda.Oblivion
             var grupType = (GroupTypeEnum)frame.Reader.ReadInt32();
             if (grupType == GroupTypeEnum.WorldChildren)
             {
-                obj._timeStamp = frame.Reader.ReadBytes(4);
+                obj.SubCellsTimestamp = frame.Reader.ReadBytes(4);
                 if (formKey != obj.FormKey)
                 {
                     errorMask.ReportExceptionOrThrow(
@@ -240,14 +239,7 @@ namespace Mutagen.Bethesda.Oblivion
                     masterReferences,
                     errorMask);
                 writer.Write((int)GroupTypeEnum.WorldChildren);
-                if (obj._timeStamp != null)
-                {
-                    writer.Write(obj._timeStamp);
-                }
-                else
-                {
-                    writer.WriteZeros(4);
-                }
+                writer.Write(obj.SubCellsTimestamp);
 
                 if (obj.Road_IsSet)
                 {
@@ -294,10 +286,16 @@ namespace Mutagen.Bethesda.Oblivion
                 ret = default;
                 return false;
             }
+            var worldspaceNode = XDocument.Load(path).Root;
             ret = Create_Xml(
-                path: path,
+                node: worldspaceNode,
                 errorMask: errorMask,
-                translationMask: XmlFolderTranslation);
+                translationMask: XmlFolderTranslationCrystal);
+            var usingOffsetLenNode = worldspaceNode.Element("UsingOffsetLength");
+            if (usingOffsetLenNode != null && usingOffsetLenNode.TryGetAttribute("value", out bool val))
+            {
+                ret.usingOffsetLength = val;
+            }
             var roadPath = Path.Combine(dir.Path, $"{nameof(Road)}.xml");
             if (File.Exists(roadPath))
             {
@@ -403,11 +401,17 @@ namespace Mutagen.Bethesda.Oblivion
             dir = new DirectoryPath(Path.Combine(dir.Value.Path, $"{counter} - {this.FormKey.IDString()} - {this.EditorID}"));
             dir.Value.Create();
 
+            var worldspaceNode = new XElement("topnode");
             Write_Xml(
-                path: Path.Combine(dir.Value.Path, $"{nameof(Worldspace)}.xml"),
+                name: name,
+                node: worldspaceNode,
                 errorMask: errorMask,
-                translationMask: XmlFolderTranslationCrystal,
-                name: null);
+                translationMask: XmlFolderTranslationCrystal);
+            if (usingOffsetLength)
+            {
+                worldspaceNode.Elements().First().Add(new XElement("UsingOffsetLength", new XAttribute("value", "true")));
+            }
+            worldspaceNode.Elements().First().SaveIfChanged(Path.Combine(dir.Value.Path, $"{nameof(Worldspace)}.xml"));
             if (this.Road_IsSet
                 && this.Road != null)
             {
@@ -427,7 +431,7 @@ namespace Mutagen.Bethesda.Oblivion
             int blockCount = 0;
             foreach (var block in this.SubCellsEnumerable)
             {
-                var blockDir = new DirectoryPath(Path.Combine(dir.Value.Path, $"SubCells/{blockCount++} - ({block.BlockNumberY}X, {block.BlockNumberX}Y)/"));
+                var blockDir = new DirectoryPath(Path.Combine(dir.Value.Path, $"SubCells/{blockCount++} - ({block.BlockNumberX}X, {block.BlockNumberY}Y)/"));
                 blockDir.Create();
                 int subBlockCount = 0;
                 block.Write_Xml(
