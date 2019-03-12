@@ -13,8 +13,6 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public partial class DialogTopic
     {
-        private byte[] _overallTimeStamp;
-
         partial void PostDuplicate(DialogTopic obj, DialogTopic rhs, Func<FormKey> getNextFormKey, IList<(MajorRecord Record, FormKey OriginalFormKey)> duplicatedRecords)
         {
             obj.Items.SetTo(rhs.Items.Select((dia) => (DialogItem)dia.Duplicate(getNextFormKey, duplicatedRecords)));
@@ -30,7 +28,7 @@ namespace Mutagen.Bethesda.Oblivion
             var grupType = (GroupTypeEnum)frame.Reader.ReadInt32();
             if (grupType == GroupTypeEnum.TopicChildren)
             {
-                obj._overallTimeStamp = frame.Reader.ReadBytes(4);
+                obj.Timestamp = frame.Reader.ReadBytes(4);
                 if (formKey != obj.FormKey)
                 {
                     throw new ArgumentException("Dialog children group did not match the FormID of the parent.");
@@ -72,14 +70,7 @@ namespace Mutagen.Bethesda.Oblivion
                     masterReferences,
                     errorMask);
                 writer.Write((int)GroupTypeEnum.TopicChildren);
-                if (obj._overallTimeStamp != null)
-                {
-                    writer.Write(obj._overallTimeStamp);
-                }
-                else
-                {
-                    writer.WriteZeros(4);
-                }
+                writer.Write(obj.Timestamp);
                 Mutagen.Bethesda.Binary.ListBinaryTranslation<DialogItem>.Instance.Write(
                     writer: writer,
                     items: obj.Items,

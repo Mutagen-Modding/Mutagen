@@ -123,6 +123,21 @@ namespace Mutagen.Bethesda.Oblivion
             this.DialogType_Set(default(DialogType), false);
         }
         #endregion
+        #region Timestamp
+        private Byte[] _Timestamp = new byte[4];
+        public Byte[] Timestamp
+        {
+            get => _Timestamp;
+            set
+            {
+                this._Timestamp = value;
+                if (value == null)
+                {
+                    this._Timestamp = new byte[4];
+                }
+            }
+        }
+        #endregion
         #region Items
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly SourceSetList<DialogItem> _Items = new SourceSetList<DialogItem>();
@@ -210,6 +225,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 if (this.DialogType != rhs.DialogType) return false;
             }
+            if (!this.Timestamp.EqualsFast(rhs.Timestamp)) return false;
             if (Items.HasBeenSet != rhs.Items.HasBeenSet) return false;
             if (Items.HasBeenSet)
             {
@@ -233,6 +249,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 ret = HashHelper.GetHashCode(DialogType).CombineHashCode(ret);
             }
+            ret = HashHelper.GetHashCode(Timestamp).CombineHashCode(ret);
             if (Items.HasBeenSet)
             {
                 ret = HashHelper.GetHashCode(Items).CombineHashCode(ret);
@@ -634,6 +651,8 @@ namespace Mutagen.Bethesda.Oblivion
                     return Quests.HasBeenSet;
                 case DialogTopic_FieldIndex.Items:
                     return Items.HasBeenSet;
+                case DialogTopic_FieldIndex.Timestamp:
+                    return true;
                 default:
                     return base.GetHasBeenSet(index);
             }
@@ -1237,6 +1256,9 @@ namespace Mutagen.Bethesda.Oblivion
                 case DialogTopic_FieldIndex.DialogType:
                     this.DialogType = (DialogType)obj;
                     break;
+                case DialogTopic_FieldIndex.Timestamp:
+                    this.Timestamp = (Byte[])obj;
+                    break;
                 case DialogTopic_FieldIndex.Items:
                     this._Items.SetTo((IEnumerable<DialogItem>)obj);
                     break;
@@ -1280,6 +1302,9 @@ namespace Mutagen.Bethesda.Oblivion
                 case DialogTopic_FieldIndex.DialogType:
                     obj.DialogType = (DialogType)pair.Value;
                     break;
+                case DialogTopic_FieldIndex.Timestamp:
+                    obj.Timestamp = (Byte[])pair.Value;
+                    break;
                 case DialogTopic_FieldIndex.Items:
                     obj._Items.SetTo((IEnumerable<DialogItem>)pair.Value);
                     break;
@@ -1309,6 +1334,8 @@ namespace Mutagen.Bethesda.Oblivion
         void DialogType_Set(DialogType item, bool hasBeenSet = true);
         void DialogType_Unset();
 
+        new Byte[] Timestamp { get; set; }
+
         new ISourceSetList<DialogItem> Items { get; }
     }
 
@@ -1325,6 +1352,10 @@ namespace Mutagen.Bethesda.Oblivion
         #region DialogType
         DialogType DialogType { get; }
         bool DialogType_IsSet { get; }
+
+        #endregion
+        #region Timestamp
+        Byte[] Timestamp { get; }
 
         #endregion
         #region Items
@@ -1350,7 +1381,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         Quests = 5,
         Name = 6,
         DialogType = 7,
-        Items = 8,
+        Timestamp = 8,
+        Items = 9,
     }
     #endregion
 
@@ -1368,9 +1400,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const string GUID = "64f03683-28fd-43e3-8141-da8e95a52f89";
 
-        public const ushort AdditionalFieldCount = 4;
+        public const ushort AdditionalFieldCount = 5;
 
-        public const ushort FieldCount = 9;
+        public const ushort FieldCount = 10;
 
         public static readonly Type MaskType = typeof(DialogTopic_Mask<>);
 
@@ -1404,6 +1436,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (ushort)DialogTopic_FieldIndex.Name;
                 case "DIALOGTYPE":
                     return (ushort)DialogTopic_FieldIndex.DialogType;
+                case "TIMESTAMP":
+                    return (ushort)DialogTopic_FieldIndex.Timestamp;
                 case "ITEMS":
                     return (ushort)DialogTopic_FieldIndex.Items;
                 default:
@@ -1421,6 +1455,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return true;
                 case DialogTopic_FieldIndex.Name:
                 case DialogTopic_FieldIndex.DialogType:
+                case DialogTopic_FieldIndex.Timestamp:
                     return false;
                 default:
                     return MajorRecord_Registration.GetNthIsEnumerable(index);
@@ -1437,6 +1472,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case DialogTopic_FieldIndex.Quests:
                 case DialogTopic_FieldIndex.Name:
                 case DialogTopic_FieldIndex.DialogType:
+                case DialogTopic_FieldIndex.Timestamp:
                     return false;
                 default:
                     return MajorRecord_Registration.GetNthIsLoqui(index);
@@ -1451,6 +1487,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case DialogTopic_FieldIndex.Quests:
                 case DialogTopic_FieldIndex.Name:
                 case DialogTopic_FieldIndex.DialogType:
+                case DialogTopic_FieldIndex.Timestamp:
                 case DialogTopic_FieldIndex.Items:
                     return false;
                 default:
@@ -1469,6 +1506,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return "Name";
                 case DialogTopic_FieldIndex.DialogType:
                     return "DialogType";
+                case DialogTopic_FieldIndex.Timestamp:
+                    return "Timestamp";
                 case DialogTopic_FieldIndex.Items:
                     return "Items";
                 default:
@@ -1484,6 +1523,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case DialogTopic_FieldIndex.Quests:
                 case DialogTopic_FieldIndex.Name:
                 case DialogTopic_FieldIndex.DialogType:
+                case DialogTopic_FieldIndex.Timestamp:
                 case DialogTopic_FieldIndex.Items:
                     return false;
                 default:
@@ -1499,6 +1539,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case DialogTopic_FieldIndex.Quests:
                 case DialogTopic_FieldIndex.Name:
                 case DialogTopic_FieldIndex.DialogType:
+                case DialogTopic_FieldIndex.Timestamp:
                 case DialogTopic_FieldIndex.Items:
                     return false;
                 default:
@@ -1517,6 +1558,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return typeof(String);
                 case DialogTopic_FieldIndex.DialogType:
                     return typeof(DialogType);
+                case DialogTopic_FieldIndex.Timestamp:
+                    return typeof(Byte[]);
                 case DialogTopic_FieldIndex.Items:
                     return typeof(SourceSetList<DialogItem>);
                 default:
@@ -1530,7 +1573,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType DATA_HEADER = new RecordType("DATA");
         public static readonly RecordType INFO_HEADER = new RecordType("INFO");
         public static readonly RecordType TRIGGERING_RECORD_TYPE = DIAL_HEADER;
-        public const int NumStructFields = 0;
+        public const int NumStructFields = 1;
         public const int NumTypedFields = 4;
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1660,6 +1703,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
+            if (copyMask?.Timestamp ?? true)
+            {
+                errorMask?.PushIndex((int)DialogTopic_FieldIndex.Timestamp);
+                try
+                {
+                    item.Timestamp = rhs.Timestamp;
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
             if (copyMask?.Items.Overall != CopyOption.Skip)
             {
                 errorMask?.PushIndex((int)DialogTopic_FieldIndex.Items);
@@ -1708,6 +1768,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             DialogTopic_FieldIndex enu = (DialogTopic_FieldIndex)index;
             switch (enu)
             {
+                case DialogTopic_FieldIndex.Timestamp:
+                    if (on) break;
+                    throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
                 case DialogTopic_FieldIndex.Quests:
                     obj.Quests.HasBeenSet = on;
                     break;
@@ -1743,6 +1806,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case DialogTopic_FieldIndex.DialogType:
                     obj.DialogType_Unset();
                     break;
+                case DialogTopic_FieldIndex.Timestamp:
+                    obj.Timestamp = default(Byte[]);
+                    break;
                 case DialogTopic_FieldIndex.Items:
                     obj.Items.Unset();
                     break;
@@ -1759,6 +1825,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             DialogTopic_FieldIndex enu = (DialogTopic_FieldIndex)index;
             switch (enu)
             {
+                case DialogTopic_FieldIndex.Timestamp:
+                    return true;
                 case DialogTopic_FieldIndex.Quests:
                     return obj.Quests.HasBeenSet;
                 case DialogTopic_FieldIndex.Name:
@@ -1785,6 +1853,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return obj.Name;
                 case DialogTopic_FieldIndex.DialogType:
                     return obj.DialogType;
+                case DialogTopic_FieldIndex.Timestamp:
+                    return obj.Timestamp;
                 case DialogTopic_FieldIndex.Items:
                     return obj.Items;
                 default:
@@ -1799,6 +1869,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Quests.Unset();
             item.Name_Unset();
             item.DialogType_Unset();
+            item.Timestamp = default(Byte[]);
             item.Items.Unset();
         }
 
@@ -1829,6 +1900,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 include);
             ret.Name = item.Name_IsSet == rhs.Name_IsSet && object.Equals(item.Name, rhs.Name);
             ret.DialogType = item.DialogType_IsSet == rhs.DialogType_IsSet && item.DialogType == rhs.DialogType;
+            ret.Timestamp = item.Timestamp.EqualsFast(rhs.Timestamp);
             ret.Items = item.Items.CollectionEqualsHelper(
                 rhs.Items,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
@@ -1889,6 +1961,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     fg.AppendLine($"DialogType => {item.DialogType}");
                 }
+                if (printMask?.Timestamp ?? true)
+                {
+                    fg.AppendLine($"Timestamp => {item.Timestamp}");
+                }
                 if (printMask?.Items?.Overall ?? true)
                 {
                     fg.AppendLine("Items =>");
@@ -1928,6 +2004,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Quests = new MaskItem<bool, IEnumerable<(int, bool)>>(item.Quests.HasBeenSet, null);
             ret.Name = item.Name_IsSet;
             ret.DialogType = item.DialogType_IsSet;
+            ret.Timestamp = true;
             ret.Items = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, DialogItem_Mask<bool>>>>(item.Items.HasBeenSet, item.Items.WithIndex().Select((i) => new MaskItemIndexed<bool, DialogItem_Mask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
             return ret;
         }
@@ -2047,6 +2124,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     name: nameof(item.DialogType),
                     item: item.DialogType,
                     fieldIndex: (int)DialogTopic_FieldIndex.DialogType,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)DialogTopic_FieldIndex.Timestamp) ?? true))
+            {
+                ByteArrayXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Timestamp),
+                    item: item.Timestamp,
+                    fieldIndex: (int)DialogTopic_FieldIndex.Timestamp,
                     errorMask: errorMask);
             }
             if (item.Items.HasBeenSet
@@ -2186,6 +2272,32 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask?.PopIndex();
                     }
                     break;
+                case "Timestamp":
+                    try
+                    {
+                        errorMask?.PushIndex((int)DialogTopic_FieldIndex.Timestamp);
+                        if (ByteArrayXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Byte[] TimestampParse,
+                            errorMask: errorMask))
+                        {
+                            item.Timestamp = TimestampParse;
+                        }
+                        else
+                        {
+                            item.Timestamp = default(Byte[]);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
                 case "Items":
                     try
                     {
@@ -2259,7 +2371,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: DialogTopic_Registration.DIAL_HEADER,
                 type: ObjectType.Record))
             {
-                MajorRecordCommon.Write_Binary_Embedded(
+                Write_Binary_Embedded(
                     item: item,
                     writer: writer,
                     errorMask: errorMask,
@@ -2278,6 +2390,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 masterReferences: masterReferences);
         }
         #endregion
+
+        public static void Write_Binary_Embedded(
+            DialogTopic item,
+            MutagenWriter writer,
+            ErrorMaskBuilder errorMask,
+            MasterReferences masterReferences)
+        {
+            MajorRecordCommon.Write_Binary_Embedded(
+                item: item,
+                writer: writer,
+                errorMask: errorMask,
+                masterReferences: masterReferences);
+        }
 
         public static void Write_Binary_RecordTypes(
             DialogTopic item,
@@ -2353,6 +2478,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.Quests = new MaskItem<T, IEnumerable<(int Index, T Value)>>(initialValue, null);
             this.Name = initialValue;
             this.DialogType = initialValue;
+            this.Timestamp = initialValue;
             this.Items = new MaskItem<T, IEnumerable<MaskItemIndexed<T, DialogItem_Mask<T>>>>(initialValue, null);
         }
         #endregion
@@ -2361,6 +2487,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public MaskItem<T, IEnumerable<(int Index, T Value)>> Quests;
         public T Name;
         public T DialogType;
+        public T Timestamp;
         public MaskItem<T, IEnumerable<MaskItemIndexed<T, DialogItem_Mask<T>>>> Items;
         #endregion
 
@@ -2378,6 +2505,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (!object.Equals(this.Quests, rhs.Quests)) return false;
             if (!object.Equals(this.Name, rhs.Name)) return false;
             if (!object.Equals(this.DialogType, rhs.DialogType)) return false;
+            if (!object.Equals(this.Timestamp, rhs.Timestamp)) return false;
             if (!object.Equals(this.Items, rhs.Items)) return false;
             return true;
         }
@@ -2387,6 +2515,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret = ret.CombineHashCode(this.Quests?.GetHashCode());
             ret = ret.CombineHashCode(this.Name?.GetHashCode());
             ret = ret.CombineHashCode(this.DialogType?.GetHashCode());
+            ret = ret.CombineHashCode(this.Timestamp?.GetHashCode());
             ret = ret.CombineHashCode(this.Items?.GetHashCode());
             ret = ret.CombineHashCode(base.GetHashCode());
             return ret;
@@ -2411,6 +2540,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (!eval(this.Name)) return false;
             if (!eval(this.DialogType)) return false;
+            if (!eval(this.Timestamp)) return false;
             if (this.Items != null)
             {
                 if (!eval(this.Items.Overall)) return false;
@@ -2457,6 +2587,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             obj.Name = eval(this.Name);
             obj.DialogType = eval(this.DialogType);
+            obj.Timestamp = eval(this.Timestamp);
             if (Items != null)
             {
                 obj.Items = new MaskItem<R, IEnumerable<MaskItemIndexed<R, DialogItem_Mask<R>>>>();
@@ -2546,6 +2677,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     fg.AppendLine($"DialogType => {DialogType}");
                 }
+                if (printMask?.Timestamp ?? true)
+                {
+                    fg.AppendLine($"Timestamp => {Timestamp}");
+                }
                 if (printMask?.Items?.Overall ?? true)
                 {
                     fg.AppendLine("Items =>");
@@ -2584,6 +2719,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public MaskItem<Exception, IEnumerable<(int Index, Exception Value)>> Quests;
         public Exception Name;
         public Exception DialogType;
+        public Exception Timestamp;
         public MaskItem<Exception, IEnumerable<MaskItem<Exception, DialogItem_ErrorMask>>> Items;
         #endregion
 
@@ -2599,6 +2735,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return Name;
                 case DialogTopic_FieldIndex.DialogType:
                     return DialogType;
+                case DialogTopic_FieldIndex.Timestamp:
+                    return Timestamp;
                 case DialogTopic_FieldIndex.Items:
                     return Items;
                 default:
@@ -2619,6 +2757,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     break;
                 case DialogTopic_FieldIndex.DialogType:
                     this.DialogType = ex;
+                    break;
+                case DialogTopic_FieldIndex.Timestamp:
+                    this.Timestamp = ex;
                     break;
                 case DialogTopic_FieldIndex.Items:
                     this.Items = new MaskItem<Exception, IEnumerable<MaskItem<Exception, DialogItem_ErrorMask>>>(ex, null);
@@ -2643,6 +2784,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case DialogTopic_FieldIndex.DialogType:
                     this.DialogType = (Exception)obj;
                     break;
+                case DialogTopic_FieldIndex.Timestamp:
+                    this.Timestamp = (Exception)obj;
+                    break;
                 case DialogTopic_FieldIndex.Items:
                     this.Items = (MaskItem<Exception, IEnumerable<MaskItem<Exception, DialogItem_ErrorMask>>>)obj;
                     break;
@@ -2658,6 +2802,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (Quests != null) return true;
             if (Name != null) return true;
             if (DialogType != null) return true;
+            if (Timestamp != null) return true;
             if (Items != null) return true;
             return false;
         }
@@ -2718,6 +2863,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             fg.AppendLine("]");
             fg.AppendLine($"Name => {Name}");
             fg.AppendLine($"DialogType => {DialogType}");
+            fg.AppendLine($"Timestamp => {Timestamp}");
             fg.AppendLine("Items =>");
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
@@ -2750,6 +2896,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Quests = new MaskItem<Exception, IEnumerable<(int Index, Exception Value)>>(this.Quests.Overall.Combine(rhs.Quests.Overall), new List<(int Index, Exception Value)>(this.Quests.Specific.And(rhs.Quests.Specific)));
             ret.Name = this.Name.Combine(rhs.Name);
             ret.DialogType = this.DialogType.Combine(rhs.DialogType);
+            ret.Timestamp = this.Timestamp.Combine(rhs.Timestamp);
             ret.Items = new MaskItem<Exception, IEnumerable<MaskItem<Exception, DialogItem_ErrorMask>>>(this.Items.Overall.Combine(rhs.Items.Overall), new List<MaskItem<Exception, DialogItem_ErrorMask>>(this.Items.Specific.And(rhs.Items.Specific)));
             return ret;
         }
@@ -2780,6 +2927,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.Quests = deepCopyOption;
             this.Name = defaultOn;
             this.DialogType = defaultOn;
+            this.Timestamp = defaultOn;
             this.Items = new MaskItem<CopyOption, DialogItem_CopyMask>(deepCopyOption, default);
         }
 
@@ -2787,6 +2935,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public CopyOption Quests;
         public bool Name;
         public bool DialogType;
+        public bool Timestamp;
         public MaskItem<CopyOption, DialogItem_CopyMask> Items;
         #endregion
 
@@ -2798,6 +2947,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool Quests;
         public bool Name;
         public bool DialogType;
+        public bool Timestamp;
         public MaskItem<bool, DialogItem_TranslationMask> Items;
         #endregion
 
@@ -2813,6 +2963,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.Quests = defaultOn;
             this.Name = defaultOn;
             this.DialogType = defaultOn;
+            this.Timestamp = defaultOn;
             this.Items = new MaskItem<bool, DialogItem_TranslationMask>(defaultOn, null);
         }
 
@@ -2824,6 +2975,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Add((Quests, null));
             ret.Add((Name, null));
             ret.Add((DialogType, null));
+            ret.Add((Timestamp, null));
             ret.Add((Items?.Overall ?? true, Items?.Specific?.GetCrystal()));
         }
     }

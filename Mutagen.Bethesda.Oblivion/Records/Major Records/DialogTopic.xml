@@ -8,6 +8,7 @@
       </List>
       <String name="Name" recordType="FULL" />
       <Enum name="DialogType" recordType="DATA" enumName="DialogType" byteLength="1" />
+      <ByteArray name="Timestamp" noBinary="true" length="4" nullable="NotNull" />
       <RefList name="Items" noBinary="true" refName="DialogItem" />
     </Fields>
   </Object>
