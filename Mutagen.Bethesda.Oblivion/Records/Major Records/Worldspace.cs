@@ -305,7 +305,7 @@ namespace Mutagen.Bethesda.Oblivion
                     errorMask: errorMask);
             }
             var topCellpath = Path.Combine(dir.Path, $"{nameof(TopCell)}.xml");
-            if (File.Exists(roadPath))
+            if (File.Exists(topCellpath))
             {
                 ret.TopCell = Cell.Create_Xml(
                     topCellpath,
@@ -333,22 +333,10 @@ namespace Mutagen.Bethesda.Oblivion
                     && short.TryParse(split[1].Substring(0, split[1].Length - 1), out y);
             }
 
-            bool TryGetItemIndex(string str, out int index)
-            {
-                string[] split = str.Split('-');
-                if (split.Length < 2
-                    || !int.TryParse(split[0].Trim(), out index))
-                {
-                    index = -1;
-                    return false;
-                }
-                return true;
-            }
-
             foreach (var blockDir in subCellsDir.EnumerateDirectories(includeSelf: false, recursive: false)
                 .SelectWhere(d =>
                 {
-                    if (TryGetItemIndex(d.Name, out var index))
+                    if (Mutagen.Bethesda.XmlFolderTranslation.TryGetItemIndex(d.Name, out var index))
                     {
                         return TryGet<(int Index, DirectoryPath Dir)>.Succeed((index, d));
                     }
@@ -369,7 +357,7 @@ namespace Mutagen.Bethesda.Oblivion
                 foreach (var subBlockFile in blockDir.EnumerateFiles()
                     .SelectWhere(d =>
                     {
-                        if (TryGetItemIndex(d.Name, out var index))
+                        if (Mutagen.Bethesda.XmlFolderTranslation.TryGetItemIndex(d.Name, out var index))
                         {
                             return TryGet<(int Index, FilePath File)>.Succeed((index, d));
                         }
@@ -440,7 +428,6 @@ namespace Mutagen.Bethesda.Oblivion
                     translationMask: BlockXmlFolderTranslationCrystal);
                 foreach (var subBlock in block.Items)
                 {
-                    if (subBlock.Items.Count == 0) continue;
                     subBlock.Write_Xml(
                         path: Path.Combine(blockDir.Path, $"{subBlockCount++} - ({subBlock.BlockNumberX}X, {subBlock.BlockNumberY}Y).xml"),
                         translationMask: SubBlockXmlFolderTranslationCrystal,

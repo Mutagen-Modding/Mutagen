@@ -471,7 +471,7 @@
     <Compile Include="Records\OblivionMod_LoquiGenerated.cs">
       <DependentUpon>OblivionMod.xml</DependentUpon>
     </Compile>
-    <Compile Include="Utility.cs" />
+    <Compile Include="LoadOrder.cs" />
     <Compile Include="Records\Major Records\SoundItem_LoquiGenerated.cs">
       <DependentUpon>Creature.xml</DependentUpon>
     </Compile>

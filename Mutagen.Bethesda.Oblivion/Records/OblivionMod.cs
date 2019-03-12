@@ -185,14 +185,21 @@ namespace Mutagen.Bethesda.Oblivion
                                 errorMask,
                                 translationMask: GroupExt.XmlFolderTranslationCrystal);
                         }
-
-                        int i = 0;
+                        
                         foreach (var subDir in dir.EnumerateDirectories(includeSelf: false, recursive: false)
-                            .OrderBy(d => d.Name))
-                        {
-                            using (errorMask?.PushIndex(i++))
+                            .SelectWhere(d =>
                             {
-                                if (Worldspace.TryCreate_Xml_Folder(subDir, out var ws, errorMask))
+                                if (Mutagen.Bethesda.XmlFolderTranslation.TryGetItemIndex(d.Name, out var i))
+                                {
+                                    return TryGet<(int Index, DirectoryPath Dir)>.Succeed((i, d));
+                                }
+                                return TryGet<(int Index, DirectoryPath Dir)>.Failure;
+                            })
+                            .OrderBy(d => d.Index))
+                        {
+                            using (errorMask?.PushIndex(subDir.Index))
+                            {
+                                if (Worldspace.TryCreate_Xml_Folder(subDir.Dir, out var ws, errorMask))
                                 {
                                     this.Worldspaces.Items.Set(ws);
                                 }
