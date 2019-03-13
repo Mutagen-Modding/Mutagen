@@ -116,12 +116,12 @@ namespace Mutagen.Bethesda
                             ushort i = 0;
                             foreach (var itemNode in itemsNode.Elements())
                             {
-                                var val = LoquiXmlTranslation<T>.Instance.Parse(
-                                    itemNode,
-                                    out var item,
-                                    errorMask,
-                                    translationMask: null);
-                                group.Items.Set(item);
+                                group.Items.Set(
+                                    LoquiXmlFolderTranslation<T>.CREATE.Value(
+                                        node: itemNode,
+                                        path: dir.Path,
+                                        errorMask: errorMask,
+                                        translationMask: null));
                                 i++;
                             }
                         }

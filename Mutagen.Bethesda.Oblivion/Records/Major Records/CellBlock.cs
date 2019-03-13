@@ -63,8 +63,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static CellBlock Create_XmlFolder(
+            XElement node,
             string path,
-            ErrorMaskBuilder errorMask)
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
         {
             CellBlock ret = new CellBlock();
             var groupPath = Path.Combine(path, $"Group.xml");

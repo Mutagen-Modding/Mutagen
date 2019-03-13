@@ -97,8 +97,10 @@ namespace Mutagen.Bethesda
                                 {
                                     group.Items.Add(
                                         LoquiXmlFolderTranslation<T>.CREATE.Value(
-                                            subDir.Dir.Path, 
-                                            errorMask: errorMask));
+                                            node: null,
+                                            path: subDir.Dir.Path, 
+                                            errorMask: errorMask,
+                                            translationMask: null));
                                 }
                                 catch (Exception ex)
                                 when (errorMask != null)

@@ -15,11 +15,13 @@ namespace Mutagen.Bethesda.Folder
         where T : ILoquiObjectGetter
     {
         public delegate T CREATE_FUNC(
+            XElement node,
             string path,
-            ErrorMaskBuilder errorMask);
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask);
         public static readonly Lazy<CREATE_FUNC> CREATE = new Lazy<CREATE_FUNC>(GetCreateFunc);
 
-        public static CREATE_FUNC GetCreateFunc()
+        private static CREATE_FUNC GetCreateFunc()
         {
             var tType = typeof(T);
             var options = tType.GetMethods()
@@ -27,9 +29,11 @@ namespace Mutagen.Bethesda.Folder
                 .Where((methodInfo) => methodInfo.IsStatic
                     && methodInfo.IsPublic)
                 .Where((methodInfo) => methodInfo.ReturnType.Equals(tType))
-                .Where((methodInfo) => methodInfo.GetParameters().Length == 2)
-                .Where((methodInfo) => methodInfo.GetParameters()[0].ParameterType.Equals(typeof(string)))
-                .Where((methodInfo) => methodInfo.GetParameters()[1].ParameterType.Equals(typeof(ErrorMaskBuilder)))
+                .Where((methodInfo) => methodInfo.GetParameters().Length == 4)
+                .Where((methodInfo) => methodInfo.GetParameters()[0].ParameterType.Equals(typeof(XElement)))
+                .Where((methodInfo) => methodInfo.GetParameters()[1].ParameterType.Equals(typeof(string)))
+                .Where((methodInfo) => methodInfo.GetParameters()[2].ParameterType.Equals(typeof(ErrorMaskBuilder)))
+                .Where((methodInfo) => methodInfo.GetParameters()[3].ParameterType.Equals(typeof(TranslationCrystal)))
                 .ToArray();
             var method = options
                 .FirstOrDefault();
@@ -39,13 +43,13 @@ namespace Mutagen.Bethesda.Folder
             }
             else
             {
-                return (path, errorMask) =>
+                return (node, path, errorMask, translMask) =>
                 {
                     if (LoquiXmlTranslation<T>.Instance.Parse(
-                        XElement.Load(path),
+                        node,
                         out var item,
                         errorMask: errorMask,
-                        translationMask: null))
+                        translationMask: translMask))
                     {
                         return item;
                     }
