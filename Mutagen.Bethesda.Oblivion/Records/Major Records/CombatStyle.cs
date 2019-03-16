@@ -3,8 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda.Oblivion.Internals;
+using Noggog;
 
 namespace Mutagen.Bethesda.Oblivion
 {
@@ -36,6 +39,48 @@ namespace Mutagen.Bethesda.Oblivion
             int flags = (int)item.Flags;
             flags = flags >> 8;
             writer.Write(flags);
+        }
+
+        public static CombatStyle Create_XmlFolder(
+            XElement node,
+            string path,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            var ret = Create_Xml(
+                node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+            var customEndingNode = node.Element("CustomEndingFlags");
+            if (customEndingNode == null
+                || !customEndingNode.TryGetAttribute<bool>("value", out var val)
+                || val)
+            {
+                ret.CSTDDataTypeState &= ~CSTDDataType.Break4;
+            }
+            return ret;
+        }
+
+        public override void Write_Xml_Folder(
+            DirectoryPath? dir,
+            string name,
+            XElement node,
+            int counter,
+            ErrorMaskBuilder errorMask)
+        {
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.CombatStyle");
+            node.Add(elem);
+            if (name != null)
+            {
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.CombatStyle");
+            }
+            CombatStyleCommon.WriteToNode_Xml(
+                item: this,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: null);
+            if (!this.CSTDDataTypeState.HasFlag(CSTDDataType.Break4)) return;
+            elem.Add(new XElement("CustomEndingFlags", new XAttribute("value", "false")));
         }
     }
 }

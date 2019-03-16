@@ -1514,13 +1514,6 @@ namespace Mutagen.Bethesda.Tests
                 }
             }
 
-            await ImportExport(
-                settings: settings,
-                tmp: tmp,
-                inputPath: orderedPath,
-                outputPathStraight: outputPath,
-                outputPathObservable: observableOutputPath);
-
             if (!settings.ReuseCaches || !File.Exists(alignedPath))
             {
                 ModRecordAligner.Align(
@@ -1608,7 +1601,15 @@ namespace Mutagen.Bethesda.Tests
             {
                 var outputPath = Path.Combine(tmp.Dir.Path, $"{this.Nickname}_NormalExport");
                 var processedPath = ProcessedPath(tmp);
+                var orderedPath = Path.Combine(tmp.Dir.Path, $"{this.Nickname}_Ordered");
                 var observableOutputPath = Path.Combine(tmp.Dir.Path, $"{this.Nickname}_ObservableExport");
+
+                await ImportExport(
+                    settings: settings,
+                    tmp: tmp,
+                    inputPath: orderedPath,
+                    outputPathStraight: outputPath,
+                    outputPathObservable: observableOutputPath);
 
                 if (settings.TestNormal)
                 {

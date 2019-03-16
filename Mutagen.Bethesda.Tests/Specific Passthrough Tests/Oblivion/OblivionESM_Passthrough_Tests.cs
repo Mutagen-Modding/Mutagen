@@ -91,26 +91,42 @@ namespace Mutagen.Bethesda.Tests
 
         public static async Task OblivionESM_Folder_Reimport(PassthroughSettings settings, Passthrough passthrough, Oblivion_Passthrough_Test oblivPassthrough)
         {
+            OblivionMod ImportModBinary(string sourcePath)
+            {
+                var mod = OblivionMod.Create_Binary(
+                    sourcePath,
+                    modKey: Mutagen.Bethesda.Oblivion.Constants.Oblivion,
+                    errorMask: out var inputErrMask);
+                Assert.False(inputErrMask?.IsInError() ?? false);
+                return mod;
+            }
+
+            async Task WriteMod(OblivionMod mod, DirectoryPath dir)
+            {
+                var exportMask = await mod.Write_XmlFolder(dir);
+                Assert.False(exportMask?.IsInError() ?? false);
+            }
+
+            async Task<OblivionMod> ImportModXmlFolder(string sourcePath, DirectoryPath dir)
+            {
+                var mod = ImportModBinary(sourcePath);
+                await WriteMod(mod, dir);
+                var reimport = await OblivionMod.Create_Xml_Folder(
+                    dir: dir,
+                    modKey: Mutagen.Bethesda.Oblivion.Constants.Oblivion);
+                var eqMask = reimport.Mod.GetEqualsMask(mod, include: Loqui.EqualsMaskHelper.Include.OnlyFailures);
+                Assert.True(eqMask.AllEqual(b => b));
+                return reimport.Mod;
+            }
+
             using (var processedTmp = await oblivPassthrough.SetupProcessedFiles())
             {
                 using (var tmp = new TempFolder("Mutagen_Oblivion_XmlFolder", deleteAfter: false))
                 {
                     var sourcePath = oblivPassthrough.ProcessedPath(processedTmp);
-                    var mod = OblivionMod.Create_Binary(
-                        sourcePath,
-                        modKey: Mutagen.Bethesda.Oblivion.Constants.Oblivion,
-                        errorMask: out var inputErrMask);
-                    Assert.False(inputErrMask?.IsInError() ?? false);
-                    var exportMask = await mod.Write_XmlFolder(
-                        tmp.Dir);
-                    Assert.False(exportMask?.IsInError() ?? false);
-                    var reimport = await OblivionMod.Create_Xml_Folder(
-                        dir: tmp.Dir,
-                        modKey: Mutagen.Bethesda.Oblivion.Constants.Oblivion);
-                    var eqMask = reimport.Mod.GetEqualsMask(mod, include: Loqui.EqualsMaskHelper.Include.OnlyFailures);
-                    Assert.True(eqMask.AllEqual(b => b));
+                    var reimport = await ImportModXmlFolder(sourcePath, tmp.Dir);
                     var reexportPath = Path.Combine(tmp.Dir.Path, "Reexport");
-                    reimport.Mod.Write_Binary(
+                    reimport.Write_Binary(
                         reexportPath,
                         modKey: Mutagen.Bethesda.Oblivion.Constants.Oblivion);
                     using (var stream = new BinaryReadStream(sourcePath))
