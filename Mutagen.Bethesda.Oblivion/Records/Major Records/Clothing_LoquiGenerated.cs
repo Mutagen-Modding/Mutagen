@@ -575,6 +575,9 @@ namespace Mutagen.Bethesda.Oblivion
         {
             switch (name)
             {
+                case "HasDATADataType":
+                    item.DATADataTypeState |= Clothing.DATADataType.Has;
+                    break;
                 default:
                     ClothingAbstract.FillPrivateElement_Xml(
                         item: item,

@@ -1121,6 +1121,9 @@ namespace Mutagen.Bethesda.Oblivion
         {
             switch (name)
             {
+                case "HasDATADataType":
+                    item.DATADataTypeState |= Race.DATADataType.Has;
+                    break;
                 default:
                     MajorRecord.FillPrivateElement_Xml(
                         item: item,

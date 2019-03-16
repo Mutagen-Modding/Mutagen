@@ -604,6 +604,9 @@ namespace Mutagen.Bethesda.Oblivion
         {
             switch (name)
             {
+                case "HasENITDataType":
+                    item.ENITDataTypeState |= Enchantment.ENITDataType.Has;
+                    break;
                 default:
                     MajorRecord.FillPrivateElement_Xml(
                         item: item,

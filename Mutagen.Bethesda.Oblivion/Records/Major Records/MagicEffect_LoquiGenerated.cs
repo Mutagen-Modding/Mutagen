@@ -784,6 +784,9 @@ namespace Mutagen.Bethesda.Oblivion
         {
             switch (name)
             {
+                case "HasDATADataType":
+                    item.DATADataTypeState |= MagicEffect.DATADataType.Has;
+                    break;
                 default:
                     MajorRecord.FillPrivateElement_Xml(
                         item: item,
@@ -3271,6 +3274,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             errorMask: errorMask,
                             translationMask: translationMask?.GetSubCrystal((int)MagicEffect_FieldIndex.SubData));
                     }
+                }
+                else
+                {
+                    node.Add(new XElement("HasDATADataType"));
                 }
             }
             if (item.CounterEffects.HasBeenSet

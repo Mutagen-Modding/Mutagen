@@ -723,6 +723,12 @@ namespace Mutagen.Bethesda.Oblivion
         {
             switch (name)
             {
+                case "HasCNAMDataType":
+                    item.CNAMDataTypeState |= Tree.CNAMDataType.Has;
+                    break;
+                case "HasBNAMDataType":
+                    item.BNAMDataTypeState |= Tree.BNAMDataType.Has;
+                    break;
                 default:
                     MajorRecord.FillPrivateElement_Xml(
                         item: item,

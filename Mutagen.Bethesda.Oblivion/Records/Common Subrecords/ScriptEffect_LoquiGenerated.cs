@@ -1979,6 +1979,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         }
                     }
                 }
+                else
+                {
+                    node.Add(new XElement("HasSCITDataType"));
+                }
             }
             if (item.Name_IsSet
                 && (translationMask?.GetShouldTranslate((int)ScriptEffect_FieldIndex.Name) ?? true))

@@ -511,6 +511,9 @@ namespace Mutagen.Bethesda.Oblivion
         {
             switch (name)
             {
+                case "HasRDATDataType":
+                    item.RDATDataTypeState |= RegionData.RDATDataType.Has;
+                    break;
                 case "DataType":
                     try
                     {

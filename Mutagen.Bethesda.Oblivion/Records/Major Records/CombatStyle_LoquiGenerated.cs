@@ -1046,6 +1046,9 @@ namespace Mutagen.Bethesda.Oblivion
         {
             switch (name)
             {
+                case "HasCSTDDataType":
+                    item.CSTDDataTypeState |= CombatStyle.CSTDDataType.Has;
+                    break;
                 default:
                     MajorRecord.FillPrivateElement_Xml(
                         item: item,
@@ -5408,6 +5411,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             }
                         }
                     }
+                }
+                else
+                {
+                    node.Add(new XElement("HasCSTDDataType"));
                 }
             }
             if (item.Advanced_IsSet

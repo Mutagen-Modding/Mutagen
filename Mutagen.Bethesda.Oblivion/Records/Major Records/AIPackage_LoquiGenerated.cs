@@ -649,6 +649,9 @@ namespace Mutagen.Bethesda.Oblivion
         {
             switch (name)
             {
+                case "HasPKDTDataType":
+                    item.PKDTDataTypeState |= AIPackage.PKDTDataType.Has;
+                    break;
                 default:
                     MajorRecord.FillPrivateElement_Xml(
                         item: item,

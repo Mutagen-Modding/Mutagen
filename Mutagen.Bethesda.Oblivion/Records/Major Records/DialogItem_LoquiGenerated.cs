@@ -700,6 +700,9 @@ namespace Mutagen.Bethesda.Oblivion
         {
             switch (name)
             {
+                case "HasDATADataType":
+                    item.DATADataTypeState |= DialogItem.DATADataType.Has;
+                    break;
                 case "Script":
                     try
                     {
@@ -2690,6 +2693,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             fieldIndex: (int)DialogItem_FieldIndex.Flags,
                             errorMask: errorMask);
                     }
+                }
+                else
+                {
+                    node.Add(new XElement("HasDATADataType"));
                 }
             }
             if (item.Quest_Property.HasBeenSet

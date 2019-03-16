@@ -633,6 +633,9 @@ namespace Mutagen.Bethesda.Oblivion
         {
             switch (name)
             {
+                case "HasSPITDataType":
+                    item.SPITDataTypeState |= SpellUnleveled.SPITDataType.Has;
+                    break;
                 default:
                     Spell.FillPrivateElement_Xml(
                         item: item,

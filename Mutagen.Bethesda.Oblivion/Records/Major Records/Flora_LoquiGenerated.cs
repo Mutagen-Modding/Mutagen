@@ -642,6 +642,9 @@ namespace Mutagen.Bethesda.Oblivion
         {
             switch (name)
             {
+                case "HasPFPCDataType":
+                    item.PFPCDataTypeState |= Flora.PFPCDataType.Has;
+                    break;
                 default:
                     MajorRecord.FillPrivateElement_Xml(
                         item: item,

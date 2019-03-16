@@ -524,6 +524,9 @@ namespace Mutagen.Bethesda.Oblivion
         {
             switch (name)
             {
+                case "HasDNAMDataType":
+                    item.DNAMDataTypeState |= Subspace.DNAMDataType.Has;
+                    break;
                 default:
                     MajorRecord.FillPrivateElement_Xml(
                         item: item,

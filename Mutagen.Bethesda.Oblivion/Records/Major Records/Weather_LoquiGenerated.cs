@@ -1082,6 +1082,15 @@ namespace Mutagen.Bethesda.Oblivion
         {
             switch (name)
             {
+                case "HasFNAMDataType":
+                    item.FNAMDataTypeState |= Weather.FNAMDataType.Has;
+                    break;
+                case "HasHNAMDataType":
+                    item.HNAMDataTypeState |= Weather.HNAMDataType.Has;
+                    break;
+                case "HasDATADataType":
+                    item.DATADataTypeState |= Weather.DATADataType.Has;
+                    break;
                 default:
                     MajorRecord.FillPrivateElement_Xml(
                         item: item,

@@ -717,6 +717,9 @@ namespace Mutagen.Bethesda.Oblivion
         {
             switch (name)
             {
+                case "HasTNAMDataType":
+                    item.TNAMDataTypeState |= Climate.TNAMDataType.Has;
+                    break;
                 default:
                     MajorRecord.FillPrivateElement_Xml(
                         item: item,

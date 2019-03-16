@@ -1371,6 +1371,9 @@ namespace Mutagen.Bethesda.Oblivion
         {
             switch (name)
             {
+                case "HasDATADataType":
+                    item.DATADataTypeState |= EffectShader.DATADataType.Has;
+                    break;
                 default:
                     MajorRecord.FillPrivateElement_Xml(
                         item: item,
@@ -7544,6 +7547,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             fieldIndex: (int)EffectShader_FieldIndex.ColorKey3ColorKeyTime,
                             errorMask: errorMask);
                     }
+                }
+                else
+                {
+                    node.Add(new XElement("HasDATADataType"));
                 }
             }
         }

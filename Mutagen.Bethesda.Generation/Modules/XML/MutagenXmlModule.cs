@@ -128,6 +128,14 @@ namespace Mutagen.Bethesda.Generation
                             {
                                 fg.Depth--;
                                 fg.AppendLine("}");
+                                if (i == encounteredBreakIndex - 1)
+                                {
+                                    fg.AppendLine("else");
+                                    using (new BraceWrapper(fg))
+                                    {
+                                        fg.AppendLine($"node.Add(new XElement(\"Has{dataType.EnumName}\"));");
+                                    }
+                                }
                             }
                         }
                     }
@@ -196,7 +204,7 @@ namespace Mutagen.Bethesda.Generation
                     fg.AppendLine($"foreach (var elem in {XmlTranslationModule.XElementLine.GetParameterName(obj)}.Elements())");
                     using (new BraceWrapper(fg))
                     {
-                        if (obj.IterateFields(includeBaseClass: true).Any(f => f.ReadOnly))
+                        if (obj.IterateFields(includeBaseClass: true).Any(f => f.ReadOnly || f is DataType))
                         {
                             using (var args = new ArgsWrapper(fg,
                                 $"FillPrivateElement_{ModuleNickname}"))
@@ -263,6 +271,12 @@ namespace Mutagen.Bethesda.Generation
                         {
                             if (field is DataType set)
                             {
+                                fg.AppendLine($"case \"Has{set.EnumName}\":");
+                                using (new DepthWrapper(fg))
+                                {
+                                    fg.AppendLine($"item.{set.StateName} |= {obj.Name}.{set.EnumName}.Has;");
+                                    fg.AppendLine("break;");
+                                }
                                 foreach (var subField in set.IterateFieldsWithMeta())
                                 {
                                     if (subField.Field.Derivative) continue;

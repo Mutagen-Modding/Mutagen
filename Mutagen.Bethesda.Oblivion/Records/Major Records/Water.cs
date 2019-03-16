@@ -40,6 +40,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 frame.Position += 2;
             }
+            item.DATADataTypeState |= DATADataType.Has;
         }
 
         static partial void FillBinary_OilCustomLogic_Custom(MutagenFrame frame, Water item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)

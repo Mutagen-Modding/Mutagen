@@ -730,6 +730,9 @@ namespace Mutagen.Bethesda.Oblivion
         {
             switch (name)
             {
+                case "HasENITDataType":
+                    item.ENITDataTypeState |= Potion.ENITDataType.Has;
+                    break;
                 default:
                     ItemAbstract.FillPrivateElement_Xml(
                         item: item,

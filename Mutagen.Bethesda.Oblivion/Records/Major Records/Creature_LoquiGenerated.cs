@@ -1524,6 +1524,15 @@ namespace Mutagen.Bethesda.Oblivion
         {
             switch (name)
             {
+                case "HasACBSDataType":
+                    item.ACBSDataTypeState |= Creature.ACBSDataType.Has;
+                    break;
+                case "HasAIDTDataType":
+                    item.AIDTDataTypeState |= Creature.AIDTDataType.Has;
+                    break;
+                case "HasDATADataType":
+                    item.DATADataTypeState |= Creature.DATADataType.Has;
+                    break;
                 default:
                     NPCAbstract.FillPrivateElement_Xml(
                         item: item,

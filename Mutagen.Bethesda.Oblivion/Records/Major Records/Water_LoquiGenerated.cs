@@ -1103,6 +1103,9 @@ namespace Mutagen.Bethesda.Oblivion
         {
             switch (name)
             {
+                case "HasDATADataType":
+                    item.DATADataTypeState |= Water.DATADataType.Has;
+                    break;
                 default:
                     MajorRecord.FillPrivateElement_Xml(
                         item: item,
@@ -5248,6 +5251,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             }
                         }
                     }
+                }
+                else
+                {
+                    node.Add(new XElement("HasDATADataType"));
                 }
             }
             if (item.RelatedWaters_IsSet

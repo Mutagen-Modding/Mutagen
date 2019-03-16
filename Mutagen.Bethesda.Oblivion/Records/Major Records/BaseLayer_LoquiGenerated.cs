@@ -524,6 +524,9 @@ namespace Mutagen.Bethesda.Oblivion
         {
             switch (name)
             {
+                case "HasBTXTDataType":
+                    item.BTXTDataTypeState |= BaseLayer.BTXTDataType.Has;
+                    break;
                 case "LayerNumber":
                     try
                     {
