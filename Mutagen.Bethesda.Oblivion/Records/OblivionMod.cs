@@ -56,7 +56,7 @@ namespace Mutagen.Bethesda.Oblivion
                 .AddKey(c => c.FormKey)
                 .PopulateInto(this._majorRecords);
         }
-        
+
         private IObservable<IChangeSet<IMajorRecord>> GetCellRecords(Cell cell)
         {
             if (cell == null) return Observable.Empty<IChangeSet<IMajorRecord>>();
@@ -175,17 +175,12 @@ namespace Mutagen.Bethesda.Oblivion
                         var path = Path.Combine(dir.Path, $"Group.xml");
                         if (File.Exists(path))
                         {
-                            XElement elem = XElement.Load(path);
-                            if (elem.Name != "Group")
-                            {
-                                throw new ArgumentException("XML file did not have \"Group\" top node.");
-                            }
                             this.Worldspaces.FillPublic_Xml(
-                                elem,
+                                XElement.Load(path),
                                 errorMask,
                                 translationMask: GroupExt.XmlFolderTranslationCrystal);
                         }
-                        
+
                         foreach (var subDir in dir.EnumerateDirectories(includeSelf: false, recursive: false)
                             .SelectWhere(d =>
                             {
@@ -217,18 +212,18 @@ namespace Mutagen.Bethesda.Oblivion
 
         partial void Write_Xml_Folder_Worldspaces(DirectoryPath dir, string name, int index, ErrorMaskBuilder errorMask)
         {
+            if (!this.Worldspaces.Items.HasBeenSet) return;
             dir = new DirectoryPath(Path.Combine(dir.Path, nameof(this.Worldspaces)));
             using (errorMask?.PushIndex(index))
             {
                 using (errorMask?.PushIndex((int)Group_FieldIndex.Items))
                 {
-                    XElement topNode = new XElement("Group");
-                    this.Worldspaces.WriteToNode_Xml(
-                        topNode,
+                    dir.Create();
+                    this.Worldspaces.Write_Xml(
+                        Path.Combine(dir.Path, $"Group.xml"),
                         errorMask,
                         translationMask: GroupExt.XmlFolderTranslationCrystal);
                     int counter = 0;
-                    XElement items = new XElement("Items");
                     foreach (var item in this.Worldspaces.Items.Items)
                     {
                         using (errorMask.PushIndex(counter))
@@ -236,7 +231,7 @@ namespace Mutagen.Bethesda.Oblivion
                             try
                             {
                                 item.Write_Xml_Folder(
-                                    node: items,
+                                    node: null,
                                     name: name,
                                     counter: counter,
                                     dir: dir,
@@ -250,14 +245,86 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         counter++;
                     }
-                    if (items.HasElements)
+                }
+            }
+        }
+
+        public static readonly Script_TranslationMask ScriptXmlFolderTranslationMask = new Script_TranslationMask(true)
+        {
+            Fields = new Loqui.MaskItem<bool, ScriptFields_TranslationMask>(
+                true,
+                new ScriptFields_TranslationMask(true)
+                {
+                    SourceCode = false
+                })
+        };
+        public static readonly TranslationCrystal ScriptXmlFolderTranslationCrystal = ScriptXmlFolderTranslationMask.GetCrystal();
+
+        partial void Create_Xml_Folder_Scripts(DirectoryPath dir, string name, int index, ErrorMaskBuilder errorMask)
+        {
+            dir = new DirectoryPath(Path.Combine(dir.Path, nameof(this.Scripts)));
+
+            var path = Path.Combine(dir.Path, $"Group.xml");
+            if (File.Exists(path))
+            {
+                this.Scripts.FillPublic_Xml(
+                    XElement.Load(path),
+                    errorMask,
+                    translationMask: GroupExt.XmlFolderTranslationCrystal);
+            }
+
+            foreach (var subDir in dir.EnumerateDirectories(includeSelf: false, recursive: false)
+                .SelectWhere(d =>
+                {
+                    if (Mutagen.Bethesda.XmlFolderTranslation.TryGetItemIndex(d.Name, out var i))
                     {
-                        topNode.Add(items);
+                        return TryGet<(int Index, DirectoryPath Dir)>.Succeed((i, d));
                     }
-                    if (topNode.HasElements)
+                    return TryGet<(int Index, DirectoryPath Dir)>.Failure;
+                })
+                .OrderBy(d => d.Index))
+            {
+                var scriptXml = new FilePath(Path.Combine(subDir.Dir.Path, "Script.xml"));
+                if (!scriptXml.Exists) continue;
+                var script = Script.Create_Xml(
+                    scriptXml.Path,
+                    errorMask: errorMask,
+                    translationMask: ScriptXmlFolderTranslationMask);
+                var scriptText = new FilePath(Path.Combine(subDir.Dir.Path, "SourceCode.txt"));
+                if (scriptText.Exists)
+                {
+                    script.Fields.SourceCode = File.ReadAllText(scriptText.Path);
+                }
+                this.Scripts.Items.Set(script);
+            }
+        }
+
+        partial void Write_Xml_Folder_Scripts(DirectoryPath dir, string name, int index, ErrorMaskBuilder errorMask)
+        {
+            if (!this.Scripts.Items.HasBeenSet) return;
+            dir = new DirectoryPath(Path.Combine(dir.Path, nameof(this.Scripts)));
+            using (errorMask?.PushIndex(index))
+            {
+                using (errorMask?.PushIndex((int)Group_FieldIndex.Items))
+                {
+                    dir.Create();
+                    this.Scripts.Write_Xml(
+                        Path.Combine(dir.Path, "Group.xml"),
+                        errorMask,
+                        translationMask: GroupExt.XmlFolderTranslationCrystal);
+                    int counter = 0;
+                    foreach (var item in this.Scripts.Items.Items)
                     {
-                        dir.Create();
-                        topNode.SaveIfChanged(Path.Combine(dir.Path, $"Group.xml"));
+                        DirectoryPath subDir = new DirectoryPath(Path.Combine(dir.Path, $"{counter++} - {item.FormKey} - {item.EditorID}"));
+                        subDir.Create();
+                        item.Write_Xml(
+                            Path.Combine(subDir.Path, $"Script.xml"),
+                            errorMask: errorMask,
+                            translationMask: ScriptXmlFolderTranslationCrystal);
+                        using (var textOut = new System.IO.StreamWriter(File.Create(Path.Combine(subDir.Path, "SourceCode.txt"))))
+                        {
+                            textOut.Write(item.Fields.SourceCode);
+                        }
                     }
                 }
             }

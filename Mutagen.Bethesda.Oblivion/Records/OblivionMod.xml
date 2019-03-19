@@ -13,7 +13,7 @@
       <Group name="Sounds" refName="Sound" />
       <Group name="Skills" refName="SkillRecord" />
       <Group name="MagicEffects" refName="MagicEffect" />
-      <Group name="Scripts" refName="Script" />
+      <Group name="Scripts" refName="Script" customFolder="True" />
       <Group name="LandTextures" refName="LandTexture" />
       <Group name="Enchantments" refName="Enchantment" />
       <Group name="Spells" refName="SpellUnleveled" />

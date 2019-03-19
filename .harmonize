@@ -2,10 +2,10 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>92f6a2bc50c46344e063eee0115c8d0812c7c58b</Sha>
+         <Sha>bc3324f911879075d2a8d9ce34256692519b7901</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>02-26-2019 18:28:19</CommitDate>
-         <Description>More file class improvements</Description>
+         <CommitDate>03-18-2019 21:21:05</CommitDate>
+         <Description>Null fix for EnumerateDirectories</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>

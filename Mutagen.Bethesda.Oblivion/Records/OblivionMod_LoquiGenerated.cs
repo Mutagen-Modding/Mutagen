@@ -2593,6 +2593,18 @@ namespace Mutagen.Bethesda.Oblivion
                 cmds);
         }
 
+        partial void Write_Xml_Folder_Scripts(
+            DirectoryPath dir,
+            string name,
+            int index,
+            ErrorMaskBuilder errorMask);
+
+        partial void Create_Xml_Folder_Scripts(
+            DirectoryPath dir,
+            string name,
+            int index,
+            ErrorMaskBuilder errorMask);
+
         partial void Write_Xml_Folder_Worldspaces(
             DirectoryPath dir,
             string name,
@@ -2666,11 +2678,11 @@ namespace Mutagen.Bethesda.Oblivion
                 name: nameof(MagicEffects),
                 errorMask: errorMaskBuilder,
                 index: (int)OblivionMod_FieldIndex.MagicEffects);
-            ret.Scripts.Create_Xml_Folder<Script>(
+            ret.Create_Xml_Folder_Scripts(
                 dir: dir,
                 name: nameof(Scripts),
-                errorMask: errorMaskBuilder,
-                index: (int)OblivionMod_FieldIndex.Scripts);
+                index: (int)OblivionMod_FieldIndex.Scripts,
+                errorMask: errorMaskBuilder);
             ret.LandTextures.Create_Xml_Folder<LandTexture>(
                 dir: dir,
                 name: nameof(LandTextures),
@@ -2964,11 +2976,11 @@ namespace Mutagen.Bethesda.Oblivion
                 name: nameof(MagicEffects),
                 errorMask: errorMaskBuilder,
                 index: (int)OblivionMod_FieldIndex.MagicEffects);
-            await Scripts.Write_Xml_Folder<Script, Script_ErrorMask>(
-                dir: dir.Path,
+            Write_Xml_Folder_Scripts(
+                dir: dir,
                 name: nameof(Scripts),
-                errorMask: errorMaskBuilder,
-                index: (int)OblivionMod_FieldIndex.Scripts);
+                index: (int)OblivionMod_FieldIndex.Scripts,
+                errorMask: errorMaskBuilder);
             await LandTextures.Write_Xml_Folder<LandTexture, LandTexture_ErrorMask>(
                 dir: dir.Path,
                 name: nameof(LandTextures),
