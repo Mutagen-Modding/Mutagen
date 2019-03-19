@@ -26,7 +26,14 @@
   </Object>
   <Object name="LocalVariable" objType="Subrecord" GUID="b77aa416-b182-4265-8276-44b34bace18f" ID="48">
     <Fields>
-      <ByteArray name="Data" length="24" nullable="NotNull" recordType="SLSD" />
+      <Data recordType="SLSD" >
+        <Fields>
+          <Int32 name="Index" />
+          <ByteArray name="Fluff" length="12" nullable="NotNull" />
+          <Enum name="Flags" enumName="Script.LocalVariableFlag" byteLength="4" />
+          <ByteArray name="Fluff2" length="4" nullable="NotNull" />
+        </Fields>
+      </Data>
       <String name="Name" recordType="SCVR" />
     </Fields>
   </Object>
