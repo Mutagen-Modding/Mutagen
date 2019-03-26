@@ -10,10 +10,10 @@
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>e755cc62d4fb3249c7791802c92e68560f5c1869</Sha>
+         <Sha>0d6747b5be27421795be72019475f95b2c1db6c5</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>03-10-2019 03:19:20</CommitDate>
-         <Description>Implemented equals mask for generic loquis</Description>
+         <CommitDate>03-20-2019 19:41:30</CommitDate>
+         <Description>Added missing translation mask checking for xml importing</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>

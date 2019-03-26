@@ -23,14 +23,8 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public partial class OblivionMod : IMod<OblivionMod>, ILinkContainer
     {
-        private static readonly object _subscribeObject = new object();
         public ISourceList<MasterReference> MasterReferences => this.TES4.MasterReferences;
         public ModKey ModKey { get; }
-
-        void IMod<OblivionMod>.Write_Binary(string path, ModKey modKey)
-        {
-            this.Write_Binary(path, modKey, importMask: null);
-        }
 
         public OblivionMod(ModKey modKey)
             : this()
@@ -55,6 +49,11 @@ namespace Mutagen.Bethesda.Oblivion
                         .MergeMany(dialog => GetDialogRecords(dialog)))
                 .AddKey(c => c.FormKey)
                 .PopulateInto(this._majorRecords);
+        }
+
+        void IMod<OblivionMod>.Write_Binary(string path, ModKey modKey)
+        {
+            this.Write_Binary(path, modKey, importMask: null);
         }
 
         private IObservable<IChangeSet<IMajorRecord>> GetCellRecords(Cell cell)
