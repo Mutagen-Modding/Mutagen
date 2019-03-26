@@ -2,26 +2,26 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>bc3324f911879075d2a8d9ce34256692519b7901</Sha>
+         <Sha>8e20dc7929eda0e1b4e73f0c71e7716472038308</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>03-18-2019 21:21:05</CommitDate>
-         <Description>Null fix for EnumerateDirectories</Description>
+         <CommitDate>03-26-2019 21:04:31</CommitDate>
+         <Description>Nuget updates</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>e755cc62d4fb3249c7791802c92e68560f5c1869</Sha>
+         <Sha>206d3e8a06b99124526731563f0987f6c61b253a</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>03-10-2019 03:19:20</CommitDate>
-         <Description>Implemented equals mask for generic loquis</Description>
+         <CommitDate>03-26-2019 18:53:56</CommitDate>
+         <Description>Added a license</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>
          <Nickname>DynamicData</Nickname>
-         <Sha>f51df5a451e2499b5bdd952bf54b1802429d8a4a</Sha>
+         <Sha>777d9f0ab67693df8f9746170de6b1df09e16e38</Sha>
          <Path>../DynamicData</Path>
-         <CommitDate>02-05-2019 14:30:31</CommitDate>
-         <Description>Removed uap target framework to avoid some errors</Description>
+         <CommitDate>03-26-2019 21:04:17</CommitDate>
+         <Description>Merge remote-tracking branch 'source/master'</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
    </ParentRepos>
