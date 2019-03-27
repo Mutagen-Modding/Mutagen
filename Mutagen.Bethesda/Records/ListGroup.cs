@@ -120,7 +120,7 @@ namespace Mutagen.Bethesda
             }
         }
 
-        public static async Task Write_Xml_Folder<T>(
+        public static void Write_Xml_Folder<T>(
             this ListGroup<T> list,
             DirectoryPath dir,
             string name,

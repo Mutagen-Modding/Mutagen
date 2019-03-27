@@ -78,15 +78,54 @@ namespace Mutagen.Bethesda.Generation
             }
 
             using (var args = new FunctionWrapper(fg,
-                $"public static async Task<({obj.Name} Mod, {obj.Mask(MaskType.Error)} ErrorMask)> Create_Xml_Folder"))
+                $"public static {obj.Name} Create_Xml_Folder"))
             {
                 args.Add("DirectoryPath dir");
                 args.Add("ModKey modKey");
-                args.Add("bool doMasks = true");
             }
             using (new BraceWrapper(fg))
             {
-                fg.AppendLine($"ErrorMaskBuilder errorMaskBuilder = null;");
+                using (var args = new ArgsWrapper(fg,
+                    "return Create_Xml_Folder"))
+                {
+                    args.Add("dir: dir");
+                    args.Add("modKey: modKey");
+                    args.Add("errorMask: null");
+                }
+            }
+            fg.AppendLine();
+
+            using (var args = new FunctionWrapper(fg,
+                $"public static {obj.Name} Create_Xml_Folder"))
+            {
+                args.Add("DirectoryPath dir");
+                args.Add("ModKey modKey");
+                args.Add($"out {obj.Mask(MaskType.Error)} errorMask");
+            }
+            using (new BraceWrapper(fg))
+            {
+                fg.AppendLine("ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();");
+                using (var args = new ArgsWrapper(fg,
+                    "var ret = Create_Xml_Folder"))
+                {
+                    args.Add("dir: dir");
+                    args.Add("modKey: modKey");
+                    args.Add("errorMask: errorMaskBuilder");
+                }
+                fg.AppendLine($"errorMask = {obj.Mask(MaskType.Error)}.Factory(errorMaskBuilder);");
+                fg.AppendLine("return ret;");
+            }
+            fg.AppendLine();
+
+            using (var args = new FunctionWrapper(fg,
+                $"public static {obj.Name} Create_Xml_Folder"))
+            {
+                args.Add("DirectoryPath dir");
+                args.Add("ModKey modKey");
+                args.Add("ErrorMaskBuilder errorMask");
+            }
+            using (new BraceWrapper(fg))
+            {
                 fg.AppendLine($"var ret = new {obj.Name}(modKey);");
                 foreach (var field in obj.IterateFields())
                 {
@@ -98,7 +137,7 @@ namespace Mutagen.Bethesda.Generation
                             args.Add("dir: dir");
                             args.Add($"name: nameof({field.Name})");
                             args.Add($"index: (int){field.IndexEnumName}");
-                            args.Add($"errorMask: errorMaskBuilder");
+                            args.Add($"errorMask: errorMask");
                         }
                         continue;
                     }
@@ -117,7 +156,7 @@ namespace Mutagen.Bethesda.Generation
                             })
                             {
                                 args.Add($"path: Path.Combine(dir.Path, \"{field.Name}.xml\")");
-                                args.Add($"errorMask: errorMaskBuilder");
+                                args.Add($"errorMask: errorMask");
                                 args.Add($"translationMask: null");
                             }
                             break;
@@ -128,7 +167,7 @@ namespace Mutagen.Bethesda.Generation
                             {
                                 args.Add($"dir: dir");
                                 args.Add($"name: nameof({field.Name})");
-                                args.Add($"errorMask: errorMaskBuilder");
+                                args.Add($"errorMask: errorMask");
                                 args.Add($"index: (int){field.IndexEnumName}");
                             }
                             break;
@@ -137,12 +176,12 @@ namespace Mutagen.Bethesda.Generation
                     }
                 }
                 BinaryTranslationModule.GenerateModLinking(obj, fg);
-                fg.AppendLine("return (ret, null);");
+                fg.AppendLine("return ret;");
             }
             fg.AppendLine();
 
             using (var args = new FunctionWrapper(fg,
-                $"public async Task<{obj.Mask(MaskType.Error)}> Write_XmlFolder"))
+                $"public {obj.Mask(MaskType.Error)} Write_XmlFolder"))
             {
                 args.Add("DirectoryPath dir");
                 args.Add("bool doMasks = true");
@@ -186,7 +225,7 @@ namespace Mutagen.Bethesda.Generation
                             {
                                 if (!group.TryGetSpecificationAsObject("T", out subObj)) continue;
                                 using (var args = new ArgsWrapper(fg,
-                                    $"await {field.Name}.Write_Xml_Folder<{subObj.Name}, {subObj.Mask(MaskType.Error)}>"))
+                                    $"{field.Name}.Write_Xml_Folder<{subObj.Name}, {subObj.Mask(MaskType.Error)}>"))
                                 {
                                     args.Add($"dir: dir.Path");
                                     args.Add($"name: nameof({field.Name})");
@@ -197,7 +236,7 @@ namespace Mutagen.Bethesda.Generation
                             else
                             {
                                 using (var args = new ArgsWrapper(fg,
-                                    $"await {field.Name}.Write_Xml_Folder"))
+                                    $"{field.Name}.Write_Xml_Folder"))
                                 {
                                     args.Add($"dir: dir.Path");
                                     args.Add($"name: nameof({field.Name})");

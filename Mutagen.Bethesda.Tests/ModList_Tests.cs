@@ -28,11 +28,13 @@ namespace Mutagen.Bethesda.Tests
             Assert.NotNull(FormIDLinkTesterHelper.CreatedLinks);
             Assert.DoesNotContain(FormIDLinkTesterHelper.CreatedLinks, l => l == null);
 
+#if DEBUG
             var failedLinks = FormIDLinkTesterHelper.CreatedLinks
                 .Where(l => !l.AttemptedLink)
                 .ToArray();
 
             Assert.Empty(failedLinks);
+#endif
 
             var unlinked = FormIDLinkTesterHelper.CreatedLinks
                 .Where(l => !l.Linked)

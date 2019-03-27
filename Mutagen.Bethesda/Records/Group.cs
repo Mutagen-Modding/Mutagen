@@ -135,7 +135,7 @@ namespace Mutagen.Bethesda
             }
         }
 
-        public static async Task Write_Xml_Folder<T, T_ErrMask>(
+        public static void Write_Xml_Folder<T, T_ErrMask>(
             this Group<T> group,
             DirectoryPath dir,
             string name,
@@ -148,6 +148,7 @@ namespace Mutagen.Bethesda
             {
                 using (errorMask?.PushIndex((int)Group_FieldIndex.Items))
                 {
+                    if (group.Items.Count == 0) return;
                     XElement topNode = new XElement("Group");
                     group.WriteToNode_Xml(
                         topNode,
