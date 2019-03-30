@@ -10,10 +10,10 @@
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>206d3e8a06b99124526731563f0987f6c61b253a</Sha>
+         <Sha>34da5d2bb8d23de3b47ddaa1eb78e2dcd8564ac0</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>03-26-2019 18:53:56</CommitDate>
-         <Description>Added a license</Description>
+         <CommitDate>03-30-2019 00:19:45</CommitDate>
+         <Description>Adjusted some new keywords</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>

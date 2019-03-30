@@ -354,11 +354,13 @@ namespace Mutagen.Bethesda.Oblivion
         #region Xml Translation
         #region Xml Create
         [DebuggerStepThrough]
-        public new static Climate Create_Xml(
+        public static Climate Create_Xml(
             XElement node,
+            MissingCreate missing = MissingCreate.New,
             Climate_TranslationMask translationMask = null)
         {
             return Create_Xml(
+                missing: missing,
                 node: node,
                 errorMask: null,
                 translationMask: translationMask?.GetCrystal());
@@ -369,10 +371,12 @@ namespace Mutagen.Bethesda.Oblivion
             XElement node,
             out Climate_ErrorMask errorMask,
             bool doMasks = true,
-            Climate_TranslationMask translationMask = null)
+            Climate_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             var ret = Create_Xml(
+                missing: missing,
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask.GetCrystal());
@@ -380,10 +384,11 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static Climate Create_Xml(
+        public new static Climate Create_Xml(
             XElement node,
             ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
+            TranslationCrystal translationMask,
+            MissingCreate missing = MissingCreate.New)
         {
             var ret = new Climate();
             try
@@ -414,10 +419,12 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Climate Create_Xml(
             string path,
+            MissingCreate missing = MissingCreate.New,
             Climate_TranslationMask translationMask = null)
         {
-            var node = XDocument.Load(path).Root;
+            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
             return Create_Xml(
+                missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
@@ -425,10 +432,12 @@ namespace Mutagen.Bethesda.Oblivion
         public static Climate Create_Xml(
             string path,
             out Climate_ErrorMask errorMask,
-            Climate_TranslationMask translationMask = null)
+            Climate_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
         {
-            var node = XDocument.Load(path).Root;
+            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
             return Create_Xml(
+                missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
@@ -437,10 +446,12 @@ namespace Mutagen.Bethesda.Oblivion
         public static Climate Create_Xml(
             string path,
             ErrorMaskBuilder errorMask,
-            Climate_TranslationMask translationMask = null)
+            Climate_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
         {
-            var node = XDocument.Load(path).Root;
+            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
             return Create_Xml(
+                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
@@ -448,10 +459,12 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Climate Create_Xml(
             Stream stream,
+            MissingCreate missing = MissingCreate.New,
             Climate_TranslationMask translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return Create_Xml(
+                missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
@@ -459,10 +472,12 @@ namespace Mutagen.Bethesda.Oblivion
         public static Climate Create_Xml(
             Stream stream,
             out Climate_ErrorMask errorMask,
-            Climate_TranslationMask translationMask = null)
+            Climate_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
         {
             var node = XDocument.Load(stream).Root;
             return Create_Xml(
+                missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
@@ -471,10 +486,12 @@ namespace Mutagen.Bethesda.Oblivion
         public static Climate Create_Xml(
             Stream stream,
             ErrorMaskBuilder errorMask,
-            Climate_TranslationMask translationMask = null)
+            Climate_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New)
         {
             var node = XDocument.Load(stream).Root;
             return Create_Xml(
+                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
@@ -485,9 +502,11 @@ namespace Mutagen.Bethesda.Oblivion
         #region Xml Copy In
         public override void CopyIn_Xml(
             XElement node,
+            MissingCreate missing = MissingCreate.New,
             NotifyingFireParameters cmds = null)
         {
             CopyIn_Xml_Internal(
+                missing: missing,
                 node: node,
                 errorMask: null,
                 translationMask: null,
@@ -498,11 +517,13 @@ namespace Mutagen.Bethesda.Oblivion
             XElement node,
             out Climate_ErrorMask errorMask,
             Climate_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New,
             bool doMasks = true,
             NotifyingFireParameters cmds = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             CopyIn_Xml_Internal(
+                missing: missing,
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal(),
@@ -514,9 +535,11 @@ namespace Mutagen.Bethesda.Oblivion
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask,
+            MissingCreate missing = MissingCreate.New,
             NotifyingFireParameters cmds = null)
         {
             LoquiXmlTranslation<Climate>.Instance.CopyIn(
+                missing: missing,
                 node: node,
                 item: this,
                 skipProtected: true,
@@ -527,10 +550,12 @@ namespace Mutagen.Bethesda.Oblivion
 
         public void CopyIn_Xml(
             string path,
+            MissingCreate missing = MissingCreate.New,
             NotifyingFireParameters cmds = null)
         {
-            var node = XDocument.Load(path).Root;
+            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
             this.CopyIn_Xml(
+                missing: missing,
                 node: node,
                 cmds: cmds);
         }
@@ -539,11 +564,13 @@ namespace Mutagen.Bethesda.Oblivion
             string path,
             out Climate_ErrorMask errorMask,
             Climate_TranslationMask translationMask,
+            MissingCreate missing = MissingCreate.New,
             NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
-            var node = XDocument.Load(path).Root;
+            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
             this.CopyIn_Xml(
+                missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask,
@@ -553,10 +580,12 @@ namespace Mutagen.Bethesda.Oblivion
 
         public void CopyIn_Xml(
             Stream stream,
+            MissingCreate missing = MissingCreate.New,
             NotifyingFireParameters cmds = null)
         {
             var node = XDocument.Load(stream).Root;
             this.CopyIn_Xml(
+                missing: missing,
                 node: node,
                 cmds: cmds);
         }
@@ -565,11 +594,13 @@ namespace Mutagen.Bethesda.Oblivion
             Stream stream,
             out Climate_ErrorMask errorMask,
             Climate_TranslationMask translationMask,
+            MissingCreate missing = MissingCreate.New,
             NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
             var node = XDocument.Load(stream).Root;
             this.CopyIn_Xml(
+                missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask,
@@ -581,11 +612,13 @@ namespace Mutagen.Bethesda.Oblivion
             XElement node,
             out MajorRecord_ErrorMask errorMask,
             MajorRecord_TranslationMask translationMask = null,
+            MissingCreate missing = MissingCreate.New,
             bool doMasks = true,
             NotifyingFireParameters cmds = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             CopyIn_Xml_Internal(
+                missing: missing,
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal(),
@@ -819,7 +852,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Translation
         #region Binary Create
         [DebuggerStepThrough]
-        public new static Climate Create_Binary(
+        public static Climate Create_Binary(
             MutagenFrame frame,
             MasterReferences masterReferences)
         {
@@ -847,7 +880,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static Climate Create_Binary(
+        public new static Climate Create_Binary(
             MutagenFrame frame,
             MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,

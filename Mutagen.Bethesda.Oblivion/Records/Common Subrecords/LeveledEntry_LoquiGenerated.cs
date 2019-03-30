@@ -232,10 +232,12 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static LeveledEntry<T> Create_Xml<T_TranslMask>(
             XElement node,
+            MissingCreate missing = MissingCreate.New,
             LeveledEntry_TranslationMask<T_TranslMask> translationMask = null)
             where T_TranslMask : MajorRecord_TranslationMask, ITranslationMask, new()
         {
             return Create_Xml(
+                missing: missing,
                 node: node,
                 errorMask: null,
                 translationMask: translationMask?.GetCrystal());
@@ -246,12 +248,14 @@ namespace Mutagen.Bethesda.Oblivion
             XElement node,
             out LeveledEntry_ErrorMask<T_ErrMask> errorMask,
             bool doMasks = true,
-            LeveledEntry_TranslationMask<T_TranslMask> translationMask = null)
+            LeveledEntry_TranslationMask<T_TranslMask> translationMask = null,
+            MissingCreate missing = MissingCreate.New)
             where T_ErrMask : MajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
             where T_TranslMask : MajorRecord_TranslationMask, ITranslationMask, new()
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             var ret = Create_Xml(
+                missing: missing,
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask.GetCrystal());
@@ -262,7 +266,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static LeveledEntry<T> Create_Xml(
             XElement node,
             ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
+            TranslationCrystal translationMask,
+            MissingCreate missing = MissingCreate.New)
         {
             var ret = new LeveledEntry<T>();
             try
@@ -287,11 +292,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static LeveledEntry<T> Create_Xml<T_TranslMask>(
             string path,
+            MissingCreate missing = MissingCreate.New,
             LeveledEntry_TranslationMask<T_TranslMask> translationMask = null)
             where T_TranslMask : MajorRecord_TranslationMask, ITranslationMask, new()
         {
-            var node = XDocument.Load(path).Root;
+            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
             return Create_Xml(
+                missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
@@ -299,12 +306,14 @@ namespace Mutagen.Bethesda.Oblivion
         public static LeveledEntry<T> Create_Xml<T_ErrMask, T_TranslMask>(
             string path,
             out LeveledEntry_ErrorMask<T_ErrMask> errorMask,
-            LeveledEntry_TranslationMask<T_TranslMask> translationMask = null)
+            LeveledEntry_TranslationMask<T_TranslMask> translationMask = null,
+            MissingCreate missing = MissingCreate.New)
             where T_ErrMask : MajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
             where T_TranslMask : MajorRecord_TranslationMask, ITranslationMask, new()
         {
-            var node = XDocument.Load(path).Root;
+            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
             return Create_Xml(
+                missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
@@ -313,12 +322,14 @@ namespace Mutagen.Bethesda.Oblivion
         public static LeveledEntry<T> Create_Xml<T_ErrMask, T_TranslMask>(
             string path,
             ErrorMaskBuilder errorMask,
-            LeveledEntry_TranslationMask<T_TranslMask> translationMask = null)
+            LeveledEntry_TranslationMask<T_TranslMask> translationMask = null,
+            MissingCreate missing = MissingCreate.New)
             where T_ErrMask : MajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
             where T_TranslMask : MajorRecord_TranslationMask, ITranslationMask, new()
         {
-            var node = XDocument.Load(path).Root;
+            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
             return Create_Xml(
+                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
@@ -326,11 +337,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static LeveledEntry<T> Create_Xml<T_TranslMask>(
             Stream stream,
+            MissingCreate missing = MissingCreate.New,
             LeveledEntry_TranslationMask<T_TranslMask> translationMask = null)
             where T_TranslMask : MajorRecord_TranslationMask, ITranslationMask, new()
         {
             var node = XDocument.Load(stream).Root;
             return Create_Xml(
+                missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
@@ -338,12 +351,14 @@ namespace Mutagen.Bethesda.Oblivion
         public static LeveledEntry<T> Create_Xml<T_ErrMask, T_TranslMask>(
             Stream stream,
             out LeveledEntry_ErrorMask<T_ErrMask> errorMask,
-            LeveledEntry_TranslationMask<T_TranslMask> translationMask = null)
+            LeveledEntry_TranslationMask<T_TranslMask> translationMask = null,
+            MissingCreate missing = MissingCreate.New)
             where T_ErrMask : MajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
             where T_TranslMask : MajorRecord_TranslationMask, ITranslationMask, new()
         {
             var node = XDocument.Load(stream).Root;
             return Create_Xml(
+                missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
@@ -352,12 +367,14 @@ namespace Mutagen.Bethesda.Oblivion
         public static LeveledEntry<T> Create_Xml<T_ErrMask, T_TranslMask>(
             Stream stream,
             ErrorMaskBuilder errorMask,
-            LeveledEntry_TranslationMask<T_TranslMask> translationMask = null)
+            LeveledEntry_TranslationMask<T_TranslMask> translationMask = null,
+            MissingCreate missing = MissingCreate.New)
             where T_ErrMask : MajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
             where T_TranslMask : MajorRecord_TranslationMask, ITranslationMask, new()
         {
             var node = XDocument.Load(stream).Root;
             return Create_Xml(
+                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
@@ -368,9 +385,11 @@ namespace Mutagen.Bethesda.Oblivion
         #region Xml Copy In
         public void CopyIn_Xml(
             XElement node,
+            MissingCreate missing = MissingCreate.New,
             NotifyingFireParameters cmds = null)
         {
             CopyIn_Xml_Internal(
+                missing: missing,
                 node: node,
                 errorMask: null,
                 translationMask: null,
@@ -381,6 +400,7 @@ namespace Mutagen.Bethesda.Oblivion
             XElement node,
             out LeveledEntry_ErrorMask<T_ErrMask> errorMask,
             LeveledEntry_TranslationMask<T_TranslMask> translationMask = null,
+            MissingCreate missing = MissingCreate.New,
             bool doMasks = true,
             NotifyingFireParameters cmds = null)
             where T_ErrMask : MajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
@@ -388,6 +408,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             CopyIn_Xml_Internal(
+                missing: missing,
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal(),
@@ -399,9 +420,11 @@ namespace Mutagen.Bethesda.Oblivion
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask,
+            MissingCreate missing = MissingCreate.New,
             NotifyingFireParameters cmds = null)
         {
             LoquiXmlTranslation<LeveledEntry<T>>.Instance.CopyIn(
+                missing: missing,
                 node: node,
                 item: this,
                 skipProtected: true,
@@ -412,10 +435,12 @@ namespace Mutagen.Bethesda.Oblivion
 
         public void CopyIn_Xml(
             string path,
+            MissingCreate missing = MissingCreate.New,
             NotifyingFireParameters cmds = null)
         {
-            var node = XDocument.Load(path).Root;
+            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
             this.CopyIn_Xml(
+                missing: missing,
                 node: node,
                 cmds: cmds);
         }
@@ -424,13 +449,15 @@ namespace Mutagen.Bethesda.Oblivion
             string path,
             out LeveledEntry_ErrorMask<T_ErrMask> errorMask,
             LeveledEntry_TranslationMask<T_TranslMask> translationMask,
+            MissingCreate missing = MissingCreate.New,
             NotifyingFireParameters cmds = null,
             bool doMasks = true)
             where T_ErrMask : MajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
             where T_TranslMask : MajorRecord_TranslationMask, ITranslationMask, new()
         {
-            var node = XDocument.Load(path).Root;
+            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
             this.CopyIn_Xml(
+                missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask,
@@ -440,10 +467,12 @@ namespace Mutagen.Bethesda.Oblivion
 
         public void CopyIn_Xml(
             Stream stream,
+            MissingCreate missing = MissingCreate.New,
             NotifyingFireParameters cmds = null)
         {
             var node = XDocument.Load(stream).Root;
             this.CopyIn_Xml(
+                missing: missing,
                 node: node,
                 cmds: cmds);
         }
@@ -452,6 +481,7 @@ namespace Mutagen.Bethesda.Oblivion
             Stream stream,
             out LeveledEntry_ErrorMask<T_ErrMask> errorMask,
             LeveledEntry_TranslationMask<T_TranslMask> translationMask,
+            MissingCreate missing = MissingCreate.New,
             NotifyingFireParameters cmds = null,
             bool doMasks = true)
             where T_ErrMask : MajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
@@ -459,6 +489,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             var node = XDocument.Load(stream).Root;
             this.CopyIn_Xml(
+                missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask,

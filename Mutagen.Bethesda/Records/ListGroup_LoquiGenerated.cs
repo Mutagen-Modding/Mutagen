@@ -191,12 +191,14 @@ namespace Mutagen.Bethesda
             XElement node,
             out ListGroup_ErrorMask<T_ErrMask> errorMask,
             bool doMasks = true,
-            ListGroup_TranslationMask<T_TranslMask> translationMask = null)
+            ListGroup_TranslationMask<T_TranslMask> translationMask = null,
+            MissingCreate missing = MissingCreate.New)
             where T_ErrMask : class, IErrorMask<T_ErrMask>, new()
             where T_TranslMask : class, ITranslationMask, new()
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             var ret = Create_Xml(
+                missing: missing,
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask.GetCrystal());
@@ -207,7 +209,8 @@ namespace Mutagen.Bethesda
         public static ListGroup<T> Create_Xml(
             XElement node,
             ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
+            TranslationCrystal translationMask,
+            MissingCreate missing = MissingCreate.New)
         {
             var ret = new ListGroup<T>();
             try
@@ -239,12 +242,14 @@ namespace Mutagen.Bethesda
         public static ListGroup<T> Create_Xml<T_ErrMask, T_TranslMask>(
             string path,
             out ListGroup_ErrorMask<T_ErrMask> errorMask,
-            ListGroup_TranslationMask<T_TranslMask> translationMask = null)
+            ListGroup_TranslationMask<T_TranslMask> translationMask = null,
+            MissingCreate missing = MissingCreate.New)
             where T_ErrMask : class, IErrorMask<T_ErrMask>, new()
             where T_TranslMask : class, ITranslationMask, new()
         {
-            var node = XDocument.Load(path).Root;
+            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
             return Create_Xml(
+                missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
@@ -253,12 +258,14 @@ namespace Mutagen.Bethesda
         public static ListGroup<T> Create_Xml<T_ErrMask, T_TranslMask>(
             string path,
             ErrorMaskBuilder errorMask,
-            ListGroup_TranslationMask<T_TranslMask> translationMask = null)
+            ListGroup_TranslationMask<T_TranslMask> translationMask = null,
+            MissingCreate missing = MissingCreate.New)
             where T_ErrMask : class, IErrorMask<T_ErrMask>, new()
             where T_TranslMask : class, ITranslationMask, new()
         {
-            var node = XDocument.Load(path).Root;
+            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
             return Create_Xml(
+                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
@@ -267,12 +274,14 @@ namespace Mutagen.Bethesda
         public static ListGroup<T> Create_Xml<T_ErrMask, T_TranslMask>(
             Stream stream,
             out ListGroup_ErrorMask<T_ErrMask> errorMask,
-            ListGroup_TranslationMask<T_TranslMask> translationMask = null)
+            ListGroup_TranslationMask<T_TranslMask> translationMask = null,
+            MissingCreate missing = MissingCreate.New)
             where T_ErrMask : class, IErrorMask<T_ErrMask>, new()
             where T_TranslMask : class, ITranslationMask, new()
         {
             var node = XDocument.Load(stream).Root;
             return Create_Xml(
+                missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
@@ -281,12 +290,14 @@ namespace Mutagen.Bethesda
         public static ListGroup<T> Create_Xml<T_ErrMask, T_TranslMask>(
             Stream stream,
             ErrorMaskBuilder errorMask,
-            ListGroup_TranslationMask<T_TranslMask> translationMask = null)
+            ListGroup_TranslationMask<T_TranslMask> translationMask = null,
+            MissingCreate missing = MissingCreate.New)
             where T_ErrMask : class, IErrorMask<T_ErrMask>, new()
             where T_TranslMask : class, ITranslationMask, new()
         {
             var node = XDocument.Load(stream).Root;
             return Create_Xml(
+                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
@@ -299,6 +310,7 @@ namespace Mutagen.Bethesda
             XElement node,
             out ListGroup_ErrorMask<T_ErrMask> errorMask,
             ListGroup_TranslationMask<T_TranslMask> translationMask = null,
+            MissingCreate missing = MissingCreate.New,
             bool doMasks = true,
             NotifyingFireParameters cmds = null)
             where T_ErrMask : class, IErrorMask<T_ErrMask>, new()
@@ -306,6 +318,7 @@ namespace Mutagen.Bethesda
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             CopyIn_Xml_Internal(
+                missing: missing,
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal(),
@@ -317,9 +330,11 @@ namespace Mutagen.Bethesda
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask,
+            MissingCreate missing = MissingCreate.New,
             NotifyingFireParameters cmds = null)
         {
             LoquiXmlTranslation<ListGroup<T>>.Instance.CopyIn(
+                missing: missing,
                 node: node,
                 item: this,
                 skipProtected: true,
@@ -332,13 +347,15 @@ namespace Mutagen.Bethesda
             string path,
             out ListGroup_ErrorMask<T_ErrMask> errorMask,
             ListGroup_TranslationMask<T_TranslMask> translationMask,
+            MissingCreate missing = MissingCreate.New,
             NotifyingFireParameters cmds = null,
             bool doMasks = true)
             where T_ErrMask : class, IErrorMask<T_ErrMask>, new()
             where T_TranslMask : class, ITranslationMask, new()
         {
-            var node = XDocument.Load(path).Root;
+            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
             this.CopyIn_Xml(
+                missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask,
@@ -350,6 +367,7 @@ namespace Mutagen.Bethesda
             Stream stream,
             out ListGroup_ErrorMask<T_ErrMask> errorMask,
             ListGroup_TranslationMask<T_TranslMask> translationMask,
+            MissingCreate missing = MissingCreate.New,
             NotifyingFireParameters cmds = null,
             bool doMasks = true)
             where T_ErrMask : class, IErrorMask<T_ErrMask>, new()
@@ -357,6 +375,7 @@ namespace Mutagen.Bethesda
         {
             var node = XDocument.Load(stream).Root;
             this.CopyIn_Xml(
+                missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask,
