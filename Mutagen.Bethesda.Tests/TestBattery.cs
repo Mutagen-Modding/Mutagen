@@ -8,11 +8,13 @@ namespace Mutagen.Bethesda.Tests
 {
     public static class TestBattery
     {
-        public static Task RunTests(TestingSettings settings)
+        public static async Task RunTests(TestingSettings settings)
         {
-            return Task.WhenAll(
-                GetTests(settings: settings)
-                .Select((t) => Task.Run(() => t)));
+            foreach (var t in GetTests(settings: settings))
+            {
+                await t;
+                GC.Collect();
+            }
         }
 
         public static IEnumerable<Task> GetTests(TestingSettings settings)

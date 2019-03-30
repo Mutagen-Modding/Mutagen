@@ -107,16 +107,10 @@ namespace Mutagen.Bethesda.Tests
                 Assert.False(exportMask?.IsInError() ?? false);
             }
 
-            async Task<OblivionMod> ImportModXmlFolder(string sourcePath, DirectoryPath dir)
+            async Task CreateXmlFolder(string sourcePath, DirectoryPath dir)
             {
                 var mod = ImportModBinary(sourcePath);
                 await WriteMod(mod, dir);
-                var reimport = OblivionMod.Create_Xml_Folder(
-                    dir: dir,
-                    modKey: Mutagen.Bethesda.Oblivion.Constants.Oblivion);
-                var eqMask = reimport.GetEqualsMask(mod, include: Loqui.EqualsMaskHelper.Include.OnlyFailures);
-                Assert.True(eqMask.AllEqual(b => b));
-                return reimport;
             }
 
             using (var processedTmp = await oblivPassthrough.SetupProcessedFiles())
@@ -124,7 +118,11 @@ namespace Mutagen.Bethesda.Tests
                 using (var tmp = new TempFolder("Mutagen_Oblivion_XmlFolder", deleteAfter: false))
                 {
                     var sourcePath = oblivPassthrough.ProcessedPath(processedTmp);
-                    var reimport = await ImportModXmlFolder(sourcePath, tmp.Dir);
+                    await CreateXmlFolder(sourcePath, tmp.Dir);
+                    GC.Collect();
+                    var reimport = OblivionMod.Create_Xml_Folder(
+                        dir: tmp.Dir,
+                        modKey: Mutagen.Bethesda.Oblivion.Constants.Oblivion);
                     var reexportPath = Path.Combine(tmp.Dir.Path, "Reexport");
                     reimport.Write_Binary(
                         reexportPath,

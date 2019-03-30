@@ -113,7 +113,6 @@ namespace Mutagen.Bethesda
                         var itemsNode = elem.Element("Items");
                         if (itemsNode != null)
                         {
-                            ushort i = 0;
                             foreach (var itemNode in itemsNode.Elements())
                             {
                                 group.Items.Set(
@@ -122,7 +121,6 @@ namespace Mutagen.Bethesda
                                         path: dir.Path,
                                         errorMask: errorMask,
                                         translationMask: null));
-                                i++;
                             }
                         }
                     }

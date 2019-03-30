@@ -63,6 +63,7 @@ namespace Mutagen.Bethesda.Tests
 
                 Assert.False(outputMask?.IsInError() ?? false);
             }
+            GC.Collect();
 
             // Do Observable
             if (settings.TestObservable)
@@ -1610,6 +1611,7 @@ namespace Mutagen.Bethesda.Tests
                     inputPath: orderedPath,
                     outputPathStraight: outputPath,
                     outputPathObservable: observableOutputPath);
+                GC.Collect();
 
                 if (settings.TestNormal)
                 {
