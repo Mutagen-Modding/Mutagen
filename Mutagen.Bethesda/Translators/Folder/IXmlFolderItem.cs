@@ -11,7 +11,7 @@ namespace Mutagen.Bethesda
 {
     public interface IXmlFolderItem
     {
-        void Write_Xml_Folder(
+        Task Write_Xml_Folder(
             DirectoryPath? dir, 
             string name, 
             XElement node, 

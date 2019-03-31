@@ -275,19 +275,17 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        public static bool TryCreate_Xml_Folder(
+        public static async Task<TryGet<Worldspace>> TryCreate_Xml_Folder(
             DirectoryPath dir,
-            out Worldspace ret,
             ErrorMaskBuilder errorMask)
         {
             var path = Path.Combine(dir.Path, $"{nameof(Worldspace)}.xml");
             if (!File.Exists(path))
             {
-                ret = default;
-                return false;
+                return TryGet<Worldspace>.Failure;
             }
             var worldspaceNode = XDocument.Load(path).Root;
-            ret = Create_Xml(
+            var ret = Create_Xml(
                 node: worldspaceNode,
                 errorMask: errorMask,
                 translationMask: XmlFolderTranslationCrystal);
@@ -313,7 +311,7 @@ namespace Mutagen.Bethesda.Oblivion
                     errorMask: errorMask);
             }
             var subCellsDir = new DirectoryPath(Path.Combine(dir.Path, $"SubCells"));
-            if (!subCellsDir.Exists) return true;
+            if (!subCellsDir.Exists) return TryGet<Worldspace>.Succeed(ret);
 
             bool TryGetIndices(string str, out short x, out short y)
             {
@@ -333,6 +331,7 @@ namespace Mutagen.Bethesda.Oblivion
                     && short.TryParse(split[1].Substring(0, split[1].Length - 1), out y);
             }
 
+            List<Task<WorldspaceBlock>> tasks = new List<Task<WorldspaceBlock>>();
             foreach (var blockDir in subCellsDir.EnumerateDirectories(includeSelf: false, recursive: false)
                 .SelectWhere(d =>
                 {
@@ -346,40 +345,51 @@ namespace Mutagen.Bethesda.Oblivion
                 .Select(d => d.Dir))
             {
                 if (!TryGetIndices(blockDir.Name, out var blockX, out var blockY)) continue;
-                WorldspaceBlock wb = WorldspaceBlock.Create_Xml(
-                    path: Path.Combine(blockDir.Path, "Group.xml"),
-                    errorMask: errorMask,
-                    translationMask: BlockXmlFolderTranslation);
-                wb.BlockNumberX = blockX;
-                wb.BlockNumberY = blockY;
-                ret.SubCells.Add(wb);
-
-                foreach (var subBlockFile in blockDir.EnumerateFiles()
-                    .SelectWhere(d =>
-                    {
-                        if (Mutagen.Bethesda.XmlFolderTranslation.TryGetItemIndex(d.Name, out var index))
-                        {
-                            return TryGet<(int Index, FilePath File)>.Succeed((index, d));
-                        }
-                        return TryGet<(int Index, FilePath File)>.Failure;
-                    })
-                    .OrderBy(d => d.Index)
-                    .Select(d => d.File))
+                tasks.Add(Task.Run(async () =>
                 {
-                    if (!TryGetIndices(subBlockFile.NameWithoutExtension, out var subBlockX, out var subBlockY)) continue;
-                    WorldspaceSubBlock wsb = WorldspaceSubBlock.Create_Xml(
-                        path: subBlockFile.Path,
+                    WorldspaceBlock wb = WorldspaceBlock.Create_Xml(
+                        path: Path.Combine(blockDir.Path, "Group.xml"),
                         errorMask: errorMask,
-                        translationMask: SubBlockXmlFolderTranslation);
-                    wsb.BlockNumberX = subBlockX;
-                    wsb.BlockNumberY = subBlockY;
-                    wb.Items.Add(wsb);
-                }
+                        translationMask: BlockXmlFolderTranslation);
+                    wb.BlockNumberX = blockX;
+                    wb.BlockNumberY = blockY;
+
+                    List<Task<WorldspaceSubBlock>> subTasks = new List<Task<WorldspaceSubBlock>>();
+                    foreach (var subBlockFile in blockDir.EnumerateFiles()
+                        .SelectWhere(d =>
+                        {
+                            if (Mutagen.Bethesda.XmlFolderTranslation.TryGetItemIndex(d.Name, out var index))
+                            {
+                                return TryGet<(int Index, FilePath File)>.Succeed((index, d));
+                            }
+                            return TryGet<(int Index, FilePath File)>.Failure;
+                        })
+                        .OrderBy(d => d.Index)
+                        .Select(d => d.File))
+                    {
+                        if (!TryGetIndices(subBlockFile.NameWithoutExtension, out var subBlockX, out var subBlockY)) continue;
+                        subTasks.Add(Task.Run(() =>
+                        {
+                            WorldspaceSubBlock wsb = WorldspaceSubBlock.Create_Xml(
+                                path: subBlockFile.Path,
+                                errorMask: errorMask,
+                                translationMask: SubBlockXmlFolderTranslation);
+                            wsb.BlockNumberX = subBlockX;
+                            wsb.BlockNumberY = subBlockY;
+                            return wsb;
+                        }));
+                    }
+                    var subBlocks = await Task.WhenAll(subTasks);
+                    wb.Items.AddRange(subBlocks);
+                    return wb;
+                }));
             }
-            return true;
+            var blocks = await Task.WhenAll(tasks);
+            ret.SubCells.AddRange(blocks);
+            return TryGet<Worldspace>.Succeed(ret);
         }
 
-        public override void Write_Xml_Folder(
+        public override async Task Write_Xml_Folder(
             DirectoryPath? dir, 
             string name, 
             XElement node, 
@@ -417,23 +427,33 @@ namespace Mutagen.Bethesda.Oblivion
                     translationMask: null);
             }
             int blockCount = 0;
+            List<Task> tasks = new List<Task>();
             foreach (var block in this.SubCellsEnumerable)
             {
-                var blockDir = new DirectoryPath(Path.Combine(dir.Value.Path, $"SubCells/{blockCount++} - ({block.BlockNumberX}X, {block.BlockNumberY}Y)/"));
-                blockDir.Create();
-                int subBlockCount = 0;
-                block.Write_Xml(
-                    Path.Combine(blockDir.Path, "Group.xml"),
-                    errorMask: errorMask,
-                    translationMask: BlockXmlFolderTranslationCrystal);
-                foreach (var subBlock in block.Items)
+                int blockStamp = blockCount++;
+                tasks.Add(Task.Run(() =>
                 {
-                    subBlock.Write_Xml(
-                        path: Path.Combine(blockDir.Path, $"{subBlockCount++} - ({subBlock.BlockNumberX}X, {subBlock.BlockNumberY}Y).xml"),
-                        translationMask: SubBlockXmlFolderTranslationCrystal,
-                        errorMask: errorMask);
-                }
+                    var blockDir = new DirectoryPath(Path.Combine(dir.Value.Path, $"SubCells/{blockStamp} - ({block.BlockNumberX}X, {block.BlockNumberY}Y)/"));
+                    blockDir.Create();
+                    int subBlockCount = 0;
+                    block.Write_Xml(
+                        Path.Combine(blockDir.Path, "Group.xml"),
+                        errorMask: errorMask,
+                        translationMask: BlockXmlFolderTranslationCrystal);
+                    foreach (var subBlock in block.Items)
+                    {
+                        int subBlockStamp = subBlockCount++;
+                        tasks.Add(Task.Run(() =>
+                        {
+                            subBlock.Write_Xml(
+                                path: Path.Combine(blockDir.Path, $"{subBlockStamp} - ({subBlock.BlockNumberX}X, {subBlock.BlockNumberY}Y).xml"),
+                                translationMask: SubBlockXmlFolderTranslationCrystal,
+                                errorMask: errorMask);
+                        }));
+                    }
+                }));
             }
+            await Task.WhenAll(tasks);
         }
     }
 }

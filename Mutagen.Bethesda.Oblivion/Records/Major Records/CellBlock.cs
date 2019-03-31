@@ -20,7 +20,7 @@ namespace Mutagen.Bethesda.Oblivion
             Items = new Loqui.MaskItem<Loqui.CopyOption, CellSubBlock_CopyMask>(Loqui.CopyOption.Skip, null)
         };
 
-        public void Write_Xml_Folder(
+        public async Task Write_Xml_Folder(
             DirectoryPath? dir,
             string name,
             XElement node,
@@ -34,24 +34,29 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask,
                 translationMask: GroupExt.XmlFolderTranslationCrystal);
             int blockCounter = 0;
+            List<Task> tasks = new List<Task>();
             foreach (var item in this.Items)
             {
-                using (errorMask.PushIndex(blockCounter))
+                //using (errorMask.PushIndex(blockCounter))
+                //{
+                //    try
+                //    {
+                int stampedCounter = blockCounter++;
+                tasks.Add(Task.Run(() =>
                 {
-                    try
-                    {
-                        item.Write_Xml_Folder(
-                            path: Path.Combine(subDir, $"{blockCounter.ToString()}.xml"),
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                }
-                blockCounter++;
+                    item.Write_Xml_Folder(
+                        path: Path.Combine(subDir, $"{stampedCounter.ToString()}.xml"),
+                        errorMask: errorMask);
+                }));
+                //    }
+                //    catch (Exception ex)
+                //    when (errorMask != null)
+                //    {
+                //        errorMask.ReportException(ex);
+                //    }
+                //}
             }
+            await Task.WhenAll(tasks);
         }
 
         public object Duplicate(Func<FormKey> getNextFormKey, IList<(MajorRecord Record, FormKey OriginalFormKey)> duplicatedRecordTracker = null)
@@ -62,7 +67,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static CellBlock Create_XmlFolder(
+        public static async Task<CellBlock> Create_XmlFolder(
             XElement node,
             string path,
             ErrorMaskBuilder errorMask,
@@ -79,6 +84,7 @@ namespace Mutagen.Bethesda.Oblivion
                     translationMask: GroupExt.XmlFolderTranslationCrystal);
             }
             var dir = new DirectoryPath(path);
+            List<Task<CellSubBlock>> tasks = new List<Task<CellSubBlock>>();
             foreach (var f in dir.EnumerateFiles(recursive: false)
                 .SelectWhere(subDir =>
                 {
@@ -93,8 +99,10 @@ namespace Mutagen.Bethesda.Oblivion
                 })
                 .OrderBy(i => i.Index))
             {
-                ret.Items.Add(CellSubBlock.Create_Xml_Folder(f.File, f.Index));
+                tasks.Add(Task.Run(() => CellSubBlock.Create_Xml_Folder(f.File, f.Index)));
             }
+            var subBlocks = await Task.WhenAll(tasks);
+            ret.Items.AddRange(subBlocks);
             return ret;
         }
     }

@@ -81,7 +81,7 @@ namespace Mutagen.Bethesda
         };
         public static readonly TranslationCrystal XmlFolderTranslationCrystal = XmlFolderTranslationMask.GetCrystal();
 
-        public static void Create_Xml_Folder<T>(
+        public static async Task Create_Xml_Folder<T>(
             this Group<T> group,
             DirectoryPath dir,
             string name,
@@ -113,15 +113,18 @@ namespace Mutagen.Bethesda
                         var itemsNode = elem.Element("Items");
                         if (itemsNode != null)
                         {
+                            List<Task<T>> tasks = new List<Task<T>>();
                             foreach (var itemNode in itemsNode.Elements())
                             {
-                                group.Items.Set(
-                                    LoquiXmlFolderTranslation<T>.CREATE.Value(
+                                tasks.Add(
+                                    LoquiXmlFolderTranslation<T>.CREATE(
                                         node: itemNode,
                                         path: dir.Path,
                                         errorMask: errorMask,
                                         translationMask: null));
                             }
+                            var items = await Task.WhenAll(tasks);
+                            group.Items.Set(items);
                         }
                     }
                     catch (Exception ex)
@@ -133,7 +136,7 @@ namespace Mutagen.Bethesda
             }
         }
 
-        public static void Write_Xml_Folder<T, T_ErrMask>(
+        public static async Task Write_Xml_Folder<T, T_ErrMask>(
             this Group<T> group,
             DirectoryPath dir,
             string name,
@@ -154,27 +157,29 @@ namespace Mutagen.Bethesda
                         translationMask: GroupExt.XmlFolderTranslationCrystal);
                     int counter = 0;
                     XElement items = new XElement("Items");
+                    List<Task> tasks = new List<Task>();
                     foreach (var item in group.Items.Items)
                     {
-                        using (errorMask.PushIndex(counter))
-                        {
-                            try
-                            {
-                                item.Write_Xml_Folder(
-                                    node: items,
-                                    name: name,
-                                    counter: counter,
-                                    dir: dir,
-                                    errorMask: errorMask);
-                            }
-                            catch (Exception ex)
-                            when (errorMask != null)
-                            {
-                                errorMask.ReportException(ex);
-                            }
-                        }
-                        counter++;
+                        //using (errorMask.PushIndex(counter))
+                        //{
+                        //    try
+                        //    {
+                        tasks.Add(
+                            item.Write_Xml_Folder(
+                                node: items,
+                                name: name,
+                                counter: counter++,
+                                dir: dir,
+                                errorMask: errorMask));
+                        //    }
+                        //    catch (Exception ex)
+                        //    when (errorMask != null)
+                        //    {
+                        //        errorMask.ReportException(ex);
+                        //    }
+                        //}
                     }
+                    await Task.WhenAll(tasks);
                     if (items.HasElements)
                     {
                         topNode.Add(items);

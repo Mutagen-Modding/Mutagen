@@ -47,7 +47,7 @@ namespace Mutagen.Bethesda
 
     public static class ListGroupExt
     {
-        public static void Create_Xml_Folder<T>(
+        public static async Task Create_Xml_Folder<T>(
             this ListGroup<T> group,
             DirectoryPath dir,
             string name,
@@ -76,7 +76,8 @@ namespace Mutagen.Bethesda
                                 errorMask,
                                 translationMask: ListGroup<T>.XmlFolderTranslationMask.GetCrystal());
                         }
-                        int counter = 0;
+                        List<Task<T>> tasks = new List<Task<T>>();
+                        //int counter = 0;
                         foreach (var subDir in dir.EnumerateDirectories(recursive: false, includeSelf: false)
                             .SelectWhere(subDir =>
                             {
@@ -91,25 +92,30 @@ namespace Mutagen.Bethesda
                             })
                             .OrderBy(i => i.Index))
                         {
-                            using (errorMask.PushIndex(counter))
+                            //using (errorMask.PushIndex(counter))
+                            //{
+                            //try
+                            //{
+                            tasks.Add(Task.Run(async () =>
                             {
-                                try
-                                {
-                                    group.Items.Add(
-                                        LoquiXmlFolderTranslation<T>.CREATE.Value(
-                                            node: null,
-                                            path: subDir.Dir.Path, 
-                                            errorMask: errorMask,
-                                            translationMask: null));
-                                }
-                                catch (Exception ex)
-                                when (errorMask != null)
-                                {
-                                    errorMask.ReportException(ex);
-                                }
-                            }
-                            counter++;
+                                var creator = LoquiXmlFolderTranslation<T>.CREATE;
+                                return await creator(
+                                    node: null,
+                                    path: subDir.Dir.Path,
+                                    errorMask: errorMask,
+                                    translationMask: null);
+                            }));
+                            //}
+                            //catch (Exception ex)
+                            //when (errorMask != null)
+                            //{
+                            //    errorMask.ReportException(ex);
+                            //}
+                            //}
+                            //counter++;
                         }
+                        var items = await Task.WhenAll(tasks);
+                        group.Items.AddRange(items);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -120,7 +126,7 @@ namespace Mutagen.Bethesda
             }
         }
 
-        public static void Write_Xml_Folder<T>(
+        public static async Task Write_Xml_Folder<T>(
             this ListGroup<T> list,
             DirectoryPath dir,
             string name,
@@ -135,34 +141,39 @@ namespace Mutagen.Bethesda
                     try
                     {
                         dir = new DirectoryPath(Path.Combine(dir.Path, name));
+                        dir.Create();
                         XElement topNode = new XElement("Group");
                         list.WriteToNode_Xml(
                             topNode,
                             errorMask,
                             translationMask: ListGroup<T>.XmlFolderTranslationMask.GetCrystal());
+                        List<Task> tasks = new List<Task>();
                         int counter = 0;
                         foreach (var item in list.Items.Items)
                         {
-                            using (errorMask.PushIndex(counter))
+                            //using (errorMask.PushIndex(counter))
+                            //{
+                            //    try
+                            //    {
+                            int stampedCounter = counter++;
+                            tasks.Add(Task.Run(() =>
                             {
-                                try
-                                {
-                                    item.Write_Xml_Folder(
-                                        node: null,
-                                        name: name,
-                                        counter: counter,
-                                        dir: dir,
-                                        errorMask: errorMask);
-                                }
-                                catch (Exception ex)
-                                when (errorMask != null)
-                                {
-                                    errorMask.ReportException(ex);
-                                }
-                            }
-                            counter++;
+                                item.Write_Xml_Folder(
+                                    node: null,
+                                    name: name,
+                                    counter: stampedCounter,
+                                    dir: dir,
+                                    errorMask: errorMask);
+                            }));
+                            //    }
+                            //    catch (Exception ex)
+                            //    when (errorMask != null)
+                            //    {
+                            //        errorMask.ReportException(ex);
+                            //    }
+                            //}
                         }
-                        dir.Create();
+                        await Task.WhenAll(tasks);
                         topNode.SaveIfChanged(Path.Combine(dir.Path, $"Group.xml"));
                     }
                     catch (Exception ex)

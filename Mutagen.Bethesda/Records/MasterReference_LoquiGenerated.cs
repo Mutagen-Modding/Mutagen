@@ -23,6 +23,8 @@ using Loqui.Xml;
 using Loqui.Internal;
 using System.Diagnostics;
 using System.Collections.Specialized;
+using System.Threading.Tasks;
+using Noggog.Utility;
 using Mutagen.Bethesda.Binary;
 
 namespace Mutagen.Bethesda

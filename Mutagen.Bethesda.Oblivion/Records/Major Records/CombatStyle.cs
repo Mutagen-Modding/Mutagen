@@ -41,7 +41,7 @@ namespace Mutagen.Bethesda.Oblivion
             writer.Write(flags);
         }
 
-        public static CombatStyle Create_XmlFolder(
+        public static async Task<CombatStyle> Create_XmlFolder(
             XElement node,
             string path,
             ErrorMaskBuilder errorMask,
@@ -61,7 +61,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public override void Write_Xml_Folder(
+        public override async Task Write_Xml_Folder(
             DirectoryPath? dir,
             string name,
             XElement node,

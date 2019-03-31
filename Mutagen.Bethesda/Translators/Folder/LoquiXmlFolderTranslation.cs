@@ -14,12 +14,22 @@ namespace Mutagen.Bethesda.Folder
     public class LoquiXmlFolderTranslation<T>
         where T : ILoquiObjectGetter
     {
-        public delegate T CREATE_FUNC(
+        public delegate Task<T> CREATE_FUNC(
             XElement node,
             string path,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask);
-        public static readonly Lazy<CREATE_FUNC> CREATE = new Lazy<CREATE_FUNC>(GetCreateFunc);
+        private static readonly Lazy<CREATE_FUNC> create = new Lazy<CREATE_FUNC>(GetCreateFunc);
+        public static CREATE_FUNC CREATE
+        {
+            get
+            {
+                lock (create)
+                {
+                    return create.Value;
+                }
+            }
+        }
 
         private static CREATE_FUNC GetCreateFunc()
         {
@@ -28,7 +38,7 @@ namespace Mutagen.Bethesda.Folder
                 .Where((methodInfo) => methodInfo.Name.Equals("Create_XmlFolder"))
                 .Where((methodInfo) => methodInfo.IsStatic
                     && methodInfo.IsPublic)
-                .Where((methodInfo) => methodInfo.ReturnType.Equals(tType))
+                .Where((methodInfo) => methodInfo.ReturnType.Equals(typeof(Task<T>)))
                 .Where((methodInfo) => methodInfo.GetParameters().Length == 4)
                 .Where((methodInfo) => methodInfo.GetParameters()[0].ParameterType.Equals(typeof(XElement)))
                 .Where((methodInfo) => methodInfo.GetParameters()[1].ParameterType.Equals(typeof(string)))
@@ -43,7 +53,7 @@ namespace Mutagen.Bethesda.Folder
             }
             else
             {
-                return (node, path, errorMask, translMask) =>
+                return async (node, path, errorMask, translMask) =>
                 {
                     if (LoquiXmlTranslation<T>.Instance.Parse(
                         node,

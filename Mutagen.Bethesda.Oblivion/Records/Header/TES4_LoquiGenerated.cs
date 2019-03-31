@@ -26,6 +26,8 @@ using Loqui.Xml;
 using Loqui.Internal;
 using System.Diagnostics;
 using System.Collections.Specialized;
+using System.Threading.Tasks;
+using Noggog.Utility;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
 
@@ -765,7 +767,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = TES4_Registration.TRIGGERING_RECORD_TYPE;
-        public void Write_Xml_Folder(
+        public async Task Write_Xml_Folder(
             DirectoryPath? dir,
             string name,
             XElement node,
