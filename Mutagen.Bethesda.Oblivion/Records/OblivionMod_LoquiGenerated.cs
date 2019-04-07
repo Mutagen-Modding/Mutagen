@@ -2954,10 +2954,10 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMaskBuilder = null;
             dir.Create();
             var tasks = new List<Task>();
-            this.TES4.Write_Xml(
+            tasks.Add(Task.Run(() => this.TES4.Write_Xml(
                 path: Path.Combine(dir.Path, "TES4.xml"),
                 errorMask: errorMaskBuilder,
-                translationMask: null);
+                translationMask: null)));
             tasks.Add(Task.Run(() => GameSettings.Write_Xml_Folder<GameSetting, GameSetting_ErrorMask>(
                 dir: dir.Path,
                 name: nameof(GameSettings),
@@ -3008,7 +3008,7 @@ namespace Mutagen.Bethesda.Oblivion
                 name: nameof(MagicEffects),
                 errorMask: errorMaskBuilder,
                 index: (int)OblivionMod_FieldIndex.MagicEffects)));
-            tasks.Add(Task.Run(() => Write_Xml_Folder_Scripts(
+            tasks.Add(Task.Run(() =>  Write_Xml_Folder_Scripts(
                 dir: dir,
                 name: nameof(Scripts),
                 index: (int)OblivionMod_FieldIndex.Scripts,
@@ -3183,7 +3183,7 @@ namespace Mutagen.Bethesda.Oblivion
                 name: nameof(Cells),
                 errorMask: errorMaskBuilder,
                 index: (int)OblivionMod_FieldIndex.Cells)));
-            tasks.Add(Task.Run(() => Write_Xml_Folder_Worldspaces(
+            tasks.Add(Task.Run(() =>  Write_Xml_Folder_Worldspaces(
                 dir: dir,
                 name: nameof(Worldspaces),
                 index: (int)OblivionMod_FieldIndex.Worldspaces,

@@ -47,35 +47,6 @@ namespace Mutagen.Bethesda.Generation
 
         private async Task GenerateForMod(ObjectGeneration obj, FileGeneration fg)
         {
-            foreach (var field in obj.IterateFields())
-            {
-                if (!field.GetFieldData().CustomFolder) continue;
-                using (var args = new ArgsWrapper(fg,
-                    $"partial void Write_Xml_Folder_{field.Name}"))
-                {
-                    args.Add("DirectoryPath dir");
-                    args.Add("string name");
-                    args.Add("int index");
-                    args.Add($"ErrorMaskBuilder errorMask");
-                }
-                fg.AppendLine();
-
-                LoquiType loqui = field as LoquiType;
-                if (!loqui.TryGetSpecificationAsObject("T", out var subObj))
-                {
-                    throw new ArgumentException();
-                }
-                using (var args = new ArgsWrapper(fg,
-                    $"partial void Create_Xml_Folder_{field.Name}"))
-                {
-                    args.Add("DirectoryPath dir");
-                    args.Add("string name");
-                    args.Add("int index");
-                    args.Add($"ErrorMaskBuilder errorMask");
-                }
-                fg.AppendLine();
-            }
-
             using (var args = new FunctionWrapper(fg,
                 $"public static Task<{obj.Name}> Create_Xml_Folder"))
             {
@@ -131,7 +102,8 @@ namespace Mutagen.Bethesda.Generation
                     if (field.GetFieldData().CustomFolder)
                     {
                         using (var args = new ArgsWrapper(fg,
-                            $"ret.Create_Xml_Folder_{field.Name}"))
+                            $"tasks.Add(Task.Run(() => ret.Create_Xml_Folder_{field.Name}",
+                            suffixLine: "))"))
                         {
                             args.Add("dir: dir");
                             args.Add($"name: nameof({field.Name})");
@@ -201,7 +173,8 @@ namespace Mutagen.Bethesda.Generation
                     if (field.GetFieldData().CustomFolder)
                     {
                         using (var args = new ArgsWrapper(fg,
-                            $"Write_Xml_Folder_{field.Name}"))
+                            $"tasks.Add(Task.Run(() =>  Write_Xml_Folder_{field.Name}",
+                            suffixLine: "))"))
                         {
                             args.Add("dir: dir");
                             args.Add($"name: nameof({field.Name})"); ;
@@ -214,7 +187,8 @@ namespace Mutagen.Bethesda.Generation
                     {
                         case ObjectType.Record:
                             using (var args = new ArgsWrapper(fg,
-                                $"this.{field.Name}.Write_Xml"))
+                                $"tasks.Add(Task.Run(() => this.{field.Name}.Write_Xml",
+                                suffixLine: "))"))
                             {
                                 args.Add($"path: Path.Combine(dir.Path, \"{field.Name}.xml\")");
                                 args.Add($"errorMask: errorMaskBuilder");
@@ -239,7 +213,8 @@ namespace Mutagen.Bethesda.Generation
                             else
                             {
                                 using (var args = new ArgsWrapper(fg,
-                                    $"{field.Name}.Write_Xml_Folder"))
+                                    $"tasks.Add(Task.Run(() => {field.Name}.Write_Xml_Folder", 
+                                    suffixLine: "))"))
                                 {
                                     args.Add($"dir: dir.Path");
                                     args.Add($"name: nameof({field.Name})");
