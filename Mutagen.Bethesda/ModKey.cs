@@ -8,12 +8,33 @@ using System.Threading.Tasks;
 
 namespace Mutagen.Bethesda
 {
+    /// <summary>
+    /// ModKey defines a key struct of the name and file type that a mod intends to be stored on-disk with.
+    /// 
+    /// The proper factory format is: [ModName].es[p/m], depending on whether it is a master file or not.
+    /// 
+    /// A correct ModKey is very important if a mod's contents will ever be added to another mod (as an override).
+    /// Otherwise, records will become mis-linked.
+    /// 
+    /// General practice is:
+    ///  - Use ModKey.TryFactory on a mod's file name when at all possible
+    ///  - Use the Dummy singleton only when it is unknown, and no record cross pollination is planned to occur.
     public struct ModKey : IEquatable<ModKey>
     {
         public static readonly ModKey NULL = new ModKey(string.Empty, master: true);
         public StringCaseAgnostic Name { get; private set; }
         public bool Master { get; private set; }
         public string FileName => this.ToString();
+
+        /// </summary>
+        /// <summary>
+        /// A convenience singleton that represents an unimportant ModKey.
+        /// 
+        /// Refer to ModKey overall docs for when/how it should be used.
+        /// </summary>
+        /// <param name="str"></param>
+        /// <returns></returns>
+        public static readonly ModKey Dummy = new ModKey("MutagenDummyKey", master: false);
         
         public ModKey(
             string name,
@@ -92,6 +113,19 @@ namespace Mutagen.Bethesda
                 return key;
             }
             throw new ArgumentException("Could not construct ModKey.");
+        }
+
+        /// <summary>
+        /// A convenience function that attempts to turn a given string into a ModKey object.
+        /// If it fails, it falls back and uses the Dummy singleton.
+        /// 
+        /// Refer to ModKey overall docs for when/how it should be used.
+        /// </summary>
+        /// <param name="str"></param>
+        /// <returns></returns>
+        public static ModKey TryFactoryDummyFallback(string str)
+        {
+            return ModKey.TryFactory(str, out var modKey) ? modKey : Dummy;
         }
 
         public static bool operator ==(ModKey a, ModKey b)
