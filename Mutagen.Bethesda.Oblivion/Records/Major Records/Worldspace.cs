@@ -431,27 +431,33 @@ namespace Mutagen.Bethesda.Oblivion
             foreach (var block in this.SubCellsEnumerable)
             {
                 int blockStamp = blockCount++;
-                tasks.Add(Task.Run(() =>
+                lock (tasks)
                 {
-                    var blockDir = new DirectoryPath(Path.Combine(dir.Value.Path, $"SubCells/{blockStamp} - ({block.BlockNumberX}X, {block.BlockNumberY}Y)/"));
-                    blockDir.Create();
-                    int subBlockCount = 0;
-                    block.Write_Xml(
-                        Path.Combine(blockDir.Path, "Group.xml"),
-                        errorMask: errorMask,
-                        translationMask: BlockXmlFolderTranslationCrystal);
-                    foreach (var subBlock in block.Items)
+                    tasks.Add(Task.Run(() =>
                     {
-                        int subBlockStamp = subBlockCount++;
-                        tasks.Add(Task.Run(() =>
+                        var blockDir = new DirectoryPath(Path.Combine(dir.Value.Path, $"SubCells/{blockStamp} - ({block.BlockNumberX}X, {block.BlockNumberY}Y)/"));
+                        blockDir.Create();
+                        int subBlockCount = 0;
+                        block.Write_Xml(
+                            Path.Combine(blockDir.Path, "Group.xml"),
+                            errorMask: errorMask,
+                            translationMask: BlockXmlFolderTranslationCrystal);
+                        foreach (var subBlock in block.Items)
                         {
-                            subBlock.Write_Xml(
-                                path: Path.Combine(blockDir.Path, $"{subBlockStamp} - ({subBlock.BlockNumberX}X, {subBlock.BlockNumberY}Y).xml"),
-                                translationMask: SubBlockXmlFolderTranslationCrystal,
-                                errorMask: errorMask);
-                        }));
-                    }
-                }));
+                            int subBlockStamp = subBlockCount++;
+                            lock (tasks)
+                            {
+                                tasks.Add(Task.Run(() =>
+                                {
+                                    subBlock.Write_Xml(
+                                        path: Path.Combine(blockDir.Path, $"{subBlockStamp} - ({subBlock.BlockNumberX}X, {subBlock.BlockNumberY}Y).xml"),
+                                        translationMask: SubBlockXmlFolderTranslationCrystal,
+                                        errorMask: errorMask);
+                                }));
+                            }
+                        }
+                    }));
+                }
             }
             await Task.WhenAll(tasks);
         }
