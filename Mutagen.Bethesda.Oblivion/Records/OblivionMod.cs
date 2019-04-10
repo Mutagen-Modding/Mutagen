@@ -185,7 +185,7 @@ namespace Mutagen.Bethesda.Oblivion
                         foreach (var subDir in dir.EnumerateDirectories(includeSelf: false, recursive: false)
                             .SelectWhere(d =>
                             {
-                                if (Mutagen.Bethesda.XmlFolderTranslation.TryGetItemIndex(d.Name, out var i))
+                                if (Mutagen.Bethesda.FolderTranslation.TryGetItemIndex(d.Name, out var i))
                                 {
                                     return TryGet<(int Index, DirectoryPath Dir)>.Succeed((i, d));
                                 }
@@ -193,14 +193,11 @@ namespace Mutagen.Bethesda.Oblivion
                             })
                             .OrderBy(d => d.Index))
                         {
-                            //using (errorMask?.PushIndex(subDir.Index))
-                            //{
                             tasks.Add(Task.Run(async () =>
                             {
                                 var get = await Worldspace.TryCreate_Xml_Folder(subDir.Dir, errorMask);
                                 return get.Value;
                             }));
-                            //}
                         }
                         var worldspaces = await Task.WhenAll(tasks);
                         this.Worldspaces.Items.Set(worldspaces.Where(ws => ws != null));
@@ -284,7 +281,7 @@ namespace Mutagen.Bethesda.Oblivion
             foreach (var subDir in dir.EnumerateDirectories(includeSelf: false, recursive: false)
                 .SelectWhere(d =>
                 {
-                    if (Mutagen.Bethesda.XmlFolderTranslation.TryGetItemIndex(d.Name, out var i))
+                    if (Mutagen.Bethesda.FolderTranslation.TryGetItemIndex(d.Name, out var i))
                     {
                         return TryGet<(int Index, DirectoryPath Dir)>.Succeed((i, d));
                     }
@@ -329,7 +326,7 @@ namespace Mutagen.Bethesda.Oblivion
                     List<Task> tasks = new List<Task>();
                     foreach (var item in this.Scripts.Items.Items)
                     {
-                        DirectoryPath subDir = new DirectoryPath(Path.Combine(dir.Path, $"{counter++} - {item.FormKey} - {item.EditorID}"));
+                        DirectoryPath subDir = new DirectoryPath(Path.Combine(dir.Path, FolderTranslation.GetFileString(item, counter++)));
 
                         subDir.Create();
                         tasks.Add(Task.Run(() =>

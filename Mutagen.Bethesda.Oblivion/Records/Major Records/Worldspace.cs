@@ -335,7 +335,7 @@ namespace Mutagen.Bethesda.Oblivion
             foreach (var blockDir in subCellsDir.EnumerateDirectories(includeSelf: false, recursive: false)
                 .SelectWhere(d =>
                 {
-                    if (Mutagen.Bethesda.XmlFolderTranslation.TryGetItemIndex(d.Name, out var index))
+                    if (Mutagen.Bethesda.FolderTranslation.TryGetItemIndex(d.Name, out var index))
                     {
                         return TryGet<(int Index, DirectoryPath Dir)>.Succeed((index, d));
                     }
@@ -358,7 +358,7 @@ namespace Mutagen.Bethesda.Oblivion
                     foreach (var subBlockFile in blockDir.EnumerateFiles()
                         .SelectWhere(d =>
                         {
-                            if (Mutagen.Bethesda.XmlFolderTranslation.TryGetItemIndex(d.Name, out var index))
+                            if (Mutagen.Bethesda.FolderTranslation.TryGetItemIndex(d.Name, out var index))
                             {
                                 return TryGet<(int Index, FilePath File)>.Succeed((index, d));
                             }
@@ -396,7 +396,7 @@ namespace Mutagen.Bethesda.Oblivion
             int counter,
             ErrorMaskBuilder errorMask)
         {
-            dir = new DirectoryPath(Path.Combine(dir.Value.Path, $"{counter} - {this.FormKey.IDString()} - {this.EditorID}"));
+            dir = new DirectoryPath(Path.Combine(dir.Value.Path, FolderTranslation.GetFileString(this, counter)));
             dir.Value.Create();
 
             var worldspaceNode = new XElement("topnode");

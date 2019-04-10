@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Mutagen.Bethesda
 {
-    public static class XmlFolderTranslation
+    public static class FolderTranslation
     {
         public static bool TryGetItemIndex(string str, out int index)
         {
@@ -16,6 +16,11 @@ namespace Mutagen.Bethesda
                 return false;
             }
             return true;
+        }
+
+        public static string GetFileString(IMajorRecord rec, int counter)
+        {
+            return $"{counter} - {rec.EditorID} - {rec.FormKey.ToString()}";
         }
     }
 }
