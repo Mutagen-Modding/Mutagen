@@ -96,58 +96,62 @@ namespace Mutagen.Bethesda.Generation
             using (new BraceWrapper(fg))
             {
                 fg.AppendLine($"var ret = new {obj.Name}(modKey);");
-                fg.AppendLine($"var tasks = new List<Task>();");
-                foreach (var field in obj.IterateFields())
+                fg.AppendLine("using (new FolderCleaner(dir, FolderCleaner.CleanType.AccessTime))");
+                using (new BraceWrapper(fg))
                 {
-                    if (field.GetFieldData().CustomFolder)
+                    fg.AppendLine($"var tasks = new List<Task>();");
+                    foreach (var field in obj.IterateFields())
                     {
-                        using (var args = new ArgsWrapper(fg,
-                            $"tasks.Add(Task.Run(() => ret.Create_Xml_Folder_{field.Name}",
-                            suffixLine: "))"))
+                        if (field.GetFieldData().CustomFolder)
                         {
-                            args.Add("dir: dir");
-                            args.Add($"name: nameof({field.Name})");
-                            args.Add($"index: (int){field.IndexEnumName}");
-                            args.Add($"errorMask: errorMask");
-                        }
-                        continue;
-                    }
-                    if (!(field is LoquiType loqui))
-                    {
-                        throw new ArgumentException();
-                    }
-                    switch (loqui.TargetObjectGeneration.GetObjectType())
-                    {
-                        case ObjectType.Record:
                             using (var args = new ArgsWrapper(fg,
-                                $"ret.{field.Name}.CopyFieldsFrom({loqui.TypeName}.Create_Xml",
-                                suffixLine: ");")
-                            {
-                                SemiColon = false
-                            })
-                            {
-                                args.Add($"path: Path.Combine(dir.Path, \"{field.Name}.xml\")");
-                                args.Add($"errorMask: errorMask");
-                                args.Add($"translationMask: null");
-                            }
-                            break;
-                        case ObjectType.Group:
-                            if (!loqui.TryGetSpecificationAsObject("T", out var subObj)) continue;
-                            using (var args = new ArgsWrapper(fg,
-                                $"tasks.Add(Task.Run(() => ret.{field.Name}.Create_Xml_Folder<{subObj.Name}>",
+                                $"tasks.Add(Task.Run(() => ret.Create_Xml_Folder_{field.Name}",
                                 suffixLine: "))"))
                             {
-                                args.Add($"dir: dir");
+                                args.Add("dir: dir");
                                 args.Add($"name: nameof({field.Name})");
-                                args.Add($"errorMask: errorMask");
                                 args.Add($"index: (int){field.IndexEnumName}");
+                                args.Add($"errorMask: errorMask");
                             }
-                            break;
-                        default:
-                            break;
+                            continue;
+                        }
+                        if (!(field is LoquiType loqui))
+                        {
+                            throw new ArgumentException();
+                        }
+                        switch (loqui.TargetObjectGeneration.GetObjectType())
+                        {
+                            case ObjectType.Record:
+                                using (var args = new ArgsWrapper(fg,
+                                    $"ret.{field.Name}.CopyFieldsFrom({loqui.TypeName}.Create_Xml",
+                                    suffixLine: ");")
+                                {
+                                    SemiColon = false
+                                })
+                                {
+                                    args.Add($"path: Path.Combine(dir.Path, \"{field.Name}.xml\")");
+                                    args.Add($"errorMask: errorMask");
+                                    args.Add($"translationMask: null");
+                                }
+                                break;
+                            case ObjectType.Group:
+                                if (!loqui.TryGetSpecificationAsObject("T", out var subObj)) continue;
+                                using (var args = new ArgsWrapper(fg,
+                                    $"tasks.Add(Task.Run(() => ret.{field.Name}.Create_Xml_Folder<{subObj.Name}>",
+                                    suffixLine: "))"))
+                                {
+                                    args.Add($"dir: dir");
+                                    args.Add($"name: nameof({field.Name})");
+                                    args.Add($"errorMask: errorMask");
+                                    args.Add($"index: (int){field.IndexEnumName}");
+                                }
+                                break;
+                            default:
+                                break;
+                        }
                     }
+                    fg.AppendLine("await Task.WhenAll(tasks);");
                 }
-                fg.AppendLine("await Task.WhenAll(tasks);");
                 BinaryTranslationModule.GenerateModLinking(obj, fg);
                 fg.AppendLine("return ret;");
             }

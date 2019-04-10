@@ -335,10 +335,12 @@ namespace Mutagen.Bethesda.Oblivion
                                 Path.Combine(subDir.Path, $"Script.xml"),
                                 errorMask: errorMask,
                                 translationMask: ScriptXmlFolderTranslationCrystal);
-                            using (var textOut = new System.IO.StreamWriter(File.Create(Path.Combine(subDir.Path, "SourceCode.txt"))))
+                            var sourceCodePath = Path.Combine(subDir.Path, "SourceCode.txt");
+                            using (var textOut = new System.IO.StreamWriter(File.Create(sourceCodePath)))
                             {
                                 textOut.Write(item.Fields.SourceCode);
                             }
+                            File.SetLastAccessTime(sourceCodePath, DateTime.Now);
                         }));
                     }
                     await Task.WhenAll(tasks);

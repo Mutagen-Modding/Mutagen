@@ -2662,292 +2662,295 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMask)
         {
             var ret = new OblivionMod(modKey);
-            var tasks = new List<Task>();
-            ret.TES4.CopyFieldsFrom(TES4.Create_Xml(
-                path: Path.Combine(dir.Path, "TES4.xml"),
-                errorMask: errorMask,
-                translationMask: null));
-            tasks.Add(Task.Run(() => ret.GameSettings.Create_Xml_Folder<GameSetting>(
-                dir: dir,
-                name: nameof(GameSettings),
-                errorMask: errorMask,
-                index: (int)OblivionMod_FieldIndex.GameSettings)));
-            tasks.Add(Task.Run(() => ret.Globals.Create_Xml_Folder<Global>(
-                dir: dir,
-                name: nameof(Globals),
-                errorMask: errorMask,
-                index: (int)OblivionMod_FieldIndex.Globals)));
-            tasks.Add(Task.Run(() => ret.Classes.Create_Xml_Folder<Class>(
-                dir: dir,
-                name: nameof(Classes),
-                errorMask: errorMask,
-                index: (int)OblivionMod_FieldIndex.Classes)));
-            tasks.Add(Task.Run(() => ret.Factions.Create_Xml_Folder<Faction>(
-                dir: dir,
-                name: nameof(Factions),
-                errorMask: errorMask,
-                index: (int)OblivionMod_FieldIndex.Factions)));
-            tasks.Add(Task.Run(() => ret.Hairs.Create_Xml_Folder<Hair>(
-                dir: dir,
-                name: nameof(Hairs),
-                errorMask: errorMask,
-                index: (int)OblivionMod_FieldIndex.Hairs)));
-            tasks.Add(Task.Run(() => ret.Eyes.Create_Xml_Folder<Eye>(
-                dir: dir,
-                name: nameof(Eyes),
-                errorMask: errorMask,
-                index: (int)OblivionMod_FieldIndex.Eyes)));
-            tasks.Add(Task.Run(() => ret.Races.Create_Xml_Folder<Race>(
-                dir: dir,
-                name: nameof(Races),
-                errorMask: errorMask,
-                index: (int)OblivionMod_FieldIndex.Races)));
-            tasks.Add(Task.Run(() => ret.Sounds.Create_Xml_Folder<Sound>(
-                dir: dir,
-                name: nameof(Sounds),
-                errorMask: errorMask,
-                index: (int)OblivionMod_FieldIndex.Sounds)));
-            tasks.Add(Task.Run(() => ret.Skills.Create_Xml_Folder<SkillRecord>(
-                dir: dir,
-                name: nameof(Skills),
-                errorMask: errorMask,
-                index: (int)OblivionMod_FieldIndex.Skills)));
-            tasks.Add(Task.Run(() => ret.MagicEffects.Create_Xml_Folder<MagicEffect>(
-                dir: dir,
-                name: nameof(MagicEffects),
-                errorMask: errorMask,
-                index: (int)OblivionMod_FieldIndex.MagicEffects)));
-            tasks.Add(Task.Run(() => ret.Create_Xml_Folder_Scripts(
-                dir: dir,
-                name: nameof(Scripts),
-                index: (int)OblivionMod_FieldIndex.Scripts,
-                errorMask: errorMask)));
-            tasks.Add(Task.Run(() => ret.LandTextures.Create_Xml_Folder<LandTexture>(
-                dir: dir,
-                name: nameof(LandTextures),
-                errorMask: errorMask,
-                index: (int)OblivionMod_FieldIndex.LandTextures)));
-            tasks.Add(Task.Run(() => ret.Enchantments.Create_Xml_Folder<Enchantment>(
-                dir: dir,
-                name: nameof(Enchantments),
-                errorMask: errorMask,
-                index: (int)OblivionMod_FieldIndex.Enchantments)));
-            tasks.Add(Task.Run(() => ret.Spells.Create_Xml_Folder<SpellUnleveled>(
-                dir: dir,
-                name: nameof(Spells),
-                errorMask: errorMask,
-                index: (int)OblivionMod_FieldIndex.Spells)));
-            tasks.Add(Task.Run(() => ret.Birthsigns.Create_Xml_Folder<Birthsign>(
-                dir: dir,
-                name: nameof(Birthsigns),
-                errorMask: errorMask,
-                index: (int)OblivionMod_FieldIndex.Birthsigns)));
-            tasks.Add(Task.Run(() => ret.Activators.Create_Xml_Folder<Activator>(
-                dir: dir,
-                name: nameof(Activators),
-                errorMask: errorMask,
-                index: (int)OblivionMod_FieldIndex.Activators)));
-            tasks.Add(Task.Run(() => ret.AlchemicalApparatus.Create_Xml_Folder<AlchemicalApparatus>(
-                dir: dir,
-                name: nameof(AlchemicalApparatus),
-                errorMask: errorMask,
-                index: (int)OblivionMod_FieldIndex.AlchemicalApparatus)));
-            tasks.Add(Task.Run(() => ret.Armors.Create_Xml_Folder<Armor>(
-                dir: dir,
-                name: nameof(Armors),
-                errorMask: errorMask,
-                index: (int)OblivionMod_FieldIndex.Armors)));
-            tasks.Add(Task.Run(() => ret.Books.Create_Xml_Folder<Book>(
-                dir: dir,
-                name: nameof(Books),
-                errorMask: errorMask,
-                index: (int)OblivionMod_FieldIndex.Books)));
-            tasks.Add(Task.Run(() => ret.Clothes.Create_Xml_Folder<Clothing>(
-                dir: dir,
-                name: nameof(Clothes),
-                errorMask: errorMask,
-                index: (int)OblivionMod_FieldIndex.Clothes)));
-            tasks.Add(Task.Run(() => ret.Containers.Create_Xml_Folder<Container>(
-                dir: dir,
-                name: nameof(Containers),
-                errorMask: errorMask,
-                index: (int)OblivionMod_FieldIndex.Containers)));
-            tasks.Add(Task.Run(() => ret.Doors.Create_Xml_Folder<Door>(
-                dir: dir,
-                name: nameof(Doors),
-                errorMask: errorMask,
-                index: (int)OblivionMod_FieldIndex.Doors)));
-            tasks.Add(Task.Run(() => ret.Ingredients.Create_Xml_Folder<Ingredient>(
-                dir: dir,
-                name: nameof(Ingredients),
-                errorMask: errorMask,
-                index: (int)OblivionMod_FieldIndex.Ingredients)));
-            tasks.Add(Task.Run(() => ret.Lights.Create_Xml_Folder<Light>(
-                dir: dir,
-                name: nameof(Lights),
-                errorMask: errorMask,
-                index: (int)OblivionMod_FieldIndex.Lights)));
-            tasks.Add(Task.Run(() => ret.Miscellaneous.Create_Xml_Folder<Miscellaneous>(
-                dir: dir,
-                name: nameof(Miscellaneous),
-                errorMask: errorMask,
-                index: (int)OblivionMod_FieldIndex.Miscellaneous)));
-            tasks.Add(Task.Run(() => ret.Statics.Create_Xml_Folder<Static>(
-                dir: dir,
-                name: nameof(Statics),
-                errorMask: errorMask,
-                index: (int)OblivionMod_FieldIndex.Statics)));
-            tasks.Add(Task.Run(() => ret.Grasses.Create_Xml_Folder<Grass>(
-                dir: dir,
-                name: nameof(Grasses),
-                errorMask: errorMask,
-                index: (int)OblivionMod_FieldIndex.Grasses)));
-            tasks.Add(Task.Run(() => ret.Trees.Create_Xml_Folder<Tree>(
-                dir: dir,
-                name: nameof(Trees),
-                errorMask: errorMask,
-                index: (int)OblivionMod_FieldIndex.Trees)));
-            tasks.Add(Task.Run(() => ret.Flora.Create_Xml_Folder<Flora>(
-                dir: dir,
-                name: nameof(Flora),
-                errorMask: errorMask,
-                index: (int)OblivionMod_FieldIndex.Flora)));
-            tasks.Add(Task.Run(() => ret.Furnature.Create_Xml_Folder<Furnature>(
-                dir: dir,
-                name: nameof(Furnature),
-                errorMask: errorMask,
-                index: (int)OblivionMod_FieldIndex.Furnature)));
-            tasks.Add(Task.Run(() => ret.Weapons.Create_Xml_Folder<Weapon>(
-                dir: dir,
-                name: nameof(Weapons),
-                errorMask: errorMask,
-                index: (int)OblivionMod_FieldIndex.Weapons)));
-            tasks.Add(Task.Run(() => ret.Ammo.Create_Xml_Folder<Ammo>(
-                dir: dir,
-                name: nameof(Ammo),
-                errorMask: errorMask,
-                index: (int)OblivionMod_FieldIndex.Ammo)));
-            tasks.Add(Task.Run(() => ret.NPCs.Create_Xml_Folder<NPC>(
-                dir: dir,
-                name: nameof(NPCs),
-                errorMask: errorMask,
-                index: (int)OblivionMod_FieldIndex.NPCs)));
-            tasks.Add(Task.Run(() => ret.Creatures.Create_Xml_Folder<Creature>(
-                dir: dir,
-                name: nameof(Creatures),
-                errorMask: errorMask,
-                index: (int)OblivionMod_FieldIndex.Creatures)));
-            tasks.Add(Task.Run(() => ret.LeveledCreatures.Create_Xml_Folder<LeveledCreature>(
-                dir: dir,
-                name: nameof(LeveledCreatures),
-                errorMask: errorMask,
-                index: (int)OblivionMod_FieldIndex.LeveledCreatures)));
-            tasks.Add(Task.Run(() => ret.SoulGems.Create_Xml_Folder<SoulGem>(
-                dir: dir,
-                name: nameof(SoulGems),
-                errorMask: errorMask,
-                index: (int)OblivionMod_FieldIndex.SoulGems)));
-            tasks.Add(Task.Run(() => ret.Keys.Create_Xml_Folder<Key>(
-                dir: dir,
-                name: nameof(Keys),
-                errorMask: errorMask,
-                index: (int)OblivionMod_FieldIndex.Keys)));
-            tasks.Add(Task.Run(() => ret.Potions.Create_Xml_Folder<Potion>(
-                dir: dir,
-                name: nameof(Potions),
-                errorMask: errorMask,
-                index: (int)OblivionMod_FieldIndex.Potions)));
-            tasks.Add(Task.Run(() => ret.Subspaces.Create_Xml_Folder<Subspace>(
-                dir: dir,
-                name: nameof(Subspaces),
-                errorMask: errorMask,
-                index: (int)OblivionMod_FieldIndex.Subspaces)));
-            tasks.Add(Task.Run(() => ret.SigilStones.Create_Xml_Folder<SigilStone>(
-                dir: dir,
-                name: nameof(SigilStones),
-                errorMask: errorMask,
-                index: (int)OblivionMod_FieldIndex.SigilStones)));
-            tasks.Add(Task.Run(() => ret.LeveledItems.Create_Xml_Folder<LeveledItem>(
-                dir: dir,
-                name: nameof(LeveledItems),
-                errorMask: errorMask,
-                index: (int)OblivionMod_FieldIndex.LeveledItems)));
-            tasks.Add(Task.Run(() => ret.Weathers.Create_Xml_Folder<Weather>(
-                dir: dir,
-                name: nameof(Weathers),
-                errorMask: errorMask,
-                index: (int)OblivionMod_FieldIndex.Weathers)));
-            tasks.Add(Task.Run(() => ret.Climates.Create_Xml_Folder<Climate>(
-                dir: dir,
-                name: nameof(Climates),
-                errorMask: errorMask,
-                index: (int)OblivionMod_FieldIndex.Climates)));
-            tasks.Add(Task.Run(() => ret.Regions.Create_Xml_Folder<Region>(
-                dir: dir,
-                name: nameof(Regions),
-                errorMask: errorMask,
-                index: (int)OblivionMod_FieldIndex.Regions)));
-            tasks.Add(Task.Run(() => ret.Cells.Create_Xml_Folder<CellBlock>(
-                dir: dir,
-                name: nameof(Cells),
-                errorMask: errorMask,
-                index: (int)OblivionMod_FieldIndex.Cells)));
-            tasks.Add(Task.Run(() => ret.Create_Xml_Folder_Worldspaces(
-                dir: dir,
-                name: nameof(Worldspaces),
-                index: (int)OblivionMod_FieldIndex.Worldspaces,
-                errorMask: errorMask)));
-            tasks.Add(Task.Run(() => ret.DialogTopics.Create_Xml_Folder<DialogTopic>(
-                dir: dir,
-                name: nameof(DialogTopics),
-                errorMask: errorMask,
-                index: (int)OblivionMod_FieldIndex.DialogTopics)));
-            tasks.Add(Task.Run(() => ret.Quests.Create_Xml_Folder<Quest>(
-                dir: dir,
-                name: nameof(Quests),
-                errorMask: errorMask,
-                index: (int)OblivionMod_FieldIndex.Quests)));
-            tasks.Add(Task.Run(() => ret.IdleAnimations.Create_Xml_Folder<IdleAnimation>(
-                dir: dir,
-                name: nameof(IdleAnimations),
-                errorMask: errorMask,
-                index: (int)OblivionMod_FieldIndex.IdleAnimations)));
-            tasks.Add(Task.Run(() => ret.AIPackages.Create_Xml_Folder<AIPackage>(
-                dir: dir,
-                name: nameof(AIPackages),
-                errorMask: errorMask,
-                index: (int)OblivionMod_FieldIndex.AIPackages)));
-            tasks.Add(Task.Run(() => ret.CombatStyles.Create_Xml_Folder<CombatStyle>(
-                dir: dir,
-                name: nameof(CombatStyles),
-                errorMask: errorMask,
-                index: (int)OblivionMod_FieldIndex.CombatStyles)));
-            tasks.Add(Task.Run(() => ret.LoadScreens.Create_Xml_Folder<LoadScreen>(
-                dir: dir,
-                name: nameof(LoadScreens),
-                errorMask: errorMask,
-                index: (int)OblivionMod_FieldIndex.LoadScreens)));
-            tasks.Add(Task.Run(() => ret.LeveledSpells.Create_Xml_Folder<LeveledSpell>(
-                dir: dir,
-                name: nameof(LeveledSpells),
-                errorMask: errorMask,
-                index: (int)OblivionMod_FieldIndex.LeveledSpells)));
-            tasks.Add(Task.Run(() => ret.AnimatedObjects.Create_Xml_Folder<AnimatedObject>(
-                dir: dir,
-                name: nameof(AnimatedObjects),
-                errorMask: errorMask,
-                index: (int)OblivionMod_FieldIndex.AnimatedObjects)));
-            tasks.Add(Task.Run(() => ret.Waters.Create_Xml_Folder<Water>(
-                dir: dir,
-                name: nameof(Waters),
-                errorMask: errorMask,
-                index: (int)OblivionMod_FieldIndex.Waters)));
-            tasks.Add(Task.Run(() => ret.EffectShaders.Create_Xml_Folder<EffectShader>(
-                dir: dir,
-                name: nameof(EffectShaders),
-                errorMask: errorMask,
-                index: (int)OblivionMod_FieldIndex.EffectShaders)));
-            await Task.WhenAll(tasks);
+            using (new FolderCleaner(dir, FolderCleaner.CleanType.AccessTime))
+            {
+                var tasks = new List<Task>();
+                ret.TES4.CopyFieldsFrom(TES4.Create_Xml(
+                    path: Path.Combine(dir.Path, "TES4.xml"),
+                    errorMask: errorMask,
+                    translationMask: null));
+                tasks.Add(Task.Run(() => ret.GameSettings.Create_Xml_Folder<GameSetting>(
+                    dir: dir,
+                    name: nameof(GameSettings),
+                    errorMask: errorMask,
+                    index: (int)OblivionMod_FieldIndex.GameSettings)));
+                tasks.Add(Task.Run(() => ret.Globals.Create_Xml_Folder<Global>(
+                    dir: dir,
+                    name: nameof(Globals),
+                    errorMask: errorMask,
+                    index: (int)OblivionMod_FieldIndex.Globals)));
+                tasks.Add(Task.Run(() => ret.Classes.Create_Xml_Folder<Class>(
+                    dir: dir,
+                    name: nameof(Classes),
+                    errorMask: errorMask,
+                    index: (int)OblivionMod_FieldIndex.Classes)));
+                tasks.Add(Task.Run(() => ret.Factions.Create_Xml_Folder<Faction>(
+                    dir: dir,
+                    name: nameof(Factions),
+                    errorMask: errorMask,
+                    index: (int)OblivionMod_FieldIndex.Factions)));
+                tasks.Add(Task.Run(() => ret.Hairs.Create_Xml_Folder<Hair>(
+                    dir: dir,
+                    name: nameof(Hairs),
+                    errorMask: errorMask,
+                    index: (int)OblivionMod_FieldIndex.Hairs)));
+                tasks.Add(Task.Run(() => ret.Eyes.Create_Xml_Folder<Eye>(
+                    dir: dir,
+                    name: nameof(Eyes),
+                    errorMask: errorMask,
+                    index: (int)OblivionMod_FieldIndex.Eyes)));
+                tasks.Add(Task.Run(() => ret.Races.Create_Xml_Folder<Race>(
+                    dir: dir,
+                    name: nameof(Races),
+                    errorMask: errorMask,
+                    index: (int)OblivionMod_FieldIndex.Races)));
+                tasks.Add(Task.Run(() => ret.Sounds.Create_Xml_Folder<Sound>(
+                    dir: dir,
+                    name: nameof(Sounds),
+                    errorMask: errorMask,
+                    index: (int)OblivionMod_FieldIndex.Sounds)));
+                tasks.Add(Task.Run(() => ret.Skills.Create_Xml_Folder<SkillRecord>(
+                    dir: dir,
+                    name: nameof(Skills),
+                    errorMask: errorMask,
+                    index: (int)OblivionMod_FieldIndex.Skills)));
+                tasks.Add(Task.Run(() => ret.MagicEffects.Create_Xml_Folder<MagicEffect>(
+                    dir: dir,
+                    name: nameof(MagicEffects),
+                    errorMask: errorMask,
+                    index: (int)OblivionMod_FieldIndex.MagicEffects)));
+                tasks.Add(Task.Run(() => ret.Create_Xml_Folder_Scripts(
+                    dir: dir,
+                    name: nameof(Scripts),
+                    index: (int)OblivionMod_FieldIndex.Scripts,
+                    errorMask: errorMask)));
+                tasks.Add(Task.Run(() => ret.LandTextures.Create_Xml_Folder<LandTexture>(
+                    dir: dir,
+                    name: nameof(LandTextures),
+                    errorMask: errorMask,
+                    index: (int)OblivionMod_FieldIndex.LandTextures)));
+                tasks.Add(Task.Run(() => ret.Enchantments.Create_Xml_Folder<Enchantment>(
+                    dir: dir,
+                    name: nameof(Enchantments),
+                    errorMask: errorMask,
+                    index: (int)OblivionMod_FieldIndex.Enchantments)));
+                tasks.Add(Task.Run(() => ret.Spells.Create_Xml_Folder<SpellUnleveled>(
+                    dir: dir,
+                    name: nameof(Spells),
+                    errorMask: errorMask,
+                    index: (int)OblivionMod_FieldIndex.Spells)));
+                tasks.Add(Task.Run(() => ret.Birthsigns.Create_Xml_Folder<Birthsign>(
+                    dir: dir,
+                    name: nameof(Birthsigns),
+                    errorMask: errorMask,
+                    index: (int)OblivionMod_FieldIndex.Birthsigns)));
+                tasks.Add(Task.Run(() => ret.Activators.Create_Xml_Folder<Activator>(
+                    dir: dir,
+                    name: nameof(Activators),
+                    errorMask: errorMask,
+                    index: (int)OblivionMod_FieldIndex.Activators)));
+                tasks.Add(Task.Run(() => ret.AlchemicalApparatus.Create_Xml_Folder<AlchemicalApparatus>(
+                    dir: dir,
+                    name: nameof(AlchemicalApparatus),
+                    errorMask: errorMask,
+                    index: (int)OblivionMod_FieldIndex.AlchemicalApparatus)));
+                tasks.Add(Task.Run(() => ret.Armors.Create_Xml_Folder<Armor>(
+                    dir: dir,
+                    name: nameof(Armors),
+                    errorMask: errorMask,
+                    index: (int)OblivionMod_FieldIndex.Armors)));
+                tasks.Add(Task.Run(() => ret.Books.Create_Xml_Folder<Book>(
+                    dir: dir,
+                    name: nameof(Books),
+                    errorMask: errorMask,
+                    index: (int)OblivionMod_FieldIndex.Books)));
+                tasks.Add(Task.Run(() => ret.Clothes.Create_Xml_Folder<Clothing>(
+                    dir: dir,
+                    name: nameof(Clothes),
+                    errorMask: errorMask,
+                    index: (int)OblivionMod_FieldIndex.Clothes)));
+                tasks.Add(Task.Run(() => ret.Containers.Create_Xml_Folder<Container>(
+                    dir: dir,
+                    name: nameof(Containers),
+                    errorMask: errorMask,
+                    index: (int)OblivionMod_FieldIndex.Containers)));
+                tasks.Add(Task.Run(() => ret.Doors.Create_Xml_Folder<Door>(
+                    dir: dir,
+                    name: nameof(Doors),
+                    errorMask: errorMask,
+                    index: (int)OblivionMod_FieldIndex.Doors)));
+                tasks.Add(Task.Run(() => ret.Ingredients.Create_Xml_Folder<Ingredient>(
+                    dir: dir,
+                    name: nameof(Ingredients),
+                    errorMask: errorMask,
+                    index: (int)OblivionMod_FieldIndex.Ingredients)));
+                tasks.Add(Task.Run(() => ret.Lights.Create_Xml_Folder<Light>(
+                    dir: dir,
+                    name: nameof(Lights),
+                    errorMask: errorMask,
+                    index: (int)OblivionMod_FieldIndex.Lights)));
+                tasks.Add(Task.Run(() => ret.Miscellaneous.Create_Xml_Folder<Miscellaneous>(
+                    dir: dir,
+                    name: nameof(Miscellaneous),
+                    errorMask: errorMask,
+                    index: (int)OblivionMod_FieldIndex.Miscellaneous)));
+                tasks.Add(Task.Run(() => ret.Statics.Create_Xml_Folder<Static>(
+                    dir: dir,
+                    name: nameof(Statics),
+                    errorMask: errorMask,
+                    index: (int)OblivionMod_FieldIndex.Statics)));
+                tasks.Add(Task.Run(() => ret.Grasses.Create_Xml_Folder<Grass>(
+                    dir: dir,
+                    name: nameof(Grasses),
+                    errorMask: errorMask,
+                    index: (int)OblivionMod_FieldIndex.Grasses)));
+                tasks.Add(Task.Run(() => ret.Trees.Create_Xml_Folder<Tree>(
+                    dir: dir,
+                    name: nameof(Trees),
+                    errorMask: errorMask,
+                    index: (int)OblivionMod_FieldIndex.Trees)));
+                tasks.Add(Task.Run(() => ret.Flora.Create_Xml_Folder<Flora>(
+                    dir: dir,
+                    name: nameof(Flora),
+                    errorMask: errorMask,
+                    index: (int)OblivionMod_FieldIndex.Flora)));
+                tasks.Add(Task.Run(() => ret.Furnature.Create_Xml_Folder<Furnature>(
+                    dir: dir,
+                    name: nameof(Furnature),
+                    errorMask: errorMask,
+                    index: (int)OblivionMod_FieldIndex.Furnature)));
+                tasks.Add(Task.Run(() => ret.Weapons.Create_Xml_Folder<Weapon>(
+                    dir: dir,
+                    name: nameof(Weapons),
+                    errorMask: errorMask,
+                    index: (int)OblivionMod_FieldIndex.Weapons)));
+                tasks.Add(Task.Run(() => ret.Ammo.Create_Xml_Folder<Ammo>(
+                    dir: dir,
+                    name: nameof(Ammo),
+                    errorMask: errorMask,
+                    index: (int)OblivionMod_FieldIndex.Ammo)));
+                tasks.Add(Task.Run(() => ret.NPCs.Create_Xml_Folder<NPC>(
+                    dir: dir,
+                    name: nameof(NPCs),
+                    errorMask: errorMask,
+                    index: (int)OblivionMod_FieldIndex.NPCs)));
+                tasks.Add(Task.Run(() => ret.Creatures.Create_Xml_Folder<Creature>(
+                    dir: dir,
+                    name: nameof(Creatures),
+                    errorMask: errorMask,
+                    index: (int)OblivionMod_FieldIndex.Creatures)));
+                tasks.Add(Task.Run(() => ret.LeveledCreatures.Create_Xml_Folder<LeveledCreature>(
+                    dir: dir,
+                    name: nameof(LeveledCreatures),
+                    errorMask: errorMask,
+                    index: (int)OblivionMod_FieldIndex.LeveledCreatures)));
+                tasks.Add(Task.Run(() => ret.SoulGems.Create_Xml_Folder<SoulGem>(
+                    dir: dir,
+                    name: nameof(SoulGems),
+                    errorMask: errorMask,
+                    index: (int)OblivionMod_FieldIndex.SoulGems)));
+                tasks.Add(Task.Run(() => ret.Keys.Create_Xml_Folder<Key>(
+                    dir: dir,
+                    name: nameof(Keys),
+                    errorMask: errorMask,
+                    index: (int)OblivionMod_FieldIndex.Keys)));
+                tasks.Add(Task.Run(() => ret.Potions.Create_Xml_Folder<Potion>(
+                    dir: dir,
+                    name: nameof(Potions),
+                    errorMask: errorMask,
+                    index: (int)OblivionMod_FieldIndex.Potions)));
+                tasks.Add(Task.Run(() => ret.Subspaces.Create_Xml_Folder<Subspace>(
+                    dir: dir,
+                    name: nameof(Subspaces),
+                    errorMask: errorMask,
+                    index: (int)OblivionMod_FieldIndex.Subspaces)));
+                tasks.Add(Task.Run(() => ret.SigilStones.Create_Xml_Folder<SigilStone>(
+                    dir: dir,
+                    name: nameof(SigilStones),
+                    errorMask: errorMask,
+                    index: (int)OblivionMod_FieldIndex.SigilStones)));
+                tasks.Add(Task.Run(() => ret.LeveledItems.Create_Xml_Folder<LeveledItem>(
+                    dir: dir,
+                    name: nameof(LeveledItems),
+                    errorMask: errorMask,
+                    index: (int)OblivionMod_FieldIndex.LeveledItems)));
+                tasks.Add(Task.Run(() => ret.Weathers.Create_Xml_Folder<Weather>(
+                    dir: dir,
+                    name: nameof(Weathers),
+                    errorMask: errorMask,
+                    index: (int)OblivionMod_FieldIndex.Weathers)));
+                tasks.Add(Task.Run(() => ret.Climates.Create_Xml_Folder<Climate>(
+                    dir: dir,
+                    name: nameof(Climates),
+                    errorMask: errorMask,
+                    index: (int)OblivionMod_FieldIndex.Climates)));
+                tasks.Add(Task.Run(() => ret.Regions.Create_Xml_Folder<Region>(
+                    dir: dir,
+                    name: nameof(Regions),
+                    errorMask: errorMask,
+                    index: (int)OblivionMod_FieldIndex.Regions)));
+                tasks.Add(Task.Run(() => ret.Cells.Create_Xml_Folder<CellBlock>(
+                    dir: dir,
+                    name: nameof(Cells),
+                    errorMask: errorMask,
+                    index: (int)OblivionMod_FieldIndex.Cells)));
+                tasks.Add(Task.Run(() => ret.Create_Xml_Folder_Worldspaces(
+                    dir: dir,
+                    name: nameof(Worldspaces),
+                    index: (int)OblivionMod_FieldIndex.Worldspaces,
+                    errorMask: errorMask)));
+                tasks.Add(Task.Run(() => ret.DialogTopics.Create_Xml_Folder<DialogTopic>(
+                    dir: dir,
+                    name: nameof(DialogTopics),
+                    errorMask: errorMask,
+                    index: (int)OblivionMod_FieldIndex.DialogTopics)));
+                tasks.Add(Task.Run(() => ret.Quests.Create_Xml_Folder<Quest>(
+                    dir: dir,
+                    name: nameof(Quests),
+                    errorMask: errorMask,
+                    index: (int)OblivionMod_FieldIndex.Quests)));
+                tasks.Add(Task.Run(() => ret.IdleAnimations.Create_Xml_Folder<IdleAnimation>(
+                    dir: dir,
+                    name: nameof(IdleAnimations),
+                    errorMask: errorMask,
+                    index: (int)OblivionMod_FieldIndex.IdleAnimations)));
+                tasks.Add(Task.Run(() => ret.AIPackages.Create_Xml_Folder<AIPackage>(
+                    dir: dir,
+                    name: nameof(AIPackages),
+                    errorMask: errorMask,
+                    index: (int)OblivionMod_FieldIndex.AIPackages)));
+                tasks.Add(Task.Run(() => ret.CombatStyles.Create_Xml_Folder<CombatStyle>(
+                    dir: dir,
+                    name: nameof(CombatStyles),
+                    errorMask: errorMask,
+                    index: (int)OblivionMod_FieldIndex.CombatStyles)));
+                tasks.Add(Task.Run(() => ret.LoadScreens.Create_Xml_Folder<LoadScreen>(
+                    dir: dir,
+                    name: nameof(LoadScreens),
+                    errorMask: errorMask,
+                    index: (int)OblivionMod_FieldIndex.LoadScreens)));
+                tasks.Add(Task.Run(() => ret.LeveledSpells.Create_Xml_Folder<LeveledSpell>(
+                    dir: dir,
+                    name: nameof(LeveledSpells),
+                    errorMask: errorMask,
+                    index: (int)OblivionMod_FieldIndex.LeveledSpells)));
+                tasks.Add(Task.Run(() => ret.AnimatedObjects.Create_Xml_Folder<AnimatedObject>(
+                    dir: dir,
+                    name: nameof(AnimatedObjects),
+                    errorMask: errorMask,
+                    index: (int)OblivionMod_FieldIndex.AnimatedObjects)));
+                tasks.Add(Task.Run(() => ret.Waters.Create_Xml_Folder<Water>(
+                    dir: dir,
+                    name: nameof(Waters),
+                    errorMask: errorMask,
+                    index: (int)OblivionMod_FieldIndex.Waters)));
+                tasks.Add(Task.Run(() => ret.EffectShaders.Create_Xml_Folder<EffectShader>(
+                    dir: dir,
+                    name: nameof(EffectShaders),
+                    errorMask: errorMask,
+                    index: (int)OblivionMod_FieldIndex.EffectShaders)));
+                await Task.WhenAll(tasks);
+            }
             foreach (var link in ret.Links)
             {
                 if (link.Linked) continue;
