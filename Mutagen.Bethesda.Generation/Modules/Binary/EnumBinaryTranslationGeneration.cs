@@ -28,24 +28,24 @@ namespace Mutagen.Bethesda.Generation
             FileGeneration fg,
             ObjectGeneration objGen,
             TypeGeneration typeGen,
-            string writerAccessor,
+            Accessor writerAccessor,
             Accessor itemAccessor,
-            string maskAccessor,
-            string translationMaskAccessor)
+            Accessor errorMaskAccessor,
+            Accessor translationMaskAccessor)
         {
             var eType = typeGen as EnumType;
             var data = typeGen.CustomData[Constants.DATA_KEY] as MutagenFieldData;
             using (var args = new ArgsWrapper(fg,
                 $"{Namespace}EnumBinaryTranslation<{eType.NoNullTypeName}>.Instance.Write"))
             {
-                args.Add(writerAccessor);
+                args.Add(writerAccessor.DirectAccess);
                 args.Add($"{itemAccessor.DirectAccess}");
                 args.Add($"length: {eType.ByteLength}");
                 if (typeGen.HasIndex)
                 {
                     args.Add($"fieldIndex: (int){typeGen.IndexEnumName}");
                 }
-                args.Add($"errorMask: {maskAccessor}");
+                args.Add($"errorMask: {errorMaskAccessor}");
                 if (data.RecordType.HasValue)
                 {
                     args.Add($"header: recordTypeConverter.ConvertToCustom({objGen.RecordTypeHeaderName(data.RecordType.Value)})");
@@ -58,10 +58,10 @@ namespace Mutagen.Bethesda.Generation
             FileGeneration fg,
             ObjectGeneration objGen,
             TypeGeneration typeGen,
-            string frameAccessor,
+            Accessor frameAccessor,
             Accessor itemAccessor,
-            string maskAccessor,
-            string translationMaskAccessor)
+            Accessor errorMaskAccessor,
+            Accessor translationMaskAccessor)
         {
             var data = typeGen.CustomData[Constants.DATA_KEY] as MutagenFieldData;
             var eType = typeGen as EnumType;
@@ -76,7 +76,7 @@ namespace Mutagen.Bethesda.Generation
                     FG = fg,
                     TypeGen = typeGen,
                     TranslatorLine = $"EnumBinaryTranslation<{eType.NoNullTypeName}>.Instance",
-                    MaskAccessor = maskAccessor,
+                    MaskAccessor = errorMaskAccessor,
                     ItemAccessor = itemAccessor,
                     TranslationMaskAccessor = null,
                     IndexAccessor = typeGen.IndexEnumInt,
@@ -89,12 +89,12 @@ namespace Mutagen.Bethesda.Generation
             ObjectGeneration objGen,
             TypeGeneration targetGen,
             TypeGeneration typeGen,
-            string nodeAccessor,
+            Accessor nodeAccessor,
             bool squashedRepeatedList,
-            string retAccessor,
+            Accessor retAccessor,
             Accessor outItemAccessor,
-            string maskAccessor,
-            string translationMaskAccessor)
+            Accessor errorMaskAccessor,
+            Accessor translationMaskAccessor)
         {
             var eType = typeGen as EnumType;
             using (var args = new ArgsWrapper(fg,
@@ -102,7 +102,7 @@ namespace Mutagen.Bethesda.Generation
             {
                 args.Add($"frame: {nodeAccessor}.SpawnWithLength({eType.ByteLength})");
                 args.Add($"item: out {outItemAccessor.DirectAccess}");
-                args.Add($"errorMask: {maskAccessor}");
+                args.Add($"errorMask: {errorMaskAccessor}");
             }
         }
     }

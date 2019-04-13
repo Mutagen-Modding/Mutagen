@@ -19,32 +19,32 @@ namespace Mutagen.Bethesda.Generation
             FileGeneration fg,
             ObjectGeneration objGen,
             TypeGeneration typeGen,
-            string nodeAccessor,
-            Accessor retAccessor, 
-            string doMaskAccessor, 
-            string maskAccessor,
-            string translationMaskAccessor)
+            Accessor nodeAccessor,
+            Accessor retAccessor,
+            Accessor doMaskAccessor,
+            Accessor errorMaskAccessor,
+            Accessor translationMaskAccessor)
         {
             FormIDLinkType linkType = typeGen as FormIDLinkType;
             using (var args = new ArgsWrapper(fg,
                 $"{retAccessor.DirectAccess}{this.TypeName}XmlTranslation.Instance.Parse",
                 $".Bubble((o) => new {linkType.TypeName}(o.Value))"))
             {
-                args.Add(nodeAccessor);
+                args.Add(nodeAccessor.DirectAccess);
                 args.Add($"nullable: {Nullable.ToString().ToLower()}");
                 args.Add($"doMasks: {doMaskAccessor}");
-                args.Add($"errorMask: out {maskAccessor}");
+                args.Add($"errorMask: out {errorMaskAccessor}");
             }
         }
 
         public override void GenerateCopyIn(
             FileGeneration fg,
             ObjectGeneration objGen,
-            TypeGeneration typeGen, 
-            string frameAccessor, 
+            TypeGeneration typeGen,
+            Accessor frameAccessor, 
             Accessor itemAccessor,
-            string maskAccessor,
-            string translationMaskAccessor)
+            Accessor errorMaskAccessor,
+            Accessor translationMaskAccessor)
         {
             TranslationGeneration.WrapParseCall(
                 new TranslationWrapParseArgs()
@@ -52,7 +52,7 @@ namespace Mutagen.Bethesda.Generation
                     FG = fg,
                     TypeGen = typeGen,
                     TranslatorLine = $"{this.TypeName}XmlTranslation.Instance",
-                    MaskAccessor = maskAccessor,
+                    MaskAccessor = errorMaskAccessor,
                     ItemAccessor = itemAccessor,
                     IndexAccessor = typeGen.HasIndex ? typeGen.IndexEnumInt : null,
                     ExtraArgs = $"{XmlTranslationModule.XElementLine.GetParameterName(objGen)}: {frameAccessor}".Single(),

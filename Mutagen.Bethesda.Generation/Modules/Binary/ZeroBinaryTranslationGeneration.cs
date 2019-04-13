@@ -15,8 +15,14 @@ namespace Mutagen.Bethesda.Generation
             return true;
         }
 
-        public override void GenerateCopyIn(FileGeneration fg, ObjectGeneration objGen, TypeGeneration typeGen, string readerAccessor, Accessor itemAccessor, string maskAccessor,
-            string translationMaskAccessor)
+        public override void GenerateCopyIn(
+            FileGeneration fg,
+            ObjectGeneration objGen,
+            TypeGeneration typeGen,
+            Accessor readerAccessor,
+            Accessor itemAccessor,
+            Accessor errorMaskAccessor,
+            Accessor translationMaskAccessor)
         {
             ZeroType zero = typeGen as ZeroType;
             fg.AppendLine($"{readerAccessor}.SetPosition({readerAccessor}.Position + {zero.Length});");
@@ -26,20 +32,26 @@ namespace Mutagen.Bethesda.Generation
             FileGeneration fg, 
             ObjectGeneration objGen, 
             TypeGeneration targetGen, 
-            TypeGeneration typeGen, 
-            string readerAccessor,
+            TypeGeneration typeGen,
+            Accessor readerAccessor,
             bool squashedRepeatedList,
-            string retAccessor,
+            Accessor retAccessor,
             Accessor outItemAccessor,
-            string maskAccessor,
-            string translationMaskAccessor)
+            Accessor errorMaskAccessor,
+            Accessor translationMaskAccessor)
         {
             ZeroType zero = typeGen as ZeroType;
             fg.AppendLine($"{readerAccessor}.SetPosition({readerAccessor}.Position + {zero.Length});");
         }
 
-        public override void GenerateWrite(FileGeneration fg, ObjectGeneration objGen, TypeGeneration typeGen, string writerAccessor, Accessor itemAccessor, string maskAccessor,
-            string translationMaskAccessor)
+        public override void GenerateWrite(
+            FileGeneration fg,
+            ObjectGeneration objGen, 
+            TypeGeneration typeGen,
+            Accessor writerAccessor, 
+            Accessor itemAccessor,
+            Accessor errorMaskAccessor,
+            Accessor translationMaskAccessor)
         {
             ZeroType zero = typeGen as ZeroType;
             fg.AppendLine($"{writerAccessor}.WriteZeros({zero.Length});");

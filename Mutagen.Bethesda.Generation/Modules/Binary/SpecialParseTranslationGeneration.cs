@@ -13,7 +13,14 @@ namespace Mutagen.Bethesda.Generation
         public override bool ShouldGenerateCopyIn(TypeGeneration typeGen) => true;
         public override bool ShouldGenerateWrite(TypeGeneration typeGen) => true;
 
-        public override void GenerateCopyIn(FileGeneration fg, ObjectGeneration objGen, TypeGeneration typeGen, string readerAccessor, Accessor itemAccessor, string maskAccessor, string translationMaskAccessor)
+        public override void GenerateCopyIn(
+            FileGeneration fg, 
+            ObjectGeneration objGen, 
+            TypeGeneration typeGen,
+            Accessor readerAccessor,
+            Accessor itemAccessor,
+            Accessor errorMaskAccessor,
+            Accessor translationMaskAccessor)
         {
             var data = typeGen.GetFieldData();
             using (var args = new ArgsWrapper(fg,
@@ -29,19 +36,25 @@ namespace Mutagen.Bethesda.Generation
             FileGeneration fg,
             ObjectGeneration objGen, 
             TypeGeneration typeGen, 
-            TypeGeneration targetGen, 
-            string readerAccessor,
+            TypeGeneration targetGen,
+            Accessor readerAccessor,
             bool squashedRepeatedList,
-            string retAccessor,
+            Accessor retAccessor,
             Accessor outItemAccessor,
-            string maskAccessor,
-            string translationMaskAccessor)
+            Accessor errorMaskAccessor,
+            Accessor translationMaskAccessor)
         {
             throw new NotImplementedException();
         }
 
-        public override void GenerateWrite(FileGeneration fg, ObjectGeneration objGen, TypeGeneration typeGen, string writerAccessor, Accessor itemAccessor, string maskAccessor,
-            string translationMaskAccessor)
+        public override void GenerateWrite(
+            FileGeneration fg, 
+            ObjectGeneration objGen, 
+            TypeGeneration typeGen,
+            Accessor writerAccessor,
+            Accessor itemAccessor,
+            Accessor errorMaskAccessor,
+            Accessor translationMaskAccessor)
         {
             var data = typeGen.GetFieldData();
             using (var args = new ArgsWrapper(fg,

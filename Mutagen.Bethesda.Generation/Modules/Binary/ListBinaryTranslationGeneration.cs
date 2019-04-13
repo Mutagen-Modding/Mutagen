@@ -59,10 +59,10 @@ namespace Mutagen.Bethesda.Generation
             FileGeneration fg,
             ObjectGeneration objGen,
             TypeGeneration typeGen,
-            string writerAccessor,
+            Accessor writerAccessor,
             Accessor itemAccessor,
-            string maskAccessor,
-            string translationMaskAccessor)
+            Accessor errorMaskAccessor,
+            Accessor translationMaskAccessor)
         {
             var list = typeGen as ListType;
             if (!this.Module.TryGetTypeGeneration(list.SubTypeGeneration.GetType(), out var subTransl))
@@ -100,7 +100,7 @@ namespace Mutagen.Bethesda.Generation
                 {
                     args.Add($"recordType: {subData.TriggeringRecordSetAccessor}");
                 }
-                args.Add($"errorMask: {maskAccessor}");
+                args.Add($"errorMask: {errorMaskAccessor}");
                 if (this.Module.TranslationMaskParameter)
                 {
                     args.Add($"translationMask: {translationMaskAccessor}");
@@ -124,7 +124,7 @@ namespace Mutagen.Bethesda.Generation
                                 writerAccessor: "subWriter",
                                 translationAccessor: "listTranslMask",
                                 itemAccessor: new Accessor($"subItem"),
-                                maskAccessor: $"listErrorMask");
+                                errorMaskAccessor: $"listErrorMask");
                         }
                     });
                 }
@@ -135,10 +135,10 @@ namespace Mutagen.Bethesda.Generation
             FileGeneration fg,
             ObjectGeneration objGen,
             TypeGeneration typeGen,
-            string nodeAccessor,
+            Accessor nodeAccessor,
             Accessor itemAccessor,
-            string maskAccessor,
-            string translationMaskAccessor)
+            Accessor errorMaskAccessor,
+            Accessor translationMaskAccessor)
         {
             var list = typeGen as ListType;
             var data = list.GetFieldData();
@@ -217,7 +217,7 @@ namespace Mutagen.Bethesda.Generation
                         args.Add($"lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH");
                     }
                 }
-                args.Add($"errorMask: {maskAccessor}");
+                args.Add($"errorMask: {errorMaskAccessor}");
                 var subGenTypes = subData.GenerationTypes.ToList();
                 var subGen = this.Module.GetTypeGeneration(list.SubTypeGeneration.GetType());
                 if (subGenTypes.Count <= 1 && subTransl.AllowDirectParse(
@@ -254,7 +254,7 @@ namespace Mutagen.Bethesda.Generation
                                     squashedRepeatedList: listBinaryType == ListBinaryType.Trigger,
                                     retAccessor: "return ",
                                     outItemAccessor: new Accessor("listSubItem"),
-                                    maskAccessor: "listErrMask");
+                                    errorMaskAccessor: "listErrMask");
                             }
                             else
                             {
@@ -281,7 +281,7 @@ namespace Mutagen.Bethesda.Generation
                                                 squashedRepeatedList: listBinaryType == ListBinaryType.Trigger,
                                                 retAccessor: "return ",
                                                 outItemAccessor: new Accessor("listSubItem"),
-                                                maskAccessor: $"listErrMask");
+                                                errorMaskAccessor: $"listErrMask");
                                         }
                                     }
                                     gen.AppendLine("default:");
@@ -302,12 +302,12 @@ namespace Mutagen.Bethesda.Generation
             ObjectGeneration objGen,
             TypeGeneration targetGen,
             TypeGeneration typeGen,
-            string nodeAccessor,
+            Accessor nodeAccessor,
             bool squashedRepeatedList,
-            string retAccessor,
+            Accessor retAccessor,
             Accessor outItemAccessor,
-            string maskAccessor,
-            string translationMaskAccessor)
+            Accessor errorMaskAccessor,
+            Accessor translationMaskAccessor)
         {
             throw new NotImplementedException();
         }

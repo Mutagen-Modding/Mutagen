@@ -73,7 +73,7 @@ namespace Mutagen.Bethesda.Generation
                             typeGen: field,
                             writerAccessor: $"{XmlTranslationModule.XElementLine.GetParameterName(obj)}",
                             itemAccessor: new Accessor(field, "item."),
-                            maskAccessor: $"errorMask",
+                            errorMaskAccessor: $"errorMask",
                             translationMaskAccessor: "translationMask",
                             nameAccessor: $"nameof(item.{field.Name})");
                     }
@@ -169,83 +169,21 @@ namespace Mutagen.Bethesda.Generation
             }
         }
 
-        protected override async Task GenerateCreateSnippet(ObjectGeneration obj, FileGeneration fg)
+        protected override async Task PreCreateLoop(ObjectGeneration obj, FileGeneration fg)
         {
-            if (obj.Abstract)
+            foreach (var field in obj.IterateFields(nonIntegrated: true, expandSets: SetMarkerType.ExpandSets.FalseAndInclude))
             {
-                fg.AppendLine($"{obj.Name}{obj.GetGenericTypes(MaskType.Normal)} ret;");
-            }
-            else
-            {
-                fg.AppendLine($"var ret = new {obj.Name}{obj.GetGenericTypes(MaskType.Normal)}();");
-            }
-            if (obj.Abstract)
-            {
-                fg.AppendLine("if (!LoquiXmlTranslation.Instance.TryCreate(node, out ret, errorMask, translationMask))");
-                using (new BraceWrapper(fg))
+                if (!(field is DataType set)) continue;
+                for (int i = 0; i < set.BreakIndices.Count; i++)
                 {
-                    fg.AppendLine($"throw new ArgumentException($\"Unknown {obj.Name} subclass: {{node.Name.LocalName}}\");");
+                    fg.AppendLine($"ret.{set.StateName} |= {obj.Name}.{set.EnumName}.Break{i};");
                 }
             }
-            else
-            {
-                fg.AppendLine("try");
-                using (new BraceWrapper(fg))
-                {
-                    foreach (var field in obj.IterateFields(nonIntegrated: true, expandSets: SetMarkerType.ExpandSets.FalseAndInclude))
-                    {
-                        if (!(field is DataType set)) continue;
-                        for (int i = 0; i < set.BreakIndices.Count; i++)
-                        {
-                            fg.AppendLine($"ret.{set.StateName} |= {obj.Name}.{set.EnumName}.Break{i};");
-                        }
-                    }
+        }
 
-                    fg.AppendLine($"foreach (var elem in {XmlTranslationModule.XElementLine.GetParameterName(obj)}.Elements())");
-                    using (new BraceWrapper(fg))
-                    {
-                        if (obj.IterateFields(includeBaseClass: true).Any(f => f.ReadOnly || f is DataType))
-                        {
-                            using (var args = new ArgsWrapper(fg,
-                                $"FillPrivateElement_{ModuleNickname}"))
-                            {
-                                args.Add("item: ret");
-                                args.Add($"{XmlTranslationModule.XElementLine.GetParameterName(obj)}: elem");
-                                args.Add("name: elem.Name.LocalName");
-                                args.Add("errorMask: errorMask");
-                                if (this.TranslationMaskParameter)
-                                {
-                                    args.Add("translationMask: translationMask");
-                                }
-                            }
-                        }
-                        using (var args = new ArgsWrapper(fg,
-                            $"{obj.ExtCommonName}.FillPublicElement_{ModuleNickname}"))
-                        {
-                            args.Add("item: ret");
-                            args.Add($"{XmlTranslationModule.XElementLine.GetParameterName(obj)}: elem");
-                            args.Add("name: elem.Name.LocalName");
-                            args.Add("errorMask: errorMask");
-                            if (this.TranslationMaskParameter)
-                            {
-                                args.Add("translationMask: translationMask");
-                            }
-                        }
-                    }
-                    BinaryTranslationModule.GenerateModLinking(obj, fg);
-                }
-                fg.AppendLine("catch (Exception ex)");
-                fg.AppendLine("when (errorMask != null)");
-                using (new BraceWrapper(fg))
-                {
-                    fg.AppendLine("errorMask.ReportException(ex);");
-                    if (obj.Abstract)
-                    {
-                        fg.AppendLine("return null;");
-                    }
-                }
-            }
-            fg.AppendLine("return ret;");
+        protected override async Task PostCreateLoop(ObjectGeneration obj, FileGeneration fg)
+        {
+            BinaryTranslationModule.GenerateModLinking(obj, fg);
         }
 
         protected override void FillPrivateElement(ObjectGeneration obj, FileGeneration fg)
@@ -298,7 +236,7 @@ namespace Mutagen.Bethesda.Generation
                                                 nodeAccessor: XmlTranslationModule.XElementLine.GetParameterName(obj).Result,
                                                 itemAccessor: new Accessor(subField.Field, "item."),
                                                 translationMaskAccessor: "translationMask",
-                                                maskAccessor: $"errorMask");
+                                                errorMaskAccessor: $"errorMask");
                                         }
                                         HandleDataTypeParsing(obj, fg, set, subField, ref isInRange);
                                         fg.AppendLine("break;");
@@ -326,7 +264,7 @@ namespace Mutagen.Bethesda.Generation
                                             nodeAccessor: XmlTranslationModule.XElementLine.GetParameterName(obj).Result,
                                             itemAccessor: new Accessor(field, "item."),
                                             translationMaskAccessor: "translationMask",
-                                            maskAccessor: $"errorMask");
+                                            errorMaskAccessor: $"errorMask");
                                     }
                                     fg.AppendLine("break;");
                                 }
@@ -404,7 +342,7 @@ namespace Mutagen.Bethesda.Generation
                                             nodeAccessor: XmlTranslationModule.XElementLine.GetParameterName(obj).Result,
                                             itemAccessor: new Accessor(subField.Field, "item."),
                                             translationMaskAccessor: "translationMask",
-                                            maskAccessor: $"errorMask");
+                                            errorMaskAccessor: $"errorMask");
                                     }
                                     HandleDataTypeParsing(obj, fg, set, subField, ref isInRange);
                                     fg.AppendLine("break;");
@@ -432,7 +370,7 @@ namespace Mutagen.Bethesda.Generation
                                         nodeAccessor: XmlTranslationModule.XElementLine.GetParameterName(obj).Result,
                                         itemAccessor: new Accessor(field, "item."),
                                         translationMaskAccessor: "translationMask",
-                                        maskAccessor: $"errorMask");
+                                        errorMaskAccessor: $"errorMask");
                                 }
                                 fg.AppendLine("break;");
                             }

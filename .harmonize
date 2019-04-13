@@ -2,18 +2,18 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>e2a9aa83e9a4b79d33048d63d2f7a81477134860</Sha>
+         <Sha>90c5050f058dac4c895e246a3046a7e14ea8b742</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>04-07-2019 18:57:18</CommitDate>
-         <Description>ObservableExt.Cast</Description>
+         <CommitDate>04-09-2019 21:58:56</CommitDate>
+         <Description>ListExt.LastByIndex</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>34da5d2bb8d23de3b47ddaa1eb78e2dcd8564ac0</Sha>
+         <Sha>f7e97c5ca7b50d9b2f0d646b9932eb3d9ec7660c</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>03-30-2019 00:19:45</CommitDate>
-         <Description>Adjusted some new keywords</Description>
+         <CommitDate>04-13-2019 22:52:48</CommitDate>
+         <Description>XmlTranslation pre/post create loop cut ins</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>

@@ -1,5 +1,6 @@
 ﻿using Loqui;
 using Loqui.Generation;
+using Noggog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,14 +33,25 @@ namespace Mutagen.Bethesda.Generation
 
         public virtual string Typename(TypeGeneration typeGen) => typeName;
 
+        public delegate TryGet<string> ParamTest(
+            ObjectGeneration objGen,
+            TypeGeneration typeGen,
+            Accessor accessor,
+            Accessor itemAccessor,
+            Accessor errorMaskAccessor,
+            Accessor translationMaskAccessor);
+        public List<ParamTest> AdditionalWriteParams = new List<ParamTest>();
+        public List<ParamTest> AdditionalCopyInParams = new List<ParamTest>();
+        public List<ParamTest> AdditionalCopyInRetParams = new List<ParamTest>();
+
         public override void GenerateWrite(
             FileGeneration fg,
             ObjectGeneration objGen,
             TypeGeneration typeGen,
-            string writerAccessor,
+            Accessor writerAccessor,
             Accessor itemAccessor,
-            string maskAccessor,
-            string translationMaskAccessor)
+            Accessor errorMaskAccessor,
+            Accessor translationMaskAccessor)
         {
             var data = typeGen.CustomData[Constants.DATA_KEY] as MutagenFieldData;
             using (var args = new ArgsWrapper(fg,
@@ -51,46 +63,36 @@ namespace Mutagen.Bethesda.Generation
                 {
                     args.Add($"fieldIndex: (int){typeGen.IndexEnumName}");
                 }
-                args.Add($"errorMask: {maskAccessor}");
+                args.Add($"errorMask: {errorMaskAccessor}");
                 if (data.RecordType.HasValue)
                 {
                     args.Add($"header: recordTypeConverter.ConvertToCustom({objGen.RecordTypeHeaderName(data.RecordType.Value)})");
                     args.Add($"nullable: {(data.Optional ? "true" : "false")}");
                 }
-                foreach (var arg in AdditionalWriteParameters(
-                    fg: fg,
-                    objGen: objGen,
-                    typeGen: typeGen,
-                    writerAccessor: writerAccessor,
-                    itemAccessor: itemAccessor,
-                    maskAccessor: maskAccessor))
+                foreach (var writeParam in this.AdditionalWriteParams)
                 {
-                    args.Add(arg);
+                    var get = writeParam(
+                        objGen: objGen,
+                        typeGen: typeGen,
+                        accessor: writerAccessor,
+                        itemAccessor: itemAccessor,
+                        errorMaskAccessor: errorMaskAccessor,
+                        translationMaskAccessor: translationMaskAccessor);
+                    if (get.Failed) continue;
+                    args.Add(get.Value);
                 }
             }
-        }
-
-        protected virtual IEnumerable<string> AdditionalWriteParameters(
-            FileGeneration fg,
-            ObjectGeneration objGen,
-            TypeGeneration typeGen,
-            string writerAccessor,
-            Accessor itemAccessor,
-            string maskAccessor)
-        {
-            yield break;
         }
 
         public override void GenerateCopyIn(
             FileGeneration fg,
             ObjectGeneration objGen,
             TypeGeneration typeGen,
-            string frameAccessor,
+            Accessor frameAccessor,
             Accessor itemAccessor,
-            string maskAccessor,
-            string translationMaskAccessor)
+            Accessor errorMaskAccessor,
+            Accessor translationMaskAccessor)
         {
-            var prim = typeGen as PrimitiveType;
             var data = typeGen.CustomData[Constants.DATA_KEY] as MutagenFieldData;
             if (data.HasTrigger)
             {
@@ -100,15 +102,17 @@ namespace Mutagen.Bethesda.Generation
 
             List<string> extraArgs = new List<string>();
             extraArgs.Add($"frame: {frameAccessor}{(data.HasTrigger ? ".SpawnWithLength(contentLength)" : ".Spawn(snapToFinalPosition: false)")}");
-            foreach (var arg in AdditionalCopyInParameters(
-                fg: fg,
-                objGen: objGen,
-                typeGen: typeGen,
-                nodeAccessor: frameAccessor,
-                itemAccessor: itemAccessor,
-                maskAccessor: maskAccessor))
+            foreach (var writeParam in this.AdditionalCopyInParams)
             {
-                extraArgs.Add(arg);
+                var get = writeParam(
+                    objGen: objGen,
+                    typeGen: typeGen,
+                    accessor: frameAccessor,
+                    itemAccessor: itemAccessor,
+                    errorMaskAccessor: errorMaskAccessor,
+                    translationMaskAccessor: translationMaskAccessor);
+                if (get.Failed) continue;
+                extraArgs.Add(get.Value);
             }
 
             TranslationGeneration.WrapParseCall(
@@ -117,7 +121,7 @@ namespace Mutagen.Bethesda.Generation
                     FG = fg,
                     TypeGen = typeGen,
                     TranslatorLine = $"{this.Namespace}{this.Typename(typeGen)}BinaryTranslation.Instance",
-                    MaskAccessor = maskAccessor,
+                    MaskAccessor = errorMaskAccessor,
                     ItemAccessor = itemAccessor,
                     TranslationMaskAccessor = null,
                     IndexAccessor = typeGen.HasIndex ? typeGen.IndexEnumInt : null,
@@ -125,28 +129,17 @@ namespace Mutagen.Bethesda.Generation
                 });
         }
 
-        protected virtual IEnumerable<string> AdditionalCopyInParameters(
-            FileGeneration fg,
-            ObjectGeneration objGen,
-            TypeGeneration typeGen,
-            string nodeAccessor,
-            Accessor itemAccessor,
-            string maskAccessor)
-        {
-            yield break;
-        }
-
         public override void GenerateCopyInRet(
             FileGeneration fg,
             ObjectGeneration objGen,
             TypeGeneration targetGen,
             TypeGeneration typeGen,
-            string nodeAccessor,
+            Accessor nodeAccessor,
             bool squashedRepeatedList,
-            string retAccessor,
+            Accessor retAccessor,
             Accessor outItemAccessor,
-            string maskAccessor,
-            string translationMaskAccessor)
+            Accessor errorMaskAccessor,
+            Accessor translationMaskAccessor)
         {
             if (typeGen.TryGetFieldData(out var data)
                 && data.RecordType.HasValue)
@@ -156,33 +149,22 @@ namespace Mutagen.Bethesda.Generation
             using (var args = new ArgsWrapper(fg,
                 $"{retAccessor}{this.Namespace}{this.Typename(typeGen)}BinaryTranslation.Instance.Parse"))
             {
-                args.Add(nodeAccessor);
-                args.Add($"errorMask: {maskAccessor}");
+                args.Add(nodeAccessor.DirectAccess);
+                args.Add($"errorMask: {errorMaskAccessor}");
                 args.Add($"translationMask: {translationMaskAccessor}");
-                foreach (var arg in AdditionalCopyInRetParameters(
-                    fg: fg,
-                    objGen: objGen,
-                    typeGen: typeGen,
-                    nodeAccessor: nodeAccessor,
-                    retAccessor: retAccessor,
-                    outItemAccessor: outItemAccessor,
-                    maskAccessor: maskAccessor))
+                foreach (var writeParam in this.AdditionalCopyInRetParams)
                 {
-                    args.Add(arg);
+                    var get = writeParam(
+                        objGen: objGen,
+                        typeGen: typeGen,
+                        accessor: nodeAccessor,
+                        itemAccessor: retAccessor,
+                        errorMaskAccessor: errorMaskAccessor,
+                        translationMaskAccessor: translationMaskAccessor);
+                    if (get.Failed) continue;
+                    args.Add(get.Value);
                 }
             }
-        }
-
-        protected virtual IEnumerable<string> AdditionalCopyInRetParameters(
-            FileGeneration fg,
-            ObjectGeneration objGen,
-            TypeGeneration typeGen,
-            string nodeAccessor,
-            string retAccessor,
-            Accessor outItemAccessor,
-            string maskAccessor)
-        {
-            yield break;
         }
     }
 }

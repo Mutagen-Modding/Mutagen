@@ -6,39 +6,34 @@ using System.Threading.Tasks;
 using System.Windows.Media;
 using Loqui;
 using Loqui.Generation;
+using Noggog;
 
 namespace Mutagen.Bethesda.Generation
 {
     public class ColorBinaryTranslationGeneration : PrimitiveBinaryTranslationGeneration<Color>
     {
-        protected bool ExtraByte(TypeGeneration typeGen)
+        public ColorBinaryTranslationGeneration()
+        {
+            this.AdditionalWriteParams.Add(AdditionalParam);
+            this.AdditionalCopyInParams.Add(AdditionalParam);
+            this.AdditionalCopyInRetParams.Add(AdditionalParam);
+        }
+
+        private static TryGet<string> AdditionalParam(
+           ObjectGeneration objGen,
+           TypeGeneration typeGen,
+           Accessor accessor,
+           Accessor itemAccessor,
+           Accessor errorMaskAccessor,
+           Accessor translationMaskAccessor)
+        {
+            return TryGet<string>.Create(successful: ExtraByte(typeGen), val: "extraByte: true");
+        }
+
+        protected static bool ExtraByte(TypeGeneration typeGen)
         {
             if (!typeGen.CustomData.TryGetValue("ColorExtraByte", out var obj)) return false;
             return (bool)obj;
-        }
-
-        protected override IEnumerable<string> AdditionalWriteParameters(FileGeneration fg, ObjectGeneration objGen, TypeGeneration typeGen, string writerAccessor, Accessor itemAccessor, string maskAccessor)
-        {
-            if (ExtraByte(typeGen))
-            {
-                yield return "extraByte: true";
-            }
-        }
-
-        protected override IEnumerable<string> AdditionalCopyInParameters(FileGeneration fg, ObjectGeneration objGen, TypeGeneration typeGen, string nodeAccessor, Accessor itemAccessor, string maskAccessor)
-        {
-            if (ExtraByte(typeGen))
-            {
-                yield return "extraByte: true";
-            }
-        }
-
-        protected override IEnumerable<string> AdditionalCopyInRetParameters(FileGeneration fg, ObjectGeneration objGen, TypeGeneration typeGen, string nodeAccessor, string retAccessor, Accessor outItemAccessor, string maskAccessor)
-        {
-            if (ExtraByte(typeGen))
-            {
-                yield return "extraByte: true";
-            }
         }
     }
 }

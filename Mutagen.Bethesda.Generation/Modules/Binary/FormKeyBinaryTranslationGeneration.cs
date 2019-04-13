@@ -5,24 +5,28 @@ using System.Text;
 using System.Threading.Tasks;
 using Loqui;
 using Loqui.Generation;
+using Noggog;
 
 namespace Mutagen.Bethesda.Generation
 {
     public class FormKeyBinaryTranslationGeneration : PrimitiveBinaryTranslationGeneration<FormKey>
     {
-        protected override IEnumerable<string> AdditionalWriteParameters(FileGeneration fg, ObjectGeneration objGen, TypeGeneration typeGen, string writerAccessor, Accessor itemAccessor, string maskAccessor)
+        public FormKeyBinaryTranslationGeneration()
         {
-            yield return "masterReferences: masterReferences";
+            this.AdditionalWriteParams.Add(AdditionalParam);
+            this.AdditionalCopyInParams.Add(AdditionalParam);
+            this.AdditionalCopyInRetParams.Add(AdditionalParam);
         }
 
-        protected override IEnumerable<string> AdditionalCopyInParameters(FileGeneration fg, ObjectGeneration objGen, TypeGeneration typeGen, string nodeAccessor, Accessor itemAccessor, string maskAccessor)
+        private static TryGet<string> AdditionalParam(
+           ObjectGeneration objGen,
+           TypeGeneration typeGen,
+           Accessor accessor,
+           Accessor itemAccessor,
+           Accessor errorMaskAccessor,
+           Accessor translationMaskAccessor)
         {
-            yield return "masterReferences: masterReferences";
-        }
-
-        protected override IEnumerable<string> AdditionalCopyInRetParameters(FileGeneration fg, ObjectGeneration objGen, TypeGeneration typeGen, string nodeAccessor, string retAccessor, Accessor outItemAccessor, string maskAccessor)
-        {
-            yield return "masterReferences: masterReferences";
+            return TryGet<string>.Succeed("masterReferences: masterReferences");
         }
     }
 }

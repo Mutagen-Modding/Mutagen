@@ -44,10 +44,10 @@ namespace Mutagen.Bethesda.Generation
             FileGeneration fg,
             ObjectGeneration objGen,
             TypeGeneration typeGen,
-            string writerAccessor,
+            Accessor writerAccessor,
             Accessor itemAccessor,
-            string maskAccessor,
-            string translationMaskAccessor)
+            Accessor errorMaskAccessor,
+            Accessor translationMaskAccessor)
         {
             var loquiGen = typeGen as LoquiType;
             if (loquiGen.TryGetFieldData(out var data)
@@ -72,7 +72,7 @@ namespace Mutagen.Bethesda.Generation
                     {
                         args.Add($"fieldIndex: (int){typeGen.IndexEnumName}");
                     }
-                    args.Add($"errorMask: {maskAccessor}");
+                    args.Add($"errorMask: {errorMaskAccessor}");
                     args.Add($"masterReferences: masterReferences");
                     if (data?.RecordTypeConverter != null
                         && data.RecordTypeConverter.FromConversions.Count > 0)
@@ -93,10 +93,10 @@ namespace Mutagen.Bethesda.Generation
             FileGeneration fg,
             ObjectGeneration objGen,
             TypeGeneration typeGen,
-            string frameAccessor,
+            Accessor frameAccessor,
             Accessor itemAccessor,
-            string maskAccessor,
-            string translationMaskAccessor)
+            Accessor errorMaskAccessor,
+            Accessor translationMaskAccessor)
         {
             var loquiGen = typeGen as LoquiType;
             if (loquiGen.TargetObjectGeneration != null)
@@ -117,7 +117,7 @@ namespace Mutagen.Bethesda.Generation
                             $"var tmp{typeGen.Name} = {loquiGen.TypeName}.Create_{ModNickname}"))
                         {
                             args.Add($"frame: {frameAccessor}");
-                            args.Add($"errorMask: {maskAccessor}");
+                            args.Add($"errorMask: {errorMaskAccessor}");
                             args.Add($"recordTypeConverter: null");
                             args.Add($"masterReferences: masterReferences");
                         }
@@ -128,7 +128,7 @@ namespace Mutagen.Bethesda.Generation
                             args.Add("def: null");
                             args.Add("cmds: null");
                             args.Add("copyMask: null");
-                            args.Add($"errorMask: {maskAccessor}");
+                            args.Add($"errorMask: {errorMaskAccessor}");
                         }
                     }
                 }
@@ -148,7 +148,7 @@ namespace Mutagen.Bethesda.Generation
                             FG = fg,
                             TypeGen = typeGen,
                             TranslatorLine = $"LoquiBinaryTranslation<{loquiGen.ObjectTypeName}{loquiGen.GenericTypes}>.Instance",
-                            MaskAccessor = maskAccessor,
+                            MaskAccessor = errorMaskAccessor,
                             ItemAccessor = itemAccessor,
                             TranslationMaskAccessor = null,
                             IndexAccessor = typeGen.HasIndex ? typeGen.IndexEnumInt : null,
@@ -167,12 +167,12 @@ namespace Mutagen.Bethesda.Generation
             ObjectGeneration objGen,
             TypeGeneration targetGen,
             TypeGeneration typeGen,
-            string readerAccessor,
+            Accessor readerAccessor,
             bool squashedRepeatedList,
-            string retAccessor,
+            Accessor retAccessor,
             Accessor outItemAccessor,
-            string maskAccessor,
-            string translationMaskAccessor)
+            Accessor errorMaskAccessor,
+            Accessor translationMaskAccessor)
         {
             var targetLoquiGen = targetGen as LoquiType;
             var loquiGen = typeGen as LoquiType;
@@ -186,7 +186,7 @@ namespace Mutagen.Bethesda.Generation
                     args.Add($"fieldIndex: (int){typeGen.IndexEnumName}");
                 }
                 args.Add($"item: out {outItemAccessor.DirectAccess}");
-                args.Add($"errorMask: {maskAccessor}");
+                args.Add($"errorMask: {errorMaskAccessor}");
                 if (objGen.GetObjectType() == ObjectType.Mod)
                 {
                     args.Add($"masterReferences: item.TES4.MasterReferences");

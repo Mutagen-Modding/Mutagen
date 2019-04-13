@@ -43,10 +43,10 @@ namespace Mutagen.Bethesda.Generation
             FileGeneration fg,
             ObjectGeneration objGen,
             TypeGeneration typeGen,
-            string writerAccessor,
+            Accessor writerAccessor,
             Accessor itemAccessor,
-            string maskAccessor,
-            string translationMask)
+            Accessor errorMaskAccessor,
+            Accessor translationMask)
         {
             var dict = typeGen as DictType;
             if (dict.Mode != DictMode.KeyedValue)
@@ -78,7 +78,7 @@ namespace Mutagen.Bethesda.Generation
                 {
                     args.Add($"recordType: {objGen.RecordTypeHeaderName(data.RecordType.Value)}");
                 }
-                args.Add($"errorMask: {maskAccessor}");
+                args.Add($"errorMask: {errorMaskAccessor}");
                 if (subTransl.AllowDirectWrite(objGen, typeGen))
                 {
                     args.Add($"transl: {subTransl.GetTranslatorInstance(dict.ValueTypeGen)}.Write");
@@ -98,7 +98,7 @@ namespace Mutagen.Bethesda.Generation
                                 itemAccessor: new Accessor("dictSubItem"),
                                 writerAccessor: "r",
                                 translationAccessor: "dictTranslMask",
-                                maskAccessor: "dictSubMask");
+                                errorMaskAccessor: "dictSubMask");
                         }
                     });
                 }
@@ -109,10 +109,10 @@ namespace Mutagen.Bethesda.Generation
             FileGeneration fg,
             ObjectGeneration objGen,
             TypeGeneration typeGen,
-            string nodeAccessor,
+            Accessor nodeAccessor,
             Accessor itemAccessor,
-            string maskAccessor,
-            string translationMaskAccessor)
+            Accessor errorMaskAccessor,
+            Accessor translationMaskAccessor)
         {
             var dict = typeGen as DictType;
             var data = dict.GetFieldData();
@@ -175,7 +175,7 @@ namespace Mutagen.Bethesda.Generation
                 {
                     args.Add($"lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH");
                 }
-                args.Add($"errorMask: {maskAccessor}");
+                args.Add($"errorMask: {errorMaskAccessor}");
                 var subGenTypes = subData.GenerationTypes.ToList();
                 var subGen = this.Module.GetTypeGeneration(dict.ValueTypeGen.GetType());
                 if (subGenTypes.Count <= 1
@@ -213,7 +213,7 @@ namespace Mutagen.Bethesda.Generation
                                             retAccessor: "return ",
                                             translationAccessor: "dictTranslMask",
                                             outItemAccessor: new Accessor("dictSubItem"),
-                                            maskAccessor: "dictSubMask");
+                                            errorMaskAccessor: "dictSubMask");
                                     }
                                 }
                                 gen.AppendLine("default:");
@@ -243,7 +243,7 @@ namespace Mutagen.Bethesda.Generation
                                 retAccessor: "return ",
                                 translationAccessor: "dictTranslMask",
                                 outItemAccessor: new Accessor("dictSubItem"),
-                                maskAccessor: "dictSubMask");
+                                errorMaskAccessor: "dictSubMask");
                         }
                     });
                 }
@@ -255,12 +255,12 @@ namespace Mutagen.Bethesda.Generation
             ObjectGeneration objGen,
             TypeGeneration targetGen,
             TypeGeneration typeGen,
-            string nodeAccessor,
+            Accessor nodeAccessor,
             bool squashedRepeatedList,
-            string retAccessor,
+            Accessor retAccessor,
             Accessor outItemAccessor,
-            string maskAccessor,
-            string translationMaskAccessor)
+            Accessor errorMaskAccessor,
+            Accessor translationMaskAccessor)
         {
             throw new NotImplementedException();
         }

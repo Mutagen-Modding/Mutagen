@@ -16,12 +16,27 @@ namespace Mutagen.Bethesda.Generation
             return true;
         }
 
-        public override void GenerateCopyIn(FileGeneration fg, ObjectGeneration objGen, TypeGeneration typeGen, string nodeAccessor, Accessor itemAccessor, string maskAccessor, string translationMaskAccessor)
+        public override void GenerateCopyIn(
+            FileGeneration fg,
+            ObjectGeneration objGen,
+            TypeGeneration typeGen, 
+            Accessor nodeAccessor, 
+            Accessor itemAccessor,
+            Accessor errorMaskAccessor, 
+            Accessor translationMaskAccessor)
         {
             throw new NotImplementedException();
         }
 
-        public override void GenerateCopyInRet(FileGeneration fg, ObjectGeneration objGen, TypeGeneration typeGen, string nodeAccessor, Accessor retAccessor, string indexAccessor, string maskAccessor, string translationMaskAccessor)
+        public override void GenerateCopyInRet(
+            FileGeneration fg,
+            ObjectGeneration objGen, 
+            TypeGeneration typeGen,
+            Accessor nodeAccessor,
+            Accessor retAccessor,
+            Accessor indexAccessor, 
+            Accessor errorMaskAccessor, 
+            Accessor translationMaskAccessor)
         {
             throw new NotImplementedException();
         }
@@ -31,12 +46,25 @@ namespace Mutagen.Bethesda.Generation
             throw new NotImplementedException();
         }
 
-        public override XElement GenerateForXSD(ObjectGeneration objGen, XElement rootElement, XElement choiceElement, TypeGeneration typeGen, string nameOverride)
+        public override XElement GenerateForXSD(
+            ObjectGeneration objGen,
+            XElement rootElement,
+            XElement choiceElement,
+            TypeGeneration typeGen, 
+            string nameOverride)
         {
             throw new NotImplementedException();
         }
 
-        public override void GenerateWrite(FileGeneration fg, ObjectGeneration obj, TypeGeneration typeGen, string writerAccessor, Accessor itemAccessor, string maskAccessor, string nameAccessor, string translationMaskAccessor)
+        public override void GenerateWrite(
+            FileGeneration fg, 
+            ObjectGeneration obj,
+            TypeGeneration typeGen,
+            Accessor writerAccessor,
+            Accessor itemAccessor,
+            Accessor errorMaskAccessor,
+            Accessor nameAccessor,
+            Accessor translationMaskAccessor)
         {
             var dataType = typeGen as DataType;
             bool isInRange = false;
@@ -96,7 +124,7 @@ namespace Mutagen.Bethesda.Generation
                         writerAccessor: writerAccessor,
                         translationMaskAccessor: "translationMask",
                         itemAccessor: new Accessor(subField.Field, "item."),
-                        maskAccessor: $"errorMask");
+                        errorMaskAccessor: $"errorMask");
                 }
             }
             for (int i = fg.Depth - origDepth; i > 0; i--)

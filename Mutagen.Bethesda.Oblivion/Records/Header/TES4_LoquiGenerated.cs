@@ -396,6 +396,15 @@ namespace Mutagen.Bethesda.Oblivion
             TranslationCrystal translationMask,
             MissingCreate missing = MissingCreate.New)
         {
+            switch (missing)
+            {
+                case MissingCreate.New:
+                case MissingCreate.Null:
+                    if (node == null) return missing == MissingCreate.New ? new TES4() : null;
+                    break;
+                default:
+                    break;
+            }
             var ret = new TES4();
             try
             {

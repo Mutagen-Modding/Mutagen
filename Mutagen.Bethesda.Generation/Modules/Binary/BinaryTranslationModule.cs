@@ -739,7 +739,7 @@ namespace Mutagen.Bethesda.Generation
                 readerAccessor: frameAccessor,
                 itemAccessor: new Accessor(field, "item."),
                 translationAccessor: null,
-                maskAccessor: $"errorMask");
+                errorMaskAccessor: $"errorMask");
         }
 
         private void ConvertFromPathOut(ObjectGeneration obj, FileGeneration fg, InternalTranslation internalToDo)
@@ -1166,7 +1166,7 @@ namespace Mutagen.Bethesda.Generation
                                 writerAccessor: "writer",
                                 itemAccessor: new Accessor(field, "item."),
                                 translationAccessor: null,
-                                maskAccessor: "errorMask");
+                                errorMaskAccessor: "errorMask");
                         }
                     }
                 }
@@ -1298,7 +1298,7 @@ namespace Mutagen.Bethesda.Generation
                                             writerAccessor: "writer",
                                                 translationAccessor: null,
                                             itemAccessor: new Accessor(subField.Field, "item."),
-                                            maskAccessor: $"errorMask");
+                                            errorMaskAccessor: $"errorMask");
                                     }
                                     for (int i = 0; i < dataType.BreakIndices.Count; i++)
                                     {
@@ -1336,7 +1336,7 @@ namespace Mutagen.Bethesda.Generation
                                     writerAccessor: "writer",
                                     itemAccessor: accessor,
                                     translationAccessor: null,
-                                    maskAccessor: $"errorMask");
+                                    errorMaskAccessor: $"errorMask");
                             }
                         }
                     }

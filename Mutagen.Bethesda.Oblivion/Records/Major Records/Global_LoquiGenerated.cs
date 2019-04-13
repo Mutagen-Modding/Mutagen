@@ -167,6 +167,15 @@ namespace Mutagen.Bethesda.Oblivion
             TranslationCrystal translationMask,
             MissingCreate missing = MissingCreate.New)
         {
+            switch (missing)
+            {
+                case MissingCreate.New:
+                case MissingCreate.Null:
+                    if (node == null) return null;
+                    break;
+                default:
+                    break;
+            }
             Global ret;
             if (!LoquiXmlTranslation.Instance.TryCreate(node, out ret, errorMask, translationMask))
             {

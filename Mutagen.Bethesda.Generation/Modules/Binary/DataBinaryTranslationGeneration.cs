@@ -16,11 +16,11 @@ namespace Mutagen.Bethesda.Generation
         public override void GenerateCopyIn(
             FileGeneration fg,
             ObjectGeneration objGen,
-            TypeGeneration typeGen, 
-            string readerAccessor, 
-            Accessor itemAccessor, 
-            string maskAccessor,
-            string translationMaskAccessor)
+            TypeGeneration typeGen,
+            Accessor readerAccessor, 
+            Accessor itemAccessor,
+            Accessor errorMaskAccessor,
+            Accessor translationMaskAccessor)
         {
         }
 
@@ -29,12 +29,12 @@ namespace Mutagen.Bethesda.Generation
             ObjectGeneration objGen,
             TypeGeneration targetGen,
             TypeGeneration typeGen,
-            string readerAccessor,
+            Accessor readerAccessor,
             bool squashedRepeatedList,
-            string retAccessor,
+            Accessor retAccessor,
             Accessor outItemAccessor,
-            string maskAccessor,
-            string translationMaskAccessor)
+            Accessor errorMaskAccessor,
+            Accessor translationMaskAccessor)
         {
             if (squashedRepeatedList)
             {
@@ -45,11 +45,11 @@ namespace Mutagen.Bethesda.Generation
         public override void GenerateWrite(
             FileGeneration fg, 
             ObjectGeneration objGen, 
-            TypeGeneration typeGen, 
-            string writerAccessor, 
-            Accessor itemAccessor, 
-            string maskAccessor,
-            string translationMaskAccessor)
+            TypeGeneration typeGen,
+            Accessor writerAccessor, 
+            Accessor itemAccessor,
+            Accessor errorMaskAccessor,
+            Accessor translationMaskAccessor)
         {
         }
 

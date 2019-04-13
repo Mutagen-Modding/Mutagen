@@ -29,11 +29,11 @@ namespace Mutagen.Bethesda.Generation
         public override void GenerateCopyIn(
             FileGeneration fg, 
             ObjectGeneration objGen,
-            TypeGeneration typeGen, 
-            string readerAccessor, 
-            Accessor itemAccessor, 
-            string maskAccessor,
-            string translationMaskAccessor)
+            TypeGeneration typeGen,
+            Accessor readerAccessor, 
+            Accessor itemAccessor,
+            Accessor errorMaskAccessor,
+            Accessor translationMaskAccessor)
         {
             CustomLogicTranslationGeneration.GenerateFill(
                 fg: fg,
@@ -45,13 +45,13 @@ namespace Mutagen.Bethesda.Generation
             FileGeneration fg, 
             ObjectGeneration objGen, 
             TypeGeneration targetGen, 
-            TypeGeneration typeGen, 
-            string readerAccessor, 
+            TypeGeneration typeGen,
+            Accessor readerAccessor, 
             bool squashedRepeatedList,
-            string retAccessor,
-            Accessor outItemAccessor, 
-            string maskAccessor,
-            string translationMaskAccessor)
+            Accessor retAccessor,
+            Accessor outItemAccessor,
+            Accessor errorMaskAccessor,
+            Accessor translationMaskAccessor)
         {
             throw new NotImplementedException();
         }
@@ -59,11 +59,11 @@ namespace Mutagen.Bethesda.Generation
         public override void GenerateWrite(
             FileGeneration fg, 
             ObjectGeneration objGen, 
-            TypeGeneration typeGen, 
-            string writerAccessor, 
-            Accessor itemAccessor, 
-            string maskAccessor,
-            string translationMaskAccessor)
+            TypeGeneration typeGen,
+            Accessor writerAccessor, 
+            Accessor itemAccessor,
+            Accessor errorMaskAccessor,
+            Accessor translationMaskAccessor)
         {
             CustomLogicTranslationGeneration.GenerateWrite(
                 fg: fg,
@@ -127,7 +127,7 @@ namespace Mutagen.Bethesda.Generation
             FileGeneration fg,
             ObjectGeneration obj,
             TypeGeneration field,
-            string writerAccessor)
+            Accessor writerAccessor)
         {
             using (var args = new ArgsWrapper(fg,
                 $"{obj.ObjectName}.WriteBinary_{field.Name}"))
@@ -142,7 +142,7 @@ namespace Mutagen.Bethesda.Generation
         public static void GenerateFill(
             FileGeneration fg,
             TypeGeneration field,
-            string frameAccessor)
+            Accessor frameAccessor)
         {
             var data = field.GetFieldData();
             if (data.HasTrigger)
