@@ -14,6 +14,7 @@ namespace Mutagen.Bethesda.Generation
         public MutagenXmlModule(LoquiGenerator gen)
             : base(gen)
         {
+            this.ShouldGenerateCopyIn = false;
         }
 
         public override void GenerateWriteToNode(ObjectGeneration obj, FileGeneration fg)
