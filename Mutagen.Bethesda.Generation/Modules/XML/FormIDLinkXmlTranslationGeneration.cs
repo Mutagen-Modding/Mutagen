@@ -21,7 +21,6 @@ namespace Mutagen.Bethesda.Generation
             TypeGeneration typeGen,
             Accessor nodeAccessor,
             Accessor retAccessor,
-            Accessor doMaskAccessor,
             Accessor errorMaskAccessor,
             Accessor translationMaskAccessor)
         {
@@ -32,7 +31,6 @@ namespace Mutagen.Bethesda.Generation
             {
                 args.Add(nodeAccessor.DirectAccess);
                 args.Add($"nullable: {Nullable.ToString().ToLower()}");
-                args.Add($"doMasks: {doMaskAccessor}");
                 args.Add($"errorMask: out {errorMaskAccessor}");
             }
         }
