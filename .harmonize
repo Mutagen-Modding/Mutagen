@@ -10,10 +10,10 @@
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>2ee95b2e6572283642c4f726669cf47c2b86a012</Sha>
+         <Sha>c6dc6013177d8aec8ee39da9dbcc086bec8ff3a9</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>04-14-2019 15:13:59</CommitDate>
-         <Description>Moved additional param lists to XmlTranslationGeneration.  Simplified</Description>
+         <CommitDate>04-14-2019 16:22:36</CommitDate>
+         <Description>Xml copy in added out item accessor</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>

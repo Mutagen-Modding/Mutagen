@@ -21,6 +21,7 @@ namespace Mutagen.Bethesda.Generation
             TypeGeneration typeGen,
             Accessor nodeAccessor,
             Accessor retAccessor,
+            Accessor outItemAccessor,
             Accessor errorMaskAccessor,
             Accessor translationMaskAccessor)
         {
@@ -30,6 +31,7 @@ namespace Mutagen.Bethesda.Generation
                 $".Bubble((o) => new {linkType.TypeName}(o.Value))"))
             {
                 args.Add(nodeAccessor.DirectAccess);
+                args.Add($"item: out {outItemAccessor}");
                 args.Add($"nullable: {Nullable.ToString().ToLower()}");
                 args.Add($"errorMask: out {errorMaskAccessor}");
             }
