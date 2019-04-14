@@ -1,5 +1,6 @@
 ﻿using Loqui;
 using Loqui.Generation;
+using Noggog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +13,14 @@ namespace Mutagen.Bethesda.Generation
     {
         public TranslationModule<BinaryTranslationGeneration> Module;
         public string Namespace => Module.Namespace;
+
+        public delegate TryGet<string> ParamTest(
+            ObjectGeneration objGen,
+            TypeGeneration typeGen);
+        public List<ParamTest> AdditionalWriteParams = new List<ParamTest>();
+        public List<ParamTest> AdditionalCopyInParams = new List<ParamTest>();
+        public List<ParamTest> AdditionalCopyInRetParams = new List<ParamTest>();
+
         public virtual bool AllowDirectWrite(
             ObjectGeneration objGen,
             TypeGeneration typeGen) => true;

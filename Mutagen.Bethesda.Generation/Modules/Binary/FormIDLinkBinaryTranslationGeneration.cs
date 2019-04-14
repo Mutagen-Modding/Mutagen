@@ -44,11 +44,7 @@ namespace Mutagen.Bethesda.Generation
 
         private static TryGet<string> AdditionalParam(
            ObjectGeneration objGen,
-           TypeGeneration typeGen,
-           Accessor accessor,
-           Accessor itemAccessor,
-           Accessor errorMaskAccessor,
-           Accessor translationMaskAccessor)
+           TypeGeneration typeGen)
         {
             return TryGet<string>.Succeed("masterReferences: masterReferences");
         }
@@ -84,11 +80,7 @@ namespace Mutagen.Bethesda.Generation
                         {
                             var get = writeParam(
                                 objGen: objGen,
-                                typeGen: typeGen,
-                                accessor: nodeAccessor,
-                                itemAccessor: retAccessor,
-                                errorMaskAccessor: errorMaskAccessor,
-                                translationMaskAccessor: translationMaskAccessor);
+                                typeGen: typeGen);
                             if (get.Failed) continue;
                             args.Add(get.Value);
                         }

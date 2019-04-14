@@ -21,11 +21,7 @@ namespace Mutagen.Bethesda.Generation
 
         private static TryGet<string> AdditionalParam(
            ObjectGeneration objGen,
-           TypeGeneration typeGen,
-           Accessor accessor,
-           Accessor itemAccessor,
-           Accessor errorMaskAccessor,
-           Accessor translationMaskAccessor)
+           TypeGeneration typeGen)
         {
             return TryGet<string>.Create(successful: ExtraByte(typeGen), val: "extraByte: true");
         }

@@ -10,10 +10,10 @@
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>09d54d9e06c2d3a600d7fbaf5e3e1226efb799b0</Sha>
+         <Sha>2ee95b2e6572283642c4f726669cf47c2b86a012</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>04-14-2019 15:10:40</CommitDate>
-         <Description>Removed vestigial index accessor on xml copy in ret generation</Description>
+         <CommitDate>04-14-2019 15:13:59</CommitDate>
+         <Description>Moved additional param lists to XmlTranslationGeneration.  Simplified</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>
