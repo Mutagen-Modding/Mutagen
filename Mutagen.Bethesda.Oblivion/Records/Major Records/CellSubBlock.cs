@@ -34,7 +34,7 @@ namespace Mutagen.Bethesda.Oblivion
             return CellSubBlock.Create_Xml(file.Path);
         }
 
-        public object Duplicate(Func<FormKey> getNextFormKey, IList<(MajorRecord Record, FormKey OriginalFormKey)> duplicatedRecordTracker = null)
+        public object Duplicate(Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecordTracker = null)
         {
             var ret = new CellSubBlock();
             ret.CopyFieldsFrom(this, duplicateMask);

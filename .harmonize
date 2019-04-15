@@ -2,18 +2,18 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>608f3675bd544010f751749a5592bcff79288582</Sha>
+         <Sha>dc3476e16847025747021141cbbad1c224d1cd71</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>04-10-2019 17:31:00</CommitDate>
-         <Description>ListExt.For LINQ /w start end indices</Description>
+         <CommitDate>03-28-2019 18:48:58</CommitDate>
+         <Description>EnumExt.SetFlag</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>c157b7d82bf083c5012305ceb501df24e547d49c</Sha>
+         <Sha>0d6747b5be27421795be72019475f95b2c1db6c5</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>04-10-2019 17:31:09</CommitDate>
-         <Description>Some ObjectNamedKey tests</Description>
+         <CommitDate>03-20-2019 19:41:30</CommitDate>
+         <Description>Added missing translation mask checking for xml importing</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>

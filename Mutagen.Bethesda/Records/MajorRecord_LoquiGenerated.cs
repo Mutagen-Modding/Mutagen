@@ -626,7 +626,7 @@ namespace Mutagen.Bethesda
             CustomCtor();
         }
 
-        public abstract MajorRecord Duplicate(Func<FormKey> getNextFormKey, IList<(MajorRecord Record, FormKey OriginalFormKey)> duplicatedRecords = null);
+        public abstract IMajorRecordCommon Duplicate(Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords = null);
         #endregion
 
         #region Binary Translation

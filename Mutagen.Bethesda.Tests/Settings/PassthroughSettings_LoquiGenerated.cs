@@ -1395,159 +1395,177 @@ namespace Mutagen.Bethesda.Tests.Internals
             switch (name)
             {
                 case "ReuseCaches":
-                    try
+                    if ((translationMask?.GetShouldTranslate((int)PassthroughSettings_FieldIndex.ReuseCaches) ?? true))
                     {
-                        errorMask?.PushIndex((int)PassthroughSettings_FieldIndex.ReuseCaches);
-                        if (BooleanXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Boolean ReuseCachesParse,
-                            errorMask: errorMask))
+                        try
                         {
-                            item.ReuseCaches = ReuseCachesParse;
+                            errorMask?.PushIndex((int)PassthroughSettings_FieldIndex.ReuseCaches);
+                            if (BooleanXmlTranslation.Instance.Parse(
+                                node: node,
+                                item: out Boolean ReuseCachesParse,
+                                errorMask: errorMask))
+                            {
+                                item.ReuseCaches = ReuseCachesParse;
+                            }
+                            else
+                            {
+                                item.ReuseCaches = default(Boolean);
+                            }
                         }
-                        else
+                        catch (Exception ex)
+                        when (errorMask != null)
                         {
-                            item.ReuseCaches = default(Boolean);
+                            errorMask.ReportException(ex);
                         }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
+                        finally
+                        {
+                            errorMask?.PopIndex();
+                        }
                     }
                     break;
                 case "DeleteCachesAfter":
-                    try
+                    if ((translationMask?.GetShouldTranslate((int)PassthroughSettings_FieldIndex.DeleteCachesAfter) ?? true))
                     {
-                        errorMask?.PushIndex((int)PassthroughSettings_FieldIndex.DeleteCachesAfter);
-                        if (BooleanXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Boolean DeleteCachesAfterParse,
-                            errorMask: errorMask))
+                        try
                         {
-                            item.DeleteCachesAfter = DeleteCachesAfterParse;
+                            errorMask?.PushIndex((int)PassthroughSettings_FieldIndex.DeleteCachesAfter);
+                            if (BooleanXmlTranslation.Instance.Parse(
+                                node: node,
+                                item: out Boolean DeleteCachesAfterParse,
+                                errorMask: errorMask))
+                            {
+                                item.DeleteCachesAfter = DeleteCachesAfterParse;
+                            }
+                            else
+                            {
+                                item.DeleteCachesAfter = default(Boolean);
+                            }
                         }
-                        else
+                        catch (Exception ex)
+                        when (errorMask != null)
                         {
-                            item.DeleteCachesAfter = default(Boolean);
+                            errorMask.ReportException(ex);
                         }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
+                        finally
+                        {
+                            errorMask?.PopIndex();
+                        }
                     }
                     break;
                 case "TestNormal":
-                    try
+                    if ((translationMask?.GetShouldTranslate((int)PassthroughSettings_FieldIndex.TestNormal) ?? true))
                     {
-                        errorMask?.PushIndex((int)PassthroughSettings_FieldIndex.TestNormal);
-                        if (BooleanXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Boolean TestNormalParse,
-                            errorMask: errorMask))
+                        try
                         {
-                            item.TestNormal = TestNormalParse;
+                            errorMask?.PushIndex((int)PassthroughSettings_FieldIndex.TestNormal);
+                            if (BooleanXmlTranslation.Instance.Parse(
+                                node: node,
+                                item: out Boolean TestNormalParse,
+                                errorMask: errorMask))
+                            {
+                                item.TestNormal = TestNormalParse;
+                            }
+                            else
+                            {
+                                item.TestNormal = default(Boolean);
+                            }
                         }
-                        else
+                        catch (Exception ex)
+                        when (errorMask != null)
                         {
-                            item.TestNormal = default(Boolean);
+                            errorMask.ReportException(ex);
                         }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
+                        finally
+                        {
+                            errorMask?.PopIndex();
+                        }
                     }
                     break;
                 case "TestObservable":
-                    try
+                    if ((translationMask?.GetShouldTranslate((int)PassthroughSettings_FieldIndex.TestObservable) ?? true))
                     {
-                        errorMask?.PushIndex((int)PassthroughSettings_FieldIndex.TestObservable);
-                        if (BooleanXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Boolean TestObservableParse,
-                            errorMask: errorMask))
+                        try
                         {
-                            item.TestObservable = TestObservableParse;
+                            errorMask?.PushIndex((int)PassthroughSettings_FieldIndex.TestObservable);
+                            if (BooleanXmlTranslation.Instance.Parse(
+                                node: node,
+                                item: out Boolean TestObservableParse,
+                                errorMask: errorMask))
+                            {
+                                item.TestObservable = TestObservableParse;
+                            }
+                            else
+                            {
+                                item.TestObservable = default(Boolean);
+                            }
                         }
-                        else
+                        catch (Exception ex)
+                        when (errorMask != null)
                         {
-                            item.TestObservable = default(Boolean);
+                            errorMask.ReportException(ex);
                         }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
+                        finally
+                        {
+                            errorMask?.PopIndex();
+                        }
                     }
                     break;
                 case "TestFolder":
-                    try
+                    if ((translationMask?.GetShouldTranslate((int)PassthroughSettings_FieldIndex.TestFolder) ?? true))
                     {
-                        errorMask?.PushIndex((int)PassthroughSettings_FieldIndex.TestFolder);
-                        if (BooleanXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Boolean TestFolderParse,
-                            errorMask: errorMask))
+                        try
                         {
-                            item.TestFolder = TestFolderParse;
+                            errorMask?.PushIndex((int)PassthroughSettings_FieldIndex.TestFolder);
+                            if (BooleanXmlTranslation.Instance.Parse(
+                                node: node,
+                                item: out Boolean TestFolderParse,
+                                errorMask: errorMask))
+                            {
+                                item.TestFolder = TestFolderParse;
+                            }
+                            else
+                            {
+                                item.TestFolder = default(Boolean);
+                            }
                         }
-                        else
+                        catch (Exception ex)
+                        when (errorMask != null)
                         {
-                            item.TestFolder = default(Boolean);
+                            errorMask.ReportException(ex);
                         }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
+                        finally
+                        {
+                            errorMask?.PopIndex();
+                        }
                     }
                     break;
                 case "DataFolder":
-                    try
+                    if ((translationMask?.GetShouldTranslate((int)PassthroughSettings_FieldIndex.DataFolder) ?? true))
                     {
-                        errorMask?.PushIndex((int)PassthroughSettings_FieldIndex.DataFolder);
-                        if (StringXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out String DataFolderParse,
-                            errorMask: errorMask))
+                        try
                         {
-                            item.DataFolder = DataFolderParse;
+                            errorMask?.PushIndex((int)PassthroughSettings_FieldIndex.DataFolder);
+                            if (StringXmlTranslation.Instance.Parse(
+                                node: node,
+                                item: out String DataFolderParse,
+                                errorMask: errorMask))
+                            {
+                                item.DataFolder = DataFolderParse;
+                            }
+                            else
+                            {
+                                item.DataFolder = default(String);
+                            }
                         }
-                        else
+                        catch (Exception ex)
+                        when (errorMask != null)
                         {
-                            item.DataFolder = default(String);
+                            errorMask.ReportException(ex);
                         }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
+                        finally
+                        {
+                            errorMask?.PopIndex();
+                        }
                     }
                     break;
                 default:

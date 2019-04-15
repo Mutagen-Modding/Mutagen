@@ -1220,81 +1220,90 @@ namespace Mutagen.Bethesda.Tests.Internals
             switch (name)
             {
                 case "Do":
-                    try
+                    if ((translationMask?.GetShouldTranslate((int)Passthrough_FieldIndex.Do) ?? true))
                     {
-                        errorMask?.PushIndex((int)Passthrough_FieldIndex.Do);
-                        if (BooleanXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Boolean DoParse,
-                            errorMask: errorMask))
+                        try
                         {
-                            item.Do = DoParse;
+                            errorMask?.PushIndex((int)Passthrough_FieldIndex.Do);
+                            if (BooleanXmlTranslation.Instance.Parse(
+                                node: node,
+                                item: out Boolean DoParse,
+                                errorMask: errorMask))
+                            {
+                                item.Do = DoParse;
+                            }
+                            else
+                            {
+                                item.Do = default(Boolean);
+                            }
                         }
-                        else
+                        catch (Exception ex)
+                        when (errorMask != null)
                         {
-                            item.Do = default(Boolean);
+                            errorMask.ReportException(ex);
                         }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
+                        finally
+                        {
+                            errorMask?.PopIndex();
+                        }
                     }
                     break;
                 case "Path":
-                    try
+                    if ((translationMask?.GetShouldTranslate((int)Passthrough_FieldIndex.Path) ?? true))
                     {
-                        errorMask?.PushIndex((int)Passthrough_FieldIndex.Path);
-                        if (StringXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out String PathParse,
-                            errorMask: errorMask))
+                        try
                         {
-                            item.Path = PathParse;
+                            errorMask?.PushIndex((int)Passthrough_FieldIndex.Path);
+                            if (StringXmlTranslation.Instance.Parse(
+                                node: node,
+                                item: out String PathParse,
+                                errorMask: errorMask))
+                            {
+                                item.Path = PathParse;
+                            }
+                            else
+                            {
+                                item.Path = default(String);
+                            }
                         }
-                        else
+                        catch (Exception ex)
+                        when (errorMask != null)
                         {
-                            item.Path = default(String);
+                            errorMask.ReportException(ex);
                         }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
+                        finally
+                        {
+                            errorMask?.PopIndex();
+                        }
                     }
                     break;
                 case "NumMasters":
-                    try
+                    if ((translationMask?.GetShouldTranslate((int)Passthrough_FieldIndex.NumMasters) ?? true))
                     {
-                        errorMask?.PushIndex((int)Passthrough_FieldIndex.NumMasters);
-                        if (ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Byte NumMastersParse,
-                            errorMask: errorMask))
+                        try
                         {
-                            item.NumMasters = NumMastersParse;
+                            errorMask?.PushIndex((int)Passthrough_FieldIndex.NumMasters);
+                            if (ByteXmlTranslation.Instance.Parse(
+                                node: node,
+                                item: out Byte NumMastersParse,
+                                errorMask: errorMask))
+                            {
+                                item.NumMasters = NumMastersParse;
+                            }
+                            else
+                            {
+                                item.NumMasters = default(Byte);
+                            }
                         }
-                        else
+                        catch (Exception ex)
+                        when (errorMask != null)
                         {
-                            item.NumMasters = default(Byte);
+                            errorMask.ReportException(ex);
                         }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
+                        finally
+                        {
+                            errorMask?.PopIndex();
+                        }
                     }
                     break;
                 default:

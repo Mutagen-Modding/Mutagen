@@ -1741,11 +1741,11 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        public Dictionary<FormKey, MajorRecord> CopyInDuplicate(
+        public Dictionary<FormKey, IMajorRecordCommon> CopyInDuplicate(
             OblivionMod rhs,
             GroupMask mask = null)
         {
-            var duppedRecords = new List<(MajorRecord Record, FormKey OriginalFormKey)>();
+            var duppedRecords = new List<(IMajorRecordCommon Record, FormKey OriginalFormKey)>();
             if (mask?.GameSettings ?? true)
             {
                 this.GameSettings.Items.Set(
@@ -2138,8 +2138,8 @@ namespace Mutagen.Bethesda.Oblivion
                         .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<EffectShader>());
             }
-            Dictionary<FormKey, MajorRecord> router = new Dictionary<FormKey, MajorRecord>();
-            router.Set(duppedRecords.Select(dup => new KeyValuePair<FormKey, MajorRecord>(dup.OriginalFormKey, dup.Record)));
+            Dictionary<FormKey, IMajorRecordCommon> router = new Dictionary<FormKey, IMajorRecordCommon>();
+            router.Set(duppedRecords.Select(dup => new KeyValuePair<FormKey, IMajorRecordCommon>(dup.OriginalFormKey, dup.Record)));
             foreach (var rec in router.Values)
             {
                 foreach (var link in rec.Links)

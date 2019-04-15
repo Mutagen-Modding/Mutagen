@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace Mutagen.Bethesda
 {
-    public partial interface IMajorRecord : IFormKey, IDuplicatable
+    public partial interface IMajorRecord : IFormKey, IDuplicatable, IMajorRecordCommon
     {
         new FormKey FormKey { get; }
     }
@@ -41,6 +41,12 @@ namespace Mutagen.Bethesda
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public string TitleString => $"{this.EditorID} - {this.FormKey.ToString()}";
 
+        bool IMajorRecordCommon.IsCompressed
+        {
+            get => this.MajorRecordFlags.HasFlag(MajorRecordFlag.Compressed);
+            set => this.MajorRecordFlags.SetFlag(MajorRecordFlag.Compressed, value);
+        }
+
         public static void Fill_Binary(
             MutagenFrame frame,
             MajorRecord record,
@@ -67,7 +73,7 @@ namespace Mutagen.Bethesda
             this.FormKey = formKey;
         }
 
-        object IDuplicatable.Duplicate(Func<FormKey> getNextFormKey, IList<(MajorRecord Record, FormKey OriginalFormKey)> duplicatedRecordTracker = null)
+        object IDuplicatable.Duplicate(Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecordTracker = null)
         {
             return this.Duplicate(getNextFormKey, duplicatedRecordTracker);
         }

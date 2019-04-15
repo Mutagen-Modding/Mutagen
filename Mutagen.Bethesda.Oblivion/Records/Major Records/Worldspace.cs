@@ -61,7 +61,7 @@ namespace Mutagen.Bethesda.Oblivion
             Items = new MaskItem<CopyOption, Cell_CopyMask>(CopyOption.Skip, null)
         };
 
-        partial void PostDuplicate(Worldspace obj, Worldspace rhs, Func<FormKey> getNextFormKey, IList<(MajorRecord Record, FormKey OriginalFormKey)> duplicatedRecords)
+        partial void PostDuplicate(Worldspace obj, Worldspace rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
         {
             if (rhs.Road_IsSet
                 && rhs.Road != null)

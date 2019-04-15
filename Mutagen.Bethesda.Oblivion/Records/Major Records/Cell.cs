@@ -398,7 +398,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
         
-        partial void PostDuplicate(Cell obj, Cell rhs, Func<FormKey> getNextFormKey, IList<(MajorRecord Record, FormKey OriginalFormKey)> duplicatedRecords)
+        partial void PostDuplicate(Cell obj, Cell rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
         {
             if (rhs.PathGrid_IsSet
                 && rhs.PathGrid != null)
