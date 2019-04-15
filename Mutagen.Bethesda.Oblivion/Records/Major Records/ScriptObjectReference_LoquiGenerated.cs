@@ -51,10 +51,10 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Reference
-        public FormIDLink<MajorRecord> Reference_Property { get; } = new FormIDLink<MajorRecord>();
-        public MajorRecord Reference { get => Reference_Property.Item; set => Reference_Property.Item = value; }
+        public FormIDLink<OblivionMajorRecord> Reference_Property { get; } = new FormIDLink<OblivionMajorRecord>();
+        public OblivionMajorRecord Reference { get => Reference_Property.Item; set => Reference_Property.Item = value; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormIDLink<MajorRecord> IScriptObjectReferenceGetter.Reference_Property => this.Reference_Property;
+        FormIDLink<OblivionMajorRecord> IScriptObjectReferenceGetter.Reference_Property => this.Reference_Property;
         #endregion
 
         #region Loqui Getter Interface
@@ -956,7 +956,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case ScriptObjectReference_FieldIndex.Reference:
                     this.Reference_Property.Set(
-                        (FormIDLink<MajorRecord>)obj,
+                        (FormIDLink<OblivionMajorRecord>)obj,
                         cmds);
                     break;
                 default:
@@ -992,7 +992,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case ScriptObjectReference_FieldIndex.Reference:
                     obj.Reference_Property.Set(
-                        (FormIDLink<MajorRecord>)pair.Value,
+                        (FormIDLink<OblivionMajorRecord>)pair.Value,
                         null);
                     break;
                 default:
@@ -1010,14 +1010,14 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface IScriptObjectReference : IScriptObjectReferenceGetter, IScriptReference, ILoquiClass<IScriptObjectReference, IScriptObjectReferenceGetter>, ILoquiClass<ScriptObjectReference, IScriptObjectReferenceGetter>
     {
-        new MajorRecord Reference { get; set; }
+        new OblivionMajorRecord Reference { get; set; }
     }
 
     public partial interface IScriptObjectReferenceGetter : IScriptReferenceGetter
     {
         #region Reference
-        MajorRecord Reference { get; }
-        FormIDLink<MajorRecord> Reference_Property { get; }
+        OblivionMajorRecord Reference { get; }
+        FormIDLink<OblivionMajorRecord> Reference_Property { get; }
 
         #endregion
 
@@ -1165,7 +1165,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case ScriptObjectReference_FieldIndex.Reference:
-                    return typeof(FormIDLink<MajorRecord>);
+                    return typeof(FormIDLink<OblivionMajorRecord>);
                 default:
                     return ScriptReference_Registration.GetNthType(index);
             }
@@ -1274,7 +1274,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case ScriptObjectReference_FieldIndex.Reference:
-                    obj.Reference = default(MajorRecord);
+                    obj.Reference = default(OblivionMajorRecord);
                     break;
                 default:
                     ScriptReferenceCommon.UnsetNthObject(index, obj);
@@ -1314,7 +1314,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IScriptObjectReference item,
             NotifyingUnsetParameters cmds = null)
         {
-            item.Reference = default(MajorRecord);
+            item.Reference = default(OblivionMajorRecord);
         }
 
         public static ScriptObjectReference_Mask<bool> GetEqualsMask(

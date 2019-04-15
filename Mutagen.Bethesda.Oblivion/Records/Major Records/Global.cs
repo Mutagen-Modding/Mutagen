@@ -73,7 +73,7 @@ namespace Mutagen.Bethesda.Oblivion
 
                 // Fill with major record fields
                 subFrame.Reader.Position = initialPos + 8;
-                MajorRecord.Fill_Binary(
+                OblivionMajorRecord.Fill_Binary(
                     subFrame,
                     g,
                     masterReferences,

@@ -51,10 +51,10 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Object
-        public FormIDLink<MajorRecord> Object_Property { get; } = new FormIDLink<MajorRecord>();
-        public MajorRecord Object { get => Object_Property.Item; set => Object_Property.Item = value; }
+        public FormIDLink<OblivionMajorRecord> Object_Property { get; } = new FormIDLink<OblivionMajorRecord>();
+        public OblivionMajorRecord Object { get => Object_Property.Item; set => Object_Property.Item = value; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormIDLink<MajorRecord> IRegionDataObjectGetter.Object_Property => this.Object_Property;
+        FormIDLink<OblivionMajorRecord> IRegionDataObjectGetter.Object_Property => this.Object_Property;
         #endregion
         #region ParentIndex
         private UInt16 _ParentIndex;
@@ -1532,7 +1532,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case RegionDataObject_FieldIndex.Object:
                     this.Object_Property.Set(
-                        (FormIDLink<MajorRecord>)obj,
+                        (FormIDLink<OblivionMajorRecord>)obj,
                         cmds);
                     break;
                 case RegionDataObject_FieldIndex.ParentIndex:
@@ -1622,7 +1622,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case RegionDataObject_FieldIndex.Object:
                     obj.Object_Property.Set(
-                        (FormIDLink<MajorRecord>)pair.Value,
+                        (FormIDLink<OblivionMajorRecord>)pair.Value,
                         null);
                     break;
                 case RegionDataObject_FieldIndex.ParentIndex:
@@ -1688,7 +1688,7 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface IRegionDataObject : IRegionDataObjectGetter, ILoquiClass<IRegionDataObject, IRegionDataObjectGetter>, ILoquiClass<RegionDataObject, IRegionDataObjectGetter>
     {
-        new MajorRecord Object { get; set; }
+        new OblivionMajorRecord Object { get; set; }
         new UInt16 ParentIndex { get; set; }
 
         new Byte[] Unknown1 { get; set; }
@@ -1726,8 +1726,8 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IRegionDataObjectGetter : ILoquiObject
     {
         #region Object
-        MajorRecord Object { get; }
-        FormIDLink<MajorRecord> Object_Property { get; }
+        OblivionMajorRecord Object { get; }
+        FormIDLink<OblivionMajorRecord> Object_Property { get; }
 
         #endregion
         #region ParentIndex
@@ -2099,7 +2099,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case RegionDataObject_FieldIndex.Object:
-                    return typeof(FormIDLink<MajorRecord>);
+                    return typeof(FormIDLink<OblivionMajorRecord>);
                 case RegionDataObject_FieldIndex.ParentIndex:
                     return typeof(UInt16);
                 case RegionDataObject_FieldIndex.Unknown1:
@@ -2518,7 +2518,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case RegionDataObject_FieldIndex.Object:
-                    obj.Object = default(MajorRecord);
+                    obj.Object = default(OblivionMajorRecord);
                     break;
                 case RegionDataObject_FieldIndex.ParentIndex:
                     obj.ParentIndex = default(UInt16);
@@ -2653,7 +2653,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IRegionDataObject item,
             NotifyingUnsetParameters cmds = null)
         {
-            item.Object = default(MajorRecord);
+            item.Object = default(OblivionMajorRecord);
             item.ParentIndex = default(UInt16);
             item.Unknown1 = default(Byte[]);
             item.Density = default(Single);

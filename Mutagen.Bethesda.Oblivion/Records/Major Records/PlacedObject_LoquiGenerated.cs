@@ -53,10 +53,10 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Base
-        public FormIDSetLink<MajorRecord> Base_Property { get; } = new FormIDSetLink<MajorRecord>();
-        public MajorRecord Base { get => Base_Property.Item; set => Base_Property.Item = value; }
+        public FormIDSetLink<OblivionMajorRecord> Base_Property { get; } = new FormIDSetLink<OblivionMajorRecord>();
+        public OblivionMajorRecord Base { get => Base_Property.Item; set => Base_Property.Item = value; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormIDSetLink<MajorRecord> IPlacedObjectGetter.Base_Property => this.Base_Property;
+        FormIDSetLink<OblivionMajorRecord> IPlacedObjectGetter.Base_Property => this.Base_Property;
         #endregion
         #region XPCIFluff
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -371,10 +371,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region Unknown
-        public FormIDSetLink<MajorRecord> Unknown_Property { get; } = new FormIDSetLink<MajorRecord>();
-        public MajorRecord Unknown { get => Unknown_Property.Item; set => Unknown_Property.Item = value; }
+        public FormIDSetLink<OblivionMajorRecord> Unknown_Property { get; } = new FormIDSetLink<OblivionMajorRecord>();
+        public OblivionMajorRecord Unknown { get => Unknown_Property.Item; set => Unknown_Property.Item = value; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormIDSetLink<MajorRecord> IPlacedObjectGetter.Unknown_Property => this.Unknown_Property;
+        FormIDSetLink<OblivionMajorRecord> IPlacedObjectGetter.Unknown_Property => this.Unknown_Property;
         #endregion
         #region ActionFlags
         public bool ActionFlags_IsSet
@@ -2414,7 +2414,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case PlacedObject_FieldIndex.Base:
                     this.Base_Property.Set(
-                        (FormIDSetLink<MajorRecord>)obj,
+                        (FormIDSetLink<OblivionMajorRecord>)obj,
                         cmds);
                     break;
                 case PlacedObject_FieldIndex.XPCIFluff:
@@ -2467,7 +2467,7 @@ namespace Mutagen.Bethesda.Oblivion
                     break;
                 case PlacedObject_FieldIndex.Unknown:
                     this.Unknown_Property.Set(
-                        (FormIDSetLink<MajorRecord>)obj,
+                        (FormIDSetLink<OblivionMajorRecord>)obj,
                         cmds);
                     break;
                 case PlacedObject_FieldIndex.ActionFlags:
@@ -2532,7 +2532,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case PlacedObject_FieldIndex.Base:
                     obj.Base_Property.Set(
-                        (FormIDSetLink<MajorRecord>)pair.Value,
+                        (FormIDSetLink<OblivionMajorRecord>)pair.Value,
                         null);
                     break;
                 case PlacedObject_FieldIndex.XPCIFluff:
@@ -2585,7 +2585,7 @@ namespace Mutagen.Bethesda.Oblivion
                     break;
                 case PlacedObject_FieldIndex.Unknown:
                     obj.Unknown_Property.Set(
-                        (FormIDSetLink<MajorRecord>)pair.Value,
+                        (FormIDSetLink<OblivionMajorRecord>)pair.Value,
                         null);
                     break;
                 case PlacedObject_FieldIndex.ActionFlags:
@@ -2632,7 +2632,7 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface IPlacedObject : IPlacedObjectGetter, IOblivionMajorRecord, ILoquiClass<IPlacedObject, IPlacedObjectGetter>, ILoquiClass<PlacedObject, IPlacedObjectGetter>
     {
-        new MajorRecord Base { get; set; }
+        new OblivionMajorRecord Base { get; set; }
         new Byte[] XPCIFluff { get; set; }
         new bool XPCIFluff_IsSet { get; set; }
         void XPCIFluff_Set(Byte[] item, bool hasBeenSet = true);
@@ -2691,7 +2691,7 @@ namespace Mutagen.Bethesda.Oblivion
         void LevelModifier_Set(Int32 item, bool hasBeenSet = true);
         void LevelModifier_Unset();
 
-        new MajorRecord Unknown { get; set; }
+        new OblivionMajorRecord Unknown { get; set; }
         new PlacedObject.ActionFlag ActionFlags { get; set; }
         new bool ActionFlags_IsSet { get; set; }
         void ActionFlags_Set(PlacedObject.ActionFlag item, bool hasBeenSet = true);
@@ -2729,8 +2729,8 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IPlacedObjectGetter : IOblivionMajorRecordGetter
     {
         #region Base
-        MajorRecord Base { get; }
-        FormIDSetLink<MajorRecord> Base_Property { get; }
+        OblivionMajorRecord Base { get; }
+        FormIDSetLink<OblivionMajorRecord> Base_Property { get; }
 
         #endregion
         #region XPCIFluff
@@ -2804,8 +2804,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Unknown
-        MajorRecord Unknown { get; }
-        FormIDSetLink<MajorRecord> Unknown_Property { get; }
+        OblivionMajorRecord Unknown { get; }
+        FormIDSetLink<OblivionMajorRecord> Unknown_Property { get; }
 
         #endregion
         #region ActionFlags
@@ -3241,7 +3241,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case PlacedObject_FieldIndex.Base:
-                    return typeof(FormIDSetLink<MajorRecord>);
+                    return typeof(FormIDSetLink<OblivionMajorRecord>);
                 case PlacedObject_FieldIndex.XPCIFluff:
                     return typeof(Byte[]);
                 case PlacedObject_FieldIndex.FULLFluff:
@@ -3271,7 +3271,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case PlacedObject_FieldIndex.LevelModifier:
                     return typeof(Int32);
                 case PlacedObject_FieldIndex.Unknown:
-                    return typeof(FormIDSetLink<MajorRecord>);
+                    return typeof(FormIDSetLink<OblivionMajorRecord>);
                 case PlacedObject_FieldIndex.ActionFlags:
                     return typeof(PlacedObject.ActionFlag);
                 case PlacedObject_FieldIndex.Count:
