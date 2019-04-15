@@ -34,7 +34,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class IdleAnimation : 
-        MajorRecord,
+        OblivionMajorRecord,
         IIdleAnimation,
         ILoquiObject<IdleAnimation>,
         ILoquiObjectSetter,
@@ -473,6 +473,22 @@ namespace Mutagen.Bethesda.Oblivion
 
         public override void CopyIn_Xml(
             XElement node,
+            out OblivionMajorRecord_ErrorMask errorMask,
+            OblivionMajorRecord_TranslationMask translationMask = null,
+            bool doMasks = true,
+            NotifyingFireParameters cmds = null)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            CopyIn_Xml_Internal(
+                node: node,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal(),
+                cmds: cmds);
+            errorMask = IdleAnimation_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public override void CopyIn_Xml(
+            XElement node,
             out MajorRecord_ErrorMask errorMask,
             MajorRecord_TranslationMask translationMask = null,
             bool doMasks = true,
@@ -571,6 +587,22 @@ namespace Mutagen.Bethesda.Oblivion
         #region Base Class Trickdown Overrides
         public override void Write_Xml(
             XElement node,
+            out OblivionMajorRecord_ErrorMask errorMask,
+            bool doMasks = true,
+            OblivionMajorRecord_TranslationMask translationMask = null,
+            string name = null)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            this.Write_Xml(
+                name: name,
+                node: node,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal());
+            errorMask = IdleAnimation_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public override void Write_Xml(
+            XElement node,
             out MajorRecord_ErrorMask errorMask,
             bool doMasks = true,
             MajorRecord_TranslationMask translationMask = null,
@@ -612,7 +644,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 default:
-                    MajorRecord.FillPrivateElement_Xml(
+                    OblivionMajorRecord.FillPrivateElement_Xml(
                         item: item,
                         node: node,
                         name: name,
@@ -928,6 +960,21 @@ namespace Mutagen.Bethesda.Oblivion
         public override void Write_Binary(
             MutagenWriter writer,
             MasterReferences masterReferences,
+            out OblivionMajorRecord_ErrorMask errorMask,
+            bool doMasks = true)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            this.Write_Binary(
+                masterReferences: masterReferences,
+                writer: writer,
+                errorMask: errorMaskBuilder,
+                recordTypeConverter: null);
+            errorMask = IdleAnimation_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public override void Write_Binary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
             out MajorRecord_ErrorMask errorMask,
             bool doMasks = true)
         {
@@ -963,7 +1010,7 @@ namespace Mutagen.Bethesda.Oblivion
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            MajorRecord.Fill_Binary_Structs(
+            OblivionMajorRecord.Fill_Binary_Structs(
                 item: item,
                 frame: frame,
                 masterReferences: masterReferences,
@@ -1068,7 +1115,7 @@ namespace Mutagen.Bethesda.Oblivion
                         transl: FormKeyBinaryTranslation.Instance.Parse);
                     return TryGet<int?>.Succeed((int)IdleAnimation_FieldIndex.RelatedIdleAnimations);
                 default:
-                    return MajorRecord.Fill_Binary_RecordTypes(
+                    return OblivionMajorRecord.Fill_Binary_RecordTypes(
                         item: item,
                         frame: frame,
                         recordTypeConverter: recordTypeConverter,
@@ -1239,7 +1286,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             if (!EnumExt.TryParse(pair.Key, out IdleAnimation_FieldIndex enu))
             {
-                CopyInInternal_MajorRecord(obj, pair);
+                CopyInInternal_OblivionMajorRecord(obj, pair);
             }
             switch (enu)
             {
@@ -1268,7 +1315,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
-    public partial interface IIdleAnimation : IIdleAnimationGetter, IMajorRecord, ILoquiClass<IIdleAnimation, IIdleAnimationGetter>, ILoquiClass<IdleAnimation, IIdleAnimationGetter>
+    public partial interface IIdleAnimation : IIdleAnimationGetter, IOblivionMajorRecord, ILoquiClass<IIdleAnimation, IIdleAnimationGetter>, ILoquiClass<IdleAnimation, IIdleAnimationGetter>
     {
         new Model Model { get; set; }
         new bool Model_IsSet { get; set; }
@@ -1284,7 +1331,7 @@ namespace Mutagen.Bethesda.Oblivion
         new ISourceSetList<FormIDLink<IdleAnimation>> RelatedIdleAnimations { get; }
     }
 
-    public partial interface IIdleAnimationGetter : IMajorRecordGetter
+    public partial interface IIdleAnimationGetter : IOblivionMajorRecordGetter
     {
         #region Model
         Model Model { get; }
@@ -1395,7 +1442,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case IdleAnimation_FieldIndex.AnimationGroupSection:
                     return false;
                 default:
-                    return MajorRecord_Registration.GetNthIsEnumerable(index);
+                    return OblivionMajorRecord_Registration.GetNthIsEnumerable(index);
             }
         }
 
@@ -1411,7 +1458,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case IdleAnimation_FieldIndex.RelatedIdleAnimations:
                     return false;
                 default:
-                    return MajorRecord_Registration.GetNthIsLoqui(index);
+                    return OblivionMajorRecord_Registration.GetNthIsLoqui(index);
             }
         }
 
@@ -1426,7 +1473,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case IdleAnimation_FieldIndex.RelatedIdleAnimations:
                     return false;
                 default:
-                    return MajorRecord_Registration.GetNthIsSingleton(index);
+                    return OblivionMajorRecord_Registration.GetNthIsSingleton(index);
             }
         }
 
@@ -1444,7 +1491,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case IdleAnimation_FieldIndex.RelatedIdleAnimations:
                     return "RelatedIdleAnimations";
                 default:
-                    return MajorRecord_Registration.GetNthName(index);
+                    return OblivionMajorRecord_Registration.GetNthName(index);
             }
         }
 
@@ -1459,7 +1506,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case IdleAnimation_FieldIndex.RelatedIdleAnimations:
                     return false;
                 default:
-                    return MajorRecord_Registration.IsNthDerivative(index);
+                    return OblivionMajorRecord_Registration.IsNthDerivative(index);
             }
         }
 
@@ -1474,7 +1521,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case IdleAnimation_FieldIndex.RelatedIdleAnimations:
                     return false;
                 default:
-                    return MajorRecord_Registration.IsProtected(index);
+                    return OblivionMajorRecord_Registration.IsProtected(index);
             }
         }
 
@@ -1492,7 +1539,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case IdleAnimation_FieldIndex.RelatedIdleAnimations:
                     return typeof(SourceSetList<FormIDLink<IdleAnimation>>);
                 default:
-                    return MajorRecord_Registration.GetNthType(index);
+                    return OblivionMajorRecord_Registration.GetNthType(index);
             }
         }
 
@@ -1547,7 +1594,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IdleAnimation_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {
-            MajorRecordCommon.CopyFieldsFrom(
+            OblivionMajorRecordCommon.CopyFieldsFrom(
                 item,
                 rhs,
                 def,
@@ -1718,7 +1765,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.RelatedIdleAnimations.HasBeenSet = on;
                     break;
                 default:
-                    MajorRecordCommon.SetNthObjectHasBeenSet(index, on, obj);
+                    OblivionMajorRecordCommon.SetNthObjectHasBeenSet(index, on, obj);
                     break;
             }
         }
@@ -1744,7 +1791,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.RelatedIdleAnimations.Unset();
                     break;
                 default:
-                    MajorRecordCommon.UnsetNthObject(index, obj);
+                    OblivionMajorRecordCommon.UnsetNthObject(index, obj);
                     break;
             }
         }
@@ -1765,7 +1812,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case IdleAnimation_FieldIndex.RelatedIdleAnimations:
                     return obj.RelatedIdleAnimations.HasBeenSet;
                 default:
-                    return MajorRecordCommon.GetNthObjectHasBeenSet(index, obj);
+                    return OblivionMajorRecordCommon.GetNthObjectHasBeenSet(index, obj);
             }
         }
 
@@ -1785,7 +1832,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case IdleAnimation_FieldIndex.RelatedIdleAnimations:
                     return obj.RelatedIdleAnimations;
                 default:
-                    return MajorRecordCommon.GetNthObject(index, obj);
+                    return OblivionMajorRecordCommon.GetNthObject(index, obj);
             }
         }
 
@@ -1836,7 +1883,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 rhs.RelatedIdleAnimations,
                 (l, r) => object.Equals(l, r),
                 include);
-            MajorRecordCommon.FillEqualsMask(item, rhs, ret);
+            OblivionMajorRecordCommon.FillEqualsMask(item, rhs, ret);
         }
 
         public static string ToString(
@@ -1936,6 +1983,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ret;
         }
 
+        public static IdleAnimation_FieldIndex? ConvertFieldIndex(OblivionMajorRecord_FieldIndex? index)
+        {
+            if (!index.HasValue) return null;
+            return ConvertFieldIndex(index: index.Value);
+        }
+
+        public static IdleAnimation_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
+        {
+            switch (index)
+            {
+                case OblivionMajorRecord_FieldIndex.MajorRecordFlags:
+                    return (IdleAnimation_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.FormKey:
+                    return (IdleAnimation_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.Version:
+                    return (IdleAnimation_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.EditorID:
+                    return (IdleAnimation_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.RecordType:
+                    return (IdleAnimation_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
+        }
+
         public static IdleAnimation_FieldIndex? ConvertFieldIndex(MajorRecord_FieldIndex? index)
         {
             if (!index.HasValue) return null;
@@ -2008,7 +2080,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
         {
-            MajorRecordCommon.WriteToNode_Xml(
+            OblivionMajorRecordCommon.WriteToNode_Xml(
                 item: item,
                 node: node,
                 errorMask: errorMask,
@@ -2221,7 +2293,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 default:
-                    MajorRecordCommon.FillPublicElement_Xml(
+                    OblivionMajorRecordCommon.FillPublicElement_Xml(
                         item: item,
                         node: node,
                         name: name,
@@ -2357,7 +2429,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     #region Modules
     #region Mask
-    public class IdleAnimation_Mask<T> : MajorRecord_Mask<T>, IMask<T>, IEquatable<IdleAnimation_Mask<T>>
+    public class IdleAnimation_Mask<T> : OblivionMajorRecord_Mask<T>, IMask<T>, IEquatable<IdleAnimation_Mask<T>>
     {
         #region Ctors
         public IdleAnimation_Mask()
@@ -2606,7 +2678,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public class IdleAnimation_ErrorMask : MajorRecord_ErrorMask, IErrorMask<IdleAnimation_ErrorMask>
+    public class IdleAnimation_ErrorMask : OblivionMajorRecord_ErrorMask, IErrorMask<IdleAnimation_ErrorMask>
     {
         #region Members
         public MaskItem<Exception, Model_ErrorMask> Model;
@@ -2797,7 +2869,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
-    public class IdleAnimation_CopyMask : MajorRecord_CopyMask
+    public class IdleAnimation_CopyMask : OblivionMajorRecord_CopyMask
     {
         public IdleAnimation_CopyMask()
         {
@@ -2820,7 +2892,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public class IdleAnimation_TranslationMask : MajorRecord_TranslationMask
+    public class IdleAnimation_TranslationMask : OblivionMajorRecord_TranslationMask
     {
         #region Members
         public MaskItem<bool, Model_TranslationMask> Model;

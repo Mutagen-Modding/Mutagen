@@ -17,6 +17,7 @@ using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using DynamicData;
 using CSharpExt.Rx;
+using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
 using System.Xml;
@@ -33,7 +34,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class Road : 
-        MajorRecord,
+        OblivionMajorRecord,
         IRoad,
         ILoquiObject<Road>,
         ILoquiObjectSetter,
@@ -373,6 +374,22 @@ namespace Mutagen.Bethesda.Oblivion
 
         public override void CopyIn_Xml(
             XElement node,
+            out OblivionMajorRecord_ErrorMask errorMask,
+            OblivionMajorRecord_TranslationMask translationMask = null,
+            bool doMasks = true,
+            NotifyingFireParameters cmds = null)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            CopyIn_Xml_Internal(
+                node: node,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal(),
+                cmds: cmds);
+            errorMask = Road_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public override void CopyIn_Xml(
+            XElement node,
             out MajorRecord_ErrorMask errorMask,
             MajorRecord_TranslationMask translationMask = null,
             bool doMasks = true,
@@ -471,6 +488,22 @@ namespace Mutagen.Bethesda.Oblivion
         #region Base Class Trickdown Overrides
         public override void Write_Xml(
             XElement node,
+            out OblivionMajorRecord_ErrorMask errorMask,
+            bool doMasks = true,
+            OblivionMajorRecord_TranslationMask translationMask = null,
+            string name = null)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            this.Write_Xml(
+                name: name,
+                node: node,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal());
+            errorMask = Road_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public override void Write_Xml(
+            XElement node,
             out MajorRecord_ErrorMask errorMask,
             bool doMasks = true,
             MajorRecord_TranslationMask translationMask = null,
@@ -512,7 +545,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 default:
-                    MajorRecord.FillPrivateElement_Xml(
+                    OblivionMajorRecord.FillPrivateElement_Xml(
                         item: item,
                         node: node,
                         name: name,
@@ -779,6 +812,21 @@ namespace Mutagen.Bethesda.Oblivion
         public override void Write_Binary(
             MutagenWriter writer,
             MasterReferences masterReferences,
+            out OblivionMajorRecord_ErrorMask errorMask,
+            bool doMasks = true)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            this.Write_Binary(
+                masterReferences: masterReferences,
+                writer: writer,
+                errorMask: errorMaskBuilder,
+                recordTypeConverter: null);
+            errorMask = Road_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public override void Write_Binary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
             out MajorRecord_ErrorMask errorMask,
             bool doMasks = true)
         {
@@ -839,7 +887,7 @@ namespace Mutagen.Bethesda.Oblivion
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            MajorRecord.Fill_Binary_Structs(
+            OblivionMajorRecord.Fill_Binary_Structs(
                 item: item,
                 frame: frame,
                 masterReferences: masterReferences,
@@ -870,7 +918,7 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     return TryGet<int?>.Succeed((int)Road_FieldIndex.Points);
                 default:
-                    return MajorRecord.Fill_Binary_RecordTypes(
+                    return OblivionMajorRecord.Fill_Binary_RecordTypes(
                         item: item,
                         frame: frame,
                         recordTypeConverter: recordTypeConverter,
@@ -1032,7 +1080,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             if (!EnumExt.TryParse(pair.Key, out Road_FieldIndex enu))
             {
-                CopyInInternal_MajorRecord(obj, pair);
+                CopyInInternal_OblivionMajorRecord(obj, pair);
             }
             switch (enu)
             {
@@ -1052,12 +1100,12 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
-    public partial interface IRoad : IRoadGetter, IMajorRecord, ILoquiClass<IRoad, IRoadGetter>, ILoquiClass<Road, IRoadGetter>
+    public partial interface IRoad : IRoadGetter, IOblivionMajorRecord, ILoquiClass<IRoad, IRoadGetter>, ILoquiClass<Road, IRoadGetter>
     {
         new ISourceSetList<RoadPoint> Points { get; }
     }
 
-    public partial interface IRoadGetter : IMajorRecordGetter
+    public partial interface IRoadGetter : IOblivionMajorRecordGetter
     {
         #region Points
         IObservableSetList<RoadPoint> Points { get; }
@@ -1142,7 +1190,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Road_FieldIndex.Points:
                     return true;
                 default:
-                    return MajorRecord_Registration.GetNthIsEnumerable(index);
+                    return OblivionMajorRecord_Registration.GetNthIsEnumerable(index);
             }
         }
 
@@ -1154,7 +1202,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Road_FieldIndex.Points:
                     return true;
                 default:
-                    return MajorRecord_Registration.GetNthIsLoqui(index);
+                    return OblivionMajorRecord_Registration.GetNthIsLoqui(index);
             }
         }
 
@@ -1166,7 +1214,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Road_FieldIndex.Points:
                     return false;
                 default:
-                    return MajorRecord_Registration.GetNthIsSingleton(index);
+                    return OblivionMajorRecord_Registration.GetNthIsSingleton(index);
             }
         }
 
@@ -1178,7 +1226,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Road_FieldIndex.Points:
                     return "Points";
                 default:
-                    return MajorRecord_Registration.GetNthName(index);
+                    return OblivionMajorRecord_Registration.GetNthName(index);
             }
         }
 
@@ -1190,7 +1238,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Road_FieldIndex.Points:
                     return false;
                 default:
-                    return MajorRecord_Registration.IsNthDerivative(index);
+                    return OblivionMajorRecord_Registration.IsNthDerivative(index);
             }
         }
 
@@ -1202,7 +1250,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Road_FieldIndex.Points:
                     return false;
                 default:
-                    return MajorRecord_Registration.IsProtected(index);
+                    return OblivionMajorRecord_Registration.IsProtected(index);
             }
         }
 
@@ -1214,7 +1262,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Road_FieldIndex.Points:
                     return typeof(SourceSetList<RoadPoint>);
                 default:
-                    return MajorRecord_Registration.GetNthType(index);
+                    return OblivionMajorRecord_Registration.GetNthType(index);
             }
         }
 
@@ -1265,7 +1313,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Road_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {
-            MajorRecordCommon.CopyFieldsFrom(
+            OblivionMajorRecordCommon.CopyFieldsFrom(
                 item,
                 rhs,
                 def,
@@ -1324,7 +1372,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.Points.HasBeenSet = on;
                     break;
                 default:
-                    MajorRecordCommon.SetNthObjectHasBeenSet(index, on, obj);
+                    OblivionMajorRecordCommon.SetNthObjectHasBeenSet(index, on, obj);
                     break;
             }
         }
@@ -1341,7 +1389,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.Points.Unset();
                     break;
                 default:
-                    MajorRecordCommon.UnsetNthObject(index, obj);
+                    OblivionMajorRecordCommon.UnsetNthObject(index, obj);
                     break;
             }
         }
@@ -1356,7 +1404,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Road_FieldIndex.Points:
                     return obj.Points.HasBeenSet;
                 default:
-                    return MajorRecordCommon.GetNthObjectHasBeenSet(index, obj);
+                    return OblivionMajorRecordCommon.GetNthObjectHasBeenSet(index, obj);
             }
         }
 
@@ -1370,7 +1418,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Road_FieldIndex.Points:
                     return obj.Points;
                 default:
-                    return MajorRecordCommon.GetNthObject(index, obj);
+                    return OblivionMajorRecordCommon.GetNthObject(index, obj);
             }
         }
 
@@ -1406,7 +1454,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 rhs.Points,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
-            MajorRecordCommon.FillEqualsMask(item, rhs, ret);
+            OblivionMajorRecordCommon.FillEqualsMask(item, rhs, ret);
         }
 
         public static string ToString(
@@ -1471,6 +1519,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             var ret = new Road_Mask<bool>();
             ret.Points = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, RoadPoint_Mask<bool>>>>(item.Points.HasBeenSet, item.Points.WithIndex().Select((i) => new MaskItemIndexed<bool, RoadPoint_Mask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
             return ret;
+        }
+
+        public static Road_FieldIndex? ConvertFieldIndex(OblivionMajorRecord_FieldIndex? index)
+        {
+            if (!index.HasValue) return null;
+            return ConvertFieldIndex(index: index.Value);
+        }
+
+        public static Road_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
+        {
+            switch (index)
+            {
+                case OblivionMajorRecord_FieldIndex.MajorRecordFlags:
+                    return (Road_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.FormKey:
+                    return (Road_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.Version:
+                    return (Road_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.EditorID:
+                    return (Road_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.RecordType:
+                    return (Road_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
         }
 
         public static Road_FieldIndex? ConvertFieldIndex(MajorRecord_FieldIndex? index)
@@ -1545,7 +1618,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
         {
-            MajorRecordCommon.WriteToNode_Xml(
+            OblivionMajorRecordCommon.WriteToNode_Xml(
                 item: item,
                 node: node,
                 errorMask: errorMask,
@@ -1636,7 +1709,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 default:
-                    MajorRecordCommon.FillPublicElement_Xml(
+                    OblivionMajorRecordCommon.FillPublicElement_Xml(
                         item: item,
                         node: node,
                         name: name,
@@ -1722,7 +1795,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     #region Modules
     #region Mask
-    public class Road_Mask<T> : MajorRecord_Mask<T>, IMask<T>, IEquatable<Road_Mask<T>>
+    public class Road_Mask<T> : OblivionMajorRecord_Mask<T>, IMask<T>, IEquatable<Road_Mask<T>>
     {
         #region Ctors
         public Road_Mask()
@@ -1881,7 +1954,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public class Road_ErrorMask : MajorRecord_ErrorMask, IErrorMask<Road_ErrorMask>
+    public class Road_ErrorMask : OblivionMajorRecord_ErrorMask, IErrorMask<Road_ErrorMask>
     {
         #region Members
         public MaskItem<Exception, IEnumerable<MaskItem<Exception, RoadPoint_ErrorMask>>> Points;
@@ -2015,7 +2088,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
-    public class Road_CopyMask : MajorRecord_CopyMask
+    public class Road_CopyMask : OblivionMajorRecord_CopyMask
     {
         public Road_CopyMask()
         {
@@ -2032,7 +2105,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public class Road_TranslationMask : MajorRecord_TranslationMask
+    public class Road_TranslationMask : OblivionMajorRecord_TranslationMask
     {
         #region Members
         public MaskItem<bool, RoadPoint_TranslationMask> Points;

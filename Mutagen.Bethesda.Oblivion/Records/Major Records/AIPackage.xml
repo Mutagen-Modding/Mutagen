@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="AIPackage" objType="Record" baseClass="Bethesda.MajorRecord" recordType="PACK" GUID="e9210f75-0cfe-4e96-8c3a-415255e0d359" ID="87">
+  <Object name="AIPackage" objType="Record" baseClass="OblivionMajorRecord" recordType="PACK" GUID="e9210f75-0cfe-4e96-8c3a-415255e0d359" ID="87">
     <Fields>
       <Data recordType="PKDT">
         <Fields>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="CombatStyle" objType="Record" baseClass="Bethesda.MajorRecord" recordType="CSTY" GUID="5a84afb8-6c2a-4274-aa72-155f9fcddd71" ID="88">
+  <Object name="CombatStyle" objType="Record" baseClass="OblivionMajorRecord" recordType="CSTY" GUID="5a84afb8-6c2a-4274-aa72-155f9fcddd71" ID="88">
     <Fields>
       <Data recordType="CSTD">
         <Fields>

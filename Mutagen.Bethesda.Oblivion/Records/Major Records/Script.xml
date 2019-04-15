@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Script" objType="Record" recordType="SCPT" baseClass="Bethesda.MajorRecord" GUID="4eda2162-86bb-49f3-babd-a9ea5ad8d928" ID="46">
+  <Object name="Script" objType="Record" recordType="SCPT" baseClass="OblivionMajorRecord" GUID="4eda2162-86bb-49f3-babd-a9ea5ad8d928" ID="46">
     <Fields>
       <RefDirect name="Fields" refName="ScriptFields" nullable="Singleton" />
     </Fields>

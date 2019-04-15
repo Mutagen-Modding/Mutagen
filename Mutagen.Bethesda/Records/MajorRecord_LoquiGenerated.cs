@@ -594,20 +594,6 @@ namespace Mutagen.Bethesda
         }
 
         #region Mutagen
-        public virtual IEnumerable<ILink> Links => GetLinks();
-        private IEnumerable<ILink> GetLinks()
-        {
-            yield break;
-        }
-
-        public virtual void Link<M>(
-            ModList<M> modList,
-            M sourceMod,
-            NotifyingFireParameters cmds = null)
-            where M : IMod<M>
-        {
-        }
-
         public virtual void Write_Xml_Folder(
             DirectoryPath? dir,
             string name,
@@ -627,6 +613,20 @@ namespace Mutagen.Bethesda
         }
 
         public abstract IMajorRecordCommon Duplicate(Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords = null);
+        public virtual IEnumerable<ILink> Links => GetLinks();
+        private IEnumerable<ILink> GetLinks()
+        {
+            yield break;
+        }
+
+        public virtual void Link<M>(
+            ModList<M> modList,
+            M sourceMod,
+            NotifyingFireParameters cmds = null)
+            where M : IMod<M>
+        {
+        }
+
         #endregion
 
         #region Binary Translation

@@ -34,7 +34,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class Door : 
-        MajorRecord,
+        OblivionMajorRecord,
         IDoor,
         ILoquiObject<Door>,
         ILoquiObjectSetter,
@@ -542,6 +542,22 @@ namespace Mutagen.Bethesda.Oblivion
 
         public override void CopyIn_Xml(
             XElement node,
+            out OblivionMajorRecord_ErrorMask errorMask,
+            OblivionMajorRecord_TranslationMask translationMask = null,
+            bool doMasks = true,
+            NotifyingFireParameters cmds = null)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            CopyIn_Xml_Internal(
+                node: node,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal(),
+                cmds: cmds);
+            errorMask = Door_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public override void CopyIn_Xml(
+            XElement node,
             out MajorRecord_ErrorMask errorMask,
             MajorRecord_TranslationMask translationMask = null,
             bool doMasks = true,
@@ -640,6 +656,22 @@ namespace Mutagen.Bethesda.Oblivion
         #region Base Class Trickdown Overrides
         public override void Write_Xml(
             XElement node,
+            out OblivionMajorRecord_ErrorMask errorMask,
+            bool doMasks = true,
+            OblivionMajorRecord_TranslationMask translationMask = null,
+            string name = null)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            this.Write_Xml(
+                name: name,
+                node: node,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal());
+            errorMask = Door_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public override void Write_Xml(
+            XElement node,
             out MajorRecord_ErrorMask errorMask,
             bool doMasks = true,
             MajorRecord_TranslationMask translationMask = null,
@@ -681,7 +713,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 default:
-                    MajorRecord.FillPrivateElement_Xml(
+                    OblivionMajorRecord.FillPrivateElement_Xml(
                         item: item,
                         node: node,
                         name: name,
@@ -1024,6 +1056,21 @@ namespace Mutagen.Bethesda.Oblivion
         public override void Write_Binary(
             MutagenWriter writer,
             MasterReferences masterReferences,
+            out OblivionMajorRecord_ErrorMask errorMask,
+            bool doMasks = true)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            this.Write_Binary(
+                masterReferences: masterReferences,
+                writer: writer,
+                errorMask: errorMaskBuilder,
+                recordTypeConverter: null);
+            errorMask = Door_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public override void Write_Binary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
             out MajorRecord_ErrorMask errorMask,
             bool doMasks = true)
         {
@@ -1059,7 +1106,7 @@ namespace Mutagen.Bethesda.Oblivion
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            MajorRecord.Fill_Binary_Structs(
+            OblivionMajorRecord.Fill_Binary_Structs(
                 item: item,
                 frame: frame,
                 masterReferences: masterReferences,
@@ -1209,7 +1256,7 @@ namespace Mutagen.Bethesda.Oblivion
                         transl: FormKeyBinaryTranslation.Instance.Parse);
                     return TryGet<int?>.Succeed((int)Door_FieldIndex.RandomTeleportDestinations);
                 default:
-                    return MajorRecord.Fill_Binary_RecordTypes(
+                    return OblivionMajorRecord.Fill_Binary_RecordTypes(
                         item: item,
                         frame: frame,
                         recordTypeConverter: recordTypeConverter,
@@ -1400,7 +1447,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             if (!EnumExt.TryParse(pair.Key, out Door_FieldIndex enu))
             {
-                CopyInInternal_MajorRecord(obj, pair);
+                CopyInInternal_OblivionMajorRecord(obj, pair);
             }
             switch (enu)
             {
@@ -1449,7 +1496,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
-    public partial interface IDoor : IDoorGetter, IMajorRecord, ILoquiClass<IDoor, IDoorGetter>, ILoquiClass<Door, IDoorGetter>
+    public partial interface IDoor : IDoorGetter, IOblivionMajorRecord, ILoquiClass<IDoor, IDoorGetter>, ILoquiClass<Door, IDoorGetter>
     {
         new String Name { get; set; }
         new bool Name_IsSet { get; set; }
@@ -1473,7 +1520,7 @@ namespace Mutagen.Bethesda.Oblivion
         new ISourceSetList<FormIDSetLink<Place>> RandomTeleportDestinations { get; }
     }
 
-    public partial interface IDoorGetter : IMajorRecordGetter
+    public partial interface IDoorGetter : IOblivionMajorRecordGetter
     {
         #region Name
         String Name { get; }
@@ -1622,7 +1669,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Door_FieldIndex.Flags:
                     return false;
                 default:
-                    return MajorRecord_Registration.GetNthIsEnumerable(index);
+                    return OblivionMajorRecord_Registration.GetNthIsEnumerable(index);
             }
         }
 
@@ -1642,7 +1689,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Door_FieldIndex.RandomTeleportDestinations:
                     return false;
                 default:
-                    return MajorRecord_Registration.GetNthIsLoqui(index);
+                    return OblivionMajorRecord_Registration.GetNthIsLoqui(index);
             }
         }
 
@@ -1661,7 +1708,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Door_FieldIndex.RandomTeleportDestinations:
                     return false;
                 default:
-                    return MajorRecord_Registration.GetNthIsSingleton(index);
+                    return OblivionMajorRecord_Registration.GetNthIsSingleton(index);
             }
         }
 
@@ -1687,7 +1734,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Door_FieldIndex.RandomTeleportDestinations:
                     return "RandomTeleportDestinations";
                 default:
-                    return MajorRecord_Registration.GetNthName(index);
+                    return OblivionMajorRecord_Registration.GetNthName(index);
             }
         }
 
@@ -1706,7 +1753,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Door_FieldIndex.RandomTeleportDestinations:
                     return false;
                 default:
-                    return MajorRecord_Registration.IsNthDerivative(index);
+                    return OblivionMajorRecord_Registration.IsNthDerivative(index);
             }
         }
 
@@ -1725,7 +1772,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Door_FieldIndex.RandomTeleportDestinations:
                     return false;
                 default:
-                    return MajorRecord_Registration.IsProtected(index);
+                    return OblivionMajorRecord_Registration.IsProtected(index);
             }
         }
 
@@ -1751,7 +1798,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Door_FieldIndex.RandomTeleportDestinations:
                     return typeof(SourceSetList<FormIDSetLink<Place>>);
                 default:
-                    return MajorRecord_Registration.GetNthType(index);
+                    return OblivionMajorRecord_Registration.GetNthType(index);
             }
         }
 
@@ -1809,7 +1856,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Door_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {
-            MajorRecordCommon.CopyFieldsFrom(
+            OblivionMajorRecordCommon.CopyFieldsFrom(
                 item,
                 rhs,
                 def,
@@ -2067,7 +2114,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.RandomTeleportDestinations.HasBeenSet = on;
                     break;
                 default:
-                    MajorRecordCommon.SetNthObjectHasBeenSet(index, on, obj);
+                    OblivionMajorRecordCommon.SetNthObjectHasBeenSet(index, on, obj);
                     break;
             }
         }
@@ -2105,7 +2152,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.RandomTeleportDestinations.Unset();
                     break;
                 default:
-                    MajorRecordCommon.UnsetNthObject(index, obj);
+                    OblivionMajorRecordCommon.UnsetNthObject(index, obj);
                     break;
             }
         }
@@ -2134,7 +2181,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Door_FieldIndex.RandomTeleportDestinations:
                     return obj.RandomTeleportDestinations.HasBeenSet;
                 default:
-                    return MajorRecordCommon.GetNthObjectHasBeenSet(index, obj);
+                    return OblivionMajorRecordCommon.GetNthObjectHasBeenSet(index, obj);
             }
         }
 
@@ -2162,7 +2209,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Door_FieldIndex.RandomTeleportDestinations:
                     return obj.RandomTeleportDestinations;
                 default:
-                    return MajorRecordCommon.GetNthObject(index, obj);
+                    return OblivionMajorRecordCommon.GetNthObject(index, obj);
             }
         }
 
@@ -2218,7 +2265,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 rhs.RandomTeleportDestinations,
                 (l, r) => object.Equals(l, r),
                 include);
-            MajorRecordCommon.FillEqualsMask(item, rhs, ret);
+            OblivionMajorRecordCommon.FillEqualsMask(item, rhs, ret);
         }
 
         public static string ToString(
@@ -2328,6 +2375,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ret;
         }
 
+        public static Door_FieldIndex? ConvertFieldIndex(OblivionMajorRecord_FieldIndex? index)
+        {
+            if (!index.HasValue) return null;
+            return ConvertFieldIndex(index: index.Value);
+        }
+
+        public static Door_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
+        {
+            switch (index)
+            {
+                case OblivionMajorRecord_FieldIndex.MajorRecordFlags:
+                    return (Door_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.FormKey:
+                    return (Door_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.Version:
+                    return (Door_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.EditorID:
+                    return (Door_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.RecordType:
+                    return (Door_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
+        }
+
         public static Door_FieldIndex? ConvertFieldIndex(MajorRecord_FieldIndex? index)
         {
             if (!index.HasValue) return null;
@@ -2400,7 +2472,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
         {
-            MajorRecordCommon.WriteToNode_Xml(
+            OblivionMajorRecordCommon.WriteToNode_Xml(
                 item: item,
                 node: node,
                 errorMask: errorMask,
@@ -2668,7 +2740,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 default:
-                    MajorRecordCommon.FillPublicElement_Xml(
+                    OblivionMajorRecordCommon.FillPublicElement_Xml(
                         item: item,
                         node: node,
                         name: name,
@@ -2842,7 +2914,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     #region Modules
     #region Mask
-    public class Door_Mask<T> : MajorRecord_Mask<T>, IMask<T>, IEquatable<Door_Mask<T>>
+    public class Door_Mask<T> : OblivionMajorRecord_Mask<T>, IMask<T>, IEquatable<Door_Mask<T>>
     {
         #region Ctors
         public Door_Mask()
@@ -3074,7 +3146,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public class Door_ErrorMask : MajorRecord_ErrorMask, IErrorMask<Door_ErrorMask>
+    public class Door_ErrorMask : OblivionMajorRecord_ErrorMask, IErrorMask<Door_ErrorMask>
     {
         #region Members
         public Exception Name;
@@ -3292,7 +3364,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
-    public class Door_CopyMask : MajorRecord_CopyMask
+    public class Door_CopyMask : OblivionMajorRecord_CopyMask
     {
         public Door_CopyMask()
         {
@@ -3323,7 +3395,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public class Door_TranslationMask : MajorRecord_TranslationMask
+    public class Door_TranslationMask : OblivionMajorRecord_TranslationMask
     {
         #region Members
         public bool Name;

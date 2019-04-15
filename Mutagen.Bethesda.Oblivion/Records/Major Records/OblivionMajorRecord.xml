@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="OblivionMajorRecord" objType="Record" abstract="true" baseClass="Bethesda.MajorRecord" GUID="73890e6b-2cc5-468e-83ee-d6bcb04c3d63" ID="169">
+    <Fields>
+    </Fields>
+  </Object>
+</Loqui>

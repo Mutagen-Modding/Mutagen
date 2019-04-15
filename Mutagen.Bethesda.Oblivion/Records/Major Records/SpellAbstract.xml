@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="SpellAbstract" objType="Record" abstract="true" baseClass="Bethesda.MajorRecord" GUID="f6a3a278-3052-4bee-8416-05eeb28d7eb7" ID="168">
+  <Object name="SpellAbstract" objType="Record" abstract="true" baseClass="OblivionMajorRecord" GUID="f6a3a278-3052-4bee-8416-05eeb28d7eb7" ID="168">
     <Fields>
     </Fields>
   </Object>

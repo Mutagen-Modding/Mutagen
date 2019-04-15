@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Weather" objType="Record" baseClass="Bethesda.MajorRecord" recordType="WTHR" GUID="c7183e23-4f2c-43f7-adcf-6c56458c94af" ID="102">
+  <Object name="Weather" objType="Record" baseClass="OblivionMajorRecord" recordType="WTHR" GUID="c7183e23-4f2c-43f7-adcf-6c56458c94af" ID="102">
     <Fields>
       <String name="TextureLowerLayer" recordType="CNAM" />
       <String name="TextureUpperLayer" recordType="DNAM" />

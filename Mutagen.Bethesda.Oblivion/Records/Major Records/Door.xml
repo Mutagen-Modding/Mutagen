@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Door" objType="Record" recordType="DOOR" baseClass="Bethesda.MajorRecord" GUID="2430f9e3-8270-4b86-b1e2-03757c4a0f93" ID="74">
+  <Object name="Door" objType="Record" recordType="DOOR" baseClass="OblivionMajorRecord" GUID="2430f9e3-8270-4b86-b1e2-03757c4a0f93" ID="74">
     <Interface>INamed</Interface>
     <Fields>
       <String name="Name" recordType="FULL" />

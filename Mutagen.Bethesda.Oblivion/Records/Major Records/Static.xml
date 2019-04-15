@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Static" baseClass="Bethesda.MajorRecord" recordType="STAT" objType="Record" GUID="9c804500-6bdf-488b-9528-401ee1171c7b" ID="78">
+  <Object name="Static" baseClass="OblivionMajorRecord" recordType="STAT" objType="Record" GUID="9c804500-6bdf-488b-9528-401ee1171c7b" ID="78">
     <Fields>
       <RefDirect name="Model" refName="Model" />
     </Fields>

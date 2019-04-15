@@ -17,6 +17,7 @@ using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using DynamicData;
 using CSharpExt.Rx;
+using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
 using System.Xml;
@@ -33,7 +34,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class Faction : 
-        MajorRecord,
+        OblivionMajorRecord,
         IFaction,
         ILoquiObject<Faction>,
         ILoquiObjectSetter,
@@ -508,6 +509,22 @@ namespace Mutagen.Bethesda.Oblivion
 
         public override void CopyIn_Xml(
             XElement node,
+            out OblivionMajorRecord_ErrorMask errorMask,
+            OblivionMajorRecord_TranslationMask translationMask = null,
+            bool doMasks = true,
+            NotifyingFireParameters cmds = null)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            CopyIn_Xml_Internal(
+                node: node,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal(),
+                cmds: cmds);
+            errorMask = Faction_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public override void CopyIn_Xml(
+            XElement node,
             out MajorRecord_ErrorMask errorMask,
             MajorRecord_TranslationMask translationMask = null,
             bool doMasks = true,
@@ -606,6 +623,22 @@ namespace Mutagen.Bethesda.Oblivion
         #region Base Class Trickdown Overrides
         public override void Write_Xml(
             XElement node,
+            out OblivionMajorRecord_ErrorMask errorMask,
+            bool doMasks = true,
+            OblivionMajorRecord_TranslationMask translationMask = null,
+            string name = null)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            this.Write_Xml(
+                name: name,
+                node: node,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal());
+            errorMask = Faction_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public override void Write_Xml(
+            XElement node,
             out MajorRecord_ErrorMask errorMask,
             bool doMasks = true,
             MajorRecord_TranslationMask translationMask = null,
@@ -647,7 +680,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 default:
-                    MajorRecord.FillPrivateElement_Xml(
+                    OblivionMajorRecord.FillPrivateElement_Xml(
                         item: item,
                         node: node,
                         name: name,
@@ -964,6 +997,21 @@ namespace Mutagen.Bethesda.Oblivion
         public override void Write_Binary(
             MutagenWriter writer,
             MasterReferences masterReferences,
+            out OblivionMajorRecord_ErrorMask errorMask,
+            bool doMasks = true)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            this.Write_Binary(
+                masterReferences: masterReferences,
+                writer: writer,
+                errorMask: errorMaskBuilder,
+                recordTypeConverter: null);
+            errorMask = Faction_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public override void Write_Binary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
             out MajorRecord_ErrorMask errorMask,
             bool doMasks = true)
         {
@@ -999,7 +1047,7 @@ namespace Mutagen.Bethesda.Oblivion
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            MajorRecord.Fill_Binary_Structs(
+            OblivionMajorRecord.Fill_Binary_Structs(
                 item: item,
                 frame: frame,
                 masterReferences: masterReferences,
@@ -1141,7 +1189,7 @@ namespace Mutagen.Bethesda.Oblivion
                         );
                     return TryGet<int?>.Succeed((int)Faction_FieldIndex.Ranks);
                 default:
-                    return MajorRecord.Fill_Binary_RecordTypes(
+                    return OblivionMajorRecord.Fill_Binary_RecordTypes(
                         item: item,
                         frame: frame,
                         recordTypeConverter: recordTypeConverter,
@@ -1315,7 +1363,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             if (!EnumExt.TryParse(pair.Key, out Faction_FieldIndex enu))
             {
-                CopyInInternal_MajorRecord(obj, pair);
+                CopyInInternal_OblivionMajorRecord(obj, pair);
             }
             switch (enu)
             {
@@ -1347,7 +1395,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
-    public partial interface IFaction : IFactionGetter, IMajorRecord, ILoquiClass<IFaction, IFactionGetter>, ILoquiClass<Faction, IFactionGetter>
+    public partial interface IFaction : IFactionGetter, IOblivionMajorRecord, ILoquiClass<IFaction, IFactionGetter>, ILoquiClass<Faction, IFactionGetter>
     {
         new String Name { get; set; }
         new bool Name_IsSet { get; set; }
@@ -1368,7 +1416,7 @@ namespace Mutagen.Bethesda.Oblivion
         new ISourceSetList<Rank> Ranks { get; }
     }
 
-    public partial interface IFactionGetter : IMajorRecordGetter
+    public partial interface IFactionGetter : IOblivionMajorRecordGetter
     {
         #region Name
         String Name { get; }
@@ -1488,7 +1536,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Faction_FieldIndex.CrimeGoldMultiplier:
                     return false;
                 default:
-                    return MajorRecord_Registration.GetNthIsEnumerable(index);
+                    return OblivionMajorRecord_Registration.GetNthIsEnumerable(index);
             }
         }
 
@@ -1505,7 +1553,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Faction_FieldIndex.CrimeGoldMultiplier:
                     return false;
                 default:
-                    return MajorRecord_Registration.GetNthIsLoqui(index);
+                    return OblivionMajorRecord_Registration.GetNthIsLoqui(index);
             }
         }
 
@@ -1521,7 +1569,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Faction_FieldIndex.Ranks:
                     return false;
                 default:
-                    return MajorRecord_Registration.GetNthIsSingleton(index);
+                    return OblivionMajorRecord_Registration.GetNthIsSingleton(index);
             }
         }
 
@@ -1541,7 +1589,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Faction_FieldIndex.Ranks:
                     return "Ranks";
                 default:
-                    return MajorRecord_Registration.GetNthName(index);
+                    return OblivionMajorRecord_Registration.GetNthName(index);
             }
         }
 
@@ -1557,7 +1605,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Faction_FieldIndex.Ranks:
                     return false;
                 default:
-                    return MajorRecord_Registration.IsNthDerivative(index);
+                    return OblivionMajorRecord_Registration.IsNthDerivative(index);
             }
         }
 
@@ -1573,7 +1621,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Faction_FieldIndex.Ranks:
                     return false;
                 default:
-                    return MajorRecord_Registration.IsProtected(index);
+                    return OblivionMajorRecord_Registration.IsProtected(index);
             }
         }
 
@@ -1593,7 +1641,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Faction_FieldIndex.Ranks:
                     return typeof(SourceSetList<Rank>);
                 default:
-                    return MajorRecord_Registration.GetNthType(index);
+                    return OblivionMajorRecord_Registration.GetNthType(index);
             }
         }
 
@@ -1651,7 +1699,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Faction_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {
-            MajorRecordCommon.CopyFieldsFrom(
+            OblivionMajorRecordCommon.CopyFieldsFrom(
                 item,
                 rhs,
                 def,
@@ -1847,7 +1895,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.Ranks.HasBeenSet = on;
                     break;
                 default:
-                    MajorRecordCommon.SetNthObjectHasBeenSet(index, on, obj);
+                    OblivionMajorRecordCommon.SetNthObjectHasBeenSet(index, on, obj);
                     break;
             }
         }
@@ -1876,7 +1924,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.Ranks.Unset();
                     break;
                 default:
-                    MajorRecordCommon.UnsetNthObject(index, obj);
+                    OblivionMajorRecordCommon.UnsetNthObject(index, obj);
                     break;
             }
         }
@@ -1899,7 +1947,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Faction_FieldIndex.Ranks:
                     return obj.Ranks.HasBeenSet;
                 default:
-                    return MajorRecordCommon.GetNthObjectHasBeenSet(index, obj);
+                    return OblivionMajorRecordCommon.GetNthObjectHasBeenSet(index, obj);
             }
         }
 
@@ -1921,7 +1969,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Faction_FieldIndex.Ranks:
                     return obj.Ranks;
                 default:
-                    return MajorRecordCommon.GetNthObject(index, obj);
+                    return OblivionMajorRecordCommon.GetNthObject(index, obj);
             }
         }
 
@@ -1968,7 +2016,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 rhs.Ranks,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
-            MajorRecordCommon.FillEqualsMask(item, rhs, ret);
+            OblivionMajorRecordCommon.FillEqualsMask(item, rhs, ret);
         }
 
         public static string ToString(
@@ -2073,6 +2121,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ret;
         }
 
+        public static Faction_FieldIndex? ConvertFieldIndex(OblivionMajorRecord_FieldIndex? index)
+        {
+            if (!index.HasValue) return null;
+            return ConvertFieldIndex(index: index.Value);
+        }
+
+        public static Faction_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
+        {
+            switch (index)
+            {
+                case OblivionMajorRecord_FieldIndex.MajorRecordFlags:
+                    return (Faction_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.FormKey:
+                    return (Faction_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.Version:
+                    return (Faction_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.EditorID:
+                    return (Faction_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.RecordType:
+                    return (Faction_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
+        }
+
         public static Faction_FieldIndex? ConvertFieldIndex(MajorRecord_FieldIndex? index)
         {
             if (!index.HasValue) return null;
@@ -2145,7 +2218,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
         {
-            MajorRecordCommon.WriteToNode_Xml(
+            OblivionMajorRecordCommon.WriteToNode_Xml(
                 item: item,
                 node: node,
                 errorMask: errorMask,
@@ -2393,7 +2466,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 default:
-                    MajorRecordCommon.FillPublicElement_Xml(
+                    OblivionMajorRecordCommon.FillPublicElement_Xml(
                         item: item,
                         node: node,
                         name: name,
@@ -2539,7 +2612,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     #region Modules
     #region Mask
-    public class Faction_Mask<T> : MajorRecord_Mask<T>, IMask<T>, IEquatable<Faction_Mask<T>>
+    public class Faction_Mask<T> : OblivionMajorRecord_Mask<T>, IMask<T>, IEquatable<Faction_Mask<T>>
     {
         #region Ctors
         public Faction_Mask()
@@ -2795,7 +2868,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public class Faction_ErrorMask : MajorRecord_ErrorMask, IErrorMask<Faction_ErrorMask>
+    public class Faction_ErrorMask : OblivionMajorRecord_ErrorMask, IErrorMask<Faction_ErrorMask>
     {
         #region Members
         public Exception Name;
@@ -2998,7 +3071,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
-    public class Faction_CopyMask : MajorRecord_CopyMask
+    public class Faction_CopyMask : OblivionMajorRecord_CopyMask
     {
         public Faction_CopyMask()
         {
@@ -3023,7 +3096,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public class Faction_TranslationMask : MajorRecord_TranslationMask
+    public class Faction_TranslationMask : OblivionMajorRecord_TranslationMask
     {
         #region Members
         public bool Name;

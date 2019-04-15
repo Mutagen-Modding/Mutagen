@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Quest" recordType="QUST" objType="Record" baseClass="Bethesda.MajorRecord" GUID="bcd4f22e-1051-4402-9032-895ecb9ac0ac" ID="148">
+  <Object name="Quest" recordType="QUST" objType="Record" baseClass="OblivionMajorRecord" GUID="bcd4f22e-1051-4402-9032-895ecb9ac0ac" ID="148">
     <Interface>INamed</Interface>    
     <Fields>
       <FormIDLink name="Script" recordType="SCRI" refName="Script" />
