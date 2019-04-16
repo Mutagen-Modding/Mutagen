@@ -123,6 +123,7 @@ namespace Mutagen.Bethesda.Tests
                     var reimport = await OblivionMod.Create_Xml_Folder(
                         dir: tmp.Dir,
                         modKey: Mutagen.Bethesda.Oblivion.Constants.Oblivion);
+                    GC.Collect();
                     var reexportPath = Path.Combine(tmp.Dir.Path, "Reexport");
                     reimport.Write_Binary(
                         reexportPath,
