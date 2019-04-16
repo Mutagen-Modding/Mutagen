@@ -2,26 +2,26 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>dc3476e16847025747021141cbbad1c224d1cd71</Sha>
+         <Sha>178146d2072691ed3dae17ee96441c7d8220d42f</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>03-28-2019 18:48:58</CommitDate>
-         <Description>EnumExt.SetFlag</Description>
+         <CommitDate>04-16-2019 18:25:14</CommitDate>
+         <Description>ReactiveUI update</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>0d6747b5be27421795be72019475f95b2c1db6c5</Sha>
+         <Sha>87aaae6a01e421e6f0de6fd172327e781a827dc4</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>03-20-2019 19:41:30</CommitDate>
-         <Description>Added missing translation mask checking for xml importing</Description>
+         <CommitDate>04-16-2019 18:25:33</CommitDate>
+         <Description>lib update</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>
          <Nickname>DynamicData</Nickname>
-         <Sha>f51df5a451e2499b5bdd952bf54b1802429d8a4a</Sha>
+         <Sha>777d9f0ab67693df8f9746170de6b1df09e16e38</Sha>
          <Path>../DynamicData</Path>
-         <CommitDate>02-05-2019 14:30:31</CommitDate>
-         <Description>Removed uap target framework to avoid some errors</Description>
+         <CommitDate>03-26-2019 21:04:17</CommitDate>
+         <Description>Merge remote-tracking branch 'source/master'</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
    </ParentRepos>
