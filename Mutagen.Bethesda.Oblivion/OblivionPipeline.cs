@@ -51,7 +51,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static async Task<TryGet<ModList<OblivionMod>>> TryImportUsualLoadOrder(
             DirectoryPath dataFolder,
             GroupMask importMask = null,
-            ModKey? modKeyExclusionHint = null)
+            ModKey modKeyExclusionHint = null)
         {
             if (!LoadOrder.TryGetUsualLoadOrder(dataFolder, out var loadOrder))
             {
@@ -59,7 +59,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
             if (modKeyExclusionHint != null)
             {
-                loadOrder.Remove(modKeyExclusionHint.Value);
+                loadOrder.Remove(modKeyExclusionHint);
             }
             var modList = new ModList<OblivionMod>();
             await modList.Import(
@@ -79,7 +79,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static async Task<ModList<OblivionMod>> ImportUsualLoadOrder(
             DirectoryPath dataFolder,
             GroupMask importMask = null,
-            ModKey? modKeyExclusionHint = null)
+            ModKey modKeyExclusionHint = null)
         {
             var tg = await TryImportUsualLoadOrder(
                 dataFolder,
@@ -88,13 +88,13 @@ namespace Mutagen.Bethesda.Oblivion
             return tg.Value;
         }
 
-        public static OblivionMod Flatten(this ModList<OblivionMod> modList, ModKey? modKey = null)
+        public static OblivionMod Flatten(this ModList<OblivionMod> modList, ModKey modKey = null)
         {
             if (modKey == null)
             {
                 modKey = new ModKey("Flattened", master: false);
             }
-            OblivionMod ret = new OblivionMod(modKey.Value);
+            OblivionMod ret = new OblivionMod(modKey);
             foreach (var mod in modList)
             {
                 ret.AddRecords(mod.Mod);

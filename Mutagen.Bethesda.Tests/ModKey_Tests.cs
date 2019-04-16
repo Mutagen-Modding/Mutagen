@@ -48,6 +48,56 @@ namespace Mutagen.Bethesda.Tests
         {
             Assert.False(ModKey.TryFactory("Obliv.ion.esn", out var modKey));
         }
+
+        [Fact]
+        public void TryFactory_TypicalDuplicate()
+        {
+            Assert.True(ModKey.TryFactory("Oblivion.esm", out var modKey));
+            Assert.Equal("Oblivion", modKey.Name);
+            Assert.Equal("Oblivion.esm", modKey.FileName);
+            Assert.True(modKey.Master);
+            Assert.True(ModKey.TryFactory("Oblivion.esm", out var modKey2));
+            Assert.Equal("Oblivion", modKey2.Name);
+            Assert.Equal("Oblivion.esm", modKey2.FileName);
+            Assert.True(modKey2.Master);
+            Assert.Same(modKey, modKey2);
+        }
+
+        [Fact]
+        public void TryFactory_TypicalBothDuplicates()
+        {
+            Assert.True(ModKey.TryFactory("Oblivion.esm", out var masterKey));
+            Assert.Equal("Oblivion", masterKey.Name);
+            Assert.Equal("Oblivion.esm", masterKey.FileName);
+            Assert.True(masterKey.Master);
+
+            Assert.True(ModKey.TryFactory("Oblivion.esp", out var modKey));
+            Assert.Equal("Oblivion", modKey.Name);
+            Assert.Equal("Oblivion.esp", modKey.FileName);
+            Assert.False(modKey.Master);
+
+            Assert.True(ModKey.TryFactory("Oblivion.esm", out var masterKey2));
+            Assert.Equal("Oblivion", masterKey2.Name);
+            Assert.Equal("Oblivion.esm", masterKey2.FileName);
+            Assert.True(masterKey2.Master);
+
+            Assert.True(ModKey.TryFactory("Oblivion.esp", out var modKey2));
+            Assert.Equal("Oblivion", modKey2.Name);
+            Assert.Equal("Oblivion.esp", modKey2.FileName);
+            Assert.False(modKey2.Master);
+
+            Assert.Same(masterKey, masterKey2);
+            Assert.Same(modKey, modKey2);
+        }
+
+        [Fact]
+        public void CaseEquality()
+        {
+            ModKey modKey = new ModKey("Oblivion", true);
+            ModKey modKey2 = new ModKey("OblivioN", true);
+            Assert.Equal(modKey, modKey2);
+            Assert.Equal(modKey.GetHashCode(), modKey2.GetHashCode());
+        }
         #endregion
     }
 }

@@ -19,12 +19,13 @@ namespace Mutagen.Bethesda
     /// General practice is:
     ///  - Use ModKey.TryFactory on a mod's file name when at all possible
     ///  - Use the Dummy singleton only when it is unknown, and no record cross pollination is planned to occur.
-    public struct ModKey : IEquatable<ModKey>
+    public class ModKey : IEquatable<ModKey>
     {
         public static readonly ModKey NULL = new ModKey(string.Empty, master: true);
-        public StringCaseAgnostic Name { get; private set; }
+        public string Name { get; private set; }
         public bool Master { get; private set; }
         public string FileName => this.ToString();
+        private static Dictionary<string, ModKey[]> cache_ = new Dictionary<string, ModKey[]>();
 
         /// </summary>
         /// <summary>
@@ -46,8 +47,8 @@ namespace Mutagen.Bethesda
 
         public bool Equals(ModKey other)
         {
-            return string.Equals(this.Name, other.Name)
-                && this.Master == other.Master;
+            return this.Master == other.Master
+                && string.Equals(this.Name, other.Name, StringComparison.CurrentCultureIgnoreCase);
         }
 
         public override bool Equals(object obj)
@@ -58,7 +59,7 @@ namespace Mutagen.Bethesda
 
         public override int GetHashCode()
         {
-            return Name.GetHashCode()
+            return Name.ToUpper().GetHashCode()
                 .CombineHashCode(Master.GetHashCode());
         }
 
@@ -96,9 +97,26 @@ namespace Mutagen.Bethesda
                     modKey = default(ModKey);
                     return false;
             }
+            var upper = modString.ToUpper();
+            var keyIndex = master ? 0 : 1;
+            if (cache_.TryGetValue(upper, out var keyItem))
+            {
+                modKey = keyItem[keyIndex];
+                if (modKey != NULL)
+                {
+                    return true;
+                }
+            }
+            else
+            {
+                keyItem = new ModKey[2];
+                keyItem[master ? 1 : 0] = NULL;
+                cache_[upper] = keyItem;
+            }
             modKey = new ModKey(
                 name: modString,
                 master: master);
+            keyItem[keyIndex] = modKey;
             return true;
         }
 
