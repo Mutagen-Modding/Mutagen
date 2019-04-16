@@ -68,26 +68,9 @@ namespace Mutagen.Bethesda
             }
         }
 
-        internal void SetFormKey(FormKey formKey)
-        {
-            this.FormKey = formKey;
-        }
-
         object IDuplicatable.Duplicate(Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecordTracker = null)
         {
             return this.Duplicate(getNextFormKey, duplicatedRecordTracker);
-        }
-    }
-
-    public static class MajorRecordExt
-    {
-        public static T Duplicate<T>(this T maj, FormKey formKey)
-            where T : MajorRecord, new()
-        {
-            var ret = new T();
-            ret.CopyFieldsFrom(maj);
-            ret.SetFormKey(formKey);
-            return ret;
         }
     }
 }
