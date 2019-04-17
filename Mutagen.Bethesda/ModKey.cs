@@ -99,19 +99,23 @@ namespace Mutagen.Bethesda
             }
             var upper = modString.ToUpper();
             var keyIndex = master ? 0 : 1;
-            if (cache_.TryGetValue(upper, out var keyItem))
+            ModKey[] keyItem;
+            lock (cache_)
             {
-                modKey = keyItem[keyIndex];
-                if (modKey != NULL)
+                if (cache_.TryGetValue(upper, out keyItem))
                 {
-                    return true;
+                    modKey = keyItem[keyIndex];
+                    if (modKey != NULL)
+                    {
+                        return true;
+                    }
                 }
-            }
-            else
-            {
-                keyItem = new ModKey[2];
-                keyItem[master ? 1 : 0] = NULL;
-                cache_[upper] = keyItem;
+                else
+                {
+                    keyItem = new ModKey[2];
+                    keyItem[master ? 1 : 0] = NULL;
+                    cache_[upper] = keyItem;
+                }
             }
             modKey = new ModKey(
                 name: modString,
