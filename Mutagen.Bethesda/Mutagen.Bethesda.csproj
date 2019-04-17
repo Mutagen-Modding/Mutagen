@@ -30,6 +30,7 @@
     <Compile Include="Enums\GroupTypeEnum.cs" />
     <Compile Include="Extensions\IBinaryStreamExt.cs" />
     <Compile Include="Extensions\NoggogRxExt.cs" />
+    <Compile Include="Extensions\XmlExt.cs" />
     <Compile Include="FormID.cs" />
     <Compile Include="FormKey.cs" />
     <Compile Include="Interfaces\IDuplicatable.cs" />

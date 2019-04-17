@@ -96,62 +96,58 @@ namespace Mutagen.Bethesda.Generation
             using (new BraceWrapper(fg))
             {
                 fg.AppendLine($"var ret = new {obj.Name}(modKey);");
-                fg.AppendLine("using (new FolderCleaner(dir, FolderCleaner.CleanType.AccessTime))");
-                using (new BraceWrapper(fg))
+                fg.AppendLine($"var tasks = new List<Task>();");
+                foreach (var field in obj.IterateFields())
                 {
-                    fg.AppendLine($"var tasks = new List<Task>();");
-                    foreach (var field in obj.IterateFields())
+                    if (field.GetFieldData().CustomFolder)
                     {
-                        if (field.GetFieldData().CustomFolder)
+                        using (var args = new ArgsWrapper(fg,
+                            $"tasks.Add(Task.Run(() => ret.Create_Xml_Folder_{field.Name}",
+                            suffixLine: "))"))
                         {
+                            args.Add("dir: dir");
+                            args.Add($"name: nameof({field.Name})");
+                            args.Add($"index: (int){field.IndexEnumName}");
+                            args.Add($"errorMask: errorMask");
+                        }
+                        continue;
+                    }
+                    if (!(field is LoquiType loqui))
+                    {
+                        throw new ArgumentException();
+                    }
+                    switch (loqui.TargetObjectGeneration.GetObjectType())
+                    {
+                        case ObjectType.Record:
                             using (var args = new ArgsWrapper(fg,
-                                $"tasks.Add(Task.Run(() => ret.Create_Xml_Folder_{field.Name}",
+                                $"ret.{field.Name}.CopyFieldsFrom({loqui.TypeName}.Create_Xml",
+                                suffixLine: ");")
+                            {
+                                SemiColon = false
+                            })
+                            {
+                                args.Add($"path: Path.Combine(dir.Path, \"{field.Name}.xml\")");
+                                args.Add($"errorMask: errorMask");
+                                args.Add($"translationMask: null");
+                            }
+                            break;
+                        case ObjectType.Group:
+                            if (!loqui.TryGetSpecificationAsObject("T", out var subObj)) continue;
+                            using (var args = new ArgsWrapper(fg,
+                                $"tasks.Add(Task.Run(() => ret.{field.Name}.Create_Xml_Folder<{subObj.Name}>",
                                 suffixLine: "))"))
                             {
-                                args.Add("dir: dir");
+                                args.Add($"dir: dir");
                                 args.Add($"name: nameof({field.Name})");
-                                args.Add($"index: (int){field.IndexEnumName}");
                                 args.Add($"errorMask: errorMask");
+                                args.Add($"index: (int){field.IndexEnumName}");
                             }
-                            continue;
-                        }
-                        if (!(field is LoquiType loqui))
-                        {
-                            throw new ArgumentException();
-                        }
-                        switch (loqui.TargetObjectGeneration.GetObjectType())
-                        {
-                            case ObjectType.Record:
-                                using (var args = new ArgsWrapper(fg,
-                                    $"ret.{field.Name}.CopyFieldsFrom({loqui.TypeName}.Create_Xml",
-                                    suffixLine: ");")
-                                {
-                                    SemiColon = false
-                                })
-                                {
-                                    args.Add($"path: Path.Combine(dir.Path, \"{field.Name}.xml\")");
-                                    args.Add($"errorMask: errorMask");
-                                    args.Add($"translationMask: null");
-                                }
-                                break;
-                            case ObjectType.Group:
-                                if (!loqui.TryGetSpecificationAsObject("T", out var subObj)) continue;
-                                using (var args = new ArgsWrapper(fg,
-                                    $"tasks.Add(Task.Run(() => ret.{field.Name}.Create_Xml_Folder<{subObj.Name}>",
-                                    suffixLine: "))"))
-                                {
-                                    args.Add($"dir: dir");
-                                    args.Add($"name: nameof({field.Name})");
-                                    args.Add($"errorMask: errorMask");
-                                    args.Add($"index: (int){field.IndexEnumName}");
-                                }
-                                break;
-                            default:
-                                break;
-                        }
+                            break;
+                        default:
+                            break;
                     }
-                    fg.AppendLine("await Task.WhenAll(tasks);");
                 }
+                fg.AppendLine("await Task.WhenAll(tasks);");
                 BinaryTranslationModule.GenerateModLinking(obj, fg);
                 fg.AppendLine("return ret;");
             }
@@ -167,71 +163,75 @@ namespace Mutagen.Bethesda.Generation
             {
                 fg.AppendLine($"ErrorMaskBuilder errorMaskBuilder = null;");
                 fg.AppendLine("dir.Create();");
-                fg.AppendLine($"var tasks = new List<Task>();");
-                foreach (var field in obj.IterateFields())
+                fg.AppendLine("using (new FolderCleaner(dir, FolderCleaner.CleanType.AccessTime))");
+                using (new BraceWrapper(fg))
                 {
-                    if (!(field is LoquiType loqui))
+                    fg.AppendLine($"var tasks = new List<Task>();");
+                    foreach (var field in obj.IterateFields())
                     {
-                        throw new ArgumentException();
-                    }
-                    if (field.GetFieldData().CustomFolder)
-                    {
-                        using (var args = new ArgsWrapper(fg,
-                            $"tasks.Add(Task.Run(() =>  Write_Xml_Folder_{field.Name}",
-                            suffixLine: "))"))
+                        if (!(field is LoquiType loqui))
                         {
-                            args.Add("dir: dir");
-                            args.Add($"name: nameof({field.Name})"); ;
-                            args.Add($"index: (int){field.IndexEnumName}");
-                            args.Add($"errorMask: errorMaskBuilder");
+                            throw new ArgumentException();
                         }
-                        continue;
-                    }
-                    switch (loqui.TargetObjectGeneration.GetObjectType())
-                    {
-                        case ObjectType.Record:
+                        if (field.GetFieldData().CustomFolder)
+                        {
                             using (var args = new ArgsWrapper(fg,
-                                $"tasks.Add(Task.Run(() => this.{field.Name}.Write_Xml",
+                                $"tasks.Add(Task.Run(() =>  Write_Xml_Folder_{field.Name}",
                                 suffixLine: "))"))
                             {
-                                args.Add($"path: Path.Combine(dir.Path, \"{field.Name}.xml\")");
+                                args.Add("dir: dir");
+                                args.Add($"name: nameof({field.Name})"); ;
+                                args.Add($"index: (int){field.IndexEnumName}");
                                 args.Add($"errorMask: errorMaskBuilder");
-                                args.Add($"translationMask: null");
                             }
-                            break;
-                        case ObjectType.Group:
-                            ObjectGeneration subObj;
-                            if (field is GroupType group)
-                            {
-                                if (!group.TryGetSpecificationAsObject("T", out subObj)) continue;
+                            continue;
+                        }
+                        switch (loqui.TargetObjectGeneration.GetObjectType())
+                        {
+                            case ObjectType.Record:
                                 using (var args = new ArgsWrapper(fg,
-                                    $"tasks.Add(Task.Run(() => {field.Name}.Write_Xml_Folder<{subObj.Name}, {subObj.Mask(MaskType.Error)}>",
+                                    $"tasks.Add(Task.Run(() => this.{field.Name}.Write_Xml",
                                     suffixLine: "))"))
                                 {
-                                    args.Add($"dir: dir.Path");
-                                    args.Add($"name: nameof({field.Name})");
+                                    args.Add($"path: Path.Combine(dir.Path, \"{field.Name}.xml\")");
                                     args.Add($"errorMask: errorMaskBuilder");
-                                    args.Add($"index: (int){field.IndexEnumName}");
+                                    args.Add($"translationMask: null");
                                 }
-                            }
-                            else
-                            {
-                                using (var args = new ArgsWrapper(fg,
-                                    $"tasks.Add(Task.Run(() => {field.Name}.Write_Xml_Folder", 
-                                    suffixLine: "))"))
+                                break;
+                            case ObjectType.Group:
+                                ObjectGeneration subObj;
+                                if (field is GroupType group)
                                 {
-                                    args.Add($"dir: dir.Path");
-                                    args.Add($"name: nameof({field.Name})");
-                                    args.Add($"errorMask: errorMaskBuilder");
-                                    args.Add($"index: (int){field.IndexEnumName}");
+                                    if (!group.TryGetSpecificationAsObject("T", out subObj)) continue;
+                                    using (var args = new ArgsWrapper(fg,
+                                        $"tasks.Add(Task.Run(() => {field.Name}.Write_Xml_Folder<{subObj.Name}, {subObj.Mask(MaskType.Error)}>",
+                                        suffixLine: "))"))
+                                    {
+                                        args.Add($"dir: dir.Path");
+                                        args.Add($"name: nameof({field.Name})");
+                                        args.Add($"errorMask: errorMaskBuilder");
+                                        args.Add($"index: (int){field.IndexEnumName}");
+                                    }
                                 }
-                            }
-                            break;
-                        default:
-                            break;
+                                else
+                                {
+                                    using (var args = new ArgsWrapper(fg,
+                                        $"tasks.Add(Task.Run(() => {field.Name}.Write_Xml_Folder",
+                                        suffixLine: "))"))
+                                    {
+                                        args.Add($"dir: dir.Path");
+                                        args.Add($"name: nameof({field.Name})");
+                                        args.Add($"errorMask: errorMaskBuilder");
+                                        args.Add($"index: (int){field.IndexEnumName}");
+                                    }
+                                }
+                                break;
+                            default:
+                                break;
+                        }
                     }
+                    fg.AppendLine("await Task.WhenAll(tasks);");
                 }
-                fg.AppendLine("await Task.WhenAll(tasks);");
                 fg.AppendLine("return null;");
             }
         }
