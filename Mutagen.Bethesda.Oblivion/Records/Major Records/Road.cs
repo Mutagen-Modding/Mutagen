@@ -35,19 +35,19 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         using (var connectionReader = new BinaryMemoryReadStream(connectionBytes))
                         {
-                            for (int i = 0; i < pointBytes.Length; i = i + POINT_LEN)
-                            {
-                                var pt = ReadPathGridPoint(ptByteReader, out var numConn);
-                                for (int j = 0; j < numConn; j++)
+                            item.Points.AddRange(
+                                EnumerableExt.For(0, pointBytes.Length, POINT_LEN)
+                                .Select(i =>
                                 {
-                                    pt.Connections.Add(
-                                        new P3Float(
-                                            x: connectionReader.ReadFloat(),
-                                            y: connectionReader.ReadFloat(),
-                                            z: connectionReader.ReadFloat()));
-                                }
-                                item.Points.Add(pt);
-                            }
+                                    var pt = ReadPathGridPoint(ptByteReader, out var numConn);
+                                    pt.Connections.AddRange(
+                                        EnumerableExt.For(0, numConn)
+                                        .Select(j => new P3Float(
+                                                x: connectionReader.ReadFloat(),
+                                                y: connectionReader.ReadFloat(),
+                                                z: connectionReader.ReadFloat())));
+                                    return pt;
+                                }));
                             if (!connectionReader.Complete)
                             {
                                 throw new ArgumentException("Connection reader did not complete as expected.");

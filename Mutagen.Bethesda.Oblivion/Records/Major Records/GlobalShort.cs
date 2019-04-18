@@ -43,10 +43,12 @@ namespace Mutagen.Bethesda.Oblivion
         {
             this.TypeChar = TRIGGER_CHAR;
             this.WhenAny(x => x.RawFloat)
+                .Skip(1)
                 .DistinctUntilChanged()
                 .Select(x => (short)Math.Round(x))
                 .BindTo(this, x => x.Data);
             this.WhenAny(x => x.Data)
+                .Skip(1)
                 .DistinctUntilChanged()
                 .Select(x => (float)x)
                 .BindTo(this, x => x.RawFloat);

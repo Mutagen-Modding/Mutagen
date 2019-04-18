@@ -76,16 +76,16 @@ namespace Mutagen.Bethesda.Oblivion
                         {
                             using (var connectionReader = new BinaryMemoryReadStream(connectionBytes))
                             {
-                                for (int i = 0; i < pointBytes.Length; i = i + POINT_LEN)
-                                {
-                                    var pt = ReadPathGridPoint(ptByteReader, out var numConn);
-                                    for (int j = 0; j < numConn; j++)
+                                item.PointToPointConnections.AddRange(
+                                    EnumerableExt.For(0, pointBytes.Length, POINT_LEN)
+                                    .Select(i =>
                                     {
-                                        pt.Connections.Add(
-                                            connectionReader.ReadInt16());
-                                    }
-                                    item.PointToPointConnections.Add(pt);
-                                }
+                                        var pt = ReadPathGridPoint(ptByteReader, out var numConn);
+                                        pt.Connections.AddRange(
+                                            EnumerableExt.For(0, numConn)
+                                                .Select(j => connectionReader.ReadInt16()));
+                                        return pt;
+                                    }));
                                 if (!connectionReader.Complete)
                                 {
                                     throw new ArgumentException("Connection reader did not complete as expected.");
@@ -102,14 +102,16 @@ namespace Mutagen.Bethesda.Oblivion
 
             if (!readPGRR)
             {
+                List<PathGridPoint> list = new List<PathGridPoint>();
                 using (var ptByteReader = new BinaryMemoryReadStream(pointBytes))
                 {
                     while (!ptByteReader.Complete)
                     {
-                        item.PointToPointConnections.Add(
+                        list.Add(
                             ReadPathGridPoint(ptByteReader, out var numConn));
                     }
                 }
+                item.PointToPointConnections.AddRange(list);
             }
         }
 
