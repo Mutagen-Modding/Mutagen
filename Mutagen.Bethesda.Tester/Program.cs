@@ -8,6 +8,7 @@ using Noggog;
 using Noggog.Utility;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reactive.Linq;
@@ -28,7 +29,12 @@ namespace Mutagen.Bethesda.Tester
 
             var settings = TestingSettings.Create_Xml(settingsFile.Path);
 
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
             await TestBattery.RunTests(settings);
+            sw.Stop();
+            System.Console.WriteLine($"Tests took: {sw.ElapsedMilliseconds * 1.0 / 1000}s");
+            System.Console.ReadKey();
         }
     }
 }
