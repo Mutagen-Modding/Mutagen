@@ -17,8 +17,7 @@ namespace Mutagen.Bethesda.Tests
     public class Oblivion_Passthrough_Test
     {
         public string Nickname { get; }
-        public string FilePath { get; set; }
-        public ModKey ModKey { get; }
+        public FilePath FilePath { get; set; }
         public byte NumMasters { get; }
         public string ProcessedPath(TempFolder tmp) => Path.Combine(tmp.Dir.Path, $"{this.Nickname}_Processed");
         private PassthroughSettings settings;
@@ -42,9 +41,10 @@ namespace Mutagen.Bethesda.Tests
             // Do normal
             if (settings.TestNormal)
             {
+                ModKey modKey = ModKey.Factory(this.FilePath.Name);
                 var mod = OblivionMod.Create_Binary(
                     inputPath,
-                    modKey: this.ModKey,
+                    modKey: modKey,
                     errorMask: out var importMask);
 
                 Assert.False(importMask?.IsInError() ?? false);
@@ -1500,7 +1500,7 @@ namespace Mutagen.Bethesda.Tests
                 using (var outStream = new FileStream(uncompressedPath, FileMode.Create, FileAccess.Write))
                 {
                     ModDecompressor.Decompress(
-                        streamCreator: () => File.OpenRead(this.FilePath),
+                        streamCreator: () => File.OpenRead(this.FilePath.Path),
                         outputStream: outStream);
                 }
             }
@@ -1546,7 +1546,7 @@ namespace Mutagen.Bethesda.Tests
 
                 using (var stream = new BinaryReadStream(preprocessedPath))
                 {
-                    var fileLocs = RecordLocator.GetFileLocations(this.FilePath);
+                    var fileLocs = RecordLocator.GetFileLocations(this.FilePath.Path);
                     foreach (var rec in fileLocs.ListedRecords)
                     {
                         LookForMagicEffects(
