@@ -104,12 +104,14 @@ namespace Mutagen.Bethesda.Oblivion
         {
             if (rhs == null) return false;
             if (!base.Equals(rhs)) return false;
+            if (this.OblivionMajorRecordFlags != rhs.OblivionMajorRecordFlags) return false;
             return true;
         }
 
         public override int GetHashCode()
         {
             int ret = 0;
+            ret = HashHelper.GetHashCode(OblivionMajorRecordFlags).CombineHashCode(ret);
             ret = ret.CombineHashCode(base.GetHashCode());
             return ret;
         }
@@ -477,6 +479,17 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        protected override bool GetHasBeenSet(int index)
+        {
+            switch ((OblivionMajorRecord_FieldIndex)index)
+            {
+                case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
+                    return true;
+                default:
+                    return base.GetHasBeenSet(index);
+            }
+        }
+
         #region Mutagen
         public override IEnumerable<ILink> Links => GetLinks();
         private IEnumerable<ILink> GetLinks()
@@ -634,6 +647,19 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
+        protected static void Fill_Binary_Structs(
+            OblivionMajorRecord item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask)
+        {
+            MajorRecord.Fill_Binary_Structs(
+                item: item,
+                frame: frame,
+                masterReferences: masterReferences,
+                errorMask: errorMask);
+        }
+
         #endregion
 
         public OblivionMajorRecord Copy(
@@ -741,6 +767,9 @@ namespace Mutagen.Bethesda.Oblivion
             OblivionMajorRecord_FieldIndex enu = (OblivionMajorRecord_FieldIndex)index;
             switch (enu)
             {
+                case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
+                    this.OblivionMajorRecordFlags = (OblivionMajorRecord.OblivionMajorRecordFlag)obj;
+                    break;
                 default:
                     base.SetNthObject(index, obj, cmds);
                     break;
@@ -762,6 +791,9 @@ namespace Mutagen.Bethesda.Oblivion
             }
             switch (enu)
             {
+                case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
+                    obj.OblivionMajorRecordFlags = (OblivionMajorRecord.OblivionMajorRecordFlag)pair.Value;
+                    break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
@@ -777,10 +809,16 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface IOblivionMajorRecord : IOblivionMajorRecordGetter, IMajorRecord, ILoquiClass<IOblivionMajorRecord, IOblivionMajorRecordGetter>, ILoquiClass<OblivionMajorRecord, IOblivionMajorRecordGetter>
     {
+        new OblivionMajorRecord.OblivionMajorRecordFlag OblivionMajorRecordFlags { get; set; }
+
     }
 
     public partial interface IOblivionMajorRecordGetter : IMajorRecordGetter
     {
+        #region OblivionMajorRecordFlags
+        OblivionMajorRecord.OblivionMajorRecordFlag OblivionMajorRecordFlags { get; }
+
+        #endregion
 
     }
 
@@ -793,11 +831,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #region Field Index
     public enum OblivionMajorRecord_FieldIndex
     {
-        MajorRecordFlags = 0,
-        FormKey = 1,
-        Version = 2,
-        EditorID = 3,
-        RecordType = 4,
+        FormKey = 0,
+        Version = 1,
+        EditorID = 2,
+        RecordType = 3,
+        OblivionMajorRecordFlags = 4,
     }
     #endregion
 
@@ -815,7 +853,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const string GUID = "73890e6b-2cc5-468e-83ee-d6bcb04c3d63";
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 1;
 
         public const ushort FieldCount = 5;
 
@@ -845,6 +883,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (str.Upper)
             {
+                case "OBLIVIONMAJORRECORDFLAGS":
+                    return (ushort)OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags;
                 default:
                     return null;
             }
@@ -855,6 +895,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             OblivionMajorRecord_FieldIndex enu = (OblivionMajorRecord_FieldIndex)index;
             switch (enu)
             {
+                case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
+                    return false;
                 default:
                     return MajorRecord_Registration.GetNthIsEnumerable(index);
             }
@@ -865,6 +907,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             OblivionMajorRecord_FieldIndex enu = (OblivionMajorRecord_FieldIndex)index;
             switch (enu)
             {
+                case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
+                    return false;
                 default:
                     return MajorRecord_Registration.GetNthIsLoqui(index);
             }
@@ -875,6 +919,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             OblivionMajorRecord_FieldIndex enu = (OblivionMajorRecord_FieldIndex)index;
             switch (enu)
             {
+                case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
+                    return false;
                 default:
                     return MajorRecord_Registration.GetNthIsSingleton(index);
             }
@@ -885,6 +931,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             OblivionMajorRecord_FieldIndex enu = (OblivionMajorRecord_FieldIndex)index;
             switch (enu)
             {
+                case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
+                    return "OblivionMajorRecordFlags";
                 default:
                     return MajorRecord_Registration.GetNthName(index);
             }
@@ -895,6 +943,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             OblivionMajorRecord_FieldIndex enu = (OblivionMajorRecord_FieldIndex)index;
             switch (enu)
             {
+                case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
+                    return false;
                 default:
                     return MajorRecord_Registration.IsNthDerivative(index);
             }
@@ -905,6 +955,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             OblivionMajorRecord_FieldIndex enu = (OblivionMajorRecord_FieldIndex)index;
             switch (enu)
             {
+                case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
+                    return false;
                 default:
                     return MajorRecord_Registration.IsProtected(index);
             }
@@ -915,6 +967,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             OblivionMajorRecord_FieldIndex enu = (OblivionMajorRecord_FieldIndex)index;
             switch (enu)
             {
+                case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
+                    return typeof(OblivionMajorRecord.OblivionMajorRecordFlag);
                 default:
                     return MajorRecord_Registration.GetNthType(index);
             }
@@ -1066,7 +1120,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     })
             );
         });
-        public const int NumStructFields = 0;
+        public const int NumStructFields = 1;
         public const int NumTypedFields = 0;
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1117,6 +1171,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask,
                 copyMask,
                 cmds);
+            if (copyMask?.OblivionMajorRecordFlags ?? true)
+            {
+                errorMask?.PushIndex((int)OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags);
+                try
+                {
+                    item.OblivionMajorRecordFlags = rhs.OblivionMajorRecordFlags;
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
 
         #endregion
@@ -1130,6 +1201,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             OblivionMajorRecord_FieldIndex enu = (OblivionMajorRecord_FieldIndex)index;
             switch (enu)
             {
+                case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
+                    if (on) break;
+                    throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
                 default:
                     MajorRecordCommon.SetNthObjectHasBeenSet(index, on, obj);
                     break;
@@ -1144,6 +1218,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             OblivionMajorRecord_FieldIndex enu = (OblivionMajorRecord_FieldIndex)index;
             switch (enu)
             {
+                case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
+                    obj.OblivionMajorRecordFlags = default(OblivionMajorRecord.OblivionMajorRecordFlag);
+                    break;
                 default:
                     MajorRecordCommon.UnsetNthObject(index, obj);
                     break;
@@ -1157,6 +1234,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             OblivionMajorRecord_FieldIndex enu = (OblivionMajorRecord_FieldIndex)index;
             switch (enu)
             {
+                case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
+                    return true;
                 default:
                     return MajorRecordCommon.GetNthObjectHasBeenSet(index, obj);
             }
@@ -1169,6 +1248,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             OblivionMajorRecord_FieldIndex enu = (OblivionMajorRecord_FieldIndex)index;
             switch (enu)
             {
+                case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
+                    return obj.OblivionMajorRecordFlags;
                 default:
                     return MajorRecordCommon.GetNthObject(index, obj);
             }
@@ -1178,6 +1259,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IOblivionMajorRecord item,
             NotifyingUnsetParameters cmds = null)
         {
+            item.OblivionMajorRecordFlags = default(OblivionMajorRecord.OblivionMajorRecordFlag);
         }
 
         public static OblivionMajorRecord_Mask<bool> GetEqualsMask(
@@ -1201,6 +1283,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
+            ret.OblivionMajorRecordFlags = item.OblivionMajorRecordFlags == rhs.OblivionMajorRecordFlags;
             MajorRecordCommon.FillEqualsMask(item, rhs, ret);
         }
 
@@ -1231,6 +1314,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
+                if (printMask?.OblivionMajorRecordFlags ?? true)
+                {
+                    fg.AppendLine($"OblivionMajorRecordFlags => {item.OblivionMajorRecordFlags}");
+                }
             }
             fg.AppendLine("]");
         }
@@ -1245,6 +1332,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static OblivionMajorRecord_Mask<bool> GetHasBeenSetMask(IOblivionMajorRecordGetter item)
         {
             var ret = new OblivionMajorRecord_Mask<bool>();
+            ret.OblivionMajorRecordFlags = true;
             return ret;
         }
 
@@ -1258,8 +1346,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (index)
             {
-                case MajorRecord_FieldIndex.MajorRecordFlags:
-                    return (OblivionMajorRecord_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
                     return (OblivionMajorRecord_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.Version:
@@ -1325,6 +1411,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
+            if ((translationMask?.GetShouldTranslate((int)OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags) ?? true))
+            {
+                EnumXmlTranslation<OblivionMajorRecord.OblivionMajorRecordFlag>.Instance.Write(
+                    node: node,
+                    name: nameof(item.OblivionMajorRecordFlags),
+                    item: item.OblivionMajorRecordFlags,
+                    fieldIndex: (int)OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags,
+                    errorMask: errorMask);
+            }
         }
 
         public static void FillPublic_Xml(
@@ -1361,6 +1456,32 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (name)
             {
+                case "OblivionMajorRecordFlags":
+                    try
+                    {
+                        errorMask?.PushIndex((int)OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags);
+                        if (EnumXmlTranslation<OblivionMajorRecord.OblivionMajorRecordFlag>.Instance.Parse(
+                            node: node,
+                            item: out OblivionMajorRecord.OblivionMajorRecordFlag OblivionMajorRecordFlagsParse,
+                            errorMask: errorMask))
+                        {
+                            item.OblivionMajorRecordFlags = OblivionMajorRecordFlagsParse;
+                        }
+                        else
+                        {
+                            item.OblivionMajorRecordFlags = default(OblivionMajorRecord.OblivionMajorRecordFlag);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
                 default:
                     MajorRecordCommon.FillPublicElement_Xml(
                         item: item,
@@ -1401,7 +1522,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            MajorRecordCommon.Write_Binary_Embedded(
+            Write_Binary_Embedded(
                 item: item,
                 writer: writer,
                 errorMask: errorMask,
@@ -1414,6 +1535,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 masterReferences: masterReferences);
         }
         #endregion
+
+        public static void Write_Binary_Embedded(
+            OblivionMajorRecord item,
+            MutagenWriter writer,
+            ErrorMaskBuilder errorMask,
+            MasterReferences masterReferences)
+        {
+            MajorRecordCommon.Write_Binary_Embedded(
+                item: item,
+                writer: writer,
+                errorMask: errorMask,
+                masterReferences: masterReferences);
+        }
 
         #endregion
 
@@ -1431,7 +1565,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public OblivionMajorRecord_Mask(T initialValue)
         {
+            this.OblivionMajorRecordFlags = initialValue;
         }
+        #endregion
+
+        #region Members
+        public T OblivionMajorRecordFlags;
         #endregion
 
         #region Equals
@@ -1445,11 +1584,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (rhs == null) return false;
             if (!base.Equals(rhs)) return false;
+            if (!object.Equals(this.OblivionMajorRecordFlags, rhs.OblivionMajorRecordFlags)) return false;
             return true;
         }
         public override int GetHashCode()
         {
             int ret = 0;
+            ret = ret.CombineHashCode(this.OblivionMajorRecordFlags?.GetHashCode());
             ret = ret.CombineHashCode(base.GetHashCode());
             return ret;
         }
@@ -1460,6 +1601,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override bool AllEqual(Func<T, bool> eval)
         {
             if (!base.AllEqual(eval)) return false;
+            if (!eval(this.OblivionMajorRecordFlags)) return false;
             return true;
         }
         #endregion
@@ -1475,6 +1617,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected void Translate_InternalFill<R>(OblivionMajorRecord_Mask<R> obj, Func<T, R> eval)
         {
             base.Translate_InternalFill(obj, eval);
+            obj.OblivionMajorRecordFlags = eval(this.OblivionMajorRecordFlags);
         }
         #endregion
 
@@ -1504,6 +1647,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
+                if (printMask?.OblivionMajorRecordFlags ?? true)
+                {
+                    fg.AppendLine($"OblivionMajorRecordFlags => {OblivionMajorRecordFlags}");
+                }
             }
             fg.AppendLine("]");
         }
@@ -1513,12 +1660,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     public class OblivionMajorRecord_ErrorMask : MajorRecord_ErrorMask, IErrorMask<OblivionMajorRecord_ErrorMask>
     {
+        #region Members
+        public Exception OblivionMajorRecordFlags;
+        #endregion
+
         #region IErrorMask
         public override object GetNthMask(int index)
         {
             OblivionMajorRecord_FieldIndex enu = (OblivionMajorRecord_FieldIndex)index;
             switch (enu)
             {
+                case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
+                    return OblivionMajorRecordFlags;
                 default:
                     return base.GetNthMask(index);
             }
@@ -1529,6 +1682,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             OblivionMajorRecord_FieldIndex enu = (OblivionMajorRecord_FieldIndex)index;
             switch (enu)
             {
+                case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
+                    this.OblivionMajorRecordFlags = ex;
+                    break;
                 default:
                     base.SetNthException(index, ex);
                     break;
@@ -1540,6 +1696,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             OblivionMajorRecord_FieldIndex enu = (OblivionMajorRecord_FieldIndex)index;
             switch (enu)
             {
+                case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
+                    this.OblivionMajorRecordFlags = (Exception)obj;
+                    break;
                 default:
                     base.SetNthMask(index, obj);
                     break;
@@ -1549,6 +1708,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override bool IsInError()
         {
             if (Overall != null) return true;
+            if (OblivionMajorRecordFlags != null) return true;
             return false;
         }
         #endregion
@@ -1584,6 +1744,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected override void ToString_FillInternal(FileGeneration fg)
         {
             base.ToString_FillInternal(fg);
+            fg.AppendLine($"OblivionMajorRecordFlags => {OblivionMajorRecordFlags}");
         }
         #endregion
 
@@ -1591,6 +1752,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public OblivionMajorRecord_ErrorMask Combine(OblivionMajorRecord_ErrorMask rhs)
         {
             var ret = new OblivionMajorRecord_ErrorMask();
+            ret.OblivionMajorRecordFlags = this.OblivionMajorRecordFlags.Combine(rhs.OblivionMajorRecordFlags);
             return ret;
         }
         public static OblivionMajorRecord_ErrorMask Combine(OblivionMajorRecord_ErrorMask lhs, OblivionMajorRecord_ErrorMask rhs)
@@ -1617,12 +1779,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public OblivionMajorRecord_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
         {
+            this.OblivionMajorRecordFlags = defaultOn;
         }
+
+        #region Members
+        public bool OblivionMajorRecordFlags;
+        #endregion
 
     }
 
     public class OblivionMajorRecord_TranslationMask : MajorRecord_TranslationMask
     {
+        #region Members
+        public bool OblivionMajorRecordFlags;
+        #endregion
+
         #region Ctors
         public OblivionMajorRecord_TranslationMask()
             : base()
@@ -1632,10 +1803,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public OblivionMajorRecord_TranslationMask(bool defaultOn)
             : base(defaultOn)
         {
+            this.OblivionMajorRecordFlags = defaultOn;
         }
 
         #endregion
 
+        protected override void GetCrystal(List<(bool On, TranslationCrystal SubCrystal)> ret)
+        {
+            base.GetCrystal(ret);
+            ret.Add((OblivionMajorRecordFlags, null));
+        }
     }
     #endregion
 

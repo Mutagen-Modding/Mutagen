@@ -3083,11 +3083,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #region Field Index
     public enum CombatStyle_FieldIndex
     {
-        MajorRecordFlags = 0,
-        FormKey = 1,
-        Version = 2,
-        EditorID = 3,
-        RecordType = 4,
+        FormKey = 0,
+        Version = 1,
+        EditorID = 2,
+        RecordType = 3,
+        OblivionMajorRecordFlags = 4,
         DodgePercentChance = 5,
         LeftRightPercentChance = 6,
         DodgeLeftRightTimerMin = 7,
@@ -5054,8 +5054,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (index)
             {
-                case OblivionMajorRecord_FieldIndex.MajorRecordFlags:
-                    return (CombatStyle_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.FormKey:
                     return (CombatStyle_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.Version:
@@ -5063,6 +5061,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMajorRecord_FieldIndex.EditorID:
                     return (CombatStyle_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.RecordType:
+                    return (CombatStyle_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
                     return (CombatStyle_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
@@ -5079,8 +5079,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (index)
             {
-                case MajorRecord_FieldIndex.MajorRecordFlags:
-                    return (CombatStyle_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
                     return (CombatStyle_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.Version:
@@ -6549,7 +6547,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: CombatStyle_Registration.CSTY_HEADER,
                 type: ObjectType.Record))
             {
-                MajorRecordCommon.Write_Binary_Embedded(
+                OblivionMajorRecordCommon.Write_Binary_Embedded(
                     item: item,
                     writer: writer,
                     errorMask: errorMask,

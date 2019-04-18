@@ -405,6 +405,9 @@
     <Compile Include="Records\Major Records\NPC.cs">
       <DependentUpon>NPC.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\OblivionMajorRecord.cs">
+      <DependentUpon>OblivionMajorRecord.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\PathGrid.cs">
       <DependentUpon>PathGrid.xml</DependentUpon>
     </Compile>

@@ -1138,11 +1138,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #region Field Index
     public enum Static_FieldIndex
     {
-        MajorRecordFlags = 0,
-        FormKey = 1,
-        Version = 2,
-        EditorID = 3,
-        RecordType = 4,
+        FormKey = 0,
+        Version = 1,
+        EditorID = 2,
+        RecordType = 3,
+        OblivionMajorRecordFlags = 4,
         Model = 5,
     }
     #endregion
@@ -1556,8 +1556,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (index)
             {
-                case OblivionMajorRecord_FieldIndex.MajorRecordFlags:
-                    return (Static_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.FormKey:
                     return (Static_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.Version:
@@ -1565,6 +1563,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMajorRecord_FieldIndex.EditorID:
                     return (Static_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.RecordType:
+                    return (Static_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
                     return (Static_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
@@ -1581,8 +1581,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (index)
             {
-                case MajorRecord_FieldIndex.MajorRecordFlags:
-                    return (Static_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
                     return (Static_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.Version:
@@ -1767,7 +1765,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: Static_Registration.STAT_HEADER,
                 type: ObjectType.Record))
             {
-                MajorRecordCommon.Write_Binary_Embedded(
+                OblivionMajorRecordCommon.Write_Binary_Embedded(
                     item: item,
                     writer: writer,
                     errorMask: errorMask,

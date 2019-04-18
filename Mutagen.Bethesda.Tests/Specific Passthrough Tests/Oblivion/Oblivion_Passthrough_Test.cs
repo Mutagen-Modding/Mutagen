@@ -51,10 +51,7 @@ namespace Mutagen.Bethesda.Tests
 
                 foreach (var record in mod.MajorRecords.Items)
                 {
-                    if (record.MajorRecordFlags.HasFlag(MajorRecord.MajorRecordFlag.Compressed))
-                    {
-                        record.MajorRecordFlags &= ~MajorRecord.MajorRecordFlag.Compressed;
-                    }
+                    record.IsCompressed = false;
                 }
                 mod.Write_Binary(
                     outputPathStraight,

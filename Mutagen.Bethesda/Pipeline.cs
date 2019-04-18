@@ -43,7 +43,7 @@ namespace Mutagen.Bethesda
             var outMod = await processor(outModKey, modList);
             foreach (var npc in outMod.MajorRecords.Items)
             {
-                npc.MajorRecordFlags &= ~MajorRecord.MajorRecordFlag.Compressed;
+                npc.MajorRecordFlagsRaw &= ~(int)MajorRecord.MajorRecordFlag.Compressed;
             }
             outMod.MasterReferences.SetTo(
                 outMod.Links

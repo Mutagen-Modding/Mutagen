@@ -8,6 +8,7 @@ namespace Mutagen.Bethesda
     {
         string EditorID { get; }
         bool IsCompressed { get; set; }
+        int MajorRecordFlagsRaw { get; set; }
         new FormKey FormKey { get; }
     }
 

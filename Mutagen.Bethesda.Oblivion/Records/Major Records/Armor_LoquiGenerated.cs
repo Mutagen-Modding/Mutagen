@@ -1381,11 +1381,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #region Field Index
     public enum Armor_FieldIndex
     {
-        MajorRecordFlags = 0,
-        FormKey = 1,
-        Version = 2,
-        EditorID = 3,
-        RecordType = 4,
+        FormKey = 0,
+        Version = 1,
+        EditorID = 2,
+        RecordType = 3,
+        OblivionMajorRecordFlags = 4,
         Name = 5,
         Script = 6,
         Enchantment = 7,
@@ -1895,8 +1895,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (index)
             {
-                case ClothingAbstract_FieldIndex.MajorRecordFlags:
-                    return (Armor_FieldIndex)((int)index);
                 case ClothingAbstract_FieldIndex.FormKey:
                     return (Armor_FieldIndex)((int)index);
                 case ClothingAbstract_FieldIndex.Version:
@@ -1904,6 +1902,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case ClothingAbstract_FieldIndex.EditorID:
                     return (Armor_FieldIndex)((int)index);
                 case ClothingAbstract_FieldIndex.RecordType:
+                    return (Armor_FieldIndex)((int)index);
+                case ClothingAbstract_FieldIndex.OblivionMajorRecordFlags:
                     return (Armor_FieldIndex)((int)index);
                 case ClothingAbstract_FieldIndex.Name:
                     return (Armor_FieldIndex)((int)index);
@@ -1944,8 +1944,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (index)
             {
-                case ItemAbstract_FieldIndex.MajorRecordFlags:
-                    return (Armor_FieldIndex)((int)index);
                 case ItemAbstract_FieldIndex.FormKey:
                     return (Armor_FieldIndex)((int)index);
                 case ItemAbstract_FieldIndex.Version:
@@ -1953,6 +1951,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case ItemAbstract_FieldIndex.EditorID:
                     return (Armor_FieldIndex)((int)index);
                 case ItemAbstract_FieldIndex.RecordType:
+                    return (Armor_FieldIndex)((int)index);
+                case ItemAbstract_FieldIndex.OblivionMajorRecordFlags:
                     return (Armor_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
@@ -1969,8 +1969,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (index)
             {
-                case OblivionMajorRecord_FieldIndex.MajorRecordFlags:
-                    return (Armor_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.FormKey:
                     return (Armor_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.Version:
@@ -1978,6 +1976,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMajorRecord_FieldIndex.EditorID:
                     return (Armor_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.RecordType:
+                    return (Armor_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
                     return (Armor_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
@@ -1994,8 +1994,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (index)
             {
-                case MajorRecord_FieldIndex.MajorRecordFlags:
-                    return (Armor_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
                     return (Armor_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.Version:
@@ -2286,7 +2284,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: Armor_Registration.ARMO_HEADER,
                 type: ObjectType.Record))
             {
-                MajorRecordCommon.Write_Binary_Embedded(
+                OblivionMajorRecordCommon.Write_Binary_Embedded(
                     item: item,
                     writer: writer,
                     errorMask: errorMask,
