@@ -2,18 +2,18 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>7a383407351bed2ee5f963f27a5a4775d788c68b</Sha>
+         <Sha>08b372ed57ac1fd18f8ce1bb5c7ede16aa5bdeea</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>04-17-2019 22:44:22</CommitDate>
-         <Description>EnumerableExt.For /w indexing</Description>
+         <CommitDate>04-19-2019 18:00:18</CommitDate>
+         <Description>SpanExt</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>c6dc6013177d8aec8ee39da9dbcc086bec8ff3a9</Sha>
+         <Sha>1534cc5501effbe3c1674c14b631ae591ba6a574</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>04-14-2019 16:22:36</CommitDate>
-         <Description>Xml copy in added out item accessor</Description>
+         <CommitDate>04-19-2019 16:56:46</CommitDate>
+         <Description>API updates</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>

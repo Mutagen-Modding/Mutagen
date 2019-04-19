@@ -13,6 +13,197 @@ namespace Mutagen.Bethesda.Binary
     {
         public static readonly RecordType GRUP_HEADER = new RecordType("GRUP");
 
+        /// <summary>
+        /// Parses span for the expected header, and retrieves the content length
+        /// </summary>
+        /// <param name="frame">Span to retreive data from</param>
+        /// <param name="expectedHeader">Header to expect</param>
+        /// <param name="contentLength">Out parameter for the content length</param>
+        /// <param name="lengthLength">Byte length of the length data</param>
+        /// <returns>True if success.  False if span is too small, or record header parsed in is not expected.</returns>
+        public static bool TryGetContentLength(
+            ReadOnlySpan<byte> frame,
+            RecordType expectedHeader,
+            out long contentLength,
+            int lengthLength)
+        {
+            if (frame.Length < Constants.HEADER_LENGTH + lengthLength)
+            {
+                contentLength = -1;
+                return false;
+            }
+            var header = frame.GetInt32();
+            if (expectedHeader.TypeInt != header)
+            {
+                contentLength = -1;
+                return false;
+            }
+            frame = frame.Slice(4);
+            switch (lengthLength)
+            {
+                case 1:
+                    contentLength = frame[0];
+                    break;
+                case 2:
+                    contentLength = frame.GetUInt16();
+                    break;
+                case 4:
+                    contentLength = checked((int)frame.GetUInt32());
+                    break;
+                default:
+                    throw new NotImplementedException();
+            }
+            return true;
+        }
+
+        /// <summary>
+        /// Parses span for the expected header, and retrieves the content length.
+        /// Throws exception if span is too small, or record header parsed in is not expected.
+        /// </summary>
+        /// <param name="frame">Span to retreive data from</param>
+        /// <param name="expectedHeader">Header to expect</param>
+        /// <param name="lengthLength">Byte length of the length data</param>
+        /// <returns>content length</returns>
+        public static long GetContentLength(
+            ReadOnlySpan<byte> frame,
+            RecordType expectedHeader,
+            int lengthLength)
+        {
+            if (!TryGetContentLength(
+                frame,
+                expectedHeader,
+                out var contentLength,
+                lengthLength))
+            {
+                throw new ArgumentException($"Expected header was not read in: {expectedHeader}");
+            }
+            return contentLength;
+        }
+
+        /// <summary>
+        /// Parses a record header, and retrieves the final position of the content based on the input span
+        /// Throws exception if span is too small, or record header parsed in is not expected.
+        /// </summary>
+        /// <param name="frame">Span to retreive data from</param>
+        /// <param name="expectedHeader">Header to expect</param>
+        /// <returns>Final position of the content relative to input span</returns>
+        public static long GetFinalRecordPosition(
+            ReadOnlySpan<byte> frame,
+            RecordType expectedHeader)
+        {
+            if (!TryGetContentLength(
+                frame,
+                expectedHeader,
+                out var contentLength,
+                Constants.RECORD_LENGTHLENGTH))
+            {
+                throw new ArgumentException($"Expected header was not read in: {expectedHeader}");
+            }
+            return Constants.RECORD_LENGTH + contentLength + Constants.RECORD_META_SKIP;
+        }
+
+        /// <summary>
+        /// Parses a sub record header, and retrieves the final position of the content based on the input span
+        /// Throws exception if span is too small, or record header parsed in is not expected.
+        /// </summary>
+        /// <param name="frame">Span to retreive data from</param>
+        /// <param name="expectedHeader">Header to expect</param>
+        /// <returns>Final position of the content relative to input span</returns>
+        public static long GetFinalSubrecordPosition(
+            ReadOnlySpan<byte> frame,
+            RecordType expectedHeader)
+        {
+            if (!TryGetContentLength(
+                frame,
+                expectedHeader,
+                out var contentLength,
+                Constants.SUBRECORD_LENGTHLENGTH))
+            {
+                throw new ArgumentException($"Expected header was not read in: {expectedHeader}");
+            }
+            return Constants.SUBRECORD_LENGTH + contentLength;
+        }
+
+        /// <summary>
+        /// Parses a GRUP header, and retrieves the final position of the content based on the input span
+        /// Throws exception if span is too small, or record header parsed in is not expected.
+        /// </summary>
+        /// <param name="frame">Span to retreive data from</param>
+        /// <param name="expectedHeader">Header to expect</param>
+        /// <returns>Final position of the content relative to input span</returns>
+        public static long GetFinalGroupPosition(
+            ReadOnlySpan<byte> frame)
+        {
+            if (!TryGetContentLength(
+                frame,
+                GRUP_HEADER,
+                out var contentLength,
+                Constants.RECORD_LENGTHLENGTH))
+            {
+                throw new ArgumentException($"Expected header was not read in: {GRUP_HEADER}");
+            }
+            return Constants.RECORD_LENGTH + contentLength - Constants.HEADER_LENGTH - Constants.RECORD_LENGTHLENGTH;
+        }
+
+        public static RecordType GetNextRecordType(
+            ReadOnlySpan<byte> frame,
+            RecordTypeConverter recordTypeConverter = null)
+        {
+            var ret = new RecordType(frame.GetInt32());
+            ret = recordTypeConverter.ConvertToStandard(ret);
+            return ret;
+        }
+
+        public static RecordType GetNextRecordType(
+            ReadOnlySpan<byte> frame,
+            out int contentLength,
+            RecordTypeConverter recordTypeConverter = null)
+        {
+            if (frame.Length < Constants.RECORD_LENGTH)
+            {
+                throw new ArgumentException("Span was too short");
+            }
+            var header = new RecordType(frame.GetInt32());
+            header = recordTypeConverter.ConvertToStandard(header);
+            frame = frame.Slice(4);
+            contentLength = checked((int)frame.GetUInt32());
+            return header;
+        }
+
+        public static RecordType GetNextSubRecordType(
+            ReadOnlySpan<byte> frame,
+            out int contentLength,
+            RecordTypeConverter recordTypeConverter = null)
+        {
+            if (frame.Length < Constants.RECORD_LENGTH)
+            {
+                throw new ArgumentException("Span was too short");
+            }
+            var header = new RecordType(frame.GetInt32());
+            header = recordTypeConverter.ConvertToStandard(header);
+            frame = frame.Slice(4);
+            contentLength = frame.GetUInt16();
+            return header;
+        }
+
+        public static RecordType GetNextType(
+            ReadOnlySpan<byte> frame,
+            out int contentLength,
+            RecordTypeConverter recordTypeConverter = null,
+            bool hopGroup = true)
+        {
+            var ret = GetNextRecordType(
+                frame,
+                out contentLength,
+                recordTypeConverter);
+            if (hopGroup && ret.Equals(GRUP_HEADER))
+            {
+                ret = GetNextRecordType(frame);
+            }
+            return ret;
+        }
+
+        #region IBinaryReadStream
         public static bool TryParse(
             IBinaryReadStream reader,
             RecordType expectedHeader,
@@ -305,5 +496,6 @@ namespace Mutagen.Bethesda.Binary
             reader.Position -= Constants.SUBRECORD_LENGTH;
             return ret;
         }
+        #endregion
     }
 }
