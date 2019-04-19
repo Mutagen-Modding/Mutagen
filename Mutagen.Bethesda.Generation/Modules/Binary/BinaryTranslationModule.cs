@@ -132,7 +132,8 @@ namespace Mutagen.Bethesda.Generation
                     Funnel = new TranslationFunnel(
                         this.MainAPI,
                         ConvertFromPathOut,
-                        ConvertFromPathIn)
+                        ConvertFromPathIn),
+                    When = (o) => o.GetObjectType() == ObjectType.Mod
                 });
             this.MinorAPIs.Add(
                 new TranslationModuleAPI(
@@ -148,7 +149,8 @@ namespace Mutagen.Bethesda.Generation
                     Funnel = new TranslationFunnel(
                         this.MainAPI,
                         ConvertFromStreamOut,
-                        ConvertFromStreamIn)
+                        ConvertFromStreamIn),
+                    When = (o) => o.GetObjectType() == ObjectType.Mod
                 });
         }
 

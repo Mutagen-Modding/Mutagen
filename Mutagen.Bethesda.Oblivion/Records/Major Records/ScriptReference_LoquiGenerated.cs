@@ -427,82 +427,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public virtual void Write_Binary(
-            string path,
-            MasterReferences masterReferences,
-            out ScriptReference_ErrorMask errorMask,
-            bool doMasks = true)
-        {
-            using (var memStream = new MemoryTributary())
-            {
-                using (var writer = new MutagenWriter(memStream, dispose: false))
-                {
-                    Write_Binary(
-                        masterReferences: masterReferences,
-                        writer: writer,
-                        errorMask: out errorMask,
-                        doMasks: doMasks);
-                }
-                using (var fs = new FileStream(path, FileMode.Create, FileAccess.Write))
-                {
-                    memStream.Position = 0;
-                    memStream.CopyTo(fs);
-                }
-            }
-        }
-
-        public virtual void Write_Binary(
-            string path,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask)
-        {
-            using (var memStream = new MemoryTributary())
-            {
-                using (var writer = new MutagenWriter(memStream, dispose: false))
-                {
-                    Write_Binary(
-                        masterReferences: masterReferences,
-                        writer: writer,
-                        recordTypeConverter: null,
-                        errorMask: errorMask);
-                }
-                using (var fs = new FileStream(path, FileMode.Create, FileAccess.Write))
-                {
-                    memStream.Position = 0;
-                    memStream.CopyTo(fs);
-                }
-            }
-        }
-        public virtual void Write_Binary(
-            Stream stream,
-            MasterReferences masterReferences,
-            out ScriptReference_ErrorMask errorMask,
-            bool doMasks = true)
-        {
-            using (var writer = new MutagenWriter(stream))
-            {
-                Write_Binary(
-                    masterReferences: masterReferences,
-                    writer: writer,
-                    errorMask: out errorMask,
-                    doMasks: doMasks);
-            }
-        }
-
-        public virtual void Write_Binary(
-            Stream stream,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask)
-        {
-            using (var writer = new MutagenWriter(stream))
-            {
-                Write_Binary(
-                    masterReferences: masterReferences,
-                    writer: writer,
-                    recordTypeConverter: null,
-                    errorMask: errorMask);
-            }
-        }
-        public virtual void Write_Binary(
             MutagenWriter writer,
             MasterReferences masterReferences)
         {
@@ -511,42 +435,6 @@ namespace Mutagen.Bethesda.Oblivion
                 writer: writer,
                 recordTypeConverter: null,
                 errorMask: null);
-        }
-
-        public virtual void Write_Binary(
-            string path,
-            MasterReferences masterReferences)
-        {
-            using (var memStream = new MemoryTributary())
-            {
-                using (var writer = new MutagenWriter(memStream, dispose: false))
-                {
-                    Write_Binary(
-                        masterReferences: masterReferences,
-                        writer: writer,
-                        recordTypeConverter: null,
-                        errorMask: null);
-                }
-                using (var fs = new FileStream(path, FileMode.Create, FileAccess.Write))
-                {
-                    memStream.Position = 0;
-                    memStream.CopyTo(fs);
-                }
-            }
-        }
-
-        public virtual void Write_Binary(
-            Stream stream,
-            MasterReferences masterReferences)
-        {
-            using (var writer = new MutagenWriter(stream))
-            {
-                Write_Binary(
-                    masterReferences: masterReferences,
-                    writer: writer,
-                    recordTypeConverter: null,
-                    errorMask: null);
-            }
         }
 
         public virtual void Write_Binary(

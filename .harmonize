@@ -10,10 +10,10 @@
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>1534cc5501effbe3c1674c14b631ae591ba6a574</Sha>
+         <Sha>f894ffa633ee3789e09d2edbe49069ec8e582eb8</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>04-19-2019 16:56:46</CommitDate>
-         <Description>API updates</Description>
+         <CommitDate>04-19-2019 18:00:48</CommitDate>
+         <Description>TranslationModule.When support</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>

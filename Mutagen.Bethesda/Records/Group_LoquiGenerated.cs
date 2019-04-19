@@ -573,72 +573,6 @@ namespace Mutagen.Bethesda
             return ret;
         }
 
-        public static Group<T> Create_Binary<T_ErrMask>(
-            string path,
-            MasterReferences masterReferences,
-            out Group_ErrorMask<T_ErrMask> errorMask)
-            where T_ErrMask : class, IErrorMask<T_ErrMask>, new()
-        {
-            using (var reader = new BinaryReadStream(path))
-            {
-                var frame = new MutagenFrame(reader);
-                return Create_Binary(
-                    masterReferences: masterReferences,
-                    frame: frame,
-                    errorMask: out errorMask);
-            }
-        }
-
-        public static Group<T> Create_Binary<T_ErrMask>(
-            string path,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask)
-            where T_ErrMask : class, IErrorMask<T_ErrMask>, new()
-        {
-            using (var reader = new BinaryReadStream(path))
-            {
-                var frame = new MutagenFrame(reader);
-                return Create_Binary(
-                    masterReferences: masterReferences,
-                    frame: frame,
-                    recordTypeConverter: null,
-                    errorMask: errorMask);
-            }
-        }
-
-        public static Group<T> Create_Binary<T_ErrMask>(
-            Stream stream,
-            MasterReferences masterReferences,
-            out Group_ErrorMask<T_ErrMask> errorMask)
-            where T_ErrMask : class, IErrorMask<T_ErrMask>, new()
-        {
-            using (var reader = new BinaryReadStream(stream))
-            {
-                var frame = new MutagenFrame(reader);
-                return Create_Binary(
-                    masterReferences: masterReferences,
-                    frame: frame,
-                    errorMask: out errorMask);
-            }
-        }
-
-        public static Group<T> Create_Binary<T_ErrMask>(
-            Stream stream,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask)
-            where T_ErrMask : class, IErrorMask<T_ErrMask>, new()
-        {
-            using (var reader = new BinaryReadStream(stream))
-            {
-                var frame = new MutagenFrame(reader);
-                return Create_Binary(
-                    masterReferences: masterReferences,
-                    frame: frame,
-                    recordTypeConverter: null,
-                    errorMask: errorMask);
-            }
-        }
-
         #endregion
 
         #region Binary Write
@@ -658,84 +592,6 @@ namespace Mutagen.Bethesda
             errorMask = Group_ErrorMask<T_ErrMask>.Factory(errorMaskBuilder);
         }
 
-        public virtual void Write_Binary<T_ErrMask>(
-            string path,
-            MasterReferences masterReferences,
-            out Group_ErrorMask<T_ErrMask> errorMask,
-            bool doMasks = true)
-            where T_ErrMask : class, IErrorMask<T_ErrMask>, new()
-        {
-            using (var memStream = new MemoryTributary())
-            {
-                using (var writer = new MutagenWriter(memStream, dispose: false))
-                {
-                    Write_Binary(
-                        masterReferences: masterReferences,
-                        writer: writer,
-                        errorMask: out errorMask,
-                        doMasks: doMasks);
-                }
-                using (var fs = new FileStream(path, FileMode.Create, FileAccess.Write))
-                {
-                    memStream.Position = 0;
-                    memStream.CopyTo(fs);
-                }
-            }
-        }
-
-        public void Write_Binary(
-            string path,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask)
-        {
-            using (var memStream = new MemoryTributary())
-            {
-                using (var writer = new MutagenWriter(memStream, dispose: false))
-                {
-                    Write_Binary(
-                        masterReferences: masterReferences,
-                        writer: writer,
-                        recordTypeConverter: null,
-                        errorMask: errorMask);
-                }
-                using (var fs = new FileStream(path, FileMode.Create, FileAccess.Write))
-                {
-                    memStream.Position = 0;
-                    memStream.CopyTo(fs);
-                }
-            }
-        }
-        public virtual void Write_Binary<T_ErrMask>(
-            Stream stream,
-            MasterReferences masterReferences,
-            out Group_ErrorMask<T_ErrMask> errorMask,
-            bool doMasks = true)
-            where T_ErrMask : class, IErrorMask<T_ErrMask>, new()
-        {
-            using (var writer = new MutagenWriter(stream))
-            {
-                Write_Binary(
-                    masterReferences: masterReferences,
-                    writer: writer,
-                    errorMask: out errorMask,
-                    doMasks: doMasks);
-            }
-        }
-
-        public void Write_Binary(
-            Stream stream,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask)
-        {
-            using (var writer = new MutagenWriter(stream))
-            {
-                Write_Binary(
-                    masterReferences: masterReferences,
-                    writer: writer,
-                    recordTypeConverter: null,
-                    errorMask: errorMask);
-            }
-        }
         public void Write_Binary<T_ErrMask>(
             MutagenWriter writer,
             MasterReferences masterReferences)
@@ -746,42 +602,6 @@ namespace Mutagen.Bethesda
                 writer: writer,
                 recordTypeConverter: null,
                 errorMask: null);
-        }
-
-        public void Write_Binary(
-            string path,
-            MasterReferences masterReferences)
-        {
-            using (var memStream = new MemoryTributary())
-            {
-                using (var writer = new MutagenWriter(memStream, dispose: false))
-                {
-                    Write_Binary(
-                        masterReferences: masterReferences,
-                        writer: writer,
-                        recordTypeConverter: null,
-                        errorMask: null);
-                }
-                using (var fs = new FileStream(path, FileMode.Create, FileAccess.Write))
-                {
-                    memStream.Position = 0;
-                    memStream.CopyTo(fs);
-                }
-            }
-        }
-
-        public void Write_Binary(
-            Stream stream,
-            MasterReferences masterReferences)
-        {
-            using (var writer = new MutagenWriter(stream))
-            {
-                Write_Binary(
-                    masterReferences: masterReferences,
-                    writer: writer,
-                    recordTypeConverter: null,
-                    errorMask: null);
-            }
         }
 
         public void Write_Binary(
