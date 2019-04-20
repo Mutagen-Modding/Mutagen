@@ -53,13 +53,12 @@ namespace Mutagen.Bethesda.Binary
             RecordType triggeringRecord,
             int lengthLength,
             ErrorMaskBuilder errorMask,
-            BinarySubParseDelegate<T> transl,
-            bool parseIndefinitely = false)
+            BinarySubParseDelegate<T> transl)
         {
             var safeFrame = frame.Spawn(snapToFinalPosition: false);
             var ret = new List<T>();
             int i = 0;
-            while ((parseIndefinitely || !frame.Complete) && !frame.Reader.Complete)
+            while (!frame.Complete && !frame.Reader.Complete)
             {
                 using (errorMask.PushIndex(i++))
                 {
@@ -100,8 +99,7 @@ namespace Mutagen.Bethesda.Binary
             RecordType triggeringRecord,
             int lengthLength,
             ErrorMaskBuilder errorMask,
-            BinarySubParseDelegate<T> transl,
-            bool parseIndefinitely = false)
+            BinarySubParseDelegate<T> transl)
         {
             using (errorMask.PushIndex(fieldIndex))
             {
@@ -113,8 +111,7 @@ namespace Mutagen.Bethesda.Binary
                         triggeringRecord,
                         lengthLength,
                         errorMask: errorMask,
-                        transl: transl,
-                        parseIndefinitely: parseIndefinitely))
+                        transl: transl))
                     {
                         item.SetTo(enumer);
                     }
@@ -139,8 +136,7 @@ namespace Mutagen.Bethesda.Binary
             int lengthLength,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask,
-            BinaryMasterParseDelegate<T> transl,
-            bool parseIndefinitely = false)
+            BinaryMasterParseDelegate<T> transl)
         {
             ParseRepeatedItem(
                 frame: frame,
@@ -152,8 +148,7 @@ namespace Mutagen.Bethesda.Binary
                 transl: (MutagenFrame r, out T i, ErrorMaskBuilder err) =>
                 {
                     return transl(r, out i, masterReferences, err);
-                },
-                parseIndefinitely: parseIndefinitely);
+                });
         }
 
         public bool ParseRepeatedItem(
