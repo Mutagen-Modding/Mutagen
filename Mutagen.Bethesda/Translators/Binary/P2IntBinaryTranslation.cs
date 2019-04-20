@@ -7,7 +7,7 @@ namespace Mutagen.Bethesda.Binary
     public class P2IntBinaryTranslation : PrimitiveBinaryTranslation<P2Int>
     {
         public readonly static P2IntBinaryTranslation Instance = new P2IntBinaryTranslation();
-        public override int? ExpectedLength => 1;
+        public override int ExpectedLength => 8;
 
         public override P2Int ParseValue(MutagenFrame reader)
         {

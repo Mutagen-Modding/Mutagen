@@ -7,7 +7,7 @@ namespace Mutagen.Bethesda.Binary
     public class DateTimeBinaryTranslation : PrimitiveBinaryTranslation<DateTime>
     {
         public readonly static DateTimeBinaryTranslation Instance = new DateTimeBinaryTranslation();
-        public override int? ExpectedLength => 4;
+        public override int ExpectedLength => 4;
 
         public override DateTime ParseValue(MutagenFrame reader)
         {

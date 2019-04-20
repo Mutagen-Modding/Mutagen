@@ -7,10 +7,15 @@ using System.IO;
 
 namespace Mutagen.Bethesda.Binary
 {
-    public abstract class PrimitiveBinaryTranslation<T> : IBinaryTranslation<T>, IBinaryTranslation<T?>
+    public interface IPrimitiveBinaryTranslation
+    {
+        int ExpectedLength { get; }
+    }
+
+    public abstract class PrimitiveBinaryTranslation<T> : IBinaryTranslation<T>, IBinaryTranslation<T?>, IPrimitiveBinaryTranslation
         where T : struct
     {
-        public abstract int? ExpectedLength { get; }
+        public abstract int ExpectedLength { get; }
 
         public abstract T ParseValue(MutagenFrame reader);
 
@@ -57,15 +62,12 @@ namespace Mutagen.Bethesda.Binary
         {
             try
             {
-                if (ExpectedLength.HasValue)
+                if (!frame.TryCheckUpcomingRead(this.ExpectedLength, out var ex))
                 {
-                    if (!frame.TryCheckUpcomingRead(this.ExpectedLength.Value, out var ex))
-                    {
-                        frame.Position = frame.FinalLocation;
-                        errorMask.ReportExceptionOrThrow(ex);
-                        item = default(T);
-                        return false;
-                    }
+                    frame.Position = frame.FinalLocation;
+                    errorMask.ReportExceptionOrThrow(ex);
+                    item = default(T);
+                    return false;
                 }
                 item = ParseValue(frame);
                 return true;
@@ -110,7 +112,7 @@ namespace Mutagen.Bethesda.Binary
 
         public bool Parse(MutagenFrame frame, long length, out T item, ErrorMaskBuilder errorMask)
         {
-            if (this.ExpectedLength.HasValue && length != this.ExpectedLength)
+            if (length != this.ExpectedLength)
             {
                 errorMask.ReportExceptionOrThrow(
                     new ArgumentException($"Expected length was {this.ExpectedLength}, but was passed {length}."));
@@ -139,7 +141,7 @@ namespace Mutagen.Bethesda.Binary
 
         void IBinaryTranslation<T?>.Write(MutagenWriter writer, T? item, long length, ErrorMaskBuilder errorMask)
         {
-            if (this.ExpectedLength.HasValue && length != this.ExpectedLength)
+            if (length != this.ExpectedLength)
             {
                 errorMask.ReportExceptionOrThrow(
                     new ArgumentException($"Expected length was {this.ExpectedLength}, but was passed {length}."));
@@ -167,7 +169,7 @@ namespace Mutagen.Bethesda.Binary
 
         void IBinaryTranslation<T>.Write(MutagenWriter writer, T item, long length, ErrorMaskBuilder errorMask)
         {
-            if (this.ExpectedLength.HasValue && length != this.ExpectedLength)
+            if (length != this.ExpectedLength)
             {
                 errorMask.ReportExceptionOrThrow(
                     new ArgumentException($"Expected length was {this.ExpectedLength}, but was passed {length}."));

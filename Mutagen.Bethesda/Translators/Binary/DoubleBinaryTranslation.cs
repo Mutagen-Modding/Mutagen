@@ -7,7 +7,7 @@ namespace Mutagen.Bethesda.Binary
     public class DoubleBinaryTranslation : PrimitiveBinaryTranslation<double>
     {
         public readonly static DoubleBinaryTranslation Instance = new DoubleBinaryTranslation();
-        public override int? ExpectedLength => 4;
+        public override int ExpectedLength => 8;
 
         public override double ParseValue(MutagenFrame reader)
         {

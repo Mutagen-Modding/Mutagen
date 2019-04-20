@@ -7,7 +7,7 @@ namespace Mutagen.Bethesda.Binary
     public class UInt64BinaryTranslation : PrimitiveBinaryTranslation<ulong>
     {
         public readonly static UInt64BinaryTranslation Instance = new UInt64BinaryTranslation();
-        public override int? ExpectedLength => 8;
+        public override int ExpectedLength => 8;
 
         public override ulong ParseValue(MutagenFrame reader)
         {

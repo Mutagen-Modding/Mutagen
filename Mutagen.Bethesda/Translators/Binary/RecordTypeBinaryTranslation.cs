@@ -9,7 +9,7 @@ namespace Mutagen.Bethesda.Binary
     public class RecordTypeBinaryTranslation : PrimitiveBinaryTranslation<RecordType>
     {
         public readonly static RecordTypeBinaryTranslation Instance = new RecordTypeBinaryTranslation();
-        public override int? ExpectedLength => 4;
+        public override int ExpectedLength => 4;
 
         public void ParseInto<T>(MutagenFrame frame, int fieldIndex, EDIDSetLink<T> item, ErrorMaskBuilder errorMask)
             where T : MajorRecord
@@ -18,7 +18,7 @@ namespace Mutagen.Bethesda.Binary
             {
                 try
                 {
-                    if (Parse(frame, ExpectedLength.Value, out RecordType val, errorMask))
+                    if (Parse(frame, ExpectedLength, out RecordType val, errorMask))
                     {
                         item.Set(val);
                     }
@@ -42,7 +42,7 @@ namespace Mutagen.Bethesda.Binary
             {
                 try
                 {
-                    if (Parse(frame, ExpectedLength.Value, out RecordType val, errorMask))
+                    if (Parse(frame, ExpectedLength, out RecordType val, errorMask))
                     {
                         item.Set(val);
                     }
