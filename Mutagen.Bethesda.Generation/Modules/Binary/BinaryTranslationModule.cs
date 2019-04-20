@@ -773,9 +773,16 @@ namespace Mutagen.Bethesda.Generation
             }
         }
 
+        protected override bool GenerateMainCreate(ObjectGeneration obj)
+        {
+            var data = obj.GetObjectData();
+            return !data.CustomBinary;
+        }
+
         protected override async Task GenerateCreateSnippet(ObjectGeneration obj, FileGeneration fg)
         {
             var data = obj.GetObjectData();
+
             bool typelessStruct = obj.IsTypelessStruct();
             ObjectType objType = obj.GetObjectType();
 

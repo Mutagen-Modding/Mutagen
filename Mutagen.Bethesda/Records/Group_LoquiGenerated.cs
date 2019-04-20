@@ -536,43 +536,6 @@ namespace Mutagen.Bethesda
             return ret;
         }
 
-        public static Group<T> Create_Binary(
-            MutagenFrame frame,
-            MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
-        {
-            var ret = new Group<T>();
-            try
-            {
-                frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseGroup(frame.Reader));
-                using (frame)
-                {
-                    Fill_Binary_Structs(
-                        item: ret,
-                        frame: frame,
-                        masterReferences: masterReferences,
-                        errorMask: errorMask);
-                    while (!frame.Complete)
-                    {
-                        var parsed = Fill_Binary_RecordTypes(
-                            item: ret,
-                            frame: frame,
-                            masterReferences: masterReferences,
-                            errorMask: errorMask,
-                            recordTypeConverter: recordTypeConverter);
-                        if (parsed.Failed) break;
-                    }
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-            return ret;
-        }
-
         #endregion
 
         #region Binary Write

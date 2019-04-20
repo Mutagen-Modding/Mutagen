@@ -10,10 +10,10 @@
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>f894ffa633ee3789e09d2edbe49069ec8e582eb8</Sha>
+         <Sha>8badde1d3e270cb37426d02a19a82e4c61e8582c</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>04-19-2019 18:00:48</CommitDate>
-         <Description>TranslationModule.When support</Description>
+         <CommitDate>04-19-2019 23:17:06</CommitDate>
+         <Description>TranslationModule generate main create optionality</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>
