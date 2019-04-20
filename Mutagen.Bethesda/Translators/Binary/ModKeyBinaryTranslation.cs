@@ -8,7 +8,7 @@ using Noggog.Notifying;
 
 namespace Mutagen.Bethesda.Binary
 {
-    public class ModKeyBinaryTranslation : IBinaryTranslation<ModKey>
+    public class ModKeyBinaryTranslation
     {
         public readonly static ModKeyBinaryTranslation Instance = new ModKeyBinaryTranslation();
 

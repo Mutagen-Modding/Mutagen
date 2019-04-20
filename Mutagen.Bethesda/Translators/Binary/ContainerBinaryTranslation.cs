@@ -14,7 +14,31 @@ using CSharpExt.Rx;
 
 namespace Mutagen.Bethesda.Binary
 {
-    public abstract class ContainerBinaryTranslation<T> : IBinaryTranslation<IEnumerable<T>>
+    public delegate bool BinarySubParseDelegate<T>(
+        MutagenFrame reader,
+        out T item,
+        ErrorMaskBuilder errorMask);
+    public delegate bool BinaryMasterParseDelegate<T>(
+        MutagenFrame reader,
+        out T item,
+        MasterReferences masterReferences,
+        ErrorMaskBuilder errorMask);
+    public delegate bool BinarySubParseRecordDelegate<T>(
+        MutagenFrame reader,
+        RecordType header,
+        out T item,
+        ErrorMaskBuilder errorMask);
+    public delegate void BinarySubWriteDelegate<in T>(
+        MutagenWriter writer,
+        T item,
+        ErrorMaskBuilder errorMask);
+    public delegate void BinaryMasterWriteDelegate<in T>(
+        MutagenWriter writer,
+        T item,
+        MasterReferences masterReferences,
+        ErrorMaskBuilder errorMask);
+
+    public abstract class ContainerBinaryTranslation<T>
     {
         public static readonly bool IsLoqui;
 
@@ -506,38 +530,6 @@ namespace Mutagen.Bethesda.Binary
         }
         #endregion
 
-        void IBinaryTranslation<IEnumerable<T>>.Write(
-            MutagenWriter writer,
-            IEnumerable<T> item,
-            long length,
-            ErrorMaskBuilder errorMask)
-        {
-            Write(writer, item, errorMask);
-        }
-
-        public void Write(
-            MutagenWriter writer,
-            IEnumerable<T> items,
-            ErrorMaskBuilder errorMask)
-        {
-            var transl = BinaryTranslator<T>.Translator;
-            if (transl.Item.Failed)
-            {
-                errorMask.ReportExceptionOrThrow(
-                    new ArgumentException($"No binary Translator available for {typeof(T)}. {transl.Item.Reason}"));
-            }
-            this.Write(
-                writer: writer,
-                items: items,
-                errorMask: errorMask,
-                transl: (MutagenWriter subWriter, T item1, ErrorMaskBuilder errMask2)
-                    => transl.Item.Value.Write(
-                        writer: subWriter,
-                        item: item1,
-                        length: -1,
-                        errorMask: errMask2));
-        }
-
         public void Write(
             MutagenWriter writer,
             IEnumerable<T> items,
@@ -750,13 +742,5 @@ namespace Mutagen.Bethesda.Binary
             BinarySubWriteDelegate<T> transl,
             T item,
             ErrorMaskBuilder errorMask);
-
-        bool IBinaryTranslation<IEnumerable<T>>.Parse(
-            MutagenFrame reader,
-            out IEnumerable<T> item,
-            ErrorMaskBuilder errorMask)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

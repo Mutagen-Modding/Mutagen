@@ -81,8 +81,6 @@
     <Compile Include="ProtocolDefinition_Bethesda.cs" />
     <Compile Include="RecordType.cs" />
     <Compile Include="RecordTypeConverter.cs" />
-    <Compile Include="Translators\Binary\BinaryTranslationCaster.cs" />
-    <Compile Include="Translators\Binary\BinaryTranslator.cs" />
     <Compile Include="Translators\Binary\BooleanBinaryTranslation.cs" />
     <Compile Include="Translators\Binary\ByteArrayBinaryTranslation.cs" />
     <Compile Include="Translators\Binary\ByteBinaryTranslation.cs" />
@@ -97,7 +95,6 @@
     <Compile Include="Translators\Binary\FormKeyBinaryTranslation.cs" />
     <Compile Include="Translators\Binary\HeaderExport.cs" />
     <Compile Include="Translators\Binary\HeaderTranslation.cs" />
-    <Compile Include="Translators\Binary\IBinaryTranslation.cs" />
     <Compile Include="Translators\Binary\Int16BinaryTranslation.cs" />
     <Compile Include="Translators\Binary\Int32BinaryTranslation.cs" />
     <Compile Include="Translators\Binary\Int64BinaryTranslation.cs" />

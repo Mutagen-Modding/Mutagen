@@ -10,7 +10,7 @@ using System.Text;
 
 namespace Mutagen.Bethesda.Binary
 {
-    public class StringBinaryTranslation : IBinaryTranslation<string>
+    public class StringBinaryTranslation
     {
         public readonly static StringBinaryTranslation Instance = new StringBinaryTranslation();
 

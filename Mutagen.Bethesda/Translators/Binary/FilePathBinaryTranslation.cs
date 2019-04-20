@@ -10,7 +10,7 @@ using Loqui.Internal;
 
 namespace Mutagen.Bethesda.Binary
 {
-    public class FilePathBinaryTranslation : IBinaryTranslation<FilePath>
+    public class FilePathBinaryTranslation
     {
         public static readonly FilePathBinaryTranslation Instance = new FilePathBinaryTranslation();
 
@@ -63,19 +63,6 @@ namespace Mutagen.Bethesda.Binary
                 item = default(FilePath);
                 return false;
             }
-        }
-
-        void IBinaryTranslation<FilePath>.Write(
-            MutagenWriter writer,
-            FilePath item,
-            long length,
-            ErrorMaskBuilder errorMask)
-        {
-            ((IBinaryTranslation<string>)StringBinaryTranslation.Instance).Write(
-                writer,
-                item.RelativePath,
-                length,
-                errorMask);
         }
 
         public void Write(

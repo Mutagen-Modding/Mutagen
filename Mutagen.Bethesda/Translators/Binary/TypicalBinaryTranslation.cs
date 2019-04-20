@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Mutagen.Bethesda.Binary
 {
-    public abstract class TypicalBinaryTranslation<T> : IBinaryTranslation<T>
+    public abstract class TypicalBinaryTranslation<T>
         where T : class
     {
         protected abstract T ParseBytes(byte[] bytes);
@@ -171,11 +171,6 @@ namespace Mutagen.Bethesda.Binary
                 item.Item,
                 fieldIndex,
                 errorMask);
-        }
-
-        void IBinaryTranslation<T>.Write(MutagenWriter writer, T item, long length, ErrorMaskBuilder errorMask)
-        {
-            Write(writer, item);
         }
 
         public void Write(

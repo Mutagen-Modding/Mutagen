@@ -12,7 +12,7 @@ namespace Mutagen.Bethesda.Binary
         int ExpectedLength { get; }
     }
 
-    public abstract class PrimitiveBinaryTranslation<T> : IBinaryTranslation<T>, IBinaryTranslation<T?>, IPrimitiveBinaryTranslation
+    public abstract class PrimitiveBinaryTranslation<T> : IPrimitiveBinaryTranslation
         where T : struct
     {
         public abstract int ExpectedLength { get; }
@@ -124,31 +124,6 @@ namespace Mutagen.Bethesda.Binary
 
         public abstract void WriteValue(MutagenWriter writer, T item);
 
-        bool IBinaryTranslation<T?>.Parse(MutagenFrame frame, out T? item, ErrorMaskBuilder errorMask)
-        {
-            if (Parse(
-                frame,
-                out T subItem,
-                errorMask))
-            {
-                item = subItem;
-                return true;
-            }
-
-            item = default(T?);
-            return false;
-        }
-
-        void IBinaryTranslation<T?>.Write(MutagenWriter writer, T? item, long length, ErrorMaskBuilder errorMask)
-        {
-            if (length != this.ExpectedLength)
-            {
-                errorMask.ReportExceptionOrThrow(
-                    new ArgumentException($"Expected length was {this.ExpectedLength}, but was passed {length}."));
-            }
-            WriteValue(writer, item);
-        }
-
         public void Write(MutagenWriter writer, T? item, ErrorMaskBuilder errorMask)
         {
             WriteValue(writer, item);
@@ -165,16 +140,6 @@ namespace Mutagen.Bethesda.Binary
             WriteValue(
                 writer,
                 item.Value);
-        }
-
-        void IBinaryTranslation<T>.Write(MutagenWriter writer, T item, long length, ErrorMaskBuilder errorMask)
-        {
-            if (length != this.ExpectedLength)
-            {
-                errorMask.ReportExceptionOrThrow(
-                    new ArgumentException($"Expected length was {this.ExpectedLength}, but was passed {length}."));
-            }
-            WriteValue(writer, (T?)item);
         }
 
         public void Write(
@@ -370,14 +335,6 @@ namespace Mutagen.Bethesda.Binary
                 item.Item,
                 fieldIndex,
                 errorMask);
-        }
-
-        bool IBinaryTranslation<T>.Parse(MutagenFrame reader, out T item, ErrorMaskBuilder errorMask)
-        {
-            return this.Parse(
-                frame: reader,
-                item: out item,
-                errorMask: errorMask);
         }
     }
 }
