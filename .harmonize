@@ -2,18 +2,18 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>08b372ed57ac1fd18f8ce1bb5c7ede16aa5bdeea</Sha>
+         <Sha>e4c7b895e4a8bf616e9a99a76e8e5fb6fe5fe7d7</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>04-19-2019 18:00:18</CommitDate>
-         <Description>SpanExt</Description>
+         <CommitDate>04-20-2019 16:08:36</CommitDate>
+         <Description>Nuget Updates</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>8badde1d3e270cb37426d02a19a82e4c61e8582c</Sha>
+         <Sha>ac0fb8805583bf867fe50880685588ae053cd210</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>04-19-2019 23:17:06</CommitDate>
-         <Description>TranslationModule generate main create optionality</Description>
+         <CommitDate>04-20-2019 16:08:55</CommitDate>
+         <Description>Nuget Updates</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>

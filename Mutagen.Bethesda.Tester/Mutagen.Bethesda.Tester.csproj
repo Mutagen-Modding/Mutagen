@@ -84,10 +84,10 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="ReactiveUI">
-      <Version>9.3.5</Version>
+      <Version>9.13.1</Version>
     </PackageReference>
     <PackageReference Include="System.Reactive">
-      <Version>4.1.2</Version>
+      <Version>4.1.5</Version>
     </PackageReference>
     <PackageReference Include="System.ValueTuple">
       <Version>4.5.0</Version>
