@@ -13,8 +13,6 @@ namespace Mutagen.Bethesda.Binary
 {
     public struct MutagenFrame : IDisposable, IBinaryReadStream
     {
-        public static bool ErrorOnFinalPosition;
-
         public readonly IBinaryReadStream Reader;
         public readonly long InitialPosition;
         public readonly long FinalLocation;
@@ -99,16 +97,7 @@ namespace Mutagen.Bethesda.Binary
             if (this.SnapToFinalPosition
                 && this.Reader.Position != FinalLocation)
             {
-                if (ErrorOnFinalPosition)
-                {
-                    var err = $"Did not read expected amount of bytes. Position: {this.Reader.Position}, Expected: {this.FinalLocation}";
-                    this.Reader.Position = this.FinalLocation;
-                    throw new ArgumentException(err);
-                }
-                else
-                {
-                    this.Reader.Position = this.FinalLocation;
-                }
+                this.Reader.Position = this.FinalLocation;
             }
         }
 
