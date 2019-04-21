@@ -26,6 +26,7 @@ namespace Mutagen.Bethesda.Oblivion
             while (rdat.Equals(Region_Registration.RDAT_HEADER))
             {
                 ParseRegionData(frame, item, masterReferences, errorMask);
+                if (frame.Complete) break;
                 rdat = HeaderTranslation.GetNextSubRecordType(frame.Reader, out rdatType);
             }
         }
