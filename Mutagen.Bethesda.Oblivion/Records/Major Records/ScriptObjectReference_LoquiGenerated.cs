@@ -57,24 +57,6 @@ namespace Mutagen.Bethesda.Oblivion
         FormIDLink<OblivionMajorRecord> IScriptObjectReferenceGetter.Reference_Property => this.Reference_Property;
         #endregion
 
-        #region Loqui Getter Interface
-
-        protected override object GetNthObject(ushort index) => ScriptObjectReferenceCommon.GetNthObject(index, this);
-
-        protected override bool GetNthObjectHasBeenSet(ushort index) => ScriptObjectReferenceCommon.GetNthObjectHasBeenSet(index, this);
-
-        protected override void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => ScriptObjectReferenceCommon.UnsetNthObject(index, this, cmds);
-
-        #endregion
-
-        #region Loqui Interface
-        protected override void SetNthObjectHasBeenSet(ushort index, bool on)
-        {
-            ScriptObjectReferenceCommon.SetNthObjectHasBeenSet(index, on, this);
-        }
-
-        #endregion
-
         IMask<bool> IEqualsMask<ScriptObjectReference>.GetEqualsMask(ScriptObjectReference rhs, EqualsMaskHelper.Include include) => ScriptObjectReferenceCommon.GetEqualsMask(this, rhs, include);
         IMask<bool> IEqualsMask<IScriptObjectReferenceGetter>.GetEqualsMask(IScriptObjectReferenceGetter rhs, EqualsMaskHelper.Include include) => ScriptObjectReferenceCommon.GetEqualsMask(this, rhs, include);
         #region To String
@@ -999,11 +981,6 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, ScriptObjectReference obj)
-        {
-            ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
-        }
-
     }
     #endregion
 
@@ -1246,69 +1223,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         #endregion
-
-        public static void SetNthObjectHasBeenSet(
-            ushort index,
-            bool on,
-            IScriptObjectReference obj,
-            NotifyingFireParameters cmds = null)
-        {
-            ScriptObjectReference_FieldIndex enu = (ScriptObjectReference_FieldIndex)index;
-            switch (enu)
-            {
-                case ScriptObjectReference_FieldIndex.Reference:
-                    if (on) break;
-                    throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
-                default:
-                    ScriptReferenceCommon.SetNthObjectHasBeenSet(index, on, obj);
-                    break;
-            }
-        }
-
-        public static void UnsetNthObject(
-            ushort index,
-            IScriptObjectReference obj,
-            NotifyingUnsetParameters cmds = null)
-        {
-            ScriptObjectReference_FieldIndex enu = (ScriptObjectReference_FieldIndex)index;
-            switch (enu)
-            {
-                case ScriptObjectReference_FieldIndex.Reference:
-                    obj.Reference = default(OblivionMajorRecord);
-                    break;
-                default:
-                    ScriptReferenceCommon.UnsetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public static bool GetNthObjectHasBeenSet(
-            ushort index,
-            IScriptObjectReference obj)
-        {
-            ScriptObjectReference_FieldIndex enu = (ScriptObjectReference_FieldIndex)index;
-            switch (enu)
-            {
-                case ScriptObjectReference_FieldIndex.Reference:
-                    return true;
-                default:
-                    return ScriptReferenceCommon.GetNthObjectHasBeenSet(index, obj);
-            }
-        }
-
-        public static object GetNthObject(
-            ushort index,
-            IScriptObjectReferenceGetter obj)
-        {
-            ScriptObjectReference_FieldIndex enu = (ScriptObjectReference_FieldIndex)index;
-            switch (enu)
-            {
-                case ScriptObjectReference_FieldIndex.Reference:
-                    return obj.Reference;
-                default:
-                    return ScriptReferenceCommon.GetNthObject(index, obj);
-            }
-        }
 
         public static void Clear(
             IScriptObjectReference item,

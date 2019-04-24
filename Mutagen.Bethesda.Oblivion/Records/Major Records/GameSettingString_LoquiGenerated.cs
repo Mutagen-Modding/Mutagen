@@ -77,24 +77,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        #region Loqui Getter Interface
-
-        protected override object GetNthObject(ushort index) => GameSettingStringCommon.GetNthObject(index, this);
-
-        protected override bool GetNthObjectHasBeenSet(ushort index) => GameSettingStringCommon.GetNthObjectHasBeenSet(index, this);
-
-        protected override void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => GameSettingStringCommon.UnsetNthObject(index, this, cmds);
-
-        #endregion
-
-        #region Loqui Interface
-        protected override void SetNthObjectHasBeenSet(ushort index, bool on)
-        {
-            GameSettingStringCommon.SetNthObjectHasBeenSet(index, on, this);
-        }
-
-        #endregion
-
         IMask<bool> IEqualsMask<GameSettingString>.GetEqualsMask(GameSettingString rhs, EqualsMaskHelper.Include include) => GameSettingStringCommon.GetEqualsMask(this, rhs, include);
         IMask<bool> IEqualsMask<IGameSettingStringGetter>.GetEqualsMask(IGameSettingStringGetter rhs, EqualsMaskHelper.Include include) => GameSettingStringCommon.GetEqualsMask(this, rhs, include);
         #region To String
@@ -1148,11 +1130,6 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, GameSettingString obj)
-        {
-            ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
-        }
-
     }
     #endregion
 
@@ -1416,69 +1393,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         #endregion
-
-        public static void SetNthObjectHasBeenSet(
-            ushort index,
-            bool on,
-            IGameSettingString obj,
-            NotifyingFireParameters cmds = null)
-        {
-            GameSettingString_FieldIndex enu = (GameSettingString_FieldIndex)index;
-            switch (enu)
-            {
-                case GameSettingString_FieldIndex.Data:
-                    obj.Data_IsSet = on;
-                    break;
-                default:
-                    GameSettingCommon.SetNthObjectHasBeenSet(index, on, obj);
-                    break;
-            }
-        }
-
-        public static void UnsetNthObject(
-            ushort index,
-            IGameSettingString obj,
-            NotifyingUnsetParameters cmds = null)
-        {
-            GameSettingString_FieldIndex enu = (GameSettingString_FieldIndex)index;
-            switch (enu)
-            {
-                case GameSettingString_FieldIndex.Data:
-                    obj.Data_Unset();
-                    break;
-                default:
-                    GameSettingCommon.UnsetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public static bool GetNthObjectHasBeenSet(
-            ushort index,
-            IGameSettingString obj)
-        {
-            GameSettingString_FieldIndex enu = (GameSettingString_FieldIndex)index;
-            switch (enu)
-            {
-                case GameSettingString_FieldIndex.Data:
-                    return obj.Data_IsSet;
-                default:
-                    return GameSettingCommon.GetNthObjectHasBeenSet(index, obj);
-            }
-        }
-
-        public static object GetNthObject(
-            ushort index,
-            IGameSettingStringGetter obj)
-        {
-            GameSettingString_FieldIndex enu = (GameSettingString_FieldIndex)index;
-            switch (enu)
-            {
-                case GameSettingString_FieldIndex.Data:
-                    return obj.Data;
-                default:
-                    return GameSettingCommon.GetNthObject(index, obj);
-            }
-        }
 
         public static void Clear(
             IGameSettingString item,

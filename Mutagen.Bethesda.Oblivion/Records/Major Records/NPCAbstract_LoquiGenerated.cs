@@ -52,24 +52,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
 
-        #region Loqui Getter Interface
-
-        protected override object GetNthObject(ushort index) => NPCAbstractCommon.GetNthObject(index, this);
-
-        protected override bool GetNthObjectHasBeenSet(ushort index) => NPCAbstractCommon.GetNthObjectHasBeenSet(index, this);
-
-        protected override void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => NPCAbstractCommon.UnsetNthObject(index, this, cmds);
-
-        #endregion
-
-        #region Loqui Interface
-        protected override void SetNthObjectHasBeenSet(ushort index, bool on)
-        {
-            NPCAbstractCommon.SetNthObjectHasBeenSet(index, on, this);
-        }
-
-        #endregion
-
         IMask<bool> IEqualsMask<NPCAbstract>.GetEqualsMask(NPCAbstract rhs, EqualsMaskHelper.Include include) => NPCAbstractCommon.GetEqualsMask(this, rhs, include);
         IMask<bool> IEqualsMask<INPCAbstractGetter>.GetEqualsMask(INPCAbstractGetter rhs, EqualsMaskHelper.Include include) => NPCAbstractCommon.GetEqualsMask(this, rhs, include);
         #region To String
@@ -861,11 +843,6 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, NPCAbstract obj)
-        {
-            ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
-        }
-
     }
     #endregion
 
@@ -1083,59 +1060,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         #endregion
-
-        public static void SetNthObjectHasBeenSet(
-            ushort index,
-            bool on,
-            INPCAbstract obj,
-            NotifyingFireParameters cmds = null)
-        {
-            NPCAbstract_FieldIndex enu = (NPCAbstract_FieldIndex)index;
-            switch (enu)
-            {
-                default:
-                    NPCSpawnCommon.SetNthObjectHasBeenSet(index, on, obj);
-                    break;
-            }
-        }
-
-        public static void UnsetNthObject(
-            ushort index,
-            INPCAbstract obj,
-            NotifyingUnsetParameters cmds = null)
-        {
-            NPCAbstract_FieldIndex enu = (NPCAbstract_FieldIndex)index;
-            switch (enu)
-            {
-                default:
-                    NPCSpawnCommon.UnsetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public static bool GetNthObjectHasBeenSet(
-            ushort index,
-            INPCAbstract obj)
-        {
-            NPCAbstract_FieldIndex enu = (NPCAbstract_FieldIndex)index;
-            switch (enu)
-            {
-                default:
-                    return NPCSpawnCommon.GetNthObjectHasBeenSet(index, obj);
-            }
-        }
-
-        public static object GetNthObject(
-            ushort index,
-            INPCAbstractGetter obj)
-        {
-            NPCAbstract_FieldIndex enu = (NPCAbstract_FieldIndex)index;
-            switch (enu)
-            {
-                default:
-                    return NPCSpawnCommon.GetNthObject(index, obj);
-            }
-        }
 
         public static void Clear(
             INPCAbstract item,

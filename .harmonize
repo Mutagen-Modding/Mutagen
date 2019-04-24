@@ -10,10 +10,10 @@
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>87aaae6a01e421e6f0de6fd172327e781a827dc4</Sha>
+         <Sha>2962f324da94f70d12cc8ebddd9e7ce300856509</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>04-16-2019 18:25:33</CommitDate>
-         <Description>lib update</Description>
+         <CommitDate>04-24-2019 17:37:00</CommitDate>
+         <Description>GetNthReflection generation option</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>

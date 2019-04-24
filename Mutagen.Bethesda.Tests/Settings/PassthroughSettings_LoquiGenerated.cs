@@ -62,28 +62,6 @@ namespace Mutagen.Bethesda.Tests
         public String DataFolder { get; set; }
         #endregion
 
-        #region Loqui Getter Interface
-
-        protected object GetNthObject(ushort index) => PassthroughSettingsCommon.GetNthObject(index, this);
-        object ILoquiObjectGetter.GetNthObject(ushort index) => this.GetNthObject(index);
-
-        protected bool GetNthObjectHasBeenSet(ushort index) => PassthroughSettingsCommon.GetNthObjectHasBeenSet(index, this);
-        bool ILoquiObjectGetter.GetNthObjectHasBeenSet(ushort index) => this.GetNthObjectHasBeenSet(index);
-
-        protected void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => PassthroughSettingsCommon.UnsetNthObject(index, this, cmds);
-        void ILoquiObjectSetter.UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => this.UnsetNthObject(index, cmds);
-
-        #endregion
-
-        #region Loqui Interface
-        protected void SetNthObjectHasBeenSet(ushort index, bool on)
-        {
-            PassthroughSettingsCommon.SetNthObjectHasBeenSet(index, on, this);
-        }
-        void ILoquiObjectSetter.SetNthObjectHasBeenSet(ushort index, bool on) => this.SetNthObjectHasBeenSet(index, on);
-
-        #endregion
-
         IMask<bool> IEqualsMask<PassthroughSettings>.GetEqualsMask(PassthroughSettings rhs, EqualsMaskHelper.Include include) => PassthroughSettingsCommon.GetEqualsMask(this, rhs, include);
         IMask<bool> IEqualsMask<IPassthroughSettingsGetter>.GetEqualsMask(IPassthroughSettingsGetter rhs, EqualsMaskHelper.Include include) => PassthroughSettingsCommon.GetEqualsMask(this, rhs, include);
         #region To String
@@ -619,7 +597,6 @@ namespace Mutagen.Bethesda.Tests
                 cmds: cmds);
         }
 
-        void ILoquiObjectSetter.SetNthObject(ushort index, object obj, NotifyingFireParameters cmds) => this.SetNthObject(index, obj, cmds);
         protected void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
         {
             PassthroughSettings_FieldIndex enu = (PassthroughSettings_FieldIndex)index;
@@ -702,11 +679,6 @@ namespace Mutagen.Bethesda.Tests
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, PassthroughSettings obj)
-        {
-            ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
-        }
-
     }
     #endregion
 
@@ -1045,102 +1017,6 @@ namespace Mutagen.Bethesda.Tests.Internals
         }
 
         #endregion
-
-        public static void SetNthObjectHasBeenSet(
-            ushort index,
-            bool on,
-            IPassthroughSettings obj,
-            NotifyingFireParameters cmds = null)
-        {
-            PassthroughSettings_FieldIndex enu = (PassthroughSettings_FieldIndex)index;
-            switch (enu)
-            {
-                case PassthroughSettings_FieldIndex.ReuseCaches:
-                case PassthroughSettings_FieldIndex.DeleteCachesAfter:
-                case PassthroughSettings_FieldIndex.TestNormal:
-                case PassthroughSettings_FieldIndex.TestObservable:
-                case PassthroughSettings_FieldIndex.TestFolder:
-                case PassthroughSettings_FieldIndex.DataFolder:
-                    if (on) break;
-                    throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static void UnsetNthObject(
-            ushort index,
-            IPassthroughSettings obj,
-            NotifyingUnsetParameters cmds = null)
-        {
-            PassthroughSettings_FieldIndex enu = (PassthroughSettings_FieldIndex)index;
-            switch (enu)
-            {
-                case PassthroughSettings_FieldIndex.ReuseCaches:
-                    obj.ReuseCaches = default(Boolean);
-                    break;
-                case PassthroughSettings_FieldIndex.DeleteCachesAfter:
-                    obj.DeleteCachesAfter = PassthroughSettings._DeleteCachesAfter_Default;
-                    break;
-                case PassthroughSettings_FieldIndex.TestNormal:
-                    obj.TestNormal = default(Boolean);
-                    break;
-                case PassthroughSettings_FieldIndex.TestObservable:
-                    obj.TestObservable = default(Boolean);
-                    break;
-                case PassthroughSettings_FieldIndex.TestFolder:
-                    obj.TestFolder = default(Boolean);
-                    break;
-                case PassthroughSettings_FieldIndex.DataFolder:
-                    obj.DataFolder = default(String);
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthObjectHasBeenSet(
-            ushort index,
-            IPassthroughSettings obj)
-        {
-            PassthroughSettings_FieldIndex enu = (PassthroughSettings_FieldIndex)index;
-            switch (enu)
-            {
-                case PassthroughSettings_FieldIndex.ReuseCaches:
-                case PassthroughSettings_FieldIndex.DeleteCachesAfter:
-                case PassthroughSettings_FieldIndex.TestNormal:
-                case PassthroughSettings_FieldIndex.TestObservable:
-                case PassthroughSettings_FieldIndex.TestFolder:
-                case PassthroughSettings_FieldIndex.DataFolder:
-                    return true;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static object GetNthObject(
-            ushort index,
-            IPassthroughSettingsGetter obj)
-        {
-            PassthroughSettings_FieldIndex enu = (PassthroughSettings_FieldIndex)index;
-            switch (enu)
-            {
-                case PassthroughSettings_FieldIndex.ReuseCaches:
-                    return obj.ReuseCaches;
-                case PassthroughSettings_FieldIndex.DeleteCachesAfter:
-                    return obj.DeleteCachesAfter;
-                case PassthroughSettings_FieldIndex.TestNormal:
-                    return obj.TestNormal;
-                case PassthroughSettings_FieldIndex.TestObservable:
-                    return obj.TestObservable;
-                case PassthroughSettings_FieldIndex.TestFolder:
-                    return obj.TestFolder;
-                case PassthroughSettings_FieldIndex.DataFolder:
-                    return obj.DataFolder;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
 
         public static void Clear(
             IPassthroughSettings item,

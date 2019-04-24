@@ -86,24 +86,6 @@ namespace Mutagen.Bethesda.Oblivion
         public static RangeFloat StartTime_Range = new RangeFloat(0f, 1434.375f);
         #endregion
 
-        #region Loqui Getter Interface
-
-        protected override object GetNthObject(ushort index) => SoundDataExtendedCommon.GetNthObject(index, this);
-
-        protected override bool GetNthObjectHasBeenSet(ushort index) => SoundDataExtendedCommon.GetNthObjectHasBeenSet(index, this);
-
-        protected override void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => SoundDataExtendedCommon.UnsetNthObject(index, this, cmds);
-
-        #endregion
-
-        #region Loqui Interface
-        protected override void SetNthObjectHasBeenSet(ushort index, bool on)
-        {
-            SoundDataExtendedCommon.SetNthObjectHasBeenSet(index, on, this);
-        }
-
-        #endregion
-
         IMask<bool> IEqualsMask<SoundDataExtended>.GetEqualsMask(SoundDataExtended rhs, EqualsMaskHelper.Include include) => SoundDataExtendedCommon.GetEqualsMask(this, rhs, include);
         IMask<bool> IEqualsMask<ISoundDataExtendedGetter>.GetEqualsMask(ISoundDataExtendedGetter rhs, EqualsMaskHelper.Include include) => SoundDataExtendedCommon.GetEqualsMask(this, rhs, include);
         #region To String
@@ -1082,11 +1064,6 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, SoundDataExtended obj)
-        {
-            ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
-        }
-
     }
     #endregion
 
@@ -1401,83 +1378,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         #endregion
-
-        public static void SetNthObjectHasBeenSet(
-            ushort index,
-            bool on,
-            ISoundDataExtended obj,
-            NotifyingFireParameters cmds = null)
-        {
-            SoundDataExtended_FieldIndex enu = (SoundDataExtended_FieldIndex)index;
-            switch (enu)
-            {
-                case SoundDataExtended_FieldIndex.StaticAttenuation:
-                case SoundDataExtended_FieldIndex.StopTime:
-                case SoundDataExtended_FieldIndex.StartTime:
-                    if (on) break;
-                    throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
-                default:
-                    SoundDataCommon.SetNthObjectHasBeenSet(index, on, obj);
-                    break;
-            }
-        }
-
-        public static void UnsetNthObject(
-            ushort index,
-            ISoundDataExtended obj,
-            NotifyingUnsetParameters cmds = null)
-        {
-            SoundDataExtended_FieldIndex enu = (SoundDataExtended_FieldIndex)index;
-            switch (enu)
-            {
-                case SoundDataExtended_FieldIndex.StaticAttenuation:
-                    obj.StaticAttenuation = default(Single);
-                    break;
-                case SoundDataExtended_FieldIndex.StopTime:
-                    obj.StopTime = default(Single);
-                    break;
-                case SoundDataExtended_FieldIndex.StartTime:
-                    obj.StartTime = default(Single);
-                    break;
-                default:
-                    SoundDataCommon.UnsetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public static bool GetNthObjectHasBeenSet(
-            ushort index,
-            ISoundDataExtended obj)
-        {
-            SoundDataExtended_FieldIndex enu = (SoundDataExtended_FieldIndex)index;
-            switch (enu)
-            {
-                case SoundDataExtended_FieldIndex.StaticAttenuation:
-                case SoundDataExtended_FieldIndex.StopTime:
-                case SoundDataExtended_FieldIndex.StartTime:
-                    return true;
-                default:
-                    return SoundDataCommon.GetNthObjectHasBeenSet(index, obj);
-            }
-        }
-
-        public static object GetNthObject(
-            ushort index,
-            ISoundDataExtendedGetter obj)
-        {
-            SoundDataExtended_FieldIndex enu = (SoundDataExtended_FieldIndex)index;
-            switch (enu)
-            {
-                case SoundDataExtended_FieldIndex.StaticAttenuation:
-                    return obj.StaticAttenuation;
-                case SoundDataExtended_FieldIndex.StopTime:
-                    return obj.StopTime;
-                case SoundDataExtended_FieldIndex.StartTime:
-                    return obj.StartTime;
-                default:
-                    return SoundDataCommon.GetNthObject(index, obj);
-            }
-        }
 
         public static void Clear(
             ISoundDataExtended item,

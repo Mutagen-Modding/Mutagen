@@ -267,24 +267,6 @@ namespace Mutagen.Bethesda.Oblivion
         RegionDataSounds IRegionGetter.Sounds => this.Sounds;
         #endregion
 
-        #region Loqui Getter Interface
-
-        protected override object GetNthObject(ushort index) => RegionCommon.GetNthObject(index, this);
-
-        protected override bool GetNthObjectHasBeenSet(ushort index) => RegionCommon.GetNthObjectHasBeenSet(index, this);
-
-        protected override void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => RegionCommon.UnsetNthObject(index, this, cmds);
-
-        #endregion
-
-        #region Loqui Interface
-        protected override void SetNthObjectHasBeenSet(ushort index, bool on)
-        {
-            RegionCommon.SetNthObjectHasBeenSet(index, on, this);
-        }
-
-        #endregion
-
         IMask<bool> IEqualsMask<Region>.GetEqualsMask(Region rhs, EqualsMaskHelper.Include include) => RegionCommon.GetEqualsMask(this, rhs, include);
         IMask<bool> IEqualsMask<IRegionGetter>.GetEqualsMask(IRegionGetter rhs, EqualsMaskHelper.Include include) => RegionCommon.GetEqualsMask(this, rhs, include);
         #region To String
@@ -1599,11 +1581,6 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, Region obj)
-        {
-            ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
-        }
-
     }
     #endregion
 
@@ -2395,149 +2372,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         #endregion
-
-        public static void SetNthObjectHasBeenSet(
-            ushort index,
-            bool on,
-            IRegion obj,
-            NotifyingFireParameters cmds = null)
-        {
-            Region_FieldIndex enu = (Region_FieldIndex)index;
-            switch (enu)
-            {
-                case Region_FieldIndex.Icon:
-                    obj.Icon_IsSet = on;
-                    break;
-                case Region_FieldIndex.MapColor:
-                    obj.MapColor_IsSet = on;
-                    break;
-                case Region_FieldIndex.Worldspace:
-                    obj.Worldspace_Property.HasBeenSet = on;
-                    break;
-                case Region_FieldIndex.Areas:
-                    obj.Areas.HasBeenSet = on;
-                    break;
-                case Region_FieldIndex.Objects:
-                    obj.Objects_IsSet = on;
-                    break;
-                case Region_FieldIndex.Weather:
-                    obj.Weather_IsSet = on;
-                    break;
-                case Region_FieldIndex.MapName:
-                    obj.MapName_IsSet = on;
-                    break;
-                case Region_FieldIndex.Grasses:
-                    obj.Grasses_IsSet = on;
-                    break;
-                case Region_FieldIndex.Sounds:
-                    obj.Sounds_IsSet = on;
-                    break;
-                default:
-                    OblivionMajorRecordCommon.SetNthObjectHasBeenSet(index, on, obj);
-                    break;
-            }
-        }
-
-        public static void UnsetNthObject(
-            ushort index,
-            IRegion obj,
-            NotifyingUnsetParameters cmds = null)
-        {
-            Region_FieldIndex enu = (Region_FieldIndex)index;
-            switch (enu)
-            {
-                case Region_FieldIndex.Icon:
-                    obj.Icon_Unset();
-                    break;
-                case Region_FieldIndex.MapColor:
-                    obj.MapColor_Unset();
-                    break;
-                case Region_FieldIndex.Worldspace:
-                    obj.Worldspace_Property.Unset(cmds);
-                    break;
-                case Region_FieldIndex.Areas:
-                    obj.Areas.Unset();
-                    break;
-                case Region_FieldIndex.Objects:
-                    obj.Objects_Unset();
-                    break;
-                case Region_FieldIndex.Weather:
-                    obj.Weather_Unset();
-                    break;
-                case Region_FieldIndex.MapName:
-                    obj.MapName_Unset();
-                    break;
-                case Region_FieldIndex.Grasses:
-                    obj.Grasses_Unset();
-                    break;
-                case Region_FieldIndex.Sounds:
-                    obj.Sounds_Unset();
-                    break;
-                default:
-                    OblivionMajorRecordCommon.UnsetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public static bool GetNthObjectHasBeenSet(
-            ushort index,
-            IRegion obj)
-        {
-            Region_FieldIndex enu = (Region_FieldIndex)index;
-            switch (enu)
-            {
-                case Region_FieldIndex.Icon:
-                    return obj.Icon_IsSet;
-                case Region_FieldIndex.MapColor:
-                    return obj.MapColor_IsSet;
-                case Region_FieldIndex.Worldspace:
-                    return obj.Worldspace_Property.HasBeenSet;
-                case Region_FieldIndex.Areas:
-                    return obj.Areas.HasBeenSet;
-                case Region_FieldIndex.Objects:
-                    return obj.Objects_IsSet;
-                case Region_FieldIndex.Weather:
-                    return obj.Weather_IsSet;
-                case Region_FieldIndex.MapName:
-                    return obj.MapName_IsSet;
-                case Region_FieldIndex.Grasses:
-                    return obj.Grasses_IsSet;
-                case Region_FieldIndex.Sounds:
-                    return obj.Sounds_IsSet;
-                default:
-                    return OblivionMajorRecordCommon.GetNthObjectHasBeenSet(index, obj);
-            }
-        }
-
-        public static object GetNthObject(
-            ushort index,
-            IRegionGetter obj)
-        {
-            Region_FieldIndex enu = (Region_FieldIndex)index;
-            switch (enu)
-            {
-                case Region_FieldIndex.Icon:
-                    return obj.Icon;
-                case Region_FieldIndex.MapColor:
-                    return obj.MapColor;
-                case Region_FieldIndex.Worldspace:
-                    return obj.Worldspace;
-                case Region_FieldIndex.Areas:
-                    return obj.Areas;
-                case Region_FieldIndex.Objects:
-                    return obj.Objects;
-                case Region_FieldIndex.Weather:
-                    return obj.Weather;
-                case Region_FieldIndex.MapName:
-                    return obj.MapName;
-                case Region_FieldIndex.Grasses:
-                    return obj.Grasses;
-                case Region_FieldIndex.Sounds:
-                    return obj.Sounds;
-                default:
-                    return OblivionMajorRecordCommon.GetNthObject(index, obj);
-            }
-        }
 
         public static void Clear(
             IRegion item,

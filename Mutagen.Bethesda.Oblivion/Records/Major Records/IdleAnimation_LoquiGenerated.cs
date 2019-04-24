@@ -143,24 +143,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        #region Loqui Getter Interface
-
-        protected override object GetNthObject(ushort index) => IdleAnimationCommon.GetNthObject(index, this);
-
-        protected override bool GetNthObjectHasBeenSet(ushort index) => IdleAnimationCommon.GetNthObjectHasBeenSet(index, this);
-
-        protected override void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => IdleAnimationCommon.UnsetNthObject(index, this, cmds);
-
-        #endregion
-
-        #region Loqui Interface
-        protected override void SetNthObjectHasBeenSet(ushort index, bool on)
-        {
-            IdleAnimationCommon.SetNthObjectHasBeenSet(index, on, this);
-        }
-
-        #endregion
-
         IMask<bool> IEqualsMask<IdleAnimation>.GetEqualsMask(IdleAnimation rhs, EqualsMaskHelper.Include include) => IdleAnimationCommon.GetEqualsMask(this, rhs, include);
         IMask<bool> IEqualsMask<IIdleAnimationGetter>.GetEqualsMask(IIdleAnimationGetter rhs, EqualsMaskHelper.Include include) => IdleAnimationCommon.GetEqualsMask(this, rhs, include);
         #region To String
@@ -1306,11 +1288,6 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, IdleAnimation obj)
-        {
-            ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
-        }
-
     }
     #endregion
 
@@ -1742,99 +1719,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         #endregion
-
-        public static void SetNthObjectHasBeenSet(
-            ushort index,
-            bool on,
-            IIdleAnimation obj,
-            NotifyingFireParameters cmds = null)
-        {
-            IdleAnimation_FieldIndex enu = (IdleAnimation_FieldIndex)index;
-            switch (enu)
-            {
-                case IdleAnimation_FieldIndex.Model:
-                    obj.Model_IsSet = on;
-                    break;
-                case IdleAnimation_FieldIndex.Conditions:
-                    obj.Conditions.HasBeenSet = on;
-                    break;
-                case IdleAnimation_FieldIndex.AnimationGroupSection:
-                    obj.AnimationGroupSection_IsSet = on;
-                    break;
-                case IdleAnimation_FieldIndex.RelatedIdleAnimations:
-                    obj.RelatedIdleAnimations.HasBeenSet = on;
-                    break;
-                default:
-                    OblivionMajorRecordCommon.SetNthObjectHasBeenSet(index, on, obj);
-                    break;
-            }
-        }
-
-        public static void UnsetNthObject(
-            ushort index,
-            IIdleAnimation obj,
-            NotifyingUnsetParameters cmds = null)
-        {
-            IdleAnimation_FieldIndex enu = (IdleAnimation_FieldIndex)index;
-            switch (enu)
-            {
-                case IdleAnimation_FieldIndex.Model:
-                    obj.Model_Unset();
-                    break;
-                case IdleAnimation_FieldIndex.Conditions:
-                    obj.Conditions.Unset();
-                    break;
-                case IdleAnimation_FieldIndex.AnimationGroupSection:
-                    obj.AnimationGroupSection_Unset();
-                    break;
-                case IdleAnimation_FieldIndex.RelatedIdleAnimations:
-                    obj.RelatedIdleAnimations.Unset();
-                    break;
-                default:
-                    OblivionMajorRecordCommon.UnsetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public static bool GetNthObjectHasBeenSet(
-            ushort index,
-            IIdleAnimation obj)
-        {
-            IdleAnimation_FieldIndex enu = (IdleAnimation_FieldIndex)index;
-            switch (enu)
-            {
-                case IdleAnimation_FieldIndex.Model:
-                    return obj.Model_IsSet;
-                case IdleAnimation_FieldIndex.Conditions:
-                    return obj.Conditions.HasBeenSet;
-                case IdleAnimation_FieldIndex.AnimationGroupSection:
-                    return obj.AnimationGroupSection_IsSet;
-                case IdleAnimation_FieldIndex.RelatedIdleAnimations:
-                    return obj.RelatedIdleAnimations.HasBeenSet;
-                default:
-                    return OblivionMajorRecordCommon.GetNthObjectHasBeenSet(index, obj);
-            }
-        }
-
-        public static object GetNthObject(
-            ushort index,
-            IIdleAnimationGetter obj)
-        {
-            IdleAnimation_FieldIndex enu = (IdleAnimation_FieldIndex)index;
-            switch (enu)
-            {
-                case IdleAnimation_FieldIndex.Model:
-                    return obj.Model;
-                case IdleAnimation_FieldIndex.Conditions:
-                    return obj.Conditions;
-                case IdleAnimation_FieldIndex.AnimationGroupSection:
-                    return obj.AnimationGroupSection;
-                case IdleAnimation_FieldIndex.RelatedIdleAnimations:
-                    return obj.RelatedIdleAnimations;
-                default:
-                    return OblivionMajorRecordCommon.GetNthObject(index, obj);
-            }
-        }
 
         public static void Clear(
             IIdleAnimation item,

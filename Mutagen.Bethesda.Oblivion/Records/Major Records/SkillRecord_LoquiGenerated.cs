@@ -293,24 +293,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        #region Loqui Getter Interface
-
-        protected override object GetNthObject(ushort index) => SkillRecordCommon.GetNthObject(index, this);
-
-        protected override bool GetNthObjectHasBeenSet(ushort index) => SkillRecordCommon.GetNthObjectHasBeenSet(index, this);
-
-        protected override void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => SkillRecordCommon.UnsetNthObject(index, this, cmds);
-
-        #endregion
-
-        #region Loqui Interface
-        protected override void SetNthObjectHasBeenSet(ushort index, bool on)
-        {
-            SkillRecordCommon.SetNthObjectHasBeenSet(index, on, this);
-        }
-
-        #endregion
-
         IMask<bool> IEqualsMask<SkillRecord>.GetEqualsMask(SkillRecord rhs, EqualsMaskHelper.Include include) => SkillRecordCommon.GetEqualsMask(this, rhs, include);
         IMask<bool> IEqualsMask<ISkillRecordGetter>.GetEqualsMask(ISkillRecordGetter rhs, EqualsMaskHelper.Include include) => SkillRecordCommon.GetEqualsMask(this, rhs, include);
         #region To String
@@ -1765,11 +1747,6 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, SkillRecord obj)
-        {
-            ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
-        }
-
     }
     #endregion
 
@@ -2527,167 +2504,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         #endregion
-
-        public static void SetNthObjectHasBeenSet(
-            ushort index,
-            bool on,
-            ISkillRecord obj,
-            NotifyingFireParameters cmds = null)
-        {
-            SkillRecord_FieldIndex enu = (SkillRecord_FieldIndex)index;
-            switch (enu)
-            {
-                case SkillRecord_FieldIndex.Action:
-                case SkillRecord_FieldIndex.Attribute:
-                case SkillRecord_FieldIndex.Specialization:
-                case SkillRecord_FieldIndex.UseValueFirst:
-                case SkillRecord_FieldIndex.UseValueSecond:
-                    if (on) break;
-                    throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
-                case SkillRecord_FieldIndex.Skill:
-                    obj.Skill_IsSet = on;
-                    break;
-                case SkillRecord_FieldIndex.Description:
-                    obj.Description_IsSet = on;
-                    break;
-                case SkillRecord_FieldIndex.Icon:
-                    obj.Icon_IsSet = on;
-                    break;
-                case SkillRecord_FieldIndex.ApprenticeText:
-                    obj.ApprenticeText_IsSet = on;
-                    break;
-                case SkillRecord_FieldIndex.JourneymanText:
-                    obj.JourneymanText_IsSet = on;
-                    break;
-                case SkillRecord_FieldIndex.ExpertText:
-                    obj.ExpertText_IsSet = on;
-                    break;
-                case SkillRecord_FieldIndex.MasterText:
-                    obj.MasterText_IsSet = on;
-                    break;
-                default:
-                    OblivionMajorRecordCommon.SetNthObjectHasBeenSet(index, on, obj);
-                    break;
-            }
-        }
-
-        public static void UnsetNthObject(
-            ushort index,
-            ISkillRecord obj,
-            NotifyingUnsetParameters cmds = null)
-        {
-            SkillRecord_FieldIndex enu = (SkillRecord_FieldIndex)index;
-            switch (enu)
-            {
-                case SkillRecord_FieldIndex.Skill:
-                    obj.Skill_Unset();
-                    break;
-                case SkillRecord_FieldIndex.Description:
-                    obj.Description_Unset();
-                    break;
-                case SkillRecord_FieldIndex.Icon:
-                    obj.Icon_Unset();
-                    break;
-                case SkillRecord_FieldIndex.Action:
-                    obj.Action = default(ActorValue);
-                    break;
-                case SkillRecord_FieldIndex.Attribute:
-                    obj.Attribute = default(ActorValue);
-                    break;
-                case SkillRecord_FieldIndex.Specialization:
-                    obj.Specialization = default(Specialization);
-                    break;
-                case SkillRecord_FieldIndex.UseValueFirst:
-                    obj.UseValueFirst = default(Single);
-                    break;
-                case SkillRecord_FieldIndex.UseValueSecond:
-                    obj.UseValueSecond = default(Single);
-                    break;
-                case SkillRecord_FieldIndex.ApprenticeText:
-                    obj.ApprenticeText_Unset();
-                    break;
-                case SkillRecord_FieldIndex.JourneymanText:
-                    obj.JourneymanText_Unset();
-                    break;
-                case SkillRecord_FieldIndex.ExpertText:
-                    obj.ExpertText_Unset();
-                    break;
-                case SkillRecord_FieldIndex.MasterText:
-                    obj.MasterText_Unset();
-                    break;
-                default:
-                    OblivionMajorRecordCommon.UnsetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public static bool GetNthObjectHasBeenSet(
-            ushort index,
-            ISkillRecord obj)
-        {
-            SkillRecord_FieldIndex enu = (SkillRecord_FieldIndex)index;
-            switch (enu)
-            {
-                case SkillRecord_FieldIndex.Action:
-                case SkillRecord_FieldIndex.Attribute:
-                case SkillRecord_FieldIndex.Specialization:
-                case SkillRecord_FieldIndex.UseValueFirst:
-                case SkillRecord_FieldIndex.UseValueSecond:
-                    return true;
-                case SkillRecord_FieldIndex.Skill:
-                    return obj.Skill_IsSet;
-                case SkillRecord_FieldIndex.Description:
-                    return obj.Description_IsSet;
-                case SkillRecord_FieldIndex.Icon:
-                    return obj.Icon_IsSet;
-                case SkillRecord_FieldIndex.ApprenticeText:
-                    return obj.ApprenticeText_IsSet;
-                case SkillRecord_FieldIndex.JourneymanText:
-                    return obj.JourneymanText_IsSet;
-                case SkillRecord_FieldIndex.ExpertText:
-                    return obj.ExpertText_IsSet;
-                case SkillRecord_FieldIndex.MasterText:
-                    return obj.MasterText_IsSet;
-                default:
-                    return OblivionMajorRecordCommon.GetNthObjectHasBeenSet(index, obj);
-            }
-        }
-
-        public static object GetNthObject(
-            ushort index,
-            ISkillRecordGetter obj)
-        {
-            SkillRecord_FieldIndex enu = (SkillRecord_FieldIndex)index;
-            switch (enu)
-            {
-                case SkillRecord_FieldIndex.Skill:
-                    return obj.Skill;
-                case SkillRecord_FieldIndex.Description:
-                    return obj.Description;
-                case SkillRecord_FieldIndex.Icon:
-                    return obj.Icon;
-                case SkillRecord_FieldIndex.Action:
-                    return obj.Action;
-                case SkillRecord_FieldIndex.Attribute:
-                    return obj.Attribute;
-                case SkillRecord_FieldIndex.Specialization:
-                    return obj.Specialization;
-                case SkillRecord_FieldIndex.UseValueFirst:
-                    return obj.UseValueFirst;
-                case SkillRecord_FieldIndex.UseValueSecond:
-                    return obj.UseValueSecond;
-                case SkillRecord_FieldIndex.ApprenticeText:
-                    return obj.ApprenticeText;
-                case SkillRecord_FieldIndex.JourneymanText:
-                    return obj.JourneymanText;
-                case SkillRecord_FieldIndex.ExpertText:
-                    return obj.ExpertText;
-                case SkillRecord_FieldIndex.MasterText:
-                    return obj.MasterText;
-                default:
-                    return OblivionMajorRecordCommon.GetNthObject(index, obj);
-            }
-        }
 
         public static void Clear(
             ISkillRecord item,

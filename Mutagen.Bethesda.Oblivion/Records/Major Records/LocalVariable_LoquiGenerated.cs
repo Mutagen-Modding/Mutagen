@@ -130,28 +130,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        #region Loqui Getter Interface
-
-        protected object GetNthObject(ushort index) => LocalVariableCommon.GetNthObject(index, this);
-        object ILoquiObjectGetter.GetNthObject(ushort index) => this.GetNthObject(index);
-
-        protected bool GetNthObjectHasBeenSet(ushort index) => LocalVariableCommon.GetNthObjectHasBeenSet(index, this);
-        bool ILoquiObjectGetter.GetNthObjectHasBeenSet(ushort index) => this.GetNthObjectHasBeenSet(index);
-
-        protected void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => LocalVariableCommon.UnsetNthObject(index, this, cmds);
-        void ILoquiObjectSetter.UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => this.UnsetNthObject(index, cmds);
-
-        #endregion
-
-        #region Loqui Interface
-        protected void SetNthObjectHasBeenSet(ushort index, bool on)
-        {
-            LocalVariableCommon.SetNthObjectHasBeenSet(index, on, this);
-        }
-        void ILoquiObjectSetter.SetNthObjectHasBeenSet(ushort index, bool on) => this.SetNthObjectHasBeenSet(index, on);
-
-        #endregion
-
         IMask<bool> IEqualsMask<LocalVariable>.GetEqualsMask(LocalVariable rhs, EqualsMaskHelper.Include include) => LocalVariableCommon.GetEqualsMask(this, rhs, include);
         IMask<bool> IEqualsMask<ILocalVariableGetter>.GetEqualsMask(ILocalVariableGetter rhs, EqualsMaskHelper.Include include) => LocalVariableCommon.GetEqualsMask(this, rhs, include);
         #region To String
@@ -1192,7 +1170,6 @@ namespace Mutagen.Bethesda.Oblivion
                 cmds: cmds);
         }
 
-        void ILoquiObjectSetter.SetNthObject(ushort index, object obj, NotifyingFireParameters cmds) => this.SetNthObject(index, obj, cmds);
         protected void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
         {
             LocalVariable_FieldIndex enu = (LocalVariable_FieldIndex)index;
@@ -1269,11 +1246,6 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, LocalVariable obj)
-        {
-            ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
-        }
-
     }
     #endregion
 
@@ -1665,98 +1637,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         #endregion
-
-        public static void SetNthObjectHasBeenSet(
-            ushort index,
-            bool on,
-            ILocalVariable obj,
-            NotifyingFireParameters cmds = null)
-        {
-            LocalVariable_FieldIndex enu = (LocalVariable_FieldIndex)index;
-            switch (enu)
-            {
-                case LocalVariable_FieldIndex.Index:
-                case LocalVariable_FieldIndex.Fluff:
-                case LocalVariable_FieldIndex.Flags:
-                case LocalVariable_FieldIndex.Fluff2:
-                    if (on) break;
-                    throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
-                case LocalVariable_FieldIndex.Name:
-                    obj.Name_IsSet = on;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static void UnsetNthObject(
-            ushort index,
-            ILocalVariable obj,
-            NotifyingUnsetParameters cmds = null)
-        {
-            LocalVariable_FieldIndex enu = (LocalVariable_FieldIndex)index;
-            switch (enu)
-            {
-                case LocalVariable_FieldIndex.Index:
-                    obj.Index = default(Int32);
-                    break;
-                case LocalVariable_FieldIndex.Fluff:
-                    obj.Fluff = default(Byte[]);
-                    break;
-                case LocalVariable_FieldIndex.Flags:
-                    obj.Flags = default(Script.LocalVariableFlag);
-                    break;
-                case LocalVariable_FieldIndex.Fluff2:
-                    obj.Fluff2 = default(Byte[]);
-                    break;
-                case LocalVariable_FieldIndex.Name:
-                    obj.Name_Unset();
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthObjectHasBeenSet(
-            ushort index,
-            ILocalVariable obj)
-        {
-            LocalVariable_FieldIndex enu = (LocalVariable_FieldIndex)index;
-            switch (enu)
-            {
-                case LocalVariable_FieldIndex.Index:
-                case LocalVariable_FieldIndex.Fluff:
-                case LocalVariable_FieldIndex.Flags:
-                case LocalVariable_FieldIndex.Fluff2:
-                    return true;
-                case LocalVariable_FieldIndex.Name:
-                    return obj.Name_IsSet;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static object GetNthObject(
-            ushort index,
-            ILocalVariableGetter obj)
-        {
-            LocalVariable_FieldIndex enu = (LocalVariable_FieldIndex)index;
-            switch (enu)
-            {
-                case LocalVariable_FieldIndex.Index:
-                    return obj.Index;
-                case LocalVariable_FieldIndex.Fluff:
-                    return obj.Fluff;
-                case LocalVariable_FieldIndex.Flags:
-                    return obj.Flags;
-                case LocalVariable_FieldIndex.Fluff2:
-                    return obj.Fluff2;
-                case LocalVariable_FieldIndex.Name:
-                    return obj.Name;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
 
         public static void Clear(
             ILocalVariable item,

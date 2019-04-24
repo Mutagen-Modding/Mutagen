@@ -51,24 +51,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
 
-        #region Loqui Getter Interface
-
-        protected override object GetNthObject(ushort index) => GameSettingCommon.GetNthObject(index, this);
-
-        protected override bool GetNthObjectHasBeenSet(ushort index) => GameSettingCommon.GetNthObjectHasBeenSet(index, this);
-
-        protected override void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => GameSettingCommon.UnsetNthObject(index, this, cmds);
-
-        #endregion
-
-        #region Loqui Interface
-        protected override void SetNthObjectHasBeenSet(ushort index, bool on)
-        {
-            GameSettingCommon.SetNthObjectHasBeenSet(index, on, this);
-        }
-
-        #endregion
-
         IMask<bool> IEqualsMask<GameSetting>.GetEqualsMask(GameSetting rhs, EqualsMaskHelper.Include include) => GameSettingCommon.GetEqualsMask(this, rhs, include);
         IMask<bool> IEqualsMask<IGameSettingGetter>.GetEqualsMask(IGameSettingGetter rhs, EqualsMaskHelper.Include include) => GameSettingCommon.GetEqualsMask(this, rhs, include);
         #region To String
@@ -792,11 +774,6 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, GameSetting obj)
-        {
-            ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
-        }
-
     }
     #endregion
 
@@ -1002,59 +979,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         #endregion
-
-        public static void SetNthObjectHasBeenSet(
-            ushort index,
-            bool on,
-            IGameSetting obj,
-            NotifyingFireParameters cmds = null)
-        {
-            GameSetting_FieldIndex enu = (GameSetting_FieldIndex)index;
-            switch (enu)
-            {
-                default:
-                    OblivionMajorRecordCommon.SetNthObjectHasBeenSet(index, on, obj);
-                    break;
-            }
-        }
-
-        public static void UnsetNthObject(
-            ushort index,
-            IGameSetting obj,
-            NotifyingUnsetParameters cmds = null)
-        {
-            GameSetting_FieldIndex enu = (GameSetting_FieldIndex)index;
-            switch (enu)
-            {
-                default:
-                    OblivionMajorRecordCommon.UnsetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public static bool GetNthObjectHasBeenSet(
-            ushort index,
-            IGameSetting obj)
-        {
-            GameSetting_FieldIndex enu = (GameSetting_FieldIndex)index;
-            switch (enu)
-            {
-                default:
-                    return OblivionMajorRecordCommon.GetNthObjectHasBeenSet(index, obj);
-            }
-        }
-
-        public static object GetNthObject(
-            ushort index,
-            IGameSettingGetter obj)
-        {
-            GameSetting_FieldIndex enu = (GameSetting_FieldIndex)index;
-            switch (enu)
-            {
-                default:
-                    return OblivionMajorRecordCommon.GetNthObject(index, obj);
-            }
-        }
 
         public static void Clear(
             IGameSetting item,

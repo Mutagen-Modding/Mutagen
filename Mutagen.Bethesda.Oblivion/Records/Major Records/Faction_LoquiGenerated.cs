@@ -170,24 +170,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        #region Loqui Getter Interface
-
-        protected override object GetNthObject(ushort index) => FactionCommon.GetNthObject(index, this);
-
-        protected override bool GetNthObjectHasBeenSet(ushort index) => FactionCommon.GetNthObjectHasBeenSet(index, this);
-
-        protected override void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => FactionCommon.UnsetNthObject(index, this, cmds);
-
-        #endregion
-
-        #region Loqui Interface
-        protected override void SetNthObjectHasBeenSet(ushort index, bool on)
-        {
-            FactionCommon.SetNthObjectHasBeenSet(index, on, this);
-        }
-
-        #endregion
-
         IMask<bool> IEqualsMask<Faction>.GetEqualsMask(Faction rhs, EqualsMaskHelper.Include include) => FactionCommon.GetEqualsMask(this, rhs, include);
         IMask<bool> IEqualsMask<IFactionGetter>.GetEqualsMask(IFactionGetter rhs, EqualsMaskHelper.Include include) => FactionCommon.GetEqualsMask(this, rhs, include);
         #region To String
@@ -1386,11 +1368,6 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, Faction obj)
-        {
-            ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
-        }
-
     }
     #endregion
 
@@ -1869,109 +1846,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         #endregion
-
-        public static void SetNthObjectHasBeenSet(
-            ushort index,
-            bool on,
-            IFaction obj,
-            NotifyingFireParameters cmds = null)
-        {
-            Faction_FieldIndex enu = (Faction_FieldIndex)index;
-            switch (enu)
-            {
-                case Faction_FieldIndex.Name:
-                    obj.Name_IsSet = on;
-                    break;
-                case Faction_FieldIndex.Relations:
-                    obj.Relations.HasBeenSet = on;
-                    break;
-                case Faction_FieldIndex.Flags:
-                    obj.Flags_IsSet = on;
-                    break;
-                case Faction_FieldIndex.CrimeGoldMultiplier:
-                    obj.CrimeGoldMultiplier_IsSet = on;
-                    break;
-                case Faction_FieldIndex.Ranks:
-                    obj.Ranks.HasBeenSet = on;
-                    break;
-                default:
-                    OblivionMajorRecordCommon.SetNthObjectHasBeenSet(index, on, obj);
-                    break;
-            }
-        }
-
-        public static void UnsetNthObject(
-            ushort index,
-            IFaction obj,
-            NotifyingUnsetParameters cmds = null)
-        {
-            Faction_FieldIndex enu = (Faction_FieldIndex)index;
-            switch (enu)
-            {
-                case Faction_FieldIndex.Name:
-                    obj.Name_Unset();
-                    break;
-                case Faction_FieldIndex.Relations:
-                    obj.Relations.Unset();
-                    break;
-                case Faction_FieldIndex.Flags:
-                    obj.Flags_Unset();
-                    break;
-                case Faction_FieldIndex.CrimeGoldMultiplier:
-                    obj.CrimeGoldMultiplier_Unset();
-                    break;
-                case Faction_FieldIndex.Ranks:
-                    obj.Ranks.Unset();
-                    break;
-                default:
-                    OblivionMajorRecordCommon.UnsetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public static bool GetNthObjectHasBeenSet(
-            ushort index,
-            IFaction obj)
-        {
-            Faction_FieldIndex enu = (Faction_FieldIndex)index;
-            switch (enu)
-            {
-                case Faction_FieldIndex.Name:
-                    return obj.Name_IsSet;
-                case Faction_FieldIndex.Relations:
-                    return obj.Relations.HasBeenSet;
-                case Faction_FieldIndex.Flags:
-                    return obj.Flags_IsSet;
-                case Faction_FieldIndex.CrimeGoldMultiplier:
-                    return obj.CrimeGoldMultiplier_IsSet;
-                case Faction_FieldIndex.Ranks:
-                    return obj.Ranks.HasBeenSet;
-                default:
-                    return OblivionMajorRecordCommon.GetNthObjectHasBeenSet(index, obj);
-            }
-        }
-
-        public static object GetNthObject(
-            ushort index,
-            IFactionGetter obj)
-        {
-            Faction_FieldIndex enu = (Faction_FieldIndex)index;
-            switch (enu)
-            {
-                case Faction_FieldIndex.Name:
-                    return obj.Name;
-                case Faction_FieldIndex.Relations:
-                    return obj.Relations;
-                case Faction_FieldIndex.Flags:
-                    return obj.Flags;
-                case Faction_FieldIndex.CrimeGoldMultiplier:
-                    return obj.CrimeGoldMultiplier;
-                case Faction_FieldIndex.Ranks:
-                    return obj.Ranks;
-                default:
-                    return OblivionMajorRecordCommon.GetNthObject(index, obj);
-            }
-        }
 
         public static void Clear(
             IFaction item,

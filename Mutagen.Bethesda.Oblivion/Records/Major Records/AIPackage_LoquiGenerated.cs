@@ -177,24 +177,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        #region Loqui Getter Interface
-
-        protected override object GetNthObject(ushort index) => AIPackageCommon.GetNthObject(index, this);
-
-        protected override bool GetNthObjectHasBeenSet(ushort index) => AIPackageCommon.GetNthObjectHasBeenSet(index, this);
-
-        protected override void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => AIPackageCommon.UnsetNthObject(index, this, cmds);
-
-        #endregion
-
-        #region Loqui Interface
-        protected override void SetNthObjectHasBeenSet(ushort index, bool on)
-        {
-            AIPackageCommon.SetNthObjectHasBeenSet(index, on, this);
-        }
-
-        #endregion
-
         IMask<bool> IEqualsMask<AIPackage>.GetEqualsMask(AIPackage rhs, EqualsMaskHelper.Include include) => AIPackageCommon.GetEqualsMask(this, rhs, include);
         IMask<bool> IEqualsMask<IAIPackageGetter>.GetEqualsMask(IAIPackageGetter rhs, EqualsMaskHelper.Include include) => AIPackageCommon.GetEqualsMask(this, rhs, include);
         #region To String
@@ -1456,11 +1438,6 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, AIPackage obj)
-        {
-            ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
-        }
-
     }
     #endregion
 
@@ -2028,116 +2005,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         #endregion
-
-        public static void SetNthObjectHasBeenSet(
-            ushort index,
-            bool on,
-            IAIPackage obj,
-            NotifyingFireParameters cmds = null)
-        {
-            AIPackage_FieldIndex enu = (AIPackage_FieldIndex)index;
-            switch (enu)
-            {
-                case AIPackage_FieldIndex.Flags:
-                case AIPackage_FieldIndex.GeneralType:
-                    if (on) break;
-                    throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
-                case AIPackage_FieldIndex.Location:
-                    obj.Location_IsSet = on;
-                    break;
-                case AIPackage_FieldIndex.Schedule:
-                    obj.Schedule_IsSet = on;
-                    break;
-                case AIPackage_FieldIndex.Target:
-                    obj.Target_IsSet = on;
-                    break;
-                case AIPackage_FieldIndex.Conditions:
-                    obj.Conditions.HasBeenSet = on;
-                    break;
-                default:
-                    OblivionMajorRecordCommon.SetNthObjectHasBeenSet(index, on, obj);
-                    break;
-            }
-        }
-
-        public static void UnsetNthObject(
-            ushort index,
-            IAIPackage obj,
-            NotifyingUnsetParameters cmds = null)
-        {
-            AIPackage_FieldIndex enu = (AIPackage_FieldIndex)index;
-            switch (enu)
-            {
-                case AIPackage_FieldIndex.Flags:
-                    obj.Flags = default(AIPackage.Flag);
-                    break;
-                case AIPackage_FieldIndex.GeneralType:
-                    obj.GeneralType = default(AIPackage.GeneralTypeEnum);
-                    break;
-                case AIPackage_FieldIndex.Location:
-                    obj.Location_Unset();
-                    break;
-                case AIPackage_FieldIndex.Schedule:
-                    obj.Schedule_Unset();
-                    break;
-                case AIPackage_FieldIndex.Target:
-                    obj.Target_Unset();
-                    break;
-                case AIPackage_FieldIndex.Conditions:
-                    obj.Conditions.Unset();
-                    break;
-                default:
-                    OblivionMajorRecordCommon.UnsetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public static bool GetNthObjectHasBeenSet(
-            ushort index,
-            IAIPackage obj)
-        {
-            AIPackage_FieldIndex enu = (AIPackage_FieldIndex)index;
-            switch (enu)
-            {
-                case AIPackage_FieldIndex.Flags:
-                case AIPackage_FieldIndex.GeneralType:
-                    return true;
-                case AIPackage_FieldIndex.Location:
-                    return obj.Location_IsSet;
-                case AIPackage_FieldIndex.Schedule:
-                    return obj.Schedule_IsSet;
-                case AIPackage_FieldIndex.Target:
-                    return obj.Target_IsSet;
-                case AIPackage_FieldIndex.Conditions:
-                    return obj.Conditions.HasBeenSet;
-                default:
-                    return OblivionMajorRecordCommon.GetNthObjectHasBeenSet(index, obj);
-            }
-        }
-
-        public static object GetNthObject(
-            ushort index,
-            IAIPackageGetter obj)
-        {
-            AIPackage_FieldIndex enu = (AIPackage_FieldIndex)index;
-            switch (enu)
-            {
-                case AIPackage_FieldIndex.Flags:
-                    return obj.Flags;
-                case AIPackage_FieldIndex.GeneralType:
-                    return obj.GeneralType;
-                case AIPackage_FieldIndex.Location:
-                    return obj.Location;
-                case AIPackage_FieldIndex.Schedule:
-                    return obj.Schedule;
-                case AIPackage_FieldIndex.Target:
-                    return obj.Target;
-                case AIPackage_FieldIndex.Conditions:
-                    return obj.Conditions;
-                default:
-                    return OblivionMajorRecordCommon.GetNthObject(index, obj);
-            }
-        }
 
         public static void Clear(
             IAIPackage item,

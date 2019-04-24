@@ -202,24 +202,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        #region Loqui Getter Interface
-
-        protected override object GetNthObject(ushort index) => PlacedCreatureCommon.GetNthObject(index, this);
-
-        protected override bool GetNthObjectHasBeenSet(ushort index) => PlacedCreatureCommon.GetNthObjectHasBeenSet(index, this);
-
-        protected override void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => PlacedCreatureCommon.UnsetNthObject(index, this, cmds);
-
-        #endregion
-
-        #region Loqui Interface
-        protected override void SetNthObjectHasBeenSet(ushort index, bool on)
-        {
-            PlacedCreatureCommon.SetNthObjectHasBeenSet(index, on, this);
-        }
-
-        #endregion
-
         IMask<bool> IEqualsMask<PlacedCreature>.GetEqualsMask(PlacedCreature rhs, EqualsMaskHelper.Include include) => PlacedCreatureCommon.GetEqualsMask(this, rhs, include);
         IMask<bool> IEqualsMask<IPlacedCreatureGetter>.GetEqualsMask(IPlacedCreatureGetter rhs, EqualsMaskHelper.Include include) => PlacedCreatureCommon.GetEqualsMask(this, rhs, include);
         #region To String
@@ -1581,11 +1563,6 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, PlacedCreature obj)
-        {
-            ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
-        }
-
     }
     #endregion
 
@@ -2221,146 +2198,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         #endregion
-
-        public static void SetNthObjectHasBeenSet(
-            ushort index,
-            bool on,
-            IPlacedCreature obj,
-            NotifyingFireParameters cmds = null)
-        {
-            PlacedCreature_FieldIndex enu = (PlacedCreature_FieldIndex)index;
-            switch (enu)
-            {
-                case PlacedCreature_FieldIndex.Position:
-                case PlacedCreature_FieldIndex.Rotation:
-                    if (on) break;
-                    throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
-                case PlacedCreature_FieldIndex.Base:
-                    obj.Base_Property.HasBeenSet = on;
-                    break;
-                case PlacedCreature_FieldIndex.Owner:
-                    obj.Owner_Property.HasBeenSet = on;
-                    break;
-                case PlacedCreature_FieldIndex.FactionRank:
-                    obj.FactionRank_IsSet = on;
-                    break;
-                case PlacedCreature_FieldIndex.GlobalVariable:
-                    obj.GlobalVariable_Property.HasBeenSet = on;
-                    break;
-                case PlacedCreature_FieldIndex.EnableParent:
-                    obj.EnableParent_IsSet = on;
-                    break;
-                case PlacedCreature_FieldIndex.RagdollData:
-                    obj.RagdollData_IsSet = on;
-                    break;
-                case PlacedCreature_FieldIndex.Scale:
-                    obj.Scale_IsSet = on;
-                    break;
-                default:
-                    OblivionMajorRecordCommon.SetNthObjectHasBeenSet(index, on, obj);
-                    break;
-            }
-        }
-
-        public static void UnsetNthObject(
-            ushort index,
-            IPlacedCreature obj,
-            NotifyingUnsetParameters cmds = null)
-        {
-            PlacedCreature_FieldIndex enu = (PlacedCreature_FieldIndex)index;
-            switch (enu)
-            {
-                case PlacedCreature_FieldIndex.Base:
-                    obj.Base_Property.Unset(cmds);
-                    break;
-                case PlacedCreature_FieldIndex.Owner:
-                    obj.Owner_Property.Unset(cmds);
-                    break;
-                case PlacedCreature_FieldIndex.FactionRank:
-                    obj.FactionRank_Unset();
-                    break;
-                case PlacedCreature_FieldIndex.GlobalVariable:
-                    obj.GlobalVariable_Property.Unset(cmds);
-                    break;
-                case PlacedCreature_FieldIndex.EnableParent:
-                    obj.EnableParent_Unset();
-                    break;
-                case PlacedCreature_FieldIndex.RagdollData:
-                    obj.RagdollData_Unset();
-                    break;
-                case PlacedCreature_FieldIndex.Scale:
-                    obj.Scale_Unset();
-                    break;
-                case PlacedCreature_FieldIndex.Position:
-                    obj.Position = default(P3Float);
-                    break;
-                case PlacedCreature_FieldIndex.Rotation:
-                    obj.Rotation = default(P3Float);
-                    break;
-                default:
-                    OblivionMajorRecordCommon.UnsetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public static bool GetNthObjectHasBeenSet(
-            ushort index,
-            IPlacedCreature obj)
-        {
-            PlacedCreature_FieldIndex enu = (PlacedCreature_FieldIndex)index;
-            switch (enu)
-            {
-                case PlacedCreature_FieldIndex.Position:
-                case PlacedCreature_FieldIndex.Rotation:
-                    return true;
-                case PlacedCreature_FieldIndex.Base:
-                    return obj.Base_Property.HasBeenSet;
-                case PlacedCreature_FieldIndex.Owner:
-                    return obj.Owner_Property.HasBeenSet;
-                case PlacedCreature_FieldIndex.FactionRank:
-                    return obj.FactionRank_IsSet;
-                case PlacedCreature_FieldIndex.GlobalVariable:
-                    return obj.GlobalVariable_Property.HasBeenSet;
-                case PlacedCreature_FieldIndex.EnableParent:
-                    return obj.EnableParent_IsSet;
-                case PlacedCreature_FieldIndex.RagdollData:
-                    return obj.RagdollData_IsSet;
-                case PlacedCreature_FieldIndex.Scale:
-                    return obj.Scale_IsSet;
-                default:
-                    return OblivionMajorRecordCommon.GetNthObjectHasBeenSet(index, obj);
-            }
-        }
-
-        public static object GetNthObject(
-            ushort index,
-            IPlacedCreatureGetter obj)
-        {
-            PlacedCreature_FieldIndex enu = (PlacedCreature_FieldIndex)index;
-            switch (enu)
-            {
-                case PlacedCreature_FieldIndex.Base:
-                    return obj.Base;
-                case PlacedCreature_FieldIndex.Owner:
-                    return obj.Owner;
-                case PlacedCreature_FieldIndex.FactionRank:
-                    return obj.FactionRank;
-                case PlacedCreature_FieldIndex.GlobalVariable:
-                    return obj.GlobalVariable;
-                case PlacedCreature_FieldIndex.EnableParent:
-                    return obj.EnableParent;
-                case PlacedCreature_FieldIndex.RagdollData:
-                    return obj.RagdollData;
-                case PlacedCreature_FieldIndex.Scale:
-                    return obj.Scale;
-                case PlacedCreature_FieldIndex.Position:
-                    return obj.Position;
-                case PlacedCreature_FieldIndex.Rotation:
-                    return obj.Rotation;
-                default:
-                    return OblivionMajorRecordCommon.GetNthObject(index, obj);
-            }
-        }
 
         public static void Clear(
             IPlacedCreature item,

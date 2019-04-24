@@ -77,24 +77,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        #region Loqui Getter Interface
-
-        protected override object GetNthObject(ushort index) => GlobalFloatCommon.GetNthObject(index, this);
-
-        protected override bool GetNthObjectHasBeenSet(ushort index) => GlobalFloatCommon.GetNthObjectHasBeenSet(index, this);
-
-        protected override void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => GlobalFloatCommon.UnsetNthObject(index, this, cmds);
-
-        #endregion
-
-        #region Loqui Interface
-        protected override void SetNthObjectHasBeenSet(ushort index, bool on)
-        {
-            GlobalFloatCommon.SetNthObjectHasBeenSet(index, on, this);
-        }
-
-        #endregion
-
         IMask<bool> IEqualsMask<GlobalFloat>.GetEqualsMask(GlobalFloat rhs, EqualsMaskHelper.Include include) => GlobalFloatCommon.GetEqualsMask(this, rhs, include);
         IMask<bool> IEqualsMask<IGlobalFloatGetter>.GetEqualsMask(IGlobalFloatGetter rhs, EqualsMaskHelper.Include include) => GlobalFloatCommon.GetEqualsMask(this, rhs, include);
         #region To String
@@ -1147,11 +1129,6 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, GlobalFloat obj)
-        {
-            ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
-        }
-
     }
     #endregion
 
@@ -1416,69 +1393,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         #endregion
-
-        public static void SetNthObjectHasBeenSet(
-            ushort index,
-            bool on,
-            IGlobalFloat obj,
-            NotifyingFireParameters cmds = null)
-        {
-            GlobalFloat_FieldIndex enu = (GlobalFloat_FieldIndex)index;
-            switch (enu)
-            {
-                case GlobalFloat_FieldIndex.Data:
-                    obj.Data_IsSet = on;
-                    break;
-                default:
-                    GlobalCommon.SetNthObjectHasBeenSet(index, on, obj);
-                    break;
-            }
-        }
-
-        public static void UnsetNthObject(
-            ushort index,
-            IGlobalFloat obj,
-            NotifyingUnsetParameters cmds = null)
-        {
-            GlobalFloat_FieldIndex enu = (GlobalFloat_FieldIndex)index;
-            switch (enu)
-            {
-                case GlobalFloat_FieldIndex.Data:
-                    obj.Data_Unset();
-                    break;
-                default:
-                    GlobalCommon.UnsetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public static bool GetNthObjectHasBeenSet(
-            ushort index,
-            IGlobalFloat obj)
-        {
-            GlobalFloat_FieldIndex enu = (GlobalFloat_FieldIndex)index;
-            switch (enu)
-            {
-                case GlobalFloat_FieldIndex.Data:
-                    return obj.Data_IsSet;
-                default:
-                    return GlobalCommon.GetNthObjectHasBeenSet(index, obj);
-            }
-        }
-
-        public static object GetNthObject(
-            ushort index,
-            IGlobalFloatGetter obj)
-        {
-            GlobalFloat_FieldIndex enu = (GlobalFloat_FieldIndex)index;
-            switch (enu)
-            {
-                case GlobalFloat_FieldIndex.Data:
-                    return obj.Data;
-                default:
-                    return GlobalCommon.GetNthObject(index, obj);
-            }
-        }
 
         public static void Clear(
             IGlobalFloat item,

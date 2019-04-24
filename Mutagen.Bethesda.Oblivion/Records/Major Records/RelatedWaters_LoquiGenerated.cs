@@ -68,28 +68,6 @@ namespace Mutagen.Bethesda.Oblivion
         FormIDLink<Water> IRelatedWatersGetter.RelatedWaterUnderwater_Property => this.RelatedWaterUnderwater_Property;
         #endregion
 
-        #region Loqui Getter Interface
-
-        protected object GetNthObject(ushort index) => RelatedWatersCommon.GetNthObject(index, this);
-        object ILoquiObjectGetter.GetNthObject(ushort index) => this.GetNthObject(index);
-
-        protected bool GetNthObjectHasBeenSet(ushort index) => RelatedWatersCommon.GetNthObjectHasBeenSet(index, this);
-        bool ILoquiObjectGetter.GetNthObjectHasBeenSet(ushort index) => this.GetNthObjectHasBeenSet(index);
-
-        protected void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => RelatedWatersCommon.UnsetNthObject(index, this, cmds);
-        void ILoquiObjectSetter.UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => this.UnsetNthObject(index, cmds);
-
-        #endregion
-
-        #region Loqui Interface
-        protected void SetNthObjectHasBeenSet(ushort index, bool on)
-        {
-            RelatedWatersCommon.SetNthObjectHasBeenSet(index, on, this);
-        }
-        void ILoquiObjectSetter.SetNthObjectHasBeenSet(ushort index, bool on) => this.SetNthObjectHasBeenSet(index, on);
-
-        #endregion
-
         IMask<bool> IEqualsMask<RelatedWaters>.GetEqualsMask(RelatedWaters rhs, EqualsMaskHelper.Include include) => RelatedWatersCommon.GetEqualsMask(this, rhs, include);
         IMask<bool> IEqualsMask<IRelatedWatersGetter>.GetEqualsMask(IRelatedWatersGetter rhs, EqualsMaskHelper.Include include) => RelatedWatersCommon.GetEqualsMask(this, rhs, include);
         #region To String
@@ -979,7 +957,6 @@ namespace Mutagen.Bethesda.Oblivion
                 cmds: cmds);
         }
 
-        void ILoquiObjectSetter.SetNthObject(ushort index, object obj, NotifyingFireParameters cmds) => this.SetNthObject(index, obj, cmds);
         protected void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
         {
             RelatedWaters_FieldIndex enu = (RelatedWaters_FieldIndex)index;
@@ -1056,11 +1033,6 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, RelatedWaters obj)
-        {
-            ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
-        }
-
     }
     #endregion
 
@@ -1370,81 +1342,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         #endregion
-
-        public static void SetNthObjectHasBeenSet(
-            ushort index,
-            bool on,
-            IRelatedWaters obj,
-            NotifyingFireParameters cmds = null)
-        {
-            RelatedWaters_FieldIndex enu = (RelatedWaters_FieldIndex)index;
-            switch (enu)
-            {
-                case RelatedWaters_FieldIndex.RelatedWaterDaytime:
-                case RelatedWaters_FieldIndex.RelatedWaterNighttime:
-                case RelatedWaters_FieldIndex.RelatedWaterUnderwater:
-                    if (on) break;
-                    throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static void UnsetNthObject(
-            ushort index,
-            IRelatedWaters obj,
-            NotifyingUnsetParameters cmds = null)
-        {
-            RelatedWaters_FieldIndex enu = (RelatedWaters_FieldIndex)index;
-            switch (enu)
-            {
-                case RelatedWaters_FieldIndex.RelatedWaterDaytime:
-                    obj.RelatedWaterDaytime = default(Water);
-                    break;
-                case RelatedWaters_FieldIndex.RelatedWaterNighttime:
-                    obj.RelatedWaterNighttime = default(Water);
-                    break;
-                case RelatedWaters_FieldIndex.RelatedWaterUnderwater:
-                    obj.RelatedWaterUnderwater = default(Water);
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthObjectHasBeenSet(
-            ushort index,
-            IRelatedWaters obj)
-        {
-            RelatedWaters_FieldIndex enu = (RelatedWaters_FieldIndex)index;
-            switch (enu)
-            {
-                case RelatedWaters_FieldIndex.RelatedWaterDaytime:
-                case RelatedWaters_FieldIndex.RelatedWaterNighttime:
-                case RelatedWaters_FieldIndex.RelatedWaterUnderwater:
-                    return true;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static object GetNthObject(
-            ushort index,
-            IRelatedWatersGetter obj)
-        {
-            RelatedWaters_FieldIndex enu = (RelatedWaters_FieldIndex)index;
-            switch (enu)
-            {
-                case RelatedWaters_FieldIndex.RelatedWaterDaytime:
-                    return obj.RelatedWaterDaytime;
-                case RelatedWaters_FieldIndex.RelatedWaterNighttime:
-                    return obj.RelatedWaterNighttime;
-                case RelatedWaters_FieldIndex.RelatedWaterUnderwater:
-                    return obj.RelatedWaterUnderwater;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
 
         public static void Clear(
             IRelatedWaters item,

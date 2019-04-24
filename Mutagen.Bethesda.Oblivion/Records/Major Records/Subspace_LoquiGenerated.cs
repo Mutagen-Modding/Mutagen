@@ -87,24 +87,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        #region Loqui Getter Interface
-
-        protected override object GetNthObject(ushort index) => SubspaceCommon.GetNthObject(index, this);
-
-        protected override bool GetNthObjectHasBeenSet(ushort index) => SubspaceCommon.GetNthObjectHasBeenSet(index, this);
-
-        protected override void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => SubspaceCommon.UnsetNthObject(index, this, cmds);
-
-        #endregion
-
-        #region Loqui Interface
-        protected override void SetNthObjectHasBeenSet(ushort index, bool on)
-        {
-            SubspaceCommon.SetNthObjectHasBeenSet(index, on, this);
-        }
-
-        #endregion
-
         IMask<bool> IEqualsMask<Subspace>.GetEqualsMask(Subspace rhs, EqualsMaskHelper.Include include) => SubspaceCommon.GetEqualsMask(this, rhs, include);
         IMask<bool> IEqualsMask<ISubspaceGetter>.GetEqualsMask(ISubspaceGetter rhs, EqualsMaskHelper.Include include) => SubspaceCommon.GetEqualsMask(this, rhs, include);
         #region To String
@@ -1185,11 +1167,6 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, Subspace obj)
-        {
-            ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
-        }
-
     }
     #endregion
 
@@ -1506,83 +1483,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         #endregion
-
-        public static void SetNthObjectHasBeenSet(
-            ushort index,
-            bool on,
-            ISubspace obj,
-            NotifyingFireParameters cmds = null)
-        {
-            Subspace_FieldIndex enu = (Subspace_FieldIndex)index;
-            switch (enu)
-            {
-                case Subspace_FieldIndex.X:
-                case Subspace_FieldIndex.Y:
-                case Subspace_FieldIndex.Z:
-                    if (on) break;
-                    throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
-                default:
-                    OblivionMajorRecordCommon.SetNthObjectHasBeenSet(index, on, obj);
-                    break;
-            }
-        }
-
-        public static void UnsetNthObject(
-            ushort index,
-            ISubspace obj,
-            NotifyingUnsetParameters cmds = null)
-        {
-            Subspace_FieldIndex enu = (Subspace_FieldIndex)index;
-            switch (enu)
-            {
-                case Subspace_FieldIndex.X:
-                    obj.X = default(Single);
-                    break;
-                case Subspace_FieldIndex.Y:
-                    obj.Y = default(Single);
-                    break;
-                case Subspace_FieldIndex.Z:
-                    obj.Z = default(Single);
-                    break;
-                default:
-                    OblivionMajorRecordCommon.UnsetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public static bool GetNthObjectHasBeenSet(
-            ushort index,
-            ISubspace obj)
-        {
-            Subspace_FieldIndex enu = (Subspace_FieldIndex)index;
-            switch (enu)
-            {
-                case Subspace_FieldIndex.X:
-                case Subspace_FieldIndex.Y:
-                case Subspace_FieldIndex.Z:
-                    return true;
-                default:
-                    return OblivionMajorRecordCommon.GetNthObjectHasBeenSet(index, obj);
-            }
-        }
-
-        public static object GetNthObject(
-            ushort index,
-            ISubspaceGetter obj)
-        {
-            Subspace_FieldIndex enu = (Subspace_FieldIndex)index;
-            switch (enu)
-            {
-                case Subspace_FieldIndex.X:
-                    return obj.X;
-                case Subspace_FieldIndex.Y:
-                    return obj.Y;
-                case Subspace_FieldIndex.Z:
-                    return obj.Z;
-                default:
-                    return OblivionMajorRecordCommon.GetNthObject(index, obj);
-            }
-        }
 
         public static void Clear(
             ISubspace item,

@@ -136,24 +136,6 @@ namespace Mutagen.Bethesda.Oblivion
         FormIDSetLink<NPCAbstract> ILeveledCreatureGetter.Template_Property => this.Template_Property;
         #endregion
 
-        #region Loqui Getter Interface
-
-        protected override object GetNthObject(ushort index) => LeveledCreatureCommon.GetNthObject(index, this);
-
-        protected override bool GetNthObjectHasBeenSet(ushort index) => LeveledCreatureCommon.GetNthObjectHasBeenSet(index, this);
-
-        protected override void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => LeveledCreatureCommon.UnsetNthObject(index, this, cmds);
-
-        #endregion
-
-        #region Loqui Interface
-        protected override void SetNthObjectHasBeenSet(ushort index, bool on)
-        {
-            LeveledCreatureCommon.SetNthObjectHasBeenSet(index, on, this);
-        }
-
-        #endregion
-
         IMask<bool> IEqualsMask<LeveledCreature>.GetEqualsMask(LeveledCreature rhs, EqualsMaskHelper.Include include) => LeveledCreatureCommon.GetEqualsMask(this, rhs, include);
         IMask<bool> IEqualsMask<ILeveledCreatureGetter>.GetEqualsMask(ILeveledCreatureGetter rhs, EqualsMaskHelper.Include include) => LeveledCreatureCommon.GetEqualsMask(this, rhs, include);
         #region To String
@@ -1387,11 +1369,6 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, LeveledCreature obj)
-        {
-            ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
-        }
-
     }
     #endregion
 
@@ -1840,109 +1817,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         #endregion
-
-        public static void SetNthObjectHasBeenSet(
-            ushort index,
-            bool on,
-            ILeveledCreature obj,
-            NotifyingFireParameters cmds = null)
-        {
-            LeveledCreature_FieldIndex enu = (LeveledCreature_FieldIndex)index;
-            switch (enu)
-            {
-                case LeveledCreature_FieldIndex.ChanceNone:
-                    obj.ChanceNone_IsSet = on;
-                    break;
-                case LeveledCreature_FieldIndex.Flags:
-                    obj.Flags_IsSet = on;
-                    break;
-                case LeveledCreature_FieldIndex.Entries:
-                    obj.Entries.HasBeenSet = on;
-                    break;
-                case LeveledCreature_FieldIndex.Script:
-                    obj.Script_Property.HasBeenSet = on;
-                    break;
-                case LeveledCreature_FieldIndex.Template:
-                    obj.Template_Property.HasBeenSet = on;
-                    break;
-                default:
-                    NPCSpawnCommon.SetNthObjectHasBeenSet(index, on, obj);
-                    break;
-            }
-        }
-
-        public static void UnsetNthObject(
-            ushort index,
-            ILeveledCreature obj,
-            NotifyingUnsetParameters cmds = null)
-        {
-            LeveledCreature_FieldIndex enu = (LeveledCreature_FieldIndex)index;
-            switch (enu)
-            {
-                case LeveledCreature_FieldIndex.ChanceNone:
-                    obj.ChanceNone_Unset();
-                    break;
-                case LeveledCreature_FieldIndex.Flags:
-                    obj.Flags_Unset();
-                    break;
-                case LeveledCreature_FieldIndex.Entries:
-                    obj.Entries.Unset();
-                    break;
-                case LeveledCreature_FieldIndex.Script:
-                    obj.Script_Property.Unset(cmds);
-                    break;
-                case LeveledCreature_FieldIndex.Template:
-                    obj.Template_Property.Unset(cmds);
-                    break;
-                default:
-                    NPCSpawnCommon.UnsetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public static bool GetNthObjectHasBeenSet(
-            ushort index,
-            ILeveledCreature obj)
-        {
-            LeveledCreature_FieldIndex enu = (LeveledCreature_FieldIndex)index;
-            switch (enu)
-            {
-                case LeveledCreature_FieldIndex.ChanceNone:
-                    return obj.ChanceNone_IsSet;
-                case LeveledCreature_FieldIndex.Flags:
-                    return obj.Flags_IsSet;
-                case LeveledCreature_FieldIndex.Entries:
-                    return obj.Entries.HasBeenSet;
-                case LeveledCreature_FieldIndex.Script:
-                    return obj.Script_Property.HasBeenSet;
-                case LeveledCreature_FieldIndex.Template:
-                    return obj.Template_Property.HasBeenSet;
-                default:
-                    return NPCSpawnCommon.GetNthObjectHasBeenSet(index, obj);
-            }
-        }
-
-        public static object GetNthObject(
-            ushort index,
-            ILeveledCreatureGetter obj)
-        {
-            LeveledCreature_FieldIndex enu = (LeveledCreature_FieldIndex)index;
-            switch (enu)
-            {
-                case LeveledCreature_FieldIndex.ChanceNone:
-                    return obj.ChanceNone;
-                case LeveledCreature_FieldIndex.Flags:
-                    return obj.Flags;
-                case LeveledCreature_FieldIndex.Entries:
-                    return obj.Entries;
-                case LeveledCreature_FieldIndex.Script:
-                    return obj.Script;
-                case LeveledCreature_FieldIndex.Template:
-                    return obj.Template;
-                default:
-                    return NPCSpawnCommon.GetNthObject(index, obj);
-            }
-        }
 
         public static void Clear(
             ILeveledCreature item,

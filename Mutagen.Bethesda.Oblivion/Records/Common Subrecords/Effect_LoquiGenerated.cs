@@ -145,28 +145,6 @@ namespace Mutagen.Bethesda.Oblivion
         ScriptEffect IEffectGetter.ScriptEffect => this.ScriptEffect;
         #endregion
 
-        #region Loqui Getter Interface
-
-        protected object GetNthObject(ushort index) => EffectCommon.GetNthObject(index, this);
-        object ILoquiObjectGetter.GetNthObject(ushort index) => this.GetNthObject(index);
-
-        protected bool GetNthObjectHasBeenSet(ushort index) => EffectCommon.GetNthObjectHasBeenSet(index, this);
-        bool ILoquiObjectGetter.GetNthObjectHasBeenSet(ushort index) => this.GetNthObjectHasBeenSet(index);
-
-        protected void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => EffectCommon.UnsetNthObject(index, this, cmds);
-        void ILoquiObjectSetter.UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => this.UnsetNthObject(index, cmds);
-
-        #endregion
-
-        #region Loqui Interface
-        protected void SetNthObjectHasBeenSet(ushort index, bool on)
-        {
-            EffectCommon.SetNthObjectHasBeenSet(index, on, this);
-        }
-        void ILoquiObjectSetter.SetNthObjectHasBeenSet(ushort index, bool on) => this.SetNthObjectHasBeenSet(index, on);
-
-        #endregion
-
         IMask<bool> IEqualsMask<Effect>.GetEqualsMask(Effect rhs, EqualsMaskHelper.Include include) => EffectCommon.GetEqualsMask(this, rhs, include);
         IMask<bool> IEqualsMask<IEffectGetter>.GetEqualsMask(IEffectGetter rhs, EqualsMaskHelper.Include include) => EffectCommon.GetEqualsMask(this, rhs, include);
         #region To String
@@ -1298,7 +1276,6 @@ namespace Mutagen.Bethesda.Oblivion
                 cmds: cmds);
         }
 
-        void ILoquiObjectSetter.SetNthObject(ushort index, object obj, NotifyingFireParameters cmds) => this.SetNthObject(index, obj, cmds);
         protected void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
         {
             Effect_FieldIndex enu = (Effect_FieldIndex)index;
@@ -1391,11 +1368,6 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, Effect obj)
-        {
-            ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
-        }
-
     }
     #endregion
 
@@ -1885,112 +1857,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         #endregion
-
-        public static void SetNthObjectHasBeenSet(
-            ushort index,
-            bool on,
-            IEffect obj,
-            NotifyingFireParameters cmds = null)
-        {
-            Effect_FieldIndex enu = (Effect_FieldIndex)index;
-            switch (enu)
-            {
-                case Effect_FieldIndex.MagicEffect:
-                case Effect_FieldIndex.Magnitude:
-                case Effect_FieldIndex.Area:
-                case Effect_FieldIndex.Duration:
-                case Effect_FieldIndex.Type:
-                case Effect_FieldIndex.ActorValue:
-                    if (on) break;
-                    throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
-                case Effect_FieldIndex.ScriptEffect:
-                    obj.ScriptEffect_IsSet = on;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static void UnsetNthObject(
-            ushort index,
-            IEffect obj,
-            NotifyingUnsetParameters cmds = null)
-        {
-            Effect_FieldIndex enu = (Effect_FieldIndex)index;
-            switch (enu)
-            {
-                case Effect_FieldIndex.MagicEffect:
-                    obj.MagicEffect = default(MagicEffect);
-                    break;
-                case Effect_FieldIndex.Magnitude:
-                    obj.Magnitude = default(UInt32);
-                    break;
-                case Effect_FieldIndex.Area:
-                    obj.Area = default(UInt32);
-                    break;
-                case Effect_FieldIndex.Duration:
-                    obj.Duration = default(UInt32);
-                    break;
-                case Effect_FieldIndex.Type:
-                    obj.Type = default(Effect.EffectType);
-                    break;
-                case Effect_FieldIndex.ActorValue:
-                    obj.ActorValue = default(ActorValueExtended);
-                    break;
-                case Effect_FieldIndex.ScriptEffect:
-                    obj.ScriptEffect_Unset();
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthObjectHasBeenSet(
-            ushort index,
-            IEffect obj)
-        {
-            Effect_FieldIndex enu = (Effect_FieldIndex)index;
-            switch (enu)
-            {
-                case Effect_FieldIndex.MagicEffect:
-                case Effect_FieldIndex.Magnitude:
-                case Effect_FieldIndex.Area:
-                case Effect_FieldIndex.Duration:
-                case Effect_FieldIndex.Type:
-                case Effect_FieldIndex.ActorValue:
-                    return true;
-                case Effect_FieldIndex.ScriptEffect:
-                    return obj.ScriptEffect_IsSet;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static object GetNthObject(
-            ushort index,
-            IEffectGetter obj)
-        {
-            Effect_FieldIndex enu = (Effect_FieldIndex)index;
-            switch (enu)
-            {
-                case Effect_FieldIndex.MagicEffect:
-                    return obj.MagicEffect;
-                case Effect_FieldIndex.Magnitude:
-                    return obj.Magnitude;
-                case Effect_FieldIndex.Area:
-                    return obj.Area;
-                case Effect_FieldIndex.Duration:
-                    return obj.Duration;
-                case Effect_FieldIndex.Type:
-                    return obj.Type;
-                case Effect_FieldIndex.ActorValue:
-                    return obj.ActorValue;
-                case Effect_FieldIndex.ScriptEffect:
-                    return obj.ScriptEffect;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
 
         public static void Clear(
             IEffect item,

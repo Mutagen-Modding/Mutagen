@@ -104,24 +104,6 @@ namespace Mutagen.Bethesda.Oblivion
         SoundData ISoundGetter.Data => this.Data;
         #endregion
 
-        #region Loqui Getter Interface
-
-        protected override object GetNthObject(ushort index) => SoundCommon.GetNthObject(index, this);
-
-        protected override bool GetNthObjectHasBeenSet(ushort index) => SoundCommon.GetNthObjectHasBeenSet(index, this);
-
-        protected override void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => SoundCommon.UnsetNthObject(index, this, cmds);
-
-        #endregion
-
-        #region Loqui Interface
-        protected override void SetNthObjectHasBeenSet(ushort index, bool on)
-        {
-            SoundCommon.SetNthObjectHasBeenSet(index, on, this);
-        }
-
-        #endregion
-
         IMask<bool> IEqualsMask<Sound>.GetEqualsMask(Sound rhs, EqualsMaskHelper.Include include) => SoundCommon.GetEqualsMask(this, rhs, include);
         IMask<bool> IEqualsMask<ISoundGetter>.GetEqualsMask(ISoundGetter rhs, EqualsMaskHelper.Include include) => SoundCommon.GetEqualsMask(this, rhs, include);
         #region To String
@@ -1198,11 +1180,6 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, Sound obj)
-        {
-            ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
-        }
-
     }
     #endregion
 
@@ -1545,79 +1522,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         #endregion
-
-        public static void SetNthObjectHasBeenSet(
-            ushort index,
-            bool on,
-            ISound obj,
-            NotifyingFireParameters cmds = null)
-        {
-            Sound_FieldIndex enu = (Sound_FieldIndex)index;
-            switch (enu)
-            {
-                case Sound_FieldIndex.File:
-                    obj.File_IsSet = on;
-                    break;
-                case Sound_FieldIndex.Data:
-                    obj.Data_IsSet = on;
-                    break;
-                default:
-                    OblivionMajorRecordCommon.SetNthObjectHasBeenSet(index, on, obj);
-                    break;
-            }
-        }
-
-        public static void UnsetNthObject(
-            ushort index,
-            ISound obj,
-            NotifyingUnsetParameters cmds = null)
-        {
-            Sound_FieldIndex enu = (Sound_FieldIndex)index;
-            switch (enu)
-            {
-                case Sound_FieldIndex.File:
-                    obj.File_Unset();
-                    break;
-                case Sound_FieldIndex.Data:
-                    obj.Data_Unset();
-                    break;
-                default:
-                    OblivionMajorRecordCommon.UnsetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public static bool GetNthObjectHasBeenSet(
-            ushort index,
-            ISound obj)
-        {
-            Sound_FieldIndex enu = (Sound_FieldIndex)index;
-            switch (enu)
-            {
-                case Sound_FieldIndex.File:
-                    return obj.File_IsSet;
-                case Sound_FieldIndex.Data:
-                    return obj.Data_IsSet;
-                default:
-                    return OblivionMajorRecordCommon.GetNthObjectHasBeenSet(index, obj);
-            }
-        }
-
-        public static object GetNthObject(
-            ushort index,
-            ISoundGetter obj)
-        {
-            Sound_FieldIndex enu = (Sound_FieldIndex)index;
-            switch (enu)
-            {
-                case Sound_FieldIndex.File:
-                    return obj.File;
-                case Sound_FieldIndex.Data:
-                    return obj.Data;
-                default:
-                    return OblivionMajorRecordCommon.GetNthObject(index, obj);
-            }
-        }
 
         public static void Clear(
             ISound item,

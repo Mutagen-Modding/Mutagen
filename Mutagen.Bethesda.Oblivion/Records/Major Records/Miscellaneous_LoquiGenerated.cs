@@ -162,24 +162,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        #region Loqui Getter Interface
-
-        protected override object GetNthObject(ushort index) => MiscellaneousCommon.GetNthObject(index, this);
-
-        protected override bool GetNthObjectHasBeenSet(ushort index) => MiscellaneousCommon.GetNthObjectHasBeenSet(index, this);
-
-        protected override void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => MiscellaneousCommon.UnsetNthObject(index, this, cmds);
-
-        #endregion
-
-        #region Loqui Interface
-        protected override void SetNthObjectHasBeenSet(ushort index, bool on)
-        {
-            MiscellaneousCommon.SetNthObjectHasBeenSet(index, on, this);
-        }
-
-        #endregion
-
         IMask<bool> IEqualsMask<Miscellaneous>.GetEqualsMask(Miscellaneous rhs, EqualsMaskHelper.Include include) => MiscellaneousCommon.GetEqualsMask(this, rhs, include);
         IMask<bool> IEqualsMask<IMiscellaneousGetter>.GetEqualsMask(IMiscellaneousGetter rhs, EqualsMaskHelper.Include include) => MiscellaneousCommon.GetEqualsMask(this, rhs, include);
         #region To String
@@ -1463,11 +1445,6 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, Miscellaneous obj)
-        {
-            ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
-        }
-
     }
     #endregion
 
@@ -1972,116 +1949,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         #endregion
-
-        public static void SetNthObjectHasBeenSet(
-            ushort index,
-            bool on,
-            IMiscellaneous obj,
-            NotifyingFireParameters cmds = null)
-        {
-            Miscellaneous_FieldIndex enu = (Miscellaneous_FieldIndex)index;
-            switch (enu)
-            {
-                case Miscellaneous_FieldIndex.Value:
-                case Miscellaneous_FieldIndex.Weight:
-                    if (on) break;
-                    throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
-                case Miscellaneous_FieldIndex.Name:
-                    obj.Name_IsSet = on;
-                    break;
-                case Miscellaneous_FieldIndex.Model:
-                    obj.Model_IsSet = on;
-                    break;
-                case Miscellaneous_FieldIndex.Icon:
-                    obj.Icon_IsSet = on;
-                    break;
-                case Miscellaneous_FieldIndex.Script:
-                    obj.Script_Property.HasBeenSet = on;
-                    break;
-                default:
-                    ItemAbstractCommon.SetNthObjectHasBeenSet(index, on, obj);
-                    break;
-            }
-        }
-
-        public static void UnsetNthObject(
-            ushort index,
-            IMiscellaneous obj,
-            NotifyingUnsetParameters cmds = null)
-        {
-            Miscellaneous_FieldIndex enu = (Miscellaneous_FieldIndex)index;
-            switch (enu)
-            {
-                case Miscellaneous_FieldIndex.Name:
-                    obj.Name_Unset();
-                    break;
-                case Miscellaneous_FieldIndex.Model:
-                    obj.Model_Unset();
-                    break;
-                case Miscellaneous_FieldIndex.Icon:
-                    obj.Icon_Unset();
-                    break;
-                case Miscellaneous_FieldIndex.Script:
-                    obj.Script_Property.Unset(cmds);
-                    break;
-                case Miscellaneous_FieldIndex.Value:
-                    obj.Value = default(Int32);
-                    break;
-                case Miscellaneous_FieldIndex.Weight:
-                    obj.Weight = default(Single);
-                    break;
-                default:
-                    ItemAbstractCommon.UnsetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public static bool GetNthObjectHasBeenSet(
-            ushort index,
-            IMiscellaneous obj)
-        {
-            Miscellaneous_FieldIndex enu = (Miscellaneous_FieldIndex)index;
-            switch (enu)
-            {
-                case Miscellaneous_FieldIndex.Value:
-                case Miscellaneous_FieldIndex.Weight:
-                    return true;
-                case Miscellaneous_FieldIndex.Name:
-                    return obj.Name_IsSet;
-                case Miscellaneous_FieldIndex.Model:
-                    return obj.Model_IsSet;
-                case Miscellaneous_FieldIndex.Icon:
-                    return obj.Icon_IsSet;
-                case Miscellaneous_FieldIndex.Script:
-                    return obj.Script_Property.HasBeenSet;
-                default:
-                    return ItemAbstractCommon.GetNthObjectHasBeenSet(index, obj);
-            }
-        }
-
-        public static object GetNthObject(
-            ushort index,
-            IMiscellaneousGetter obj)
-        {
-            Miscellaneous_FieldIndex enu = (Miscellaneous_FieldIndex)index;
-            switch (enu)
-            {
-                case Miscellaneous_FieldIndex.Name:
-                    return obj.Name;
-                case Miscellaneous_FieldIndex.Model:
-                    return obj.Model;
-                case Miscellaneous_FieldIndex.Icon:
-                    return obj.Icon;
-                case Miscellaneous_FieldIndex.Script:
-                    return obj.Script;
-                case Miscellaneous_FieldIndex.Value:
-                    return obj.Value;
-                case Miscellaneous_FieldIndex.Weight:
-                    return obj.Weight;
-                default:
-                    return ItemAbstractCommon.GetNthObject(index, obj);
-            }
-        }
 
         public static void Clear(
             IMiscellaneous item,

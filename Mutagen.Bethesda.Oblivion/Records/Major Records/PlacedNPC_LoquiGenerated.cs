@@ -259,24 +259,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        #region Loqui Getter Interface
-
-        protected override object GetNthObject(ushort index) => PlacedNPCCommon.GetNthObject(index, this);
-
-        protected override bool GetNthObjectHasBeenSet(ushort index) => PlacedNPCCommon.GetNthObjectHasBeenSet(index, this);
-
-        protected override void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => PlacedNPCCommon.UnsetNthObject(index, this, cmds);
-
-        #endregion
-
-        #region Loqui Interface
-        protected override void SetNthObjectHasBeenSet(ushort index, bool on)
-        {
-            PlacedNPCCommon.SetNthObjectHasBeenSet(index, on, this);
-        }
-
-        #endregion
-
         IMask<bool> IEqualsMask<PlacedNPC>.GetEqualsMask(PlacedNPC rhs, EqualsMaskHelper.Include include) => PlacedNPCCommon.GetEqualsMask(this, rhs, include);
         IMask<bool> IEqualsMask<IPlacedNPCGetter>.GetEqualsMask(IPlacedNPCGetter rhs, EqualsMaskHelper.Include include) => PlacedNPCCommon.GetEqualsMask(this, rhs, include);
         #region To String
@@ -1724,11 +1706,6 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, PlacedNPC obj)
-        {
-            ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
-        }
-
     }
     #endregion
 
@@ -2494,166 +2471,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         #endregion
-
-        public static void SetNthObjectHasBeenSet(
-            ushort index,
-            bool on,
-            IPlacedNPC obj,
-            NotifyingFireParameters cmds = null)
-        {
-            PlacedNPC_FieldIndex enu = (PlacedNPC_FieldIndex)index;
-            switch (enu)
-            {
-                case PlacedNPC_FieldIndex.Position:
-                case PlacedNPC_FieldIndex.Rotation:
-                    if (on) break;
-                    throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
-                case PlacedNPC_FieldIndex.Base:
-                    obj.Base_Property.HasBeenSet = on;
-                    break;
-                case PlacedNPC_FieldIndex.XPCIFluff:
-                    obj.XPCIFluff_IsSet = on;
-                    break;
-                case PlacedNPC_FieldIndex.FULLFluff:
-                    obj.FULLFluff_IsSet = on;
-                    break;
-                case PlacedNPC_FieldIndex.DistantLODData:
-                    obj.DistantLODData_IsSet = on;
-                    break;
-                case PlacedNPC_FieldIndex.EnableParent:
-                    obj.EnableParent_IsSet = on;
-                    break;
-                case PlacedNPC_FieldIndex.MerchantContainer:
-                    obj.MerchantContainer_Property.HasBeenSet = on;
-                    break;
-                case PlacedNPC_FieldIndex.Horse:
-                    obj.Horse_Property.HasBeenSet = on;
-                    break;
-                case PlacedNPC_FieldIndex.RagdollData:
-                    obj.RagdollData_IsSet = on;
-                    break;
-                case PlacedNPC_FieldIndex.Scale:
-                    obj.Scale_IsSet = on;
-                    break;
-                default:
-                    OblivionMajorRecordCommon.SetNthObjectHasBeenSet(index, on, obj);
-                    break;
-            }
-        }
-
-        public static void UnsetNthObject(
-            ushort index,
-            IPlacedNPC obj,
-            NotifyingUnsetParameters cmds = null)
-        {
-            PlacedNPC_FieldIndex enu = (PlacedNPC_FieldIndex)index;
-            switch (enu)
-            {
-                case PlacedNPC_FieldIndex.Base:
-                    obj.Base_Property.Unset(cmds);
-                    break;
-                case PlacedNPC_FieldIndex.XPCIFluff:
-                    obj.XPCIFluff_Unset();
-                    break;
-                case PlacedNPC_FieldIndex.FULLFluff:
-                    obj.FULLFluff_Unset();
-                    break;
-                case PlacedNPC_FieldIndex.DistantLODData:
-                    obj.DistantLODData_Unset();
-                    break;
-                case PlacedNPC_FieldIndex.EnableParent:
-                    obj.EnableParent_Unset();
-                    break;
-                case PlacedNPC_FieldIndex.MerchantContainer:
-                    obj.MerchantContainer_Property.Unset(cmds);
-                    break;
-                case PlacedNPC_FieldIndex.Horse:
-                    obj.Horse_Property.Unset(cmds);
-                    break;
-                case PlacedNPC_FieldIndex.RagdollData:
-                    obj.RagdollData_Unset();
-                    break;
-                case PlacedNPC_FieldIndex.Scale:
-                    obj.Scale_Unset();
-                    break;
-                case PlacedNPC_FieldIndex.Position:
-                    obj.Position = default(P3Float);
-                    break;
-                case PlacedNPC_FieldIndex.Rotation:
-                    obj.Rotation = default(P3Float);
-                    break;
-                default:
-                    OblivionMajorRecordCommon.UnsetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public static bool GetNthObjectHasBeenSet(
-            ushort index,
-            IPlacedNPC obj)
-        {
-            PlacedNPC_FieldIndex enu = (PlacedNPC_FieldIndex)index;
-            switch (enu)
-            {
-                case PlacedNPC_FieldIndex.Position:
-                case PlacedNPC_FieldIndex.Rotation:
-                    return true;
-                case PlacedNPC_FieldIndex.Base:
-                    return obj.Base_Property.HasBeenSet;
-                case PlacedNPC_FieldIndex.XPCIFluff:
-                    return obj.XPCIFluff_IsSet;
-                case PlacedNPC_FieldIndex.FULLFluff:
-                    return obj.FULLFluff_IsSet;
-                case PlacedNPC_FieldIndex.DistantLODData:
-                    return obj.DistantLODData_IsSet;
-                case PlacedNPC_FieldIndex.EnableParent:
-                    return obj.EnableParent_IsSet;
-                case PlacedNPC_FieldIndex.MerchantContainer:
-                    return obj.MerchantContainer_Property.HasBeenSet;
-                case PlacedNPC_FieldIndex.Horse:
-                    return obj.Horse_Property.HasBeenSet;
-                case PlacedNPC_FieldIndex.RagdollData:
-                    return obj.RagdollData_IsSet;
-                case PlacedNPC_FieldIndex.Scale:
-                    return obj.Scale_IsSet;
-                default:
-                    return OblivionMajorRecordCommon.GetNthObjectHasBeenSet(index, obj);
-            }
-        }
-
-        public static object GetNthObject(
-            ushort index,
-            IPlacedNPCGetter obj)
-        {
-            PlacedNPC_FieldIndex enu = (PlacedNPC_FieldIndex)index;
-            switch (enu)
-            {
-                case PlacedNPC_FieldIndex.Base:
-                    return obj.Base;
-                case PlacedNPC_FieldIndex.XPCIFluff:
-                    return obj.XPCIFluff;
-                case PlacedNPC_FieldIndex.FULLFluff:
-                    return obj.FULLFluff;
-                case PlacedNPC_FieldIndex.DistantLODData:
-                    return obj.DistantLODData;
-                case PlacedNPC_FieldIndex.EnableParent:
-                    return obj.EnableParent;
-                case PlacedNPC_FieldIndex.MerchantContainer:
-                    return obj.MerchantContainer;
-                case PlacedNPC_FieldIndex.Horse:
-                    return obj.Horse;
-                case PlacedNPC_FieldIndex.RagdollData:
-                    return obj.RagdollData;
-                case PlacedNPC_FieldIndex.Scale:
-                    return obj.Scale;
-                case PlacedNPC_FieldIndex.Position:
-                    return obj.Position;
-                case PlacedNPC_FieldIndex.Rotation:
-                    return obj.Rotation;
-                default:
-                    return OblivionMajorRecordCommon.GetNthObject(index, obj);
-            }
-        }
 
         public static void Clear(
             IPlacedNPC item,

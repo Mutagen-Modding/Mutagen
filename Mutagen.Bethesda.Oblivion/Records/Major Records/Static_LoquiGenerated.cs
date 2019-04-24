@@ -78,24 +78,6 @@ namespace Mutagen.Bethesda.Oblivion
         Model IStaticGetter.Model => this.Model;
         #endregion
 
-        #region Loqui Getter Interface
-
-        protected override object GetNthObject(ushort index) => StaticCommon.GetNthObject(index, this);
-
-        protected override bool GetNthObjectHasBeenSet(ushort index) => StaticCommon.GetNthObjectHasBeenSet(index, this);
-
-        protected override void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => StaticCommon.UnsetNthObject(index, this, cmds);
-
-        #endregion
-
-        #region Loqui Interface
-        protected override void SetNthObjectHasBeenSet(ushort index, bool on)
-        {
-            StaticCommon.SetNthObjectHasBeenSet(index, on, this);
-        }
-
-        #endregion
-
         IMask<bool> IEqualsMask<Static>.GetEqualsMask(Static rhs, EqualsMaskHelper.Include include) => StaticCommon.GetEqualsMask(this, rhs, include);
         IMask<bool> IEqualsMask<IStaticGetter>.GetEqualsMask(IStaticGetter rhs, EqualsMaskHelper.Include include) => StaticCommon.GetEqualsMask(this, rhs, include);
         #region To String
@@ -1101,11 +1083,6 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, Static obj)
-        {
-            ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
-        }
-
     }
     #endregion
 
@@ -1393,69 +1370,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         #endregion
-
-        public static void SetNthObjectHasBeenSet(
-            ushort index,
-            bool on,
-            IStatic obj,
-            NotifyingFireParameters cmds = null)
-        {
-            Static_FieldIndex enu = (Static_FieldIndex)index;
-            switch (enu)
-            {
-                case Static_FieldIndex.Model:
-                    obj.Model_IsSet = on;
-                    break;
-                default:
-                    OblivionMajorRecordCommon.SetNthObjectHasBeenSet(index, on, obj);
-                    break;
-            }
-        }
-
-        public static void UnsetNthObject(
-            ushort index,
-            IStatic obj,
-            NotifyingUnsetParameters cmds = null)
-        {
-            Static_FieldIndex enu = (Static_FieldIndex)index;
-            switch (enu)
-            {
-                case Static_FieldIndex.Model:
-                    obj.Model_Unset();
-                    break;
-                default:
-                    OblivionMajorRecordCommon.UnsetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public static bool GetNthObjectHasBeenSet(
-            ushort index,
-            IStatic obj)
-        {
-            Static_FieldIndex enu = (Static_FieldIndex)index;
-            switch (enu)
-            {
-                case Static_FieldIndex.Model:
-                    return obj.Model_IsSet;
-                default:
-                    return OblivionMajorRecordCommon.GetNthObjectHasBeenSet(index, obj);
-            }
-        }
-
-        public static object GetNthObject(
-            ushort index,
-            IStaticGetter obj)
-        {
-            Static_FieldIndex enu = (Static_FieldIndex)index;
-            switch (enu)
-            {
-                case Static_FieldIndex.Model:
-                    return obj.Model;
-                default:
-                    return OblivionMajorRecordCommon.GetNthObject(index, obj);
-            }
-        }
 
         public static void Clear(
             IStatic item,

@@ -77,24 +77,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        #region Loqui Getter Interface
-
-        protected override object GetNthObject(ushort index) => GameSettingFloatCommon.GetNthObject(index, this);
-
-        protected override bool GetNthObjectHasBeenSet(ushort index) => GameSettingFloatCommon.GetNthObjectHasBeenSet(index, this);
-
-        protected override void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => GameSettingFloatCommon.UnsetNthObject(index, this, cmds);
-
-        #endregion
-
-        #region Loqui Interface
-        protected override void SetNthObjectHasBeenSet(ushort index, bool on)
-        {
-            GameSettingFloatCommon.SetNthObjectHasBeenSet(index, on, this);
-        }
-
-        #endregion
-
         IMask<bool> IEqualsMask<GameSettingFloat>.GetEqualsMask(GameSettingFloat rhs, EqualsMaskHelper.Include include) => GameSettingFloatCommon.GetEqualsMask(this, rhs, include);
         IMask<bool> IEqualsMask<IGameSettingFloatGetter>.GetEqualsMask(IGameSettingFloatGetter rhs, EqualsMaskHelper.Include include) => GameSettingFloatCommon.GetEqualsMask(this, rhs, include);
         #region To String
@@ -1147,11 +1129,6 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, GameSettingFloat obj)
-        {
-            ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
-        }
-
     }
     #endregion
 
@@ -1415,69 +1392,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         #endregion
-
-        public static void SetNthObjectHasBeenSet(
-            ushort index,
-            bool on,
-            IGameSettingFloat obj,
-            NotifyingFireParameters cmds = null)
-        {
-            GameSettingFloat_FieldIndex enu = (GameSettingFloat_FieldIndex)index;
-            switch (enu)
-            {
-                case GameSettingFloat_FieldIndex.Data:
-                    obj.Data_IsSet = on;
-                    break;
-                default:
-                    GameSettingCommon.SetNthObjectHasBeenSet(index, on, obj);
-                    break;
-            }
-        }
-
-        public static void UnsetNthObject(
-            ushort index,
-            IGameSettingFloat obj,
-            NotifyingUnsetParameters cmds = null)
-        {
-            GameSettingFloat_FieldIndex enu = (GameSettingFloat_FieldIndex)index;
-            switch (enu)
-            {
-                case GameSettingFloat_FieldIndex.Data:
-                    obj.Data_Unset();
-                    break;
-                default:
-                    GameSettingCommon.UnsetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public static bool GetNthObjectHasBeenSet(
-            ushort index,
-            IGameSettingFloat obj)
-        {
-            GameSettingFloat_FieldIndex enu = (GameSettingFloat_FieldIndex)index;
-            switch (enu)
-            {
-                case GameSettingFloat_FieldIndex.Data:
-                    return obj.Data_IsSet;
-                default:
-                    return GameSettingCommon.GetNthObjectHasBeenSet(index, obj);
-            }
-        }
-
-        public static object GetNthObject(
-            ushort index,
-            IGameSettingFloatGetter obj)
-        {
-            GameSettingFloat_FieldIndex enu = (GameSettingFloat_FieldIndex)index;
-            switch (enu)
-            {
-                case GameSettingFloat_FieldIndex.Data:
-                    return obj.Data;
-                default:
-                    return GameSettingCommon.GetNthObject(index, obj);
-            }
-        }
 
         public static void Clear(
             IGameSettingFloat item,

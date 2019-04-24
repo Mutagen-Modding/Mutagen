@@ -151,28 +151,6 @@ namespace Mutagen.Bethesda.Oblivion
         ScriptFields ILogEntryGetter.ResultScript => this.ResultScript;
         #endregion
 
-        #region Loqui Getter Interface
-
-        protected object GetNthObject(ushort index) => LogEntryCommon.GetNthObject(index, this);
-        object ILoquiObjectGetter.GetNthObject(ushort index) => this.GetNthObject(index);
-
-        protected bool GetNthObjectHasBeenSet(ushort index) => LogEntryCommon.GetNthObjectHasBeenSet(index, this);
-        bool ILoquiObjectGetter.GetNthObjectHasBeenSet(ushort index) => this.GetNthObjectHasBeenSet(index);
-
-        protected void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => LogEntryCommon.UnsetNthObject(index, this, cmds);
-        void ILoquiObjectSetter.UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => this.UnsetNthObject(index, cmds);
-
-        #endregion
-
-        #region Loqui Interface
-        protected void SetNthObjectHasBeenSet(ushort index, bool on)
-        {
-            LogEntryCommon.SetNthObjectHasBeenSet(index, on, this);
-        }
-        void ILoquiObjectSetter.SetNthObjectHasBeenSet(ushort index, bool on) => this.SetNthObjectHasBeenSet(index, on);
-
-        #endregion
-
         IMask<bool> IEqualsMask<LogEntry>.GetEqualsMask(LogEntry rhs, EqualsMaskHelper.Include include) => LogEntryCommon.GetEqualsMask(this, rhs, include);
         IMask<bool> IEqualsMask<ILogEntryGetter>.GetEqualsMask(ILogEntryGetter rhs, EqualsMaskHelper.Include include) => LogEntryCommon.GetEqualsMask(this, rhs, include);
         #region To String
@@ -1227,7 +1205,6 @@ namespace Mutagen.Bethesda.Oblivion
                 cmds: cmds);
         }
 
-        void ILoquiObjectSetter.SetNthObject(ushort index, object obj, NotifyingFireParameters cmds) => this.SetNthObject(index, obj, cmds);
         protected void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
         {
             LogEntry_FieldIndex enu = (LogEntry_FieldIndex)index;
@@ -1298,11 +1275,6 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, LogEntry obj)
-        {
-            ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
-        }
-
     }
     #endregion
 
@@ -1762,97 +1734,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         #endregion
-
-        public static void SetNthObjectHasBeenSet(
-            ushort index,
-            bool on,
-            ILogEntry obj,
-            NotifyingFireParameters cmds = null)
-        {
-            LogEntry_FieldIndex enu = (LogEntry_FieldIndex)index;
-            switch (enu)
-            {
-                case LogEntry_FieldIndex.Flags:
-                    obj.Flags_IsSet = on;
-                    break;
-                case LogEntry_FieldIndex.Conditions:
-                    obj.Conditions.HasBeenSet = on;
-                    break;
-                case LogEntry_FieldIndex.Entry:
-                    obj.Entry_IsSet = on;
-                    break;
-                case LogEntry_FieldIndex.ResultScript:
-                    obj.ResultScript_IsSet = on;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static void UnsetNthObject(
-            ushort index,
-            ILogEntry obj,
-            NotifyingUnsetParameters cmds = null)
-        {
-            LogEntry_FieldIndex enu = (LogEntry_FieldIndex)index;
-            switch (enu)
-            {
-                case LogEntry_FieldIndex.Flags:
-                    obj.Flags_Unset();
-                    break;
-                case LogEntry_FieldIndex.Conditions:
-                    obj.Conditions.Unset();
-                    break;
-                case LogEntry_FieldIndex.Entry:
-                    obj.Entry_Unset();
-                    break;
-                case LogEntry_FieldIndex.ResultScript:
-                    obj.ResultScript_Unset();
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthObjectHasBeenSet(
-            ushort index,
-            ILogEntry obj)
-        {
-            LogEntry_FieldIndex enu = (LogEntry_FieldIndex)index;
-            switch (enu)
-            {
-                case LogEntry_FieldIndex.Flags:
-                    return obj.Flags_IsSet;
-                case LogEntry_FieldIndex.Conditions:
-                    return obj.Conditions.HasBeenSet;
-                case LogEntry_FieldIndex.Entry:
-                    return obj.Entry_IsSet;
-                case LogEntry_FieldIndex.ResultScript:
-                    return obj.ResultScript_IsSet;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static object GetNthObject(
-            ushort index,
-            ILogEntryGetter obj)
-        {
-            LogEntry_FieldIndex enu = (LogEntry_FieldIndex)index;
-            switch (enu)
-            {
-                case LogEntry_FieldIndex.Flags:
-                    return obj.Flags;
-                case LogEntry_FieldIndex.Conditions:
-                    return obj.Conditions;
-                case LogEntry_FieldIndex.Entry:
-                    return obj.Entry;
-                case LogEntry_FieldIndex.ResultScript:
-                    return obj.ResultScript;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
 
         public static void Clear(
             ILogEntry item,

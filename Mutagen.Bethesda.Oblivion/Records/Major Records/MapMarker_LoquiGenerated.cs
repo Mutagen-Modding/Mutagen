@@ -123,28 +123,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        #region Loqui Getter Interface
-
-        protected object GetNthObject(ushort index) => MapMarkerCommon.GetNthObject(index, this);
-        object ILoquiObjectGetter.GetNthObject(ushort index) => this.GetNthObject(index);
-
-        protected bool GetNthObjectHasBeenSet(ushort index) => MapMarkerCommon.GetNthObjectHasBeenSet(index, this);
-        bool ILoquiObjectGetter.GetNthObjectHasBeenSet(ushort index) => this.GetNthObjectHasBeenSet(index);
-
-        protected void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => MapMarkerCommon.UnsetNthObject(index, this, cmds);
-        void ILoquiObjectSetter.UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => this.UnsetNthObject(index, cmds);
-
-        #endregion
-
-        #region Loqui Interface
-        protected void SetNthObjectHasBeenSet(ushort index, bool on)
-        {
-            MapMarkerCommon.SetNthObjectHasBeenSet(index, on, this);
-        }
-        void ILoquiObjectSetter.SetNthObjectHasBeenSet(ushort index, bool on) => this.SetNthObjectHasBeenSet(index, on);
-
-        #endregion
-
         IMask<bool> IEqualsMask<MapMarker>.GetEqualsMask(MapMarker rhs, EqualsMaskHelper.Include include) => MapMarkerCommon.GetEqualsMask(this, rhs, include);
         IMask<bool> IEqualsMask<IMapMarkerGetter>.GetEqualsMask(IMapMarkerGetter rhs, EqualsMaskHelper.Include include) => MapMarkerCommon.GetEqualsMask(this, rhs, include);
         #region To String
@@ -1123,7 +1101,6 @@ namespace Mutagen.Bethesda.Oblivion
                 cmds: cmds);
         }
 
-        void ILoquiObjectSetter.SetNthObject(ushort index, object obj, NotifyingFireParameters cmds) => this.SetNthObject(index, obj, cmds);
         protected void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
         {
             MapMarker_FieldIndex enu = (MapMarker_FieldIndex)index;
@@ -1188,11 +1165,6 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, MapMarker obj)
-        {
-            ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
-        }
-
     }
     #endregion
 
@@ -1545,87 +1517,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         #endregion
-
-        public static void SetNthObjectHasBeenSet(
-            ushort index,
-            bool on,
-            IMapMarker obj,
-            NotifyingFireParameters cmds = null)
-        {
-            MapMarker_FieldIndex enu = (MapMarker_FieldIndex)index;
-            switch (enu)
-            {
-                case MapMarker_FieldIndex.Flags:
-                    obj.Flags_IsSet = on;
-                    break;
-                case MapMarker_FieldIndex.Name:
-                    obj.Name_IsSet = on;
-                    break;
-                case MapMarker_FieldIndex.Types:
-                    obj.Types.HasBeenSet = on;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static void UnsetNthObject(
-            ushort index,
-            IMapMarker obj,
-            NotifyingUnsetParameters cmds = null)
-        {
-            MapMarker_FieldIndex enu = (MapMarker_FieldIndex)index;
-            switch (enu)
-            {
-                case MapMarker_FieldIndex.Flags:
-                    obj.Flags_Unset();
-                    break;
-                case MapMarker_FieldIndex.Name:
-                    obj.Name_Unset();
-                    break;
-                case MapMarker_FieldIndex.Types:
-                    obj.Types.Unset();
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthObjectHasBeenSet(
-            ushort index,
-            IMapMarker obj)
-        {
-            MapMarker_FieldIndex enu = (MapMarker_FieldIndex)index;
-            switch (enu)
-            {
-                case MapMarker_FieldIndex.Flags:
-                    return obj.Flags_IsSet;
-                case MapMarker_FieldIndex.Name:
-                    return obj.Name_IsSet;
-                case MapMarker_FieldIndex.Types:
-                    return obj.Types.HasBeenSet;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static object GetNthObject(
-            ushort index,
-            IMapMarkerGetter obj)
-        {
-            MapMarker_FieldIndex enu = (MapMarker_FieldIndex)index;
-            switch (enu)
-            {
-                case MapMarker_FieldIndex.Flags:
-                    return obj.Flags;
-                case MapMarker_FieldIndex.Name:
-                    return obj.Name;
-                case MapMarker_FieldIndex.Types:
-                    return obj.Types;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
 
         public static void Clear(
             IMapMarker item,

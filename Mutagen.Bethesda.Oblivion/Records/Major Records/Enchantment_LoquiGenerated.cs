@@ -147,24 +147,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        #region Loqui Getter Interface
-
-        protected override object GetNthObject(ushort index) => EnchantmentCommon.GetNthObject(index, this);
-
-        protected override bool GetNthObjectHasBeenSet(ushort index) => EnchantmentCommon.GetNthObjectHasBeenSet(index, this);
-
-        protected override void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => EnchantmentCommon.UnsetNthObject(index, this, cmds);
-
-        #endregion
-
-        #region Loqui Interface
-        protected override void SetNthObjectHasBeenSet(ushort index, bool on)
-        {
-            EnchantmentCommon.SetNthObjectHasBeenSet(index, on, this);
-        }
-
-        #endregion
-
         IMask<bool> IEqualsMask<Enchantment>.GetEqualsMask(Enchantment rhs, EqualsMaskHelper.Include include) => EnchantmentCommon.GetEqualsMask(this, rhs, include);
         IMask<bool> IEqualsMask<IEnchantmentGetter>.GetEqualsMask(IEnchantmentGetter rhs, EqualsMaskHelper.Include include) => EnchantmentCommon.GetEqualsMask(this, rhs, include);
         #region To String
@@ -1391,11 +1373,6 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, Enchantment obj)
-        {
-            ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
-        }
-
     }
     #endregion
 
@@ -1854,110 +1831,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         #endregion
-
-        public static void SetNthObjectHasBeenSet(
-            ushort index,
-            bool on,
-            IEnchantment obj,
-            NotifyingFireParameters cmds = null)
-        {
-            Enchantment_FieldIndex enu = (Enchantment_FieldIndex)index;
-            switch (enu)
-            {
-                case Enchantment_FieldIndex.Type:
-                case Enchantment_FieldIndex.ChargeAmount:
-                case Enchantment_FieldIndex.EnchantCost:
-                case Enchantment_FieldIndex.Flags:
-                    if (on) break;
-                    throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
-                case Enchantment_FieldIndex.Name:
-                    obj.Name_IsSet = on;
-                    break;
-                case Enchantment_FieldIndex.Effects:
-                    obj.Effects.HasBeenSet = on;
-                    break;
-                default:
-                    OblivionMajorRecordCommon.SetNthObjectHasBeenSet(index, on, obj);
-                    break;
-            }
-        }
-
-        public static void UnsetNthObject(
-            ushort index,
-            IEnchantment obj,
-            NotifyingUnsetParameters cmds = null)
-        {
-            Enchantment_FieldIndex enu = (Enchantment_FieldIndex)index;
-            switch (enu)
-            {
-                case Enchantment_FieldIndex.Name:
-                    obj.Name_Unset();
-                    break;
-                case Enchantment_FieldIndex.Type:
-                    obj.Type = default(Enchantment.EnchantmentType);
-                    break;
-                case Enchantment_FieldIndex.ChargeAmount:
-                    obj.ChargeAmount = default(UInt32);
-                    break;
-                case Enchantment_FieldIndex.EnchantCost:
-                    obj.EnchantCost = default(UInt32);
-                    break;
-                case Enchantment_FieldIndex.Flags:
-                    obj.Flags = default(Enchantment.Flag);
-                    break;
-                case Enchantment_FieldIndex.Effects:
-                    obj.Effects.Unset();
-                    break;
-                default:
-                    OblivionMajorRecordCommon.UnsetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public static bool GetNthObjectHasBeenSet(
-            ushort index,
-            IEnchantment obj)
-        {
-            Enchantment_FieldIndex enu = (Enchantment_FieldIndex)index;
-            switch (enu)
-            {
-                case Enchantment_FieldIndex.Type:
-                case Enchantment_FieldIndex.ChargeAmount:
-                case Enchantment_FieldIndex.EnchantCost:
-                case Enchantment_FieldIndex.Flags:
-                    return true;
-                case Enchantment_FieldIndex.Name:
-                    return obj.Name_IsSet;
-                case Enchantment_FieldIndex.Effects:
-                    return obj.Effects.HasBeenSet;
-                default:
-                    return OblivionMajorRecordCommon.GetNthObjectHasBeenSet(index, obj);
-            }
-        }
-
-        public static object GetNthObject(
-            ushort index,
-            IEnchantmentGetter obj)
-        {
-            Enchantment_FieldIndex enu = (Enchantment_FieldIndex)index;
-            switch (enu)
-            {
-                case Enchantment_FieldIndex.Name:
-                    return obj.Name;
-                case Enchantment_FieldIndex.Type:
-                    return obj.Type;
-                case Enchantment_FieldIndex.ChargeAmount:
-                    return obj.ChargeAmount;
-                case Enchantment_FieldIndex.EnchantCost:
-                    return obj.EnchantCost;
-                case Enchantment_FieldIndex.Flags:
-                    return obj.Flags;
-                case Enchantment_FieldIndex.Effects:
-                    return obj.Effects;
-                default:
-                    return OblivionMajorRecordCommon.GetNthObject(index, obj);
-            }
-        }
 
         public static void Clear(
             IEnchantment item,

@@ -203,24 +203,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        #region Loqui Getter Interface
-
-        protected override object GetNthObject(ushort index) => LandscapeCommon.GetNthObject(index, this);
-
-        protected override bool GetNthObjectHasBeenSet(ushort index) => LandscapeCommon.GetNthObjectHasBeenSet(index, this);
-
-        protected override void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => LandscapeCommon.UnsetNthObject(index, this, cmds);
-
-        #endregion
-
-        #region Loqui Interface
-        protected override void SetNthObjectHasBeenSet(ushort index, bool on)
-        {
-            LandscapeCommon.SetNthObjectHasBeenSet(index, on, this);
-        }
-
-        #endregion
-
         IMask<bool> IEqualsMask<Landscape>.GetEqualsMask(Landscape rhs, EqualsMaskHelper.Include include) => LandscapeCommon.GetEqualsMask(this, rhs, include);
         IMask<bool> IEqualsMask<ILandscapeGetter>.GetEqualsMask(ILandscapeGetter rhs, EqualsMaskHelper.Include include) => LandscapeCommon.GetEqualsMask(this, rhs, include);
         #region To String
@@ -1475,11 +1457,6 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, Landscape obj)
-        {
-            ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
-        }
-
     }
     #endregion
 
@@ -1993,119 +1970,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         #endregion
-
-        public static void SetNthObjectHasBeenSet(
-            ushort index,
-            bool on,
-            ILandscape obj,
-            NotifyingFireParameters cmds = null)
-        {
-            Landscape_FieldIndex enu = (Landscape_FieldIndex)index;
-            switch (enu)
-            {
-                case Landscape_FieldIndex.Unknown:
-                    obj.Unknown_IsSet = on;
-                    break;
-                case Landscape_FieldIndex.VertexNormals:
-                    obj.VertexNormals_IsSet = on;
-                    break;
-                case Landscape_FieldIndex.VertexHeightMap:
-                    obj.VertexHeightMap_IsSet = on;
-                    break;
-                case Landscape_FieldIndex.VertexColors:
-                    obj.VertexColors_IsSet = on;
-                    break;
-                case Landscape_FieldIndex.Layers:
-                    obj.Layers.HasBeenSet = on;
-                    break;
-                case Landscape_FieldIndex.Textures:
-                    obj.Textures.HasBeenSet = on;
-                    break;
-                default:
-                    OblivionMajorRecordCommon.SetNthObjectHasBeenSet(index, on, obj);
-                    break;
-            }
-        }
-
-        public static void UnsetNthObject(
-            ushort index,
-            ILandscape obj,
-            NotifyingUnsetParameters cmds = null)
-        {
-            Landscape_FieldIndex enu = (Landscape_FieldIndex)index;
-            switch (enu)
-            {
-                case Landscape_FieldIndex.Unknown:
-                    obj.Unknown_Unset();
-                    break;
-                case Landscape_FieldIndex.VertexNormals:
-                    obj.VertexNormals_Unset();
-                    break;
-                case Landscape_FieldIndex.VertexHeightMap:
-                    obj.VertexHeightMap_Unset();
-                    break;
-                case Landscape_FieldIndex.VertexColors:
-                    obj.VertexColors_Unset();
-                    break;
-                case Landscape_FieldIndex.Layers:
-                    obj.Layers.Unset();
-                    break;
-                case Landscape_FieldIndex.Textures:
-                    obj.Textures.Unset();
-                    break;
-                default:
-                    OblivionMajorRecordCommon.UnsetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public static bool GetNthObjectHasBeenSet(
-            ushort index,
-            ILandscape obj)
-        {
-            Landscape_FieldIndex enu = (Landscape_FieldIndex)index;
-            switch (enu)
-            {
-                case Landscape_FieldIndex.Unknown:
-                    return obj.Unknown_IsSet;
-                case Landscape_FieldIndex.VertexNormals:
-                    return obj.VertexNormals_IsSet;
-                case Landscape_FieldIndex.VertexHeightMap:
-                    return obj.VertexHeightMap_IsSet;
-                case Landscape_FieldIndex.VertexColors:
-                    return obj.VertexColors_IsSet;
-                case Landscape_FieldIndex.Layers:
-                    return obj.Layers.HasBeenSet;
-                case Landscape_FieldIndex.Textures:
-                    return obj.Textures.HasBeenSet;
-                default:
-                    return OblivionMajorRecordCommon.GetNthObjectHasBeenSet(index, obj);
-            }
-        }
-
-        public static object GetNthObject(
-            ushort index,
-            ILandscapeGetter obj)
-        {
-            Landscape_FieldIndex enu = (Landscape_FieldIndex)index;
-            switch (enu)
-            {
-                case Landscape_FieldIndex.Unknown:
-                    return obj.Unknown;
-                case Landscape_FieldIndex.VertexNormals:
-                    return obj.VertexNormals;
-                case Landscape_FieldIndex.VertexHeightMap:
-                    return obj.VertexHeightMap;
-                case Landscape_FieldIndex.VertexColors:
-                    return obj.VertexColors;
-                case Landscape_FieldIndex.Layers:
-                    return obj.Layers;
-                case Landscape_FieldIndex.Textures:
-                    return obj.Textures;
-                default:
-                    return OblivionMajorRecordCommon.GetNthObject(index, obj);
-            }
-        }
 
         public static void Clear(
             ILandscape item,

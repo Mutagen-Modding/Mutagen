@@ -130,24 +130,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        #region Loqui Getter Interface
-
-        protected override object GetNthObject(ushort index) => EyeCommon.GetNthObject(index, this);
-
-        protected override bool GetNthObjectHasBeenSet(ushort index) => EyeCommon.GetNthObjectHasBeenSet(index, this);
-
-        protected override void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => EyeCommon.UnsetNthObject(index, this, cmds);
-
-        #endregion
-
-        #region Loqui Interface
-        protected override void SetNthObjectHasBeenSet(ushort index, bool on)
-        {
-            EyeCommon.SetNthObjectHasBeenSet(index, on, this);
-        }
-
-        #endregion
-
         IMask<bool> IEqualsMask<Eye>.GetEqualsMask(Eye rhs, EqualsMaskHelper.Include include) => EyeCommon.GetEqualsMask(this, rhs, include);
         IMask<bool> IEqualsMask<IEyeGetter>.GetEqualsMask(IEyeGetter rhs, EqualsMaskHelper.Include include) => EyeCommon.GetEqualsMask(this, rhs, include);
         #region To String
@@ -1241,11 +1223,6 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, Eye obj)
-        {
-            ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
-        }
-
     }
     #endregion
 
@@ -1615,89 +1592,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         #endregion
-
-        public static void SetNthObjectHasBeenSet(
-            ushort index,
-            bool on,
-            IEye obj,
-            NotifyingFireParameters cmds = null)
-        {
-            Eye_FieldIndex enu = (Eye_FieldIndex)index;
-            switch (enu)
-            {
-                case Eye_FieldIndex.Name:
-                    obj.Name_IsSet = on;
-                    break;
-                case Eye_FieldIndex.Icon:
-                    obj.Icon_IsSet = on;
-                    break;
-                case Eye_FieldIndex.Flags:
-                    obj.Flags_IsSet = on;
-                    break;
-                default:
-                    OblivionMajorRecordCommon.SetNthObjectHasBeenSet(index, on, obj);
-                    break;
-            }
-        }
-
-        public static void UnsetNthObject(
-            ushort index,
-            IEye obj,
-            NotifyingUnsetParameters cmds = null)
-        {
-            Eye_FieldIndex enu = (Eye_FieldIndex)index;
-            switch (enu)
-            {
-                case Eye_FieldIndex.Name:
-                    obj.Name_Unset();
-                    break;
-                case Eye_FieldIndex.Icon:
-                    obj.Icon_Unset();
-                    break;
-                case Eye_FieldIndex.Flags:
-                    obj.Flags_Unset();
-                    break;
-                default:
-                    OblivionMajorRecordCommon.UnsetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public static bool GetNthObjectHasBeenSet(
-            ushort index,
-            IEye obj)
-        {
-            Eye_FieldIndex enu = (Eye_FieldIndex)index;
-            switch (enu)
-            {
-                case Eye_FieldIndex.Name:
-                    return obj.Name_IsSet;
-                case Eye_FieldIndex.Icon:
-                    return obj.Icon_IsSet;
-                case Eye_FieldIndex.Flags:
-                    return obj.Flags_IsSet;
-                default:
-                    return OblivionMajorRecordCommon.GetNthObjectHasBeenSet(index, obj);
-            }
-        }
-
-        public static object GetNthObject(
-            ushort index,
-            IEyeGetter obj)
-        {
-            Eye_FieldIndex enu = (Eye_FieldIndex)index;
-            switch (enu)
-            {
-                case Eye_FieldIndex.Name:
-                    return obj.Name;
-                case Eye_FieldIndex.Icon:
-                    return obj.Icon;
-                case Eye_FieldIndex.Flags:
-                    return obj.Flags;
-                default:
-                    return OblivionMajorRecordCommon.GetNthObject(index, obj);
-            }
-        }
 
         public static void Clear(
             IEye item,

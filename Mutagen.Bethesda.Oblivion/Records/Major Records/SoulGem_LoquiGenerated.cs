@@ -214,24 +214,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        #region Loqui Getter Interface
-
-        protected override object GetNthObject(ushort index) => SoulGemCommon.GetNthObject(index, this);
-
-        protected override bool GetNthObjectHasBeenSet(ushort index) => SoulGemCommon.GetNthObjectHasBeenSet(index, this);
-
-        protected override void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => SoulGemCommon.UnsetNthObject(index, this, cmds);
-
-        #endregion
-
-        #region Loqui Interface
-        protected override void SetNthObjectHasBeenSet(ushort index, bool on)
-        {
-            SoulGemCommon.SetNthObjectHasBeenSet(index, on, this);
-        }
-
-        #endregion
-
         IMask<bool> IEqualsMask<SoulGem>.GetEqualsMask(SoulGem rhs, EqualsMaskHelper.Include include) => SoulGemCommon.GetEqualsMask(this, rhs, include);
         IMask<bool> IEqualsMask<ISoulGemGetter>.GetEqualsMask(ISoulGemGetter rhs, EqualsMaskHelper.Include include) => SoulGemCommon.GetEqualsMask(this, rhs, include);
         #region To String
@@ -1601,11 +1583,6 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, SoulGem obj)
-        {
-            ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
-        }
-
     }
     #endregion
 
@@ -2216,136 +2193,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         #endregion
-
-        public static void SetNthObjectHasBeenSet(
-            ushort index,
-            bool on,
-            ISoulGem obj,
-            NotifyingFireParameters cmds = null)
-        {
-            SoulGem_FieldIndex enu = (SoulGem_FieldIndex)index;
-            switch (enu)
-            {
-                case SoulGem_FieldIndex.Value:
-                case SoulGem_FieldIndex.Weight:
-                    if (on) break;
-                    throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
-                case SoulGem_FieldIndex.Name:
-                    obj.Name_IsSet = on;
-                    break;
-                case SoulGem_FieldIndex.Model:
-                    obj.Model_IsSet = on;
-                    break;
-                case SoulGem_FieldIndex.Icon:
-                    obj.Icon_IsSet = on;
-                    break;
-                case SoulGem_FieldIndex.Script:
-                    obj.Script_Property.HasBeenSet = on;
-                    break;
-                case SoulGem_FieldIndex.ContainedSoul:
-                    obj.ContainedSoul_IsSet = on;
-                    break;
-                case SoulGem_FieldIndex.MaximumCapacity:
-                    obj.MaximumCapacity_IsSet = on;
-                    break;
-                default:
-                    ItemAbstractCommon.SetNthObjectHasBeenSet(index, on, obj);
-                    break;
-            }
-        }
-
-        public static void UnsetNthObject(
-            ushort index,
-            ISoulGem obj,
-            NotifyingUnsetParameters cmds = null)
-        {
-            SoulGem_FieldIndex enu = (SoulGem_FieldIndex)index;
-            switch (enu)
-            {
-                case SoulGem_FieldIndex.Name:
-                    obj.Name_Unset();
-                    break;
-                case SoulGem_FieldIndex.Model:
-                    obj.Model_Unset();
-                    break;
-                case SoulGem_FieldIndex.Icon:
-                    obj.Icon_Unset();
-                    break;
-                case SoulGem_FieldIndex.Script:
-                    obj.Script_Property.Unset(cmds);
-                    break;
-                case SoulGem_FieldIndex.Value:
-                    obj.Value = default(UInt32);
-                    break;
-                case SoulGem_FieldIndex.Weight:
-                    obj.Weight = default(Single);
-                    break;
-                case SoulGem_FieldIndex.ContainedSoul:
-                    obj.ContainedSoul_Unset();
-                    break;
-                case SoulGem_FieldIndex.MaximumCapacity:
-                    obj.MaximumCapacity_Unset();
-                    break;
-                default:
-                    ItemAbstractCommon.UnsetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public static bool GetNthObjectHasBeenSet(
-            ushort index,
-            ISoulGem obj)
-        {
-            SoulGem_FieldIndex enu = (SoulGem_FieldIndex)index;
-            switch (enu)
-            {
-                case SoulGem_FieldIndex.Value:
-                case SoulGem_FieldIndex.Weight:
-                    return true;
-                case SoulGem_FieldIndex.Name:
-                    return obj.Name_IsSet;
-                case SoulGem_FieldIndex.Model:
-                    return obj.Model_IsSet;
-                case SoulGem_FieldIndex.Icon:
-                    return obj.Icon_IsSet;
-                case SoulGem_FieldIndex.Script:
-                    return obj.Script_Property.HasBeenSet;
-                case SoulGem_FieldIndex.ContainedSoul:
-                    return obj.ContainedSoul_IsSet;
-                case SoulGem_FieldIndex.MaximumCapacity:
-                    return obj.MaximumCapacity_IsSet;
-                default:
-                    return ItemAbstractCommon.GetNthObjectHasBeenSet(index, obj);
-            }
-        }
-
-        public static object GetNthObject(
-            ushort index,
-            ISoulGemGetter obj)
-        {
-            SoulGem_FieldIndex enu = (SoulGem_FieldIndex)index;
-            switch (enu)
-            {
-                case SoulGem_FieldIndex.Name:
-                    return obj.Name;
-                case SoulGem_FieldIndex.Model:
-                    return obj.Model;
-                case SoulGem_FieldIndex.Icon:
-                    return obj.Icon;
-                case SoulGem_FieldIndex.Script:
-                    return obj.Script;
-                case SoulGem_FieldIndex.Value:
-                    return obj.Value;
-                case SoulGem_FieldIndex.Weight:
-                    return obj.Weight;
-                case SoulGem_FieldIndex.ContainedSoul:
-                    return obj.ContainedSoul;
-                case SoulGem_FieldIndex.MaximumCapacity:
-                    return obj.MaximumCapacity;
-                default:
-                    return ItemAbstractCommon.GetNthObject(index, obj);
-            }
-        }
 
         public static void Clear(
             ISoulGem item,

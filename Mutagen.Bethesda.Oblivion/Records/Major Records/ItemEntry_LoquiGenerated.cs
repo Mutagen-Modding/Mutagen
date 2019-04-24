@@ -83,28 +83,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        #region Loqui Getter Interface
-
-        protected object GetNthObject(ushort index) => ItemEntryCommon.GetNthObject(index, this);
-        object ILoquiObjectGetter.GetNthObject(ushort index) => this.GetNthObject(index);
-
-        protected bool GetNthObjectHasBeenSet(ushort index) => ItemEntryCommon.GetNthObjectHasBeenSet(index, this);
-        bool ILoquiObjectGetter.GetNthObjectHasBeenSet(ushort index) => this.GetNthObjectHasBeenSet(index);
-
-        protected void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => ItemEntryCommon.UnsetNthObject(index, this, cmds);
-        void ILoquiObjectSetter.UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => this.UnsetNthObject(index, cmds);
-
-        #endregion
-
-        #region Loqui Interface
-        protected void SetNthObjectHasBeenSet(ushort index, bool on)
-        {
-            ItemEntryCommon.SetNthObjectHasBeenSet(index, on, this);
-        }
-        void ILoquiObjectSetter.SetNthObjectHasBeenSet(ushort index, bool on) => this.SetNthObjectHasBeenSet(index, on);
-
-        #endregion
-
         IMask<bool> IEqualsMask<ItemEntry>.GetEqualsMask(ItemEntry rhs, EqualsMaskHelper.Include include) => ItemEntryCommon.GetEqualsMask(this, rhs, include);
         IMask<bool> IEqualsMask<IItemEntryGetter>.GetEqualsMask(IItemEntryGetter rhs, EqualsMaskHelper.Include include) => ItemEntryCommon.GetEqualsMask(this, rhs, include);
         #region To String
@@ -1030,7 +1008,6 @@ namespace Mutagen.Bethesda.Oblivion
                 cmds: cmds);
         }
 
-        void ILoquiObjectSetter.SetNthObject(ushort index, object obj, NotifyingFireParameters cmds) => this.SetNthObject(index, obj, cmds);
         protected void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
         {
             ItemEntry_FieldIndex enu = (ItemEntry_FieldIndex)index;
@@ -1093,11 +1070,6 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, ItemEntry obj)
-        {
-            ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
-        }
-
     }
     #endregion
 
@@ -1385,77 +1357,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         #endregion
-
-        public static void SetNthObjectHasBeenSet(
-            ushort index,
-            bool on,
-            IItemEntry obj,
-            NotifyingFireParameters cmds = null)
-        {
-            ItemEntry_FieldIndex enu = (ItemEntry_FieldIndex)index;
-            switch (enu)
-            {
-                case ItemEntry_FieldIndex.Item:
-                    if (on) break;
-                    throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
-                case ItemEntry_FieldIndex.Count:
-                    obj.Count_IsSet = on;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static void UnsetNthObject(
-            ushort index,
-            IItemEntry obj,
-            NotifyingUnsetParameters cmds = null)
-        {
-            ItemEntry_FieldIndex enu = (ItemEntry_FieldIndex)index;
-            switch (enu)
-            {
-                case ItemEntry_FieldIndex.Item:
-                    obj.Item = default(ItemAbstract);
-                    break;
-                case ItemEntry_FieldIndex.Count:
-                    obj.Count_Unset();
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthObjectHasBeenSet(
-            ushort index,
-            IItemEntry obj)
-        {
-            ItemEntry_FieldIndex enu = (ItemEntry_FieldIndex)index;
-            switch (enu)
-            {
-                case ItemEntry_FieldIndex.Item:
-                    return true;
-                case ItemEntry_FieldIndex.Count:
-                    return obj.Count_IsSet;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static object GetNthObject(
-            ushort index,
-            IItemEntryGetter obj)
-        {
-            ItemEntry_FieldIndex enu = (ItemEntry_FieldIndex)index;
-            switch (enu)
-            {
-                case ItemEntry_FieldIndex.Item:
-                    return obj.Item;
-                case ItemEntry_FieldIndex.Count:
-                    return obj.Count;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
 
         public static void Clear(
             IItemEntry item,

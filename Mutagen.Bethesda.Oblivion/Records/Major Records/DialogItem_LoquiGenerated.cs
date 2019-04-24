@@ -191,24 +191,6 @@ namespace Mutagen.Bethesda.Oblivion
         ScriptFields IDialogItemGetter.Script => this.Script;
         #endregion
 
-        #region Loqui Getter Interface
-
-        protected override object GetNthObject(ushort index) => DialogItemCommon.GetNthObject(index, this);
-
-        protected override bool GetNthObjectHasBeenSet(ushort index) => DialogItemCommon.GetNthObjectHasBeenSet(index, this);
-
-        protected override void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => DialogItemCommon.UnsetNthObject(index, this, cmds);
-
-        #endregion
-
-        #region Loqui Interface
-        protected override void SetNthObjectHasBeenSet(ushort index, bool on)
-        {
-            DialogItemCommon.SetNthObjectHasBeenSet(index, on, this);
-        }
-
-        #endregion
-
         IMask<bool> IEqualsMask<DialogItem>.GetEqualsMask(DialogItem rhs, EqualsMaskHelper.Include include) => DialogItemCommon.GetEqualsMask(this, rhs, include);
         IMask<bool> IEqualsMask<IDialogItemGetter>.GetEqualsMask(IDialogItemGetter rhs, EqualsMaskHelper.Include include) => DialogItemCommon.GetEqualsMask(this, rhs, include);
         #region To String
@@ -1620,11 +1602,6 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, DialogItem obj)
-        {
-            ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
-        }
-
     }
     #endregion
 
@@ -2247,154 +2224,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         #endregion
-
-        public static void SetNthObjectHasBeenSet(
-            ushort index,
-            bool on,
-            IDialogItem obj,
-            NotifyingFireParameters cmds = null)
-        {
-            DialogItem_FieldIndex enu = (DialogItem_FieldIndex)index;
-            switch (enu)
-            {
-                case DialogItem_FieldIndex.DialogType:
-                case DialogItem_FieldIndex.Flags:
-                    if (on) break;
-                    throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
-                case DialogItem_FieldIndex.Script:
-                    throw new ArgumentException("Tried to set at a readonly index " + index);
-                case DialogItem_FieldIndex.Quest:
-                    obj.Quest_Property.HasBeenSet = on;
-                    break;
-                case DialogItem_FieldIndex.PreviousTopic:
-                    obj.PreviousTopic_Property.HasBeenSet = on;
-                    break;
-                case DialogItem_FieldIndex.Topics:
-                    obj.Topics.HasBeenSet = on;
-                    break;
-                case DialogItem_FieldIndex.Responses:
-                    obj.Responses.HasBeenSet = on;
-                    break;
-                case DialogItem_FieldIndex.Conditions:
-                    obj.Conditions.HasBeenSet = on;
-                    break;
-                case DialogItem_FieldIndex.Choices:
-                    obj.Choices.HasBeenSet = on;
-                    break;
-                case DialogItem_FieldIndex.LinkFrom:
-                    obj.LinkFrom.HasBeenSet = on;
-                    break;
-                default:
-                    OblivionMajorRecordCommon.SetNthObjectHasBeenSet(index, on, obj);
-                    break;
-            }
-        }
-
-        public static void UnsetNthObject(
-            ushort index,
-            IDialogItem obj,
-            NotifyingUnsetParameters cmds = null)
-        {
-            DialogItem_FieldIndex enu = (DialogItem_FieldIndex)index;
-            switch (enu)
-            {
-                case DialogItem_FieldIndex.DialogType:
-                    obj.DialogType = default(DialogType);
-                    break;
-                case DialogItem_FieldIndex.Flags:
-                    obj.Flags = default(DialogItem.Flag);
-                    break;
-                case DialogItem_FieldIndex.Quest:
-                    obj.Quest_Property.Unset(cmds);
-                    break;
-                case DialogItem_FieldIndex.PreviousTopic:
-                    obj.PreviousTopic_Property.Unset(cmds);
-                    break;
-                case DialogItem_FieldIndex.Topics:
-                    obj.Topics.Unset();
-                    break;
-                case DialogItem_FieldIndex.Responses:
-                    obj.Responses.Unset();
-                    break;
-                case DialogItem_FieldIndex.Conditions:
-                    obj.Conditions.Unset();
-                    break;
-                case DialogItem_FieldIndex.Choices:
-                    obj.Choices.Unset();
-                    break;
-                case DialogItem_FieldIndex.LinkFrom:
-                    obj.LinkFrom.Unset();
-                    break;
-                case DialogItem_FieldIndex.Script:
-                    throw new ArgumentException("Tried to set at a readonly index " + index);
-                default:
-                    OblivionMajorRecordCommon.UnsetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public static bool GetNthObjectHasBeenSet(
-            ushort index,
-            IDialogItem obj)
-        {
-            DialogItem_FieldIndex enu = (DialogItem_FieldIndex)index;
-            switch (enu)
-            {
-                case DialogItem_FieldIndex.DialogType:
-                case DialogItem_FieldIndex.Flags:
-                    return true;
-                case DialogItem_FieldIndex.Quest:
-                    return obj.Quest_Property.HasBeenSet;
-                case DialogItem_FieldIndex.PreviousTopic:
-                    return obj.PreviousTopic_Property.HasBeenSet;
-                case DialogItem_FieldIndex.Topics:
-                    return obj.Topics.HasBeenSet;
-                case DialogItem_FieldIndex.Responses:
-                    return obj.Responses.HasBeenSet;
-                case DialogItem_FieldIndex.Conditions:
-                    return obj.Conditions.HasBeenSet;
-                case DialogItem_FieldIndex.Choices:
-                    return obj.Choices.HasBeenSet;
-                case DialogItem_FieldIndex.LinkFrom:
-                    return obj.LinkFrom.HasBeenSet;
-                case DialogItem_FieldIndex.Script:
-                    return obj.Script_IsSet;
-                default:
-                    return OblivionMajorRecordCommon.GetNthObjectHasBeenSet(index, obj);
-            }
-        }
-
-        public static object GetNthObject(
-            ushort index,
-            IDialogItemGetter obj)
-        {
-            DialogItem_FieldIndex enu = (DialogItem_FieldIndex)index;
-            switch (enu)
-            {
-                case DialogItem_FieldIndex.DialogType:
-                    return obj.DialogType;
-                case DialogItem_FieldIndex.Flags:
-                    return obj.Flags;
-                case DialogItem_FieldIndex.Quest:
-                    return obj.Quest;
-                case DialogItem_FieldIndex.PreviousTopic:
-                    return obj.PreviousTopic;
-                case DialogItem_FieldIndex.Topics:
-                    return obj.Topics;
-                case DialogItem_FieldIndex.Responses:
-                    return obj.Responses;
-                case DialogItem_FieldIndex.Conditions:
-                    return obj.Conditions;
-                case DialogItem_FieldIndex.Choices:
-                    return obj.Choices;
-                case DialogItem_FieldIndex.LinkFrom:
-                    return obj.LinkFrom;
-                case DialogItem_FieldIndex.Script:
-                    return obj.Script;
-                default:
-                    return OblivionMajorRecordCommon.GetNthObject(index, obj);
-            }
-        }
 
         public static void Clear(
             IDialogItem item,

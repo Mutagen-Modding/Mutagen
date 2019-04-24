@@ -235,24 +235,6 @@ namespace Mutagen.Bethesda.Oblivion
         public static RangeUInt8 PhaseLength_Range = new RangeUInt8(0, 63);
         #endregion
 
-        #region Loqui Getter Interface
-
-        protected override object GetNthObject(ushort index) => ClimateCommon.GetNthObject(index, this);
-
-        protected override bool GetNthObjectHasBeenSet(ushort index) => ClimateCommon.GetNthObjectHasBeenSet(index, this);
-
-        protected override void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => ClimateCommon.UnsetNthObject(index, this, cmds);
-
-        #endregion
-
-        #region Loqui Interface
-        protected override void SetNthObjectHasBeenSet(ushort index, bool on)
-        {
-            ClimateCommon.SetNthObjectHasBeenSet(index, on, this);
-        }
-
-        #endregion
-
         IMask<bool> IEqualsMask<Climate>.GetEqualsMask(Climate rhs, EqualsMaskHelper.Include include) => ClimateCommon.GetEqualsMask(this, rhs, include);
         IMask<bool> IEqualsMask<IClimateGetter>.GetEqualsMask(IClimateGetter rhs, EqualsMaskHelper.Include include) => ClimateCommon.GetEqualsMask(this, rhs, include);
         #region To String
@@ -1701,11 +1683,6 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, Climate obj)
-        {
-            ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
-        }
-
     }
     #endregion
 
@@ -2399,151 +2376,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         #endregion
-
-        public static void SetNthObjectHasBeenSet(
-            ushort index,
-            bool on,
-            IClimate obj,
-            NotifyingFireParameters cmds = null)
-        {
-            Climate_FieldIndex enu = (Climate_FieldIndex)index;
-            switch (enu)
-            {
-                case Climate_FieldIndex.SunriseBegin:
-                case Climate_FieldIndex.SunriseEnd:
-                case Climate_FieldIndex.SunsetBegin:
-                case Climate_FieldIndex.SunsetEnd:
-                case Climate_FieldIndex.Volatility:
-                case Climate_FieldIndex.Phase:
-                case Climate_FieldIndex.PhaseLength:
-                    if (on) break;
-                    throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
-                case Climate_FieldIndex.Weathers:
-                    obj.Weathers.HasBeenSet = on;
-                    break;
-                case Climate_FieldIndex.SunTexture:
-                    obj.SunTexture_IsSet = on;
-                    break;
-                case Climate_FieldIndex.SunGlareTexture:
-                    obj.SunGlareTexture_IsSet = on;
-                    break;
-                case Climate_FieldIndex.Model:
-                    obj.Model_IsSet = on;
-                    break;
-                default:
-                    OblivionMajorRecordCommon.SetNthObjectHasBeenSet(index, on, obj);
-                    break;
-            }
-        }
-
-        public static void UnsetNthObject(
-            ushort index,
-            IClimate obj,
-            NotifyingUnsetParameters cmds = null)
-        {
-            Climate_FieldIndex enu = (Climate_FieldIndex)index;
-            switch (enu)
-            {
-                case Climate_FieldIndex.Weathers:
-                    obj.Weathers.Unset();
-                    break;
-                case Climate_FieldIndex.SunTexture:
-                    obj.SunTexture_Unset();
-                    break;
-                case Climate_FieldIndex.SunGlareTexture:
-                    obj.SunGlareTexture_Unset();
-                    break;
-                case Climate_FieldIndex.Model:
-                    obj.Model_Unset();
-                    break;
-                case Climate_FieldIndex.SunriseBegin:
-                    obj.SunriseBegin = default(DateTime);
-                    break;
-                case Climate_FieldIndex.SunriseEnd:
-                    obj.SunriseEnd = default(DateTime);
-                    break;
-                case Climate_FieldIndex.SunsetBegin:
-                    obj.SunsetBegin = default(DateTime);
-                    break;
-                case Climate_FieldIndex.SunsetEnd:
-                    obj.SunsetEnd = default(DateTime);
-                    break;
-                case Climate_FieldIndex.Volatility:
-                    obj.Volatility = default(Byte);
-                    break;
-                case Climate_FieldIndex.Phase:
-                    obj.Phase = default(Climate.MoonPhase);
-                    break;
-                case Climate_FieldIndex.PhaseLength:
-                    obj.PhaseLength = default(Byte);
-                    break;
-                default:
-                    OblivionMajorRecordCommon.UnsetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public static bool GetNthObjectHasBeenSet(
-            ushort index,
-            IClimate obj)
-        {
-            Climate_FieldIndex enu = (Climate_FieldIndex)index;
-            switch (enu)
-            {
-                case Climate_FieldIndex.SunriseBegin:
-                case Climate_FieldIndex.SunriseEnd:
-                case Climate_FieldIndex.SunsetBegin:
-                case Climate_FieldIndex.SunsetEnd:
-                case Climate_FieldIndex.Volatility:
-                case Climate_FieldIndex.Phase:
-                case Climate_FieldIndex.PhaseLength:
-                    return true;
-                case Climate_FieldIndex.Weathers:
-                    return obj.Weathers.HasBeenSet;
-                case Climate_FieldIndex.SunTexture:
-                    return obj.SunTexture_IsSet;
-                case Climate_FieldIndex.SunGlareTexture:
-                    return obj.SunGlareTexture_IsSet;
-                case Climate_FieldIndex.Model:
-                    return obj.Model_IsSet;
-                default:
-                    return OblivionMajorRecordCommon.GetNthObjectHasBeenSet(index, obj);
-            }
-        }
-
-        public static object GetNthObject(
-            ushort index,
-            IClimateGetter obj)
-        {
-            Climate_FieldIndex enu = (Climate_FieldIndex)index;
-            switch (enu)
-            {
-                case Climate_FieldIndex.Weathers:
-                    return obj.Weathers;
-                case Climate_FieldIndex.SunTexture:
-                    return obj.SunTexture;
-                case Climate_FieldIndex.SunGlareTexture:
-                    return obj.SunGlareTexture;
-                case Climate_FieldIndex.Model:
-                    return obj.Model;
-                case Climate_FieldIndex.SunriseBegin:
-                    return obj.SunriseBegin;
-                case Climate_FieldIndex.SunriseEnd:
-                    return obj.SunriseEnd;
-                case Climate_FieldIndex.SunsetBegin:
-                    return obj.SunsetBegin;
-                case Climate_FieldIndex.SunsetEnd:
-                    return obj.SunsetEnd;
-                case Climate_FieldIndex.Volatility:
-                    return obj.Volatility;
-                case Climate_FieldIndex.Phase:
-                    return obj.Phase;
-                case Climate_FieldIndex.PhaseLength:
-                    return obj.PhaseLength;
-                default:
-                    return OblivionMajorRecordCommon.GetNthObject(index, obj);
-            }
-        }
 
         public static void Clear(
             IClimate item,

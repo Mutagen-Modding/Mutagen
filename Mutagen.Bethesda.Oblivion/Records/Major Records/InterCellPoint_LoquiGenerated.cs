@@ -66,28 +66,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        #region Loqui Getter Interface
-
-        protected object GetNthObject(ushort index) => InterCellPointCommon.GetNthObject(index, this);
-        object ILoquiObjectGetter.GetNthObject(ushort index) => this.GetNthObject(index);
-
-        protected bool GetNthObjectHasBeenSet(ushort index) => InterCellPointCommon.GetNthObjectHasBeenSet(index, this);
-        bool ILoquiObjectGetter.GetNthObjectHasBeenSet(ushort index) => this.GetNthObjectHasBeenSet(index);
-
-        protected void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => InterCellPointCommon.UnsetNthObject(index, this, cmds);
-        void ILoquiObjectSetter.UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => this.UnsetNthObject(index, cmds);
-
-        #endregion
-
-        #region Loqui Interface
-        protected void SetNthObjectHasBeenSet(ushort index, bool on)
-        {
-            InterCellPointCommon.SetNthObjectHasBeenSet(index, on, this);
-        }
-        void ILoquiObjectSetter.SetNthObjectHasBeenSet(ushort index, bool on) => this.SetNthObjectHasBeenSet(index, on);
-
-        #endregion
-
         IMask<bool> IEqualsMask<InterCellPoint>.GetEqualsMask(InterCellPoint rhs, EqualsMaskHelper.Include include) => InterCellPointCommon.GetEqualsMask(this, rhs, include);
         IMask<bool> IEqualsMask<IInterCellPointGetter>.GetEqualsMask(IInterCellPointGetter rhs, EqualsMaskHelper.Include include) => InterCellPointCommon.GetEqualsMask(this, rhs, include);
         #region To String
@@ -982,7 +960,6 @@ namespace Mutagen.Bethesda.Oblivion
                 cmds: cmds);
         }
 
-        void ILoquiObjectSetter.SetNthObject(ushort index, object obj, NotifyingFireParameters cmds) => this.SetNthObject(index, obj, cmds);
         protected void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
         {
             InterCellPoint_FieldIndex enu = (InterCellPoint_FieldIndex)index;
@@ -1041,11 +1018,6 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, InterCellPoint obj)
-        {
-            ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
-        }
-
     }
     #endregion
 
@@ -1312,74 +1284,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         #endregion
-
-        public static void SetNthObjectHasBeenSet(
-            ushort index,
-            bool on,
-            IInterCellPoint obj,
-            NotifyingFireParameters cmds = null)
-        {
-            InterCellPoint_FieldIndex enu = (InterCellPoint_FieldIndex)index;
-            switch (enu)
-            {
-                case InterCellPoint_FieldIndex.PointID:
-                case InterCellPoint_FieldIndex.Point:
-                    if (on) break;
-                    throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static void UnsetNthObject(
-            ushort index,
-            IInterCellPoint obj,
-            NotifyingUnsetParameters cmds = null)
-        {
-            InterCellPoint_FieldIndex enu = (InterCellPoint_FieldIndex)index;
-            switch (enu)
-            {
-                case InterCellPoint_FieldIndex.PointID:
-                    obj.PointID = default(Int32);
-                    break;
-                case InterCellPoint_FieldIndex.Point:
-                    obj.Point = default(P3Float);
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthObjectHasBeenSet(
-            ushort index,
-            IInterCellPoint obj)
-        {
-            InterCellPoint_FieldIndex enu = (InterCellPoint_FieldIndex)index;
-            switch (enu)
-            {
-                case InterCellPoint_FieldIndex.PointID:
-                case InterCellPoint_FieldIndex.Point:
-                    return true;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static object GetNthObject(
-            ushort index,
-            IInterCellPointGetter obj)
-        {
-            InterCellPoint_FieldIndex enu = (InterCellPoint_FieldIndex)index;
-            switch (enu)
-            {
-                case InterCellPoint_FieldIndex.PointID:
-                    return obj.PointID;
-                case InterCellPoint_FieldIndex.Point:
-                    return obj.Point;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
 
         public static void Clear(
             IInterCellPoint item,

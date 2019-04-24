@@ -105,28 +105,6 @@ namespace Mutagen.Bethesda.Oblivion
         BodyData IGenderedBodyDataGetter.Female => this.Female;
         #endregion
 
-        #region Loqui Getter Interface
-
-        protected object GetNthObject(ushort index) => GenderedBodyDataCommon.GetNthObject(index, this);
-        object ILoquiObjectGetter.GetNthObject(ushort index) => this.GetNthObject(index);
-
-        protected bool GetNthObjectHasBeenSet(ushort index) => GenderedBodyDataCommon.GetNthObjectHasBeenSet(index, this);
-        bool ILoquiObjectGetter.GetNthObjectHasBeenSet(ushort index) => this.GetNthObjectHasBeenSet(index);
-
-        protected void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => GenderedBodyDataCommon.UnsetNthObject(index, this, cmds);
-        void ILoquiObjectSetter.UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => this.UnsetNthObject(index, cmds);
-
-        #endregion
-
-        #region Loqui Interface
-        protected void SetNthObjectHasBeenSet(ushort index, bool on)
-        {
-            GenderedBodyDataCommon.SetNthObjectHasBeenSet(index, on, this);
-        }
-        void ILoquiObjectSetter.SetNthObjectHasBeenSet(ushort index, bool on) => this.SetNthObjectHasBeenSet(index, on);
-
-        #endregion
-
         IMask<bool> IEqualsMask<GenderedBodyData>.GetEqualsMask(GenderedBodyData rhs, EqualsMaskHelper.Include include) => GenderedBodyDataCommon.GetEqualsMask(this, rhs, include);
         IMask<bool> IEqualsMask<IGenderedBodyDataGetter>.GetEqualsMask(IGenderedBodyDataGetter rhs, EqualsMaskHelper.Include include) => GenderedBodyDataCommon.GetEqualsMask(this, rhs, include);
         #region To String
@@ -1077,7 +1055,6 @@ namespace Mutagen.Bethesda.Oblivion
                 cmds: cmds);
         }
 
-        void ILoquiObjectSetter.SetNthObject(ushort index, object obj, NotifyingFireParameters cmds) => this.SetNthObject(index, obj, cmds);
         protected void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
         {
             GenderedBodyData_FieldIndex enu = (GenderedBodyData_FieldIndex)index;
@@ -1136,11 +1113,6 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, GenderedBodyData obj)
-        {
-            ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
-        }
-
     }
     #endregion
 
@@ -1503,77 +1475,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         #endregion
-
-        public static void SetNthObjectHasBeenSet(
-            ushort index,
-            bool on,
-            IGenderedBodyData obj,
-            NotifyingFireParameters cmds = null)
-        {
-            GenderedBodyData_FieldIndex enu = (GenderedBodyData_FieldIndex)index;
-            switch (enu)
-            {
-                case GenderedBodyData_FieldIndex.Male:
-                    obj.Male_IsSet = on;
-                    break;
-                case GenderedBodyData_FieldIndex.Female:
-                    obj.Female_IsSet = on;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static void UnsetNthObject(
-            ushort index,
-            IGenderedBodyData obj,
-            NotifyingUnsetParameters cmds = null)
-        {
-            GenderedBodyData_FieldIndex enu = (GenderedBodyData_FieldIndex)index;
-            switch (enu)
-            {
-                case GenderedBodyData_FieldIndex.Male:
-                    obj.Male_Unset();
-                    break;
-                case GenderedBodyData_FieldIndex.Female:
-                    obj.Female_Unset();
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthObjectHasBeenSet(
-            ushort index,
-            IGenderedBodyData obj)
-        {
-            GenderedBodyData_FieldIndex enu = (GenderedBodyData_FieldIndex)index;
-            switch (enu)
-            {
-                case GenderedBodyData_FieldIndex.Male:
-                    return obj.Male_IsSet;
-                case GenderedBodyData_FieldIndex.Female:
-                    return obj.Female_IsSet;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static object GetNthObject(
-            ushort index,
-            IGenderedBodyDataGetter obj)
-        {
-            GenderedBodyData_FieldIndex enu = (GenderedBodyData_FieldIndex)index;
-            switch (enu)
-            {
-                case GenderedBodyData_FieldIndex.Male:
-                    return obj.Male;
-                case GenderedBodyData_FieldIndex.Female:
-                    return obj.Female;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
 
         public static void Clear(
             IGenderedBodyData item,

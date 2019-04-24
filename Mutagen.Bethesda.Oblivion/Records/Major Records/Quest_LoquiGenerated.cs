@@ -191,24 +191,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        #region Loqui Getter Interface
-
-        protected override object GetNthObject(ushort index) => QuestCommon.GetNthObject(index, this);
-
-        protected override bool GetNthObjectHasBeenSet(ushort index) => QuestCommon.GetNthObjectHasBeenSet(index, this);
-
-        protected override void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => QuestCommon.UnsetNthObject(index, this, cmds);
-
-        #endregion
-
-        #region Loqui Interface
-        protected override void SetNthObjectHasBeenSet(ushort index, bool on)
-        {
-            QuestCommon.SetNthObjectHasBeenSet(index, on, this);
-        }
-
-        #endregion
-
         IMask<bool> IEqualsMask<Quest>.GetEqualsMask(Quest rhs, EqualsMaskHelper.Include include) => QuestCommon.GetEqualsMask(this, rhs, include);
         IMask<bool> IEqualsMask<IQuestGetter>.GetEqualsMask(IQuestGetter rhs, EqualsMaskHelper.Include include) => QuestCommon.GetEqualsMask(this, rhs, include);
         #region To String
@@ -1531,11 +1513,6 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, Quest obj)
-        {
-            ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
-        }
-
     }
     #endregion
 
@@ -2121,136 +2098,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         #endregion
-
-        public static void SetNthObjectHasBeenSet(
-            ushort index,
-            bool on,
-            IQuest obj,
-            NotifyingFireParameters cmds = null)
-        {
-            Quest_FieldIndex enu = (Quest_FieldIndex)index;
-            switch (enu)
-            {
-                case Quest_FieldIndex.Flags:
-                case Quest_FieldIndex.Priority:
-                    if (on) break;
-                    throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
-                case Quest_FieldIndex.Script:
-                    obj.Script_Property.HasBeenSet = on;
-                    break;
-                case Quest_FieldIndex.Name:
-                    obj.Name_IsSet = on;
-                    break;
-                case Quest_FieldIndex.Icon:
-                    obj.Icon_IsSet = on;
-                    break;
-                case Quest_FieldIndex.Conditions:
-                    obj.Conditions.HasBeenSet = on;
-                    break;
-                case Quest_FieldIndex.Stages:
-                    obj.Stages.HasBeenSet = on;
-                    break;
-                case Quest_FieldIndex.Targets:
-                    obj.Targets.HasBeenSet = on;
-                    break;
-                default:
-                    OblivionMajorRecordCommon.SetNthObjectHasBeenSet(index, on, obj);
-                    break;
-            }
-        }
-
-        public static void UnsetNthObject(
-            ushort index,
-            IQuest obj,
-            NotifyingUnsetParameters cmds = null)
-        {
-            Quest_FieldIndex enu = (Quest_FieldIndex)index;
-            switch (enu)
-            {
-                case Quest_FieldIndex.Script:
-                    obj.Script_Property.Unset(cmds);
-                    break;
-                case Quest_FieldIndex.Name:
-                    obj.Name_Unset();
-                    break;
-                case Quest_FieldIndex.Icon:
-                    obj.Icon_Unset();
-                    break;
-                case Quest_FieldIndex.Flags:
-                    obj.Flags = default(Quest.Flag);
-                    break;
-                case Quest_FieldIndex.Priority:
-                    obj.Priority = default(Byte);
-                    break;
-                case Quest_FieldIndex.Conditions:
-                    obj.Conditions.Unset();
-                    break;
-                case Quest_FieldIndex.Stages:
-                    obj.Stages.Unset();
-                    break;
-                case Quest_FieldIndex.Targets:
-                    obj.Targets.Unset();
-                    break;
-                default:
-                    OblivionMajorRecordCommon.UnsetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public static bool GetNthObjectHasBeenSet(
-            ushort index,
-            IQuest obj)
-        {
-            Quest_FieldIndex enu = (Quest_FieldIndex)index;
-            switch (enu)
-            {
-                case Quest_FieldIndex.Flags:
-                case Quest_FieldIndex.Priority:
-                    return true;
-                case Quest_FieldIndex.Script:
-                    return obj.Script_Property.HasBeenSet;
-                case Quest_FieldIndex.Name:
-                    return obj.Name_IsSet;
-                case Quest_FieldIndex.Icon:
-                    return obj.Icon_IsSet;
-                case Quest_FieldIndex.Conditions:
-                    return obj.Conditions.HasBeenSet;
-                case Quest_FieldIndex.Stages:
-                    return obj.Stages.HasBeenSet;
-                case Quest_FieldIndex.Targets:
-                    return obj.Targets.HasBeenSet;
-                default:
-                    return OblivionMajorRecordCommon.GetNthObjectHasBeenSet(index, obj);
-            }
-        }
-
-        public static object GetNthObject(
-            ushort index,
-            IQuestGetter obj)
-        {
-            Quest_FieldIndex enu = (Quest_FieldIndex)index;
-            switch (enu)
-            {
-                case Quest_FieldIndex.Script:
-                    return obj.Script;
-                case Quest_FieldIndex.Name:
-                    return obj.Name;
-                case Quest_FieldIndex.Icon:
-                    return obj.Icon;
-                case Quest_FieldIndex.Flags:
-                    return obj.Flags;
-                case Quest_FieldIndex.Priority:
-                    return obj.Priority;
-                case Quest_FieldIndex.Conditions:
-                    return obj.Conditions;
-                case Quest_FieldIndex.Stages:
-                    return obj.Stages;
-                case Quest_FieldIndex.Targets:
-                    return obj.Targets;
-                default:
-                    return OblivionMajorRecordCommon.GetNthObject(index, obj);
-            }
-        }
 
         public static void Clear(
             IQuest item,

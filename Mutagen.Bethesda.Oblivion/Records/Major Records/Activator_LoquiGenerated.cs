@@ -118,24 +118,6 @@ namespace Mutagen.Bethesda.Oblivion
         FormIDSetLink<Sound> IActivatorGetter.Sound_Property => this.Sound_Property;
         #endregion
 
-        #region Loqui Getter Interface
-
-        protected override object GetNthObject(ushort index) => ActivatorCommon.GetNthObject(index, this);
-
-        protected override bool GetNthObjectHasBeenSet(ushort index) => ActivatorCommon.GetNthObjectHasBeenSet(index, this);
-
-        protected override void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => ActivatorCommon.UnsetNthObject(index, this, cmds);
-
-        #endregion
-
-        #region Loqui Interface
-        protected override void SetNthObjectHasBeenSet(ushort index, bool on)
-        {
-            ActivatorCommon.SetNthObjectHasBeenSet(index, on, this);
-        }
-
-        #endregion
-
         IMask<bool> IEqualsMask<Activator>.GetEqualsMask(Activator rhs, EqualsMaskHelper.Include include) => ActivatorCommon.GetEqualsMask(this, rhs, include);
         IMask<bool> IEqualsMask<IActivatorGetter>.GetEqualsMask(IActivatorGetter rhs, EqualsMaskHelper.Include include) => ActivatorCommon.GetEqualsMask(this, rhs, include);
         #region To String
@@ -1277,11 +1259,6 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, Activator obj)
-        {
-            ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
-        }
-
     }
     #endregion
 
@@ -1701,99 +1678,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         #endregion
-
-        public static void SetNthObjectHasBeenSet(
-            ushort index,
-            bool on,
-            IActivator obj,
-            NotifyingFireParameters cmds = null)
-        {
-            Activator_FieldIndex enu = (Activator_FieldIndex)index;
-            switch (enu)
-            {
-                case Activator_FieldIndex.Name:
-                    obj.Name_IsSet = on;
-                    break;
-                case Activator_FieldIndex.Model:
-                    obj.Model_IsSet = on;
-                    break;
-                case Activator_FieldIndex.Script:
-                    obj.Script_Property.HasBeenSet = on;
-                    break;
-                case Activator_FieldIndex.Sound:
-                    obj.Sound_Property.HasBeenSet = on;
-                    break;
-                default:
-                    OblivionMajorRecordCommon.SetNthObjectHasBeenSet(index, on, obj);
-                    break;
-            }
-        }
-
-        public static void UnsetNthObject(
-            ushort index,
-            IActivator obj,
-            NotifyingUnsetParameters cmds = null)
-        {
-            Activator_FieldIndex enu = (Activator_FieldIndex)index;
-            switch (enu)
-            {
-                case Activator_FieldIndex.Name:
-                    obj.Name_Unset();
-                    break;
-                case Activator_FieldIndex.Model:
-                    obj.Model_Unset();
-                    break;
-                case Activator_FieldIndex.Script:
-                    obj.Script_Property.Unset(cmds);
-                    break;
-                case Activator_FieldIndex.Sound:
-                    obj.Sound_Property.Unset(cmds);
-                    break;
-                default:
-                    OblivionMajorRecordCommon.UnsetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public static bool GetNthObjectHasBeenSet(
-            ushort index,
-            IActivator obj)
-        {
-            Activator_FieldIndex enu = (Activator_FieldIndex)index;
-            switch (enu)
-            {
-                case Activator_FieldIndex.Name:
-                    return obj.Name_IsSet;
-                case Activator_FieldIndex.Model:
-                    return obj.Model_IsSet;
-                case Activator_FieldIndex.Script:
-                    return obj.Script_Property.HasBeenSet;
-                case Activator_FieldIndex.Sound:
-                    return obj.Sound_Property.HasBeenSet;
-                default:
-                    return OblivionMajorRecordCommon.GetNthObjectHasBeenSet(index, obj);
-            }
-        }
-
-        public static object GetNthObject(
-            ushort index,
-            IActivatorGetter obj)
-        {
-            Activator_FieldIndex enu = (Activator_FieldIndex)index;
-            switch (enu)
-            {
-                case Activator_FieldIndex.Name:
-                    return obj.Name;
-                case Activator_FieldIndex.Model:
-                    return obj.Model;
-                case Activator_FieldIndex.Script:
-                    return obj.Script;
-                case Activator_FieldIndex.Sound:
-                    return obj.Sound;
-                default:
-                    return OblivionMajorRecordCommon.GetNthObject(index, obj);
-            }
-        }
 
         public static void Clear(
             IActivator item,

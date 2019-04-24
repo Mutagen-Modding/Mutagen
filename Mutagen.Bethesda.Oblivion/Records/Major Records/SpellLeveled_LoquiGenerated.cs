@@ -51,24 +51,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
 
-        #region Loqui Getter Interface
-
-        protected override object GetNthObject(ushort index) => SpellLeveledCommon.GetNthObject(index, this);
-
-        protected override bool GetNthObjectHasBeenSet(ushort index) => SpellLeveledCommon.GetNthObjectHasBeenSet(index, this);
-
-        protected override void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => SpellLeveledCommon.UnsetNthObject(index, this, cmds);
-
-        #endregion
-
-        #region Loqui Interface
-        protected override void SetNthObjectHasBeenSet(ushort index, bool on)
-        {
-            SpellLeveledCommon.SetNthObjectHasBeenSet(index, on, this);
-        }
-
-        #endregion
-
         IMask<bool> IEqualsMask<SpellLeveled>.GetEqualsMask(SpellLeveled rhs, EqualsMaskHelper.Include include) => SpellLeveledCommon.GetEqualsMask(this, rhs, include);
         IMask<bool> IEqualsMask<ISpellLeveledGetter>.GetEqualsMask(ISpellLeveledGetter rhs, EqualsMaskHelper.Include include) => SpellLeveledCommon.GetEqualsMask(this, rhs, include);
         #region To String
@@ -1092,11 +1074,6 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, SpellLeveled obj)
-        {
-            ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
-        }
-
     }
     #endregion
 
@@ -1303,59 +1280,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         #endregion
-
-        public static void SetNthObjectHasBeenSet(
-            ushort index,
-            bool on,
-            ISpellLeveled obj,
-            NotifyingFireParameters cmds = null)
-        {
-            SpellLeveled_FieldIndex enu = (SpellLeveled_FieldIndex)index;
-            switch (enu)
-            {
-                default:
-                    SpellCommon.SetNthObjectHasBeenSet(index, on, obj);
-                    break;
-            }
-        }
-
-        public static void UnsetNthObject(
-            ushort index,
-            ISpellLeveled obj,
-            NotifyingUnsetParameters cmds = null)
-        {
-            SpellLeveled_FieldIndex enu = (SpellLeveled_FieldIndex)index;
-            switch (enu)
-            {
-                default:
-                    SpellCommon.UnsetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public static bool GetNthObjectHasBeenSet(
-            ushort index,
-            ISpellLeveled obj)
-        {
-            SpellLeveled_FieldIndex enu = (SpellLeveled_FieldIndex)index;
-            switch (enu)
-            {
-                default:
-                    return SpellCommon.GetNthObjectHasBeenSet(index, obj);
-            }
-        }
-
-        public static object GetNthObject(
-            ushort index,
-            ISpellLeveledGetter obj)
-        {
-            SpellLeveled_FieldIndex enu = (SpellLeveled_FieldIndex)index;
-            switch (enu)
-            {
-                default:
-                    return SpellCommon.GetNthObject(index, obj);
-            }
-        }
 
         public static void Clear(
             ISpellLeveled item,

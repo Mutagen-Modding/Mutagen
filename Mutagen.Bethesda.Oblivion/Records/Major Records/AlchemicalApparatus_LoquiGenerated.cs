@@ -186,24 +186,6 @@ namespace Mutagen.Bethesda.Oblivion
         public static RangeFloat Quality_Range = new RangeFloat(0f, 255f);
         #endregion
 
-        #region Loqui Getter Interface
-
-        protected override object GetNthObject(ushort index) => AlchemicalApparatusCommon.GetNthObject(index, this);
-
-        protected override bool GetNthObjectHasBeenSet(ushort index) => AlchemicalApparatusCommon.GetNthObjectHasBeenSet(index, this);
-
-        protected override void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => AlchemicalApparatusCommon.UnsetNthObject(index, this, cmds);
-
-        #endregion
-
-        #region Loqui Interface
-        protected override void SetNthObjectHasBeenSet(ushort index, bool on)
-        {
-            AlchemicalApparatusCommon.SetNthObjectHasBeenSet(index, on, this);
-        }
-
-        #endregion
-
         IMask<bool> IEqualsMask<AlchemicalApparatus>.GetEqualsMask(AlchemicalApparatus rhs, EqualsMaskHelper.Include include) => AlchemicalApparatusCommon.GetEqualsMask(this, rhs, include);
         IMask<bool> IEqualsMask<IAlchemicalApparatusGetter>.GetEqualsMask(IAlchemicalApparatusGetter rhs, EqualsMaskHelper.Include include) => AlchemicalApparatusCommon.GetEqualsMask(this, rhs, include);
         #region To String
@@ -1553,11 +1535,6 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, AlchemicalApparatus obj)
-        {
-            ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
-        }
-
     }
     #endregion
 
@@ -2132,130 +2109,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         #endregion
-
-        public static void SetNthObjectHasBeenSet(
-            ushort index,
-            bool on,
-            IAlchemicalApparatus obj,
-            NotifyingFireParameters cmds = null)
-        {
-            AlchemicalApparatus_FieldIndex enu = (AlchemicalApparatus_FieldIndex)index;
-            switch (enu)
-            {
-                case AlchemicalApparatus_FieldIndex.Type:
-                case AlchemicalApparatus_FieldIndex.Value:
-                case AlchemicalApparatus_FieldIndex.Weight:
-                case AlchemicalApparatus_FieldIndex.Quality:
-                    if (on) break;
-                    throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
-                case AlchemicalApparatus_FieldIndex.Name:
-                    obj.Name_IsSet = on;
-                    break;
-                case AlchemicalApparatus_FieldIndex.Model:
-                    obj.Model_IsSet = on;
-                    break;
-                case AlchemicalApparatus_FieldIndex.Icon:
-                    obj.Icon_IsSet = on;
-                    break;
-                case AlchemicalApparatus_FieldIndex.Script:
-                    obj.Script_Property.HasBeenSet = on;
-                    break;
-                default:
-                    ItemAbstractCommon.SetNthObjectHasBeenSet(index, on, obj);
-                    break;
-            }
-        }
-
-        public static void UnsetNthObject(
-            ushort index,
-            IAlchemicalApparatus obj,
-            NotifyingUnsetParameters cmds = null)
-        {
-            AlchemicalApparatus_FieldIndex enu = (AlchemicalApparatus_FieldIndex)index;
-            switch (enu)
-            {
-                case AlchemicalApparatus_FieldIndex.Name:
-                    obj.Name_Unset();
-                    break;
-                case AlchemicalApparatus_FieldIndex.Model:
-                    obj.Model_Unset();
-                    break;
-                case AlchemicalApparatus_FieldIndex.Icon:
-                    obj.Icon_Unset();
-                    break;
-                case AlchemicalApparatus_FieldIndex.Script:
-                    obj.Script_Property.Unset(cmds);
-                    break;
-                case AlchemicalApparatus_FieldIndex.Type:
-                    obj.Type = default(AlchemicalApparatus.ApparatusType);
-                    break;
-                case AlchemicalApparatus_FieldIndex.Value:
-                    obj.Value = default(UInt32);
-                    break;
-                case AlchemicalApparatus_FieldIndex.Weight:
-                    obj.Weight = default(Single);
-                    break;
-                case AlchemicalApparatus_FieldIndex.Quality:
-                    obj.Quality = default(Single);
-                    break;
-                default:
-                    ItemAbstractCommon.UnsetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public static bool GetNthObjectHasBeenSet(
-            ushort index,
-            IAlchemicalApparatus obj)
-        {
-            AlchemicalApparatus_FieldIndex enu = (AlchemicalApparatus_FieldIndex)index;
-            switch (enu)
-            {
-                case AlchemicalApparatus_FieldIndex.Type:
-                case AlchemicalApparatus_FieldIndex.Value:
-                case AlchemicalApparatus_FieldIndex.Weight:
-                case AlchemicalApparatus_FieldIndex.Quality:
-                    return true;
-                case AlchemicalApparatus_FieldIndex.Name:
-                    return obj.Name_IsSet;
-                case AlchemicalApparatus_FieldIndex.Model:
-                    return obj.Model_IsSet;
-                case AlchemicalApparatus_FieldIndex.Icon:
-                    return obj.Icon_IsSet;
-                case AlchemicalApparatus_FieldIndex.Script:
-                    return obj.Script_Property.HasBeenSet;
-                default:
-                    return ItemAbstractCommon.GetNthObjectHasBeenSet(index, obj);
-            }
-        }
-
-        public static object GetNthObject(
-            ushort index,
-            IAlchemicalApparatusGetter obj)
-        {
-            AlchemicalApparatus_FieldIndex enu = (AlchemicalApparatus_FieldIndex)index;
-            switch (enu)
-            {
-                case AlchemicalApparatus_FieldIndex.Name:
-                    return obj.Name;
-                case AlchemicalApparatus_FieldIndex.Model:
-                    return obj.Model;
-                case AlchemicalApparatus_FieldIndex.Icon:
-                    return obj.Icon;
-                case AlchemicalApparatus_FieldIndex.Script:
-                    return obj.Script;
-                case AlchemicalApparatus_FieldIndex.Type:
-                    return obj.Type;
-                case AlchemicalApparatus_FieldIndex.Value:
-                    return obj.Value;
-                case AlchemicalApparatus_FieldIndex.Weight:
-                    return obj.Weight;
-                case AlchemicalApparatus_FieldIndex.Quality:
-                    return obj.Quality;
-                default:
-                    return ItemAbstractCommon.GetNthObject(index, obj);
-            }
-        }
 
         public static void Clear(
             IAlchemicalApparatus item,

@@ -162,24 +162,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        #region Loqui Getter Interface
-
-        protected override object GetNthObject(ushort index) => KeyCommon.GetNthObject(index, this);
-
-        protected override bool GetNthObjectHasBeenSet(ushort index) => KeyCommon.GetNthObjectHasBeenSet(index, this);
-
-        protected override void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => KeyCommon.UnsetNthObject(index, this, cmds);
-
-        #endregion
-
-        #region Loqui Interface
-        protected override void SetNthObjectHasBeenSet(ushort index, bool on)
-        {
-            KeyCommon.SetNthObjectHasBeenSet(index, on, this);
-        }
-
-        #endregion
-
         IMask<bool> IEqualsMask<Key>.GetEqualsMask(Key rhs, EqualsMaskHelper.Include include) => KeyCommon.GetEqualsMask(this, rhs, include);
         IMask<bool> IEqualsMask<IKeyGetter>.GetEqualsMask(IKeyGetter rhs, EqualsMaskHelper.Include include) => KeyCommon.GetEqualsMask(this, rhs, include);
         #region To String
@@ -1463,11 +1445,6 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, Key obj)
-        {
-            ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
-        }
-
     }
     #endregion
 
@@ -1972,116 +1949,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         #endregion
-
-        public static void SetNthObjectHasBeenSet(
-            ushort index,
-            bool on,
-            IKey obj,
-            NotifyingFireParameters cmds = null)
-        {
-            Key_FieldIndex enu = (Key_FieldIndex)index;
-            switch (enu)
-            {
-                case Key_FieldIndex.Value:
-                case Key_FieldIndex.Weight:
-                    if (on) break;
-                    throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
-                case Key_FieldIndex.Name:
-                    obj.Name_IsSet = on;
-                    break;
-                case Key_FieldIndex.Model:
-                    obj.Model_IsSet = on;
-                    break;
-                case Key_FieldIndex.Icon:
-                    obj.Icon_IsSet = on;
-                    break;
-                case Key_FieldIndex.Script:
-                    obj.Script_Property.HasBeenSet = on;
-                    break;
-                default:
-                    ItemAbstractCommon.SetNthObjectHasBeenSet(index, on, obj);
-                    break;
-            }
-        }
-
-        public static void UnsetNthObject(
-            ushort index,
-            IKey obj,
-            NotifyingUnsetParameters cmds = null)
-        {
-            Key_FieldIndex enu = (Key_FieldIndex)index;
-            switch (enu)
-            {
-                case Key_FieldIndex.Name:
-                    obj.Name_Unset();
-                    break;
-                case Key_FieldIndex.Model:
-                    obj.Model_Unset();
-                    break;
-                case Key_FieldIndex.Icon:
-                    obj.Icon_Unset();
-                    break;
-                case Key_FieldIndex.Script:
-                    obj.Script_Property.Unset(cmds);
-                    break;
-                case Key_FieldIndex.Value:
-                    obj.Value = default(UInt32);
-                    break;
-                case Key_FieldIndex.Weight:
-                    obj.Weight = default(Single);
-                    break;
-                default:
-                    ItemAbstractCommon.UnsetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public static bool GetNthObjectHasBeenSet(
-            ushort index,
-            IKey obj)
-        {
-            Key_FieldIndex enu = (Key_FieldIndex)index;
-            switch (enu)
-            {
-                case Key_FieldIndex.Value:
-                case Key_FieldIndex.Weight:
-                    return true;
-                case Key_FieldIndex.Name:
-                    return obj.Name_IsSet;
-                case Key_FieldIndex.Model:
-                    return obj.Model_IsSet;
-                case Key_FieldIndex.Icon:
-                    return obj.Icon_IsSet;
-                case Key_FieldIndex.Script:
-                    return obj.Script_Property.HasBeenSet;
-                default:
-                    return ItemAbstractCommon.GetNthObjectHasBeenSet(index, obj);
-            }
-        }
-
-        public static object GetNthObject(
-            ushort index,
-            IKeyGetter obj)
-        {
-            Key_FieldIndex enu = (Key_FieldIndex)index;
-            switch (enu)
-            {
-                case Key_FieldIndex.Name:
-                    return obj.Name;
-                case Key_FieldIndex.Model:
-                    return obj.Model;
-                case Key_FieldIndex.Icon:
-                    return obj.Icon;
-                case Key_FieldIndex.Script:
-                    return obj.Script;
-                case Key_FieldIndex.Value:
-                    return obj.Value;
-                case Key_FieldIndex.Weight:
-                    return obj.Weight;
-                default:
-                    return ItemAbstractCommon.GetNthObject(index, obj);
-            }
-        }
 
         public static void Clear(
             IKey item,

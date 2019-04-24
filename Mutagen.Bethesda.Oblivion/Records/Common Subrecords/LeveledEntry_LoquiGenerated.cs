@@ -135,28 +135,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        #region Loqui Getter Interface
-
-        protected object GetNthObject(ushort index) => LeveledEntryCommon.GetNthObject<T>(index, this);
-        object ILoquiObjectGetter.GetNthObject(ushort index) => this.GetNthObject(index);
-
-        protected bool GetNthObjectHasBeenSet(ushort index) => LeveledEntryCommon.GetNthObjectHasBeenSet<T>(index, this);
-        bool ILoquiObjectGetter.GetNthObjectHasBeenSet(ushort index) => this.GetNthObjectHasBeenSet(index);
-
-        protected void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => LeveledEntryCommon.UnsetNthObject<T>(index, this, cmds);
-        void ILoquiObjectSetter.UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => this.UnsetNthObject(index, cmds);
-
-        #endregion
-
-        #region Loqui Interface
-        protected void SetNthObjectHasBeenSet(ushort index, bool on)
-        {
-            LeveledEntryCommon.SetNthObjectHasBeenSet<T>(index, on, this);
-        }
-        void ILoquiObjectSetter.SetNthObjectHasBeenSet(ushort index, bool on) => this.SetNthObjectHasBeenSet(index, on);
-
-        #endregion
-
         IMask<bool> IEqualsMask<LeveledEntry<T>>.GetEqualsMask(LeveledEntry<T> rhs, EqualsMaskHelper.Include include) => LeveledEntryCommon.GetEqualsMask(this, rhs, include);
         IMask<bool> IEqualsMask<ILeveledEntryGetter<T>>.GetEqualsMask(ILeveledEntryGetter<T> rhs, EqualsMaskHelper.Include include) => LeveledEntryCommon.GetEqualsMask(this, rhs, include);
         #region To String
@@ -1219,7 +1197,6 @@ namespace Mutagen.Bethesda.Oblivion
                 cmds: cmds);
         }
 
-        void ILoquiObjectSetter.SetNthObject(ushort index, object obj, NotifyingFireParameters cmds) => this.SetNthObject(index, obj, cmds);
         protected void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
         {
             LeveledEntry_FieldIndex enu = (LeveledEntry_FieldIndex)index;
@@ -1300,11 +1277,6 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, LeveledEntry<T> obj)
-        {
-            ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
-        }
-
     }
     #endregion
 
@@ -1727,105 +1699,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         #endregion
-
-        public static void SetNthObjectHasBeenSet<T>(
-            ushort index,
-            bool on,
-            ILeveledEntry<T> obj,
-            NotifyingFireParameters cmds = null)
-            where T : OblivionMajorRecord, ILoquiObject<T>
-        {
-            LeveledEntry_FieldIndex enu = (LeveledEntry_FieldIndex)index;
-            switch (enu)
-            {
-                case LeveledEntry_FieldIndex.Level:
-                case LeveledEntry_FieldIndex.Fluff:
-                case LeveledEntry_FieldIndex.Reference:
-                    if (on) break;
-                    throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
-                case LeveledEntry_FieldIndex.Count:
-                    obj.Count_IsSet = on;
-                    break;
-                case LeveledEntry_FieldIndex.Fluff2:
-                    obj.Fluff2_IsSet = on;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static void UnsetNthObject<T>(
-            ushort index,
-            ILeveledEntry<T> obj,
-            NotifyingUnsetParameters cmds = null)
-            where T : OblivionMajorRecord, ILoquiObject<T>
-        {
-            LeveledEntry_FieldIndex enu = (LeveledEntry_FieldIndex)index;
-            switch (enu)
-            {
-                case LeveledEntry_FieldIndex.Level:
-                    obj.Level = default(Int16);
-                    break;
-                case LeveledEntry_FieldIndex.Fluff:
-                    obj.Fluff = default(Byte[]);
-                    break;
-                case LeveledEntry_FieldIndex.Reference:
-                    obj.Reference = default(T);
-                    break;
-                case LeveledEntry_FieldIndex.Count:
-                    obj.Count_Unset();
-                    break;
-                case LeveledEntry_FieldIndex.Fluff2:
-                    obj.Fluff2_Unset();
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthObjectHasBeenSet<T>(
-            ushort index,
-            ILeveledEntry<T> obj)
-            where T : OblivionMajorRecord, ILoquiObject<T>
-        {
-            LeveledEntry_FieldIndex enu = (LeveledEntry_FieldIndex)index;
-            switch (enu)
-            {
-                case LeveledEntry_FieldIndex.Level:
-                case LeveledEntry_FieldIndex.Fluff:
-                case LeveledEntry_FieldIndex.Reference:
-                    return true;
-                case LeveledEntry_FieldIndex.Count:
-                    return obj.Count_IsSet;
-                case LeveledEntry_FieldIndex.Fluff2:
-                    return obj.Fluff2_IsSet;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static object GetNthObject<T>(
-            ushort index,
-            ILeveledEntryGetter<T> obj)
-            where T : OblivionMajorRecord, ILoquiObject<T>
-        {
-            LeveledEntry_FieldIndex enu = (LeveledEntry_FieldIndex)index;
-            switch (enu)
-            {
-                case LeveledEntry_FieldIndex.Level:
-                    return obj.Level;
-                case LeveledEntry_FieldIndex.Fluff:
-                    return obj.Fluff;
-                case LeveledEntry_FieldIndex.Reference:
-                    return obj.Reference;
-                case LeveledEntry_FieldIndex.Count:
-                    return obj.Count;
-                case LeveledEntry_FieldIndex.Fluff2:
-                    return obj.Fluff2;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
 
         public static void Clear<T>(
             ILeveledEntry<T> item,

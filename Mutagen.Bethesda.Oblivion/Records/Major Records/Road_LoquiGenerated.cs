@@ -71,24 +71,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        #region Loqui Getter Interface
-
-        protected override object GetNthObject(ushort index) => RoadCommon.GetNthObject(index, this);
-
-        protected override bool GetNthObjectHasBeenSet(ushort index) => RoadCommon.GetNthObjectHasBeenSet(index, this);
-
-        protected override void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => RoadCommon.UnsetNthObject(index, this, cmds);
-
-        #endregion
-
-        #region Loqui Interface
-        protected override void SetNthObjectHasBeenSet(ushort index, bool on)
-        {
-            RoadCommon.SetNthObjectHasBeenSet(index, on, this);
-        }
-
-        #endregion
-
         IMask<bool> IEqualsMask<Road>.GetEqualsMask(Road rhs, EqualsMaskHelper.Include include) => RoadCommon.GetEqualsMask(this, rhs, include);
         IMask<bool> IEqualsMask<IRoadGetter>.GetEqualsMask(IRoadGetter rhs, EqualsMaskHelper.Include include) => RoadCommon.GetEqualsMask(this, rhs, include);
         #region To String
@@ -1091,11 +1073,6 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, Road obj)
-        {
-            ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
-        }
-
     }
     #endregion
 
@@ -1358,69 +1335,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         #endregion
-
-        public static void SetNthObjectHasBeenSet(
-            ushort index,
-            bool on,
-            IRoad obj,
-            NotifyingFireParameters cmds = null)
-        {
-            Road_FieldIndex enu = (Road_FieldIndex)index;
-            switch (enu)
-            {
-                case Road_FieldIndex.Points:
-                    obj.Points.HasBeenSet = on;
-                    break;
-                default:
-                    OblivionMajorRecordCommon.SetNthObjectHasBeenSet(index, on, obj);
-                    break;
-            }
-        }
-
-        public static void UnsetNthObject(
-            ushort index,
-            IRoad obj,
-            NotifyingUnsetParameters cmds = null)
-        {
-            Road_FieldIndex enu = (Road_FieldIndex)index;
-            switch (enu)
-            {
-                case Road_FieldIndex.Points:
-                    obj.Points.Unset();
-                    break;
-                default:
-                    OblivionMajorRecordCommon.UnsetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public static bool GetNthObjectHasBeenSet(
-            ushort index,
-            IRoad obj)
-        {
-            Road_FieldIndex enu = (Road_FieldIndex)index;
-            switch (enu)
-            {
-                case Road_FieldIndex.Points:
-                    return obj.Points.HasBeenSet;
-                default:
-                    return OblivionMajorRecordCommon.GetNthObjectHasBeenSet(index, obj);
-            }
-        }
-
-        public static object GetNthObject(
-            ushort index,
-            IRoadGetter obj)
-        {
-            Road_FieldIndex enu = (Road_FieldIndex)index;
-            switch (enu)
-            {
-                case Road_FieldIndex.Points:
-                    return obj.Points;
-                default:
-                    return OblivionMajorRecordCommon.GetNthObject(index, obj);
-            }
-        }
 
         public static void Clear(
             IRoad item,

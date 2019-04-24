@@ -151,24 +151,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        #region Loqui Getter Interface
-
-        protected override object GetNthObject(ushort index) => BirthsignCommon.GetNthObject(index, this);
-
-        protected override bool GetNthObjectHasBeenSet(ushort index) => BirthsignCommon.GetNthObjectHasBeenSet(index, this);
-
-        protected override void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => BirthsignCommon.UnsetNthObject(index, this, cmds);
-
-        #endregion
-
-        #region Loqui Interface
-        protected override void SetNthObjectHasBeenSet(ushort index, bool on)
-        {
-            BirthsignCommon.SetNthObjectHasBeenSet(index, on, this);
-        }
-
-        #endregion
-
         IMask<bool> IEqualsMask<Birthsign>.GetEqualsMask(Birthsign rhs, EqualsMaskHelper.Include include) => BirthsignCommon.GetEqualsMask(this, rhs, include);
         IMask<bool> IEqualsMask<IBirthsignGetter>.GetEqualsMask(IBirthsignGetter rhs, EqualsMaskHelper.Include include) => BirthsignCommon.GetEqualsMask(this, rhs, include);
         #region To String
@@ -1324,11 +1306,6 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, Birthsign obj)
-        {
-            ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
-        }
-
     }
     #endregion
 
@@ -1735,99 +1712,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         #endregion
-
-        public static void SetNthObjectHasBeenSet(
-            ushort index,
-            bool on,
-            IBirthsign obj,
-            NotifyingFireParameters cmds = null)
-        {
-            Birthsign_FieldIndex enu = (Birthsign_FieldIndex)index;
-            switch (enu)
-            {
-                case Birthsign_FieldIndex.Name:
-                    obj.Name_IsSet = on;
-                    break;
-                case Birthsign_FieldIndex.Icon:
-                    obj.Icon_IsSet = on;
-                    break;
-                case Birthsign_FieldIndex.Description:
-                    obj.Description_IsSet = on;
-                    break;
-                case Birthsign_FieldIndex.Spells:
-                    obj.Spells.HasBeenSet = on;
-                    break;
-                default:
-                    OblivionMajorRecordCommon.SetNthObjectHasBeenSet(index, on, obj);
-                    break;
-            }
-        }
-
-        public static void UnsetNthObject(
-            ushort index,
-            IBirthsign obj,
-            NotifyingUnsetParameters cmds = null)
-        {
-            Birthsign_FieldIndex enu = (Birthsign_FieldIndex)index;
-            switch (enu)
-            {
-                case Birthsign_FieldIndex.Name:
-                    obj.Name_Unset();
-                    break;
-                case Birthsign_FieldIndex.Icon:
-                    obj.Icon_Unset();
-                    break;
-                case Birthsign_FieldIndex.Description:
-                    obj.Description_Unset();
-                    break;
-                case Birthsign_FieldIndex.Spells:
-                    obj.Spells.Unset();
-                    break;
-                default:
-                    OblivionMajorRecordCommon.UnsetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public static bool GetNthObjectHasBeenSet(
-            ushort index,
-            IBirthsign obj)
-        {
-            Birthsign_FieldIndex enu = (Birthsign_FieldIndex)index;
-            switch (enu)
-            {
-                case Birthsign_FieldIndex.Name:
-                    return obj.Name_IsSet;
-                case Birthsign_FieldIndex.Icon:
-                    return obj.Icon_IsSet;
-                case Birthsign_FieldIndex.Description:
-                    return obj.Description_IsSet;
-                case Birthsign_FieldIndex.Spells:
-                    return obj.Spells.HasBeenSet;
-                default:
-                    return OblivionMajorRecordCommon.GetNthObjectHasBeenSet(index, obj);
-            }
-        }
-
-        public static object GetNthObject(
-            ushort index,
-            IBirthsignGetter obj)
-        {
-            Birthsign_FieldIndex enu = (Birthsign_FieldIndex)index;
-            switch (enu)
-            {
-                case Birthsign_FieldIndex.Name:
-                    return obj.Name;
-                case Birthsign_FieldIndex.Icon:
-                    return obj.Icon;
-                case Birthsign_FieldIndex.Description:
-                    return obj.Description;
-                case Birthsign_FieldIndex.Spells:
-                    return obj.Spells;
-                default:
-                    return OblivionMajorRecordCommon.GetNthObject(index, obj);
-            }
-        }
 
         public static void Clear(
             IBirthsign item,

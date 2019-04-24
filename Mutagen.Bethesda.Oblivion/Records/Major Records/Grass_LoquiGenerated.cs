@@ -222,24 +222,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        #region Loqui Getter Interface
-
-        protected override object GetNthObject(ushort index) => GrassCommon.GetNthObject(index, this);
-
-        protected override bool GetNthObjectHasBeenSet(ushort index) => GrassCommon.GetNthObjectHasBeenSet(index, this);
-
-        protected override void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => GrassCommon.UnsetNthObject(index, this, cmds);
-
-        #endregion
-
-        #region Loqui Interface
-        protected override void SetNthObjectHasBeenSet(ushort index, bool on)
-        {
-            GrassCommon.SetNthObjectHasBeenSet(index, on, this);
-        }
-
-        #endregion
-
         IMask<bool> IEqualsMask<Grass>.GetEqualsMask(Grass rhs, EqualsMaskHelper.Include include) => GrassCommon.GetEqualsMask(this, rhs, include);
         IMask<bool> IEqualsMask<IGrassGetter>.GetEqualsMask(IGrassGetter rhs, EqualsMaskHelper.Include include) => GrassCommon.GetEqualsMask(this, rhs, include);
         #region To String
@@ -1661,11 +1643,6 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, Grass obj)
-        {
-            ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
-        }
-
     }
     #endregion
 
@@ -2375,156 +2352,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         #endregion
-
-        public static void SetNthObjectHasBeenSet(
-            ushort index,
-            bool on,
-            IGrass obj,
-            NotifyingFireParameters cmds = null)
-        {
-            Grass_FieldIndex enu = (Grass_FieldIndex)index;
-            switch (enu)
-            {
-                case Grass_FieldIndex.Density:
-                case Grass_FieldIndex.MinSlope:
-                case Grass_FieldIndex.MaxSlope:
-                case Grass_FieldIndex.Fluff1:
-                case Grass_FieldIndex.UnitFromWaterAmount:
-                case Grass_FieldIndex.Fluff2:
-                case Grass_FieldIndex.UnitFromWaterMode:
-                case Grass_FieldIndex.PositionRange:
-                case Grass_FieldIndex.HeightRange:
-                case Grass_FieldIndex.ColorRange:
-                case Grass_FieldIndex.WavePeriod:
-                case Grass_FieldIndex.Flags:
-                    if (on) break;
-                    throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
-                case Grass_FieldIndex.Model:
-                    obj.Model_IsSet = on;
-                    break;
-                default:
-                    OblivionMajorRecordCommon.SetNthObjectHasBeenSet(index, on, obj);
-                    break;
-            }
-        }
-
-        public static void UnsetNthObject(
-            ushort index,
-            IGrass obj,
-            NotifyingUnsetParameters cmds = null)
-        {
-            Grass_FieldIndex enu = (Grass_FieldIndex)index;
-            switch (enu)
-            {
-                case Grass_FieldIndex.Model:
-                    obj.Model_Unset();
-                    break;
-                case Grass_FieldIndex.Density:
-                    obj.Density = default(Byte);
-                    break;
-                case Grass_FieldIndex.MinSlope:
-                    obj.MinSlope = default(Byte);
-                    break;
-                case Grass_FieldIndex.MaxSlope:
-                    obj.MaxSlope = default(Byte);
-                    break;
-                case Grass_FieldIndex.Fluff1:
-                    obj.Fluff1 = default(Byte);
-                    break;
-                case Grass_FieldIndex.UnitFromWaterAmount:
-                    obj.UnitFromWaterAmount = default(UInt16);
-                    break;
-                case Grass_FieldIndex.Fluff2:
-                    obj.Fluff2 = default(UInt16);
-                    break;
-                case Grass_FieldIndex.UnitFromWaterMode:
-                    obj.UnitFromWaterMode = default(Grass.UnitFromWaterType);
-                    break;
-                case Grass_FieldIndex.PositionRange:
-                    obj.PositionRange = default(Single);
-                    break;
-                case Grass_FieldIndex.HeightRange:
-                    obj.HeightRange = default(Single);
-                    break;
-                case Grass_FieldIndex.ColorRange:
-                    obj.ColorRange = default(Single);
-                    break;
-                case Grass_FieldIndex.WavePeriod:
-                    obj.WavePeriod = default(Single);
-                    break;
-                case Grass_FieldIndex.Flags:
-                    obj.Flags = default(Grass.GrassFlag);
-                    break;
-                default:
-                    OblivionMajorRecordCommon.UnsetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public static bool GetNthObjectHasBeenSet(
-            ushort index,
-            IGrass obj)
-        {
-            Grass_FieldIndex enu = (Grass_FieldIndex)index;
-            switch (enu)
-            {
-                case Grass_FieldIndex.Density:
-                case Grass_FieldIndex.MinSlope:
-                case Grass_FieldIndex.MaxSlope:
-                case Grass_FieldIndex.Fluff1:
-                case Grass_FieldIndex.UnitFromWaterAmount:
-                case Grass_FieldIndex.Fluff2:
-                case Grass_FieldIndex.UnitFromWaterMode:
-                case Grass_FieldIndex.PositionRange:
-                case Grass_FieldIndex.HeightRange:
-                case Grass_FieldIndex.ColorRange:
-                case Grass_FieldIndex.WavePeriod:
-                case Grass_FieldIndex.Flags:
-                    return true;
-                case Grass_FieldIndex.Model:
-                    return obj.Model_IsSet;
-                default:
-                    return OblivionMajorRecordCommon.GetNthObjectHasBeenSet(index, obj);
-            }
-        }
-
-        public static object GetNthObject(
-            ushort index,
-            IGrassGetter obj)
-        {
-            Grass_FieldIndex enu = (Grass_FieldIndex)index;
-            switch (enu)
-            {
-                case Grass_FieldIndex.Model:
-                    return obj.Model;
-                case Grass_FieldIndex.Density:
-                    return obj.Density;
-                case Grass_FieldIndex.MinSlope:
-                    return obj.MinSlope;
-                case Grass_FieldIndex.MaxSlope:
-                    return obj.MaxSlope;
-                case Grass_FieldIndex.Fluff1:
-                    return obj.Fluff1;
-                case Grass_FieldIndex.UnitFromWaterAmount:
-                    return obj.UnitFromWaterAmount;
-                case Grass_FieldIndex.Fluff2:
-                    return obj.Fluff2;
-                case Grass_FieldIndex.UnitFromWaterMode:
-                    return obj.UnitFromWaterMode;
-                case Grass_FieldIndex.PositionRange:
-                    return obj.PositionRange;
-                case Grass_FieldIndex.HeightRange:
-                    return obj.HeightRange;
-                case Grass_FieldIndex.ColorRange:
-                    return obj.ColorRange;
-                case Grass_FieldIndex.WavePeriod:
-                    return obj.WavePeriod;
-                case Grass_FieldIndex.Flags:
-                    return obj.Flags;
-                default:
-                    return OblivionMajorRecordCommon.GetNthObject(index, obj);
-            }
-        }
 
         public static void Clear(
             IGrass item,

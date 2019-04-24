@@ -52,24 +52,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
 
-        #region Loqui Getter Interface
-
-        protected override object GetNthObject(ushort index) => NPCSpawnCommon.GetNthObject(index, this);
-
-        protected override bool GetNthObjectHasBeenSet(ushort index) => NPCSpawnCommon.GetNthObjectHasBeenSet(index, this);
-
-        protected override void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => NPCSpawnCommon.UnsetNthObject(index, this, cmds);
-
-        #endregion
-
-        #region Loqui Interface
-        protected override void SetNthObjectHasBeenSet(ushort index, bool on)
-        {
-            NPCSpawnCommon.SetNthObjectHasBeenSet(index, on, this);
-        }
-
-        #endregion
-
         IMask<bool> IEqualsMask<NPCSpawn>.GetEqualsMask(NPCSpawn rhs, EqualsMaskHelper.Include include) => NPCSpawnCommon.GetEqualsMask(this, rhs, include);
         IMask<bool> IEqualsMask<INPCSpawnGetter>.GetEqualsMask(INPCSpawnGetter rhs, EqualsMaskHelper.Include include) => NPCSpawnCommon.GetEqualsMask(this, rhs, include);
         #region To String
@@ -814,11 +796,6 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, NPCSpawn obj)
-        {
-            ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
-        }
-
     }
     #endregion
 
@@ -1038,59 +1015,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         #endregion
-
-        public static void SetNthObjectHasBeenSet(
-            ushort index,
-            bool on,
-            INPCSpawn obj,
-            NotifyingFireParameters cmds = null)
-        {
-            NPCSpawn_FieldIndex enu = (NPCSpawn_FieldIndex)index;
-            switch (enu)
-            {
-                default:
-                    OblivionMajorRecordCommon.SetNthObjectHasBeenSet(index, on, obj);
-                    break;
-            }
-        }
-
-        public static void UnsetNthObject(
-            ushort index,
-            INPCSpawn obj,
-            NotifyingUnsetParameters cmds = null)
-        {
-            NPCSpawn_FieldIndex enu = (NPCSpawn_FieldIndex)index;
-            switch (enu)
-            {
-                default:
-                    OblivionMajorRecordCommon.UnsetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public static bool GetNthObjectHasBeenSet(
-            ushort index,
-            INPCSpawn obj)
-        {
-            NPCSpawn_FieldIndex enu = (NPCSpawn_FieldIndex)index;
-            switch (enu)
-            {
-                default:
-                    return OblivionMajorRecordCommon.GetNthObjectHasBeenSet(index, obj);
-            }
-        }
-
-        public static object GetNthObject(
-            ushort index,
-            INPCSpawnGetter obj)
-        {
-            NPCSpawn_FieldIndex enu = (NPCSpawn_FieldIndex)index;
-            switch (enu)
-            {
-                default:
-                    return OblivionMajorRecordCommon.GetNthObject(index, obj);
-            }
-        }
 
         public static void Clear(
             INPCSpawn item,

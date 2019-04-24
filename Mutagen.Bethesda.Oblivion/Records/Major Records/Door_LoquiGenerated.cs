@@ -176,24 +176,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        #region Loqui Getter Interface
-
-        protected override object GetNthObject(ushort index) => DoorCommon.GetNthObject(index, this);
-
-        protected override bool GetNthObjectHasBeenSet(ushort index) => DoorCommon.GetNthObjectHasBeenSet(index, this);
-
-        protected override void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => DoorCommon.UnsetNthObject(index, this, cmds);
-
-        #endregion
-
-        #region Loqui Interface
-        protected override void SetNthObjectHasBeenSet(ushort index, bool on)
-        {
-            DoorCommon.SetNthObjectHasBeenSet(index, on, this);
-        }
-
-        #endregion
-
         IMask<bool> IEqualsMask<Door>.GetEqualsMask(Door rhs, EqualsMaskHelper.Include include) => DoorCommon.GetEqualsMask(this, rhs, include);
         IMask<bool> IEqualsMask<IDoorGetter>.GetEqualsMask(IDoorGetter rhs, EqualsMaskHelper.Include include) => DoorCommon.GetEqualsMask(this, rhs, include);
         #region To String
@@ -1487,11 +1469,6 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, Door obj)
-        {
-            ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
-        }
-
     }
     #endregion
 
@@ -2079,139 +2056,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         #endregion
-
-        public static void SetNthObjectHasBeenSet(
-            ushort index,
-            bool on,
-            IDoor obj,
-            NotifyingFireParameters cmds = null)
-        {
-            Door_FieldIndex enu = (Door_FieldIndex)index;
-            switch (enu)
-            {
-                case Door_FieldIndex.Name:
-                    obj.Name_IsSet = on;
-                    break;
-                case Door_FieldIndex.Model:
-                    obj.Model_IsSet = on;
-                    break;
-                case Door_FieldIndex.Script:
-                    obj.Script_Property.HasBeenSet = on;
-                    break;
-                case Door_FieldIndex.OpenSound:
-                    obj.OpenSound_Property.HasBeenSet = on;
-                    break;
-                case Door_FieldIndex.CloseSound:
-                    obj.CloseSound_Property.HasBeenSet = on;
-                    break;
-                case Door_FieldIndex.LoopSound:
-                    obj.LoopSound_Property.HasBeenSet = on;
-                    break;
-                case Door_FieldIndex.Flags:
-                    obj.Flags_IsSet = on;
-                    break;
-                case Door_FieldIndex.RandomTeleportDestinations:
-                    obj.RandomTeleportDestinations.HasBeenSet = on;
-                    break;
-                default:
-                    OblivionMajorRecordCommon.SetNthObjectHasBeenSet(index, on, obj);
-                    break;
-            }
-        }
-
-        public static void UnsetNthObject(
-            ushort index,
-            IDoor obj,
-            NotifyingUnsetParameters cmds = null)
-        {
-            Door_FieldIndex enu = (Door_FieldIndex)index;
-            switch (enu)
-            {
-                case Door_FieldIndex.Name:
-                    obj.Name_Unset();
-                    break;
-                case Door_FieldIndex.Model:
-                    obj.Model_Unset();
-                    break;
-                case Door_FieldIndex.Script:
-                    obj.Script_Property.Unset(cmds);
-                    break;
-                case Door_FieldIndex.OpenSound:
-                    obj.OpenSound_Property.Unset(cmds);
-                    break;
-                case Door_FieldIndex.CloseSound:
-                    obj.CloseSound_Property.Unset(cmds);
-                    break;
-                case Door_FieldIndex.LoopSound:
-                    obj.LoopSound_Property.Unset(cmds);
-                    break;
-                case Door_FieldIndex.Flags:
-                    obj.Flags_Unset();
-                    break;
-                case Door_FieldIndex.RandomTeleportDestinations:
-                    obj.RandomTeleportDestinations.Unset();
-                    break;
-                default:
-                    OblivionMajorRecordCommon.UnsetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public static bool GetNthObjectHasBeenSet(
-            ushort index,
-            IDoor obj)
-        {
-            Door_FieldIndex enu = (Door_FieldIndex)index;
-            switch (enu)
-            {
-                case Door_FieldIndex.Name:
-                    return obj.Name_IsSet;
-                case Door_FieldIndex.Model:
-                    return obj.Model_IsSet;
-                case Door_FieldIndex.Script:
-                    return obj.Script_Property.HasBeenSet;
-                case Door_FieldIndex.OpenSound:
-                    return obj.OpenSound_Property.HasBeenSet;
-                case Door_FieldIndex.CloseSound:
-                    return obj.CloseSound_Property.HasBeenSet;
-                case Door_FieldIndex.LoopSound:
-                    return obj.LoopSound_Property.HasBeenSet;
-                case Door_FieldIndex.Flags:
-                    return obj.Flags_IsSet;
-                case Door_FieldIndex.RandomTeleportDestinations:
-                    return obj.RandomTeleportDestinations.HasBeenSet;
-                default:
-                    return OblivionMajorRecordCommon.GetNthObjectHasBeenSet(index, obj);
-            }
-        }
-
-        public static object GetNthObject(
-            ushort index,
-            IDoorGetter obj)
-        {
-            Door_FieldIndex enu = (Door_FieldIndex)index;
-            switch (enu)
-            {
-                case Door_FieldIndex.Name:
-                    return obj.Name;
-                case Door_FieldIndex.Model:
-                    return obj.Model;
-                case Door_FieldIndex.Script:
-                    return obj.Script;
-                case Door_FieldIndex.OpenSound:
-                    return obj.OpenSound;
-                case Door_FieldIndex.CloseSound:
-                    return obj.CloseSound;
-                case Door_FieldIndex.LoopSound:
-                    return obj.LoopSound;
-                case Door_FieldIndex.Flags:
-                    return obj.Flags;
-                case Door_FieldIndex.RandomTeleportDestinations:
-                    return obj.RandomTeleportDestinations;
-                default:
-                    return OblivionMajorRecordCommon.GetNthObject(index, obj);
-            }
-        }
 
         public static void Clear(
             IDoor item,

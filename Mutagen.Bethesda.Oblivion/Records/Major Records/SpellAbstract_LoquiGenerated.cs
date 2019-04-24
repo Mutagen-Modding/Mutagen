@@ -52,24 +52,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
 
-        #region Loqui Getter Interface
-
-        protected override object GetNthObject(ushort index) => SpellAbstractCommon.GetNthObject(index, this);
-
-        protected override bool GetNthObjectHasBeenSet(ushort index) => SpellAbstractCommon.GetNthObjectHasBeenSet(index, this);
-
-        protected override void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => SpellAbstractCommon.UnsetNthObject(index, this, cmds);
-
-        #endregion
-
-        #region Loqui Interface
-        protected override void SetNthObjectHasBeenSet(ushort index, bool on)
-        {
-            SpellAbstractCommon.SetNthObjectHasBeenSet(index, on, this);
-        }
-
-        #endregion
-
         IMask<bool> IEqualsMask<SpellAbstract>.GetEqualsMask(SpellAbstract rhs, EqualsMaskHelper.Include include) => SpellAbstractCommon.GetEqualsMask(this, rhs, include);
         IMask<bool> IEqualsMask<ISpellAbstractGetter>.GetEqualsMask(ISpellAbstractGetter rhs, EqualsMaskHelper.Include include) => SpellAbstractCommon.GetEqualsMask(this, rhs, include);
         #region To String
@@ -814,11 +796,6 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, SpellAbstract obj)
-        {
-            ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
-        }
-
     }
     #endregion
 
@@ -1038,59 +1015,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         #endregion
-
-        public static void SetNthObjectHasBeenSet(
-            ushort index,
-            bool on,
-            ISpellAbstract obj,
-            NotifyingFireParameters cmds = null)
-        {
-            SpellAbstract_FieldIndex enu = (SpellAbstract_FieldIndex)index;
-            switch (enu)
-            {
-                default:
-                    OblivionMajorRecordCommon.SetNthObjectHasBeenSet(index, on, obj);
-                    break;
-            }
-        }
-
-        public static void UnsetNthObject(
-            ushort index,
-            ISpellAbstract obj,
-            NotifyingUnsetParameters cmds = null)
-        {
-            SpellAbstract_FieldIndex enu = (SpellAbstract_FieldIndex)index;
-            switch (enu)
-            {
-                default:
-                    OblivionMajorRecordCommon.UnsetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public static bool GetNthObjectHasBeenSet(
-            ushort index,
-            ISpellAbstract obj)
-        {
-            SpellAbstract_FieldIndex enu = (SpellAbstract_FieldIndex)index;
-            switch (enu)
-            {
-                default:
-                    return OblivionMajorRecordCommon.GetNthObjectHasBeenSet(index, obj);
-            }
-        }
-
-        public static object GetNthObject(
-            ushort index,
-            ISpellAbstractGetter obj)
-        {
-            SpellAbstract_FieldIndex enu = (SpellAbstract_FieldIndex)index;
-            switch (enu)
-            {
-                default:
-                    return OblivionMajorRecordCommon.GetNthObject(index, obj);
-            }
-        }
 
         public static void Clear(
             ISpellAbstract item,

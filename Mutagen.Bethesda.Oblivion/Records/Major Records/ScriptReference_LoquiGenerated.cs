@@ -50,28 +50,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
 
-        #region Loqui Getter Interface
-
-        protected virtual object GetNthObject(ushort index) => ScriptReferenceCommon.GetNthObject(index, this);
-        object ILoquiObjectGetter.GetNthObject(ushort index) => this.GetNthObject(index);
-
-        protected virtual bool GetNthObjectHasBeenSet(ushort index) => ScriptReferenceCommon.GetNthObjectHasBeenSet(index, this);
-        bool ILoquiObjectGetter.GetNthObjectHasBeenSet(ushort index) => this.GetNthObjectHasBeenSet(index);
-
-        protected virtual void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => ScriptReferenceCommon.UnsetNthObject(index, this, cmds);
-        void ILoquiObjectSetter.UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => this.UnsetNthObject(index, cmds);
-
-        #endregion
-
-        #region Loqui Interface
-        protected virtual void SetNthObjectHasBeenSet(ushort index, bool on)
-        {
-            ScriptReferenceCommon.SetNthObjectHasBeenSet(index, on, this);
-        }
-        void ILoquiObjectSetter.SetNthObjectHasBeenSet(ushort index, bool on) => this.SetNthObjectHasBeenSet(index, on);
-
-        #endregion
-
         IMask<bool> IEqualsMask<ScriptReference>.GetEqualsMask(ScriptReference rhs, EqualsMaskHelper.Include include) => ScriptReferenceCommon.GetEqualsMask(this, rhs, include);
         IMask<bool> IEqualsMask<IScriptReferenceGetter>.GetEqualsMask(IScriptReferenceGetter rhs, EqualsMaskHelper.Include include) => ScriptReferenceCommon.GetEqualsMask(this, rhs, include);
         #region To String
@@ -735,7 +713,6 @@ namespace Mutagen.Bethesda.Oblivion
                 cmds: cmds);
         }
 
-        void ILoquiObjectSetter.SetNthObject(ushort index, object obj, NotifyingFireParameters cmds) => this.SetNthObject(index, obj, cmds);
         protected virtual void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
         {
             ScriptReference_FieldIndex enu = (ScriptReference_FieldIndex)index;
@@ -772,11 +749,6 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, ScriptReference obj)
-        {
-            ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
-        }
-
     }
     #endregion
 
@@ -982,57 +954,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         #endregion
-
-        public static void SetNthObjectHasBeenSet(
-            ushort index,
-            bool on,
-            IScriptReference obj,
-            NotifyingFireParameters cmds = null)
-        {
-            ScriptReference_FieldIndex enu = (ScriptReference_FieldIndex)index;
-            switch (enu)
-            {
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static void UnsetNthObject(
-            ushort index,
-            IScriptReference obj,
-            NotifyingUnsetParameters cmds = null)
-        {
-            ScriptReference_FieldIndex enu = (ScriptReference_FieldIndex)index;
-            switch (enu)
-            {
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthObjectHasBeenSet(
-            ushort index,
-            IScriptReference obj)
-        {
-            ScriptReference_FieldIndex enu = (ScriptReference_FieldIndex)index;
-            switch (enu)
-            {
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static object GetNthObject(
-            ushort index,
-            IScriptReferenceGetter obj)
-        {
-            ScriptReference_FieldIndex enu = (ScriptReference_FieldIndex)index;
-            switch (enu)
-            {
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
 
         public static void Clear(
             IScriptReference item,

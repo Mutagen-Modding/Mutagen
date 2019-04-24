@@ -52,28 +52,6 @@ namespace Mutagen.Bethesda.Tests
         public Byte NumMasters { get; set; }
         #endregion
 
-        #region Loqui Getter Interface
-
-        protected object GetNthObject(ushort index) => PassthroughCommon.GetNthObject(index, this);
-        object ILoquiObjectGetter.GetNthObject(ushort index) => this.GetNthObject(index);
-
-        protected bool GetNthObjectHasBeenSet(ushort index) => PassthroughCommon.GetNthObjectHasBeenSet(index, this);
-        bool ILoquiObjectGetter.GetNthObjectHasBeenSet(ushort index) => this.GetNthObjectHasBeenSet(index);
-
-        protected void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => PassthroughCommon.UnsetNthObject(index, this, cmds);
-        void ILoquiObjectSetter.UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => this.UnsetNthObject(index, cmds);
-
-        #endregion
-
-        #region Loqui Interface
-        protected void SetNthObjectHasBeenSet(ushort index, bool on)
-        {
-            PassthroughCommon.SetNthObjectHasBeenSet(index, on, this);
-        }
-        void ILoquiObjectSetter.SetNthObjectHasBeenSet(ushort index, bool on) => this.SetNthObjectHasBeenSet(index, on);
-
-        #endregion
-
         IMask<bool> IEqualsMask<Passthrough>.GetEqualsMask(Passthrough rhs, EqualsMaskHelper.Include include) => PassthroughCommon.GetEqualsMask(this, rhs, include);
         IMask<bool> IEqualsMask<IPassthroughGetter>.GetEqualsMask(IPassthroughGetter rhs, EqualsMaskHelper.Include include) => PassthroughCommon.GetEqualsMask(this, rhs, include);
         #region To String
@@ -603,7 +581,6 @@ namespace Mutagen.Bethesda.Tests
                 cmds: cmds);
         }
 
-        void ILoquiObjectSetter.SetNthObject(ushort index, object obj, NotifyingFireParameters cmds) => this.SetNthObject(index, obj, cmds);
         protected void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
         {
             Passthrough_FieldIndex enu = (Passthrough_FieldIndex)index;
@@ -668,11 +645,6 @@ namespace Mutagen.Bethesda.Tests
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, Passthrough obj)
-        {
-            ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
-        }
-
     }
     #endregion
 
@@ -939,81 +911,6 @@ namespace Mutagen.Bethesda.Tests.Internals
         }
 
         #endregion
-
-        public static void SetNthObjectHasBeenSet(
-            ushort index,
-            bool on,
-            IPassthrough obj,
-            NotifyingFireParameters cmds = null)
-        {
-            Passthrough_FieldIndex enu = (Passthrough_FieldIndex)index;
-            switch (enu)
-            {
-                case Passthrough_FieldIndex.Do:
-                case Passthrough_FieldIndex.Path:
-                case Passthrough_FieldIndex.NumMasters:
-                    if (on) break;
-                    throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static void UnsetNthObject(
-            ushort index,
-            IPassthrough obj,
-            NotifyingUnsetParameters cmds = null)
-        {
-            Passthrough_FieldIndex enu = (Passthrough_FieldIndex)index;
-            switch (enu)
-            {
-                case Passthrough_FieldIndex.Do:
-                    obj.Do = default(Boolean);
-                    break;
-                case Passthrough_FieldIndex.Path:
-                    obj.Path = default(String);
-                    break;
-                case Passthrough_FieldIndex.NumMasters:
-                    obj.NumMasters = default(Byte);
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthObjectHasBeenSet(
-            ushort index,
-            IPassthrough obj)
-        {
-            Passthrough_FieldIndex enu = (Passthrough_FieldIndex)index;
-            switch (enu)
-            {
-                case Passthrough_FieldIndex.Do:
-                case Passthrough_FieldIndex.Path:
-                case Passthrough_FieldIndex.NumMasters:
-                    return true;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static object GetNthObject(
-            ushort index,
-            IPassthroughGetter obj)
-        {
-            Passthrough_FieldIndex enu = (Passthrough_FieldIndex)index;
-            switch (enu)
-            {
-                case Passthrough_FieldIndex.Do:
-                    return obj.Do;
-                case Passthrough_FieldIndex.Path:
-                    return obj.Path;
-                case Passthrough_FieldIndex.NumMasters:
-                    return obj.NumMasters;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
 
         public static void Clear(
             IPassthrough item,

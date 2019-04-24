@@ -89,28 +89,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        #region Loqui Getter Interface
-
-        protected object GetNthObject(ushort index) => QuestTargetCommon.GetNthObject(index, this);
-        object ILoquiObjectGetter.GetNthObject(ushort index) => this.GetNthObject(index);
-
-        protected bool GetNthObjectHasBeenSet(ushort index) => QuestTargetCommon.GetNthObjectHasBeenSet(index, this);
-        bool ILoquiObjectGetter.GetNthObjectHasBeenSet(ushort index) => this.GetNthObjectHasBeenSet(index);
-
-        protected void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => QuestTargetCommon.UnsetNthObject(index, this, cmds);
-        void ILoquiObjectSetter.UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => this.UnsetNthObject(index, cmds);
-
-        #endregion
-
-        #region Loqui Interface
-        protected void SetNthObjectHasBeenSet(ushort index, bool on)
-        {
-            QuestTargetCommon.SetNthObjectHasBeenSet(index, on, this);
-        }
-        void ILoquiObjectSetter.SetNthObjectHasBeenSet(ushort index, bool on) => this.SetNthObjectHasBeenSet(index, on);
-
-        #endregion
-
         IMask<bool> IEqualsMask<QuestTarget>.GetEqualsMask(QuestTarget rhs, EqualsMaskHelper.Include include) => QuestTargetCommon.GetEqualsMask(this, rhs, include);
         IMask<bool> IEqualsMask<IQuestTargetGetter>.GetEqualsMask(IQuestTargetGetter rhs, EqualsMaskHelper.Include include) => QuestTargetCommon.GetEqualsMask(this, rhs, include);
         #region To String
@@ -1089,7 +1067,6 @@ namespace Mutagen.Bethesda.Oblivion
                 cmds: cmds);
         }
 
-        void ILoquiObjectSetter.SetNthObject(ushort index, object obj, NotifyingFireParameters cmds) => this.SetNthObject(index, obj, cmds);
         protected void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
         {
             QuestTarget_FieldIndex enu = (QuestTarget_FieldIndex)index;
@@ -1158,11 +1135,6 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, QuestTarget obj)
-        {
-            ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
-        }
-
     }
     #endregion
 
@@ -1488,84 +1460,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         #endregion
-
-        public static void SetNthObjectHasBeenSet(
-            ushort index,
-            bool on,
-            IQuestTarget obj,
-            NotifyingFireParameters cmds = null)
-        {
-            QuestTarget_FieldIndex enu = (QuestTarget_FieldIndex)index;
-            switch (enu)
-            {
-                case QuestTarget_FieldIndex.Target:
-                case QuestTarget_FieldIndex.Flags:
-                    if (on) break;
-                    throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
-                case QuestTarget_FieldIndex.Conditions:
-                    obj.Conditions.HasBeenSet = on;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static void UnsetNthObject(
-            ushort index,
-            IQuestTarget obj,
-            NotifyingUnsetParameters cmds = null)
-        {
-            QuestTarget_FieldIndex enu = (QuestTarget_FieldIndex)index;
-            switch (enu)
-            {
-                case QuestTarget_FieldIndex.Target:
-                    obj.Target = default(IPlaced);
-                    break;
-                case QuestTarget_FieldIndex.Flags:
-                    obj.Flags = default(QuestTarget.Flag);
-                    break;
-                case QuestTarget_FieldIndex.Conditions:
-                    obj.Conditions.Unset();
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthObjectHasBeenSet(
-            ushort index,
-            IQuestTarget obj)
-        {
-            QuestTarget_FieldIndex enu = (QuestTarget_FieldIndex)index;
-            switch (enu)
-            {
-                case QuestTarget_FieldIndex.Target:
-                case QuestTarget_FieldIndex.Flags:
-                    return true;
-                case QuestTarget_FieldIndex.Conditions:
-                    return obj.Conditions.HasBeenSet;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static object GetNthObject(
-            ushort index,
-            IQuestTargetGetter obj)
-        {
-            QuestTarget_FieldIndex enu = (QuestTarget_FieldIndex)index;
-            switch (enu)
-            {
-                case QuestTarget_FieldIndex.Target:
-                    return obj.Target;
-                case QuestTarget_FieldIndex.Flags:
-                    return obj.Flags;
-                case QuestTarget_FieldIndex.Conditions:
-                    return obj.Conditions;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
 
         public static void Clear(
             IQuestTarget item,

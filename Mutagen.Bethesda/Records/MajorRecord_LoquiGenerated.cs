@@ -100,28 +100,6 @@ namespace Mutagen.Bethesda
         }
         #endregion
 
-        #region Loqui Getter Interface
-
-        protected virtual object GetNthObject(ushort index) => MajorRecordCommon.GetNthObject(index, this);
-        object ILoquiObjectGetter.GetNthObject(ushort index) => this.GetNthObject(index);
-
-        protected virtual bool GetNthObjectHasBeenSet(ushort index) => MajorRecordCommon.GetNthObjectHasBeenSet(index, this);
-        bool ILoquiObjectGetter.GetNthObjectHasBeenSet(ushort index) => this.GetNthObjectHasBeenSet(index);
-
-        protected virtual void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => MajorRecordCommon.UnsetNthObject(index, this, cmds);
-        void ILoquiObjectSetter.UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => this.UnsetNthObject(index, cmds);
-
-        #endregion
-
-        #region Loqui Interface
-        protected virtual void SetNthObjectHasBeenSet(ushort index, bool on)
-        {
-            MajorRecordCommon.SetNthObjectHasBeenSet(index, on, this);
-        }
-        void ILoquiObjectSetter.SetNthObjectHasBeenSet(ushort index, bool on) => this.SetNthObjectHasBeenSet(index, on);
-
-        #endregion
-
         IMask<bool> IEqualsMask<MajorRecord>.GetEqualsMask(MajorRecord rhs, EqualsMaskHelper.Include include) => MajorRecordCommon.GetEqualsMask(this, rhs, include);
         IMask<bool> IEqualsMask<IMajorRecordGetter>.GetEqualsMask(IMajorRecordGetter rhs, EqualsMaskHelper.Include include) => MajorRecordCommon.GetEqualsMask(this, rhs, include);
         #region To String
@@ -1010,7 +988,6 @@ namespace Mutagen.Bethesda
                 cmds: cmds);
         }
 
-        void ILoquiObjectSetter.SetNthObject(ushort index, object obj, NotifyingFireParameters cmds) => this.SetNthObject(index, obj, cmds);
         protected virtual void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
         {
             MajorRecord_FieldIndex enu = (MajorRecord_FieldIndex)index;
@@ -1067,11 +1044,6 @@ namespace Mutagen.Bethesda
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, MajorRecord obj)
-        {
-            ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
-        }
-
     }
     #endregion
 
@@ -1536,90 +1508,6 @@ namespace Mutagen.Bethesda.Internals
         }
 
         #endregion
-
-        public static void SetNthObjectHasBeenSet(
-            ushort index,
-            bool on,
-            IMajorRecord obj,
-            NotifyingFireParameters cmds = null)
-        {
-            MajorRecord_FieldIndex enu = (MajorRecord_FieldIndex)index;
-            switch (enu)
-            {
-                case MajorRecord_FieldIndex.RecordType:
-                    throw new ArgumentException($"Tried to set at a derivative index {index}");
-                case MajorRecord_FieldIndex.FormKey:
-                case MajorRecord_FieldIndex.Version:
-                    if (on) break;
-                    throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
-                case MajorRecord_FieldIndex.EditorID:
-                    obj.EditorID_IsSet = on;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static void UnsetNthObject(
-            ushort index,
-            IMajorRecord obj,
-            NotifyingUnsetParameters cmds = null)
-        {
-            MajorRecord_FieldIndex enu = (MajorRecord_FieldIndex)index;
-            switch (enu)
-            {
-                case MajorRecord_FieldIndex.RecordType:
-                    throw new ArgumentException($"Tried to unset at a derivative index {index}");
-                case MajorRecord_FieldIndex.FormKey:
-                    throw new ArgumentException("Tried to set at a readonly index " + index);
-                case MajorRecord_FieldIndex.Version:
-                    obj.Version = default(UInt32);
-                    break;
-                case MajorRecord_FieldIndex.EditorID:
-                    obj.EditorID_Unset();
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthObjectHasBeenSet(
-            ushort index,
-            IMajorRecord obj)
-        {
-            MajorRecord_FieldIndex enu = (MajorRecord_FieldIndex)index;
-            switch (enu)
-            {
-                case MajorRecord_FieldIndex.FormKey:
-                case MajorRecord_FieldIndex.Version:
-                case MajorRecord_FieldIndex.RecordType:
-                    return true;
-                case MajorRecord_FieldIndex.EditorID:
-                    return obj.EditorID_IsSet;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static object GetNthObject(
-            ushort index,
-            IMajorRecordGetter obj)
-        {
-            MajorRecord_FieldIndex enu = (MajorRecord_FieldIndex)index;
-            switch (enu)
-            {
-                case MajorRecord_FieldIndex.FormKey:
-                    return obj.FormKey;
-                case MajorRecord_FieldIndex.Version:
-                    return obj.Version;
-                case MajorRecord_FieldIndex.EditorID:
-                    return obj.EditorID;
-                case MajorRecord_FieldIndex.RecordType:
-                    return obj.RecordType;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
 
         public static void Clear(
             IMajorRecord item,

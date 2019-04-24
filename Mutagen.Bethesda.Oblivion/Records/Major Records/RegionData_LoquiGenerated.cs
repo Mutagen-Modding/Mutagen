@@ -87,28 +87,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        #region Loqui Getter Interface
-
-        protected virtual object GetNthObject(ushort index) => RegionDataCommon.GetNthObject(index, this);
-        object ILoquiObjectGetter.GetNthObject(ushort index) => this.GetNthObject(index);
-
-        protected virtual bool GetNthObjectHasBeenSet(ushort index) => RegionDataCommon.GetNthObjectHasBeenSet(index, this);
-        bool ILoquiObjectGetter.GetNthObjectHasBeenSet(ushort index) => this.GetNthObjectHasBeenSet(index);
-
-        protected virtual void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => RegionDataCommon.UnsetNthObject(index, this, cmds);
-        void ILoquiObjectSetter.UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => this.UnsetNthObject(index, cmds);
-
-        #endregion
-
-        #region Loqui Interface
-        protected virtual void SetNthObjectHasBeenSet(ushort index, bool on)
-        {
-            RegionDataCommon.SetNthObjectHasBeenSet(index, on, this);
-        }
-        void ILoquiObjectSetter.SetNthObjectHasBeenSet(ushort index, bool on) => this.SetNthObjectHasBeenSet(index, on);
-
-        #endregion
-
         IMask<bool> IEqualsMask<RegionData>.GetEqualsMask(RegionData rhs, EqualsMaskHelper.Include include) => RegionDataCommon.GetEqualsMask(this, rhs, include);
         IMask<bool> IEqualsMask<IRegionDataGetter>.GetEqualsMask(IRegionDataGetter rhs, EqualsMaskHelper.Include include) => RegionDataCommon.GetEqualsMask(this, rhs, include);
         #region To String
@@ -944,7 +922,6 @@ namespace Mutagen.Bethesda.Oblivion
                 cmds: cmds);
         }
 
-        void ILoquiObjectSetter.SetNthObject(ushort index, object obj, NotifyingFireParameters cmds) => this.SetNthObject(index, obj, cmds);
         protected virtual void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
         {
             RegionData_FieldIndex enu = (RegionData_FieldIndex)index;
@@ -999,11 +976,6 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, RegionData obj)
-        {
-            ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
-        }
-
     }
     #endregion
 
@@ -1289,80 +1261,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         #endregion
-
-        public static void SetNthObjectHasBeenSet(
-            ushort index,
-            bool on,
-            IRegionData obj,
-            NotifyingFireParameters cmds = null)
-        {
-            RegionData_FieldIndex enu = (RegionData_FieldIndex)index;
-            switch (enu)
-            {
-                case RegionData_FieldIndex.DataType:
-                case RegionData_FieldIndex.Flags:
-                case RegionData_FieldIndex.Priority:
-                    if (on) break;
-                    throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static void UnsetNthObject(
-            ushort index,
-            IRegionData obj,
-            NotifyingUnsetParameters cmds = null)
-        {
-            RegionData_FieldIndex enu = (RegionData_FieldIndex)index;
-            switch (enu)
-            {
-                case RegionData_FieldIndex.DataType:
-                    throw new ArgumentException("Tried to set at a readonly index " + index);
-                case RegionData_FieldIndex.Flags:
-                    obj.Flags = default(RegionData.RegionDataFlag);
-                    break;
-                case RegionData_FieldIndex.Priority:
-                    obj.Priority = default(Byte);
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthObjectHasBeenSet(
-            ushort index,
-            IRegionData obj)
-        {
-            RegionData_FieldIndex enu = (RegionData_FieldIndex)index;
-            switch (enu)
-            {
-                case RegionData_FieldIndex.DataType:
-                case RegionData_FieldIndex.Flags:
-                case RegionData_FieldIndex.Priority:
-                    return true;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static object GetNthObject(
-            ushort index,
-            IRegionDataGetter obj)
-        {
-            RegionData_FieldIndex enu = (RegionData_FieldIndex)index;
-            switch (enu)
-            {
-                case RegionData_FieldIndex.DataType:
-                    return obj.DataType;
-                case RegionData_FieldIndex.Flags:
-                    return obj.Flags;
-                case RegionData_FieldIndex.Priority:
-                    return obj.Priority;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
 
         public static void Clear(
             IRegionData item,

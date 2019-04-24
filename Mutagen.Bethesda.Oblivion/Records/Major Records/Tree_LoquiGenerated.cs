@@ -244,24 +244,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        #region Loqui Getter Interface
-
-        protected override object GetNthObject(ushort index) => TreeCommon.GetNthObject(index, this);
-
-        protected override bool GetNthObjectHasBeenSet(ushort index) => TreeCommon.GetNthObjectHasBeenSet(index, this);
-
-        protected override void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => TreeCommon.UnsetNthObject(index, this, cmds);
-
-        #endregion
-
-        #region Loqui Interface
-        protected override void SetNthObjectHasBeenSet(ushort index, bool on)
-        {
-            TreeCommon.SetNthObjectHasBeenSet(index, on, this);
-        }
-
-        #endregion
-
         IMask<bool> IEqualsMask<Tree>.GetEqualsMask(Tree rhs, EqualsMaskHelper.Include include) => TreeCommon.GetEqualsMask(this, rhs, include);
         IMask<bool> IEqualsMask<ITreeGetter>.GetEqualsMask(ITreeGetter rhs, EqualsMaskHelper.Include include) => TreeCommon.GetEqualsMask(this, rhs, include);
         #region To String
@@ -1707,11 +1689,6 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, Tree obj)
-        {
-            ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
-        }
-
     }
     #endregion
 
@@ -2442,162 +2419,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         #endregion
-
-        public static void SetNthObjectHasBeenSet(
-            ushort index,
-            bool on,
-            ITree obj,
-            NotifyingFireParameters cmds = null)
-        {
-            Tree_FieldIndex enu = (Tree_FieldIndex)index;
-            switch (enu)
-            {
-                case Tree_FieldIndex.LeafCurvature:
-                case Tree_FieldIndex.MinimumLeafAngle:
-                case Tree_FieldIndex.MaximumLeafAngle:
-                case Tree_FieldIndex.BranchDimmingValue:
-                case Tree_FieldIndex.LeafDimmingValue:
-                case Tree_FieldIndex.ShadowRadius:
-                case Tree_FieldIndex.RockingSpeed:
-                case Tree_FieldIndex.RustleSpeed:
-                case Tree_FieldIndex.BillboardWidth:
-                case Tree_FieldIndex.BillboardHeight:
-                    if (on) break;
-                    throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
-                case Tree_FieldIndex.Model:
-                    obj.Model_IsSet = on;
-                    break;
-                case Tree_FieldIndex.Icon:
-                    obj.Icon_IsSet = on;
-                    break;
-                case Tree_FieldIndex.SpeedTreeSeeds:
-                    obj.SpeedTreeSeeds.HasBeenSet = on;
-                    break;
-                default:
-                    OblivionMajorRecordCommon.SetNthObjectHasBeenSet(index, on, obj);
-                    break;
-            }
-        }
-
-        public static void UnsetNthObject(
-            ushort index,
-            ITree obj,
-            NotifyingUnsetParameters cmds = null)
-        {
-            Tree_FieldIndex enu = (Tree_FieldIndex)index;
-            switch (enu)
-            {
-                case Tree_FieldIndex.Model:
-                    obj.Model_Unset();
-                    break;
-                case Tree_FieldIndex.Icon:
-                    obj.Icon_Unset();
-                    break;
-                case Tree_FieldIndex.SpeedTreeSeeds:
-                    obj.SpeedTreeSeeds.Unset();
-                    break;
-                case Tree_FieldIndex.LeafCurvature:
-                    obj.LeafCurvature = default(Single);
-                    break;
-                case Tree_FieldIndex.MinimumLeafAngle:
-                    obj.MinimumLeafAngle = default(Single);
-                    break;
-                case Tree_FieldIndex.MaximumLeafAngle:
-                    obj.MaximumLeafAngle = default(Single);
-                    break;
-                case Tree_FieldIndex.BranchDimmingValue:
-                    obj.BranchDimmingValue = default(Single);
-                    break;
-                case Tree_FieldIndex.LeafDimmingValue:
-                    obj.LeafDimmingValue = default(Single);
-                    break;
-                case Tree_FieldIndex.ShadowRadius:
-                    obj.ShadowRadius = default(Int32);
-                    break;
-                case Tree_FieldIndex.RockingSpeed:
-                    obj.RockingSpeed = default(Single);
-                    break;
-                case Tree_FieldIndex.RustleSpeed:
-                    obj.RustleSpeed = default(Single);
-                    break;
-                case Tree_FieldIndex.BillboardWidth:
-                    obj.BillboardWidth = default(Single);
-                    break;
-                case Tree_FieldIndex.BillboardHeight:
-                    obj.BillboardHeight = default(Single);
-                    break;
-                default:
-                    OblivionMajorRecordCommon.UnsetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public static bool GetNthObjectHasBeenSet(
-            ushort index,
-            ITree obj)
-        {
-            Tree_FieldIndex enu = (Tree_FieldIndex)index;
-            switch (enu)
-            {
-                case Tree_FieldIndex.LeafCurvature:
-                case Tree_FieldIndex.MinimumLeafAngle:
-                case Tree_FieldIndex.MaximumLeafAngle:
-                case Tree_FieldIndex.BranchDimmingValue:
-                case Tree_FieldIndex.LeafDimmingValue:
-                case Tree_FieldIndex.ShadowRadius:
-                case Tree_FieldIndex.RockingSpeed:
-                case Tree_FieldIndex.RustleSpeed:
-                case Tree_FieldIndex.BillboardWidth:
-                case Tree_FieldIndex.BillboardHeight:
-                    return true;
-                case Tree_FieldIndex.Model:
-                    return obj.Model_IsSet;
-                case Tree_FieldIndex.Icon:
-                    return obj.Icon_IsSet;
-                case Tree_FieldIndex.SpeedTreeSeeds:
-                    return obj.SpeedTreeSeeds.HasBeenSet;
-                default:
-                    return OblivionMajorRecordCommon.GetNthObjectHasBeenSet(index, obj);
-            }
-        }
-
-        public static object GetNthObject(
-            ushort index,
-            ITreeGetter obj)
-        {
-            Tree_FieldIndex enu = (Tree_FieldIndex)index;
-            switch (enu)
-            {
-                case Tree_FieldIndex.Model:
-                    return obj.Model;
-                case Tree_FieldIndex.Icon:
-                    return obj.Icon;
-                case Tree_FieldIndex.SpeedTreeSeeds:
-                    return obj.SpeedTreeSeeds;
-                case Tree_FieldIndex.LeafCurvature:
-                    return obj.LeafCurvature;
-                case Tree_FieldIndex.MinimumLeafAngle:
-                    return obj.MinimumLeafAngle;
-                case Tree_FieldIndex.MaximumLeafAngle:
-                    return obj.MaximumLeafAngle;
-                case Tree_FieldIndex.BranchDimmingValue:
-                    return obj.BranchDimmingValue;
-                case Tree_FieldIndex.LeafDimmingValue:
-                    return obj.LeafDimmingValue;
-                case Tree_FieldIndex.ShadowRadius:
-                    return obj.ShadowRadius;
-                case Tree_FieldIndex.RockingSpeed:
-                    return obj.RockingSpeed;
-                case Tree_FieldIndex.RustleSpeed:
-                    return obj.RustleSpeed;
-                case Tree_FieldIndex.BillboardWidth:
-                    return obj.BillboardWidth;
-                case Tree_FieldIndex.BillboardHeight:
-                    return obj.BillboardHeight;
-                default:
-                    return OblivionMajorRecordCommon.GetNthObject(index, obj);
-            }
-        }
 
         public static void Clear(
             ITree item,

@@ -166,24 +166,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        #region Loqui Getter Interface
-
-        protected override object GetNthObject(ushort index) => FloraCommon.GetNthObject(index, this);
-
-        protected override bool GetNthObjectHasBeenSet(ushort index) => FloraCommon.GetNthObjectHasBeenSet(index, this);
-
-        protected override void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => FloraCommon.UnsetNthObject(index, this, cmds);
-
-        #endregion
-
-        #region Loqui Interface
-        protected override void SetNthObjectHasBeenSet(ushort index, bool on)
-        {
-            FloraCommon.SetNthObjectHasBeenSet(index, on, this);
-        }
-
-        #endregion
-
         IMask<bool> IEqualsMask<Flora>.GetEqualsMask(Flora rhs, EqualsMaskHelper.Include include) => FloraCommon.GetEqualsMask(this, rhs, include);
         IMask<bool> IEqualsMask<IFloraGetter>.GetEqualsMask(IFloraGetter rhs, EqualsMaskHelper.Include include) => FloraCommon.GetEqualsMask(this, rhs, include);
         #region To String
@@ -1477,11 +1459,6 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, Flora obj)
-        {
-            ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
-        }
-
     }
     #endregion
 
@@ -2042,130 +2019,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         #endregion
-
-        public static void SetNthObjectHasBeenSet(
-            ushort index,
-            bool on,
-            IFlora obj,
-            NotifyingFireParameters cmds = null)
-        {
-            Flora_FieldIndex enu = (Flora_FieldIndex)index;
-            switch (enu)
-            {
-                case Flora_FieldIndex.Spring:
-                case Flora_FieldIndex.Summer:
-                case Flora_FieldIndex.Fall:
-                case Flora_FieldIndex.Winter:
-                    if (on) break;
-                    throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
-                case Flora_FieldIndex.Name:
-                    obj.Name_IsSet = on;
-                    break;
-                case Flora_FieldIndex.Model:
-                    obj.Model_IsSet = on;
-                    break;
-                case Flora_FieldIndex.Script:
-                    obj.Script_Property.HasBeenSet = on;
-                    break;
-                case Flora_FieldIndex.Ingredient:
-                    obj.Ingredient_Property.HasBeenSet = on;
-                    break;
-                default:
-                    OblivionMajorRecordCommon.SetNthObjectHasBeenSet(index, on, obj);
-                    break;
-            }
-        }
-
-        public static void UnsetNthObject(
-            ushort index,
-            IFlora obj,
-            NotifyingUnsetParameters cmds = null)
-        {
-            Flora_FieldIndex enu = (Flora_FieldIndex)index;
-            switch (enu)
-            {
-                case Flora_FieldIndex.Name:
-                    obj.Name_Unset();
-                    break;
-                case Flora_FieldIndex.Model:
-                    obj.Model_Unset();
-                    break;
-                case Flora_FieldIndex.Script:
-                    obj.Script_Property.Unset(cmds);
-                    break;
-                case Flora_FieldIndex.Ingredient:
-                    obj.Ingredient_Property.Unset(cmds);
-                    break;
-                case Flora_FieldIndex.Spring:
-                    obj.Spring = default(Byte);
-                    break;
-                case Flora_FieldIndex.Summer:
-                    obj.Summer = default(Byte);
-                    break;
-                case Flora_FieldIndex.Fall:
-                    obj.Fall = default(Byte);
-                    break;
-                case Flora_FieldIndex.Winter:
-                    obj.Winter = default(Byte);
-                    break;
-                default:
-                    OblivionMajorRecordCommon.UnsetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public static bool GetNthObjectHasBeenSet(
-            ushort index,
-            IFlora obj)
-        {
-            Flora_FieldIndex enu = (Flora_FieldIndex)index;
-            switch (enu)
-            {
-                case Flora_FieldIndex.Spring:
-                case Flora_FieldIndex.Summer:
-                case Flora_FieldIndex.Fall:
-                case Flora_FieldIndex.Winter:
-                    return true;
-                case Flora_FieldIndex.Name:
-                    return obj.Name_IsSet;
-                case Flora_FieldIndex.Model:
-                    return obj.Model_IsSet;
-                case Flora_FieldIndex.Script:
-                    return obj.Script_Property.HasBeenSet;
-                case Flora_FieldIndex.Ingredient:
-                    return obj.Ingredient_Property.HasBeenSet;
-                default:
-                    return OblivionMajorRecordCommon.GetNthObjectHasBeenSet(index, obj);
-            }
-        }
-
-        public static object GetNthObject(
-            ushort index,
-            IFloraGetter obj)
-        {
-            Flora_FieldIndex enu = (Flora_FieldIndex)index;
-            switch (enu)
-            {
-                case Flora_FieldIndex.Name:
-                    return obj.Name;
-                case Flora_FieldIndex.Model:
-                    return obj.Model;
-                case Flora_FieldIndex.Script:
-                    return obj.Script;
-                case Flora_FieldIndex.Ingredient:
-                    return obj.Ingredient;
-                case Flora_FieldIndex.Spring:
-                    return obj.Spring;
-                case Flora_FieldIndex.Summer:
-                    return obj.Summer;
-                case Flora_FieldIndex.Fall:
-                    return obj.Fall;
-                case Flora_FieldIndex.Winter:
-                    return obj.Winter;
-                default:
-                    return OblivionMajorRecordCommon.GetNthObject(index, obj);
-            }
-        }
 
         public static void Clear(
             IFlora item,

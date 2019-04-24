@@ -168,24 +168,6 @@ namespace Mutagen.Bethesda.Oblivion
         FormIDSetLink<Sound> IContainerGetter.CloseSound_Property => this.CloseSound_Property;
         #endregion
 
-        #region Loqui Getter Interface
-
-        protected override object GetNthObject(ushort index) => ContainerCommon.GetNthObject(index, this);
-
-        protected override bool GetNthObjectHasBeenSet(ushort index) => ContainerCommon.GetNthObjectHasBeenSet(index, this);
-
-        protected override void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => ContainerCommon.UnsetNthObject(index, this, cmds);
-
-        #endregion
-
-        #region Loqui Interface
-        protected override void SetNthObjectHasBeenSet(ushort index, bool on)
-        {
-            ContainerCommon.SetNthObjectHasBeenSet(index, on, this);
-        }
-
-        #endregion
-
         IMask<bool> IEqualsMask<Container>.GetEqualsMask(Container rhs, EqualsMaskHelper.Include include) => ContainerCommon.GetEqualsMask(this, rhs, include);
         IMask<bool> IEqualsMask<IContainerGetter>.GetEqualsMask(IContainerGetter rhs, EqualsMaskHelper.Include include) => ContainerCommon.GetEqualsMask(this, rhs, include);
         #region To String
@@ -1494,11 +1476,6 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, Container obj)
-        {
-            ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
-        }
-
     }
     #endregion
 
@@ -2081,136 +2058,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         #endregion
-
-        public static void SetNthObjectHasBeenSet(
-            ushort index,
-            bool on,
-            IContainer obj,
-            NotifyingFireParameters cmds = null)
-        {
-            Container_FieldIndex enu = (Container_FieldIndex)index;
-            switch (enu)
-            {
-                case Container_FieldIndex.Flags:
-                case Container_FieldIndex.Weight:
-                    if (on) break;
-                    throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
-                case Container_FieldIndex.Name:
-                    obj.Name_IsSet = on;
-                    break;
-                case Container_FieldIndex.Model:
-                    obj.Model_IsSet = on;
-                    break;
-                case Container_FieldIndex.Script:
-                    obj.Script_Property.HasBeenSet = on;
-                    break;
-                case Container_FieldIndex.Items:
-                    obj.Items.HasBeenSet = on;
-                    break;
-                case Container_FieldIndex.OpenSound:
-                    obj.OpenSound_Property.HasBeenSet = on;
-                    break;
-                case Container_FieldIndex.CloseSound:
-                    obj.CloseSound_Property.HasBeenSet = on;
-                    break;
-                default:
-                    OblivionMajorRecordCommon.SetNthObjectHasBeenSet(index, on, obj);
-                    break;
-            }
-        }
-
-        public static void UnsetNthObject(
-            ushort index,
-            IContainer obj,
-            NotifyingUnsetParameters cmds = null)
-        {
-            Container_FieldIndex enu = (Container_FieldIndex)index;
-            switch (enu)
-            {
-                case Container_FieldIndex.Name:
-                    obj.Name_Unset();
-                    break;
-                case Container_FieldIndex.Model:
-                    obj.Model_Unset();
-                    break;
-                case Container_FieldIndex.Script:
-                    obj.Script_Property.Unset(cmds);
-                    break;
-                case Container_FieldIndex.Items:
-                    obj.Items.Unset();
-                    break;
-                case Container_FieldIndex.Flags:
-                    obj.Flags = default(Container.ContainerFlag);
-                    break;
-                case Container_FieldIndex.Weight:
-                    obj.Weight = default(Single);
-                    break;
-                case Container_FieldIndex.OpenSound:
-                    obj.OpenSound_Property.Unset(cmds);
-                    break;
-                case Container_FieldIndex.CloseSound:
-                    obj.CloseSound_Property.Unset(cmds);
-                    break;
-                default:
-                    OblivionMajorRecordCommon.UnsetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public static bool GetNthObjectHasBeenSet(
-            ushort index,
-            IContainer obj)
-        {
-            Container_FieldIndex enu = (Container_FieldIndex)index;
-            switch (enu)
-            {
-                case Container_FieldIndex.Flags:
-                case Container_FieldIndex.Weight:
-                    return true;
-                case Container_FieldIndex.Name:
-                    return obj.Name_IsSet;
-                case Container_FieldIndex.Model:
-                    return obj.Model_IsSet;
-                case Container_FieldIndex.Script:
-                    return obj.Script_Property.HasBeenSet;
-                case Container_FieldIndex.Items:
-                    return obj.Items.HasBeenSet;
-                case Container_FieldIndex.OpenSound:
-                    return obj.OpenSound_Property.HasBeenSet;
-                case Container_FieldIndex.CloseSound:
-                    return obj.CloseSound_Property.HasBeenSet;
-                default:
-                    return OblivionMajorRecordCommon.GetNthObjectHasBeenSet(index, obj);
-            }
-        }
-
-        public static object GetNthObject(
-            ushort index,
-            IContainerGetter obj)
-        {
-            Container_FieldIndex enu = (Container_FieldIndex)index;
-            switch (enu)
-            {
-                case Container_FieldIndex.Name:
-                    return obj.Name;
-                case Container_FieldIndex.Model:
-                    return obj.Model;
-                case Container_FieldIndex.Script:
-                    return obj.Script;
-                case Container_FieldIndex.Items:
-                    return obj.Items;
-                case Container_FieldIndex.Flags:
-                    return obj.Flags;
-                case Container_FieldIndex.Weight:
-                    return obj.Weight;
-                case Container_FieldIndex.OpenSound:
-                    return obj.OpenSound;
-                case Container_FieldIndex.CloseSound:
-                    return obj.CloseSound;
-                default:
-                    return OblivionMajorRecordCommon.GetNthObject(index, obj);
-            }
-        }
 
         public static void Clear(
             IContainer item,

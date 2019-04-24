@@ -93,28 +93,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        #region Loqui Getter Interface
-
-        protected object GetNthObject(ushort index) => PathGridPointCommon.GetNthObject(index, this);
-        object ILoquiObjectGetter.GetNthObject(ushort index) => this.GetNthObject(index);
-
-        protected bool GetNthObjectHasBeenSet(ushort index) => PathGridPointCommon.GetNthObjectHasBeenSet(index, this);
-        bool ILoquiObjectGetter.GetNthObjectHasBeenSet(ushort index) => this.GetNthObjectHasBeenSet(index);
-
-        protected void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => PathGridPointCommon.UnsetNthObject(index, this, cmds);
-        void ILoquiObjectSetter.UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => this.UnsetNthObject(index, cmds);
-
-        #endregion
-
-        #region Loqui Interface
-        protected void SetNthObjectHasBeenSet(ushort index, bool on)
-        {
-            PathGridPointCommon.SetNthObjectHasBeenSet(index, on, this);
-        }
-        void ILoquiObjectSetter.SetNthObjectHasBeenSet(ushort index, bool on) => this.SetNthObjectHasBeenSet(index, on);
-
-        #endregion
-
         IMask<bool> IEqualsMask<PathGridPoint>.GetEqualsMask(PathGridPoint rhs, EqualsMaskHelper.Include include) => PathGridPointCommon.GetEqualsMask(this, rhs, include);
         IMask<bool> IEqualsMask<IPathGridPointGetter>.GetEqualsMask(IPathGridPointGetter rhs, EqualsMaskHelper.Include include) => PathGridPointCommon.GetEqualsMask(this, rhs, include);
         #region To String
@@ -1019,7 +997,6 @@ namespace Mutagen.Bethesda.Oblivion
                 cmds: cmds);
         }
 
-        void ILoquiObjectSetter.SetNthObject(ushort index, object obj, NotifyingFireParameters cmds) => this.SetNthObject(index, obj, cmds);
         protected void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
         {
             PathGridPoint_FieldIndex enu = (PathGridPoint_FieldIndex)index;
@@ -1084,11 +1061,6 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, PathGridPoint obj)
-        {
-            ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
-        }
-
     }
     #endregion
 
@@ -1391,81 +1363,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         #endregion
-
-        public static void SetNthObjectHasBeenSet(
-            ushort index,
-            bool on,
-            IPathGridPoint obj,
-            NotifyingFireParameters cmds = null)
-        {
-            PathGridPoint_FieldIndex enu = (PathGridPoint_FieldIndex)index;
-            switch (enu)
-            {
-                case PathGridPoint_FieldIndex.Point:
-                case PathGridPoint_FieldIndex.NumConnectionsFluffBytes:
-                case PathGridPoint_FieldIndex.Connections:
-                    if (on) break;
-                    throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static void UnsetNthObject(
-            ushort index,
-            IPathGridPoint obj,
-            NotifyingUnsetParameters cmds = null)
-        {
-            PathGridPoint_FieldIndex enu = (PathGridPoint_FieldIndex)index;
-            switch (enu)
-            {
-                case PathGridPoint_FieldIndex.Point:
-                    obj.Point = default(P3Float);
-                    break;
-                case PathGridPoint_FieldIndex.NumConnectionsFluffBytes:
-                    obj.NumConnectionsFluffBytes = default(Byte[]);
-                    break;
-                case PathGridPoint_FieldIndex.Connections:
-                    obj.Connections.Unset();
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthObjectHasBeenSet(
-            ushort index,
-            IPathGridPoint obj)
-        {
-            PathGridPoint_FieldIndex enu = (PathGridPoint_FieldIndex)index;
-            switch (enu)
-            {
-                case PathGridPoint_FieldIndex.Point:
-                case PathGridPoint_FieldIndex.NumConnectionsFluffBytes:
-                case PathGridPoint_FieldIndex.Connections:
-                    return true;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static object GetNthObject(
-            ushort index,
-            IPathGridPointGetter obj)
-        {
-            PathGridPoint_FieldIndex enu = (PathGridPoint_FieldIndex)index;
-            switch (enu)
-            {
-                case PathGridPoint_FieldIndex.Point:
-                    return obj.Point;
-                case PathGridPoint_FieldIndex.NumConnectionsFluffBytes:
-                    return obj.NumConnectionsFluffBytes;
-                case PathGridPoint_FieldIndex.Connections:
-                    return obj.Connections;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
 
         public static void Clear(
             IPathGridPoint item,

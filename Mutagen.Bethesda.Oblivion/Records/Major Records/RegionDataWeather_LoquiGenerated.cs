@@ -71,24 +71,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        #region Loqui Getter Interface
-
-        protected override object GetNthObject(ushort index) => RegionDataWeatherCommon.GetNthObject(index, this);
-
-        protected override bool GetNthObjectHasBeenSet(ushort index) => RegionDataWeatherCommon.GetNthObjectHasBeenSet(index, this);
-
-        protected override void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => RegionDataWeatherCommon.UnsetNthObject(index, this, cmds);
-
-        #endregion
-
-        #region Loqui Interface
-        protected override void SetNthObjectHasBeenSet(ushort index, bool on)
-        {
-            RegionDataWeatherCommon.SetNthObjectHasBeenSet(index, on, this);
-        }
-
-        #endregion
-
         IMask<bool> IEqualsMask<RegionDataWeather>.GetEqualsMask(RegionDataWeather rhs, EqualsMaskHelper.Include include) => RegionDataWeatherCommon.GetEqualsMask(this, rhs, include);
         IMask<bool> IEqualsMask<IRegionDataWeatherGetter>.GetEqualsMask(IRegionDataWeatherGetter rhs, EqualsMaskHelper.Include include) => RegionDataWeatherCommon.GetEqualsMask(this, rhs, include);
         #region To String
@@ -1061,11 +1043,6 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, RegionDataWeather obj)
-        {
-            ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
-        }
-
     }
     #endregion
 
@@ -1326,69 +1303,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         #endregion
-
-        public static void SetNthObjectHasBeenSet(
-            ushort index,
-            bool on,
-            IRegionDataWeather obj,
-            NotifyingFireParameters cmds = null)
-        {
-            RegionDataWeather_FieldIndex enu = (RegionDataWeather_FieldIndex)index;
-            switch (enu)
-            {
-                case RegionDataWeather_FieldIndex.Weathers:
-                    obj.Weathers.HasBeenSet = on;
-                    break;
-                default:
-                    RegionDataCommon.SetNthObjectHasBeenSet(index, on, obj);
-                    break;
-            }
-        }
-
-        public static void UnsetNthObject(
-            ushort index,
-            IRegionDataWeather obj,
-            NotifyingUnsetParameters cmds = null)
-        {
-            RegionDataWeather_FieldIndex enu = (RegionDataWeather_FieldIndex)index;
-            switch (enu)
-            {
-                case RegionDataWeather_FieldIndex.Weathers:
-                    obj.Weathers.Unset();
-                    break;
-                default:
-                    RegionDataCommon.UnsetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public static bool GetNthObjectHasBeenSet(
-            ushort index,
-            IRegionDataWeather obj)
-        {
-            RegionDataWeather_FieldIndex enu = (RegionDataWeather_FieldIndex)index;
-            switch (enu)
-            {
-                case RegionDataWeather_FieldIndex.Weathers:
-                    return obj.Weathers.HasBeenSet;
-                default:
-                    return RegionDataCommon.GetNthObjectHasBeenSet(index, obj);
-            }
-        }
-
-        public static object GetNthObject(
-            ushort index,
-            IRegionDataWeatherGetter obj)
-        {
-            RegionDataWeather_FieldIndex enu = (RegionDataWeather_FieldIndex)index;
-            switch (enu)
-            {
-                case RegionDataWeather_FieldIndex.Weathers:
-                    return obj.Weathers;
-                default:
-                    return RegionDataCommon.GetNthObject(index, obj);
-            }
-        }
 
         public static void Clear(
             IRegionDataWeather item,

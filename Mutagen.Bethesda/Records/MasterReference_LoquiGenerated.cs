@@ -83,28 +83,6 @@ namespace Mutagen.Bethesda
         }
         #endregion
 
-        #region Loqui Getter Interface
-
-        protected object GetNthObject(ushort index) => MasterReferenceCommon.GetNthObject(index, this);
-        object ILoquiObjectGetter.GetNthObject(ushort index) => this.GetNthObject(index);
-
-        protected bool GetNthObjectHasBeenSet(ushort index) => MasterReferenceCommon.GetNthObjectHasBeenSet(index, this);
-        bool ILoquiObjectGetter.GetNthObjectHasBeenSet(ushort index) => this.GetNthObjectHasBeenSet(index);
-
-        protected void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => MasterReferenceCommon.UnsetNthObject(index, this, cmds);
-        void ILoquiObjectSetter.UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => this.UnsetNthObject(index, cmds);
-
-        #endregion
-
-        #region Loqui Interface
-        protected void SetNthObjectHasBeenSet(ushort index, bool on)
-        {
-            MasterReferenceCommon.SetNthObjectHasBeenSet(index, on, this);
-        }
-        void ILoquiObjectSetter.SetNthObjectHasBeenSet(ushort index, bool on) => this.SetNthObjectHasBeenSet(index, on);
-
-        #endregion
-
         IMask<bool> IEqualsMask<MasterReference>.GetEqualsMask(MasterReference rhs, EqualsMaskHelper.Include include) => MasterReferenceCommon.GetEqualsMask(this, rhs, include);
         IMask<bool> IEqualsMask<IMasterReferenceGetter>.GetEqualsMask(IMasterReferenceGetter rhs, EqualsMaskHelper.Include include) => MasterReferenceCommon.GetEqualsMask(this, rhs, include);
         #region To String
@@ -1050,7 +1028,6 @@ namespace Mutagen.Bethesda
                 cmds: cmds);
         }
 
-        void ILoquiObjectSetter.SetNthObject(ushort index, object obj, NotifyingFireParameters cmds) => this.SetNthObject(index, obj, cmds);
         protected void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
         {
             MasterReference_FieldIndex enu = (MasterReference_FieldIndex)index;
@@ -1109,11 +1086,6 @@ namespace Mutagen.Bethesda
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, MasterReference obj)
-        {
-            ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
-        }
-
     }
     #endregion
 
@@ -1400,77 +1372,6 @@ namespace Mutagen.Bethesda.Internals
         }
 
         #endregion
-
-        public static void SetNthObjectHasBeenSet(
-            ushort index,
-            bool on,
-            IMasterReference obj,
-            NotifyingFireParameters cmds = null)
-        {
-            MasterReference_FieldIndex enu = (MasterReference_FieldIndex)index;
-            switch (enu)
-            {
-                case MasterReference_FieldIndex.Master:
-                    if (on) break;
-                    throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
-                case MasterReference_FieldIndex.FileSize:
-                    obj.FileSize_IsSet = on;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static void UnsetNthObject(
-            ushort index,
-            IMasterReference obj,
-            NotifyingUnsetParameters cmds = null)
-        {
-            MasterReference_FieldIndex enu = (MasterReference_FieldIndex)index;
-            switch (enu)
-            {
-                case MasterReference_FieldIndex.Master:
-                    obj.Master = default(ModKey);
-                    break;
-                case MasterReference_FieldIndex.FileSize:
-                    obj.FileSize_Unset();
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthObjectHasBeenSet(
-            ushort index,
-            IMasterReference obj)
-        {
-            MasterReference_FieldIndex enu = (MasterReference_FieldIndex)index;
-            switch (enu)
-            {
-                case MasterReference_FieldIndex.Master:
-                    return true;
-                case MasterReference_FieldIndex.FileSize:
-                    return obj.FileSize_IsSet;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static object GetNthObject(
-            ushort index,
-            IMasterReferenceGetter obj)
-        {
-            MasterReference_FieldIndex enu = (MasterReference_FieldIndex)index;
-            switch (enu)
-            {
-                case MasterReference_FieldIndex.Master:
-                    return obj.Master;
-                case MasterReference_FieldIndex.FileSize:
-                    return obj.FileSize;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
 
         public static void Clear(
             IMasterReference item,

@@ -65,28 +65,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        #region Loqui Getter Interface
-
-        protected object GetNthObject(ushort index) => WeatherSoundCommon.GetNthObject(index, this);
-        object ILoquiObjectGetter.GetNthObject(ushort index) => this.GetNthObject(index);
-
-        protected bool GetNthObjectHasBeenSet(ushort index) => WeatherSoundCommon.GetNthObjectHasBeenSet(index, this);
-        bool ILoquiObjectGetter.GetNthObjectHasBeenSet(ushort index) => this.GetNthObjectHasBeenSet(index);
-
-        protected void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => WeatherSoundCommon.UnsetNthObject(index, this, cmds);
-        void ILoquiObjectSetter.UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => this.UnsetNthObject(index, cmds);
-
-        #endregion
-
-        #region Loqui Interface
-        protected void SetNthObjectHasBeenSet(ushort index, bool on)
-        {
-            WeatherSoundCommon.SetNthObjectHasBeenSet(index, on, this);
-        }
-        void ILoquiObjectSetter.SetNthObjectHasBeenSet(ushort index, bool on) => this.SetNthObjectHasBeenSet(index, on);
-
-        #endregion
-
         IMask<bool> IEqualsMask<WeatherSound>.GetEqualsMask(WeatherSound rhs, EqualsMaskHelper.Include include) => WeatherSoundCommon.GetEqualsMask(this, rhs, include);
         IMask<bool> IEqualsMask<IWeatherSoundGetter>.GetEqualsMask(IWeatherSoundGetter rhs, EqualsMaskHelper.Include include) => WeatherSoundCommon.GetEqualsMask(this, rhs, include);
         #region To String
@@ -989,7 +967,6 @@ namespace Mutagen.Bethesda.Oblivion
                 cmds: cmds);
         }
 
-        void ILoquiObjectSetter.SetNthObject(ushort index, object obj, NotifyingFireParameters cmds) => this.SetNthObject(index, obj, cmds);
         protected void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
         {
             WeatherSound_FieldIndex enu = (WeatherSound_FieldIndex)index;
@@ -1052,11 +1029,6 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, WeatherSound obj)
-        {
-            ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
-        }
-
     }
     #endregion
 
@@ -1327,74 +1299,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         #endregion
-
-        public static void SetNthObjectHasBeenSet(
-            ushort index,
-            bool on,
-            IWeatherSound obj,
-            NotifyingFireParameters cmds = null)
-        {
-            WeatherSound_FieldIndex enu = (WeatherSound_FieldIndex)index;
-            switch (enu)
-            {
-                case WeatherSound_FieldIndex.Sound:
-                case WeatherSound_FieldIndex.Type:
-                    if (on) break;
-                    throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static void UnsetNthObject(
-            ushort index,
-            IWeatherSound obj,
-            NotifyingUnsetParameters cmds = null)
-        {
-            WeatherSound_FieldIndex enu = (WeatherSound_FieldIndex)index;
-            switch (enu)
-            {
-                case WeatherSound_FieldIndex.Sound:
-                    obj.Sound = default(Sound);
-                    break;
-                case WeatherSound_FieldIndex.Type:
-                    obj.Type = default(WeatherSound.SoundType);
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthObjectHasBeenSet(
-            ushort index,
-            IWeatherSound obj)
-        {
-            WeatherSound_FieldIndex enu = (WeatherSound_FieldIndex)index;
-            switch (enu)
-            {
-                case WeatherSound_FieldIndex.Sound:
-                case WeatherSound_FieldIndex.Type:
-                    return true;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static object GetNthObject(
-            ushort index,
-            IWeatherSoundGetter obj)
-        {
-            WeatherSound_FieldIndex enu = (WeatherSound_FieldIndex)index;
-            switch (enu)
-            {
-                case WeatherSound_FieldIndex.Sound:
-                    return obj.Sound;
-                case WeatherSound_FieldIndex.Type:
-                    return obj.Type;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
 
         public static void Clear(
             IWeatherSound item,

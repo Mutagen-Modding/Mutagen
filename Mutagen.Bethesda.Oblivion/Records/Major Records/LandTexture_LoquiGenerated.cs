@@ -151,24 +151,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        #region Loqui Getter Interface
-
-        protected override object GetNthObject(ushort index) => LandTextureCommon.GetNthObject(index, this);
-
-        protected override bool GetNthObjectHasBeenSet(ushort index) => LandTextureCommon.GetNthObjectHasBeenSet(index, this);
-
-        protected override void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => LandTextureCommon.UnsetNthObject(index, this, cmds);
-
-        #endregion
-
-        #region Loqui Interface
-        protected override void SetNthObjectHasBeenSet(ushort index, bool on)
-        {
-            LandTextureCommon.SetNthObjectHasBeenSet(index, on, this);
-        }
-
-        #endregion
-
         IMask<bool> IEqualsMask<LandTexture>.GetEqualsMask(LandTexture rhs, EqualsMaskHelper.Include include) => LandTextureCommon.GetEqualsMask(this, rhs, include);
         IMask<bool> IEqualsMask<ILandTextureGetter>.GetEqualsMask(ILandTextureGetter rhs, EqualsMaskHelper.Include include) => LandTextureCommon.GetEqualsMask(this, rhs, include);
         #region To String
@@ -1322,11 +1304,6 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, LandTexture obj)
-        {
-            ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
-        }
-
     }
     #endregion
 
@@ -1758,99 +1735,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         #endregion
-
-        public static void SetNthObjectHasBeenSet(
-            ushort index,
-            bool on,
-            ILandTexture obj,
-            NotifyingFireParameters cmds = null)
-        {
-            LandTexture_FieldIndex enu = (LandTexture_FieldIndex)index;
-            switch (enu)
-            {
-                case LandTexture_FieldIndex.Icon:
-                    obj.Icon_IsSet = on;
-                    break;
-                case LandTexture_FieldIndex.Havok:
-                    obj.Havok_IsSet = on;
-                    break;
-                case LandTexture_FieldIndex.TextureSpecularExponent:
-                    obj.TextureSpecularExponent_IsSet = on;
-                    break;
-                case LandTexture_FieldIndex.PotentialGrass:
-                    obj.PotentialGrass.HasBeenSet = on;
-                    break;
-                default:
-                    OblivionMajorRecordCommon.SetNthObjectHasBeenSet(index, on, obj);
-                    break;
-            }
-        }
-
-        public static void UnsetNthObject(
-            ushort index,
-            ILandTexture obj,
-            NotifyingUnsetParameters cmds = null)
-        {
-            LandTexture_FieldIndex enu = (LandTexture_FieldIndex)index;
-            switch (enu)
-            {
-                case LandTexture_FieldIndex.Icon:
-                    obj.Icon_Unset();
-                    break;
-                case LandTexture_FieldIndex.Havok:
-                    obj.Havok_Unset();
-                    break;
-                case LandTexture_FieldIndex.TextureSpecularExponent:
-                    obj.TextureSpecularExponent_Unset();
-                    break;
-                case LandTexture_FieldIndex.PotentialGrass:
-                    obj.PotentialGrass.Unset();
-                    break;
-                default:
-                    OblivionMajorRecordCommon.UnsetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public static bool GetNthObjectHasBeenSet(
-            ushort index,
-            ILandTexture obj)
-        {
-            LandTexture_FieldIndex enu = (LandTexture_FieldIndex)index;
-            switch (enu)
-            {
-                case LandTexture_FieldIndex.Icon:
-                    return obj.Icon_IsSet;
-                case LandTexture_FieldIndex.Havok:
-                    return obj.Havok_IsSet;
-                case LandTexture_FieldIndex.TextureSpecularExponent:
-                    return obj.TextureSpecularExponent_IsSet;
-                case LandTexture_FieldIndex.PotentialGrass:
-                    return obj.PotentialGrass.HasBeenSet;
-                default:
-                    return OblivionMajorRecordCommon.GetNthObjectHasBeenSet(index, obj);
-            }
-        }
-
-        public static object GetNthObject(
-            ushort index,
-            ILandTextureGetter obj)
-        {
-            LandTexture_FieldIndex enu = (LandTexture_FieldIndex)index;
-            switch (enu)
-            {
-                case LandTexture_FieldIndex.Icon:
-                    return obj.Icon;
-                case LandTexture_FieldIndex.Havok:
-                    return obj.Havok;
-                case LandTexture_FieldIndex.TextureSpecularExponent:
-                    return obj.TextureSpecularExponent;
-                case LandTexture_FieldIndex.PotentialGrass:
-                    return obj.PotentialGrass;
-                default:
-                    return OblivionMajorRecordCommon.GetNthObject(index, obj);
-            }
-        }
 
         public static void Clear(
             ILandTexture item,

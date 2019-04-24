@@ -136,24 +136,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        #region Loqui Getter Interface
-
-        protected override object GetNthObject(ushort index) => PathGridCommon.GetNthObject(index, this);
-
-        protected override bool GetNthObjectHasBeenSet(ushort index) => PathGridCommon.GetNthObjectHasBeenSet(index, this);
-
-        protected override void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => PathGridCommon.UnsetNthObject(index, this, cmds);
-
-        #endregion
-
-        #region Loqui Interface
-        protected override void SetNthObjectHasBeenSet(ushort index, bool on)
-        {
-            PathGridCommon.SetNthObjectHasBeenSet(index, on, this);
-        }
-
-        #endregion
-
         IMask<bool> IEqualsMask<PathGrid>.GetEqualsMask(PathGrid rhs, EqualsMaskHelper.Include include) => PathGridCommon.GetEqualsMask(this, rhs, include);
         IMask<bool> IEqualsMask<IPathGridGetter>.GetEqualsMask(IPathGridGetter rhs, EqualsMaskHelper.Include include) => PathGridCommon.GetEqualsMask(this, rhs, include);
         #region To String
@@ -1322,11 +1304,6 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, PathGrid obj)
-        {
-            ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
-        }
-
     }
     #endregion
 
@@ -1748,99 +1725,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         #endregion
-
-        public static void SetNthObjectHasBeenSet(
-            ushort index,
-            bool on,
-            IPathGrid obj,
-            NotifyingFireParameters cmds = null)
-        {
-            PathGrid_FieldIndex enu = (PathGrid_FieldIndex)index;
-            switch (enu)
-            {
-                case PathGrid_FieldIndex.PointToPointConnections:
-                    obj.PointToPointConnections.HasBeenSet = on;
-                    break;
-                case PathGrid_FieldIndex.Unknown:
-                    obj.Unknown_IsSet = on;
-                    break;
-                case PathGrid_FieldIndex.InterCellConnections:
-                    obj.InterCellConnections.HasBeenSet = on;
-                    break;
-                case PathGrid_FieldIndex.PointToReferenceMappings:
-                    obj.PointToReferenceMappings.HasBeenSet = on;
-                    break;
-                default:
-                    OblivionMajorRecordCommon.SetNthObjectHasBeenSet(index, on, obj);
-                    break;
-            }
-        }
-
-        public static void UnsetNthObject(
-            ushort index,
-            IPathGrid obj,
-            NotifyingUnsetParameters cmds = null)
-        {
-            PathGrid_FieldIndex enu = (PathGrid_FieldIndex)index;
-            switch (enu)
-            {
-                case PathGrid_FieldIndex.PointToPointConnections:
-                    obj.PointToPointConnections.Unset();
-                    break;
-                case PathGrid_FieldIndex.Unknown:
-                    obj.Unknown_Unset();
-                    break;
-                case PathGrid_FieldIndex.InterCellConnections:
-                    obj.InterCellConnections.Unset();
-                    break;
-                case PathGrid_FieldIndex.PointToReferenceMappings:
-                    obj.PointToReferenceMappings.Unset();
-                    break;
-                default:
-                    OblivionMajorRecordCommon.UnsetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public static bool GetNthObjectHasBeenSet(
-            ushort index,
-            IPathGrid obj)
-        {
-            PathGrid_FieldIndex enu = (PathGrid_FieldIndex)index;
-            switch (enu)
-            {
-                case PathGrid_FieldIndex.PointToPointConnections:
-                    return obj.PointToPointConnections.HasBeenSet;
-                case PathGrid_FieldIndex.Unknown:
-                    return obj.Unknown_IsSet;
-                case PathGrid_FieldIndex.InterCellConnections:
-                    return obj.InterCellConnections.HasBeenSet;
-                case PathGrid_FieldIndex.PointToReferenceMappings:
-                    return obj.PointToReferenceMappings.HasBeenSet;
-                default:
-                    return OblivionMajorRecordCommon.GetNthObjectHasBeenSet(index, obj);
-            }
-        }
-
-        public static object GetNthObject(
-            ushort index,
-            IPathGridGetter obj)
-        {
-            PathGrid_FieldIndex enu = (PathGrid_FieldIndex)index;
-            switch (enu)
-            {
-                case PathGrid_FieldIndex.PointToPointConnections:
-                    return obj.PointToPointConnections;
-                case PathGrid_FieldIndex.Unknown:
-                    return obj.Unknown;
-                case PathGrid_FieldIndex.InterCellConnections:
-                    return obj.InterCellConnections;
-                case PathGrid_FieldIndex.PointToReferenceMappings:
-                    return obj.PointToReferenceMappings;
-                default:
-                    return OblivionMajorRecordCommon.GetNthObject(index, obj);
-            }
-        }
 
         public static void Clear(
             IPathGrid item,

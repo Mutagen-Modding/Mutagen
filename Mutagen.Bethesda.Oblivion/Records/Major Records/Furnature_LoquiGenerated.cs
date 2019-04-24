@@ -140,24 +140,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        #region Loqui Getter Interface
-
-        protected override object GetNthObject(ushort index) => FurnatureCommon.GetNthObject(index, this);
-
-        protected override bool GetNthObjectHasBeenSet(ushort index) => FurnatureCommon.GetNthObjectHasBeenSet(index, this);
-
-        protected override void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => FurnatureCommon.UnsetNthObject(index, this, cmds);
-
-        #endregion
-
-        #region Loqui Interface
-        protected override void SetNthObjectHasBeenSet(ushort index, bool on)
-        {
-            FurnatureCommon.SetNthObjectHasBeenSet(index, on, this);
-        }
-
-        #endregion
-
         IMask<bool> IEqualsMask<Furnature>.GetEqualsMask(Furnature rhs, EqualsMaskHelper.Include include) => FurnatureCommon.GetEqualsMask(this, rhs, include);
         IMask<bool> IEqualsMask<IFurnatureGetter>.GetEqualsMask(IFurnatureGetter rhs, EqualsMaskHelper.Include include) => FurnatureCommon.GetEqualsMask(this, rhs, include);
         #region To String
@@ -1307,11 +1289,6 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, Furnature obj)
-        {
-            ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
-        }
-
     }
     #endregion
 
@@ -1745,99 +1722,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         #endregion
-
-        public static void SetNthObjectHasBeenSet(
-            ushort index,
-            bool on,
-            IFurnature obj,
-            NotifyingFireParameters cmds = null)
-        {
-            Furnature_FieldIndex enu = (Furnature_FieldIndex)index;
-            switch (enu)
-            {
-                case Furnature_FieldIndex.Name:
-                    obj.Name_IsSet = on;
-                    break;
-                case Furnature_FieldIndex.Model:
-                    obj.Model_IsSet = on;
-                    break;
-                case Furnature_FieldIndex.Script:
-                    obj.Script_Property.HasBeenSet = on;
-                    break;
-                case Furnature_FieldIndex.MarkerFlags:
-                    obj.MarkerFlags_IsSet = on;
-                    break;
-                default:
-                    OblivionMajorRecordCommon.SetNthObjectHasBeenSet(index, on, obj);
-                    break;
-            }
-        }
-
-        public static void UnsetNthObject(
-            ushort index,
-            IFurnature obj,
-            NotifyingUnsetParameters cmds = null)
-        {
-            Furnature_FieldIndex enu = (Furnature_FieldIndex)index;
-            switch (enu)
-            {
-                case Furnature_FieldIndex.Name:
-                    obj.Name_Unset();
-                    break;
-                case Furnature_FieldIndex.Model:
-                    obj.Model_Unset();
-                    break;
-                case Furnature_FieldIndex.Script:
-                    obj.Script_Property.Unset(cmds);
-                    break;
-                case Furnature_FieldIndex.MarkerFlags:
-                    obj.MarkerFlags_Unset();
-                    break;
-                default:
-                    OblivionMajorRecordCommon.UnsetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public static bool GetNthObjectHasBeenSet(
-            ushort index,
-            IFurnature obj)
-        {
-            Furnature_FieldIndex enu = (Furnature_FieldIndex)index;
-            switch (enu)
-            {
-                case Furnature_FieldIndex.Name:
-                    return obj.Name_IsSet;
-                case Furnature_FieldIndex.Model:
-                    return obj.Model_IsSet;
-                case Furnature_FieldIndex.Script:
-                    return obj.Script_Property.HasBeenSet;
-                case Furnature_FieldIndex.MarkerFlags:
-                    return obj.MarkerFlags_IsSet;
-                default:
-                    return OblivionMajorRecordCommon.GetNthObjectHasBeenSet(index, obj);
-            }
-        }
-
-        public static object GetNthObject(
-            ushort index,
-            IFurnatureGetter obj)
-        {
-            Furnature_FieldIndex enu = (Furnature_FieldIndex)index;
-            switch (enu)
-            {
-                case Furnature_FieldIndex.Name:
-                    return obj.Name;
-                case Furnature_FieldIndex.Model:
-                    return obj.Model;
-                case Furnature_FieldIndex.Script:
-                    return obj.Script;
-                case Furnature_FieldIndex.MarkerFlags:
-                    return obj.MarkerFlags;
-                default:
-                    return OblivionMajorRecordCommon.GetNthObject(index, obj);
-            }
-        }
 
         public static void Clear(
             IFurnature item,

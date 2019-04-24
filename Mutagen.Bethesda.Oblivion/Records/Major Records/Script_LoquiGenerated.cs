@@ -62,24 +62,6 @@ namespace Mutagen.Bethesda.Oblivion
         ScriptFields IScriptGetter.Fields => this.Fields;
         #endregion
 
-        #region Loqui Getter Interface
-
-        protected override object GetNthObject(ushort index) => ScriptCommon.GetNthObject(index, this);
-
-        protected override bool GetNthObjectHasBeenSet(ushort index) => ScriptCommon.GetNthObjectHasBeenSet(index, this);
-
-        protected override void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => ScriptCommon.UnsetNthObject(index, this, cmds);
-
-        #endregion
-
-        #region Loqui Interface
-        protected override void SetNthObjectHasBeenSet(ushort index, bool on)
-        {
-            ScriptCommon.SetNthObjectHasBeenSet(index, on, this);
-        }
-
-        #endregion
-
         IMask<bool> IEqualsMask<Script>.GetEqualsMask(Script rhs, EqualsMaskHelper.Include include) => ScriptCommon.GetEqualsMask(this, rhs, include);
         IMask<bool> IEqualsMask<IScriptGetter>.GetEqualsMask(IScriptGetter rhs, EqualsMaskHelper.Include include) => ScriptCommon.GetEqualsMask(this, rhs, include);
         #region To String
@@ -1140,11 +1122,6 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, Script obj)
-        {
-            ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
-        }
-
     }
     #endregion
 
@@ -1401,67 +1378,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         #endregion
-
-        public static void SetNthObjectHasBeenSet(
-            ushort index,
-            bool on,
-            IScript obj,
-            NotifyingFireParameters cmds = null)
-        {
-            Script_FieldIndex enu = (Script_FieldIndex)index;
-            switch (enu)
-            {
-                case Script_FieldIndex.Fields:
-                    throw new ArgumentException("Tried to set at a readonly index " + index);
-                default:
-                    OblivionMajorRecordCommon.SetNthObjectHasBeenSet(index, on, obj);
-                    break;
-            }
-        }
-
-        public static void UnsetNthObject(
-            ushort index,
-            IScript obj,
-            NotifyingUnsetParameters cmds = null)
-        {
-            Script_FieldIndex enu = (Script_FieldIndex)index;
-            switch (enu)
-            {
-                case Script_FieldIndex.Fields:
-                    throw new ArgumentException("Tried to set at a readonly index " + index);
-                default:
-                    OblivionMajorRecordCommon.UnsetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public static bool GetNthObjectHasBeenSet(
-            ushort index,
-            IScript obj)
-        {
-            Script_FieldIndex enu = (Script_FieldIndex)index;
-            switch (enu)
-            {
-                case Script_FieldIndex.Fields:
-                    return obj.Fields_IsSet;
-                default:
-                    return OblivionMajorRecordCommon.GetNthObjectHasBeenSet(index, obj);
-            }
-        }
-
-        public static object GetNthObject(
-            ushort index,
-            IScriptGetter obj)
-        {
-            Script_FieldIndex enu = (Script_FieldIndex)index;
-            switch (enu)
-            {
-                case Script_FieldIndex.Fields:
-                    return obj.Fields;
-                default:
-                    return OblivionMajorRecordCommon.GetNthObject(index, obj);
-            }
-        }
 
         public static void Clear(
             IScript item,

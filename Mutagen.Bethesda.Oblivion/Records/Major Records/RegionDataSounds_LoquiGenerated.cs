@@ -97,24 +97,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        #region Loqui Getter Interface
-
-        protected override object GetNthObject(ushort index) => RegionDataSoundsCommon.GetNthObject(index, this);
-
-        protected override bool GetNthObjectHasBeenSet(ushort index) => RegionDataSoundsCommon.GetNthObjectHasBeenSet(index, this);
-
-        protected override void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => RegionDataSoundsCommon.UnsetNthObject(index, this, cmds);
-
-        #endregion
-
-        #region Loqui Interface
-        protected override void SetNthObjectHasBeenSet(ushort index, bool on)
-        {
-            RegionDataSoundsCommon.SetNthObjectHasBeenSet(index, on, this);
-        }
-
-        #endregion
-
         IMask<bool> IEqualsMask<RegionDataSounds>.GetEqualsMask(RegionDataSounds rhs, EqualsMaskHelper.Include include) => RegionDataSoundsCommon.GetEqualsMask(this, rhs, include);
         IMask<bool> IEqualsMask<IRegionDataSoundsGetter>.GetEqualsMask(IRegionDataSoundsGetter rhs, EqualsMaskHelper.Include include) => RegionDataSoundsCommon.GetEqualsMask(this, rhs, include);
         #region To String
@@ -1142,11 +1124,6 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, RegionDataSounds obj)
-        {
-            ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
-        }
-
     }
     #endregion
 
@@ -1462,79 +1439,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         #endregion
-
-        public static void SetNthObjectHasBeenSet(
-            ushort index,
-            bool on,
-            IRegionDataSounds obj,
-            NotifyingFireParameters cmds = null)
-        {
-            RegionDataSounds_FieldIndex enu = (RegionDataSounds_FieldIndex)index;
-            switch (enu)
-            {
-                case RegionDataSounds_FieldIndex.MusicType:
-                    obj.MusicType_IsSet = on;
-                    break;
-                case RegionDataSounds_FieldIndex.Sounds:
-                    obj.Sounds.HasBeenSet = on;
-                    break;
-                default:
-                    RegionDataCommon.SetNthObjectHasBeenSet(index, on, obj);
-                    break;
-            }
-        }
-
-        public static void UnsetNthObject(
-            ushort index,
-            IRegionDataSounds obj,
-            NotifyingUnsetParameters cmds = null)
-        {
-            RegionDataSounds_FieldIndex enu = (RegionDataSounds_FieldIndex)index;
-            switch (enu)
-            {
-                case RegionDataSounds_FieldIndex.MusicType:
-                    obj.MusicType_Unset();
-                    break;
-                case RegionDataSounds_FieldIndex.Sounds:
-                    obj.Sounds.Unset();
-                    break;
-                default:
-                    RegionDataCommon.UnsetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public static bool GetNthObjectHasBeenSet(
-            ushort index,
-            IRegionDataSounds obj)
-        {
-            RegionDataSounds_FieldIndex enu = (RegionDataSounds_FieldIndex)index;
-            switch (enu)
-            {
-                case RegionDataSounds_FieldIndex.MusicType:
-                    return obj.MusicType_IsSet;
-                case RegionDataSounds_FieldIndex.Sounds:
-                    return obj.Sounds.HasBeenSet;
-                default:
-                    return RegionDataCommon.GetNthObjectHasBeenSet(index, obj);
-            }
-        }
-
-        public static object GetNthObject(
-            ushort index,
-            IRegionDataSoundsGetter obj)
-        {
-            RegionDataSounds_FieldIndex enu = (RegionDataSounds_FieldIndex)index;
-            switch (enu)
-            {
-                case RegionDataSounds_FieldIndex.MusicType:
-                    return obj.MusicType;
-                case RegionDataSounds_FieldIndex.Sounds:
-                    return obj.Sounds;
-                default:
-                    return RegionDataCommon.GetNthObject(index, obj);
-            }
-        }
 
         public static void Clear(
             IRegionDataSounds item,

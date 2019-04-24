@@ -124,24 +124,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        #region Loqui Getter Interface
-
-        protected override object GetNthObject(ushort index) => LoadScreenCommon.GetNthObject(index, this);
-
-        protected override bool GetNthObjectHasBeenSet(ushort index) => LoadScreenCommon.GetNthObjectHasBeenSet(index, this);
-
-        protected override void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => LoadScreenCommon.UnsetNthObject(index, this, cmds);
-
-        #endregion
-
-        #region Loqui Interface
-        protected override void SetNthObjectHasBeenSet(ushort index, bool on)
-        {
-            LoadScreenCommon.SetNthObjectHasBeenSet(index, on, this);
-        }
-
-        #endregion
-
         IMask<bool> IEqualsMask<LoadScreen>.GetEqualsMask(LoadScreen rhs, EqualsMaskHelper.Include include) => LoadScreenCommon.GetEqualsMask(this, rhs, include);
         IMask<bool> IEqualsMask<ILoadScreenGetter>.GetEqualsMask(ILoadScreenGetter rhs, EqualsMaskHelper.Include include) => LoadScreenCommon.GetEqualsMask(this, rhs, include);
         #region To String
@@ -1260,11 +1242,6 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, LoadScreen obj)
-        {
-            ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
-        }
-
     }
     #endregion
 
@@ -1635,89 +1612,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         #endregion
-
-        public static void SetNthObjectHasBeenSet(
-            ushort index,
-            bool on,
-            ILoadScreen obj,
-            NotifyingFireParameters cmds = null)
-        {
-            LoadScreen_FieldIndex enu = (LoadScreen_FieldIndex)index;
-            switch (enu)
-            {
-                case LoadScreen_FieldIndex.Icon:
-                    obj.Icon_IsSet = on;
-                    break;
-                case LoadScreen_FieldIndex.Description:
-                    obj.Description_IsSet = on;
-                    break;
-                case LoadScreen_FieldIndex.Locations:
-                    obj.Locations.HasBeenSet = on;
-                    break;
-                default:
-                    OblivionMajorRecordCommon.SetNthObjectHasBeenSet(index, on, obj);
-                    break;
-            }
-        }
-
-        public static void UnsetNthObject(
-            ushort index,
-            ILoadScreen obj,
-            NotifyingUnsetParameters cmds = null)
-        {
-            LoadScreen_FieldIndex enu = (LoadScreen_FieldIndex)index;
-            switch (enu)
-            {
-                case LoadScreen_FieldIndex.Icon:
-                    obj.Icon_Unset();
-                    break;
-                case LoadScreen_FieldIndex.Description:
-                    obj.Description_Unset();
-                    break;
-                case LoadScreen_FieldIndex.Locations:
-                    obj.Locations.Unset();
-                    break;
-                default:
-                    OblivionMajorRecordCommon.UnsetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public static bool GetNthObjectHasBeenSet(
-            ushort index,
-            ILoadScreen obj)
-        {
-            LoadScreen_FieldIndex enu = (LoadScreen_FieldIndex)index;
-            switch (enu)
-            {
-                case LoadScreen_FieldIndex.Icon:
-                    return obj.Icon_IsSet;
-                case LoadScreen_FieldIndex.Description:
-                    return obj.Description_IsSet;
-                case LoadScreen_FieldIndex.Locations:
-                    return obj.Locations.HasBeenSet;
-                default:
-                    return OblivionMajorRecordCommon.GetNthObjectHasBeenSet(index, obj);
-            }
-        }
-
-        public static object GetNthObject(
-            ushort index,
-            ILoadScreenGetter obj)
-        {
-            LoadScreen_FieldIndex enu = (LoadScreen_FieldIndex)index;
-            switch (enu)
-            {
-                case LoadScreen_FieldIndex.Icon:
-                    return obj.Icon;
-                case LoadScreen_FieldIndex.Description:
-                    return obj.Description;
-                case LoadScreen_FieldIndex.Locations:
-                    return obj.Locations;
-                default:
-                    return OblivionMajorRecordCommon.GetNthObject(index, obj);
-            }
-        }
 
         public static void Clear(
             ILoadScreen item,

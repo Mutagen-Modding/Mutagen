@@ -124,24 +124,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        #region Loqui Getter Interface
-
-        protected override object GetNthObject(ushort index) => LeveledItemCommon.GetNthObject(index, this);
-
-        protected override bool GetNthObjectHasBeenSet(ushort index) => LeveledItemCommon.GetNthObjectHasBeenSet(index, this);
-
-        protected override void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => LeveledItemCommon.UnsetNthObject(index, this, cmds);
-
-        #endregion
-
-        #region Loqui Interface
-        protected override void SetNthObjectHasBeenSet(ushort index, bool on)
-        {
-            LeveledItemCommon.SetNthObjectHasBeenSet(index, on, this);
-        }
-
-        #endregion
-
         IMask<bool> IEqualsMask<LeveledItem>.GetEqualsMask(LeveledItem rhs, EqualsMaskHelper.Include include) => LeveledItemCommon.GetEqualsMask(this, rhs, include);
         IMask<bool> IEqualsMask<ILeveledItemGetter>.GetEqualsMask(ILeveledItemGetter rhs, EqualsMaskHelper.Include include) => LeveledItemCommon.GetEqualsMask(this, rhs, include);
         #region To String
@@ -1329,11 +1311,6 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, LeveledItem obj)
-        {
-            ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
-        }
-
     }
     #endregion
 
@@ -1705,89 +1682,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         #endregion
-
-        public static void SetNthObjectHasBeenSet(
-            ushort index,
-            bool on,
-            ILeveledItem obj,
-            NotifyingFireParameters cmds = null)
-        {
-            LeveledItem_FieldIndex enu = (LeveledItem_FieldIndex)index;
-            switch (enu)
-            {
-                case LeveledItem_FieldIndex.ChanceNone:
-                    obj.ChanceNone_IsSet = on;
-                    break;
-                case LeveledItem_FieldIndex.Flags:
-                    obj.Flags_IsSet = on;
-                    break;
-                case LeveledItem_FieldIndex.Entries:
-                    obj.Entries.HasBeenSet = on;
-                    break;
-                default:
-                    ItemAbstractCommon.SetNthObjectHasBeenSet(index, on, obj);
-                    break;
-            }
-        }
-
-        public static void UnsetNthObject(
-            ushort index,
-            ILeveledItem obj,
-            NotifyingUnsetParameters cmds = null)
-        {
-            LeveledItem_FieldIndex enu = (LeveledItem_FieldIndex)index;
-            switch (enu)
-            {
-                case LeveledItem_FieldIndex.ChanceNone:
-                    obj.ChanceNone_Unset();
-                    break;
-                case LeveledItem_FieldIndex.Flags:
-                    obj.Flags_Unset();
-                    break;
-                case LeveledItem_FieldIndex.Entries:
-                    obj.Entries.Unset();
-                    break;
-                default:
-                    ItemAbstractCommon.UnsetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public static bool GetNthObjectHasBeenSet(
-            ushort index,
-            ILeveledItem obj)
-        {
-            LeveledItem_FieldIndex enu = (LeveledItem_FieldIndex)index;
-            switch (enu)
-            {
-                case LeveledItem_FieldIndex.ChanceNone:
-                    return obj.ChanceNone_IsSet;
-                case LeveledItem_FieldIndex.Flags:
-                    return obj.Flags_IsSet;
-                case LeveledItem_FieldIndex.Entries:
-                    return obj.Entries.HasBeenSet;
-                default:
-                    return ItemAbstractCommon.GetNthObjectHasBeenSet(index, obj);
-            }
-        }
-
-        public static object GetNthObject(
-            ushort index,
-            ILeveledItemGetter obj)
-        {
-            LeveledItem_FieldIndex enu = (LeveledItem_FieldIndex)index;
-            switch (enu)
-            {
-                case LeveledItem_FieldIndex.ChanceNone:
-                    return obj.ChanceNone;
-                case LeveledItem_FieldIndex.Flags:
-                    return obj.Flags;
-                case LeveledItem_FieldIndex.Entries:
-                    return obj.Entries;
-                default:
-                    return ItemAbstractCommon.GetNthObject(index, obj);
-            }
-        }
 
         public static void Clear(
             ILeveledItem item,

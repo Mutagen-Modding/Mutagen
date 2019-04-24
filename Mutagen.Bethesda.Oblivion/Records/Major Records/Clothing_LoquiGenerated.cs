@@ -75,24 +75,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        #region Loqui Getter Interface
-
-        protected override object GetNthObject(ushort index) => ClothingCommon.GetNthObject(index, this);
-
-        protected override bool GetNthObjectHasBeenSet(ushort index) => ClothingCommon.GetNthObjectHasBeenSet(index, this);
-
-        protected override void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => ClothingCommon.UnsetNthObject(index, this, cmds);
-
-        #endregion
-
-        #region Loqui Interface
-        protected override void SetNthObjectHasBeenSet(ushort index, bool on)
-        {
-            ClothingCommon.SetNthObjectHasBeenSet(index, on, this);
-        }
-
-        #endregion
-
         IMask<bool> IEqualsMask<Clothing>.GetEqualsMask(Clothing rhs, EqualsMaskHelper.Include include) => ClothingCommon.GetEqualsMask(this, rhs, include);
         IMask<bool> IEqualsMask<IClothingGetter>.GetEqualsMask(IClothingGetter rhs, EqualsMaskHelper.Include include) => ClothingCommon.GetEqualsMask(this, rhs, include);
         #region To String
@@ -1234,11 +1216,6 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, Clothing obj)
-        {
-            ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
-        }
-
     }
     #endregion
 
@@ -1532,76 +1509,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         #endregion
-
-        public static void SetNthObjectHasBeenSet(
-            ushort index,
-            bool on,
-            IClothing obj,
-            NotifyingFireParameters cmds = null)
-        {
-            Clothing_FieldIndex enu = (Clothing_FieldIndex)index;
-            switch (enu)
-            {
-                case Clothing_FieldIndex.Value:
-                case Clothing_FieldIndex.Weight:
-                    if (on) break;
-                    throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
-                default:
-                    ClothingAbstractCommon.SetNthObjectHasBeenSet(index, on, obj);
-                    break;
-            }
-        }
-
-        public static void UnsetNthObject(
-            ushort index,
-            IClothing obj,
-            NotifyingUnsetParameters cmds = null)
-        {
-            Clothing_FieldIndex enu = (Clothing_FieldIndex)index;
-            switch (enu)
-            {
-                case Clothing_FieldIndex.Value:
-                    obj.Value = default(UInt32);
-                    break;
-                case Clothing_FieldIndex.Weight:
-                    obj.Weight = default(Single);
-                    break;
-                default:
-                    ClothingAbstractCommon.UnsetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public static bool GetNthObjectHasBeenSet(
-            ushort index,
-            IClothing obj)
-        {
-            Clothing_FieldIndex enu = (Clothing_FieldIndex)index;
-            switch (enu)
-            {
-                case Clothing_FieldIndex.Value:
-                case Clothing_FieldIndex.Weight:
-                    return true;
-                default:
-                    return ClothingAbstractCommon.GetNthObjectHasBeenSet(index, obj);
-            }
-        }
-
-        public static object GetNthObject(
-            ushort index,
-            IClothingGetter obj)
-        {
-            Clothing_FieldIndex enu = (Clothing_FieldIndex)index;
-            switch (enu)
-            {
-                case Clothing_FieldIndex.Value:
-                    return obj.Value;
-                case Clothing_FieldIndex.Weight:
-                    return obj.Weight;
-                default:
-                    return ClothingAbstractCommon.GetNthObject(index, obj);
-            }
-        }
 
         public static void Clear(
             IClothing item,

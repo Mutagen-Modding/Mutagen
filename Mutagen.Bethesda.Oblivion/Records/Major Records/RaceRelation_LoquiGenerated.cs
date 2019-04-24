@@ -65,28 +65,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        #region Loqui Getter Interface
-
-        protected object GetNthObject(ushort index) => RaceRelationCommon.GetNthObject(index, this);
-        object ILoquiObjectGetter.GetNthObject(ushort index) => this.GetNthObject(index);
-
-        protected bool GetNthObjectHasBeenSet(ushort index) => RaceRelationCommon.GetNthObjectHasBeenSet(index, this);
-        bool ILoquiObjectGetter.GetNthObjectHasBeenSet(ushort index) => this.GetNthObjectHasBeenSet(index);
-
-        protected void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => RaceRelationCommon.UnsetNthObject(index, this, cmds);
-        void ILoquiObjectSetter.UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => this.UnsetNthObject(index, cmds);
-
-        #endregion
-
-        #region Loqui Interface
-        protected void SetNthObjectHasBeenSet(ushort index, bool on)
-        {
-            RaceRelationCommon.SetNthObjectHasBeenSet(index, on, this);
-        }
-        void ILoquiObjectSetter.SetNthObjectHasBeenSet(ushort index, bool on) => this.SetNthObjectHasBeenSet(index, on);
-
-        #endregion
-
         IMask<bool> IEqualsMask<RaceRelation>.GetEqualsMask(RaceRelation rhs, EqualsMaskHelper.Include include) => RaceRelationCommon.GetEqualsMask(this, rhs, include);
         IMask<bool> IEqualsMask<IRaceRelationGetter>.GetEqualsMask(IRaceRelationGetter rhs, EqualsMaskHelper.Include include) => RaceRelationCommon.GetEqualsMask(this, rhs, include);
         #region To String
@@ -989,7 +967,6 @@ namespace Mutagen.Bethesda.Oblivion
                 cmds: cmds);
         }
 
-        void ILoquiObjectSetter.SetNthObject(ushort index, object obj, NotifyingFireParameters cmds) => this.SetNthObject(index, obj, cmds);
         protected void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
         {
             RaceRelation_FieldIndex enu = (RaceRelation_FieldIndex)index;
@@ -1052,11 +1029,6 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, RaceRelation obj)
-        {
-            ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
-        }
-
     }
     #endregion
 
@@ -1327,74 +1299,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         #endregion
-
-        public static void SetNthObjectHasBeenSet(
-            ushort index,
-            bool on,
-            IRaceRelation obj,
-            NotifyingFireParameters cmds = null)
-        {
-            RaceRelation_FieldIndex enu = (RaceRelation_FieldIndex)index;
-            switch (enu)
-            {
-                case RaceRelation_FieldIndex.Race:
-                case RaceRelation_FieldIndex.Modifier:
-                    if (on) break;
-                    throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static void UnsetNthObject(
-            ushort index,
-            IRaceRelation obj,
-            NotifyingUnsetParameters cmds = null)
-        {
-            RaceRelation_FieldIndex enu = (RaceRelation_FieldIndex)index;
-            switch (enu)
-            {
-                case RaceRelation_FieldIndex.Race:
-                    obj.Race = default(Race);
-                    break;
-                case RaceRelation_FieldIndex.Modifier:
-                    obj.Modifier = default(Int32);
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthObjectHasBeenSet(
-            ushort index,
-            IRaceRelation obj)
-        {
-            RaceRelation_FieldIndex enu = (RaceRelation_FieldIndex)index;
-            switch (enu)
-            {
-                case RaceRelation_FieldIndex.Race:
-                case RaceRelation_FieldIndex.Modifier:
-                    return true;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static object GetNthObject(
-            ushort index,
-            IRaceRelationGetter obj)
-        {
-            RaceRelation_FieldIndex enu = (RaceRelation_FieldIndex)index;
-            switch (enu)
-            {
-                case RaceRelation_FieldIndex.Race:
-                    return obj.Race;
-                case RaceRelation_FieldIndex.Modifier:
-                    return obj.Modifier;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
 
         public static void Clear(
             IRaceRelation item,

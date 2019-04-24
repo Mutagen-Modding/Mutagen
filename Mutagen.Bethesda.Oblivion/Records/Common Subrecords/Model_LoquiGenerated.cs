@@ -94,28 +94,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        #region Loqui Getter Interface
-
-        protected object GetNthObject(ushort index) => ModelCommon.GetNthObject(index, this);
-        object ILoquiObjectGetter.GetNthObject(ushort index) => this.GetNthObject(index);
-
-        protected bool GetNthObjectHasBeenSet(ushort index) => ModelCommon.GetNthObjectHasBeenSet(index, this);
-        bool ILoquiObjectGetter.GetNthObjectHasBeenSet(ushort index) => this.GetNthObjectHasBeenSet(index);
-
-        protected void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => ModelCommon.UnsetNthObject(index, this, cmds);
-        void ILoquiObjectSetter.UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => this.UnsetNthObject(index, cmds);
-
-        #endregion
-
-        #region Loqui Interface
-        protected void SetNthObjectHasBeenSet(ushort index, bool on)
-        {
-            ModelCommon.SetNthObjectHasBeenSet(index, on, this);
-        }
-        void ILoquiObjectSetter.SetNthObjectHasBeenSet(ushort index, bool on) => this.SetNthObjectHasBeenSet(index, on);
-
-        #endregion
-
         IMask<bool> IEqualsMask<Model>.GetEqualsMask(Model rhs, EqualsMaskHelper.Include include) => ModelCommon.GetEqualsMask(this, rhs, include);
         IMask<bool> IEqualsMask<IModelGetter>.GetEqualsMask(IModelGetter rhs, EqualsMaskHelper.Include include) => ModelCommon.GetEqualsMask(this, rhs, include);
         #region To String
@@ -1092,7 +1070,6 @@ namespace Mutagen.Bethesda.Oblivion
                 cmds: cmds);
         }
 
-        void ILoquiObjectSetter.SetNthObject(ushort index, object obj, NotifyingFireParameters cmds) => this.SetNthObject(index, obj, cmds);
         protected void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
         {
             Model_FieldIndex enu = (Model_FieldIndex)index;
@@ -1157,11 +1134,6 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, Model obj)
-        {
-            ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
-        }
-
     }
     #endregion
 
@@ -1484,84 +1456,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         #endregion
-
-        public static void SetNthObjectHasBeenSet(
-            ushort index,
-            bool on,
-            IModel obj,
-            NotifyingFireParameters cmds = null)
-        {
-            Model_FieldIndex enu = (Model_FieldIndex)index;
-            switch (enu)
-            {
-                case Model_FieldIndex.File:
-                case Model_FieldIndex.BoundRadius:
-                    if (on) break;
-                    throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
-                case Model_FieldIndex.Hashes:
-                    obj.Hashes_IsSet = on;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static void UnsetNthObject(
-            ushort index,
-            IModel obj,
-            NotifyingUnsetParameters cmds = null)
-        {
-            Model_FieldIndex enu = (Model_FieldIndex)index;
-            switch (enu)
-            {
-                case Model_FieldIndex.File:
-                    obj.File = default(String);
-                    break;
-                case Model_FieldIndex.BoundRadius:
-                    obj.BoundRadius = default(Single);
-                    break;
-                case Model_FieldIndex.Hashes:
-                    obj.Hashes_Unset();
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthObjectHasBeenSet(
-            ushort index,
-            IModel obj)
-        {
-            Model_FieldIndex enu = (Model_FieldIndex)index;
-            switch (enu)
-            {
-                case Model_FieldIndex.File:
-                case Model_FieldIndex.BoundRadius:
-                    return true;
-                case Model_FieldIndex.Hashes:
-                    return obj.Hashes_IsSet;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static object GetNthObject(
-            ushort index,
-            IModelGetter obj)
-        {
-            Model_FieldIndex enu = (Model_FieldIndex)index;
-            switch (enu)
-            {
-                case Model_FieldIndex.File:
-                    return obj.File;
-                case Model_FieldIndex.BoundRadius:
-                    return obj.BoundRadius;
-                case Model_FieldIndex.Hashes:
-                    return obj.Hashes;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
 
         public static void Clear(
             IModel item,

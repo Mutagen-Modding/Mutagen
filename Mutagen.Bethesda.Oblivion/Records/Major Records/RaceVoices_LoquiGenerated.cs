@@ -62,28 +62,6 @@ namespace Mutagen.Bethesda.Oblivion
         FormIDLink<Race> IRaceVoicesGetter.Female_Property => this.Female_Property;
         #endregion
 
-        #region Loqui Getter Interface
-
-        protected object GetNthObject(ushort index) => RaceVoicesCommon.GetNthObject(index, this);
-        object ILoquiObjectGetter.GetNthObject(ushort index) => this.GetNthObject(index);
-
-        protected bool GetNthObjectHasBeenSet(ushort index) => RaceVoicesCommon.GetNthObjectHasBeenSet(index, this);
-        bool ILoquiObjectGetter.GetNthObjectHasBeenSet(ushort index) => this.GetNthObjectHasBeenSet(index);
-
-        protected void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => RaceVoicesCommon.UnsetNthObject(index, this, cmds);
-        void ILoquiObjectSetter.UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => this.UnsetNthObject(index, cmds);
-
-        #endregion
-
-        #region Loqui Interface
-        protected void SetNthObjectHasBeenSet(ushort index, bool on)
-        {
-            RaceVoicesCommon.SetNthObjectHasBeenSet(index, on, this);
-        }
-        void ILoquiObjectSetter.SetNthObjectHasBeenSet(ushort index, bool on) => this.SetNthObjectHasBeenSet(index, on);
-
-        #endregion
-
         IMask<bool> IEqualsMask<RaceVoices>.GetEqualsMask(RaceVoices rhs, EqualsMaskHelper.Include include) => RaceVoicesCommon.GetEqualsMask(this, rhs, include);
         IMask<bool> IEqualsMask<IRaceVoicesGetter>.GetEqualsMask(IRaceVoicesGetter rhs, EqualsMaskHelper.Include include) => RaceVoicesCommon.GetEqualsMask(this, rhs, include);
         #region To String
@@ -960,7 +938,6 @@ namespace Mutagen.Bethesda.Oblivion
                 cmds: cmds);
         }
 
-        void ILoquiObjectSetter.SetNthObject(ushort index, object obj, NotifyingFireParameters cmds) => this.SetNthObject(index, obj, cmds);
         protected void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
         {
             RaceVoices_FieldIndex enu = (RaceVoices_FieldIndex)index;
@@ -1027,11 +1004,6 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, RaceVoices obj)
-        {
-            ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
-        }
-
     }
     #endregion
 
@@ -1304,74 +1276,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         #endregion
-
-        public static void SetNthObjectHasBeenSet(
-            ushort index,
-            bool on,
-            IRaceVoices obj,
-            NotifyingFireParameters cmds = null)
-        {
-            RaceVoices_FieldIndex enu = (RaceVoices_FieldIndex)index;
-            switch (enu)
-            {
-                case RaceVoices_FieldIndex.Male:
-                case RaceVoices_FieldIndex.Female:
-                    if (on) break;
-                    throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static void UnsetNthObject(
-            ushort index,
-            IRaceVoices obj,
-            NotifyingUnsetParameters cmds = null)
-        {
-            RaceVoices_FieldIndex enu = (RaceVoices_FieldIndex)index;
-            switch (enu)
-            {
-                case RaceVoices_FieldIndex.Male:
-                    obj.Male = default(Race);
-                    break;
-                case RaceVoices_FieldIndex.Female:
-                    obj.Female = default(Race);
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthObjectHasBeenSet(
-            ushort index,
-            IRaceVoices obj)
-        {
-            RaceVoices_FieldIndex enu = (RaceVoices_FieldIndex)index;
-            switch (enu)
-            {
-                case RaceVoices_FieldIndex.Male:
-                case RaceVoices_FieldIndex.Female:
-                    return true;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static object GetNthObject(
-            ushort index,
-            IRaceVoicesGetter obj)
-        {
-            RaceVoices_FieldIndex enu = (RaceVoices_FieldIndex)index;
-            switch (enu)
-            {
-                case RaceVoices_FieldIndex.Male:
-                    return obj.Male;
-                case RaceVoices_FieldIndex.Female:
-                    return obj.Female;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
 
         public static void Clear(
             IRaceVoices item,

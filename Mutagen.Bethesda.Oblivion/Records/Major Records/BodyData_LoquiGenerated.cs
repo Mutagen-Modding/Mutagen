@@ -98,28 +98,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        #region Loqui Getter Interface
-
-        protected object GetNthObject(ushort index) => BodyDataCommon.GetNthObject(index, this);
-        object ILoquiObjectGetter.GetNthObject(ushort index) => this.GetNthObject(index);
-
-        protected bool GetNthObjectHasBeenSet(ushort index) => BodyDataCommon.GetNthObjectHasBeenSet(index, this);
-        bool ILoquiObjectGetter.GetNthObjectHasBeenSet(ushort index) => this.GetNthObjectHasBeenSet(index);
-
-        protected void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => BodyDataCommon.UnsetNthObject(index, this, cmds);
-        void ILoquiObjectSetter.UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => this.UnsetNthObject(index, cmds);
-
-        #endregion
-
-        #region Loqui Interface
-        protected void SetNthObjectHasBeenSet(ushort index, bool on)
-        {
-            BodyDataCommon.SetNthObjectHasBeenSet(index, on, this);
-        }
-        void ILoquiObjectSetter.SetNthObjectHasBeenSet(ushort index, bool on) => this.SetNthObjectHasBeenSet(index, on);
-
-        #endregion
-
         IMask<bool> IEqualsMask<BodyData>.GetEqualsMask(BodyData rhs, EqualsMaskHelper.Include include) => BodyDataCommon.GetEqualsMask(this, rhs, include);
         IMask<bool> IEqualsMask<IBodyDataGetter>.GetEqualsMask(IBodyDataGetter rhs, EqualsMaskHelper.Include include) => BodyDataCommon.GetEqualsMask(this, rhs, include);
         #region To String
@@ -1061,7 +1039,6 @@ namespace Mutagen.Bethesda.Oblivion
                 cmds: cmds);
         }
 
-        void ILoquiObjectSetter.SetNthObject(ushort index, object obj, NotifyingFireParameters cmds) => this.SetNthObject(index, obj, cmds);
         protected void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
         {
             BodyData_FieldIndex enu = (BodyData_FieldIndex)index;
@@ -1120,11 +1097,6 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, BodyData obj)
-        {
-            ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
-        }
-
     }
     #endregion
 
@@ -1465,77 +1437,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         #endregion
-
-        public static void SetNthObjectHasBeenSet(
-            ushort index,
-            bool on,
-            IBodyData obj,
-            NotifyingFireParameters cmds = null)
-        {
-            BodyData_FieldIndex enu = (BodyData_FieldIndex)index;
-            switch (enu)
-            {
-                case BodyData_FieldIndex.Model:
-                    obj.Model_IsSet = on;
-                    break;
-                case BodyData_FieldIndex.BodyParts:
-                    obj.BodyParts.HasBeenSet = on;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static void UnsetNthObject(
-            ushort index,
-            IBodyData obj,
-            NotifyingUnsetParameters cmds = null)
-        {
-            BodyData_FieldIndex enu = (BodyData_FieldIndex)index;
-            switch (enu)
-            {
-                case BodyData_FieldIndex.Model:
-                    obj.Model_Unset();
-                    break;
-                case BodyData_FieldIndex.BodyParts:
-                    obj.BodyParts.Unset();
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthObjectHasBeenSet(
-            ushort index,
-            IBodyData obj)
-        {
-            BodyData_FieldIndex enu = (BodyData_FieldIndex)index;
-            switch (enu)
-            {
-                case BodyData_FieldIndex.Model:
-                    return obj.Model_IsSet;
-                case BodyData_FieldIndex.BodyParts:
-                    return obj.BodyParts.HasBeenSet;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static object GetNthObject(
-            ushort index,
-            IBodyDataGetter obj)
-        {
-            BodyData_FieldIndex enu = (BodyData_FieldIndex)index;
-            switch (enu)
-            {
-                case BodyData_FieldIndex.Model:
-                    return obj.Model;
-                case BodyData_FieldIndex.BodyParts:
-                    return obj.BodyParts;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
 
         public static void Clear(
             IBodyData item,

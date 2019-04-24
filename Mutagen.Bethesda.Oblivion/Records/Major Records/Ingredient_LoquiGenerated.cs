@@ -208,24 +208,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        #region Loqui Getter Interface
-
-        protected override object GetNthObject(ushort index) => IngredientCommon.GetNthObject(index, this);
-
-        protected override bool GetNthObjectHasBeenSet(ushort index) => IngredientCommon.GetNthObjectHasBeenSet(index, this);
-
-        protected override void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => IngredientCommon.UnsetNthObject(index, this, cmds);
-
-        #endregion
-
-        #region Loqui Interface
-        protected override void SetNthObjectHasBeenSet(ushort index, bool on)
-        {
-            IngredientCommon.SetNthObjectHasBeenSet(index, on, this);
-        }
-
-        #endregion
-
         IMask<bool> IEqualsMask<Ingredient>.GetEqualsMask(Ingredient rhs, EqualsMaskHelper.Include include) => IngredientCommon.GetEqualsMask(this, rhs, include);
         IMask<bool> IEqualsMask<IIngredientGetter>.GetEqualsMask(IIngredientGetter rhs, EqualsMaskHelper.Include include) => IngredientCommon.GetEqualsMask(this, rhs, include);
         #region To String
@@ -1598,11 +1580,6 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, Ingredient obj)
-        {
-            ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
-        }
-
     }
     #endregion
 
@@ -2213,136 +2190,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         #endregion
-
-        public static void SetNthObjectHasBeenSet(
-            ushort index,
-            bool on,
-            IIngredient obj,
-            NotifyingFireParameters cmds = null)
-        {
-            Ingredient_FieldIndex enu = (Ingredient_FieldIndex)index;
-            switch (enu)
-            {
-                case Ingredient_FieldIndex.Value:
-                case Ingredient_FieldIndex.Flags:
-                    if (on) break;
-                    throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
-                case Ingredient_FieldIndex.Name:
-                    obj.Name_IsSet = on;
-                    break;
-                case Ingredient_FieldIndex.Model:
-                    obj.Model_IsSet = on;
-                    break;
-                case Ingredient_FieldIndex.Icon:
-                    obj.Icon_IsSet = on;
-                    break;
-                case Ingredient_FieldIndex.Script:
-                    obj.Script_Property.HasBeenSet = on;
-                    break;
-                case Ingredient_FieldIndex.Weight:
-                    obj.Weight_IsSet = on;
-                    break;
-                case Ingredient_FieldIndex.Effects:
-                    obj.Effects.HasBeenSet = on;
-                    break;
-                default:
-                    ItemAbstractCommon.SetNthObjectHasBeenSet(index, on, obj);
-                    break;
-            }
-        }
-
-        public static void UnsetNthObject(
-            ushort index,
-            IIngredient obj,
-            NotifyingUnsetParameters cmds = null)
-        {
-            Ingredient_FieldIndex enu = (Ingredient_FieldIndex)index;
-            switch (enu)
-            {
-                case Ingredient_FieldIndex.Name:
-                    obj.Name_Unset();
-                    break;
-                case Ingredient_FieldIndex.Model:
-                    obj.Model_Unset();
-                    break;
-                case Ingredient_FieldIndex.Icon:
-                    obj.Icon_Unset();
-                    break;
-                case Ingredient_FieldIndex.Script:
-                    obj.Script_Property.Unset(cmds);
-                    break;
-                case Ingredient_FieldIndex.Weight:
-                    obj.Weight_Unset();
-                    break;
-                case Ingredient_FieldIndex.Value:
-                    obj.Value = default(UInt32);
-                    break;
-                case Ingredient_FieldIndex.Flags:
-                    obj.Flags = default(IngredientFlag);
-                    break;
-                case Ingredient_FieldIndex.Effects:
-                    obj.Effects.Unset();
-                    break;
-                default:
-                    ItemAbstractCommon.UnsetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public static bool GetNthObjectHasBeenSet(
-            ushort index,
-            IIngredient obj)
-        {
-            Ingredient_FieldIndex enu = (Ingredient_FieldIndex)index;
-            switch (enu)
-            {
-                case Ingredient_FieldIndex.Value:
-                case Ingredient_FieldIndex.Flags:
-                    return true;
-                case Ingredient_FieldIndex.Name:
-                    return obj.Name_IsSet;
-                case Ingredient_FieldIndex.Model:
-                    return obj.Model_IsSet;
-                case Ingredient_FieldIndex.Icon:
-                    return obj.Icon_IsSet;
-                case Ingredient_FieldIndex.Script:
-                    return obj.Script_Property.HasBeenSet;
-                case Ingredient_FieldIndex.Weight:
-                    return obj.Weight_IsSet;
-                case Ingredient_FieldIndex.Effects:
-                    return obj.Effects.HasBeenSet;
-                default:
-                    return ItemAbstractCommon.GetNthObjectHasBeenSet(index, obj);
-            }
-        }
-
-        public static object GetNthObject(
-            ushort index,
-            IIngredientGetter obj)
-        {
-            Ingredient_FieldIndex enu = (Ingredient_FieldIndex)index;
-            switch (enu)
-            {
-                case Ingredient_FieldIndex.Name:
-                    return obj.Name;
-                case Ingredient_FieldIndex.Model:
-                    return obj.Model;
-                case Ingredient_FieldIndex.Icon:
-                    return obj.Icon;
-                case Ingredient_FieldIndex.Script:
-                    return obj.Script;
-                case Ingredient_FieldIndex.Weight:
-                    return obj.Weight;
-                case Ingredient_FieldIndex.Value:
-                    return obj.Value;
-                case Ingredient_FieldIndex.Flags:
-                    return obj.Flags;
-                case Ingredient_FieldIndex.Effects:
-                    return obj.Effects;
-                default:
-                    return ItemAbstractCommon.GetNthObject(index, obj);
-            }
-        }
 
         public static void Clear(
             IIngredient item,

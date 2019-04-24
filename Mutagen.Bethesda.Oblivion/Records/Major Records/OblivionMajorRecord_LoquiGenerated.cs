@@ -51,24 +51,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
 
-        #region Loqui Getter Interface
-
-        protected override object GetNthObject(ushort index) => OblivionMajorRecordCommon.GetNthObject(index, this);
-
-        protected override bool GetNthObjectHasBeenSet(ushort index) => OblivionMajorRecordCommon.GetNthObjectHasBeenSet(index, this);
-
-        protected override void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => OblivionMajorRecordCommon.UnsetNthObject(index, this, cmds);
-
-        #endregion
-
-        #region Loqui Interface
-        protected override void SetNthObjectHasBeenSet(ushort index, bool on)
-        {
-            OblivionMajorRecordCommon.SetNthObjectHasBeenSet(index, on, this);
-        }
-
-        #endregion
-
         IMask<bool> IEqualsMask<OblivionMajorRecord>.GetEqualsMask(OblivionMajorRecord rhs, EqualsMaskHelper.Include include) => OblivionMajorRecordCommon.GetEqualsMask(this, rhs, include);
         IMask<bool> IEqualsMask<IOblivionMajorRecordGetter>.GetEqualsMask(IOblivionMajorRecordGetter rhs, EqualsMaskHelper.Include include) => OblivionMajorRecordCommon.GetEqualsMask(this, rhs, include);
         #region To String
@@ -798,11 +780,6 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, OblivionMajorRecord obj)
-        {
-            ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
-        }
-
     }
     #endregion
 
@@ -1191,69 +1168,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         #endregion
-
-        public static void SetNthObjectHasBeenSet(
-            ushort index,
-            bool on,
-            IOblivionMajorRecord obj,
-            NotifyingFireParameters cmds = null)
-        {
-            OblivionMajorRecord_FieldIndex enu = (OblivionMajorRecord_FieldIndex)index;
-            switch (enu)
-            {
-                case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
-                    if (on) break;
-                    throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
-                default:
-                    MajorRecordCommon.SetNthObjectHasBeenSet(index, on, obj);
-                    break;
-            }
-        }
-
-        public static void UnsetNthObject(
-            ushort index,
-            IOblivionMajorRecord obj,
-            NotifyingUnsetParameters cmds = null)
-        {
-            OblivionMajorRecord_FieldIndex enu = (OblivionMajorRecord_FieldIndex)index;
-            switch (enu)
-            {
-                case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
-                    obj.OblivionMajorRecordFlags = default(OblivionMajorRecord.OblivionMajorRecordFlag);
-                    break;
-                default:
-                    MajorRecordCommon.UnsetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public static bool GetNthObjectHasBeenSet(
-            ushort index,
-            IOblivionMajorRecord obj)
-        {
-            OblivionMajorRecord_FieldIndex enu = (OblivionMajorRecord_FieldIndex)index;
-            switch (enu)
-            {
-                case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
-                    return true;
-                default:
-                    return MajorRecordCommon.GetNthObjectHasBeenSet(index, obj);
-            }
-        }
-
-        public static object GetNthObject(
-            ushort index,
-            IOblivionMajorRecordGetter obj)
-        {
-            OblivionMajorRecord_FieldIndex enu = (OblivionMajorRecord_FieldIndex)index;
-            switch (enu)
-            {
-                case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
-                    return obj.OblivionMajorRecordFlags;
-                default:
-                    return MajorRecordCommon.GetNthObject(index, obj);
-            }
-        }
 
         public static void Clear(
             IOblivionMajorRecord item,

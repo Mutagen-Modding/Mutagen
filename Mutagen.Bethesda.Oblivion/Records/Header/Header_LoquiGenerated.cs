@@ -74,28 +74,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        #region Loqui Getter Interface
-
-        protected object GetNthObject(ushort index) => HeaderCommon.GetNthObject(index, this);
-        object ILoquiObjectGetter.GetNthObject(ushort index) => this.GetNthObject(index);
-
-        protected bool GetNthObjectHasBeenSet(ushort index) => HeaderCommon.GetNthObjectHasBeenSet(index, this);
-        bool ILoquiObjectGetter.GetNthObjectHasBeenSet(ushort index) => this.GetNthObjectHasBeenSet(index);
-
-        protected void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => HeaderCommon.UnsetNthObject(index, this, cmds);
-        void ILoquiObjectSetter.UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => this.UnsetNthObject(index, cmds);
-
-        #endregion
-
-        #region Loqui Interface
-        protected void SetNthObjectHasBeenSet(ushort index, bool on)
-        {
-            HeaderCommon.SetNthObjectHasBeenSet(index, on, this);
-        }
-        void ILoquiObjectSetter.SetNthObjectHasBeenSet(ushort index, bool on) => this.SetNthObjectHasBeenSet(index, on);
-
-        #endregion
-
         IMask<bool> IEqualsMask<Header>.GetEqualsMask(Header rhs, EqualsMaskHelper.Include include) => HeaderCommon.GetEqualsMask(this, rhs, include);
         IMask<bool> IEqualsMask<IHeaderGetter>.GetEqualsMask(IHeaderGetter rhs, EqualsMaskHelper.Include include) => HeaderCommon.GetEqualsMask(this, rhs, include);
         #region To String
@@ -1024,7 +1002,6 @@ namespace Mutagen.Bethesda.Oblivion
                 cmds: cmds);
         }
 
-        void ILoquiObjectSetter.SetNthObject(ushort index, object obj, NotifyingFireParameters cmds) => this.SetNthObject(index, obj, cmds);
         protected void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
         {
             Header_FieldIndex enu = (Header_FieldIndex)index;
@@ -1089,11 +1066,6 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, Header obj)
-        {
-            ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
-        }
-
     }
     #endregion
 
@@ -1397,81 +1369,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         #endregion
-
-        public static void SetNthObjectHasBeenSet(
-            ushort index,
-            bool on,
-            IHeader obj,
-            NotifyingFireParameters cmds = null)
-        {
-            Header_FieldIndex enu = (Header_FieldIndex)index;
-            switch (enu)
-            {
-                case Header_FieldIndex.Version:
-                case Header_FieldIndex.NumRecords:
-                case Header_FieldIndex.NextObjectID:
-                    if (on) break;
-                    throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static void UnsetNthObject(
-            ushort index,
-            IHeader obj,
-            NotifyingUnsetParameters cmds = null)
-        {
-            Header_FieldIndex enu = (Header_FieldIndex)index;
-            switch (enu)
-            {
-                case Header_FieldIndex.Version:
-                    obj.Version = default(Single);
-                    break;
-                case Header_FieldIndex.NumRecords:
-                    obj.NumRecords = default(Int32);
-                    break;
-                case Header_FieldIndex.NextObjectID:
-                    obj.NextObjectID = default(UInt32);
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthObjectHasBeenSet(
-            ushort index,
-            IHeader obj)
-        {
-            Header_FieldIndex enu = (Header_FieldIndex)index;
-            switch (enu)
-            {
-                case Header_FieldIndex.Version:
-                case Header_FieldIndex.NumRecords:
-                case Header_FieldIndex.NextObjectID:
-                    return true;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static object GetNthObject(
-            ushort index,
-            IHeaderGetter obj)
-        {
-            Header_FieldIndex enu = (Header_FieldIndex)index;
-            switch (enu)
-            {
-                case Header_FieldIndex.Version:
-                    return obj.Version;
-                case Header_FieldIndex.NumRecords:
-                    return obj.NumRecords;
-                case Header_FieldIndex.NextObjectID:
-                    return obj.NextObjectID;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
 
         public static void Clear(
             IHeader item,

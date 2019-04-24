@@ -213,24 +213,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        #region Loqui Getter Interface
-
-        protected override object GetNthObject(ushort index) => ClassCommon.GetNthObject(index, this);
-
-        protected override bool GetNthObjectHasBeenSet(ushort index) => ClassCommon.GetNthObjectHasBeenSet(index, this);
-
-        protected override void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => ClassCommon.UnsetNthObject(index, this, cmds);
-
-        #endregion
-
-        #region Loqui Interface
-        protected override void SetNthObjectHasBeenSet(ushort index, bool on)
-        {
-            ClassCommon.SetNthObjectHasBeenSet(index, on, this);
-        }
-
-        #endregion
-
         IMask<bool> IEqualsMask<Class>.GetEqualsMask(Class rhs, EqualsMaskHelper.Include include) => ClassCommon.GetEqualsMask(this, rhs, include);
         IMask<bool> IEqualsMask<IClassGetter>.GetEqualsMask(IClassGetter rhs, EqualsMaskHelper.Include include) => ClassCommon.GetEqualsMask(this, rhs, include);
         #region To String
@@ -1531,11 +1513,6 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, Class obj)
-        {
-            ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
-        }
-
     }
     #endregion
 
@@ -2147,134 +2124,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         #endregion
-
-        public static void SetNthObjectHasBeenSet(
-            ushort index,
-            bool on,
-            IClass obj,
-            NotifyingFireParameters cmds = null)
-        {
-            Class_FieldIndex enu = (Class_FieldIndex)index;
-            switch (enu)
-            {
-                case Class_FieldIndex.PrimaryAttributes:
-                case Class_FieldIndex.Specialization:
-                case Class_FieldIndex.SecondaryAttributes:
-                case Class_FieldIndex.Flags:
-                case Class_FieldIndex.ClassServices:
-                case Class_FieldIndex.Training:
-                    if (on) break;
-                    throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
-                case Class_FieldIndex.Name:
-                    obj.Name_IsSet = on;
-                    break;
-                case Class_FieldIndex.Description:
-                    obj.Description_IsSet = on;
-                    break;
-                case Class_FieldIndex.Icon:
-                    obj.Icon_IsSet = on;
-                    break;
-                default:
-                    OblivionMajorRecordCommon.SetNthObjectHasBeenSet(index, on, obj);
-                    break;
-            }
-        }
-
-        public static void UnsetNthObject(
-            ushort index,
-            IClass obj,
-            NotifyingUnsetParameters cmds = null)
-        {
-            Class_FieldIndex enu = (Class_FieldIndex)index;
-            switch (enu)
-            {
-                case Class_FieldIndex.Name:
-                    obj.Name_Unset();
-                    break;
-                case Class_FieldIndex.Description:
-                    obj.Description_Unset();
-                    break;
-                case Class_FieldIndex.Icon:
-                    obj.Icon_Unset();
-                    break;
-                case Class_FieldIndex.PrimaryAttributes:
-                    obj.PrimaryAttributes.Unset();
-                    break;
-                case Class_FieldIndex.Specialization:
-                    obj.Specialization = default(Class.SpecializationFlag);
-                    break;
-                case Class_FieldIndex.SecondaryAttributes:
-                    obj.SecondaryAttributes.Unset();
-                    break;
-                case Class_FieldIndex.Flags:
-                    obj.Flags = default(ClassFlag);
-                    break;
-                case Class_FieldIndex.ClassServices:
-                    obj.ClassServices = default(ClassService);
-                    break;
-                case Class_FieldIndex.Training:
-                    obj.Training = default(ClassTraining);
-                    break;
-                default:
-                    OblivionMajorRecordCommon.UnsetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public static bool GetNthObjectHasBeenSet(
-            ushort index,
-            IClass obj)
-        {
-            Class_FieldIndex enu = (Class_FieldIndex)index;
-            switch (enu)
-            {
-                case Class_FieldIndex.PrimaryAttributes:
-                case Class_FieldIndex.Specialization:
-                case Class_FieldIndex.SecondaryAttributes:
-                case Class_FieldIndex.Flags:
-                case Class_FieldIndex.ClassServices:
-                case Class_FieldIndex.Training:
-                    return true;
-                case Class_FieldIndex.Name:
-                    return obj.Name_IsSet;
-                case Class_FieldIndex.Description:
-                    return obj.Description_IsSet;
-                case Class_FieldIndex.Icon:
-                    return obj.Icon_IsSet;
-                default:
-                    return OblivionMajorRecordCommon.GetNthObjectHasBeenSet(index, obj);
-            }
-        }
-
-        public static object GetNthObject(
-            ushort index,
-            IClassGetter obj)
-        {
-            Class_FieldIndex enu = (Class_FieldIndex)index;
-            switch (enu)
-            {
-                case Class_FieldIndex.Name:
-                    return obj.Name;
-                case Class_FieldIndex.Description:
-                    return obj.Description;
-                case Class_FieldIndex.Icon:
-                    return obj.Icon;
-                case Class_FieldIndex.PrimaryAttributes:
-                    return obj.PrimaryAttributes;
-                case Class_FieldIndex.Specialization:
-                    return obj.Specialization;
-                case Class_FieldIndex.SecondaryAttributes:
-                    return obj.SecondaryAttributes;
-                case Class_FieldIndex.Flags:
-                    return obj.Flags;
-                case Class_FieldIndex.ClassServices:
-                    return obj.ClassServices;
-                case Class_FieldIndex.Training:
-                    return obj.Training;
-                default:
-                    return OblivionMajorRecordCommon.GetNthObject(index, obj);
-            }
-        }
 
         public static void Clear(
             IClass item,
