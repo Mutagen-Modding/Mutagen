@@ -500,22 +500,14 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMask)
         {
             var ret = new WeatherType();
-            try
-            {
-                using (frame)
-                {
-                    Fill_Binary_Structs(
-                        item: ret,
-                        frame: frame,
-                        masterReferences: masterReferences,
-                        errorMask: errorMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
+            UtilityTranslation.TypelessRecordParse(
+                record: ret,
+                frame: frame,
+                setFinal: false,
+                masterReferences: masterReferences,
+                errorMask: errorMask,
+                recordTypeConverter: recordTypeConverter,
+                fillStructs: Fill_Binary_Structs);
             return ret;
         }
 
@@ -573,7 +565,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 errorMask?.PushIndex((int)WeatherType_FieldIndex.Sunrise);
                 if (Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
-                    frame: frame.Spawn(snapToFinalPosition: false),
+                    frame: frame,
                     extraByte: true,
                     item: out Color SunriseParse,
                     errorMask: errorMask))
@@ -598,7 +590,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 errorMask?.PushIndex((int)WeatherType_FieldIndex.Day);
                 if (Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
-                    frame: frame.Spawn(snapToFinalPosition: false),
+                    frame: frame,
                     extraByte: true,
                     item: out Color DayParse,
                     errorMask: errorMask))
@@ -623,7 +615,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 errorMask?.PushIndex((int)WeatherType_FieldIndex.Sunset);
                 if (Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
-                    frame: frame.Spawn(snapToFinalPosition: false),
+                    frame: frame,
                     extraByte: true,
                     item: out Color SunsetParse,
                     errorMask: errorMask))
@@ -648,7 +640,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 errorMask?.PushIndex((int)WeatherType_FieldIndex.Night);
                 if (Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
-                    frame: frame.Spawn(snapToFinalPosition: false),
+                    frame: frame,
                     extraByte: true,
                     item: out Color NightParse,
                     errorMask: errorMask))

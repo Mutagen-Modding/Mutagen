@@ -895,17 +895,17 @@ namespace Mutagen.Bethesda.Oblivion
         protected static TryGet<int?> Fill_Binary_RecordTypes(
             ClothingAbstract item,
             MutagenFrame frame,
+            RecordType nextRecordType,
+            int contentLength,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask,
             RecordTypeConverter recordTypeConverter = null)
         {
-            var nextRecordType = HeaderTranslation.GetNextSubRecordType(
-                reader: frame.Reader,
-                contentLength: out var contentLength,
-                recordTypeConverter: recordTypeConverter);
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
                 case 0x4C4C5546: // FULL
+                {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     try
                     {
@@ -933,7 +933,9 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)ClothingAbstract_FieldIndex.Name);
+                }
                 case 0x49524353: // SCRI
+                {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
@@ -942,7 +944,9 @@ namespace Mutagen.Bethesda.Oblivion
                         fieldIndex: (int)ClothingAbstract_FieldIndex.Script,
                         errorMask: errorMask);
                     return TryGet<int?>.Succeed((int)ClothingAbstract_FieldIndex.Script);
+                }
                 case 0x4D414E45: // ENAM
+                {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
@@ -951,7 +955,9 @@ namespace Mutagen.Bethesda.Oblivion
                         fieldIndex: (int)ClothingAbstract_FieldIndex.Enchantment,
                         errorMask: errorMask);
                     return TryGet<int?>.Succeed((int)ClothingAbstract_FieldIndex.Enchantment);
+                }
                 case 0x4D414E41: // ANAM
+                {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     try
                     {
@@ -978,70 +984,72 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)ClothingAbstract_FieldIndex.EnchantmentPoints);
+                }
                 case 0x54444D42: // BMDT
+                {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    using (var dataFrame = frame.SpawnWithLength(contentLength))
+                    var dataFrame = frame.SpawnWithLength(contentLength);
+                    if (!dataFrame.Complete)
                     {
-                        if (!dataFrame.Complete)
+                        item.BMDTDataTypeState = BMDTDataType.Has;
+                    }
+                    try
+                    {
+                        errorMask?.PushIndex((int)ClothingAbstract_FieldIndex.BipedFlags);
+                        if (EnumBinaryTranslation<BipedFlag>.Instance.Parse(
+                            frame: dataFrame.SpawnWithLength(2),
+                            item: out BipedFlag BipedFlagsParse,
+                            errorMask: errorMask))
                         {
-                            item.BMDTDataTypeState = BMDTDataType.Has;
+                            item.BipedFlags = BipedFlagsParse;
                         }
-                        try
+                        else
                         {
-                            errorMask?.PushIndex((int)ClothingAbstract_FieldIndex.BipedFlags);
-                            if (EnumBinaryTranslation<BipedFlag>.Instance.Parse(
-                                frame: dataFrame.SpawnWithLength(2),
-                                item: out BipedFlag BipedFlagsParse,
-                                errorMask: errorMask))
-                            {
-                                item.BipedFlags = BipedFlagsParse;
-                            }
-                            else
-                            {
-                                item.BipedFlags = default(BipedFlag);
-                            }
-                        }
-                        catch (Exception ex)
-                        when (errorMask != null)
-                        {
-                            errorMask.ReportException(ex);
-                        }
-                        finally
-                        {
-                            errorMask?.PopIndex();
-                        }
-                        try
-                        {
-                            errorMask?.PushIndex((int)ClothingAbstract_FieldIndex.Flags);
-                            if (EnumBinaryTranslation<EquipmentFlag>.Instance.Parse(
-                                frame: dataFrame.SpawnWithLength(2),
-                                item: out EquipmentFlag FlagsParse,
-                                errorMask: errorMask))
-                            {
-                                item.Flags = FlagsParse;
-                            }
-                            else
-                            {
-                                item.Flags = default(EquipmentFlag);
-                            }
-                        }
-                        catch (Exception ex)
-                        when (errorMask != null)
-                        {
-                            errorMask.ReportException(ex);
-                        }
-                        finally
-                        {
-                            errorMask?.PopIndex();
+                            item.BipedFlags = default(BipedFlag);
                         }
                     }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    try
+                    {
+                        errorMask?.PushIndex((int)ClothingAbstract_FieldIndex.Flags);
+                        if (EnumBinaryTranslation<EquipmentFlag>.Instance.Parse(
+                            frame: dataFrame.SpawnWithLength(2),
+                            item: out EquipmentFlag FlagsParse,
+                            errorMask: errorMask))
+                        {
+                            item.Flags = FlagsParse;
+                        }
+                        else
+                        {
+                            item.Flags = default(EquipmentFlag);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
                     return TryGet<int?>.Succeed((int)ClothingAbstract_FieldIndex.Flags);
+                }
                 case 0x4C444F4D: // MODL
+                {
                     try
                     {
                         errorMask?.PushIndex((int)ClothingAbstract_FieldIndex.MaleBipedModel);
                         if (LoquiBinaryTranslation<Model>.Instance.Parse(
-                            frame: frame.Spawn(snapToFinalPosition: false),
+                            frame: frame,
                             masterReferences: masterReferences,
                             item: out Model MaleBipedModelParse,
                             errorMask: errorMask))
@@ -1063,12 +1071,14 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)ClothingAbstract_FieldIndex.MaleBipedModel);
+                }
                 case 0x32444F4D: // MOD2
+                {
                     try
                     {
                         errorMask?.PushIndex((int)ClothingAbstract_FieldIndex.MaleWorldModel);
                         if (LoquiBinaryTranslation<Model>.Instance.Parse(
-                            frame: frame.Spawn(snapToFinalPosition: false),
+                            frame: frame,
                             recordTypeConverter: ClothingAbstract_Registration.MaleWorldModelConverter,
                             masterReferences: masterReferences,
                             item: out Model MaleWorldModelParse,
@@ -1091,7 +1101,9 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)ClothingAbstract_FieldIndex.MaleWorldModel);
+                }
                 case 0x4E4F4349: // ICON
+                {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     try
                     {
@@ -1119,12 +1131,14 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)ClothingAbstract_FieldIndex.MaleIcon);
+                }
                 case 0x33444F4D: // MOD3
+                {
                     try
                     {
                         errorMask?.PushIndex((int)ClothingAbstract_FieldIndex.FemaleBipedModel);
                         if (LoquiBinaryTranslation<Model>.Instance.Parse(
-                            frame: frame.Spawn(snapToFinalPosition: false),
+                            frame: frame,
                             recordTypeConverter: ClothingAbstract_Registration.FemaleBipedModelConverter,
                             masterReferences: masterReferences,
                             item: out Model FemaleBipedModelParse,
@@ -1147,12 +1161,14 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)ClothingAbstract_FieldIndex.FemaleBipedModel);
+                }
                 case 0x34444F4D: // MOD4
+                {
                     try
                     {
                         errorMask?.PushIndex((int)ClothingAbstract_FieldIndex.FemaleWorldModel);
                         if (LoquiBinaryTranslation<Model>.Instance.Parse(
-                            frame: frame.Spawn(snapToFinalPosition: false),
+                            frame: frame,
                             recordTypeConverter: ClothingAbstract_Registration.FemaleWorldModelConverter,
                             masterReferences: masterReferences,
                             item: out Model FemaleWorldModelParse,
@@ -1175,7 +1191,9 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)ClothingAbstract_FieldIndex.FemaleWorldModel);
+                }
                 case 0x324F4349: // ICO2
+                {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     try
                     {
@@ -1203,10 +1221,13 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)ClothingAbstract_FieldIndex.FemaleIcon);
+                }
                 default:
                     return ItemAbstract.Fill_Binary_RecordTypes(
                         item: item,
                         frame: frame,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
                         recordTypeConverter: recordTypeConverter,
                         masterReferences: masterReferences,
                         errorMask: errorMask);

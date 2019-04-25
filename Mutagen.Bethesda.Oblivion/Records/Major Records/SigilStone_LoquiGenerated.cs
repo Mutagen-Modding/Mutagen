@@ -840,17 +840,17 @@ namespace Mutagen.Bethesda.Oblivion
         protected static TryGet<int?> Fill_Binary_RecordTypes(
             SigilStone item,
             MutagenFrame frame,
+            RecordType nextRecordType,
+            int contentLength,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask,
             RecordTypeConverter recordTypeConverter = null)
         {
-            var nextRecordType = HeaderTranslation.GetNextSubRecordType(
-                reader: frame.Reader,
-                contentLength: out var contentLength,
-                recordTypeConverter: recordTypeConverter);
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
                 case 0x4C4C5546: // FULL
+                {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     try
                     {
@@ -878,12 +878,14 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)SigilStone_FieldIndex.Name);
+                }
                 case 0x4C444F4D: // MODL
+                {
                     try
                     {
                         errorMask?.PushIndex((int)SigilStone_FieldIndex.Model);
                         if (LoquiBinaryTranslation<Model>.Instance.Parse(
-                            frame: frame.Spawn(snapToFinalPosition: false),
+                            frame: frame,
                             masterReferences: masterReferences,
                             item: out Model ModelParse,
                             errorMask: errorMask))
@@ -905,7 +907,9 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)SigilStone_FieldIndex.Model);
+                }
                 case 0x4E4F4349: // ICON
+                {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     try
                     {
@@ -933,7 +937,9 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)SigilStone_FieldIndex.Icon);
+                }
                 case 0x49524353: // SCRI
+                {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
@@ -942,7 +948,9 @@ namespace Mutagen.Bethesda.Oblivion
                         fieldIndex: (int)SigilStone_FieldIndex.Script,
                         errorMask: errorMask);
                     return TryGet<int?>.Succeed((int)SigilStone_FieldIndex.Script);
+                }
                 case 0x44494645: // EFID
+                {
                     Mutagen.Bethesda.Binary.ListBinaryTranslation<Effect>.Instance.ParseRepeatedItem(
                         frame: frame,
                         triggeringRecord: SigilStone_Registration.EFID_HEADER,
@@ -953,99 +961,102 @@ namespace Mutagen.Bethesda.Oblivion
                         transl: (MutagenFrame r, out Effect listSubItem, ErrorMaskBuilder listErrMask) =>
                         {
                             return LoquiBinaryTranslation<Effect>.Instance.Parse(
-                                frame: r.Spawn(snapToFinalPosition: false),
+                                frame: r,
                                 item: out listSubItem,
                                 errorMask: listErrMask,
                                 masterReferences: masterReferences);
                         }
                         );
                     return TryGet<int?>.Succeed((int)SigilStone_FieldIndex.Effects);
+                }
                 case 0x41544144: // DATA
+                {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    using (var dataFrame = frame.SpawnWithLength(contentLength))
+                    var dataFrame = frame.SpawnWithLength(contentLength);
+                    if (!dataFrame.Complete)
                     {
-                        if (!dataFrame.Complete)
+                        item.DATADataTypeState = DATADataType.Has;
+                    }
+                    try
+                    {
+                        errorMask?.PushIndex((int)SigilStone_FieldIndex.Uses);
+                        if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                            frame: dataFrame,
+                            item: out Byte UsesParse,
+                            errorMask: errorMask))
                         {
-                            item.DATADataTypeState = DATADataType.Has;
+                            item.Uses = UsesParse;
                         }
-                        try
+                        else
                         {
-                            errorMask?.PushIndex((int)SigilStone_FieldIndex.Uses);
-                            if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                                frame: dataFrame.Spawn(snapToFinalPosition: false),
-                                item: out Byte UsesParse,
-                                errorMask: errorMask))
-                            {
-                                item.Uses = UsesParse;
-                            }
-                            else
-                            {
-                                item.Uses = default(Byte);
-                            }
-                        }
-                        catch (Exception ex)
-                        when (errorMask != null)
-                        {
-                            errorMask.ReportException(ex);
-                        }
-                        finally
-                        {
-                            errorMask?.PopIndex();
-                        }
-                        try
-                        {
-                            errorMask?.PushIndex((int)SigilStone_FieldIndex.Value);
-                            if (Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
-                                frame: dataFrame.Spawn(snapToFinalPosition: false),
-                                item: out UInt32 ValueParse,
-                                errorMask: errorMask))
-                            {
-                                item.Value = ValueParse;
-                            }
-                            else
-                            {
-                                item.Value = default(UInt32);
-                            }
-                        }
-                        catch (Exception ex)
-                        when (errorMask != null)
-                        {
-                            errorMask.ReportException(ex);
-                        }
-                        finally
-                        {
-                            errorMask?.PopIndex();
-                        }
-                        try
-                        {
-                            errorMask?.PushIndex((int)SigilStone_FieldIndex.Weight);
-                            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                                frame: dataFrame.Spawn(snapToFinalPosition: false),
-                                item: out Single WeightParse,
-                                errorMask: errorMask))
-                            {
-                                item.Weight = WeightParse;
-                            }
-                            else
-                            {
-                                item.Weight = default(Single);
-                            }
-                        }
-                        catch (Exception ex)
-                        when (errorMask != null)
-                        {
-                            errorMask.ReportException(ex);
-                        }
-                        finally
-                        {
-                            errorMask?.PopIndex();
+                            item.Uses = default(Byte);
                         }
                     }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    try
+                    {
+                        errorMask?.PushIndex((int)SigilStone_FieldIndex.Value);
+                        if (Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
+                            frame: dataFrame,
+                            item: out UInt32 ValueParse,
+                            errorMask: errorMask))
+                        {
+                            item.Value = ValueParse;
+                        }
+                        else
+                        {
+                            item.Value = default(UInt32);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    try
+                    {
+                        errorMask?.PushIndex((int)SigilStone_FieldIndex.Weight);
+                        if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                            frame: dataFrame,
+                            item: out Single WeightParse,
+                            errorMask: errorMask))
+                        {
+                            item.Weight = WeightParse;
+                        }
+                        else
+                        {
+                            item.Weight = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
                     return TryGet<int?>.Succeed((int)SigilStone_FieldIndex.Weight);
+                }
                 default:
                     return ItemAbstract.Fill_Binary_RecordTypes(
                         item: item,
                         frame: frame,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
                         recordTypeConverter: recordTypeConverter,
                         masterReferences: masterReferences,
                         errorMask: errorMask);

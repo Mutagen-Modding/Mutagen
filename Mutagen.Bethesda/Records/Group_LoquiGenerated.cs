@@ -536,6 +536,25 @@ namespace Mutagen.Bethesda
             return ret;
         }
 
+        public static Group<T> Create_Binary(
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            var ret = new Group<T>();
+            frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseGroup(frame.Reader));
+            UtilityTranslation.GroupParse(
+                record: ret,
+                frame: frame,
+                masterReferences: masterReferences,
+                errorMask: errorMask,
+                recordTypeConverter: recordTypeConverter,
+                fillStructs: Fill_Binary_Structs,
+                fillTyped: Fill_Binary_RecordTypes);
+            return ret;
+        }
+
         #endregion
 
         #region Binary Write
@@ -671,14 +690,13 @@ namespace Mutagen.Bethesda
         protected static TryGet<int?> Fill_Binary_RecordTypes(
             Group<T> item,
             MutagenFrame frame,
+            RecordType nextRecordType,
+            int contentLength,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask,
             RecordTypeConverter recordTypeConverter = null)
         {
-            var nextRecordType = HeaderTranslation.GetNextRecordType(
-                reader: frame.Reader,
-                contentLength: out var contentLength,
-                recordTypeConverter: recordTypeConverter);
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
                 default:
@@ -694,7 +712,7 @@ namespace Mutagen.Bethesda
                             transl: (MutagenFrame r, out T dictSubItem, ErrorMaskBuilder dictSubMask) =>
                             {
                                 return LoquiBinaryTranslation<T>.Instance.Parse(
-                                    frame: r.Spawn(snapToFinalPosition: false),
+                                    frame: r,
                                     item: out dictSubItem,
                                     errorMask: dictSubMask,
                                     masterReferences: masterReferences);

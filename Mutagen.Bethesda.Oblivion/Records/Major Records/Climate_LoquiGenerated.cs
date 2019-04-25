@@ -996,17 +996,17 @@ namespace Mutagen.Bethesda.Oblivion
         protected static TryGet<int?> Fill_Binary_RecordTypes(
             Climate item,
             MutagenFrame frame,
+            RecordType nextRecordType,
+            int contentLength,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask,
             RecordTypeConverter recordTypeConverter = null)
         {
-            var nextRecordType = HeaderTranslation.GetNextSubRecordType(
-                reader: frame.Reader,
-                contentLength: out var contentLength,
-                recordTypeConverter: recordTypeConverter);
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
                 case 0x54534C57: // WLST
+                {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     Mutagen.Bethesda.Binary.ListBinaryTranslation<WeatherChance>.Instance.ParseRepeatedItem(
                         frame: frame.SpawnWithLength(contentLength),
@@ -1017,14 +1017,16 @@ namespace Mutagen.Bethesda.Oblivion
                         transl: (MutagenFrame r, out WeatherChance listSubItem, ErrorMaskBuilder listErrMask) =>
                         {
                             return LoquiBinaryTranslation<WeatherChance>.Instance.Parse(
-                                frame: r.Spawn(snapToFinalPosition: false),
+                                frame: r,
                                 item: out listSubItem,
                                 errorMask: listErrMask,
                                 masterReferences: masterReferences);
                         }
                         );
                     return TryGet<int?>.Succeed((int)Climate_FieldIndex.Weathers);
+                }
                 case 0x4D414E46: // FNAM
+                {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     try
                     {
@@ -1052,7 +1054,9 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)Climate_FieldIndex.SunTexture);
+                }
                 case 0x4D414E47: // GNAM
+                {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     try
                     {
@@ -1080,12 +1084,14 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)Climate_FieldIndex.SunGlareTexture);
+                }
                 case 0x4C444F4D: // MODL
+                {
                     try
                     {
                         errorMask?.PushIndex((int)Climate_FieldIndex.Model);
                         if (LoquiBinaryTranslation<Model>.Instance.Parse(
-                            frame: frame.Spawn(snapToFinalPosition: false),
+                            frame: frame,
                             masterReferences: masterReferences,
                             item: out Model ModelParse,
                             errorMask: errorMask))
@@ -1107,74 +1113,77 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)Climate_FieldIndex.Model);
+                }
                 case 0x4D414E54: // TNAM
+                {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    using (var dataFrame = frame.SpawnWithLength(contentLength))
+                    var dataFrame = frame.SpawnWithLength(contentLength);
+                    if (!dataFrame.Complete)
                     {
-                        if (!dataFrame.Complete)
-                        {
-                            item.TNAMDataTypeState = TNAMDataType.Has;
-                        }
-                        FillBinary_SunriseBegin_Custom(
-                            frame: dataFrame,
-                            item: item,
-                            masterReferences: masterReferences,
-                            errorMask: errorMask);
-                        FillBinary_SunriseEnd_Custom(
-                            frame: dataFrame,
-                            item: item,
-                            masterReferences: masterReferences,
-                            errorMask: errorMask);
-                        FillBinary_SunsetBegin_Custom(
-                            frame: dataFrame,
-                            item: item,
-                            masterReferences: masterReferences,
-                            errorMask: errorMask);
-                        FillBinary_SunsetEnd_Custom(
-                            frame: dataFrame,
-                            item: item,
-                            masterReferences: masterReferences,
-                            errorMask: errorMask);
-                        try
-                        {
-                            errorMask?.PushIndex((int)Climate_FieldIndex.Volatility);
-                            if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                                frame: dataFrame.Spawn(snapToFinalPosition: false),
-                                item: out Byte VolatilityParse,
-                                errorMask: errorMask))
-                            {
-                                item.Volatility = VolatilityParse;
-                            }
-                            else
-                            {
-                                item.Volatility = default(Byte);
-                            }
-                        }
-                        catch (Exception ex)
-                        when (errorMask != null)
-                        {
-                            errorMask.ReportException(ex);
-                        }
-                        finally
-                        {
-                            errorMask?.PopIndex();
-                        }
-                        FillBinary_Phase_Custom(
-                            frame: dataFrame,
-                            item: item,
-                            masterReferences: masterReferences,
-                            errorMask: errorMask);
-                        FillBinary_PhaseLength_Custom(
-                            frame: dataFrame,
-                            item: item,
-                            masterReferences: masterReferences,
-                            errorMask: errorMask);
+                        item.TNAMDataTypeState = TNAMDataType.Has;
                     }
+                    FillBinary_SunriseBegin_Custom(
+                        frame: dataFrame,
+                        item: item,
+                        masterReferences: masterReferences,
+                        errorMask: errorMask);
+                    FillBinary_SunriseEnd_Custom(
+                        frame: dataFrame,
+                        item: item,
+                        masterReferences: masterReferences,
+                        errorMask: errorMask);
+                    FillBinary_SunsetBegin_Custom(
+                        frame: dataFrame,
+                        item: item,
+                        masterReferences: masterReferences,
+                        errorMask: errorMask);
+                    FillBinary_SunsetEnd_Custom(
+                        frame: dataFrame,
+                        item: item,
+                        masterReferences: masterReferences,
+                        errorMask: errorMask);
+                    try
+                    {
+                        errorMask?.PushIndex((int)Climate_FieldIndex.Volatility);
+                        if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                            frame: dataFrame,
+                            item: out Byte VolatilityParse,
+                            errorMask: errorMask))
+                        {
+                            item.Volatility = VolatilityParse;
+                        }
+                        else
+                        {
+                            item.Volatility = default(Byte);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    FillBinary_Phase_Custom(
+                        frame: dataFrame,
+                        item: item,
+                        masterReferences: masterReferences,
+                        errorMask: errorMask);
+                    FillBinary_PhaseLength_Custom(
+                        frame: dataFrame,
+                        item: item,
+                        masterReferences: masterReferences,
+                        errorMask: errorMask);
                     return TryGet<int?>.Succeed((int)Climate_FieldIndex.PhaseLength);
+                }
                 default:
                     return MajorRecord.Fill_Binary_RecordTypes(
                         item: item,
                         frame: frame,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
                         recordTypeConverter: recordTypeConverter,
                         masterReferences: masterReferences,
                         errorMask: errorMask);

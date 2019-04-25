@@ -639,22 +639,22 @@ namespace Mutagen.Bethesda.Oblivion
         protected static TryGet<int?> Fill_Binary_RecordTypes(
             AnimatedObject item,
             MutagenFrame frame,
+            RecordType nextRecordType,
+            int contentLength,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask,
             RecordTypeConverter recordTypeConverter = null)
         {
-            var nextRecordType = HeaderTranslation.GetNextSubRecordType(
-                reader: frame.Reader,
-                contentLength: out var contentLength,
-                recordTypeConverter: recordTypeConverter);
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
                 case 0x4C444F4D: // MODL
+                {
                     try
                     {
                         errorMask?.PushIndex((int)AnimatedObject_FieldIndex.Model);
                         if (LoquiBinaryTranslation<Model>.Instance.Parse(
-                            frame: frame.Spawn(snapToFinalPosition: false),
+                            frame: frame,
                             masterReferences: masterReferences,
                             item: out Model ModelParse,
                             errorMask: errorMask))
@@ -676,7 +676,9 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)AnimatedObject_FieldIndex.Model);
+                }
                 case 0x41544144: // DATA
+                {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
@@ -685,10 +687,13 @@ namespace Mutagen.Bethesda.Oblivion
                         fieldIndex: (int)AnimatedObject_FieldIndex.IdleAnimation,
                         errorMask: errorMask);
                     return TryGet<int?>.Succeed((int)AnimatedObject_FieldIndex.IdleAnimation);
+                }
                 default:
                     return MajorRecord.Fill_Binary_RecordTypes(
                         item: item,
                         frame: frame,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
                         recordTypeConverter: recordTypeConverter,
                         masterReferences: masterReferences,
                         errorMask: errorMask);

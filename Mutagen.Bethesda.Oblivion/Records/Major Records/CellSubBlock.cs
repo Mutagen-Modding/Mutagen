@@ -1,4 +1,4 @@
-﻿using Loqui.Internal;
+using Loqui.Internal;
 using Loqui.Xml;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Noggog;

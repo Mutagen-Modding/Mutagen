@@ -693,17 +693,17 @@ namespace Mutagen.Bethesda.Oblivion
         protected static TryGet<int?> Fill_Binary_RecordTypes(
             LoadScreen item,
             MutagenFrame frame,
+            RecordType nextRecordType,
+            int contentLength,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask,
             RecordTypeConverter recordTypeConverter = null)
         {
-            var nextRecordType = HeaderTranslation.GetNextSubRecordType(
-                reader: frame.Reader,
-                contentLength: out var contentLength,
-                recordTypeConverter: recordTypeConverter);
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
                 case 0x4E4F4349: // ICON
+                {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     try
                     {
@@ -731,7 +731,9 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)LoadScreen_FieldIndex.Icon);
+                }
                 case 0x43534544: // DESC
+                {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     try
                     {
@@ -759,7 +761,9 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)LoadScreen_FieldIndex.Description);
+                }
                 case 0x4D414E4C: // LNAM
+                {
                     Mutagen.Bethesda.Binary.ListBinaryTranslation<LoadScreenLocation>.Instance.ParseRepeatedItem(
                         frame: frame,
                         triggeringRecord: LoadScreen_Registration.LNAM_HEADER,
@@ -770,17 +774,20 @@ namespace Mutagen.Bethesda.Oblivion
                         transl: (MutagenFrame r, out LoadScreenLocation listSubItem, ErrorMaskBuilder listErrMask) =>
                         {
                             return LoquiBinaryTranslation<LoadScreenLocation>.Instance.Parse(
-                                frame: r.Spawn(snapToFinalPosition: false),
+                                frame: r,
                                 item: out listSubItem,
                                 errorMask: listErrMask,
                                 masterReferences: masterReferences);
                         }
                         );
                     return TryGet<int?>.Succeed((int)LoadScreen_FieldIndex.Locations);
+                }
                 default:
                     return MajorRecord.Fill_Binary_RecordTypes(
                         item: item,
                         frame: frame,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
                         recordTypeConverter: recordTypeConverter,
                         masterReferences: masterReferences,
                         errorMask: errorMask);

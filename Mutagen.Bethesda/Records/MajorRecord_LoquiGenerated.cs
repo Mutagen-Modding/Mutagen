@@ -637,7 +637,7 @@ namespace Mutagen.Bethesda
             {
                 errorMask?.PushIndex((int)MajorRecord_FieldIndex.FormKey);
                 if (Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.Parse(
-                    frame: frame.Spawn(snapToFinalPosition: false),
+                    frame: frame,
                     masterReferences: masterReferences,
                     item: out FormKey FormKeyParse,
                     errorMask: errorMask))
@@ -662,7 +662,7 @@ namespace Mutagen.Bethesda
             {
                 errorMask?.PushIndex((int)MajorRecord_FieldIndex.Version);
                 if (Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
-                    frame: frame.Spawn(snapToFinalPosition: false),
+                    frame: frame,
                     item: out UInt32 VersionParse,
                     errorMask: errorMask))
                 {
@@ -687,17 +687,17 @@ namespace Mutagen.Bethesda
         protected static TryGet<int?> Fill_Binary_RecordTypes(
             MajorRecord item,
             MutagenFrame frame,
+            RecordType nextRecordType,
+            int contentLength,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask,
             RecordTypeConverter recordTypeConverter = null)
         {
-            var nextRecordType = HeaderTranslation.GetNextSubRecordType(
-                reader: frame.Reader,
-                contentLength: out var contentLength,
-                recordTypeConverter: recordTypeConverter);
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
                 case 0x44494445: // EDID
+                {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     try
                     {
@@ -725,6 +725,7 @@ namespace Mutagen.Bethesda
                         errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)MajorRecord_FieldIndex.EditorID);
+                }
                 default:
                     errorMask?.ReportWarning($"Unexpected header {nextRecordType.Type} at position {frame.Position}");
                     frame.Position += contentLength + Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;

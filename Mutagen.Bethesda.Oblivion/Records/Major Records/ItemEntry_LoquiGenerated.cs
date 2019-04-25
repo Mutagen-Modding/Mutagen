@@ -525,37 +525,29 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMask)
         {
             var ret = new ItemEntry();
-            try
+            frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
+                frame.Reader,
+                recordTypeConverter.ConvertToCustom(ItemEntry_Registration.CNTO_HEADER)));
+            UtilityTranslation.RecordParse(
+                record: ret,
+                frame: frame,
+                setFinal: true,
+                masterReferences: masterReferences,
+                errorMask: errorMask,
+                recordTypeConverter: recordTypeConverter,
+                fillStructs: Fill_Binary_Structs);
+            if (ret.StructCustom)
             {
-                frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
-                    frame.Reader,
-                    recordTypeConverter.ConvertToCustom(ItemEntry_Registration.CNTO_HEADER)));
-                using (frame)
+                CompositeDisposable structUnsubber = new CompositeDisposable();
+                Action unsubAction = () =>
                 {
-                    Fill_Binary_Structs(
-                        item: ret,
-                        frame: frame,
-                        masterReferences: masterReferences,
-                        errorMask: errorMask);
-                }
-                if (ret.StructCustom)
-                {
-                    CompositeDisposable structUnsubber = new CompositeDisposable();
-                    Action unsubAction = () =>
-                    {
-                        structUnsubber.Dispose();
-                        ret.StructCustom = false;
-                    };
-                    structUnsubber.Add(
-                        ret.WhenAny(x => x.Count)
-                        .Skip(1)
-                        .Subscribe(unsubAction));
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
+                    structUnsubber.Dispose();
+                    ret.StructCustom = false;
+                };
+                structUnsubber.Add(
+                    ret.WhenAny(x => x.Count)
+                    .Skip(1)
+                    .Subscribe(unsubAction));
             }
             return ret;
         }
@@ -611,7 +603,7 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMask)
         {
             Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.ParseInto(
-                frame: frame.Spawn(snapToFinalPosition: false),
+                frame: frame,
                 masterReferences: masterReferences,
                 item: item.Item_Property,
                 fieldIndex: (int)ItemEntry_FieldIndex.Item,
@@ -621,7 +613,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 errorMask?.PushIndex((int)ItemEntry_FieldIndex.Count);
                 if (Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
-                    frame: frame.Spawn(snapToFinalPosition: false),
+                    frame: frame,
                     item: out Int32 CountParse,
                     errorMask: errorMask))
                 {

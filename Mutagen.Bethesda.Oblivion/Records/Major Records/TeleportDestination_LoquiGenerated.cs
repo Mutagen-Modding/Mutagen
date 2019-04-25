@@ -509,25 +509,17 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMask)
         {
             var ret = new TeleportDestination();
-            try
-            {
-                frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
-                    frame.Reader,
-                    recordTypeConverter.ConvertToCustom(TeleportDestination_Registration.XTEL_HEADER)));
-                using (frame)
-                {
-                    Fill_Binary_Structs(
-                        item: ret,
-                        frame: frame,
-                        masterReferences: masterReferences,
-                        errorMask: errorMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
+            frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
+                frame.Reader,
+                recordTypeConverter.ConvertToCustom(TeleportDestination_Registration.XTEL_HEADER)));
+            UtilityTranslation.RecordParse(
+                record: ret,
+                frame: frame,
+                setFinal: true,
+                masterReferences: masterReferences,
+                errorMask: errorMask,
+                recordTypeConverter: recordTypeConverter,
+                fillStructs: Fill_Binary_Structs);
             return ret;
         }
 
@@ -582,7 +574,7 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMask)
         {
             Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.ParseInto(
-                frame: frame.Spawn(snapToFinalPosition: false),
+                frame: frame,
                 masterReferences: masterReferences,
                 item: item.Destination_Property,
                 fieldIndex: (int)TeleportDestination_FieldIndex.Destination,
@@ -591,7 +583,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 errorMask?.PushIndex((int)TeleportDestination_FieldIndex.Position);
                 if (Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(
-                    frame: frame.Spawn(snapToFinalPosition: false),
+                    frame: frame,
                     item: out P3Float PositionParse,
                     errorMask: errorMask))
                 {
@@ -615,7 +607,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 errorMask?.PushIndex((int)TeleportDestination_FieldIndex.Rotation);
                 if (Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(
-                    frame: frame.Spawn(snapToFinalPosition: false),
+                    frame: frame,
                     item: out P3Float RotationParse,
                     errorMask: errorMask))
                 {

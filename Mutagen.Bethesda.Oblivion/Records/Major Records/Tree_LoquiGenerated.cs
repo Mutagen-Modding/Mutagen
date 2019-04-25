@@ -830,22 +830,22 @@ namespace Mutagen.Bethesda.Oblivion
         protected static TryGet<int?> Fill_Binary_RecordTypes(
             Tree item,
             MutagenFrame frame,
+            RecordType nextRecordType,
+            int contentLength,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask,
             RecordTypeConverter recordTypeConverter = null)
         {
-            var nextRecordType = HeaderTranslation.GetNextSubRecordType(
-                reader: frame.Reader,
-                contentLength: out var contentLength,
-                recordTypeConverter: recordTypeConverter);
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
                 case 0x4C444F4D: // MODL
+                {
                     try
                     {
                         errorMask?.PushIndex((int)Tree_FieldIndex.Model);
                         if (LoquiBinaryTranslation<Model>.Instance.Parse(
-                            frame: frame.Spawn(snapToFinalPosition: false),
+                            frame: frame,
                             masterReferences: masterReferences,
                             item: out Model ModelParse,
                             errorMask: errorMask))
@@ -867,7 +867,9 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)Tree_FieldIndex.Model);
+                }
                 case 0x4E4F4349: // ICON
+                {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     try
                     {
@@ -895,7 +897,9 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)Tree_FieldIndex.Icon);
+                }
                 case 0x4D414E53: // SNAM
+                {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     Mutagen.Bethesda.Binary.ListBinaryTranslation<UInt32>.Instance.ParseRepeatedItem(
                         frame: frame.SpawnWithLength(contentLength),
@@ -905,270 +909,273 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask: errorMask,
                         transl: UInt32BinaryTranslation.Instance.Parse);
                     return TryGet<int?>.Succeed((int)Tree_FieldIndex.SpeedTreeSeeds);
+                }
                 case 0x4D414E43: // CNAM
+                {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    using (var dataFrame = frame.SpawnWithLength(contentLength))
+                    var dataFrame = frame.SpawnWithLength(contentLength);
+                    if (!dataFrame.Complete)
                     {
-                        if (!dataFrame.Complete)
+                        item.CNAMDataTypeState = CNAMDataType.Has;
+                    }
+                    try
+                    {
+                        errorMask?.PushIndex((int)Tree_FieldIndex.LeafCurvature);
+                        if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                            frame: dataFrame,
+                            item: out Single LeafCurvatureParse,
+                            errorMask: errorMask))
                         {
-                            item.CNAMDataTypeState = CNAMDataType.Has;
+                            item.LeafCurvature = LeafCurvatureParse;
                         }
-                        try
+                        else
                         {
-                            errorMask?.PushIndex((int)Tree_FieldIndex.LeafCurvature);
-                            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                                frame: dataFrame.Spawn(snapToFinalPosition: false),
-                                item: out Single LeafCurvatureParse,
-                                errorMask: errorMask))
-                            {
-                                item.LeafCurvature = LeafCurvatureParse;
-                            }
-                            else
-                            {
-                                item.LeafCurvature = default(Single);
-                            }
+                            item.LeafCurvature = default(Single);
                         }
-                        catch (Exception ex)
-                        when (errorMask != null)
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    try
+                    {
+                        errorMask?.PushIndex((int)Tree_FieldIndex.MinimumLeafAngle);
+                        if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                            frame: dataFrame,
+                            item: out Single MinimumLeafAngleParse,
+                            errorMask: errorMask))
                         {
-                            errorMask.ReportException(ex);
+                            item.MinimumLeafAngle = MinimumLeafAngleParse;
                         }
-                        finally
+                        else
                         {
-                            errorMask?.PopIndex();
+                            item.MinimumLeafAngle = default(Single);
                         }
-                        try
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    try
+                    {
+                        errorMask?.PushIndex((int)Tree_FieldIndex.MaximumLeafAngle);
+                        if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                            frame: dataFrame,
+                            item: out Single MaximumLeafAngleParse,
+                            errorMask: errorMask))
                         {
-                            errorMask?.PushIndex((int)Tree_FieldIndex.MinimumLeafAngle);
-                            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                                frame: dataFrame.Spawn(snapToFinalPosition: false),
-                                item: out Single MinimumLeafAngleParse,
-                                errorMask: errorMask))
-                            {
-                                item.MinimumLeafAngle = MinimumLeafAngleParse;
-                            }
-                            else
-                            {
-                                item.MinimumLeafAngle = default(Single);
-                            }
+                            item.MaximumLeafAngle = MaximumLeafAngleParse;
                         }
-                        catch (Exception ex)
-                        when (errorMask != null)
+                        else
                         {
-                            errorMask.ReportException(ex);
+                            item.MaximumLeafAngle = default(Single);
                         }
-                        finally
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    try
+                    {
+                        errorMask?.PushIndex((int)Tree_FieldIndex.BranchDimmingValue);
+                        if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                            frame: dataFrame,
+                            item: out Single BranchDimmingValueParse,
+                            errorMask: errorMask))
                         {
-                            errorMask?.PopIndex();
+                            item.BranchDimmingValue = BranchDimmingValueParse;
                         }
-                        try
+                        else
                         {
-                            errorMask?.PushIndex((int)Tree_FieldIndex.MaximumLeafAngle);
-                            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                                frame: dataFrame.Spawn(snapToFinalPosition: false),
-                                item: out Single MaximumLeafAngleParse,
-                                errorMask: errorMask))
-                            {
-                                item.MaximumLeafAngle = MaximumLeafAngleParse;
-                            }
-                            else
-                            {
-                                item.MaximumLeafAngle = default(Single);
-                            }
+                            item.BranchDimmingValue = default(Single);
                         }
-                        catch (Exception ex)
-                        when (errorMask != null)
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    try
+                    {
+                        errorMask?.PushIndex((int)Tree_FieldIndex.LeafDimmingValue);
+                        if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                            frame: dataFrame,
+                            item: out Single LeafDimmingValueParse,
+                            errorMask: errorMask))
                         {
-                            errorMask.ReportException(ex);
+                            item.LeafDimmingValue = LeafDimmingValueParse;
                         }
-                        finally
+                        else
                         {
-                            errorMask?.PopIndex();
+                            item.LeafDimmingValue = default(Single);
                         }
-                        try
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    try
+                    {
+                        errorMask?.PushIndex((int)Tree_FieldIndex.ShadowRadius);
+                        if (Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
+                            frame: dataFrame,
+                            item: out Int32 ShadowRadiusParse,
+                            errorMask: errorMask))
                         {
-                            errorMask?.PushIndex((int)Tree_FieldIndex.BranchDimmingValue);
-                            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                                frame: dataFrame.Spawn(snapToFinalPosition: false),
-                                item: out Single BranchDimmingValueParse,
-                                errorMask: errorMask))
-                            {
-                                item.BranchDimmingValue = BranchDimmingValueParse;
-                            }
-                            else
-                            {
-                                item.BranchDimmingValue = default(Single);
-                            }
+                            item.ShadowRadius = ShadowRadiusParse;
                         }
-                        catch (Exception ex)
-                        when (errorMask != null)
+                        else
                         {
-                            errorMask.ReportException(ex);
+                            item.ShadowRadius = default(Int32);
                         }
-                        finally
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    try
+                    {
+                        errorMask?.PushIndex((int)Tree_FieldIndex.RockingSpeed);
+                        if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                            frame: dataFrame,
+                            item: out Single RockingSpeedParse,
+                            errorMask: errorMask))
                         {
-                            errorMask?.PopIndex();
+                            item.RockingSpeed = RockingSpeedParse;
                         }
-                        try
+                        else
                         {
-                            errorMask?.PushIndex((int)Tree_FieldIndex.LeafDimmingValue);
-                            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                                frame: dataFrame.Spawn(snapToFinalPosition: false),
-                                item: out Single LeafDimmingValueParse,
-                                errorMask: errorMask))
-                            {
-                                item.LeafDimmingValue = LeafDimmingValueParse;
-                            }
-                            else
-                            {
-                                item.LeafDimmingValue = default(Single);
-                            }
+                            item.RockingSpeed = default(Single);
                         }
-                        catch (Exception ex)
-                        when (errorMask != null)
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    try
+                    {
+                        errorMask?.PushIndex((int)Tree_FieldIndex.RustleSpeed);
+                        if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                            frame: dataFrame,
+                            item: out Single RustleSpeedParse,
+                            errorMask: errorMask))
                         {
-                            errorMask.ReportException(ex);
+                            item.RustleSpeed = RustleSpeedParse;
                         }
-                        finally
+                        else
                         {
-                            errorMask?.PopIndex();
+                            item.RustleSpeed = default(Single);
                         }
-                        try
-                        {
-                            errorMask?.PushIndex((int)Tree_FieldIndex.ShadowRadius);
-                            if (Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
-                                frame: dataFrame.Spawn(snapToFinalPosition: false),
-                                item: out Int32 ShadowRadiusParse,
-                                errorMask: errorMask))
-                            {
-                                item.ShadowRadius = ShadowRadiusParse;
-                            }
-                            else
-                            {
-                                item.ShadowRadius = default(Int32);
-                            }
-                        }
-                        catch (Exception ex)
-                        when (errorMask != null)
-                        {
-                            errorMask.ReportException(ex);
-                        }
-                        finally
-                        {
-                            errorMask?.PopIndex();
-                        }
-                        try
-                        {
-                            errorMask?.PushIndex((int)Tree_FieldIndex.RockingSpeed);
-                            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                                frame: dataFrame.Spawn(snapToFinalPosition: false),
-                                item: out Single RockingSpeedParse,
-                                errorMask: errorMask))
-                            {
-                                item.RockingSpeed = RockingSpeedParse;
-                            }
-                            else
-                            {
-                                item.RockingSpeed = default(Single);
-                            }
-                        }
-                        catch (Exception ex)
-                        when (errorMask != null)
-                        {
-                            errorMask.ReportException(ex);
-                        }
-                        finally
-                        {
-                            errorMask?.PopIndex();
-                        }
-                        try
-                        {
-                            errorMask?.PushIndex((int)Tree_FieldIndex.RustleSpeed);
-                            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                                frame: dataFrame.Spawn(snapToFinalPosition: false),
-                                item: out Single RustleSpeedParse,
-                                errorMask: errorMask))
-                            {
-                                item.RustleSpeed = RustleSpeedParse;
-                            }
-                            else
-                            {
-                                item.RustleSpeed = default(Single);
-                            }
-                        }
-                        catch (Exception ex)
-                        when (errorMask != null)
-                        {
-                            errorMask.ReportException(ex);
-                        }
-                        finally
-                        {
-                            errorMask?.PopIndex();
-                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)Tree_FieldIndex.RustleSpeed);
+                }
                 case 0x4D414E42: // BNAM
+                {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    using (var dataFrame = frame.SpawnWithLength(contentLength))
+                    var dataFrame = frame.SpawnWithLength(contentLength);
+                    if (!dataFrame.Complete)
                     {
-                        if (!dataFrame.Complete)
+                        item.BNAMDataTypeState = BNAMDataType.Has;
+                    }
+                    try
+                    {
+                        errorMask?.PushIndex((int)Tree_FieldIndex.BillboardWidth);
+                        if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                            frame: dataFrame,
+                            item: out Single BillboardWidthParse,
+                            errorMask: errorMask))
                         {
-                            item.BNAMDataTypeState = BNAMDataType.Has;
+                            item.BillboardWidth = BillboardWidthParse;
                         }
-                        try
+                        else
                         {
-                            errorMask?.PushIndex((int)Tree_FieldIndex.BillboardWidth);
-                            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                                frame: dataFrame.Spawn(snapToFinalPosition: false),
-                                item: out Single BillboardWidthParse,
-                                errorMask: errorMask))
-                            {
-                                item.BillboardWidth = BillboardWidthParse;
-                            }
-                            else
-                            {
-                                item.BillboardWidth = default(Single);
-                            }
-                        }
-                        catch (Exception ex)
-                        when (errorMask != null)
-                        {
-                            errorMask.ReportException(ex);
-                        }
-                        finally
-                        {
-                            errorMask?.PopIndex();
-                        }
-                        try
-                        {
-                            errorMask?.PushIndex((int)Tree_FieldIndex.BillboardHeight);
-                            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                                frame: dataFrame.Spawn(snapToFinalPosition: false),
-                                item: out Single BillboardHeightParse,
-                                errorMask: errorMask))
-                            {
-                                item.BillboardHeight = BillboardHeightParse;
-                            }
-                            else
-                            {
-                                item.BillboardHeight = default(Single);
-                            }
-                        }
-                        catch (Exception ex)
-                        when (errorMask != null)
-                        {
-                            errorMask.ReportException(ex);
-                        }
-                        finally
-                        {
-                            errorMask?.PopIndex();
+                            item.BillboardWidth = default(Single);
                         }
                     }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    try
+                    {
+                        errorMask?.PushIndex((int)Tree_FieldIndex.BillboardHeight);
+                        if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                            frame: dataFrame,
+                            item: out Single BillboardHeightParse,
+                            errorMask: errorMask))
+                        {
+                            item.BillboardHeight = BillboardHeightParse;
+                        }
+                        else
+                        {
+                            item.BillboardHeight = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
                     return TryGet<int?>.Succeed((int)Tree_FieldIndex.BillboardHeight);
+                }
                 default:
                     return MajorRecord.Fill_Binary_RecordTypes(
                         item: item,
                         frame: frame,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
                         recordTypeConverter: recordTypeConverter,
                         masterReferences: masterReferences,
                         errorMask: errorMask);

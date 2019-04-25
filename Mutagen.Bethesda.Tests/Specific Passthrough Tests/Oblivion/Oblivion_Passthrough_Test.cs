@@ -30,67 +30,7 @@ namespace Mutagen.Bethesda.Tests
             this.NumMasters = passthrough.NumMasters;
             this.settings = settings;
         }
-
-        public async Task ImportExport(
-            PassthroughSettings settings,
-            TempFolder tmp,
-            string inputPath,
-            string outputPathStraight,
-            string outputPathObservable)
-        {
-            // Do normal
-            if (settings.TestNormal)
-            {
-                ModKey modKey = ModKey.Factory(this.FilePath.Name);
-                var mod = OblivionMod.Create_Binary(
-                    inputPath,
-                    modKey: modKey,
-                    errorMask: out var importMask);
-
-                Assert.False(importMask?.IsInError() ?? false);
-
-                foreach (var record in mod.MajorRecords.Items)
-                {
-                    if (record.MajorRecordFlags.HasFlag(MajorRecord.MajorRecordFlag.Compressed))
-                    {
-                        record.MajorRecordFlags &= ~MajorRecord.MajorRecordFlag.Compressed;
-                    }
-                }
-                mod.Write_Binary(
-                    outputPathStraight,
-                    Mutagen.Bethesda.Oblivion.Constants.Oblivion,
-                    errorMask: out var outputMask);
-
-                Assert.False(outputMask?.IsInError() ?? false);
-            }
-            GC.Collect();
-
-            // Do Observable
-            if (settings.TestObservable)
-            {
-                //var observableOutputPathTmp = Path.Combine(tmp.Dir.Path, $"{this.Nickname}_ObservableExportUnsorted");
-                //var sourceObv = Observable.Return(inputPath)
-                //    .Replay();
-                //var obv = new OblivionMod_Observable(sourceObv)
-                //    .Do((MajorRecord m) =>
-                //    {
-                //        if (m.MajorRecordFlags.HasFlag(MajorRecord.MajorRecordFlag.Compressed))
-                //        {
-                //            m.MajorRecordFlags &= ~MajorRecord.MajorRecordFlag.Compressed;
-                //        }
-                //    })
-                //    .Write_Binary(observableOutputPathTmp);
-                //sourceObv.Connect();
-
-                //await obv;
-
-                //ModRecordSorter.Sort(
-                //    inputPath: observableOutputPathTmp,
-                //    outputPath: outputPathObservable,
-                //    temp: tmp);
-            }
-        }
-
+        
         public static ModRecordAligner.AlignmentRules GetAlignmentRules()
         {
             var ret = new ModRecordAligner.AlignmentRules();
@@ -1604,17 +1544,33 @@ namespace Mutagen.Bethesda.Tests
                 var processedPath = ProcessedPath(tmp);
                 var orderedPath = Path.Combine(tmp.Dir.Path, $"{this.Nickname}_Ordered");
                 var observableOutputPath = Path.Combine(tmp.Dir.Path, $"{this.Nickname}_ObservableExport");
-
-                await ImportExport(
-                    settings: settings,
-                    tmp: tmp,
-                    inputPath: orderedPath,
-                    outputPathStraight: outputPath,
-                    outputPathObservable: observableOutputPath);
-                GC.Collect();
-
+                
+                // Do normal
                 if (settings.TestNormal)
                 {
+                    ModKey modKey = ModKey.Factory(this.FilePath.Name);
+                    var mod = OblivionMod.Create_Binary(
+                        orderedPath,
+                        modKey: modKey,
+                        errorMask: out var importMask);
+
+                    Assert.False(importMask?.IsInError() ?? false);
+
+                    foreach (var record in mod.MajorRecords.Items)
+                    {
+                        if (record.MajorRecordFlags.HasFlag(MajorRecord.MajorRecordFlag.Compressed))
+                        {
+                            record.MajorRecordFlags &= ~MajorRecord.MajorRecordFlag.Compressed;
+                        }
+                    }
+                    mod.Write_Binary(
+                        outputPath,
+                        Mutagen.Bethesda.Oblivion.Constants.Oblivion,
+                        errorMask: out var outputMask);
+
+                    Assert.False(outputMask?.IsInError() ?? false);
+                    GC.Collect();
+                
                     using (var stream = new BinaryReadStream(processedPath))
                     {
                         var ret = Passthrough_Tests.AssertFilesEqual(
@@ -1643,6 +1599,17 @@ namespace Mutagen.Bethesda.Tests
                     }
                 }
             }
+        }
+
+        public async Task TestImport()
+        {
+            ModKey modKey = ModKey.Factory(this.FilePath.Name);
+            var mod = OblivionMod.Create_Binary(
+                this.FilePath.Path,
+                modKey: modKey,
+                errorMask: out var importMask);
+
+            Assert.False(importMask?.IsInError() ?? false);
         }
     }
 }

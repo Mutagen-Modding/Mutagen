@@ -769,17 +769,17 @@ namespace Mutagen.Bethesda.Oblivion
         protected static TryGet<int?> Fill_Binary_RecordTypes(
             LeveledCreature item,
             MutagenFrame frame,
+            RecordType nextRecordType,
+            int contentLength,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask,
             RecordTypeConverter recordTypeConverter = null)
         {
-            var nextRecordType = HeaderTranslation.GetNextSubRecordType(
-                reader: frame.Reader,
-                contentLength: out var contentLength,
-                recordTypeConverter: recordTypeConverter);
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
                 case 0x444C564C: // LVLD
+                {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     try
                     {
@@ -806,7 +806,9 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)LeveledCreature_FieldIndex.ChanceNone);
+                }
                 case 0x464C564C: // LVLF
+                {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     try
                     {
@@ -833,7 +835,9 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)LeveledCreature_FieldIndex.Flags);
+                }
                 case 0x4F4C564C: // LVLO
+                {
                     Mutagen.Bethesda.Binary.ListBinaryTranslation<LeveledEntry<NPCSpawn>>.Instance.ParseRepeatedItem(
                         frame: frame,
                         triggeringRecord: LeveledCreature_Registration.LVLO_HEADER,
@@ -844,14 +848,16 @@ namespace Mutagen.Bethesda.Oblivion
                         transl: (MutagenFrame r, out LeveledEntry<NPCSpawn> listSubItem, ErrorMaskBuilder listErrMask) =>
                         {
                             return LoquiBinaryTranslation<LeveledEntry<NPCSpawn>>.Instance.Parse(
-                                frame: r.Spawn(snapToFinalPosition: false),
+                                frame: r,
                                 item: out listSubItem,
                                 errorMask: listErrMask,
                                 masterReferences: masterReferences);
                         }
                         );
                     return TryGet<int?>.Succeed((int)LeveledCreature_FieldIndex.Entries);
+                }
                 case 0x49524353: // SCRI
+                {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
@@ -860,7 +866,9 @@ namespace Mutagen.Bethesda.Oblivion
                         fieldIndex: (int)LeveledCreature_FieldIndex.Script,
                         errorMask: errorMask);
                     return TryGet<int?>.Succeed((int)LeveledCreature_FieldIndex.Script);
+                }
                 case 0x4D414E54: // TNAM
+                {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
@@ -869,10 +877,13 @@ namespace Mutagen.Bethesda.Oblivion
                         fieldIndex: (int)LeveledCreature_FieldIndex.Template,
                         errorMask: errorMask);
                     return TryGet<int?>.Succeed((int)LeveledCreature_FieldIndex.Template);
+                }
                 default:
                     return NPCSpawn.Fill_Binary_RecordTypes(
                         item: item,
                         frame: frame,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
                         recordTypeConverter: recordTypeConverter,
                         masterReferences: masterReferences,
                         errorMask: errorMask);

@@ -25,6 +25,7 @@
     <LangVersion>7.1</LangVersion>
     <NoWarn>CS1998</NoWarn>
     <WarningsAsErrors>CS4014</WarningsAsErrors>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>

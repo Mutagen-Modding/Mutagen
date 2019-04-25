@@ -676,22 +676,14 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMask)
         {
             var ret = new RegionDataObject();
-            try
-            {
-                using (frame)
-                {
-                    Fill_Binary_Structs(
-                        item: ret,
-                        frame: frame,
-                        masterReferences: masterReferences,
-                        errorMask: errorMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
+            UtilityTranslation.TypelessRecordParse(
+                record: ret,
+                frame: frame,
+                setFinal: false,
+                masterReferences: masterReferences,
+                errorMask: errorMask,
+                recordTypeConverter: recordTypeConverter,
+                fillStructs: Fill_Binary_Structs);
             return ret;
         }
 
@@ -746,7 +738,7 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMask)
         {
             Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.ParseInto(
-                frame: frame.Spawn(snapToFinalPosition: false),
+                frame: frame,
                 masterReferences: masterReferences,
                 item: item.Object_Property,
                 fieldIndex: (int)RegionDataObject_FieldIndex.Object,
@@ -755,7 +747,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 errorMask?.PushIndex((int)RegionDataObject_FieldIndex.ParentIndex);
                 if (Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Parse(
-                    frame: frame.Spawn(snapToFinalPosition: false),
+                    frame: frame,
                     item: out UInt16 ParentIndexParse,
                     errorMask: errorMask))
                 {
@@ -803,7 +795,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 errorMask?.PushIndex((int)RegionDataObject_FieldIndex.Density);
                 if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                    frame: frame.Spawn(snapToFinalPosition: false),
+                    frame: frame,
                     item: out Single DensityParse,
                     errorMask: errorMask))
                 {
@@ -827,7 +819,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 errorMask?.PushIndex((int)RegionDataObject_FieldIndex.Clustering);
                 if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                    frame: frame.Spawn(snapToFinalPosition: false),
+                    frame: frame,
                     item: out Byte ClusteringParse,
                     errorMask: errorMask))
                 {
@@ -851,7 +843,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 errorMask?.PushIndex((int)RegionDataObject_FieldIndex.MinSlope);
                 if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                    frame: frame.Spawn(snapToFinalPosition: false),
+                    frame: frame,
                     item: out Byte MinSlopeParse,
                     errorMask: errorMask))
                 {
@@ -875,7 +867,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 errorMask?.PushIndex((int)RegionDataObject_FieldIndex.MaxSlope);
                 if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                    frame: frame.Spawn(snapToFinalPosition: false),
+                    frame: frame,
                     item: out Byte MaxSlopeParse,
                     errorMask: errorMask))
                 {
@@ -923,7 +915,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 errorMask?.PushIndex((int)RegionDataObject_FieldIndex.RadiusWrtPercent);
                 if (Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Parse(
-                    frame: frame.Spawn(snapToFinalPosition: false),
+                    frame: frame,
                     item: out UInt16 RadiusWrtPercentParse,
                     errorMask: errorMask))
                 {
@@ -947,7 +939,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 errorMask?.PushIndex((int)RegionDataObject_FieldIndex.Radius);
                 if (Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Parse(
-                    frame: frame.Spawn(snapToFinalPosition: false),
+                    frame: frame,
                     item: out UInt16 RadiusParse,
                     errorMask: errorMask))
                 {
@@ -971,7 +963,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 errorMask?.PushIndex((int)RegionDataObject_FieldIndex.MinHeight);
                 if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                    frame: frame.Spawn(snapToFinalPosition: false),
+                    frame: frame,
                     item: out Single MinHeightParse,
                     errorMask: errorMask))
                 {
@@ -995,7 +987,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 errorMask?.PushIndex((int)RegionDataObject_FieldIndex.MaxHeight);
                 if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                    frame: frame.Spawn(snapToFinalPosition: false),
+                    frame: frame,
                     item: out Single MaxHeightParse,
                     errorMask: errorMask))
                 {
@@ -1019,7 +1011,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 errorMask?.PushIndex((int)RegionDataObject_FieldIndex.Sink);
                 if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                    frame: frame.Spawn(snapToFinalPosition: false),
+                    frame: frame,
                     item: out Single SinkParse,
                     errorMask: errorMask))
                 {
@@ -1043,7 +1035,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 errorMask?.PushIndex((int)RegionDataObject_FieldIndex.SinkVariance);
                 if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                    frame: frame.Spawn(snapToFinalPosition: false),
+                    frame: frame,
                     item: out Single SinkVarianceParse,
                     errorMask: errorMask))
                 {
@@ -1067,7 +1059,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 errorMask?.PushIndex((int)RegionDataObject_FieldIndex.SizeVariance);
                 if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                    frame: frame.Spawn(snapToFinalPosition: false),
+                    frame: frame,
                     item: out Single SizeVarianceParse,
                     errorMask: errorMask))
                 {
@@ -1091,7 +1083,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 errorMask?.PushIndex((int)RegionDataObject_FieldIndex.AngleVariance);
                 if (Mutagen.Bethesda.Binary.P3UInt16BinaryTranslation.Instance.Parse(
-                    frame: frame.Spawn(snapToFinalPosition: false),
+                    frame: frame,
                     item: out P3UInt16 AngleVarianceParse,
                     errorMask: errorMask))
                 {

@@ -69,8 +69,7 @@ namespace Mutagen.Bethesda
                             var restOfMeta = inputStream.ReadBytes(8);
                             using (var frame = MutagenFrame.ByLength(
                                 reader: inputStream,
-                                length: len,
-                                snapToFinalPosition: false))
+                                length: len))
                             {
                                 // Decompress
                                 var decompressed = frame.Decompress();

@@ -491,25 +491,17 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMask)
         {
             var ret = new Header();
-            try
-            {
-                frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
-                    frame.Reader,
-                    recordTypeConverter.ConvertToCustom(Header_Registration.HEDR_HEADER)));
-                using (frame)
-                {
-                    Fill_Binary_Structs(
-                        item: ret,
-                        frame: frame,
-                        masterReferences: masterReferences,
-                        errorMask: errorMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
+            frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
+                frame.Reader,
+                recordTypeConverter.ConvertToCustom(Header_Registration.HEDR_HEADER)));
+            UtilityTranslation.RecordParse(
+                record: ret,
+                frame: frame,
+                setFinal: true,
+                masterReferences: masterReferences,
+                errorMask: errorMask,
+                recordTypeConverter: recordTypeConverter,
+                fillStructs: Fill_Binary_Structs);
             return ret;
         }
 
@@ -567,7 +559,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 errorMask?.PushIndex((int)Header_FieldIndex.Version);
                 if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                    frame: frame.Spawn(snapToFinalPosition: false),
+                    frame: frame,
                     item: out Single VersionParse,
                     errorMask: errorMask))
                 {
@@ -591,7 +583,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 errorMask?.PushIndex((int)Header_FieldIndex.NumRecords);
                 if (Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
-                    frame: frame.Spawn(snapToFinalPosition: false),
+                    frame: frame,
                     item: out Int32 NumRecordsParse,
                     errorMask: errorMask))
                 {
@@ -615,7 +607,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 errorMask?.PushIndex((int)Header_FieldIndex.NextObjectID);
                 if (Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
-                    frame: frame.Spawn(snapToFinalPosition: false),
+                    frame: frame,
                     item: out UInt32 NextObjectIDParse,
                     errorMask: errorMask))
                 {

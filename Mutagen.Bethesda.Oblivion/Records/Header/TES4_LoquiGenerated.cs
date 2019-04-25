@@ -717,35 +717,18 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMask)
         {
             var ret = new TES4();
-            try
-            {
-                frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseRecord(
-                    frame.Reader,
-                    recordTypeConverter.ConvertToCustom(TES4_Registration.TES4_HEADER)));
-                using (frame)
-                {
-                    Fill_Binary_Structs(
-                        item: ret,
-                        frame: frame,
-                        masterReferences: masterReferences,
-                        errorMask: errorMask);
-                    while (!frame.Complete)
-                    {
-                        var parsed = Fill_Binary_RecordTypes(
-                            item: ret,
-                            frame: frame,
-                            masterReferences: masterReferences,
-                            errorMask: errorMask,
-                            recordTypeConverter: recordTypeConverter);
-                        if (parsed.Failed) break;
-                    }
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
+            frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseRecord(
+                frame.Reader,
+                recordTypeConverter.ConvertToCustom(TES4_Registration.TES4_HEADER)));
+            UtilityTranslation.RecordParse(
+                record: ret,
+                frame: frame,
+                setFinal: true,
+                masterReferences: masterReferences,
+                errorMask: errorMask,
+                recordTypeConverter: recordTypeConverter,
+                fillStructs: Fill_Binary_Structs,
+                fillTyped: Fill_Binary_RecordTypes);
             return ret;
         }
 
@@ -828,17 +811,17 @@ namespace Mutagen.Bethesda.Oblivion
         protected static TryGet<int?> Fill_Binary_RecordTypes(
             TES4 item,
             MutagenFrame frame,
+            RecordType nextRecordType,
+            int contentLength,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask,
             RecordTypeConverter recordTypeConverter = null)
         {
-            var nextRecordType = HeaderTranslation.GetNextSubRecordType(
-                reader: frame.Reader,
-                contentLength: out var contentLength,
-                recordTypeConverter: recordTypeConverter);
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
                 case 0x52444548: // HEDR
+                {
                     try
                     {
                         errorMask?.PushIndex((int)TES4_FieldIndex.Header);
@@ -865,7 +848,9 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)TES4_FieldIndex.Header);
+                }
                 case 0x5453464F: // OFST
+                {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     try
                     {
@@ -892,7 +877,9 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)TES4_FieldIndex.TypeOffsets);
+                }
                 case 0x454C4544: // DELE
+                {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     try
                     {
@@ -919,7 +906,9 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)TES4_FieldIndex.Deleted);
+                }
                 case 0x4D414E43: // CNAM
+                {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     try
                     {
@@ -947,7 +936,9 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)TES4_FieldIndex.Author);
+                }
                 case 0x4D414E53: // SNAM
+                {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     try
                     {
@@ -975,7 +966,9 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)TES4_FieldIndex.Description);
+                }
                 case 0x5453414D: // MAST
+                {
                     Mutagen.Bethesda.Binary.ListBinaryTranslation<MasterReference>.Instance.ParseRepeatedItem(
                         frame: frame,
                         triggeringRecord: TES4_Registration.MAST_HEADER,
@@ -986,14 +979,16 @@ namespace Mutagen.Bethesda.Oblivion
                         transl: (MutagenFrame r, out MasterReference listSubItem, ErrorMaskBuilder listErrMask) =>
                         {
                             return LoquiBinaryTranslation<MasterReference>.Instance.Parse(
-                                frame: r.Spawn(snapToFinalPosition: false),
+                                frame: r,
                                 item: out listSubItem,
                                 errorMask: listErrMask,
                                 masterReferences: masterReferences);
                         }
                         );
                     return TryGet<int?>.Succeed((int)TES4_FieldIndex.MasterReferences);
+                }
                 case 0x41544144: // DATA
+                {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     try
                     {
@@ -1020,6 +1015,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)TES4_FieldIndex.VestigialData);
+                }
                 default:
                     errorMask?.ReportWarning($"Unexpected header {nextRecordType.Type} at position {frame.Position}");
                     frame.Position += contentLength + Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;

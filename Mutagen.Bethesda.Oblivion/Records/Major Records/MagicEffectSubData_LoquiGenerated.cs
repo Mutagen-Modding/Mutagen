@@ -564,22 +564,14 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMask)
         {
             var ret = new MagicEffectSubData();
-            try
-            {
-                using (frame)
-                {
-                    Fill_Binary_Structs(
-                        item: ret,
-                        frame: frame,
-                        masterReferences: masterReferences,
-                        errorMask: errorMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
+            UtilityTranslation.TypelessRecordParse(
+                record: ret,
+                frame: frame,
+                setFinal: false,
+                masterReferences: masterReferences,
+                errorMask: errorMask,
+                recordTypeConverter: recordTypeConverter,
+                fillStructs: Fill_Binary_Structs);
             return ret;
         }
 
@@ -634,31 +626,31 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMask)
         {
             Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.ParseInto(
-                frame: frame.Spawn(snapToFinalPosition: false),
+                frame: frame,
                 masterReferences: masterReferences,
                 item: item.EnchantEffect_Property,
                 fieldIndex: (int)MagicEffectSubData_FieldIndex.EnchantEffect,
                 errorMask: errorMask);
             Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.ParseInto(
-                frame: frame.Spawn(snapToFinalPosition: false),
+                frame: frame,
                 masterReferences: masterReferences,
                 item: item.CastingSound_Property,
                 fieldIndex: (int)MagicEffectSubData_FieldIndex.CastingSound,
                 errorMask: errorMask);
             Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.ParseInto(
-                frame: frame.Spawn(snapToFinalPosition: false),
+                frame: frame,
                 masterReferences: masterReferences,
                 item: item.BoltSound_Property,
                 fieldIndex: (int)MagicEffectSubData_FieldIndex.BoltSound,
                 errorMask: errorMask);
             Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.ParseInto(
-                frame: frame.Spawn(snapToFinalPosition: false),
+                frame: frame,
                 masterReferences: masterReferences,
                 item: item.HitSound_Property,
                 fieldIndex: (int)MagicEffectSubData_FieldIndex.HitSound,
                 errorMask: errorMask);
             Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.ParseInto(
-                frame: frame.Spawn(snapToFinalPosition: false),
+                frame: frame,
                 masterReferences: masterReferences,
                 item: item.AreaSound_Property,
                 fieldIndex: (int)MagicEffectSubData_FieldIndex.AreaSound,
@@ -667,7 +659,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 errorMask?.PushIndex((int)MagicEffectSubData_FieldIndex.ConstantEffectEnchantmentFactor);
                 if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                    frame: frame.Spawn(snapToFinalPosition: false),
+                    frame: frame,
                     item: out Single ConstantEffectEnchantmentFactorParse,
                     errorMask: errorMask))
                 {
@@ -691,7 +683,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 errorMask?.PushIndex((int)MagicEffectSubData_FieldIndex.ConstantEffectBarterFactor);
                 if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                    frame: frame.Spawn(snapToFinalPosition: false),
+                    frame: frame,
                     item: out Single ConstantEffectBarterFactorParse,
                     errorMask: errorMask))
                 {

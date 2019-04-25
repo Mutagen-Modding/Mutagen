@@ -563,99 +563,98 @@ namespace Mutagen.Bethesda.Oblivion
         protected static TryGet<int?> Fill_Binary_RecordTypes(
             RegionData item,
             MutagenFrame frame,
+            RecordType nextRecordType,
+            int contentLength,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask,
             RecordTypeConverter recordTypeConverter = null)
         {
-            var nextRecordType = HeaderTranslation.GetNextSubRecordType(
-                reader: frame.Reader,
-                contentLength: out var contentLength,
-                recordTypeConverter: recordTypeConverter);
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
                 case 0x54414452: // RDAT
+                {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    using (var dataFrame = frame.SpawnWithLength(contentLength))
+                    var dataFrame = frame.SpawnWithLength(contentLength);
+                    if (!dataFrame.Complete)
                     {
-                        if (!dataFrame.Complete)
-                        {
-                            item.RDATDataTypeState = RDATDataType.Has;
-                        }
-                        try
-                        {
-                            errorMask?.PushIndex((int)RegionData_FieldIndex.DataType);
-                            if (EnumBinaryTranslation<RegionData.RegionDataType>.Instance.Parse(
-                                frame: dataFrame.SpawnWithLength(4),
-                                item: out RegionData.RegionDataType DataTypeParse,
-                                errorMask: errorMask))
-                            {
-                                item.DataType = DataTypeParse;
-                            }
-                            else
-                            {
-                                item.DataType = default(RegionData.RegionDataType);
-                            }
-                        }
-                        catch (Exception ex)
-                        when (errorMask != null)
-                        {
-                            errorMask.ReportException(ex);
-                        }
-                        finally
-                        {
-                            errorMask?.PopIndex();
-                        }
-                        try
-                        {
-                            errorMask?.PushIndex((int)RegionData_FieldIndex.Flags);
-                            if (EnumBinaryTranslation<RegionData.RegionDataFlag>.Instance.Parse(
-                                frame: dataFrame.SpawnWithLength(1),
-                                item: out RegionData.RegionDataFlag FlagsParse,
-                                errorMask: errorMask))
-                            {
-                                item.Flags = FlagsParse;
-                            }
-                            else
-                            {
-                                item.Flags = default(RegionData.RegionDataFlag);
-                            }
-                        }
-                        catch (Exception ex)
-                        when (errorMask != null)
-                        {
-                            errorMask.ReportException(ex);
-                        }
-                        finally
-                        {
-                            errorMask?.PopIndex();
-                        }
-                        try
-                        {
-                            errorMask?.PushIndex((int)RegionData_FieldIndex.Priority);
-                            if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                                frame: dataFrame.Spawn(snapToFinalPosition: false),
-                                item: out Byte PriorityParse,
-                                errorMask: errorMask))
-                            {
-                                item.Priority = PriorityParse;
-                            }
-                            else
-                            {
-                                item.Priority = default(Byte);
-                            }
-                        }
-                        catch (Exception ex)
-                        when (errorMask != null)
-                        {
-                            errorMask.ReportException(ex);
-                        }
-                        finally
-                        {
-                            errorMask?.PopIndex();
-                        }
-                        dataFrame.SetPosition(dataFrame.Position + 2);
+                        item.RDATDataTypeState = RDATDataType.Has;
                     }
+                    try
+                    {
+                        errorMask?.PushIndex((int)RegionData_FieldIndex.DataType);
+                        if (EnumBinaryTranslation<RegionData.RegionDataType>.Instance.Parse(
+                            frame: dataFrame.SpawnWithLength(4),
+                            item: out RegionData.RegionDataType DataTypeParse,
+                            errorMask: errorMask))
+                        {
+                            item.DataType = DataTypeParse;
+                        }
+                        else
+                        {
+                            item.DataType = default(RegionData.RegionDataType);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    try
+                    {
+                        errorMask?.PushIndex((int)RegionData_FieldIndex.Flags);
+                        if (EnumBinaryTranslation<RegionData.RegionDataFlag>.Instance.Parse(
+                            frame: dataFrame.SpawnWithLength(1),
+                            item: out RegionData.RegionDataFlag FlagsParse,
+                            errorMask: errorMask))
+                        {
+                            item.Flags = FlagsParse;
+                        }
+                        else
+                        {
+                            item.Flags = default(RegionData.RegionDataFlag);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    try
+                    {
+                        errorMask?.PushIndex((int)RegionData_FieldIndex.Priority);
+                        if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                            frame: dataFrame,
+                            item: out Byte PriorityParse,
+                            errorMask: errorMask))
+                        {
+                            item.Priority = PriorityParse;
+                        }
+                        else
+                        {
+                            item.Priority = default(Byte);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    dataFrame.SetPosition(dataFrame.Position + 2);
                     return TryGet<int?>.Succeed((int)RegionData_FieldIndex.Priority);
+                }
                 default:
                     return TryGet<int?>.Failure;
             }

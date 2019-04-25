@@ -143,7 +143,11 @@ namespace Mutagen.Bethesda.Oblivion
         static partial void CustomBinaryEnd_Import(MutagenFrame frame, Worldspace obj, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
         {
             if (frame.Reader.Complete) return;
-            var next = HeaderTranslation.GetNextType(frame.Reader, out var len, hopGroup: false);
+            var next = HeaderTranslation.GetNextType(
+                reader: frame.Reader, 
+                contentLength: out var len, 
+                finalPos: out var _,
+                hopGroup: false);
             if (!next.Equals(Group_Registration.GRUP_HEADER)) return;
             frame.Reader.Position += 8;
             var formKey = FormKey.Factory(masterReferences, frame.Reader.ReadUInt32());
@@ -163,65 +167,63 @@ namespace Mutagen.Bethesda.Oblivion
                 frame.Reader.Position -= 16;
                 return;
             }
-            using (var subFrame = MutagenFrame.ByLength(frame.Reader, len - 20))
+            var subFrame = MutagenFrame.ByLength(frame.Reader, len - 20);
+            for (int i = 0; i < 3; i++)
             {
-                for (int i = 0; i < 3; i++)
+                if (subFrame.Complete) return;
+                var subType = HeaderTranslation.ReadNextSubRecordType(frame.Reader, out var subLen);
+                subFrame.Reader.Position -= 6;
+                switch (subType.TypeInt)
                 {
-                    if (subFrame.Complete) return;
-                    var subType = HeaderTranslation.ReadNextSubRecordType(frame.Reader, out var subLen);
-                    subFrame.Reader.Position -= 6;
-                    switch (subType.TypeInt)
-                    {
-                        case 0x44414F52: // "ROAD":
-                            if (LoquiBinaryTranslation<Road>.Instance.Parse(
-                                frame: subFrame,
-                                item: out var road,
-                                fieldIndex: (int)Worldspace_FieldIndex.Road,
-                                masterReferences: masterReferences,
-                                errorMask: errorMask))
+                    case 0x44414F52: // "ROAD":
+                        if (LoquiBinaryTranslation<Road>.Instance.Parse(
+                            frame: subFrame,
+                            item: out var road,
+                            fieldIndex: (int)Worldspace_FieldIndex.Road,
+                            masterReferences: masterReferences,
+                            errorMask: errorMask))
+                        {
+                            obj.Road = road;
+                        }
+                        else
+                        {
+                            obj.Road_Unset();
+                        }
+                        break;
+                    case 0x4C4C4543: // "CELL":
+                        if (LoquiBinaryTranslation<Cell>.Instance.Parse(
+                            frame: subFrame,
+                            item: out var topCell,
+                            fieldIndex: (int)Worldspace_FieldIndex.TopCell,
+                            masterReferences: masterReferences,
+                            errorMask: errorMask))
+                        {
+                            obj.TopCell = topCell;
+                        }
+                        else
+                        {
+                            obj.TopCell_Unset();
+                        }
+                        break;
+                    case 0x50555247: // "GRUP":
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<WorldspaceBlock>.Instance.ParseRepeatedItem(
+                            frame: frame,
+                            item: obj._SubCells,
+                            triggeringRecord: Worldspace_Registration.GRUP_HEADER,
+                            fieldIndex: (int)Worldspace_FieldIndex.SubCells,
+                            lengthLength: Mutagen.Bethesda.Constants.RECORD_LENGTHLENGTH,
+                            errorMask: errorMask,
+                            transl: (MutagenFrame r, out WorldspaceBlock block, ErrorMaskBuilder subErrorMask) =>
                             {
-                                obj.Road = road;
-                            }
-                            else
-                            {
-                                obj.Road_Unset();
-                            }
-                            break;
-                        case 0x4C4C4543: // "CELL":
-                            if (LoquiBinaryTranslation<Cell>.Instance.Parse(
-                                frame: subFrame,
-                                item: out var topCell,
-                                fieldIndex: (int)Worldspace_FieldIndex.TopCell,
-                                masterReferences: masterReferences,
-                                errorMask: errorMask))
-                            {
-                                obj.TopCell = topCell;
-                            }
-                            else
-                            {
-                                obj.TopCell_Unset();
-                            }
-                            break;
-                        case 0x50555247: // "GRUP":
-                            Mutagen.Bethesda.Binary.ListBinaryTranslation<WorldspaceBlock>.Instance.ParseRepeatedItem(
-                                frame: frame,
-                                item: obj._SubCells,
-                                triggeringRecord: Worldspace_Registration.GRUP_HEADER,
-                                fieldIndex: (int)Worldspace_FieldIndex.SubCells,
-                                lengthLength: Mutagen.Bethesda.Constants.RECORD_LENGTHLENGTH,
-                                errorMask: errorMask,
-                                transl: (MutagenFrame r, out WorldspaceBlock block, ErrorMaskBuilder subErrorMask) =>
-                                {
-                                    return LoquiBinaryTranslation<WorldspaceBlock>.Instance.Parse(
-                                        frame: r.Spawn(snapToFinalPosition: false),
-                                        item: out block,
-                                        masterReferences: masterReferences,
-                                        errorMask: errorMask);
-                                });
-                            break;
-                        default:
-                            return;
-                    }
+                                return LoquiBinaryTranslation<WorldspaceBlock>.Instance.Parse(
+                                    frame: r,
+                                    item: out block,
+                                    masterReferences: masterReferences,
+                                    errorMask: errorMask);
+                            });
+                        break;
+                    default:
+                        return;
                 }
             }
         }

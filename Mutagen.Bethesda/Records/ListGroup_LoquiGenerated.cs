@@ -545,33 +545,15 @@ namespace Mutagen.Bethesda
             ErrorMaskBuilder errorMask)
         {
             var ret = new ListGroup<T>();
-            try
-            {
-                frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseGroup(frame.Reader));
-                using (frame)
-                {
-                    Fill_Binary_Structs(
-                        item: ret,
-                        frame: frame,
-                        masterReferences: masterReferences,
-                        errorMask: errorMask);
-                    while (!frame.Complete)
-                    {
-                        var parsed = Fill_Binary_RecordTypes(
-                            item: ret,
-                            frame: frame,
-                            masterReferences: masterReferences,
-                            errorMask: errorMask,
-                            recordTypeConverter: recordTypeConverter);
-                        if (parsed.Failed) break;
-                    }
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
+            frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseGroup(frame.Reader));
+            UtilityTranslation.GroupParse(
+                record: ret,
+                frame: frame,
+                masterReferences: masterReferences,
+                errorMask: errorMask,
+                recordTypeConverter: recordTypeConverter,
+                fillStructs: Fill_Binary_Structs,
+                fillTyped: Fill_Binary_RecordTypes);
             return ret;
         }
 
@@ -710,14 +692,13 @@ namespace Mutagen.Bethesda
         protected static TryGet<int?> Fill_Binary_RecordTypes(
             ListGroup<T> item,
             MutagenFrame frame,
+            RecordType nextRecordType,
+            int contentLength,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask,
             RecordTypeConverter recordTypeConverter = null)
         {
-            var nextRecordType = HeaderTranslation.GetNextRecordType(
-                reader: frame.Reader,
-                contentLength: out var contentLength,
-                recordTypeConverter: recordTypeConverter);
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
                 default:
@@ -733,7 +714,7 @@ namespace Mutagen.Bethesda
                             transl: (MutagenFrame r, out T listSubItem, ErrorMaskBuilder listErrMask) =>
                             {
                                 return LoquiBinaryTranslation<T>.Instance.Parse(
-                                    frame: r.Spawn(snapToFinalPosition: false),
+                                    frame: r,
                                     item: out listSubItem,
                                     errorMask: listErrMask,
                                     masterReferences: masterReferences);

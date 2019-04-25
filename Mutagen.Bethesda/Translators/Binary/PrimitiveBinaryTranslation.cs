@@ -60,22 +60,15 @@ namespace Mutagen.Bethesda.Binary
 
         public bool Parse(MutagenFrame frame, out T item, ErrorMaskBuilder errorMask)
         {
-            try
+            if (!frame.TryCheckUpcomingRead(this.ExpectedLength, out var ex))
             {
-                if (!frame.TryCheckUpcomingRead(this.ExpectedLength, out var ex))
-                {
-                    frame.Position = frame.FinalLocation;
-                    errorMask.ReportExceptionOrThrow(ex);
-                    item = default(T);
-                    return false;
-                }
-                item = ParseValue(frame);
-                return true;
+                frame.Position = frame.FinalLocation;
+                errorMask.ReportExceptionOrThrow(ex);
+                item = default(T);
+                return false;
             }
-            finally
-            {
-                frame.Dispose();
-            }
+            item = ParseValue(frame);
+            return true;
         }
 
         public void ParseInto(

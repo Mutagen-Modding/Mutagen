@@ -684,35 +684,15 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMask)
         {
             var ret = new ScriptFields();
-            try
-            {
-                using (frame)
-                {
-                    Fill_Binary_Structs(
-                        item: ret,
-                        frame: frame,
-                        masterReferences: masterReferences,
-                        errorMask: errorMask);
-                    int? lastParsed = null;
-                    while (!frame.Complete)
-                    {
-                        var parsed = Fill_Binary_RecordTypes(
-                            item: ret,
-                            frame: frame,
-                            lastParsed: lastParsed,
-                            masterReferences: masterReferences,
-                            errorMask: errorMask,
-                            recordTypeConverter: recordTypeConverter);
-                        if (parsed.Failed) break;
-                        lastParsed = parsed.Value;
-                    }
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
+            UtilityTranslation.TypelessRecordParse(
+                record: ret,
+                frame: frame,
+                setFinal: false,
+                masterReferences: masterReferences,
+                errorMask: errorMask,
+                recordTypeConverter: recordTypeConverter,
+                fillStructs: Fill_Binary_Structs,
+                fillTyped: Fill_Binary_RecordTypes);
             return ret;
         }
 
@@ -797,17 +777,17 @@ namespace Mutagen.Bethesda.Oblivion
             ScriptFields item,
             MutagenFrame frame,
             int? lastParsed,
+            RecordType nextRecordType,
+            int contentLength,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask,
             RecordTypeConverter recordTypeConverter = null)
         {
-            var nextRecordType = HeaderTranslation.GetNextSubRecordType(
-                reader: frame.Reader,
-                contentLength: out var contentLength,
-                recordTypeConverter: recordTypeConverter);
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
                 case 0x52484353: // SCHR
+                {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)ScriptFields_FieldIndex.MetadataSummary) return TryGet<int?>.Failure;
                     using (errorMask.PushIndex((int)ScriptFields_FieldIndex.MetadataSummary))
                     {
@@ -824,17 +804,18 @@ namespace Mutagen.Bethesda.Oblivion
                             errorMask: errorMask);
                     }
                     return TryGet<int?>.Succeed((int)ScriptFields_FieldIndex.MetadataSummary);
+                }
                 case 0x44484353: // SCHD
-                    using (var subFrame = frame.SpawnWithLength(Mutagen.Bethesda.Constants.SUBRECORD_LENGTH + contentLength, snapToFinalPosition: false))
-                    {
-                        FillBinary_MetadataSummaryOld_Custom(
-                            frame: subFrame,
-                            item: item,
-                            masterReferences: masterReferences,
-                            errorMask: errorMask);
-                    }
+                {
+                    FillBinary_MetadataSummaryOld_Custom(
+                        frame: frame.SpawnWithLength(Mutagen.Bethesda.Constants.SUBRECORD_LENGTH + contentLength),
+                        item: item,
+                        masterReferences: masterReferences,
+                        errorMask: errorMask);
                     return TryGet<int?>.Succeed(lastParsed);
+                }
                 case 0x41444353: // SCDA
+                {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)ScriptFields_FieldIndex.CompiledScript) return TryGet<int?>.Failure;
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     try
@@ -862,7 +843,9 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)ScriptFields_FieldIndex.CompiledScript);
+                }
                 case 0x58544353: // SCTX
+                {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)ScriptFields_FieldIndex.SourceCode) return TryGet<int?>.Failure;
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     try
@@ -891,7 +874,9 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)ScriptFields_FieldIndex.SourceCode);
+                }
                 case 0x44534C53: // SLSD
+                {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)ScriptFields_FieldIndex.LocalVariables) return TryGet<int?>.Failure;
                     Mutagen.Bethesda.Binary.ListBinaryTranslation<LocalVariable>.Instance.ParseRepeatedItem(
                         frame: frame,
@@ -903,15 +888,17 @@ namespace Mutagen.Bethesda.Oblivion
                         transl: (MutagenFrame r, out LocalVariable listSubItem, ErrorMaskBuilder listErrMask) =>
                         {
                             return LoquiBinaryTranslation<LocalVariable>.Instance.Parse(
-                                frame: r.Spawn(snapToFinalPosition: false),
+                                frame: r,
                                 item: out listSubItem,
                                 errorMask: listErrMask,
                                 masterReferences: masterReferences);
                         }
                         );
                     return TryGet<int?>.Succeed((int)ScriptFields_FieldIndex.LocalVariables);
+                }
                 case 0x56524353: // SCRV
                 case 0x4F524353: // SCRO
+                {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)ScriptFields_FieldIndex.References) return TryGet<int?>.Failure;
                     Mutagen.Bethesda.Binary.ListBinaryTranslation<ScriptReference>.Instance.ParseRepeatedItem(
                         frame: frame,
@@ -926,13 +913,13 @@ namespace Mutagen.Bethesda.Oblivion
                             {
                                 case 0x56524353: // SCRV
                                     return LoquiBinaryTranslation<ScriptVariableReference>.Instance.Parse(
-                                        frame: r.Spawn(snapToFinalPosition: false),
+                                        frame: r,
                                         item: out listSubItem,
                                         errorMask: listErrMask,
                                         masterReferences: masterReferences);
                                 case 0x4F524353: // SCRO
                                     return LoquiBinaryTranslation<ScriptObjectReference>.Instance.Parse(
-                                        frame: r.Spawn(snapToFinalPosition: false),
+                                        frame: r,
                                         item: out listSubItem,
                                         errorMask: listErrMask,
                                         masterReferences: masterReferences);
@@ -942,6 +929,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         );
                     return TryGet<int?>.Succeed((int)ScriptFields_FieldIndex.References);
+                }
                 default:
                     return TryGet<int?>.Failure;
             }

@@ -893,17 +893,17 @@ namespace Mutagen.Bethesda.Oblivion
         protected static TryGet<int?> Fill_Binary_RecordTypes(
             SkillRecord item,
             MutagenFrame frame,
+            RecordType nextRecordType,
+            int contentLength,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask,
             RecordTypeConverter recordTypeConverter = null)
         {
-            var nextRecordType = HeaderTranslation.GetNextSubRecordType(
-                reader: frame.Reader,
-                contentLength: out var contentLength,
-                recordTypeConverter: recordTypeConverter);
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
                 case 0x58444E49: // INDX
+                {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     try
                     {
@@ -930,7 +930,9 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)SkillRecord_FieldIndex.Skill);
+                }
                 case 0x43534544: // DESC
+                {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     try
                     {
@@ -958,7 +960,9 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)SkillRecord_FieldIndex.Description);
+                }
                 case 0x4E4F4349: // ICON
+                {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     try
                     {
@@ -986,137 +990,139 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)SkillRecord_FieldIndex.Icon);
+                }
                 case 0x41544144: // DATA
+                {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    using (var dataFrame = frame.SpawnWithLength(contentLength))
+                    var dataFrame = frame.SpawnWithLength(contentLength);
+                    if (!dataFrame.Complete)
                     {
-                        if (!dataFrame.Complete)
+                        item.DATADataTypeState = DATADataType.Has;
+                    }
+                    try
+                    {
+                        errorMask?.PushIndex((int)SkillRecord_FieldIndex.Action);
+                        if (EnumBinaryTranslation<ActorValue>.Instance.Parse(
+                            frame: dataFrame.SpawnWithLength(4),
+                            item: out ActorValue ActionParse,
+                            errorMask: errorMask))
                         {
-                            item.DATADataTypeState = DATADataType.Has;
+                            item.Action = ActionParse;
                         }
-                        try
+                        else
                         {
-                            errorMask?.PushIndex((int)SkillRecord_FieldIndex.Action);
-                            if (EnumBinaryTranslation<ActorValue>.Instance.Parse(
-                                frame: dataFrame.SpawnWithLength(4),
-                                item: out ActorValue ActionParse,
-                                errorMask: errorMask))
-                            {
-                                item.Action = ActionParse;
-                            }
-                            else
-                            {
-                                item.Action = default(ActorValue);
-                            }
-                        }
-                        catch (Exception ex)
-                        when (errorMask != null)
-                        {
-                            errorMask.ReportException(ex);
-                        }
-                        finally
-                        {
-                            errorMask?.PopIndex();
-                        }
-                        try
-                        {
-                            errorMask?.PushIndex((int)SkillRecord_FieldIndex.Attribute);
-                            if (EnumBinaryTranslation<ActorValue>.Instance.Parse(
-                                frame: dataFrame.SpawnWithLength(4),
-                                item: out ActorValue AttributeParse,
-                                errorMask: errorMask))
-                            {
-                                item.Attribute = AttributeParse;
-                            }
-                            else
-                            {
-                                item.Attribute = default(ActorValue);
-                            }
-                        }
-                        catch (Exception ex)
-                        when (errorMask != null)
-                        {
-                            errorMask.ReportException(ex);
-                        }
-                        finally
-                        {
-                            errorMask?.PopIndex();
-                        }
-                        try
-                        {
-                            errorMask?.PushIndex((int)SkillRecord_FieldIndex.Specialization);
-                            if (EnumBinaryTranslation<Specialization>.Instance.Parse(
-                                frame: dataFrame.SpawnWithLength(4),
-                                item: out Specialization SpecializationParse,
-                                errorMask: errorMask))
-                            {
-                                item.Specialization = SpecializationParse;
-                            }
-                            else
-                            {
-                                item.Specialization = default(Specialization);
-                            }
-                        }
-                        catch (Exception ex)
-                        when (errorMask != null)
-                        {
-                            errorMask.ReportException(ex);
-                        }
-                        finally
-                        {
-                            errorMask?.PopIndex();
-                        }
-                        try
-                        {
-                            errorMask?.PushIndex((int)SkillRecord_FieldIndex.UseValueFirst);
-                            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                                frame: dataFrame.Spawn(snapToFinalPosition: false),
-                                item: out Single UseValueFirstParse,
-                                errorMask: errorMask))
-                            {
-                                item.UseValueFirst = UseValueFirstParse;
-                            }
-                            else
-                            {
-                                item.UseValueFirst = default(Single);
-                            }
-                        }
-                        catch (Exception ex)
-                        when (errorMask != null)
-                        {
-                            errorMask.ReportException(ex);
-                        }
-                        finally
-                        {
-                            errorMask?.PopIndex();
-                        }
-                        try
-                        {
-                            errorMask?.PushIndex((int)SkillRecord_FieldIndex.UseValueSecond);
-                            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                                frame: dataFrame.Spawn(snapToFinalPosition: false),
-                                item: out Single UseValueSecondParse,
-                                errorMask: errorMask))
-                            {
-                                item.UseValueSecond = UseValueSecondParse;
-                            }
-                            else
-                            {
-                                item.UseValueSecond = default(Single);
-                            }
-                        }
-                        catch (Exception ex)
-                        when (errorMask != null)
-                        {
-                            errorMask.ReportException(ex);
-                        }
-                        finally
-                        {
-                            errorMask?.PopIndex();
+                            item.Action = default(ActorValue);
                         }
                     }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    try
+                    {
+                        errorMask?.PushIndex((int)SkillRecord_FieldIndex.Attribute);
+                        if (EnumBinaryTranslation<ActorValue>.Instance.Parse(
+                            frame: dataFrame.SpawnWithLength(4),
+                            item: out ActorValue AttributeParse,
+                            errorMask: errorMask))
+                        {
+                            item.Attribute = AttributeParse;
+                        }
+                        else
+                        {
+                            item.Attribute = default(ActorValue);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    try
+                    {
+                        errorMask?.PushIndex((int)SkillRecord_FieldIndex.Specialization);
+                        if (EnumBinaryTranslation<Specialization>.Instance.Parse(
+                            frame: dataFrame.SpawnWithLength(4),
+                            item: out Specialization SpecializationParse,
+                            errorMask: errorMask))
+                        {
+                            item.Specialization = SpecializationParse;
+                        }
+                        else
+                        {
+                            item.Specialization = default(Specialization);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    try
+                    {
+                        errorMask?.PushIndex((int)SkillRecord_FieldIndex.UseValueFirst);
+                        if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                            frame: dataFrame,
+                            item: out Single UseValueFirstParse,
+                            errorMask: errorMask))
+                        {
+                            item.UseValueFirst = UseValueFirstParse;
+                        }
+                        else
+                        {
+                            item.UseValueFirst = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    try
+                    {
+                        errorMask?.PushIndex((int)SkillRecord_FieldIndex.UseValueSecond);
+                        if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                            frame: dataFrame,
+                            item: out Single UseValueSecondParse,
+                            errorMask: errorMask))
+                        {
+                            item.UseValueSecond = UseValueSecondParse;
+                        }
+                        else
+                        {
+                            item.UseValueSecond = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
                     return TryGet<int?>.Succeed((int)SkillRecord_FieldIndex.UseValueSecond);
+                }
                 case 0x4D414E41: // ANAM
+                {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     try
                     {
@@ -1144,7 +1150,9 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)SkillRecord_FieldIndex.ApprenticeText);
+                }
                 case 0x4D414E4A: // JNAM
+                {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     try
                     {
@@ -1172,7 +1180,9 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)SkillRecord_FieldIndex.JourneymanText);
+                }
                 case 0x4D414E45: // ENAM
+                {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     try
                     {
@@ -1200,7 +1210,9 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)SkillRecord_FieldIndex.ExpertText);
+                }
                 case 0x4D414E4D: // MNAM
+                {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     try
                     {
@@ -1228,10 +1240,13 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)SkillRecord_FieldIndex.MasterText);
+                }
                 default:
                     return MajorRecord.Fill_Binary_RecordTypes(
                         item: item,
                         frame: frame,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
                         recordTypeConverter: recordTypeConverter,
                         masterReferences: masterReferences,
                         errorMask: errorMask);

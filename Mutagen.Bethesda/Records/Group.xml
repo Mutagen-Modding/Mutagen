@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Group" objType="Group" recordType="GRUP" customBinary="true" GUID="35a37d0b-4676-4dba-9410-a5972e262f5d" ID="11">
+  <Object name="Group" objType="Group" recordType="GRUP" GUID="35a37d0b-4676-4dba-9410-a5972e262f5d" ID="11">
     <Generic name="T" isLoqui="true">
       <Where>IMajorRecord</Where>
     </Generic>

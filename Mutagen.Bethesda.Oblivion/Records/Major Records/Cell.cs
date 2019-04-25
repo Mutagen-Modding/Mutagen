@@ -33,7 +33,11 @@ namespace Mutagen.Bethesda.Oblivion
         static partial void CustomBinaryEnd_Import(MutagenFrame frame, Cell obj, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
         {
             if (frame.Reader.Complete) return;
-            var next = HeaderTranslation.GetNextType(frame.Reader, out var len, hopGroup: false);
+            var next = HeaderTranslation.GetNextType(
+                reader: frame.Reader,
+                contentLength: out var len,
+                finalPos: out var finalPos,
+                hopGroup: false);
             if (!next.Equals(Group_Registration.GRUP_HEADER)) return;
             frame.Reader.Position += 8;
             var formKey = FormKey.Factory(masterReferences, frame.Reader.ReadUInt32());
@@ -51,53 +55,53 @@ namespace Mutagen.Bethesda.Oblivion
                 frame.Reader.Position -= 16;
                 return;
             }
-            using (var subFrame = frame.SpawnWithLength(len - Mutagen.Bethesda.Constants.RECORD_HEADER_LENGTH))
+            var subFrame = frame.SpawnWithLength(len - Mutagen.Bethesda.Constants.RECORD_HEADER_LENGTH);
+            while (!subFrame.Complete)
             {
-                while (!subFrame.Complete)
+                var persistGroup = HeaderTranslation.GetNextType(
+                    reader: frame.Reader,
+                    contentLength: out var persistLen,
+                    finalPos: out var _,
+                    hopGroup: false);
+                if (!persistGroup.Equals(Group_Registration.GRUP_HEADER))
                 {
-                    var persistGroup = HeaderTranslation.GetNextType(frame.Reader, out var persistLen, hopGroup: false);
-                    if (!persistGroup.Equals(Group_Registration.GRUP_HEADER))
-                    {
-                        throw new ArgumentException();
-                    }
-                    subFrame.Reader.Position += 12;
-                    GroupTypeEnum type = (GroupTypeEnum)subFrame.Reader.ReadUInt32();
-                    subFrame.Reader.Position -= 16;
-                    using (var itemFrame = frame.SpawnWithLength(persistLen))
-                    {
-                        switch (type)
-                        {
-                            case GroupTypeEnum.CellPersistentChildren:
-                                ParseTypical(
-                                    frame: itemFrame,
-                                    obj: obj,
-                                    fieldIndex: (int)Cell_FieldIndex.Persistent,
-                                    masterReferences: masterReferences,
-                                    coll: obj.Persistent,
-                                    errorMask: errorMask,
-                                    persistentParse: true);
-                                break;
-                            case GroupTypeEnum.CellTemporaryChildren:
-                                ParseTemporary(
-                                    itemFrame,
-                                    obj,
-                                    masterReferences,
-                                    errorMask);
-                                break;
-                            case GroupTypeEnum.CellVisibleDistantChildren:
-                                ParseTypical(
-                                    frame: itemFrame,
-                                    obj: obj,
-                                    fieldIndex: (int)Cell_FieldIndex.VisibleWhenDistant,
-                                    masterReferences: masterReferences,
-                                    coll: obj.VisibleWhenDistant,
-                                    errorMask: errorMask,
-                                    persistentParse: false);
-                                break;
-                            default:
-                                throw new NotImplementedException();
-                        }
-                    }
+                    throw new ArgumentException();
+                }
+                subFrame.Reader.Position += 12;
+                GroupTypeEnum type = (GroupTypeEnum)subFrame.Reader.ReadUInt32();
+                subFrame.Reader.Position -= 16;
+                var itemFrame = frame.SpawnWithLength(persistLen);
+                switch (type)
+                {
+                    case GroupTypeEnum.CellPersistentChildren:
+                        ParseTypical(
+                            frame: itemFrame,
+                            obj: obj,
+                            fieldIndex: (int)Cell_FieldIndex.Persistent,
+                            masterReferences: masterReferences,
+                            coll: obj.Persistent,
+                            errorMask: errorMask,
+                            persistentParse: true);
+                        break;
+                    case GroupTypeEnum.CellTemporaryChildren:
+                        ParseTemporary(
+                            itemFrame,
+                            obj,
+                            masterReferences,
+                            errorMask);
+                        break;
+                    case GroupTypeEnum.CellVisibleDistantChildren:
+                        ParseTypical(
+                            frame: itemFrame,
+                            obj: obj,
+                            fieldIndex: (int)Cell_FieldIndex.VisibleWhenDistant,
+                            masterReferences: masterReferences,
+                            coll: obj.VisibleWhenDistant,
+                            errorMask: errorMask,
+                            persistentParse: false);
+                        break;
+                    default:
+                        throw new NotImplementedException();
                 }
             }
         }
@@ -183,31 +187,25 @@ namespace Mutagen.Bethesda.Oblivion
             var nextHeader = HeaderTranslation.GetNextRecordType(frame.Reader, out var pathLen);
             if (nextHeader.Equals(PathGrid_Registration.PGRD_HEADER))
             {
-                using (var subFrame = frame.SpawnWithLength(pathLen + Mutagen.Bethesda.Constants.RECORD_HEADER_LENGTH))
+                using (errorMask.PushIndex((int)Cell_FieldIndex.PathGrid))
                 {
-                    using (errorMask.PushIndex((int)Cell_FieldIndex.PathGrid))
-                    {
-                        obj.PathGrid = PathGrid.Create_Binary(
-                            subFrame,
-                            errorMask: errorMask,
-                            masterReferences: masterReferences,
-                            recordTypeConverter: null);
-                    }
+                    obj.PathGrid = PathGrid.Create_Binary(
+                        frame.SpawnWithLength(pathLen + Mutagen.Bethesda.Constants.RECORD_HEADER_LENGTH),
+                        errorMask: errorMask,
+                        masterReferences: masterReferences,
+                        recordTypeConverter: null);
                 }
                 return true;
             }
             else if (nextHeader.Equals(Landscape_Registration.LAND_HEADER))
             {
-                using (var subFrame = frame.SpawnWithLength(pathLen + Mutagen.Bethesda.Constants.RECORD_HEADER_LENGTH))
+                using (errorMask.PushIndex((int)Cell_FieldIndex.Landscape))
                 {
-                    using (errorMask.PushIndex((int)Cell_FieldIndex.Landscape))
-                    {
-                        obj.Landscape = Landscape.Create_Binary(
-                            subFrame,
-                            errorMask: errorMask,
-                            masterReferences: masterReferences,
-                            recordTypeConverter: null);
-                    }
+                    obj.Landscape = Landscape.Create_Binary(
+                        frame.SpawnWithLength(pathLen + Mutagen.Bethesda.Constants.RECORD_HEADER_LENGTH),
+                        errorMask: errorMask,
+                        masterReferences: masterReferences,
+                        recordTypeConverter: null);
                 }
                 return true;
             }
@@ -397,7 +395,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
             }
         }
-        
+
         partial void PostDuplicate(Cell obj, Cell rhs, Func<FormKey> getNextFormKey, IList<(MajorRecord Record, FormKey OriginalFormKey)> duplicatedRecords)
         {
             if (rhs.PathGrid_IsSet

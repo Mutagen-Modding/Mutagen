@@ -11,12 +11,11 @@ using System.Threading.Tasks;
 
 namespace Mutagen.Bethesda.Binary
 {
-    public struct MutagenFrame : IDisposable, IBinaryReadStream
+    public struct MutagenFrame : IBinaryReadStream
     {
         public readonly IBinaryReadStream Reader;
         public readonly long InitialPosition;
         public readonly long FinalLocation;
-        public readonly bool SnapToFinalPosition;
 
         public bool Complete => this.Position >= this.FinalLocation;
         public long Position
@@ -35,19 +34,16 @@ namespace Mutagen.Bethesda.Binary
             this.Reader = reader;
             this.InitialPosition = reader.Position;
             this.FinalLocation = reader.Length;
-            this.SnapToFinalPosition = true;
         }
 
         [DebuggerStepThrough]
         private MutagenFrame(
             IBinaryReadStream reader,
-            long finalPosition,
-            bool snapToFinalPosition = true)
+            long finalPosition)
         {
             this.Reader = reader;
             this.InitialPosition = reader.Position;
             this.FinalLocation = finalPosition;
-            this.SnapToFinalPosition = snapToFinalPosition;
         }
 
         public bool TryCheckUpcomingRead(long length)
@@ -94,11 +90,11 @@ namespace Mutagen.Bethesda.Binary
 
         public void Dispose()
         {
-            if (this.SnapToFinalPosition
-                && this.Reader.Position != FinalLocation)
-            {
-                this.Reader.Position = this.FinalLocation;
-            }
+        }
+
+        public void SetToFinalPosition()
+        {
+            this.Reader.Position = this.FinalLocation;
         }
 
         public byte[] ReadRemaining()
@@ -114,25 +110,21 @@ namespace Mutagen.Bethesda.Binary
         [DebuggerStepThrough]
         public static MutagenFrame ByFinalPosition(
             IBinaryReadStream reader,
-            long finalPosition,
-            bool snapToFinalPosition = true)
+            long finalPosition)
         {
             return new MutagenFrame(
                 reader: reader,
-                finalPosition: finalPosition,
-                snapToFinalPosition: snapToFinalPosition);
+                finalPosition: finalPosition);
         }
 
         [DebuggerStepThrough]
         public static MutagenFrame ByLength(
             IBinaryReadStream reader,
-            long length,
-            bool snapToFinalPosition = true)
+            long length)
         {
             return new MutagenFrame(
                 reader: reader,
-                finalPosition: reader.Position + length,
-                snapToFinalPosition: snapToFinalPosition);
+                finalPosition: reader.Position + length);
         }
 
         [DebuggerStepThrough]
@@ -143,7 +135,7 @@ namespace Mutagen.Bethesda.Binary
                 finalPosition);
         }
         
-        public MutagenFrame SpawnWithLength(long length, bool snapToFinalPosition = true, bool checkFraming = true)
+        public MutagenFrame SpawnWithLength(long length, bool checkFraming = true)
         {
             if (checkFraming 
                 && this.Remaining < length)
@@ -152,17 +144,7 @@ namespace Mutagen.Bethesda.Binary
             }
             return new MutagenFrame(
                 this.Reader,
-                this.Reader.Position + length,
-                snapToFinalPosition: snapToFinalPosition);
-        }
-
-        [DebuggerStepThrough]
-        public MutagenFrame Spawn(bool snapToFinalPosition)
-        {
-            return new MutagenFrame(
-                this.Reader,
-                this.FinalLocation,
-                snapToFinalPosition);
+                this.Reader.Position + length);
         }
 
         public MutagenFrame Decompress()

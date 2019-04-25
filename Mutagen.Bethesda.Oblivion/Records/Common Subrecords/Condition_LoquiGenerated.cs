@@ -555,39 +555,27 @@ namespace Mutagen.Bethesda.Oblivion
             switch (nextRecord.TypeInt)
             {
                 case 1413764163: // CTDT
-                    frame = frame.SpawnWithLength(customLen + Mutagen.Bethesda.Constants.SUBRECORD_LENGTH);
-                    using (frame)
-                    {
-                        return CustomRecordTypeTrigger(
-                            frame: frame,
-                            recordType: nextRecord,
-                            recordTypeConverter: recordTypeConverter,
-                            masterReferences: masterReferences,
-                            errorMask: errorMask);
-                    }
+                    return CustomRecordTypeTrigger(
+                        frame: frame.SpawnWithLength(customLen + Mutagen.Bethesda.Constants.SUBRECORD_LENGTH),
+                        recordType: nextRecord,
+                        recordTypeConverter: recordTypeConverter,
+                        masterReferences: masterReferences,
+                        errorMask: errorMask);
                 default:
                     break;
             }
             var ret = new Condition();
-            try
-            {
-                frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
-                    frame.Reader,
-                    recordTypeConverter.ConvertToCustom(Condition_Registration.CTDA_HEADER)));
-                using (frame)
-                {
-                    Fill_Binary_Structs(
-                        item: ret,
-                        frame: frame,
-                        masterReferences: masterReferences,
-                        errorMask: errorMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
+            frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
+                frame.Reader,
+                recordTypeConverter.ConvertToCustom(Condition_Registration.CTDA_HEADER)));
+            UtilityTranslation.RecordParse(
+                record: ret,
+                frame: frame,
+                setFinal: true,
+                masterReferences: masterReferences,
+                errorMask: errorMask,
+                recordTypeConverter: recordTypeConverter,
+                fillStructs: Fill_Binary_Structs);
             return ret;
         }
 
@@ -729,7 +717,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 errorMask?.PushIndex((int)Condition_FieldIndex.ComparisonValue);
                 if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                    frame: frame.Spawn(snapToFinalPosition: false),
+                    frame: frame,
                     item: out Single ComparisonValueParse,
                     errorMask: errorMask))
                 {
@@ -777,7 +765,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 errorMask?.PushIndex((int)Condition_FieldIndex.FirstParameter);
                 if (Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
-                    frame: frame.Spawn(snapToFinalPosition: false),
+                    frame: frame,
                     item: out Int32 FirstParameterParse,
                     errorMask: errorMask))
                 {
@@ -801,7 +789,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 errorMask?.PushIndex((int)Condition_FieldIndex.SecondParameter);
                 if (Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
-                    frame: frame.Spawn(snapToFinalPosition: false),
+                    frame: frame,
                     item: out Int32 SecondParameterParse,
                     errorMask: errorMask))
                 {
@@ -825,7 +813,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 errorMask?.PushIndex((int)Condition_FieldIndex.ThirdParameter);
                 if (Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
-                    frame: frame.Spawn(snapToFinalPosition: false),
+                    frame: frame,
                     item: out Int32 ThirdParameterParse,
                     errorMask: errorMask))
                 {

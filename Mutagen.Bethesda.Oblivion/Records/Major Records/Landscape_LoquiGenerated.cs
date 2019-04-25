@@ -814,17 +814,17 @@ namespace Mutagen.Bethesda.Oblivion
         protected static TryGet<int?> Fill_Binary_RecordTypes(
             Landscape item,
             MutagenFrame frame,
+            RecordType nextRecordType,
+            int contentLength,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask,
             RecordTypeConverter recordTypeConverter = null)
         {
-            var nextRecordType = HeaderTranslation.GetNextSubRecordType(
-                reader: frame.Reader,
-                contentLength: out var contentLength,
-                recordTypeConverter: recordTypeConverter);
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
                 case 0x41544144: // DATA
+                {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     try
                     {
@@ -851,7 +851,9 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)Landscape_FieldIndex.Unknown);
+                }
                 case 0x4C4D4E56: // VNML
+                {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     try
                     {
@@ -878,7 +880,9 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)Landscape_FieldIndex.VertexNormals);
+                }
                 case 0x54474856: // VHGT
+                {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     try
                     {
@@ -905,7 +909,9 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)Landscape_FieldIndex.VertexHeightMap);
+                }
                 case 0x524C4356: // VCLR
+                {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     try
                     {
@@ -932,8 +938,10 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)Landscape_FieldIndex.VertexColors);
+                }
                 case 0x54585442: // BTXT
                 case 0x54585441: // ATXT
+                {
                     Mutagen.Bethesda.Binary.ListBinaryTranslation<BaseLayer>.Instance.ParseRepeatedItem(
                         frame: frame,
                         triggeringRecord: BaseLayer_Registration.TriggeringRecordTypes,
@@ -947,13 +955,13 @@ namespace Mutagen.Bethesda.Oblivion
                             {
                                 case 0x54585442: // BTXT
                                     return LoquiBinaryTranslation<BaseLayer>.Instance.Parse(
-                                        frame: r.Spawn(snapToFinalPosition: false),
+                                        frame: r,
                                         item: out listSubItem,
                                         errorMask: listErrMask,
                                         masterReferences: masterReferences);
                                 case 0x54585441: // ATXT
                                     return LoquiBinaryTranslation<AlphaLayer>.Instance.Parse(
-                                        frame: r.Spawn(snapToFinalPosition: false),
+                                        frame: r,
                                         item: out listSubItem,
                                         errorMask: listErrMask,
                                         masterReferences: masterReferences);
@@ -963,7 +971,9 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         );
                     return TryGet<int?>.Succeed((int)Landscape_FieldIndex.Layers);
+                }
                 case 0x58455456: // VTEX
+                {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDLink<LandTexture>>.Instance.ParseRepeatedItem(
                         frame: frame.SpawnWithLength(contentLength),
@@ -974,10 +984,13 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask: errorMask,
                         transl: FormKeyBinaryTranslation.Instance.Parse);
                     return TryGet<int?>.Succeed((int)Landscape_FieldIndex.Textures);
+                }
                 default:
                     return MajorRecord.Fill_Binary_RecordTypes(
                         item: item,
                         frame: frame,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
                         recordTypeConverter: recordTypeConverter,
                         masterReferences: masterReferences,
                         errorMask: errorMask);

@@ -25,11 +25,7 @@ namespace Mutagen.Bethesda.Oblivion
                 frame.Reader.Position -= Mutagen.Bethesda.Constants.RECORD_LENGTH;
                 return;
             }
-            uint ptCount;
-            using (var subFrame = frame.SpawnWithLength(len))
-            {
-                ptCount = frame.Reader.ReadUInt16();
-            }
+            uint ptCount = frame.Reader.ReadUInt16();
 
             nextRec = HeaderTranslation.ReadNextSubRecordType(frame.Reader, out var pointsLen);
             if (!nextRec.Equals(PGRP))
@@ -54,19 +50,16 @@ namespace Mutagen.Bethesda.Oblivion
                     case 0x47414750: //"PGAG":
                         using (errorMask.PushIndex((int)PathGrid_FieldIndex.Unknown))
                         {
-                            using (var subFrame = frame.SpawnWithLength(len, checkFraming: false))
+                            if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+                               frame.SpawnWithLength(len, checkFraming: false),
+                               item: out var unknownBytes,
+                               errorMask: errorMask))
                             {
-                                if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
-                                   subFrame,
-                                   item: out var unknownBytes,
-                                   errorMask: errorMask))
-                                {
-                                    item.Unknown = unknownBytes;
-                                }
-                                else
-                                {
-                                    item.Unknown_Unset();
-                                }
+                                item.Unknown = unknownBytes;
+                            }
+                            else
+                            {
+                                item.Unknown_Unset();
                             }
                         }
                         break;

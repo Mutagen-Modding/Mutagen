@@ -582,55 +582,35 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMask)
         {
             var ret = new ScriptEffect();
-            try
+            UtilityTranslation.TypelessRecordParse(
+                record: ret,
+                frame: frame,
+                setFinal: false,
+                masterReferences: masterReferences,
+                errorMask: errorMask,
+                recordTypeConverter: recordTypeConverter,
+                fillStructs: Fill_Binary_Structs,
+                fillTyped: Fill_Binary_RecordTypes);
+            if (ret.SCITDataTypeState != default(SCITDataType))
             {
-                using (frame)
+                CompositeDisposable structUnsubber = new CompositeDisposable();
+                Action unsubAction = () =>
                 {
-                    Fill_Binary_Structs(
-                        item: ret,
-                        frame: frame,
-                        masterReferences: masterReferences,
-                        errorMask: errorMask);
-                    int? lastParsed = null;
-                    while (!frame.Complete)
-                    {
-                        var parsed = Fill_Binary_RecordTypes(
-                            item: ret,
-                            frame: frame,
-                            lastParsed: lastParsed,
-                            masterReferences: masterReferences,
-                            errorMask: errorMask,
-                            recordTypeConverter: recordTypeConverter);
-                        if (parsed.Failed) break;
-                        lastParsed = parsed.Value;
-                    }
-                }
-                if (ret.SCITDataTypeState != default(SCITDataType))
-                {
-                    CompositeDisposable structUnsubber = new CompositeDisposable();
-                    Action unsubAction = () =>
-                    {
-                        structUnsubber.Dispose();
-                        ret.SCITDataTypeState = default(SCITDataType);
-                    };
-                    structUnsubber.Add(
-                        ret.WhenAny(x => x.MagicSchool)
-                        .Skip(1)
-                        .Subscribe(unsubAction));
-                    structUnsubber.Add(
-                        ret.WhenAny(x => x.VisualEffect)
-                        .Skip(1)
-                        .Subscribe(unsubAction));
-                    structUnsubber.Add(
-                        ret.WhenAny(x => x.Flags)
-                        .Skip(1)
-                        .Subscribe(unsubAction));
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
+                    structUnsubber.Dispose();
+                    ret.SCITDataTypeState = default(SCITDataType);
+                };
+                structUnsubber.Add(
+                    ret.WhenAny(x => x.MagicSchool)
+                    .Skip(1)
+                    .Subscribe(unsubAction));
+                structUnsubber.Add(
+                    ret.WhenAny(x => x.VisualEffect)
+                    .Skip(1)
+                    .Subscribe(unsubAction));
+                structUnsubber.Add(
+                    ret.WhenAny(x => x.Flags)
+                    .Skip(1)
+                    .Subscribe(unsubAction));
             }
             return ret;
         }
@@ -691,97 +671,97 @@ namespace Mutagen.Bethesda.Oblivion
             ScriptEffect item,
             MutagenFrame frame,
             int? lastParsed,
+            RecordType nextRecordType,
+            int contentLength,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask,
             RecordTypeConverter recordTypeConverter = null)
         {
-            var nextRecordType = HeaderTranslation.GetNextSubRecordType(
-                reader: frame.Reader,
-                contentLength: out var contentLength,
-                recordTypeConverter: recordTypeConverter);
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
                 case 0x54494353: // SCIT
+                {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)ScriptEffect_FieldIndex.Flags) return TryGet<int?>.Failure;
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    using (var dataFrame = frame.SpawnWithLength(contentLength))
+                    var dataFrame = frame.SpawnWithLength(contentLength);
+                    if (!dataFrame.Complete)
                     {
-                        if (!dataFrame.Complete)
+                        item.SCITDataTypeState = SCITDataType.Has;
+                    }
+                    Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.ParseInto(
+                        frame: dataFrame,
+                        masterReferences: masterReferences,
+                        item: item.Script_Property,
+                        fieldIndex: (int)ScriptEffect_FieldIndex.Script,
+                        errorMask: errorMask);
+                    if (dataFrame.Complete)
+                    {
+                        item.SCITDataTypeState |= SCITDataType.Break0;
+                        return TryGet<int?>.Succeed((int)ScriptEffect_FieldIndex.Script);
+                    }
+                    try
+                    {
+                        errorMask?.PushIndex((int)ScriptEffect_FieldIndex.MagicSchool);
+                        if (EnumBinaryTranslation<MagicSchool>.Instance.Parse(
+                            frame: dataFrame.SpawnWithLength(4),
+                            item: out MagicSchool MagicSchoolParse,
+                            errorMask: errorMask))
                         {
-                            item.SCITDataTypeState = SCITDataType.Has;
+                            item.MagicSchool = MagicSchoolParse;
                         }
-                        Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.ParseInto(
-                            frame: dataFrame.Spawn(snapToFinalPosition: false),
-                            masterReferences: masterReferences,
-                            item: item.Script_Property,
-                            fieldIndex: (int)ScriptEffect_FieldIndex.Script,
-                            errorMask: errorMask);
-                        if (dataFrame.Complete)
+                        else
                         {
-                            item.SCITDataTypeState |= SCITDataType.Break0;
-                            return TryGet<int?>.Succeed((int)ScriptEffect_FieldIndex.Script);
-                        }
-                        try
-                        {
-                            errorMask?.PushIndex((int)ScriptEffect_FieldIndex.MagicSchool);
-                            if (EnumBinaryTranslation<MagicSchool>.Instance.Parse(
-                                frame: dataFrame.SpawnWithLength(4),
-                                item: out MagicSchool MagicSchoolParse,
-                                errorMask: errorMask))
-                            {
-                                item.MagicSchool = MagicSchoolParse;
-                            }
-                            else
-                            {
-                                item.MagicSchool = default(MagicSchool);
-                            }
-                        }
-                        catch (Exception ex)
-                        when (errorMask != null)
-                        {
-                            errorMask.ReportException(ex);
-                        }
-                        finally
-                        {
-                            errorMask?.PopIndex();
-                        }
-                        Mutagen.Bethesda.Binary.RecordTypeBinaryTranslation.Instance.ParseInto(
-                            frame: dataFrame.Spawn(snapToFinalPosition: false),
-                            item: item.VisualEffect_Property,
-                            fieldIndex: (int)ScriptEffect_FieldIndex.VisualEffect,
-                            errorMask: errorMask);
-                        if (dataFrame.Complete)
-                        {
-                            item.SCITDataTypeState |= SCITDataType.Break1;
-                            return TryGet<int?>.Succeed((int)ScriptEffect_FieldIndex.VisualEffect);
-                        }
-                        try
-                        {
-                            errorMask?.PushIndex((int)ScriptEffect_FieldIndex.Flags);
-                            if (EnumBinaryTranslation<ScriptEffect.Flag>.Instance.Parse(
-                                frame: dataFrame.SpawnWithLength(4),
-                                item: out ScriptEffect.Flag FlagsParse,
-                                errorMask: errorMask))
-                            {
-                                item.Flags = FlagsParse;
-                            }
-                            else
-                            {
-                                item.Flags = default(ScriptEffect.Flag);
-                            }
-                        }
-                        catch (Exception ex)
-                        when (errorMask != null)
-                        {
-                            errorMask.ReportException(ex);
-                        }
-                        finally
-                        {
-                            errorMask?.PopIndex();
+                            item.MagicSchool = default(MagicSchool);
                         }
                     }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    Mutagen.Bethesda.Binary.RecordTypeBinaryTranslation.Instance.ParseInto(
+                        frame: dataFrame,
+                        item: item.VisualEffect_Property,
+                        fieldIndex: (int)ScriptEffect_FieldIndex.VisualEffect,
+                        errorMask: errorMask);
+                    if (dataFrame.Complete)
+                    {
+                        item.SCITDataTypeState |= SCITDataType.Break1;
+                        return TryGet<int?>.Succeed((int)ScriptEffect_FieldIndex.VisualEffect);
+                    }
+                    try
+                    {
+                        errorMask?.PushIndex((int)ScriptEffect_FieldIndex.Flags);
+                        if (EnumBinaryTranslation<ScriptEffect.Flag>.Instance.Parse(
+                            frame: dataFrame.SpawnWithLength(4),
+                            item: out ScriptEffect.Flag FlagsParse,
+                            errorMask: errorMask))
+                        {
+                            item.Flags = FlagsParse;
+                        }
+                        else
+                        {
+                            item.Flags = default(ScriptEffect.Flag);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
                     return TryGet<int?>.Succeed((int)ScriptEffect_FieldIndex.Flags);
+                }
                 case 0x4C4C5546: // FULL
+                {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     try
                     {
@@ -809,6 +789,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)ScriptEffect_FieldIndex.Name);
+                }
                 default:
                     return TryGet<int?>.Failure;
             }

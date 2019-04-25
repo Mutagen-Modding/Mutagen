@@ -20,17 +20,18 @@ namespace Mutagen.Bethesda.Tests
         public static IEnumerable<Task> GetTests(TestingSettings settings)
         {
             var oblivPassthrough = new Oblivion_Passthrough_Test(settings.PassthroughSettings, settings.OblivionESM);
-            if ((settings.PassthroughSettings?.TestNormal ?? false)
-                || (settings.PassthroughSettings?.TestObservable ?? false))
+            var passthroughTests = (settings.PassthroughSettings?.TestNormal ?? false)
+                || (settings.PassthroughSettings?.TestObservable ?? false);
+            foreach (var passthrough in settings.OblivionESM.And(settings.OtherPassthroughsEnumerable))
             {
-                if (settings.OblivionESM.Do)
+                if (!passthrough.Do) continue;
+                if (passthroughTests)
                 {
-                    yield return oblivPassthrough.BinaryPassthroughTest();
-                }
-                foreach (var passthrough in settings.OtherPassthroughsEnumerable)
-                {
-                    if (!passthrough.Do) continue;
                     yield return new Oblivion_Passthrough_Test(settings.PassthroughSettings, passthrough).BinaryPassthroughTest();
+                }
+                if (settings.PassthroughSettings?.TestImport ?? false)
+                {
+                    yield return new Oblivion_Passthrough_Test(settings.PassthroughSettings, passthrough).TestImport();
                 }
             }
 

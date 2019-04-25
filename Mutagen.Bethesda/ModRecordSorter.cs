@@ -37,7 +37,7 @@ namespace Mutagen.Bethesda
                                 HeaderTranslation.GetNextRecordType(inputStream, out var grupLen);
 
                                 Dictionary<FormID, List<byte[]>> storage = new Dictionary<FormID, List<byte[]>>();
-                                using (var grupFrame = new MutagenFrame(inputStream).SpawnWithLength(grupLen, snapToFinalPosition: false))
+                                using (var grupFrame = new MutagenFrame(inputStream).SpawnWithLength(grupLen))
                                 {
                                     inputStream.WriteTo(writer.BaseStream, Constants.GRUP_LENGTH);
                                     locatorStream.Position = grupLoc.Value;

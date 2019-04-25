@@ -84,25 +84,13 @@ namespace Mutagen.Bethesda.Oblivion
             switch (dataType)
             {
                 case RegionData.RegionDataType.Objects:
-                    using (var subFrame = frame.SpawnWithLength(len, checkFraming: false))
-                    {
-                        var obj = RegionDataObjects.Create_Binary(subFrame, masterReferences);
-                        item.Objects = obj;
-                    }
+                    item.Objects = RegionDataObjects.Create_Binary(frame.SpawnWithLength(len, checkFraming: false), masterReferences);
                     break;
                 case RegionData.RegionDataType.MapName:
-                    using (var subFrame = frame.SpawnWithLength(len, checkFraming: false))
-                    {
-                        var map = RegionDataMapName.Create_Binary(subFrame, masterReferences);
-                        item.MapName = map;
-                    }
+                    item.MapName = RegionDataMapName.Create_Binary(frame.SpawnWithLength(len, checkFraming: false), masterReferences);
                     break;
                 case RegionData.RegionDataType.Grasses:
-                    using (var subFrame = frame.SpawnWithLength(len, checkFraming: false))
-                    {
-                        var grass = RegionDataGrasses.Create_Binary(subFrame, masterReferences);
-                        item.Grasses = grass;
-                    }
+                    item.Grasses = RegionDataGrasses.Create_Binary(frame.SpawnWithLength(len, checkFraming: false), masterReferences);
                     break;
                 case RegionData.RegionDataType.Sounds:
                     frame.Position += len;
@@ -112,18 +100,10 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         len += nextLen + 6;
                     }
-                    using (var subFrame = frame.SpawnWithLength(len, checkFraming: false))
-                    {
-                        var sounds = RegionDataSounds.Create_Binary(subFrame, masterReferences);
-                        item.Sounds = sounds;
-                    }
+                    item.Sounds = RegionDataSounds.Create_Binary(frame.SpawnWithLength(len, checkFraming: false), masterReferences);
                     break;
                 case RegionData.RegionDataType.Weather:
-                    using (var subFrame = frame.SpawnWithLength(len, checkFraming: false))
-                    {
-                        var weather = RegionDataWeather.Create_Binary(subFrame, masterReferences);
-                        item.Weather = weather;
-                    }
+                    item.Weather = RegionDataWeather.Create_Binary(frame.SpawnWithLength(len, checkFraming: false), masterReferences);
                     break;
                 case RegionData.RegionDataType.Icon:
                     frame.Position += 6 + RDAT_LEN;

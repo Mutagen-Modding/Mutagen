@@ -15,6 +15,7 @@
       <Bool name="ReuseCaches" />
       <Bool name="DeleteCachesAfter" default="true" />
       <Bool name="TestNormal" />
+      <Bool name="TestImport" />
       <Bool name="TestObservable" />
       <Bool name="TestFolder" />
       <String name="DataFolder" />

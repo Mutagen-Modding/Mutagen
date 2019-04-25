@@ -615,41 +615,33 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMask)
         {
             var ret = new LeveledEntry<T>();
-            try
+            frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
+                frame.Reader,
+                recordTypeConverter.ConvertToCustom(LeveledEntry_Registration.LVLO_HEADER)));
+            UtilityTranslation.RecordParse(
+                record: ret,
+                frame: frame,
+                setFinal: true,
+                masterReferences: masterReferences,
+                errorMask: errorMask,
+                recordTypeConverter: recordTypeConverter,
+                fillStructs: Fill_Binary_Structs);
+            if (ret.StructCustom)
             {
-                frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
-                    frame.Reader,
-                    recordTypeConverter.ConvertToCustom(LeveledEntry_Registration.LVLO_HEADER)));
-                using (frame)
+                CompositeDisposable structUnsubber = new CompositeDisposable();
+                Action unsubAction = () =>
                 {
-                    Fill_Binary_Structs(
-                        item: ret,
-                        frame: frame,
-                        masterReferences: masterReferences,
-                        errorMask: errorMask);
-                }
-                if (ret.StructCustom)
-                {
-                    CompositeDisposable structUnsubber = new CompositeDisposable();
-                    Action unsubAction = () =>
-                    {
-                        structUnsubber.Dispose();
-                        ret.StructCustom = false;
-                    };
-                    structUnsubber.Add(
-                        ret.WhenAny(x => x.Count)
-                        .Skip(1)
-                        .Subscribe(unsubAction));
-                    structUnsubber.Add(
-                        ret.WhenAny(x => x.Fluff2)
-                        .Skip(1)
-                        .Subscribe(unsubAction));
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
+                    structUnsubber.Dispose();
+                    ret.StructCustom = false;
+                };
+                structUnsubber.Add(
+                    ret.WhenAny(x => x.Count)
+                    .Skip(1)
+                    .Subscribe(unsubAction));
+                structUnsubber.Add(
+                    ret.WhenAny(x => x.Fluff2)
+                    .Skip(1)
+                    .Subscribe(unsubAction));
             }
             return ret;
         }
@@ -710,7 +702,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 errorMask?.PushIndex((int)LeveledEntry_FieldIndex.Level);
                 if (Mutagen.Bethesda.Binary.Int16BinaryTranslation.Instance.Parse(
-                    frame: frame.Spawn(snapToFinalPosition: false),
+                    frame: frame,
                     item: out Int16 LevelParse,
                     errorMask: errorMask))
                 {
@@ -755,7 +747,7 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask?.PopIndex();
             }
             Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.ParseInto(
-                frame: frame.Spawn(snapToFinalPosition: false),
+                frame: frame,
                 masterReferences: masterReferences,
                 item: item.Reference_Property,
                 fieldIndex: (int)LeveledEntry_FieldIndex.Reference,
@@ -765,7 +757,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 errorMask?.PushIndex((int)LeveledEntry_FieldIndex.Count);
                 if (Mutagen.Bethesda.Binary.Int16BinaryTranslation.Instance.Parse(
-                    frame: frame.Spawn(snapToFinalPosition: false),
+                    frame: frame,
                     item: out Int16 CountParse,
                     errorMask: errorMask))
                 {

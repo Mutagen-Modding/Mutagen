@@ -54,11 +54,21 @@ namespace Mutagen.Bethesda
                 errorMask);
             for (int i = 0; i < MajorRecord_Registration.NumTypedFields; i++)
             {
+                var nextRecordType = HeaderTranslation.GetNextSubRecordType(
+                    frame.Reader,
+                    contentLength: out var contentLength);
+                var finalPos = frame.Position + contentLength;
                 Fill_Binary_RecordTypes(
                     record,
                     frame,
+                    nextRecordType,
+                    contentLength,
                     masterReferences,
                     errorMask: errorMask);
+                if (frame.Position < finalPos)
+                {
+                    frame.Position = finalPos;
+                }
             }
         }
 
@@ -67,7 +77,7 @@ namespace Mutagen.Bethesda
             this.FormKey = formKey;
         }
 
-        object IDuplicatable.Duplicate(Func<FormKey> getNextFormKey, IList<(MajorRecord Record, FormKey OriginalFormKey)> duplicatedRecordTracker = null)
+        object IDuplicatable.Duplicate(Func<FormKey> getNextFormKey, IList<(MajorRecord Record, FormKey OriginalFormKey)> duplicatedRecordTracker)
         {
             return this.Duplicate(getNextFormKey, duplicatedRecordTracker);
         }

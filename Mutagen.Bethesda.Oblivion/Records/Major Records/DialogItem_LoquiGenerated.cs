@@ -906,80 +906,80 @@ namespace Mutagen.Bethesda.Oblivion
         protected static TryGet<int?> Fill_Binary_RecordTypes(
             DialogItem item,
             MutagenFrame frame,
+            RecordType nextRecordType,
+            int contentLength,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask,
             RecordTypeConverter recordTypeConverter = null)
         {
-            var nextRecordType = HeaderTranslation.GetNextSubRecordType(
-                reader: frame.Reader,
-                contentLength: out var contentLength,
-                recordTypeConverter: recordTypeConverter);
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
                 case 0x41544144: // DATA
+                {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    using (var dataFrame = frame.SpawnWithLength(contentLength))
+                    var dataFrame = frame.SpawnWithLength(contentLength);
+                    if (!dataFrame.Complete)
                     {
-                        if (!dataFrame.Complete)
+                        item.DATADataTypeState = DATADataType.Has;
+                    }
+                    try
+                    {
+                        errorMask?.PushIndex((int)DialogItem_FieldIndex.DialogType);
+                        if (EnumBinaryTranslation<DialogType>.Instance.Parse(
+                            frame: dataFrame.SpawnWithLength(2),
+                            item: out DialogType DialogTypeParse,
+                            errorMask: errorMask))
                         {
-                            item.DATADataTypeState = DATADataType.Has;
+                            item.DialogType = DialogTypeParse;
                         }
-                        try
+                        else
                         {
-                            errorMask?.PushIndex((int)DialogItem_FieldIndex.DialogType);
-                            if (EnumBinaryTranslation<DialogType>.Instance.Parse(
-                                frame: dataFrame.SpawnWithLength(2),
-                                item: out DialogType DialogTypeParse,
-                                errorMask: errorMask))
-                            {
-                                item.DialogType = DialogTypeParse;
-                            }
-                            else
-                            {
-                                item.DialogType = default(DialogType);
-                            }
-                        }
-                        catch (Exception ex)
-                        when (errorMask != null)
-                        {
-                            errorMask.ReportException(ex);
-                        }
-                        finally
-                        {
-                            errorMask?.PopIndex();
-                        }
-                        if (dataFrame.Complete)
-                        {
-                            item.DATADataTypeState |= DATADataType.Break0;
-                            return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.DialogType);
-                        }
-                        try
-                        {
-                            errorMask?.PushIndex((int)DialogItem_FieldIndex.Flags);
-                            if (EnumBinaryTranslation<DialogItem.Flag>.Instance.Parse(
-                                frame: dataFrame.SpawnWithLength(1),
-                                item: out DialogItem.Flag FlagsParse,
-                                errorMask: errorMask))
-                            {
-                                item.Flags = FlagsParse;
-                            }
-                            else
-                            {
-                                item.Flags = default(DialogItem.Flag);
-                            }
-                        }
-                        catch (Exception ex)
-                        when (errorMask != null)
-                        {
-                            errorMask.ReportException(ex);
-                        }
-                        finally
-                        {
-                            errorMask?.PopIndex();
+                            item.DialogType = default(DialogType);
                         }
                     }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    if (dataFrame.Complete)
+                    {
+                        item.DATADataTypeState |= DATADataType.Break0;
+                        return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.DialogType);
+                    }
+                    try
+                    {
+                        errorMask?.PushIndex((int)DialogItem_FieldIndex.Flags);
+                        if (EnumBinaryTranslation<DialogItem.Flag>.Instance.Parse(
+                            frame: dataFrame.SpawnWithLength(1),
+                            item: out DialogItem.Flag FlagsParse,
+                            errorMask: errorMask))
+                        {
+                            item.Flags = FlagsParse;
+                        }
+                        else
+                        {
+                            item.Flags = default(DialogItem.Flag);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
                     return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.Flags);
+                }
                 case 0x49545351: // QSTI
+                {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
@@ -988,7 +988,9 @@ namespace Mutagen.Bethesda.Oblivion
                         fieldIndex: (int)DialogItem_FieldIndex.Quest,
                         errorMask: errorMask);
                     return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.Quest);
+                }
                 case 0x4D414E50: // PNAM
+                {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
@@ -997,7 +999,9 @@ namespace Mutagen.Bethesda.Oblivion
                         fieldIndex: (int)DialogItem_FieldIndex.PreviousTopic,
                         errorMask: errorMask);
                     return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.PreviousTopic);
+                }
                 case 0x454D414E: // NAME
+                {
                     Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDSetLink<DialogTopic>>.Instance.ParseRepeatedItem(
                         frame: frame,
                         triggeringRecord: DialogItem_Registration.NAME_HEADER,
@@ -1008,7 +1012,9 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask: errorMask,
                         transl: FormKeyBinaryTranslation.Instance.Parse);
                     return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.Topics);
+                }
                 case 0x54445254: // TRDT
+                {
                     Mutagen.Bethesda.Binary.ListBinaryTranslation<DialogResponse>.Instance.ParseRepeatedItem(
                         frame: frame,
                         triggeringRecord: DialogItem_Registration.TRDT_HEADER,
@@ -1019,15 +1025,17 @@ namespace Mutagen.Bethesda.Oblivion
                         transl: (MutagenFrame r, out DialogResponse listSubItem, ErrorMaskBuilder listErrMask) =>
                         {
                             return LoquiBinaryTranslation<DialogResponse>.Instance.Parse(
-                                frame: r.Spawn(snapToFinalPosition: false),
+                                frame: r,
                                 item: out listSubItem,
                                 errorMask: listErrMask,
                                 masterReferences: masterReferences);
                         }
                         );
                     return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.Responses);
+                }
                 case 0x41445443: // CTDA
                 case 0x54445443: // CTDT
+                {
                     Mutagen.Bethesda.Binary.ListBinaryTranslation<Condition>.Instance.ParseRepeatedItem(
                         frame: frame,
                         triggeringRecord: Condition_Registration.TriggeringRecordTypes,
@@ -1038,14 +1046,16 @@ namespace Mutagen.Bethesda.Oblivion
                         transl: (MutagenFrame r, out Condition listSubItem, ErrorMaskBuilder listErrMask) =>
                         {
                             return LoquiBinaryTranslation<Condition>.Instance.Parse(
-                                frame: r.Spawn(snapToFinalPosition: false),
+                                frame: r,
                                 item: out listSubItem,
                                 errorMask: listErrMask,
                                 masterReferences: masterReferences);
                         }
                         );
                     return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.Conditions);
+                }
                 case 0x544C4354: // TCLT
+                {
                     Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDSetLink<DialogTopic>>.Instance.ParseRepeatedItem(
                         frame: frame,
                         triggeringRecord: DialogItem_Registration.TCLT_HEADER,
@@ -1056,7 +1066,9 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask: errorMask,
                         transl: FormKeyBinaryTranslation.Instance.Parse);
                     return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.Choices);
+                }
                 case 0x464C4354: // TCLF
+                {
                     Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDSetLink<DialogTopic>>.Instance.ParseRepeatedItem(
                         frame: frame,
                         triggeringRecord: DialogItem_Registration.TCLF_HEADER,
@@ -1067,12 +1079,14 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask: errorMask,
                         transl: FormKeyBinaryTranslation.Instance.Parse);
                     return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.LinkFrom);
+                }
                 case 0x52484353: // SCHR
                 case 0x41444353: // SCDA
                 case 0x58544353: // SCTX
                 case 0x44534C53: // SLSD
                 case 0x56524353: // SCRV
                 case 0x4F524353: // SCRO
+                {
                     using (errorMask.PushIndex((int)DialogItem_FieldIndex.Script))
                     {
                         var tmpScript = ScriptFields.Create_Binary(
@@ -1088,10 +1102,13 @@ namespace Mutagen.Bethesda.Oblivion
                             errorMask: errorMask);
                     }
                     return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.Script);
+                }
                 default:
                     return MajorRecord.Fill_Binary_RecordTypes(
                         item: item,
                         frame: frame,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
                         recordTypeConverter: recordTypeConverter,
                         masterReferences: masterReferences,
                         errorMask: errorMask);

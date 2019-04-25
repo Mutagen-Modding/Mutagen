@@ -618,35 +618,15 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMask)
         {
             var ret = new DialogResponse();
-            try
-            {
-                using (frame)
-                {
-                    Fill_Binary_Structs(
-                        item: ret,
-                        frame: frame,
-                        masterReferences: masterReferences,
-                        errorMask: errorMask);
-                    int? lastParsed = null;
-                    while (!frame.Complete)
-                    {
-                        var parsed = Fill_Binary_RecordTypes(
-                            item: ret,
-                            frame: frame,
-                            lastParsed: lastParsed,
-                            masterReferences: masterReferences,
-                            errorMask: errorMask,
-                            recordTypeConverter: recordTypeConverter);
-                        if (parsed.Failed) break;
-                        lastParsed = parsed.Value;
-                    }
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
+            UtilityTranslation.TypelessRecordParse(
+                record: ret,
+                frame: frame,
+                setFinal: false,
+                masterReferences: masterReferences,
+                errorMask: errorMask,
+                recordTypeConverter: recordTypeConverter,
+                fillStructs: Fill_Binary_Structs,
+                fillTyped: Fill_Binary_RecordTypes);
             return ret;
         }
 
@@ -706,148 +686,148 @@ namespace Mutagen.Bethesda.Oblivion
             DialogResponse item,
             MutagenFrame frame,
             int? lastParsed,
+            RecordType nextRecordType,
+            int contentLength,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask,
             RecordTypeConverter recordTypeConverter = null)
         {
-            var nextRecordType = HeaderTranslation.GetNextSubRecordType(
-                reader: frame.Reader,
-                contentLength: out var contentLength,
-                recordTypeConverter: recordTypeConverter);
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
                 case 0x54445254: // TRDT
+                {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)DialogResponse_FieldIndex.Fluff2) return TryGet<int?>.Failure;
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    using (var dataFrame = frame.SpawnWithLength(contentLength))
+                    var dataFrame = frame.SpawnWithLength(contentLength);
+                    if (!dataFrame.Complete)
                     {
-                        if (!dataFrame.Complete)
+                        item.TRDTDataTypeState = TRDTDataType.Has;
+                    }
+                    try
+                    {
+                        errorMask?.PushIndex((int)DialogResponse_FieldIndex.Emotion);
+                        if (EnumBinaryTranslation<EmotionType>.Instance.Parse(
+                            frame: dataFrame.SpawnWithLength(4),
+                            item: out EmotionType EmotionParse,
+                            errorMask: errorMask))
                         {
-                            item.TRDTDataTypeState = TRDTDataType.Has;
+                            item.Emotion = EmotionParse;
                         }
-                        try
+                        else
                         {
-                            errorMask?.PushIndex((int)DialogResponse_FieldIndex.Emotion);
-                            if (EnumBinaryTranslation<EmotionType>.Instance.Parse(
-                                frame: dataFrame.SpawnWithLength(4),
-                                item: out EmotionType EmotionParse,
-                                errorMask: errorMask))
-                            {
-                                item.Emotion = EmotionParse;
-                            }
-                            else
-                            {
-                                item.Emotion = default(EmotionType);
-                            }
-                        }
-                        catch (Exception ex)
-                        when (errorMask != null)
-                        {
-                            errorMask.ReportException(ex);
-                        }
-                        finally
-                        {
-                            errorMask?.PopIndex();
-                        }
-                        try
-                        {
-                            errorMask?.PushIndex((int)DialogResponse_FieldIndex.EmotionValue);
-                            if (Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
-                                frame: dataFrame.Spawn(snapToFinalPosition: false),
-                                item: out Int32 EmotionValueParse,
-                                errorMask: errorMask))
-                            {
-                                item.EmotionValue = EmotionValueParse;
-                            }
-                            else
-                            {
-                                item.EmotionValue = default(Int32);
-                            }
-                        }
-                        catch (Exception ex)
-                        when (errorMask != null)
-                        {
-                            errorMask.ReportException(ex);
-                        }
-                        finally
-                        {
-                            errorMask?.PopIndex();
-                        }
-                        try
-                        {
-                            errorMask?.PushIndex((int)DialogResponse_FieldIndex.Fluff1);
-                            if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
-                                frame: dataFrame.SpawnWithLength(4),
-                                item: out Byte[] Fluff1Parse,
-                                errorMask: errorMask))
-                            {
-                                item.Fluff1 = Fluff1Parse;
-                            }
-                            else
-                            {
-                                item.Fluff1 = default(Byte[]);
-                            }
-                        }
-                        catch (Exception ex)
-                        when (errorMask != null)
-                        {
-                            errorMask.ReportException(ex);
-                        }
-                        finally
-                        {
-                            errorMask?.PopIndex();
-                        }
-                        try
-                        {
-                            errorMask?.PushIndex((int)DialogResponse_FieldIndex.ResponseNumber);
-                            if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                                frame: dataFrame.Spawn(snapToFinalPosition: false),
-                                item: out Byte ResponseNumberParse,
-                                errorMask: errorMask))
-                            {
-                                item.ResponseNumber = ResponseNumberParse;
-                            }
-                            else
-                            {
-                                item.ResponseNumber = default(Byte);
-                            }
-                        }
-                        catch (Exception ex)
-                        when (errorMask != null)
-                        {
-                            errorMask.ReportException(ex);
-                        }
-                        finally
-                        {
-                            errorMask?.PopIndex();
-                        }
-                        try
-                        {
-                            errorMask?.PushIndex((int)DialogResponse_FieldIndex.Fluff2);
-                            if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
-                                frame: dataFrame.SpawnWithLength(3),
-                                item: out Byte[] Fluff2Parse,
-                                errorMask: errorMask))
-                            {
-                                item.Fluff2 = Fluff2Parse;
-                            }
-                            else
-                            {
-                                item.Fluff2 = default(Byte[]);
-                            }
-                        }
-                        catch (Exception ex)
-                        when (errorMask != null)
-                        {
-                            errorMask.ReportException(ex);
-                        }
-                        finally
-                        {
-                            errorMask?.PopIndex();
+                            item.Emotion = default(EmotionType);
                         }
                     }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    try
+                    {
+                        errorMask?.PushIndex((int)DialogResponse_FieldIndex.EmotionValue);
+                        if (Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
+                            frame: dataFrame,
+                            item: out Int32 EmotionValueParse,
+                            errorMask: errorMask))
+                        {
+                            item.EmotionValue = EmotionValueParse;
+                        }
+                        else
+                        {
+                            item.EmotionValue = default(Int32);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    try
+                    {
+                        errorMask?.PushIndex((int)DialogResponse_FieldIndex.Fluff1);
+                        if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+                            frame: dataFrame.SpawnWithLength(4),
+                            item: out Byte[] Fluff1Parse,
+                            errorMask: errorMask))
+                        {
+                            item.Fluff1 = Fluff1Parse;
+                        }
+                        else
+                        {
+                            item.Fluff1 = default(Byte[]);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    try
+                    {
+                        errorMask?.PushIndex((int)DialogResponse_FieldIndex.ResponseNumber);
+                        if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                            frame: dataFrame,
+                            item: out Byte ResponseNumberParse,
+                            errorMask: errorMask))
+                        {
+                            item.ResponseNumber = ResponseNumberParse;
+                        }
+                        else
+                        {
+                            item.ResponseNumber = default(Byte);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    try
+                    {
+                        errorMask?.PushIndex((int)DialogResponse_FieldIndex.Fluff2);
+                        if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+                            frame: dataFrame.SpawnWithLength(3),
+                            item: out Byte[] Fluff2Parse,
+                            errorMask: errorMask))
+                        {
+                            item.Fluff2 = Fluff2Parse;
+                        }
+                        else
+                        {
+                            item.Fluff2 = default(Byte[]);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
                     return TryGet<int?>.Succeed((int)DialogResponse_FieldIndex.Fluff2);
+                }
                 case 0x314D414E: // NAM1
+                {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     try
                     {
@@ -875,7 +855,9 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)DialogResponse_FieldIndex.ResponseText);
+                }
                 case 0x324D414E: // NAM2
+                {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     try
                     {
@@ -903,6 +885,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)DialogResponse_FieldIndex.ActorNotes);
+                }
                 default:
                     return TryGet<int?>.Failure;
             }

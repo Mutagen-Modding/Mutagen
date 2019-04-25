@@ -21,7 +21,11 @@ namespace Mutagen.Bethesda.Oblivion
         static partial void CustomBinaryEnd_Import(MutagenFrame frame, DialogTopic obj, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
         {
             if (frame.Reader.Complete) return;
-            var next = HeaderTranslation.GetNextType(frame.Reader, out var len, hopGroup: false);
+            var next = HeaderTranslation.GetNextType(
+                reader: frame.Reader,
+                contentLength: out var len,
+                finalPos: out var _,
+                hopGroup: false);
             if (!next.Equals(Group_Registration.GRUP_HEADER)) return;
             frame.Reader.Position += 8;
             var formKey = FormKey.Factory(masterReferences, frame.Reader.ReadUInt32());
@@ -39,24 +43,21 @@ namespace Mutagen.Bethesda.Oblivion
                 frame.Reader.Position -= 16;
                 return;
             }
-            using (var subFrame = frame.SpawnWithLength(len - Mutagen.Bethesda.Constants.RECORD_HEADER_LENGTH))
-            {
-                Mutagen.Bethesda.Binary.ListBinaryTranslation<DialogItem>.Instance.ParseRepeatedItem(
-                    frame: subFrame,
-                    fieldIndex: (int)DialogTopic_FieldIndex.Items,
-                    lengthLength: 4,
-                    item: obj.Items,
-                    errorMask: errorMask,
-                    transl: (MutagenFrame r, RecordType header, out DialogItem listItem, ErrorMaskBuilder listErrorMask) =>
-                    {
-                        return LoquiBinaryTranslation<DialogItem>.Instance.Parse(
-                            frame: r,
-                            item: out listItem,
-                            masterReferences: masterReferences,
-                            errorMask: listErrorMask);
-                    }
-                    );
-            }
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<DialogItem>.Instance.ParseRepeatedItem(
+                frame: frame.SpawnWithLength(len - Mutagen.Bethesda.Constants.RECORD_HEADER_LENGTH),
+                fieldIndex: (int)DialogTopic_FieldIndex.Items,
+                lengthLength: 4,
+                item: obj.Items,
+                errorMask: errorMask,
+                transl: (MutagenFrame r, RecordType header, out DialogItem listItem, ErrorMaskBuilder listErrorMask) =>
+                {
+                    return LoquiBinaryTranslation<DialogItem>.Instance.Parse(
+                        frame: r,
+                        item: out listItem,
+                        masterReferences: masterReferences,
+                        errorMask: listErrorMask);
+                }
+                );
         }
 
         static partial void CustomBinaryEnd_Export(MutagenWriter writer, DialogTopic obj, MasterReferences masterReferences, ErrorMaskBuilder errorMask)

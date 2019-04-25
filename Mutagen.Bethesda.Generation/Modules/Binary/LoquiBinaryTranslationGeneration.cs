@@ -135,7 +135,7 @@ namespace Mutagen.Bethesda.Generation
                 else
                 {
                     List<string> extraArgs = new List<string>();
-                    extraArgs.Add($"frame: {frameAccessor}{(loquiGen.TargetObjectGeneration.HasRecordType() ? null : ".Spawn(snapToFinalPosition: false)")}");
+                    extraArgs.Add($"frame: {frameAccessor}");
                     if (data?.RecordTypeConverter != null
                         && data.RecordTypeConverter.FromConversions.Count > 0)
                     {
@@ -180,7 +180,7 @@ namespace Mutagen.Bethesda.Generation
             using (var args = new ArgsWrapper(fg,
                 $"{retAccessor}LoquiBinaryTranslation<{loquiGen.ObjectTypeName}{loquiGen.GenericTypes}>.Instance.Parse"))
             {
-                args.Add($"frame: {readerAccessor}.Spawn(snapToFinalPosition: false)");
+                args.Add($"frame: {readerAccessor}");
                 if (loquiGen.HasIndex)
                 {
                     args.Add($"fieldIndex: (int){typeGen.IndexEnumName}");

@@ -1365,17 +1365,17 @@ namespace Mutagen.Bethesda.Oblivion
         protected static TryGet<int?> Fill_Binary_RecordTypes(
             Water item,
             MutagenFrame frame,
+            RecordType nextRecordType,
+            int contentLength,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask,
             RecordTypeConverter recordTypeConverter = null)
         {
-            var nextRecordType = HeaderTranslation.GetNextSubRecordType(
-                reader: frame.Reader,
-                contentLength: out var contentLength,
-                recordTypeConverter: recordTypeConverter);
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
                 case 0x4D414E54: // TNAM
+                {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     try
                     {
@@ -1403,7 +1403,9 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)Water_FieldIndex.Texture);
+                }
                 case 0x4D414E41: // ANAM
+                {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     try
                     {
@@ -1430,7 +1432,9 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)Water_FieldIndex.Opacity);
+                }
                 case 0x4D414E46: // FNAM
+                {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     try
                     {
@@ -1457,7 +1461,9 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)Water_FieldIndex.Flags);
+                }
                 case 0x4D414E4D: // MNAM
+                {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     try
                     {
@@ -1485,7 +1491,9 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)Water_FieldIndex.MaterialID);
+                }
                 case 0x4D414E53: // SNAM
+                {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
@@ -1494,685 +1502,687 @@ namespace Mutagen.Bethesda.Oblivion
                         fieldIndex: (int)Water_FieldIndex.Sound,
                         errorMask: errorMask);
                     return TryGet<int?>.Succeed((int)Water_FieldIndex.Sound);
+                }
                 case 0x41544144: // DATA
+                {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    using (var dataFrame = frame.SpawnWithLength(contentLength))
+                    var dataFrame = frame.SpawnWithLength(contentLength);
+                    if (!dataFrame.Complete)
                     {
-                        if (!dataFrame.Complete)
-                        {
-                            item.DATADataTypeState = DATADataType.Has;
-                        }
-                        FillBinary_NothingCustomLogic_Custom(
+                        item.DATADataTypeState = DATADataType.Has;
+                    }
+                    FillBinary_NothingCustomLogic_Custom(
+                        frame: dataFrame,
+                        item: item,
+                        masterReferences: masterReferences,
+                        errorMask: errorMask);
+                    if (dataFrame.Complete)
+                    {
+                        item.DATADataTypeState |= DATADataType.Break0;
+                        return TryGet<int?>.Succeed(null);
+                    }
+                    try
+                    {
+                        errorMask?.PushIndex((int)Water_FieldIndex.WindVelocity);
+                        if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
-                            item: item,
-                            masterReferences: masterReferences,
-                            errorMask: errorMask);
-                        if (dataFrame.Complete)
+                            item: out Single WindVelocityParse,
+                            errorMask: errorMask))
                         {
-                            item.DATADataTypeState |= DATADataType.Break0;
-                            return TryGet<int?>.Succeed(null);
+                            item.WindVelocity = WindVelocityParse;
                         }
-                        try
+                        else
                         {
-                            errorMask?.PushIndex((int)Water_FieldIndex.WindVelocity);
-                            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                                frame: dataFrame.Spawn(snapToFinalPosition: false),
-                                item: out Single WindVelocityParse,
-                                errorMask: errorMask))
-                            {
-                                item.WindVelocity = WindVelocityParse;
-                            }
-                            else
-                            {
-                                item.WindVelocity = default(Single);
-                            }
-                        }
-                        catch (Exception ex)
-                        when (errorMask != null)
-                        {
-                            errorMask.ReportException(ex);
-                        }
-                        finally
-                        {
-                            errorMask?.PopIndex();
-                        }
-                        try
-                        {
-                            errorMask?.PushIndex((int)Water_FieldIndex.WindDirection);
-                            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                                frame: dataFrame.Spawn(snapToFinalPosition: false),
-                                item: out Single WindDirectionParse,
-                                errorMask: errorMask))
-                            {
-                                item.WindDirection = WindDirectionParse;
-                            }
-                            else
-                            {
-                                item.WindDirection = default(Single);
-                            }
-                        }
-                        catch (Exception ex)
-                        when (errorMask != null)
-                        {
-                            errorMask.ReportException(ex);
-                        }
-                        finally
-                        {
-                            errorMask?.PopIndex();
-                        }
-                        try
-                        {
-                            errorMask?.PushIndex((int)Water_FieldIndex.WaveAmplitude);
-                            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                                frame: dataFrame.Spawn(snapToFinalPosition: false),
-                                item: out Single WaveAmplitudeParse,
-                                errorMask: errorMask))
-                            {
-                                item.WaveAmplitude = WaveAmplitudeParse;
-                            }
-                            else
-                            {
-                                item.WaveAmplitude = default(Single);
-                            }
-                        }
-                        catch (Exception ex)
-                        when (errorMask != null)
-                        {
-                            errorMask.ReportException(ex);
-                        }
-                        finally
-                        {
-                            errorMask?.PopIndex();
-                        }
-                        try
-                        {
-                            errorMask?.PushIndex((int)Water_FieldIndex.WaveFrequency);
-                            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                                frame: dataFrame.Spawn(snapToFinalPosition: false),
-                                item: out Single WaveFrequencyParse,
-                                errorMask: errorMask))
-                            {
-                                item.WaveFrequency = WaveFrequencyParse;
-                            }
-                            else
-                            {
-                                item.WaveFrequency = default(Single);
-                            }
-                        }
-                        catch (Exception ex)
-                        when (errorMask != null)
-                        {
-                            errorMask.ReportException(ex);
-                        }
-                        finally
-                        {
-                            errorMask?.PopIndex();
-                        }
-                        try
-                        {
-                            errorMask?.PushIndex((int)Water_FieldIndex.SunPower);
-                            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                                frame: dataFrame.Spawn(snapToFinalPosition: false),
-                                item: out Single SunPowerParse,
-                                errorMask: errorMask))
-                            {
-                                item.SunPower = SunPowerParse;
-                            }
-                            else
-                            {
-                                item.SunPower = default(Single);
-                            }
-                        }
-                        catch (Exception ex)
-                        when (errorMask != null)
-                        {
-                            errorMask.ReportException(ex);
-                        }
-                        finally
-                        {
-                            errorMask?.PopIndex();
-                        }
-                        try
-                        {
-                            errorMask?.PushIndex((int)Water_FieldIndex.ReflectivityAmount);
-                            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                                frame: dataFrame.Spawn(snapToFinalPosition: false),
-                                item: out Single ReflectivityAmountParse,
-                                errorMask: errorMask))
-                            {
-                                item.ReflectivityAmount = ReflectivityAmountParse;
-                            }
-                            else
-                            {
-                                item.ReflectivityAmount = default(Single);
-                            }
-                        }
-                        catch (Exception ex)
-                        when (errorMask != null)
-                        {
-                            errorMask.ReportException(ex);
-                        }
-                        finally
-                        {
-                            errorMask?.PopIndex();
-                        }
-                        try
-                        {
-                            errorMask?.PushIndex((int)Water_FieldIndex.FresnelAmount);
-                            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                                frame: dataFrame.Spawn(snapToFinalPosition: false),
-                                item: out Single FresnelAmountParse,
-                                errorMask: errorMask))
-                            {
-                                item.FresnelAmount = FresnelAmountParse;
-                            }
-                            else
-                            {
-                                item.FresnelAmount = default(Single);
-                            }
-                        }
-                        catch (Exception ex)
-                        when (errorMask != null)
-                        {
-                            errorMask.ReportException(ex);
-                        }
-                        finally
-                        {
-                            errorMask?.PopIndex();
-                        }
-                        try
-                        {
-                            errorMask?.PushIndex((int)Water_FieldIndex.ScrollXSpeed);
-                            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                                frame: dataFrame.Spawn(snapToFinalPosition: false),
-                                item: out Single ScrollXSpeedParse,
-                                errorMask: errorMask))
-                            {
-                                item.ScrollXSpeed = ScrollXSpeedParse;
-                            }
-                            else
-                            {
-                                item.ScrollXSpeed = default(Single);
-                            }
-                        }
-                        catch (Exception ex)
-                        when (errorMask != null)
-                        {
-                            errorMask.ReportException(ex);
-                        }
-                        finally
-                        {
-                            errorMask?.PopIndex();
-                        }
-                        try
-                        {
-                            errorMask?.PushIndex((int)Water_FieldIndex.ScrollYSpeed);
-                            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                                frame: dataFrame.Spawn(snapToFinalPosition: false),
-                                item: out Single ScrollYSpeedParse,
-                                errorMask: errorMask))
-                            {
-                                item.ScrollYSpeed = ScrollYSpeedParse;
-                            }
-                            else
-                            {
-                                item.ScrollYSpeed = default(Single);
-                            }
-                        }
-                        catch (Exception ex)
-                        when (errorMask != null)
-                        {
-                            errorMask.ReportException(ex);
-                        }
-                        finally
-                        {
-                            errorMask?.PopIndex();
-                        }
-                        try
-                        {
-                            errorMask?.PushIndex((int)Water_FieldIndex.FogDistanceNearPlane);
-                            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                                frame: dataFrame.Spawn(snapToFinalPosition: false),
-                                item: out Single FogDistanceNearPlaneParse,
-                                errorMask: errorMask))
-                            {
-                                item.FogDistanceNearPlane = FogDistanceNearPlaneParse;
-                            }
-                            else
-                            {
-                                item.FogDistanceNearPlane = default(Single);
-                            }
-                        }
-                        catch (Exception ex)
-                        when (errorMask != null)
-                        {
-                            errorMask.ReportException(ex);
-                        }
-                        finally
-                        {
-                            errorMask?.PopIndex();
-                        }
-                        FillBinary_BloodCustomLogic_Custom(
-                            frame: dataFrame,
-                            item: item,
-                            masterReferences: masterReferences,
-                            errorMask: errorMask);
-                        if (dataFrame.Complete)
-                        {
-                            item.DATADataTypeState |= DATADataType.Break1;
-                            return TryGet<int?>.Succeed((int)Water_FieldIndex.FogDistanceNearPlane);
-                        }
-                        try
-                        {
-                            errorMask?.PushIndex((int)Water_FieldIndex.FogDistanceFarPlane);
-                            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                                frame: dataFrame.Spawn(snapToFinalPosition: false),
-                                item: out Single FogDistanceFarPlaneParse,
-                                errorMask: errorMask))
-                            {
-                                item.FogDistanceFarPlane = FogDistanceFarPlaneParse;
-                            }
-                            else
-                            {
-                                item.FogDistanceFarPlane = default(Single);
-                            }
-                        }
-                        catch (Exception ex)
-                        when (errorMask != null)
-                        {
-                            errorMask.ReportException(ex);
-                        }
-                        finally
-                        {
-                            errorMask?.PopIndex();
-                        }
-                        try
-                        {
-                            errorMask?.PushIndex((int)Water_FieldIndex.ShallowColor);
-                            if (Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
-                                frame: dataFrame.Spawn(snapToFinalPosition: false),
-                                extraByte: true,
-                                item: out Color ShallowColorParse,
-                                errorMask: errorMask))
-                            {
-                                item.ShallowColor = ShallowColorParse;
-                            }
-                            else
-                            {
-                                item.ShallowColor = default(Color);
-                            }
-                        }
-                        catch (Exception ex)
-                        when (errorMask != null)
-                        {
-                            errorMask.ReportException(ex);
-                        }
-                        finally
-                        {
-                            errorMask?.PopIndex();
-                        }
-                        try
-                        {
-                            errorMask?.PushIndex((int)Water_FieldIndex.DeepColor);
-                            if (Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
-                                frame: dataFrame.Spawn(snapToFinalPosition: false),
-                                extraByte: true,
-                                item: out Color DeepColorParse,
-                                errorMask: errorMask))
-                            {
-                                item.DeepColor = DeepColorParse;
-                            }
-                            else
-                            {
-                                item.DeepColor = default(Color);
-                            }
-                        }
-                        catch (Exception ex)
-                        when (errorMask != null)
-                        {
-                            errorMask.ReportException(ex);
-                        }
-                        finally
-                        {
-                            errorMask?.PopIndex();
-                        }
-                        try
-                        {
-                            errorMask?.PushIndex((int)Water_FieldIndex.ReflectionColor);
-                            if (Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
-                                frame: dataFrame.Spawn(snapToFinalPosition: false),
-                                extraByte: true,
-                                item: out Color ReflectionColorParse,
-                                errorMask: errorMask))
-                            {
-                                item.ReflectionColor = ReflectionColorParse;
-                            }
-                            else
-                            {
-                                item.ReflectionColor = default(Color);
-                            }
-                        }
-                        catch (Exception ex)
-                        when (errorMask != null)
-                        {
-                            errorMask.ReportException(ex);
-                        }
-                        finally
-                        {
-                            errorMask?.PopIndex();
-                        }
-                        try
-                        {
-                            errorMask?.PushIndex((int)Water_FieldIndex.TextureBlend);
-                            if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                                frame: dataFrame.Spawn(snapToFinalPosition: false),
-                                item: out Byte TextureBlendParse,
-                                errorMask: errorMask))
-                            {
-                                item.TextureBlend = TextureBlendParse;
-                            }
-                            else
-                            {
-                                item.TextureBlend = default(Byte);
-                            }
-                        }
-                        catch (Exception ex)
-                        when (errorMask != null)
-                        {
-                            errorMask.ReportException(ex);
-                        }
-                        finally
-                        {
-                            errorMask?.PopIndex();
-                        }
-                        dataFrame.SetPosition(dataFrame.Position + 3);
-                        FillBinary_OilCustomLogic_Custom(
-                            frame: dataFrame,
-                            item: item,
-                            masterReferences: masterReferences,
-                            errorMask: errorMask);
-                        if (dataFrame.Complete)
-                        {
-                            item.DATADataTypeState |= DATADataType.Break2;
-                            return TryGet<int?>.Succeed((int)Water_FieldIndex.TextureBlend);
-                        }
-                        try
-                        {
-                            errorMask?.PushIndex((int)Water_FieldIndex.RainSimulatorForce);
-                            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                                frame: dataFrame.Spawn(snapToFinalPosition: false),
-                                item: out Single RainSimulatorForceParse,
-                                errorMask: errorMask))
-                            {
-                                item.RainSimulatorForce = RainSimulatorForceParse;
-                            }
-                            else
-                            {
-                                item.RainSimulatorForce = default(Single);
-                            }
-                        }
-                        catch (Exception ex)
-                        when (errorMask != null)
-                        {
-                            errorMask.ReportException(ex);
-                        }
-                        finally
-                        {
-                            errorMask?.PopIndex();
-                        }
-                        try
-                        {
-                            errorMask?.PushIndex((int)Water_FieldIndex.RainSimulatorVelocity);
-                            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                                frame: dataFrame.Spawn(snapToFinalPosition: false),
-                                item: out Single RainSimulatorVelocityParse,
-                                errorMask: errorMask))
-                            {
-                                item.RainSimulatorVelocity = RainSimulatorVelocityParse;
-                            }
-                            else
-                            {
-                                item.RainSimulatorVelocity = default(Single);
-                            }
-                        }
-                        catch (Exception ex)
-                        when (errorMask != null)
-                        {
-                            errorMask.ReportException(ex);
-                        }
-                        finally
-                        {
-                            errorMask?.PopIndex();
-                        }
-                        try
-                        {
-                            errorMask?.PushIndex((int)Water_FieldIndex.RainSimulatorFalloff);
-                            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                                frame: dataFrame.Spawn(snapToFinalPosition: false),
-                                item: out Single RainSimulatorFalloffParse,
-                                errorMask: errorMask))
-                            {
-                                item.RainSimulatorFalloff = RainSimulatorFalloffParse;
-                            }
-                            else
-                            {
-                                item.RainSimulatorFalloff = default(Single);
-                            }
-                        }
-                        catch (Exception ex)
-                        when (errorMask != null)
-                        {
-                            errorMask.ReportException(ex);
-                        }
-                        finally
-                        {
-                            errorMask?.PopIndex();
-                        }
-                        try
-                        {
-                            errorMask?.PushIndex((int)Water_FieldIndex.RainSimulatorDampner);
-                            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                                frame: dataFrame.Spawn(snapToFinalPosition: false),
-                                item: out Single RainSimulatorDampnerParse,
-                                errorMask: errorMask))
-                            {
-                                item.RainSimulatorDampner = RainSimulatorDampnerParse;
-                            }
-                            else
-                            {
-                                item.RainSimulatorDampner = default(Single);
-                            }
-                        }
-                        catch (Exception ex)
-                        when (errorMask != null)
-                        {
-                            errorMask.ReportException(ex);
-                        }
-                        finally
-                        {
-                            errorMask?.PopIndex();
-                        }
-                        try
-                        {
-                            errorMask?.PushIndex((int)Water_FieldIndex.RainSimulatorStartingSize);
-                            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                                frame: dataFrame.Spawn(snapToFinalPosition: false),
-                                item: out Single RainSimulatorStartingSizeParse,
-                                errorMask: errorMask))
-                            {
-                                item.RainSimulatorStartingSize = RainSimulatorStartingSizeParse;
-                            }
-                            else
-                            {
-                                item.RainSimulatorStartingSize = default(Single);
-                            }
-                        }
-                        catch (Exception ex)
-                        when (errorMask != null)
-                        {
-                            errorMask.ReportException(ex);
-                        }
-                        finally
-                        {
-                            errorMask?.PopIndex();
-                        }
-                        try
-                        {
-                            errorMask?.PushIndex((int)Water_FieldIndex.DisplacementSimulatorForce);
-                            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                                frame: dataFrame.Spawn(snapToFinalPosition: false),
-                                item: out Single DisplacementSimulatorForceParse,
-                                errorMask: errorMask))
-                            {
-                                item.DisplacementSimulatorForce = DisplacementSimulatorForceParse;
-                            }
-                            else
-                            {
-                                item.DisplacementSimulatorForce = default(Single);
-                            }
-                        }
-                        catch (Exception ex)
-                        when (errorMask != null)
-                        {
-                            errorMask.ReportException(ex);
-                        }
-                        finally
-                        {
-                            errorMask?.PopIndex();
-                        }
-                        FillBinary_OddExtraBytes_Custom(
-                            frame: dataFrame,
-                            item: item,
-                            masterReferences: masterReferences,
-                            errorMask: errorMask);
-                        if (dataFrame.Complete)
-                        {
-                            item.DATADataTypeState |= DATADataType.Break3;
-                            return TryGet<int?>.Succeed((int)Water_FieldIndex.DisplacementSimulatorForce);
-                        }
-                        try
-                        {
-                            errorMask?.PushIndex((int)Water_FieldIndex.DisplacementSimulatorVelocity);
-                            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                                frame: dataFrame.Spawn(snapToFinalPosition: false),
-                                item: out Single DisplacementSimulatorVelocityParse,
-                                errorMask: errorMask))
-                            {
-                                item.DisplacementSimulatorVelocity = DisplacementSimulatorVelocityParse;
-                            }
-                            else
-                            {
-                                item.DisplacementSimulatorVelocity = default(Single);
-                            }
-                        }
-                        catch (Exception ex)
-                        when (errorMask != null)
-                        {
-                            errorMask.ReportException(ex);
-                        }
-                        finally
-                        {
-                            errorMask?.PopIndex();
-                        }
-                        try
-                        {
-                            errorMask?.PushIndex((int)Water_FieldIndex.DisplacementSimulatorFalloff);
-                            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                                frame: dataFrame.Spawn(snapToFinalPosition: false),
-                                item: out Single DisplacementSimulatorFalloffParse,
-                                errorMask: errorMask))
-                            {
-                                item.DisplacementSimulatorFalloff = DisplacementSimulatorFalloffParse;
-                            }
-                            else
-                            {
-                                item.DisplacementSimulatorFalloff = default(Single);
-                            }
-                        }
-                        catch (Exception ex)
-                        when (errorMask != null)
-                        {
-                            errorMask.ReportException(ex);
-                        }
-                        finally
-                        {
-                            errorMask?.PopIndex();
-                        }
-                        try
-                        {
-                            errorMask?.PushIndex((int)Water_FieldIndex.DisplacementSimulatorDampner);
-                            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                                frame: dataFrame.Spawn(snapToFinalPosition: false),
-                                item: out Single DisplacementSimulatorDampnerParse,
-                                errorMask: errorMask))
-                            {
-                                item.DisplacementSimulatorDampner = DisplacementSimulatorDampnerParse;
-                            }
-                            else
-                            {
-                                item.DisplacementSimulatorDampner = default(Single);
-                            }
-                        }
-                        catch (Exception ex)
-                        when (errorMask != null)
-                        {
-                            errorMask.ReportException(ex);
-                        }
-                        finally
-                        {
-                            errorMask?.PopIndex();
-                        }
-                        try
-                        {
-                            errorMask?.PushIndex((int)Water_FieldIndex.DisplacementSimulatorStartingSize);
-                            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                                frame: dataFrame.Spawn(snapToFinalPosition: false),
-                                item: out Single DisplacementSimulatorStartingSizeParse,
-                                errorMask: errorMask))
-                            {
-                                item.DisplacementSimulatorStartingSize = DisplacementSimulatorStartingSizeParse;
-                            }
-                            else
-                            {
-                                item.DisplacementSimulatorStartingSize = default(Single);
-                            }
-                        }
-                        catch (Exception ex)
-                        when (errorMask != null)
-                        {
-                            errorMask.ReportException(ex);
-                        }
-                        finally
-                        {
-                            errorMask?.PopIndex();
-                        }
-                        try
-                        {
-                            errorMask?.PushIndex((int)Water_FieldIndex.Damage);
-                            if (Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Parse(
-                                frame: dataFrame.Spawn(snapToFinalPosition: false),
-                                item: out UInt16 DamageParse,
-                                errorMask: errorMask))
-                            {
-                                item.Damage = DamageParse;
-                            }
-                            else
-                            {
-                                item.Damage = default(UInt16);
-                            }
-                        }
-                        catch (Exception ex)
-                        when (errorMask != null)
-                        {
-                            errorMask.ReportException(ex);
-                        }
-                        finally
-                        {
-                            errorMask?.PopIndex();
+                            item.WindVelocity = default(Single);
                         }
                     }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    try
+                    {
+                        errorMask?.PushIndex((int)Water_FieldIndex.WindDirection);
+                        if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                            frame: dataFrame,
+                            item: out Single WindDirectionParse,
+                            errorMask: errorMask))
+                        {
+                            item.WindDirection = WindDirectionParse;
+                        }
+                        else
+                        {
+                            item.WindDirection = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    try
+                    {
+                        errorMask?.PushIndex((int)Water_FieldIndex.WaveAmplitude);
+                        if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                            frame: dataFrame,
+                            item: out Single WaveAmplitudeParse,
+                            errorMask: errorMask))
+                        {
+                            item.WaveAmplitude = WaveAmplitudeParse;
+                        }
+                        else
+                        {
+                            item.WaveAmplitude = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    try
+                    {
+                        errorMask?.PushIndex((int)Water_FieldIndex.WaveFrequency);
+                        if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                            frame: dataFrame,
+                            item: out Single WaveFrequencyParse,
+                            errorMask: errorMask))
+                        {
+                            item.WaveFrequency = WaveFrequencyParse;
+                        }
+                        else
+                        {
+                            item.WaveFrequency = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    try
+                    {
+                        errorMask?.PushIndex((int)Water_FieldIndex.SunPower);
+                        if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                            frame: dataFrame,
+                            item: out Single SunPowerParse,
+                            errorMask: errorMask))
+                        {
+                            item.SunPower = SunPowerParse;
+                        }
+                        else
+                        {
+                            item.SunPower = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    try
+                    {
+                        errorMask?.PushIndex((int)Water_FieldIndex.ReflectivityAmount);
+                        if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                            frame: dataFrame,
+                            item: out Single ReflectivityAmountParse,
+                            errorMask: errorMask))
+                        {
+                            item.ReflectivityAmount = ReflectivityAmountParse;
+                        }
+                        else
+                        {
+                            item.ReflectivityAmount = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    try
+                    {
+                        errorMask?.PushIndex((int)Water_FieldIndex.FresnelAmount);
+                        if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                            frame: dataFrame,
+                            item: out Single FresnelAmountParse,
+                            errorMask: errorMask))
+                        {
+                            item.FresnelAmount = FresnelAmountParse;
+                        }
+                        else
+                        {
+                            item.FresnelAmount = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    try
+                    {
+                        errorMask?.PushIndex((int)Water_FieldIndex.ScrollXSpeed);
+                        if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                            frame: dataFrame,
+                            item: out Single ScrollXSpeedParse,
+                            errorMask: errorMask))
+                        {
+                            item.ScrollXSpeed = ScrollXSpeedParse;
+                        }
+                        else
+                        {
+                            item.ScrollXSpeed = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    try
+                    {
+                        errorMask?.PushIndex((int)Water_FieldIndex.ScrollYSpeed);
+                        if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                            frame: dataFrame,
+                            item: out Single ScrollYSpeedParse,
+                            errorMask: errorMask))
+                        {
+                            item.ScrollYSpeed = ScrollYSpeedParse;
+                        }
+                        else
+                        {
+                            item.ScrollYSpeed = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    try
+                    {
+                        errorMask?.PushIndex((int)Water_FieldIndex.FogDistanceNearPlane);
+                        if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                            frame: dataFrame,
+                            item: out Single FogDistanceNearPlaneParse,
+                            errorMask: errorMask))
+                        {
+                            item.FogDistanceNearPlane = FogDistanceNearPlaneParse;
+                        }
+                        else
+                        {
+                            item.FogDistanceNearPlane = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    FillBinary_BloodCustomLogic_Custom(
+                        frame: dataFrame,
+                        item: item,
+                        masterReferences: masterReferences,
+                        errorMask: errorMask);
+                    if (dataFrame.Complete)
+                    {
+                        item.DATADataTypeState |= DATADataType.Break1;
+                        return TryGet<int?>.Succeed((int)Water_FieldIndex.FogDistanceNearPlane);
+                    }
+                    try
+                    {
+                        errorMask?.PushIndex((int)Water_FieldIndex.FogDistanceFarPlane);
+                        if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                            frame: dataFrame,
+                            item: out Single FogDistanceFarPlaneParse,
+                            errorMask: errorMask))
+                        {
+                            item.FogDistanceFarPlane = FogDistanceFarPlaneParse;
+                        }
+                        else
+                        {
+                            item.FogDistanceFarPlane = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    try
+                    {
+                        errorMask?.PushIndex((int)Water_FieldIndex.ShallowColor);
+                        if (Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
+                            frame: dataFrame,
+                            extraByte: true,
+                            item: out Color ShallowColorParse,
+                            errorMask: errorMask))
+                        {
+                            item.ShallowColor = ShallowColorParse;
+                        }
+                        else
+                        {
+                            item.ShallowColor = default(Color);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    try
+                    {
+                        errorMask?.PushIndex((int)Water_FieldIndex.DeepColor);
+                        if (Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
+                            frame: dataFrame,
+                            extraByte: true,
+                            item: out Color DeepColorParse,
+                            errorMask: errorMask))
+                        {
+                            item.DeepColor = DeepColorParse;
+                        }
+                        else
+                        {
+                            item.DeepColor = default(Color);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    try
+                    {
+                        errorMask?.PushIndex((int)Water_FieldIndex.ReflectionColor);
+                        if (Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
+                            frame: dataFrame,
+                            extraByte: true,
+                            item: out Color ReflectionColorParse,
+                            errorMask: errorMask))
+                        {
+                            item.ReflectionColor = ReflectionColorParse;
+                        }
+                        else
+                        {
+                            item.ReflectionColor = default(Color);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    try
+                    {
+                        errorMask?.PushIndex((int)Water_FieldIndex.TextureBlend);
+                        if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                            frame: dataFrame,
+                            item: out Byte TextureBlendParse,
+                            errorMask: errorMask))
+                        {
+                            item.TextureBlend = TextureBlendParse;
+                        }
+                        else
+                        {
+                            item.TextureBlend = default(Byte);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    dataFrame.SetPosition(dataFrame.Position + 3);
+                    FillBinary_OilCustomLogic_Custom(
+                        frame: dataFrame,
+                        item: item,
+                        masterReferences: masterReferences,
+                        errorMask: errorMask);
+                    if (dataFrame.Complete)
+                    {
+                        item.DATADataTypeState |= DATADataType.Break2;
+                        return TryGet<int?>.Succeed((int)Water_FieldIndex.TextureBlend);
+                    }
+                    try
+                    {
+                        errorMask?.PushIndex((int)Water_FieldIndex.RainSimulatorForce);
+                        if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                            frame: dataFrame,
+                            item: out Single RainSimulatorForceParse,
+                            errorMask: errorMask))
+                        {
+                            item.RainSimulatorForce = RainSimulatorForceParse;
+                        }
+                        else
+                        {
+                            item.RainSimulatorForce = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    try
+                    {
+                        errorMask?.PushIndex((int)Water_FieldIndex.RainSimulatorVelocity);
+                        if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                            frame: dataFrame,
+                            item: out Single RainSimulatorVelocityParse,
+                            errorMask: errorMask))
+                        {
+                            item.RainSimulatorVelocity = RainSimulatorVelocityParse;
+                        }
+                        else
+                        {
+                            item.RainSimulatorVelocity = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    try
+                    {
+                        errorMask?.PushIndex((int)Water_FieldIndex.RainSimulatorFalloff);
+                        if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                            frame: dataFrame,
+                            item: out Single RainSimulatorFalloffParse,
+                            errorMask: errorMask))
+                        {
+                            item.RainSimulatorFalloff = RainSimulatorFalloffParse;
+                        }
+                        else
+                        {
+                            item.RainSimulatorFalloff = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    try
+                    {
+                        errorMask?.PushIndex((int)Water_FieldIndex.RainSimulatorDampner);
+                        if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                            frame: dataFrame,
+                            item: out Single RainSimulatorDampnerParse,
+                            errorMask: errorMask))
+                        {
+                            item.RainSimulatorDampner = RainSimulatorDampnerParse;
+                        }
+                        else
+                        {
+                            item.RainSimulatorDampner = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    try
+                    {
+                        errorMask?.PushIndex((int)Water_FieldIndex.RainSimulatorStartingSize);
+                        if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                            frame: dataFrame,
+                            item: out Single RainSimulatorStartingSizeParse,
+                            errorMask: errorMask))
+                        {
+                            item.RainSimulatorStartingSize = RainSimulatorStartingSizeParse;
+                        }
+                        else
+                        {
+                            item.RainSimulatorStartingSize = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    try
+                    {
+                        errorMask?.PushIndex((int)Water_FieldIndex.DisplacementSimulatorForce);
+                        if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                            frame: dataFrame,
+                            item: out Single DisplacementSimulatorForceParse,
+                            errorMask: errorMask))
+                        {
+                            item.DisplacementSimulatorForce = DisplacementSimulatorForceParse;
+                        }
+                        else
+                        {
+                            item.DisplacementSimulatorForce = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    FillBinary_OddExtraBytes_Custom(
+                        frame: dataFrame,
+                        item: item,
+                        masterReferences: masterReferences,
+                        errorMask: errorMask);
+                    if (dataFrame.Complete)
+                    {
+                        item.DATADataTypeState |= DATADataType.Break3;
+                        return TryGet<int?>.Succeed((int)Water_FieldIndex.DisplacementSimulatorForce);
+                    }
+                    try
+                    {
+                        errorMask?.PushIndex((int)Water_FieldIndex.DisplacementSimulatorVelocity);
+                        if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                            frame: dataFrame,
+                            item: out Single DisplacementSimulatorVelocityParse,
+                            errorMask: errorMask))
+                        {
+                            item.DisplacementSimulatorVelocity = DisplacementSimulatorVelocityParse;
+                        }
+                        else
+                        {
+                            item.DisplacementSimulatorVelocity = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    try
+                    {
+                        errorMask?.PushIndex((int)Water_FieldIndex.DisplacementSimulatorFalloff);
+                        if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                            frame: dataFrame,
+                            item: out Single DisplacementSimulatorFalloffParse,
+                            errorMask: errorMask))
+                        {
+                            item.DisplacementSimulatorFalloff = DisplacementSimulatorFalloffParse;
+                        }
+                        else
+                        {
+                            item.DisplacementSimulatorFalloff = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    try
+                    {
+                        errorMask?.PushIndex((int)Water_FieldIndex.DisplacementSimulatorDampner);
+                        if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                            frame: dataFrame,
+                            item: out Single DisplacementSimulatorDampnerParse,
+                            errorMask: errorMask))
+                        {
+                            item.DisplacementSimulatorDampner = DisplacementSimulatorDampnerParse;
+                        }
+                        else
+                        {
+                            item.DisplacementSimulatorDampner = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    try
+                    {
+                        errorMask?.PushIndex((int)Water_FieldIndex.DisplacementSimulatorStartingSize);
+                        if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                            frame: dataFrame,
+                            item: out Single DisplacementSimulatorStartingSizeParse,
+                            errorMask: errorMask))
+                        {
+                            item.DisplacementSimulatorStartingSize = DisplacementSimulatorStartingSizeParse;
+                        }
+                        else
+                        {
+                            item.DisplacementSimulatorStartingSize = default(Single);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    try
+                    {
+                        errorMask?.PushIndex((int)Water_FieldIndex.Damage);
+                        if (Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Parse(
+                            frame: dataFrame,
+                            item: out UInt16 DamageParse,
+                            errorMask: errorMask))
+                        {
+                            item.Damage = DamageParse;
+                        }
+                        else
+                        {
+                            item.Damage = default(UInt16);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
                     return TryGet<int?>.Succeed((int)Water_FieldIndex.Damage);
+                }
                 case 0x4D414E47: // GNAM
+                {
                     try
                     {
                         errorMask?.PushIndex((int)Water_FieldIndex.RelatedWaters);
@@ -2199,10 +2209,13 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)Water_FieldIndex.RelatedWaters);
+                }
                 default:
                     return MajorRecord.Fill_Binary_RecordTypes(
                         item: item,
                         frame: frame,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
                         recordTypeConverter: recordTypeConverter,
                         masterReferences: masterReferences,
                         errorMask: errorMask);

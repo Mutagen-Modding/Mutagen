@@ -779,17 +779,17 @@ namespace Mutagen.Bethesda.Oblivion
         protected static TryGet<int?> Fill_Binary_RecordTypes(
             Class item,
             MutagenFrame frame,
+            RecordType nextRecordType,
+            int contentLength,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask,
             RecordTypeConverter recordTypeConverter = null)
         {
-            var nextRecordType = HeaderTranslation.GetNextSubRecordType(
-                reader: frame.Reader,
-                contentLength: out var contentLength,
-                recordTypeConverter: recordTypeConverter);
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
                 case 0x4C4C5546: // FULL
+                {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     try
                     {
@@ -817,7 +817,9 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)Class_FieldIndex.Name);
+                }
                 case 0x43534544: // DESC
+                {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     try
                     {
@@ -845,7 +847,9 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)Class_FieldIndex.Description);
+                }
                 case 0x4E4F4349: // ICON
+                {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     try
                     {
@@ -873,150 +877,153 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)Class_FieldIndex.Icon);
+                }
                 case 0x41544144: // DATA
+                {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    using (var dataFrame = frame.SpawnWithLength(contentLength))
+                    var dataFrame = frame.SpawnWithLength(contentLength);
+                    if (!dataFrame.Complete)
                     {
-                        if (!dataFrame.Complete)
+                        item.DATADataTypeState = DATADataType.Has;
+                    }
+                    Mutagen.Bethesda.Binary.ListBinaryTranslation<ActorValue>.Instance.ParseRepeatedItem(
+                        frame: frame,
+                        amount: 2,
+                        item: item.PrimaryAttributes,
+                        fieldIndex: (int)Class_FieldIndex.PrimaryAttributes,
+                        errorMask: errorMask,
+                        transl: (MutagenFrame r, out ActorValue listSubItem, ErrorMaskBuilder listErrMask) =>
                         {
-                            item.DATADataTypeState = DATADataType.Has;
+                            return Mutagen.Bethesda.Binary.EnumBinaryTranslation<ActorValue>.Instance.Parse(
+                                frame: r.SpawnWithLength(4),
+                                item: out listSubItem,
+                                errorMask: listErrMask);
                         }
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<ActorValue>.Instance.ParseRepeatedItem(
-                            frame: frame,
-                            amount: 2,
-                            item: item.PrimaryAttributes,
-                            fieldIndex: (int)Class_FieldIndex.PrimaryAttributes,
-                            errorMask: errorMask,
-                            transl: (MutagenFrame r, out ActorValue listSubItem, ErrorMaskBuilder listErrMask) =>
-                            {
-                                return Mutagen.Bethesda.Binary.EnumBinaryTranslation<ActorValue>.Instance.Parse(
-                                    frame: r.SpawnWithLength(4),
-                                    item: out listSubItem,
-                                    errorMask: listErrMask);
-                            }
-                            );
-                        try
+                        );
+                    try
+                    {
+                        errorMask?.PushIndex((int)Class_FieldIndex.Specialization);
+                        if (EnumBinaryTranslation<Class.SpecializationFlag>.Instance.Parse(
+                            frame: dataFrame.SpawnWithLength(4),
+                            item: out Class.SpecializationFlag SpecializationParse,
+                            errorMask: errorMask))
                         {
-                            errorMask?.PushIndex((int)Class_FieldIndex.Specialization);
-                            if (EnumBinaryTranslation<Class.SpecializationFlag>.Instance.Parse(
-                                frame: dataFrame.SpawnWithLength(4),
-                                item: out Class.SpecializationFlag SpecializationParse,
-                                errorMask: errorMask))
-                            {
-                                item.Specialization = SpecializationParse;
-                            }
-                            else
-                            {
-                                item.Specialization = default(Class.SpecializationFlag);
-                            }
+                            item.Specialization = SpecializationParse;
                         }
-                        catch (Exception ex)
-                        when (errorMask != null)
+                        else
                         {
-                            errorMask.ReportException(ex);
-                        }
-                        finally
-                        {
-                            errorMask?.PopIndex();
-                        }
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<ActorValue>.Instance.ParseRepeatedItem(
-                            frame: frame,
-                            amount: 7,
-                            item: item.SecondaryAttributes,
-                            fieldIndex: (int)Class_FieldIndex.SecondaryAttributes,
-                            errorMask: errorMask,
-                            transl: (MutagenFrame r, out ActorValue listSubItem, ErrorMaskBuilder listErrMask) =>
-                            {
-                                return Mutagen.Bethesda.Binary.EnumBinaryTranslation<ActorValue>.Instance.Parse(
-                                    frame: r.SpawnWithLength(4),
-                                    item: out listSubItem,
-                                    errorMask: listErrMask);
-                            }
-                            );
-                        try
-                        {
-                            errorMask?.PushIndex((int)Class_FieldIndex.Flags);
-                            if (EnumBinaryTranslation<ClassFlag>.Instance.Parse(
-                                frame: dataFrame.SpawnWithLength(4),
-                                item: out ClassFlag FlagsParse,
-                                errorMask: errorMask))
-                            {
-                                item.Flags = FlagsParse;
-                            }
-                            else
-                            {
-                                item.Flags = default(ClassFlag);
-                            }
-                        }
-                        catch (Exception ex)
-                        when (errorMask != null)
-                        {
-                            errorMask.ReportException(ex);
-                        }
-                        finally
-                        {
-                            errorMask?.PopIndex();
-                        }
-                        try
-                        {
-                            errorMask?.PushIndex((int)Class_FieldIndex.ClassServices);
-                            if (EnumBinaryTranslation<ClassService>.Instance.Parse(
-                                frame: dataFrame.SpawnWithLength(4),
-                                item: out ClassService ClassServicesParse,
-                                errorMask: errorMask))
-                            {
-                                item.ClassServices = ClassServicesParse;
-                            }
-                            else
-                            {
-                                item.ClassServices = default(ClassService);
-                            }
-                        }
-                        catch (Exception ex)
-                        when (errorMask != null)
-                        {
-                            errorMask.ReportException(ex);
-                        }
-                        finally
-                        {
-                            errorMask?.PopIndex();
-                        }
-                        if (dataFrame.Complete)
-                        {
-                            item.DATADataTypeState |= DATADataType.Break0;
-                            return TryGet<int?>.Succeed((int)Class_FieldIndex.ClassServices);
-                        }
-                        try
-                        {
-                            errorMask?.PushIndex((int)Class_FieldIndex.Training);
-                            if (LoquiBinaryTranslation<ClassTraining>.Instance.Parse(
-                                frame: dataFrame.Spawn(snapToFinalPosition: false),
-                                masterReferences: masterReferences,
-                                item: out ClassTraining TrainingParse,
-                                errorMask: errorMask))
-                            {
-                                item.Training = TrainingParse;
-                            }
-                            else
-                            {
-                                item.Training = default(ClassTraining);
-                            }
-                        }
-                        catch (Exception ex)
-                        when (errorMask != null)
-                        {
-                            errorMask.ReportException(ex);
-                        }
-                        finally
-                        {
-                            errorMask?.PopIndex();
+                            item.Specialization = default(Class.SpecializationFlag);
                         }
                     }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    Mutagen.Bethesda.Binary.ListBinaryTranslation<ActorValue>.Instance.ParseRepeatedItem(
+                        frame: frame,
+                        amount: 7,
+                        item: item.SecondaryAttributes,
+                        fieldIndex: (int)Class_FieldIndex.SecondaryAttributes,
+                        errorMask: errorMask,
+                        transl: (MutagenFrame r, out ActorValue listSubItem, ErrorMaskBuilder listErrMask) =>
+                        {
+                            return Mutagen.Bethesda.Binary.EnumBinaryTranslation<ActorValue>.Instance.Parse(
+                                frame: r.SpawnWithLength(4),
+                                item: out listSubItem,
+                                errorMask: listErrMask);
+                        }
+                        );
+                    try
+                    {
+                        errorMask?.PushIndex((int)Class_FieldIndex.Flags);
+                        if (EnumBinaryTranslation<ClassFlag>.Instance.Parse(
+                            frame: dataFrame.SpawnWithLength(4),
+                            item: out ClassFlag FlagsParse,
+                            errorMask: errorMask))
+                        {
+                            item.Flags = FlagsParse;
+                        }
+                        else
+                        {
+                            item.Flags = default(ClassFlag);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    try
+                    {
+                        errorMask?.PushIndex((int)Class_FieldIndex.ClassServices);
+                        if (EnumBinaryTranslation<ClassService>.Instance.Parse(
+                            frame: dataFrame.SpawnWithLength(4),
+                            item: out ClassService ClassServicesParse,
+                            errorMask: errorMask))
+                        {
+                            item.ClassServices = ClassServicesParse;
+                        }
+                        else
+                        {
+                            item.ClassServices = default(ClassService);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    if (dataFrame.Complete)
+                    {
+                        item.DATADataTypeState |= DATADataType.Break0;
+                        return TryGet<int?>.Succeed((int)Class_FieldIndex.ClassServices);
+                    }
+                    try
+                    {
+                        errorMask?.PushIndex((int)Class_FieldIndex.Training);
+                        if (LoquiBinaryTranslation<ClassTraining>.Instance.Parse(
+                            frame: dataFrame,
+                            masterReferences: masterReferences,
+                            item: out ClassTraining TrainingParse,
+                            errorMask: errorMask))
+                        {
+                            item.Training = TrainingParse;
+                        }
+                        else
+                        {
+                            item.Training = default(ClassTraining);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
                     return TryGet<int?>.Succeed((int)Class_FieldIndex.Training);
+                }
                 default:
                     return MajorRecord.Fill_Binary_RecordTypes(
                         item: item,
                         frame: frame,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
                         recordTypeConverter: recordTypeConverter,
                         masterReferences: masterReferences,
                         errorMask: errorMask);

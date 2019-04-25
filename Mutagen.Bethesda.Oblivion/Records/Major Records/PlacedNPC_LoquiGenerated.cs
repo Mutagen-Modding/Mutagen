@@ -925,17 +925,17 @@ namespace Mutagen.Bethesda.Oblivion
         protected static TryGet<int?> Fill_Binary_RecordTypes(
             PlacedNPC item,
             MutagenFrame frame,
+            RecordType nextRecordType,
+            int contentLength,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask,
             RecordTypeConverter recordTypeConverter = null)
         {
-            var nextRecordType = HeaderTranslation.GetNextSubRecordType(
-                reader: frame.Reader,
-                contentLength: out var contentLength,
-                recordTypeConverter: recordTypeConverter);
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
                 case 0x454D414E: // NAME
+                {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
@@ -944,7 +944,9 @@ namespace Mutagen.Bethesda.Oblivion
                         fieldIndex: (int)PlacedNPC_FieldIndex.Base,
                         errorMask: errorMask);
                     return TryGet<int?>.Succeed((int)PlacedNPC_FieldIndex.Base);
+                }
                 case 0x49435058: // XPCI
+                {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     try
                     {
@@ -971,7 +973,9 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)PlacedNPC_FieldIndex.XPCIFluff);
+                }
                 case 0x4C4C5546: // FULL
+                {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     try
                     {
@@ -998,7 +1002,9 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)PlacedNPC_FieldIndex.FULLFluff);
+                }
                 case 0x444F4C58: // XLOD
+                {
                     try
                     {
                         errorMask?.PushIndex((int)PlacedNPC_FieldIndex.DistantLODData);
@@ -1025,7 +1031,9 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)PlacedNPC_FieldIndex.DistantLODData);
+                }
                 case 0x50534558: // XESP
+                {
                     try
                     {
                         errorMask?.PushIndex((int)PlacedNPC_FieldIndex.EnableParent);
@@ -1052,7 +1060,9 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)PlacedNPC_FieldIndex.EnableParent);
+                }
                 case 0x43524D58: // XMRC
+                {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
@@ -1061,7 +1071,9 @@ namespace Mutagen.Bethesda.Oblivion
                         fieldIndex: (int)PlacedNPC_FieldIndex.MerchantContainer,
                         errorMask: errorMask);
                     return TryGet<int?>.Succeed((int)PlacedNPC_FieldIndex.MerchantContainer);
+                }
                 case 0x53524858: // XHRS
+                {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
@@ -1070,7 +1082,9 @@ namespace Mutagen.Bethesda.Oblivion
                         fieldIndex: (int)PlacedNPC_FieldIndex.Horse,
                         errorMask: errorMask);
                     return TryGet<int?>.Succeed((int)PlacedNPC_FieldIndex.Horse);
+                }
                 case 0x44475258: // XRGD
+                {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     try
                     {
@@ -1097,7 +1111,9 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)PlacedNPC_FieldIndex.RagdollData);
+                }
                 case 0x4C435358: // XSCL
+                {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                     try
                     {
@@ -1124,68 +1140,71 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)PlacedNPC_FieldIndex.Scale);
+                }
                 case 0x41544144: // DATA
+                {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    using (var dataFrame = frame.SpawnWithLength(contentLength))
+                    var dataFrame = frame.SpawnWithLength(contentLength);
+                    if (!dataFrame.Complete)
                     {
-                        if (!dataFrame.Complete)
+                        item.DATADataTypeState = DATADataType.Has;
+                    }
+                    try
+                    {
+                        errorMask?.PushIndex((int)PlacedNPC_FieldIndex.Position);
+                        if (Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(
+                            frame: dataFrame,
+                            item: out P3Float PositionParse,
+                            errorMask: errorMask))
                         {
-                            item.DATADataTypeState = DATADataType.Has;
+                            item.Position = PositionParse;
                         }
-                        try
+                        else
                         {
-                            errorMask?.PushIndex((int)PlacedNPC_FieldIndex.Position);
-                            if (Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(
-                                frame: dataFrame.Spawn(snapToFinalPosition: false),
-                                item: out P3Float PositionParse,
-                                errorMask: errorMask))
-                            {
-                                item.Position = PositionParse;
-                            }
-                            else
-                            {
-                                item.Position = default(P3Float);
-                            }
-                        }
-                        catch (Exception ex)
-                        when (errorMask != null)
-                        {
-                            errorMask.ReportException(ex);
-                        }
-                        finally
-                        {
-                            errorMask?.PopIndex();
-                        }
-                        try
-                        {
-                            errorMask?.PushIndex((int)PlacedNPC_FieldIndex.Rotation);
-                            if (Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(
-                                frame: dataFrame.Spawn(snapToFinalPosition: false),
-                                item: out P3Float RotationParse,
-                                errorMask: errorMask))
-                            {
-                                item.Rotation = RotationParse;
-                            }
-                            else
-                            {
-                                item.Rotation = default(P3Float);
-                            }
-                        }
-                        catch (Exception ex)
-                        when (errorMask != null)
-                        {
-                            errorMask.ReportException(ex);
-                        }
-                        finally
-                        {
-                            errorMask?.PopIndex();
+                            item.Position = default(P3Float);
                         }
                     }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    try
+                    {
+                        errorMask?.PushIndex((int)PlacedNPC_FieldIndex.Rotation);
+                        if (Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(
+                            frame: dataFrame,
+                            item: out P3Float RotationParse,
+                            errorMask: errorMask))
+                        {
+                            item.Rotation = RotationParse;
+                        }
+                        else
+                        {
+                            item.Rotation = default(P3Float);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
                     return TryGet<int?>.Succeed((int)PlacedNPC_FieldIndex.Rotation);
+                }
                 default:
                     return MajorRecord.Fill_Binary_RecordTypes(
                         item: item,
                         frame: frame,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
                         recordTypeConverter: recordTypeConverter,
                         masterReferences: masterReferences,
                         errorMask: errorMask);

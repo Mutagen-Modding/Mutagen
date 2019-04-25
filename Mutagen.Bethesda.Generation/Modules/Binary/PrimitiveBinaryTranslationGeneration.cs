@@ -86,7 +86,7 @@ namespace Mutagen.Bethesda.Generation
 
 
             List<string> extraArgs = new List<string>();
-            extraArgs.Add($"frame: {frameAccessor}{(data.HasTrigger ? ".SpawnWithLength(contentLength)" : ".Spawn(snapToFinalPosition: false)")}");
+            extraArgs.Add($"frame: {frameAccessor}{(data.HasTrigger ? ".SpawnWithLength(contentLength)" : "")}");
             foreach (var writeParam in this.AdditionalCopyInParams)
             {
                 var get = writeParam(

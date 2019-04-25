@@ -55,7 +55,6 @@ namespace Mutagen.Bethesda.Binary
             ErrorMaskBuilder errorMask,
             BinarySubParseDelegate<T> transl)
         {
-            var safeFrame = frame.Spawn(snapToFinalPosition: false);
             var ret = new List<T>();
             int i = 0;
             while (!frame.Complete && !frame.Reader.Complete)
@@ -64,13 +63,13 @@ namespace Mutagen.Bethesda.Binary
                 {
                     try
                     {
-                        if (!HeaderTranslation.TryGetRecordType(safeFrame.Reader, lengthLength, triggeringRecord)) break;
+                        if (!HeaderTranslation.TryGetRecordType(frame.Reader, lengthLength, triggeringRecord)) break;
                         if (!IsLoqui)
                         {
-                            safeFrame.Position += Constants.SUBRECORD_LENGTH;
+                            frame.Position += Constants.SUBRECORD_LENGTH;
                         }
                         var startingPos = frame.Position;
-                        if (transl(safeFrame, out var subItem, errorMask))
+                        if (transl(frame, out var subItem, errorMask))
                         {
                             ret.Add(subItem);
                         }
@@ -159,7 +158,6 @@ namespace Mutagen.Bethesda.Binary
             BinarySubParseRecordDelegate<T> transl,
             ICollectionGetter<RecordType> triggeringRecord = null)
         {
-            var safeFrame = frame.Spawn(snapToFinalPosition: false);
             int i = 0;
             var ret = new List<T>();
             while (!frame.Complete)
@@ -172,10 +170,10 @@ namespace Mutagen.Bethesda.Binary
                         if (!triggeringRecord?.Contains(nextRecord) ?? false) break;
                         if (!IsLoqui)
                         {
-                            safeFrame.Position += Constants.SUBRECORD_LENGTH;
+                            frame.Position += Constants.SUBRECORD_LENGTH;
                         }
                         var startingPos = frame.Position;
-                        if (transl(safeFrame, nextRecord, out var subIitem, errorMask))
+                        if (transl(frame, nextRecord, out var subIitem, errorMask))
                         {
                             ret.Add(subIitem);
                         }
@@ -282,32 +280,28 @@ namespace Mutagen.Bethesda.Binary
             ErrorMaskBuilder errorMask,
             BinarySubParseDelegate<T> transl)
         {
-            using (frame)
+            var ret = new List<T>();
+            int i = 0;
+            while (!frame.Complete)
             {
-                var safeFrame = frame.Spawn(snapToFinalPosition: false);
-                var ret = new List<T>();
-                int i = 0;
-                while (!safeFrame.Complete)
+                using (errorMask.PushIndex(i++))
                 {
-                    using (errorMask.PushIndex(i++))
+                    try
                     {
-                        try
+                        if (transl(frame, out var subItem, errorMask))
                         {
-                            if (transl(safeFrame, out var subItem, errorMask))
-                            {
-                                ret.Add(subItem);
-                            }
-                        }
-                        catch (Exception ex)
-                        when (errorMask != null)
-                        {
-                            errorMask.ReportException(ex);
+                            ret.Add(subItem);
                         }
                     }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
                 }
-                enumer = ret;
-                return true;
             }
+            enumer = ret;
+            return true;
         }
 
         public void ParseRepeatedItem(
@@ -373,14 +367,13 @@ namespace Mutagen.Bethesda.Binary
             BinarySubParseDelegate<T> transl)
         {
             var ret = new List<T>();
-            var safeFrame = frame.Spawn(snapToFinalPosition: false);
             for (int i = 0; i < amount; i++)
             {
                 using (errorMask.PushIndex(i))
                 {
                     try
                     {
-                        if (transl(safeFrame, out var subItem, errorMask))
+                        if (transl(frame, out var subItem, errorMask))
                         {
                             ret.Add(subItem);
                         }

@@ -826,37 +826,37 @@ namespace Mutagen.Bethesda.Oblivion
         protected static TryGet<int?> Fill_Binary_RecordTypes(
             AIPackage item,
             MutagenFrame frame,
+            RecordType nextRecordType,
+            int contentLength,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask,
             RecordTypeConverter recordTypeConverter = null)
         {
-            var nextRecordType = HeaderTranslation.GetNextSubRecordType(
-                reader: frame.Reader,
-                contentLength: out var contentLength,
-                recordTypeConverter: recordTypeConverter);
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
                 case 0x54444B50: // PKDT
+                {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    using (var dataFrame = frame.SpawnWithLength(contentLength))
+                    var dataFrame = frame.SpawnWithLength(contentLength);
+                    if (!dataFrame.Complete)
                     {
-                        if (!dataFrame.Complete)
-                        {
-                            item.PKDTDataTypeState = PKDTDataType.Has;
-                        }
-                        FillBinary_Flags_Custom(
-                            frame: dataFrame,
-                            item: item,
-                            masterReferences: masterReferences,
-                            errorMask: errorMask);
-                        FillBinary_GeneralType_Custom(
-                            frame: dataFrame,
-                            item: item,
-                            masterReferences: masterReferences,
-                            errorMask: errorMask);
+                        item.PKDTDataTypeState = PKDTDataType.Has;
                     }
+                    FillBinary_Flags_Custom(
+                        frame: dataFrame,
+                        item: item,
+                        masterReferences: masterReferences,
+                        errorMask: errorMask);
+                    FillBinary_GeneralType_Custom(
+                        frame: dataFrame,
+                        item: item,
+                        masterReferences: masterReferences,
+                        errorMask: errorMask);
                     return TryGet<int?>.Succeed((int)AIPackage_FieldIndex.GeneralType);
+                }
                 case 0x54444C50: // PLDT
+                {
                     try
                     {
                         errorMask?.PushIndex((int)AIPackage_FieldIndex.Location);
@@ -883,7 +883,9 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)AIPackage_FieldIndex.Location);
+                }
                 case 0x54445350: // PSDT
+                {
                     try
                     {
                         errorMask?.PushIndex((int)AIPackage_FieldIndex.Schedule);
@@ -910,7 +912,9 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)AIPackage_FieldIndex.Schedule);
+                }
                 case 0x54445450: // PTDT
+                {
                     try
                     {
                         errorMask?.PushIndex((int)AIPackage_FieldIndex.Target);
@@ -937,8 +941,10 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)AIPackage_FieldIndex.Target);
+                }
                 case 0x41445443: // CTDA
                 case 0x54445443: // CTDT
+                {
                     Mutagen.Bethesda.Binary.ListBinaryTranslation<Condition>.Instance.ParseRepeatedItem(
                         frame: frame,
                         triggeringRecord: Condition_Registration.TriggeringRecordTypes,
@@ -949,17 +955,20 @@ namespace Mutagen.Bethesda.Oblivion
                         transl: (MutagenFrame r, out Condition listSubItem, ErrorMaskBuilder listErrMask) =>
                         {
                             return LoquiBinaryTranslation<Condition>.Instance.Parse(
-                                frame: r.Spawn(snapToFinalPosition: false),
+                                frame: r,
                                 item: out listSubItem,
                                 errorMask: listErrMask,
                                 masterReferences: masterReferences);
                         }
                         );
                     return TryGet<int?>.Succeed((int)AIPackage_FieldIndex.Conditions);
+                }
                 default:
                     return MajorRecord.Fill_Binary_RecordTypes(
                         item: item,
                         frame: frame,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
                         recordTypeConverter: recordTypeConverter,
                         masterReferences: masterReferences,
                         errorMask: errorMask);

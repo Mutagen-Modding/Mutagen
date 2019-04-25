@@ -17,7 +17,7 @@ namespace Mutagen.Bethesda.Oblivion
         static partial void FillBinary_StaticAttenuation_Custom(MutagenFrame frame, SoundDataExtended item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
         {
             if (!UInt16BinaryTranslation.Instance.Parse(
-                frame.Spawn(snapToFinalPosition: false),
+                frame,
                 out var i,
                 errorMask))
             {
@@ -37,7 +37,7 @@ namespace Mutagen.Bethesda.Oblivion
         static partial void FillBinary_StartTime_Custom(MutagenFrame frame, SoundDataExtended item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
         {
             if (!ByteBinaryTranslation.Instance.Parse(
-                frame.Spawn(snapToFinalPosition: false),
+                frame,
                 out var b,
                 errorMask))
             {
@@ -57,7 +57,7 @@ namespace Mutagen.Bethesda.Oblivion
         static partial void FillBinary_StopTime_Custom(MutagenFrame frame, SoundDataExtended item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
         {
             if (!ByteBinaryTranslation.Instance.Parse(
-                frame.Spawn(snapToFinalPosition: false),
+                frame,
                 out var b,
                 errorMask))
             {

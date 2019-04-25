@@ -27,10 +27,10 @@ namespace Mutagen.Bethesda.Generation
         }
 
         public override void GenerateCopyIn(
-            FileGeneration fg, 
+            FileGeneration fg,
             ObjectGeneration objGen,
             TypeGeneration typeGen,
-            Accessor readerAccessor, 
+            Accessor readerAccessor,
             Accessor itemAccessor,
             Accessor errorMaskAccessor,
             Accessor translationMaskAccessor)
@@ -42,11 +42,11 @@ namespace Mutagen.Bethesda.Generation
         }
 
         public override void GenerateCopyInRet(
-            FileGeneration fg, 
-            ObjectGeneration objGen, 
-            TypeGeneration targetGen, 
+            FileGeneration fg,
+            ObjectGeneration objGen,
+            TypeGeneration targetGen,
             TypeGeneration typeGen,
-            Accessor readerAccessor, 
+            Accessor readerAccessor,
             bool squashedRepeatedList,
             Accessor retAccessor,
             Accessor outItemAccessor,
@@ -57,10 +57,10 @@ namespace Mutagen.Bethesda.Generation
         }
 
         public override void GenerateWrite(
-            FileGeneration fg, 
-            ObjectGeneration objGen, 
+            FileGeneration fg,
+            ObjectGeneration objGen,
             TypeGeneration typeGen,
-            Accessor writerAccessor, 
+            Accessor writerAccessor,
             Accessor itemAccessor,
             Accessor errorMaskAccessor,
             Accessor translationMaskAccessor)
@@ -145,20 +145,13 @@ namespace Mutagen.Bethesda.Generation
             Accessor frameAccessor)
         {
             var data = field.GetFieldData();
-            if (data.HasTrigger)
+            using (var args = new ArgsWrapper(fg,
+                $"FillBinary_{field.Name}_Custom"))
             {
-                fg.AppendLine($"using (var subFrame = {frameAccessor}.SpawnWithLength(Mutagen.Bethesda.Constants.SUBRECORD_LENGTH + contentLength, snapToFinalPosition: false))");
-            }
-            using (new BraceWrapper(fg, doIt: data.HasTrigger))
-            {
-                using (var args = new ArgsWrapper(fg,
-                    $"FillBinary_{field.Name}_Custom"))
-                {
-                    args.Add($"frame: {(data.HasTrigger ? "subFrame" : frameAccessor)}");
-                    args.Add("item: item");
-                    args.Add($"masterReferences: masterReferences");
-                    args.Add($"errorMask: errorMask");
-                }
+                args.Add($"frame: {(data.HasTrigger ? $"{frameAccessor}.SpawnWithLength(Mutagen.Bethesda.Constants.SUBRECORD_LENGTH + contentLength)" : frameAccessor)}");
+                args.Add("item: item");
+                args.Add($"masterReferences: masterReferences");
+                args.Add($"errorMask: errorMask");
             }
         }
     }
