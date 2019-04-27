@@ -33,11 +33,11 @@ namespace Mutagen.Bethesda.Oblivion
 
         static void ParseRegionData(MutagenFrame frame, Region item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
         {
-            var origPos = frame.Position;
-            frame.Reader.Position += 6;
-            RegionData.RegionDataType dataType = (RegionData.RegionDataType)frame.Reader.ReadUInt32();
-            frame.Reader.Position += 4;
-            var recType = HeaderTranslation.GetNextSubRecordType(frame.Reader, out var len);
+            RegionData.RegionDataType dataType = (RegionData.RegionDataType)frame.Reader.GetUInt32(offset: 6);
+            var recType = HeaderTranslation.GetNextSubRecordType(
+                frame.Reader,
+                out var len,
+                offset: 14);
             switch (dataType)
             {
                 case RegionData.RegionDataType.Objects:
@@ -79,7 +79,6 @@ namespace Mutagen.Bethesda.Oblivion
                 default:
                     break;
             }
-            frame.Position = origPos;
             len += RDAT_LEN + 6;
             switch (dataType)
             {
@@ -93,9 +92,7 @@ namespace Mutagen.Bethesda.Oblivion
                     item.Grasses = RegionDataGrasses.Create_Binary(frame.SpawnWithLength(len, checkFraming: false), masterReferences);
                     break;
                 case RegionData.RegionDataType.Sounds:
-                    frame.Position += len;
-                    var nextRec = HeaderTranslation.GetNextSubRecordType(frame.Reader, out var nextLen);
-                    frame.Position = origPos;
+                    var nextRec = HeaderTranslation.GetNextSubRecordType(frame.Reader, out var nextLen, offset: len);
                     if (nextRec.Equals(RDSD) || nextRec.Equals(RDMD))
                     {
                         len += nextLen + 6;

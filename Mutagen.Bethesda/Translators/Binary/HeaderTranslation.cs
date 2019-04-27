@@ -19,33 +19,16 @@ namespace Mutagen.Bethesda.Binary
             out long contentLength,
             long lengthLength)
         {
-            if (reader.Remaining < Constants.HEADER_LENGTH)
+            if (TryGet(
+                reader,
+                expectedHeader,
+                out contentLength,
+                lengthLength))
             {
-                contentLength = -1;
-                return false;
+                reader.Position += Constants.HEADER_LENGTH + lengthLength;
+                return true;
             }
-            var header = reader.ReadInt32();
-            if (expectedHeader.TypeInt != header)
-            {
-                contentLength = -1;
-                reader.Position -= Constants.HEADER_LENGTH;
-                return false;
-            }
-            switch (lengthLength)
-            {
-                case 1:
-                    contentLength = reader.ReadUInt8();
-                    break;
-                case 2:
-                    contentLength = reader.ReadUInt16();
-                    break;
-                case 4:
-                    contentLength = reader.ReadUInt32();
-                    break;
-                default:
-                    throw new NotImplementedException();
-            }
-            return true;
+            return false;
         }
 
         public static bool TryGet(
@@ -54,16 +37,32 @@ namespace Mutagen.Bethesda.Binary
             out long contentLength,
             long lengthLength)
         {
-            var ret = TryParse(
-                reader,
-                expectedHeader,
-                out contentLength,
-                lengthLength);
-            if (ret)
+            if (reader.Remaining < Constants.HEADER_LENGTH + lengthLength)
             {
-                reader.Position -= Constants.HEADER_LENGTH + lengthLength;
+                contentLength = -1;
+                return false;
             }
-            return ret;
+            var header = reader.GetInt32();
+            if (expectedHeader.TypeInt != header)
+            {
+                contentLength = -1;
+                return false;
+            }
+            switch (lengthLength)
+            {
+                case 1:
+                    contentLength = reader.GetUInt8(offset: Constants.HEADER_LENGTH);
+                    break;
+                case 2:
+                    contentLength = reader.GetUInt16(offset: Constants.HEADER_LENGTH);
+                    break;
+                case 4:
+                    contentLength = reader.GetUInt32(offset: Constants.HEADER_LENGTH);
+                    break;
+                default:
+                    throw new NotImplementedException();
+            }
+            return true;
         }
 
         public static long Parse(
@@ -197,10 +196,9 @@ namespace Mutagen.Bethesda.Binary
             IBinaryReadStream reader,
             RecordTypeConverter recordTypeConverter = null)
         {
-            var header = reader.ReadInt32();
+            var header = reader.GetInt32();
             var ret = new RecordType(header);
             ret = recordTypeConverter.ConvertToStandard(ret);
-            reader.Position -= Constants.HEADER_LENGTH;
             return ret;
         }
 
@@ -209,9 +207,9 @@ namespace Mutagen.Bethesda.Binary
             out int contentLength,
             RecordTypeConverter recordTypeConverter = null)
         {
-            var ret = ReadNextRecordType(reader, out contentLength);
+            var ret = new RecordType(reader.GetInt32());
+            contentLength = GetContentLength(reader, Constants.RECORD_LENGTHLENGTH, Constants.HEADER_LENGTH);
             ret = recordTypeConverter.ConvertToStandard(ret);
-            reader.Position -= Constants.HEADER_LENGTH + Constants.RECORD_LENGTHLENGTH;
             return ret;
         }
 
@@ -227,6 +225,24 @@ namespace Mutagen.Bethesda.Binary
                     return reader.ReadUInt16();
                 case 4:
                     return (int)reader.ReadUInt32();
+                default:
+                    throw new NotImplementedException();
+            }
+        }
+
+        protected static int GetContentLength(
+            IBinaryReadStream reader,
+            int lengthLength,
+            int offset)
+        {
+            switch (lengthLength)
+            {
+                case 1:
+                    return reader.GetUInt8(offset);
+                case 2:
+                    return reader.GetUInt16(offset);
+                case 4:
+                    return (int)reader.GetUInt32(offset);
                 default:
                     throw new NotImplementedException();
             }
@@ -281,13 +297,13 @@ namespace Mutagen.Bethesda.Binary
             out long finalPos,
             bool hopGroup = true)
         {
-            var ret = ReadNextRecordType(reader);
-            contentLength = ReadContentLength(reader, Constants.RECORD_LENGTHLENGTH);
+            var ret = new RecordType(reader.GetInt32());
+            contentLength = GetContentLength(reader, Constants.RECORD_LENGTHLENGTH, Constants.HEADER_LENGTH);
             if (ret.Equals(GRUP_HEADER))
             {
                 if (hopGroup)
                 {
-                    ret = GetNextRecordType(reader);
+                    ret = new RecordType(reader.GetInt32(offset: Constants.RECORD_LENGTHLENGTH + Constants.HEADER_LENGTH));
                 }
                 finalPos = reader.Position + Constants.GRUP_HEADER_OFFSET + contentLength;
             }
@@ -295,19 +311,19 @@ namespace Mutagen.Bethesda.Binary
             {
                 finalPos = reader.Position + Constants.RECORD_META_SKIP + contentLength;
             }
-            reader.Position -= Constants.HEADER_LENGTH + Constants.RECORD_LENGTHLENGTH;
             return ret;
         }
 
         public static RecordType GetNextSubRecordType(
             IBinaryReadStream reader,
-            out int contentLength)
+            out int contentLength,
+            int offset = 0)
         {
-            var ret = ReadNextRecordType(
-                reader,
-                Constants.SUBRECORD_LENGTHLENGTH,
-                out contentLength);
-            reader.Position -= Constants.SUBRECORD_LENGTH;
+            var ret = new RecordType(reader.GetInt32(offset));
+            contentLength = GetContentLength(
+                reader: reader,
+                lengthLength: Constants.SUBRECORD_LENGTHLENGTH,
+                offset: Constants.HEADER_LENGTH + offset);
             return ret;
         }
     }

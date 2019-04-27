@@ -171,8 +171,7 @@ namespace Mutagen.Bethesda.Oblivion
             for (int i = 0; i < 3; i++)
             {
                 if (subFrame.Complete) return;
-                var subType = HeaderTranslation.ReadNextSubRecordType(frame.Reader, out var subLen);
-                subFrame.Reader.Position -= 6;
+                var subType = HeaderTranslation.GetNextSubRecordType(frame.Reader, out var subLen);
                 switch (subType.TypeInt)
                 {
                     case 0x44414F52: // "ROAD":

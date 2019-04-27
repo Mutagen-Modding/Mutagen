@@ -278,7 +278,7 @@ namespace Mutagen.Bethesda
                     var nextRecordType = HeaderTranslation.GetNextSubRecordType(
                         reader: frame.Reader,
                         contentLength: out var contentLength);
-                    var finalPos = frame.Position + contentLength + Constants.SUBRECORD_LENGTH;
+                    var finalPos = frame.Position + contentLength;
                     var parsed = fillTyped(
                         record: record,
                         frame: frame,

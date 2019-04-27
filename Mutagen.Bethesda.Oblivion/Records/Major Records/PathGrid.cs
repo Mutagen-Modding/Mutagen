@@ -44,10 +44,11 @@ namespace Mutagen.Bethesda.Oblivion
             for (int recAttempt = 0; recAttempt < 2; recAttempt++)
             {
                 if (frame.Reader.Complete) break;
-                nextRec = HeaderTranslation.ReadNextSubRecordType(frame.Reader, out len);
+                nextRec = HeaderTranslation.GetNextSubRecordType(frame.Reader, out len);
                 switch (nextRec.TypeInt)
                 {
                     case 0x47414750: //"PGAG":
+                        frame.Reader.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                         using (errorMask.PushIndex((int)PathGrid_FieldIndex.Unknown))
                         {
                             if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
@@ -64,6 +65,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         break;
                     case 0x52524750: // "PGRR":
+                        frame.Reader.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                         var connectionBytes = frame.Reader.ReadBytes(len);
                         using (var ptByteReader = new BinaryMemoryReadStream(pointBytes))
                         {
@@ -88,7 +90,6 @@ namespace Mutagen.Bethesda.Oblivion
                         readPGRR = true;
                         break;
                     default:
-                        frame.Reader.Position -= Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
                         break;
                 }
             }

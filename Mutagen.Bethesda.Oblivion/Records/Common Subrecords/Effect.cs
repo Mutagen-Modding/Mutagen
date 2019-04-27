@@ -26,18 +26,16 @@ namespace Mutagen.Bethesda.Oblivion
                 throw new ArgumentException($"Magic effect name must be length 4.  Was: {contentLen}");
             }
             var magicEffName = frame.Reader.ReadString(4);
-            var pos = frame.Position;
-            var efit = HeaderTranslation.ReadNextSubRecordType(frame.Reader, out var efitLength);
+            var efit = HeaderTranslation.GetNextSubRecordType(frame.Reader, out var efitLength);
             if (efitLength < 4)
             {
                 throw new ArgumentException($"Magic effect ref length was less than 4.  Was: {efitLength}");
             }
-            var magicEffName2 = frame.Reader.ReadString(4);
+            var magicEffName2 = frame.Reader.GetString(amount: 4, offset: Mutagen.Bethesda.Constants.SUBRECORD_LENGTH);
             if (!magicEffName.Equals(magicEffName2))
             {
                 throw new ArgumentException($"Magic effect names did not match. {magicEffName} != {magicEffName2}");
             }
-            frame.Position = pos;
         }
 
         static partial void SpecialWrite_EffectInitial(

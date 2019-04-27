@@ -57,9 +57,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         static partial void FillBinary_Flags_Custom(MutagenFrame frame, AIPackage item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
         {
-            frame.Position -= 2;
-            var len = frame.ReadUInt16();
-            if (len == 8)
+            if (frame.Remaining == 8)
             {
                 if (EnumBinaryTranslation<AIPackage.Flag>.Instance.Parse(
                     frame: frame.SpawnWithLength(4),
@@ -76,7 +74,7 @@ namespace Mutagen.Bethesda.Oblivion
                     item.GeneralType = GeneralTypeParse;
                 }
             }
-            else if (len == 4)
+            else if (frame.Remaining == 4)
             {
                 byte[] buff = new byte[4];
                 frame.Reader.Read(buff, 0, 2);
@@ -100,7 +98,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
             else
             {
-                throw new ArgumentException($"Odd length for general AI field: {len}");
+                throw new ArgumentException($"Odd length for general AI field: {frame.Remaining}");
             }
         }
 

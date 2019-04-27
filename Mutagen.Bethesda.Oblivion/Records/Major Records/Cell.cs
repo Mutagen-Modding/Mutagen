@@ -39,11 +39,11 @@ namespace Mutagen.Bethesda.Oblivion
                 finalPos: out var finalPos,
                 hopGroup: false);
             if (!next.Equals(Group_Registration.GRUP_HEADER)) return;
-            frame.Reader.Position += 8;
-            var formKey = FormKey.Factory(masterReferences, frame.Reader.ReadUInt32());
-            var grupType = (GroupTypeEnum)frame.Reader.ReadInt32();
+            var formKey = FormKey.Factory(masterReferences, frame.Reader.GetUInt32(offset: 8));
+            var grupType = (GroupTypeEnum)frame.Reader.GetInt32(offset: 12);
             if (grupType == GroupTypeEnum.CellChildren)
             {
+                frame.Reader.Position += 16;
                 obj.Timestamp = frame.Reader.ReadBytes(4);
                 if (formKey != obj.FormKey)
                 {
@@ -52,7 +52,6 @@ namespace Mutagen.Bethesda.Oblivion
             }
             else
             {
-                frame.Reader.Position -= 16;
                 return;
             }
             var subFrame = frame.SpawnWithLength(len - Mutagen.Bethesda.Constants.RECORD_HEADER_LENGTH);
@@ -67,9 +66,7 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     throw new ArgumentException();
                 }
-                subFrame.Reader.Position += 12;
-                GroupTypeEnum type = (GroupTypeEnum)subFrame.Reader.ReadUInt32();
-                subFrame.Reader.Position -= 16;
+                GroupTypeEnum type = (GroupTypeEnum)subFrame.Reader.GetUInt32(offset: 12);
                 var itemFrame = frame.SpawnWithLength(persistLen);
                 switch (type)
                 {

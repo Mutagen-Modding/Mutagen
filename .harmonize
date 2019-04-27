@@ -2,10 +2,10 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>e8f05a1dd863b5c4f3e922cf7eb83a82f7596807</Sha>
+         <Sha>b3188c55b583de3956796c00c1093dce3e696f34</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>04-20-2019 16:09:38</CommitDate>
-         <Description>BinaryReadStream ReadSpan</Description>
+         <CommitDate>04-27-2019 16:26:14</CommitDate>
+         <Description>IBinaryReadStream get accessors</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>

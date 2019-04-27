@@ -247,9 +247,79 @@ namespace Mutagen.Bethesda.Binary
             Reader.WriteTo(stream, amount);
         }
 
-        public ReadOnlySpan<byte> ReadSpan(int amount)
+        public int Get(byte[] buffer, int offset, int amount)
         {
-            return Reader.ReadSpan(amount);
+            return Reader.Get(buffer, offset, amount);
+        }
+
+        public byte[] GetBytes(int amount)
+        {
+            return Reader.GetBytes(amount);
+        }
+
+        public int Get(byte[] buffer, int offset)
+        {
+            return Reader.Get(buffer, offset);
+        }
+
+        public bool GetBool(int offset)
+        {
+            return Reader.GetBool(offset);
+        }
+
+        public byte GetUInt8(int offset)
+        {
+            return Reader.GetUInt8(offset);
+        }
+
+        public ushort GetUInt16(int offset)
+        {
+            return Reader.GetUInt16(offset);
+        }
+
+        public uint GetUInt32(int offset)
+        {
+            return Reader.GetUInt32(offset);
+        }
+
+        public ulong GetUInt64(int offset)
+        {
+            return Reader.GetUInt64(offset);
+        }
+
+        public sbyte GetInt8(int offset)
+        {
+            return Reader.GetInt8(offset);
+        }
+
+        public short GetInt16(int offset)
+        {
+            return Reader.GetInt16(offset);
+        }
+
+        public int GetInt32(int offset)
+        {
+            return Reader.GetInt32(offset);
+        }
+
+        public long GetInt64(int offset)
+        {
+            return Reader.GetInt64(offset);
+        }
+
+        public float GetFloat(int offset)
+        {
+            return Reader.GetFloat(offset);
+        }
+
+        public double GetDouble(int offset)
+        {
+            return Reader.GetDouble(offset);
+        }
+
+        public string GetString(int amount, int offset)
+        {
+            return Reader.GetString(amount, offset);
         }
     }
 }
