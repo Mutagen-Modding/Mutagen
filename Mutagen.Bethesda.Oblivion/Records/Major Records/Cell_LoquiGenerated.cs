@@ -451,24 +451,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        #region Loqui Getter Interface
-
-        protected override object GetNthObject(ushort index) => CellCommon.GetNthObject(index, this);
-
-        protected override bool GetNthObjectHasBeenSet(ushort index) => CellCommon.GetNthObjectHasBeenSet(index, this);
-
-        protected override void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => CellCommon.UnsetNthObject(index, this, cmds);
-
-        #endregion
-
-        #region Loqui Interface
-        protected override void SetNthObjectHasBeenSet(ushort index, bool on)
-        {
-            CellCommon.SetNthObjectHasBeenSet(index, on, this);
-        }
-
-        #endregion
-
         IMask<bool> IEqualsMask<Cell>.GetEqualsMask(Cell rhs, EqualsMaskHelper.Include include) => CellCommon.GetEqualsMask(this, rhs, include);
         IMask<bool> IEqualsMask<ICellGetter>.GetEqualsMask(ICellGetter rhs, EqualsMaskHelper.Include include) => CellCommon.GetEqualsMask(this, rhs, include);
         #region To String
@@ -933,6 +915,22 @@ namespace Mutagen.Bethesda.Oblivion
 
         public override void Write_Xml(
             XElement node,
+            out OblivionMajorRecord_ErrorMask errorMask,
+            bool doMasks = true,
+            OblivionMajorRecord_TranslationMask translationMask = null,
+            string name = null)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            this.Write_Xml(
+                name: name,
+                node: node,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal());
+            errorMask = Cell_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public override void Write_Xml(
+            XElement node,
             out MajorRecord_ErrorMask errorMask,
             bool doMasks = true,
             MajorRecord_TranslationMask translationMask = null,
@@ -1151,9 +1149,9 @@ namespace Mutagen.Bethesda.Oblivion
             CustomCtor();
         }
 
-        partial void PostDuplicate(Cell obj, Cell rhs, Func<FormKey> getNextFormKey, IList<(MajorRecord Record, FormKey OriginalFormKey)> duplicatedRecords);
+        partial void PostDuplicate(Cell obj, Cell rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
 
-        public override MajorRecord Duplicate(Func<FormKey> getNextFormKey, IList<(MajorRecord Record, FormKey OriginalFormKey)> duplicatedRecords)
+        public override IMajorRecordCommon Duplicate(Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
         {
             var ret = new Cell(getNextFormKey());
             ret.CopyFieldsFrom(this);
@@ -1249,6 +1247,21 @@ namespace Mutagen.Bethesda.Oblivion
             MutagenWriter writer,
             MasterReferences masterReferences,
             out Place_ErrorMask errorMask,
+            bool doMasks = true)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            this.Write_Binary(
+                masterReferences: masterReferences,
+                writer: writer,
+                errorMask: errorMaskBuilder,
+                recordTypeConverter: null);
+            errorMask = Cell_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public override void Write_Binary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            out OblivionMajorRecord_ErrorMask errorMask,
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
@@ -1912,11 +1925,6 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, Cell obj)
-        {
-            ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
-        }
-
     }
     #endregion
 
@@ -2093,11 +2101,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #region Field Index
     public enum Cell_FieldIndex
     {
-        MajorRecordFlags = 0,
-        FormKey = 1,
-        Version = 2,
-        EditorID = 3,
-        RecordType = 4,
+        FormKey = 0,
+        Version = 1,
+        EditorID = 2,
+        RecordType = 3,
+        OblivionMajorRecordFlags = 4,
         Name = 5,
         Flags = 6,
         Grid = 7,
@@ -3158,260 +3166,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void SetNthObjectHasBeenSet(
-            ushort index,
-            bool on,
-            ICell obj,
-            NotifyingFireParameters cmds = null)
-        {
-            Cell_FieldIndex enu = (Cell_FieldIndex)index;
-            switch (enu)
-            {
-                case Cell_FieldIndex.Timestamp:
-                case Cell_FieldIndex.PersistentTimestamp:
-                case Cell_FieldIndex.TemporaryTimestamp:
-                case Cell_FieldIndex.VisibleWhenDistantTimestamp:
-                    if (on) break;
-                    throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
-                case Cell_FieldIndex.Name:
-                    obj.Name_IsSet = on;
-                    break;
-                case Cell_FieldIndex.Flags:
-                    obj.Flags_IsSet = on;
-                    break;
-                case Cell_FieldIndex.Grid:
-                    obj.Grid_IsSet = on;
-                    break;
-                case Cell_FieldIndex.Lighting:
-                    obj.Lighting_IsSet = on;
-                    break;
-                case Cell_FieldIndex.Regions:
-                    obj.Regions.HasBeenSet = on;
-                    break;
-                case Cell_FieldIndex.MusicType:
-                    obj.MusicType_IsSet = on;
-                    break;
-                case Cell_FieldIndex.WaterHeight:
-                    obj.WaterHeight_IsSet = on;
-                    break;
-                case Cell_FieldIndex.Climate:
-                    obj.Climate_Property.HasBeenSet = on;
-                    break;
-                case Cell_FieldIndex.Water:
-                    obj.Water_Property.HasBeenSet = on;
-                    break;
-                case Cell_FieldIndex.Owner:
-                    obj.Owner_Property.HasBeenSet = on;
-                    break;
-                case Cell_FieldIndex.FactionRank:
-                    obj.FactionRank_IsSet = on;
-                    break;
-                case Cell_FieldIndex.GlobalVariable:
-                    obj.GlobalVariable_Property.HasBeenSet = on;
-                    break;
-                case Cell_FieldIndex.PathGrid:
-                    obj.PathGrid_IsSet = on;
-                    break;
-                case Cell_FieldIndex.Landscape:
-                    obj.Landscape_IsSet = on;
-                    break;
-                case Cell_FieldIndex.Persistent:
-                    obj.Persistent.HasBeenSet = on;
-                    break;
-                case Cell_FieldIndex.Temporary:
-                    obj.Temporary.HasBeenSet = on;
-                    break;
-                case Cell_FieldIndex.VisibleWhenDistant:
-                    obj.VisibleWhenDistant.HasBeenSet = on;
-                    break;
-                default:
-                    PlaceCommon.SetNthObjectHasBeenSet(index, on, obj);
-                    break;
-            }
-        }
-
-        public static void UnsetNthObject(
-            ushort index,
-            ICell obj,
-            NotifyingUnsetParameters cmds = null)
-        {
-            Cell_FieldIndex enu = (Cell_FieldIndex)index;
-            switch (enu)
-            {
-                case Cell_FieldIndex.Name:
-                    obj.Name_Unset();
-                    break;
-                case Cell_FieldIndex.Flags:
-                    obj.Flags_Unset();
-                    break;
-                case Cell_FieldIndex.Grid:
-                    obj.Grid_Unset();
-                    break;
-                case Cell_FieldIndex.Lighting:
-                    obj.Lighting_Unset();
-                    break;
-                case Cell_FieldIndex.Regions:
-                    obj.Regions.Unset();
-                    break;
-                case Cell_FieldIndex.MusicType:
-                    obj.MusicType_Unset();
-                    break;
-                case Cell_FieldIndex.WaterHeight:
-                    obj.WaterHeight_Unset();
-                    break;
-                case Cell_FieldIndex.Climate:
-                    obj.Climate_Property.Unset(cmds);
-                    break;
-                case Cell_FieldIndex.Water:
-                    obj.Water_Property.Unset(cmds);
-                    break;
-                case Cell_FieldIndex.Owner:
-                    obj.Owner_Property.Unset(cmds);
-                    break;
-                case Cell_FieldIndex.FactionRank:
-                    obj.FactionRank_Unset();
-                    break;
-                case Cell_FieldIndex.GlobalVariable:
-                    obj.GlobalVariable_Property.Unset(cmds);
-                    break;
-                case Cell_FieldIndex.PathGrid:
-                    obj.PathGrid_Unset();
-                    break;
-                case Cell_FieldIndex.Landscape:
-                    obj.Landscape_Unset();
-                    break;
-                case Cell_FieldIndex.Timestamp:
-                    obj.Timestamp = default(Byte[]);
-                    break;
-                case Cell_FieldIndex.PersistentTimestamp:
-                    obj.PersistentTimestamp = default(Byte[]);
-                    break;
-                case Cell_FieldIndex.Persistent:
-                    obj.Persistent.Unset();
-                    break;
-                case Cell_FieldIndex.TemporaryTimestamp:
-                    obj.TemporaryTimestamp = default(Byte[]);
-                    break;
-                case Cell_FieldIndex.Temporary:
-                    obj.Temporary.Unset();
-                    break;
-                case Cell_FieldIndex.VisibleWhenDistantTimestamp:
-                    obj.VisibleWhenDistantTimestamp = default(Byte[]);
-                    break;
-                case Cell_FieldIndex.VisibleWhenDistant:
-                    obj.VisibleWhenDistant.Unset();
-                    break;
-                default:
-                    PlaceCommon.UnsetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public static bool GetNthObjectHasBeenSet(
-            ushort index,
-            ICell obj)
-        {
-            Cell_FieldIndex enu = (Cell_FieldIndex)index;
-            switch (enu)
-            {
-                case Cell_FieldIndex.Timestamp:
-                case Cell_FieldIndex.PersistentTimestamp:
-                case Cell_FieldIndex.TemporaryTimestamp:
-                case Cell_FieldIndex.VisibleWhenDistantTimestamp:
-                    return true;
-                case Cell_FieldIndex.Name:
-                    return obj.Name_IsSet;
-                case Cell_FieldIndex.Flags:
-                    return obj.Flags_IsSet;
-                case Cell_FieldIndex.Grid:
-                    return obj.Grid_IsSet;
-                case Cell_FieldIndex.Lighting:
-                    return obj.Lighting_IsSet;
-                case Cell_FieldIndex.Regions:
-                    return obj.Regions.HasBeenSet;
-                case Cell_FieldIndex.MusicType:
-                    return obj.MusicType_IsSet;
-                case Cell_FieldIndex.WaterHeight:
-                    return obj.WaterHeight_IsSet;
-                case Cell_FieldIndex.Climate:
-                    return obj.Climate_Property.HasBeenSet;
-                case Cell_FieldIndex.Water:
-                    return obj.Water_Property.HasBeenSet;
-                case Cell_FieldIndex.Owner:
-                    return obj.Owner_Property.HasBeenSet;
-                case Cell_FieldIndex.FactionRank:
-                    return obj.FactionRank_IsSet;
-                case Cell_FieldIndex.GlobalVariable:
-                    return obj.GlobalVariable_Property.HasBeenSet;
-                case Cell_FieldIndex.PathGrid:
-                    return obj.PathGrid_IsSet;
-                case Cell_FieldIndex.Landscape:
-                    return obj.Landscape_IsSet;
-                case Cell_FieldIndex.Persistent:
-                    return obj.Persistent.HasBeenSet;
-                case Cell_FieldIndex.Temporary:
-                    return obj.Temporary.HasBeenSet;
-                case Cell_FieldIndex.VisibleWhenDistant:
-                    return obj.VisibleWhenDistant.HasBeenSet;
-                default:
-                    return PlaceCommon.GetNthObjectHasBeenSet(index, obj);
-            }
-        }
-
-        public static object GetNthObject(
-            ushort index,
-            ICellGetter obj)
-        {
-            Cell_FieldIndex enu = (Cell_FieldIndex)index;
-            switch (enu)
-            {
-                case Cell_FieldIndex.Name:
-                    return obj.Name;
-                case Cell_FieldIndex.Flags:
-                    return obj.Flags;
-                case Cell_FieldIndex.Grid:
-                    return obj.Grid;
-                case Cell_FieldIndex.Lighting:
-                    return obj.Lighting;
-                case Cell_FieldIndex.Regions:
-                    return obj.Regions;
-                case Cell_FieldIndex.MusicType:
-                    return obj.MusicType;
-                case Cell_FieldIndex.WaterHeight:
-                    return obj.WaterHeight;
-                case Cell_FieldIndex.Climate:
-                    return obj.Climate;
-                case Cell_FieldIndex.Water:
-                    return obj.Water;
-                case Cell_FieldIndex.Owner:
-                    return obj.Owner;
-                case Cell_FieldIndex.FactionRank:
-                    return obj.FactionRank;
-                case Cell_FieldIndex.GlobalVariable:
-                    return obj.GlobalVariable;
-                case Cell_FieldIndex.PathGrid:
-                    return obj.PathGrid;
-                case Cell_FieldIndex.Landscape:
-                    return obj.Landscape;
-                case Cell_FieldIndex.Timestamp:
-                    return obj.Timestamp;
-                case Cell_FieldIndex.PersistentTimestamp:
-                    return obj.PersistentTimestamp;
-                case Cell_FieldIndex.Persistent:
-                    return obj.Persistent;
-                case Cell_FieldIndex.TemporaryTimestamp:
-                    return obj.TemporaryTimestamp;
-                case Cell_FieldIndex.Temporary:
-                    return obj.Temporary;
-                case Cell_FieldIndex.VisibleWhenDistantTimestamp:
-                    return obj.VisibleWhenDistantTimestamp;
-                case Cell_FieldIndex.VisibleWhenDistant:
-                    return obj.VisibleWhenDistant;
-                default:
-                    return PlaceCommon.GetNthObject(index, obj);
-            }
-        }
-
         public static void Clear(
             ICell item,
             NotifyingUnsetParameters cmds = null)
@@ -3749,8 +3503,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (index)
             {
-                case Place_FieldIndex.MajorRecordFlags:
-                    return (Cell_FieldIndex)((int)index);
                 case Place_FieldIndex.FormKey:
                     return (Cell_FieldIndex)((int)index);
                 case Place_FieldIndex.Version:
@@ -3758,6 +3510,33 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Place_FieldIndex.EditorID:
                     return (Cell_FieldIndex)((int)index);
                 case Place_FieldIndex.RecordType:
+                    return (Cell_FieldIndex)((int)index);
+                case Place_FieldIndex.OblivionMajorRecordFlags:
+                    return (Cell_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
+        }
+
+        public static Cell_FieldIndex? ConvertFieldIndex(OblivionMajorRecord_FieldIndex? index)
+        {
+            if (!index.HasValue) return null;
+            return ConvertFieldIndex(index: index.Value);
+        }
+
+        public static Cell_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
+        {
+            switch (index)
+            {
+                case OblivionMajorRecord_FieldIndex.FormKey:
+                    return (Cell_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.Version:
+                    return (Cell_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.EditorID:
+                    return (Cell_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.RecordType:
+                    return (Cell_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
                     return (Cell_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
@@ -3774,8 +3553,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (index)
             {
-                case MajorRecord_FieldIndex.MajorRecordFlags:
-                    return (Cell_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
                     return (Cell_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.Version:
@@ -4681,7 +4458,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             MasterReferences masterReferences)
         {
-            MajorRecordCommon.Write_Binary_Embedded(
+            OblivionMajorRecordCommon.Write_Binary_Embedded(
                 item: item,
                 writer: writer,
                 errorMask: errorMask,

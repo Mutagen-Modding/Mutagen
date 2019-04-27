@@ -53,10 +53,10 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Object
-        public FormIDLink<MajorRecord> Object_Property { get; } = new FormIDLink<MajorRecord>();
-        public MajorRecord Object { get => Object_Property.Item; set => Object_Property.Item = value; }
+        public FormIDLink<OblivionMajorRecord> Object_Property { get; } = new FormIDLink<OblivionMajorRecord>();
+        public OblivionMajorRecord Object { get => Object_Property.Item; set => Object_Property.Item = value; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormIDLink<MajorRecord> IRegionDataObjectGetter.Object_Property => this.Object_Property;
+        FormIDLink<OblivionMajorRecord> IRegionDataObjectGetter.Object_Property => this.Object_Property;
         #endregion
         #region ParentIndex
         private UInt16 _ParentIndex;
@@ -199,28 +199,6 @@ namespace Mutagen.Bethesda.Oblivion
                 }
             }
         }
-        #endregion
-
-        #region Loqui Getter Interface
-
-        protected object GetNthObject(ushort index) => RegionDataObjectCommon.GetNthObject(index, this);
-        object ILoquiObjectGetter.GetNthObject(ushort index) => this.GetNthObject(index);
-
-        protected bool GetNthObjectHasBeenSet(ushort index) => RegionDataObjectCommon.GetNthObjectHasBeenSet(index, this);
-        bool ILoquiObjectGetter.GetNthObjectHasBeenSet(ushort index) => this.GetNthObjectHasBeenSet(index);
-
-        protected void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => RegionDataObjectCommon.UnsetNthObject(index, this, cmds);
-        void ILoquiObjectSetter.UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => this.UnsetNthObject(index, cmds);
-
-        #endregion
-
-        #region Loqui Interface
-        protected void SetNthObjectHasBeenSet(ushort index, bool on)
-        {
-            RegionDataObjectCommon.SetNthObjectHasBeenSet(index, on, this);
-        }
-        void ILoquiObjectSetter.SetNthObjectHasBeenSet(ushort index, bool on) => this.SetNthObjectHasBeenSet(index, on);
-
         #endregion
 
         IMask<bool> IEqualsMask<RegionDataObject>.GetEqualsMask(RegionDataObject rhs, EqualsMaskHelper.Include include) => RegionDataObjectCommon.GetEqualsMask(this, rhs, include);
@@ -1247,7 +1225,6 @@ namespace Mutagen.Bethesda.Oblivion
                 cmds: cmds);
         }
 
-        void ILoquiObjectSetter.SetNthObject(ushort index, object obj, NotifyingFireParameters cmds) => this.SetNthObject(index, obj, cmds);
         protected void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
         {
             RegionDataObject_FieldIndex enu = (RegionDataObject_FieldIndex)index;
@@ -1255,7 +1232,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case RegionDataObject_FieldIndex.Object:
                     this.Object_Property.Set(
-                        (FormIDLink<MajorRecord>)obj,
+                        (FormIDLink<OblivionMajorRecord>)obj,
                         cmds);
                     break;
                 case RegionDataObject_FieldIndex.ParentIndex:
@@ -1345,7 +1322,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case RegionDataObject_FieldIndex.Object:
                     obj.Object_Property.Set(
-                        (FormIDLink<MajorRecord>)pair.Value,
+                        (FormIDLink<OblivionMajorRecord>)pair.Value,
                         null);
                     break;
                 case RegionDataObject_FieldIndex.ParentIndex:
@@ -1400,18 +1377,13 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, RegionDataObject obj)
-        {
-            ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
-        }
-
     }
     #endregion
 
     #region Interface
     public partial interface IRegionDataObject : IRegionDataObjectGetter, ILoquiClass<IRegionDataObject, IRegionDataObjectGetter>, ILoquiClass<RegionDataObject, IRegionDataObjectGetter>
     {
-        new MajorRecord Object { get; set; }
+        new OblivionMajorRecord Object { get; set; }
         new UInt16 ParentIndex { get; set; }
 
         new Byte[] Unknown1 { get; set; }
@@ -1449,8 +1421,8 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IRegionDataObjectGetter : ILoquiObject
     {
         #region Object
-        MajorRecord Object { get; }
-        FormIDLink<MajorRecord> Object_Property { get; }
+        OblivionMajorRecord Object { get; }
+        FormIDLink<OblivionMajorRecord> Object_Property { get; }
 
         #endregion
         #region ParentIndex
@@ -1822,7 +1794,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case RegionDataObject_FieldIndex.Object:
-                    return typeof(FormIDLink<MajorRecord>);
+                    return typeof(FormIDLink<OblivionMajorRecord>);
                 case RegionDataObject_FieldIndex.ParentIndex:
                     return typeof(UInt16);
                 case RegionDataObject_FieldIndex.Unknown1:
@@ -2199,184 +2171,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void SetNthObjectHasBeenSet(
-            ushort index,
-            bool on,
-            IRegionDataObject obj,
-            NotifyingFireParameters cmds = null)
-        {
-            RegionDataObject_FieldIndex enu = (RegionDataObject_FieldIndex)index;
-            switch (enu)
-            {
-                case RegionDataObject_FieldIndex.Object:
-                case RegionDataObject_FieldIndex.ParentIndex:
-                case RegionDataObject_FieldIndex.Unknown1:
-                case RegionDataObject_FieldIndex.Density:
-                case RegionDataObject_FieldIndex.Clustering:
-                case RegionDataObject_FieldIndex.MinSlope:
-                case RegionDataObject_FieldIndex.MaxSlope:
-                case RegionDataObject_FieldIndex.Flags:
-                case RegionDataObject_FieldIndex.RadiusWrtPercent:
-                case RegionDataObject_FieldIndex.Radius:
-                case RegionDataObject_FieldIndex.MinHeight:
-                case RegionDataObject_FieldIndex.MaxHeight:
-                case RegionDataObject_FieldIndex.Sink:
-                case RegionDataObject_FieldIndex.SinkVariance:
-                case RegionDataObject_FieldIndex.SizeVariance:
-                case RegionDataObject_FieldIndex.AngleVariance:
-                case RegionDataObject_FieldIndex.Unknow2n:
-                    if (on) break;
-                    throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static void UnsetNthObject(
-            ushort index,
-            IRegionDataObject obj,
-            NotifyingUnsetParameters cmds = null)
-        {
-            RegionDataObject_FieldIndex enu = (RegionDataObject_FieldIndex)index;
-            switch (enu)
-            {
-                case RegionDataObject_FieldIndex.Object:
-                    obj.Object = default(MajorRecord);
-                    break;
-                case RegionDataObject_FieldIndex.ParentIndex:
-                    obj.ParentIndex = default(UInt16);
-                    break;
-                case RegionDataObject_FieldIndex.Unknown1:
-                    obj.Unknown1 = default(Byte[]);
-                    break;
-                case RegionDataObject_FieldIndex.Density:
-                    obj.Density = default(Single);
-                    break;
-                case RegionDataObject_FieldIndex.Clustering:
-                    obj.Clustering = default(Byte);
-                    break;
-                case RegionDataObject_FieldIndex.MinSlope:
-                    obj.MinSlope = default(Byte);
-                    break;
-                case RegionDataObject_FieldIndex.MaxSlope:
-                    obj.MaxSlope = default(Byte);
-                    break;
-                case RegionDataObject_FieldIndex.Flags:
-                    obj.Flags = default(RegionDataObject.Flag);
-                    break;
-                case RegionDataObject_FieldIndex.RadiusWrtPercent:
-                    obj.RadiusWrtPercent = default(UInt16);
-                    break;
-                case RegionDataObject_FieldIndex.Radius:
-                    obj.Radius = default(UInt16);
-                    break;
-                case RegionDataObject_FieldIndex.MinHeight:
-                    obj.MinHeight = default(Single);
-                    break;
-                case RegionDataObject_FieldIndex.MaxHeight:
-                    obj.MaxHeight = default(Single);
-                    break;
-                case RegionDataObject_FieldIndex.Sink:
-                    obj.Sink = default(Single);
-                    break;
-                case RegionDataObject_FieldIndex.SinkVariance:
-                    obj.SinkVariance = default(Single);
-                    break;
-                case RegionDataObject_FieldIndex.SizeVariance:
-                    obj.SizeVariance = default(Single);
-                    break;
-                case RegionDataObject_FieldIndex.AngleVariance:
-                    obj.AngleVariance = default(P3UInt16);
-                    break;
-                case RegionDataObject_FieldIndex.Unknow2n:
-                    obj.Unknow2n = default(Byte[]);
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthObjectHasBeenSet(
-            ushort index,
-            IRegionDataObject obj)
-        {
-            RegionDataObject_FieldIndex enu = (RegionDataObject_FieldIndex)index;
-            switch (enu)
-            {
-                case RegionDataObject_FieldIndex.Object:
-                case RegionDataObject_FieldIndex.ParentIndex:
-                case RegionDataObject_FieldIndex.Unknown1:
-                case RegionDataObject_FieldIndex.Density:
-                case RegionDataObject_FieldIndex.Clustering:
-                case RegionDataObject_FieldIndex.MinSlope:
-                case RegionDataObject_FieldIndex.MaxSlope:
-                case RegionDataObject_FieldIndex.Flags:
-                case RegionDataObject_FieldIndex.RadiusWrtPercent:
-                case RegionDataObject_FieldIndex.Radius:
-                case RegionDataObject_FieldIndex.MinHeight:
-                case RegionDataObject_FieldIndex.MaxHeight:
-                case RegionDataObject_FieldIndex.Sink:
-                case RegionDataObject_FieldIndex.SinkVariance:
-                case RegionDataObject_FieldIndex.SizeVariance:
-                case RegionDataObject_FieldIndex.AngleVariance:
-                case RegionDataObject_FieldIndex.Unknow2n:
-                    return true;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static object GetNthObject(
-            ushort index,
-            IRegionDataObjectGetter obj)
-        {
-            RegionDataObject_FieldIndex enu = (RegionDataObject_FieldIndex)index;
-            switch (enu)
-            {
-                case RegionDataObject_FieldIndex.Object:
-                    return obj.Object;
-                case RegionDataObject_FieldIndex.ParentIndex:
-                    return obj.ParentIndex;
-                case RegionDataObject_FieldIndex.Unknown1:
-                    return obj.Unknown1;
-                case RegionDataObject_FieldIndex.Density:
-                    return obj.Density;
-                case RegionDataObject_FieldIndex.Clustering:
-                    return obj.Clustering;
-                case RegionDataObject_FieldIndex.MinSlope:
-                    return obj.MinSlope;
-                case RegionDataObject_FieldIndex.MaxSlope:
-                    return obj.MaxSlope;
-                case RegionDataObject_FieldIndex.Flags:
-                    return obj.Flags;
-                case RegionDataObject_FieldIndex.RadiusWrtPercent:
-                    return obj.RadiusWrtPercent;
-                case RegionDataObject_FieldIndex.Radius:
-                    return obj.Radius;
-                case RegionDataObject_FieldIndex.MinHeight:
-                    return obj.MinHeight;
-                case RegionDataObject_FieldIndex.MaxHeight:
-                    return obj.MaxHeight;
-                case RegionDataObject_FieldIndex.Sink:
-                    return obj.Sink;
-                case RegionDataObject_FieldIndex.SinkVariance:
-                    return obj.SinkVariance;
-                case RegionDataObject_FieldIndex.SizeVariance:
-                    return obj.SizeVariance;
-                case RegionDataObject_FieldIndex.AngleVariance:
-                    return obj.AngleVariance;
-                case RegionDataObject_FieldIndex.Unknow2n:
-                    return obj.Unknow2n;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
         public static void Clear(
             IRegionDataObject item,
             NotifyingUnsetParameters cmds = null)
         {
-            item.Object = default(MajorRecord);
+            item.Object = default(OblivionMajorRecord);
             item.ParentIndex = default(UInt16);
             item.Unknown1 = default(Byte[]);
             item.Density = default(Single);

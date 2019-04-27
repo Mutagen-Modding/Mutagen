@@ -54,24 +54,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
 
-        #region Loqui Getter Interface
-
-        protected override object GetNthObject(ushort index) => NPCAbstractCommon.GetNthObject(index, this);
-
-        protected override bool GetNthObjectHasBeenSet(ushort index) => NPCAbstractCommon.GetNthObjectHasBeenSet(index, this);
-
-        protected override void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => NPCAbstractCommon.UnsetNthObject(index, this, cmds);
-
-        #endregion
-
-        #region Loqui Interface
-        protected override void SetNthObjectHasBeenSet(ushort index, bool on)
-        {
-            NPCAbstractCommon.SetNthObjectHasBeenSet(index, on, this);
-        }
-
-        #endregion
-
         IMask<bool> IEqualsMask<NPCAbstract>.GetEqualsMask(NPCAbstract rhs, EqualsMaskHelper.Include include) => NPCAbstractCommon.GetEqualsMask(this, rhs, include);
         IMask<bool> IEqualsMask<INPCAbstractGetter>.GetEqualsMask(INPCAbstractGetter rhs, EqualsMaskHelper.Include include) => NPCAbstractCommon.GetEqualsMask(this, rhs, include);
         #region To String
@@ -356,6 +338,22 @@ namespace Mutagen.Bethesda.Oblivion
 
         public override void Write_Xml(
             XElement node,
+            out OblivionMajorRecord_ErrorMask errorMask,
+            bool doMasks = true,
+            OblivionMajorRecord_TranslationMask translationMask = null,
+            string name = null)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            this.Write_Xml(
+                name: name,
+                node: node,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal());
+            errorMask = NPCAbstract_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public override void Write_Xml(
+            XElement node,
             out MajorRecord_ErrorMask errorMask,
             bool doMasks = true,
             MajorRecord_TranslationMask translationMask = null,
@@ -462,6 +460,21 @@ namespace Mutagen.Bethesda.Oblivion
             MutagenWriter writer,
             MasterReferences masterReferences,
             out NPCSpawn_ErrorMask errorMask,
+            bool doMasks = true)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            this.Write_Binary(
+                masterReferences: masterReferences,
+                writer: writer,
+                errorMask: errorMaskBuilder,
+                recordTypeConverter: null);
+            errorMask = NPCAbstract_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public override void Write_Binary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            out OblivionMajorRecord_ErrorMask errorMask,
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
@@ -637,11 +650,6 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, NPCAbstract obj)
-        {
-            ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
-        }
-
     }
     #endregion
 
@@ -664,11 +672,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #region Field Index
     public enum NPCAbstract_FieldIndex
     {
-        MajorRecordFlags = 0,
-        FormKey = 1,
-        Version = 2,
-        EditorID = 3,
-        RecordType = 4,
+        FormKey = 0,
+        Version = 1,
+        EditorID = 2,
+        RecordType = 3,
+        OblivionMajorRecordFlags = 4,
     }
     #endregion
 
@@ -860,59 +868,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void SetNthObjectHasBeenSet(
-            ushort index,
-            bool on,
-            INPCAbstract obj,
-            NotifyingFireParameters cmds = null)
-        {
-            NPCAbstract_FieldIndex enu = (NPCAbstract_FieldIndex)index;
-            switch (enu)
-            {
-                default:
-                    NPCSpawnCommon.SetNthObjectHasBeenSet(index, on, obj);
-                    break;
-            }
-        }
-
-        public static void UnsetNthObject(
-            ushort index,
-            INPCAbstract obj,
-            NotifyingUnsetParameters cmds = null)
-        {
-            NPCAbstract_FieldIndex enu = (NPCAbstract_FieldIndex)index;
-            switch (enu)
-            {
-                default:
-                    NPCSpawnCommon.UnsetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public static bool GetNthObjectHasBeenSet(
-            ushort index,
-            INPCAbstract obj)
-        {
-            NPCAbstract_FieldIndex enu = (NPCAbstract_FieldIndex)index;
-            switch (enu)
-            {
-                default:
-                    return NPCSpawnCommon.GetNthObjectHasBeenSet(index, obj);
-            }
-        }
-
-        public static object GetNthObject(
-            ushort index,
-            INPCAbstractGetter obj)
-        {
-            NPCAbstract_FieldIndex enu = (NPCAbstract_FieldIndex)index;
-            switch (enu)
-            {
-                default:
-                    return NPCSpawnCommon.GetNthObject(index, obj);
-            }
-        }
-
         public static void Clear(
             INPCAbstract item,
             NotifyingUnsetParameters cmds = null)
@@ -997,8 +952,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (index)
             {
-                case NPCSpawn_FieldIndex.MajorRecordFlags:
-                    return (NPCAbstract_FieldIndex)((int)index);
                 case NPCSpawn_FieldIndex.FormKey:
                     return (NPCAbstract_FieldIndex)((int)index);
                 case NPCSpawn_FieldIndex.Version:
@@ -1006,6 +959,33 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case NPCSpawn_FieldIndex.EditorID:
                     return (NPCAbstract_FieldIndex)((int)index);
                 case NPCSpawn_FieldIndex.RecordType:
+                    return (NPCAbstract_FieldIndex)((int)index);
+                case NPCSpawn_FieldIndex.OblivionMajorRecordFlags:
+                    return (NPCAbstract_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
+        }
+
+        public static NPCAbstract_FieldIndex? ConvertFieldIndex(OblivionMajorRecord_FieldIndex? index)
+        {
+            if (!index.HasValue) return null;
+            return ConvertFieldIndex(index: index.Value);
+        }
+
+        public static NPCAbstract_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
+        {
+            switch (index)
+            {
+                case OblivionMajorRecord_FieldIndex.FormKey:
+                    return (NPCAbstract_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.Version:
+                    return (NPCAbstract_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.EditorID:
+                    return (NPCAbstract_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.RecordType:
+                    return (NPCAbstract_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
                     return (NPCAbstract_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
@@ -1022,8 +1002,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (index)
             {
-                case MajorRecord_FieldIndex.MajorRecordFlags:
-                    return (NPCAbstract_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
                     return (NPCAbstract_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.Version:
@@ -1165,7 +1143,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            MajorRecordCommon.Write_Binary_Embedded(
+            OblivionMajorRecordCommon.Write_Binary_Embedded(
                 item: item,
                 writer: writer,
                 errorMask: errorMask,

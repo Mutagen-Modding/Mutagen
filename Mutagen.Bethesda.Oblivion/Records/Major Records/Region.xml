@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Region" objType="Record" recordType="REGN" baseClass="Bethesda.MajorRecord" GUID="638d02e0-687a-49ad-a934-6f2ed1e05c3a" ID="107">
+  <Object name="Region" objType="Record" recordType="REGN" baseClass="OblivionMajorRecord" GUID="638d02e0-687a-49ad-a934-6f2ed1e05c3a" ID="107">
     <Fields>
       <String name="Icon" recordType="ICON" />
       <Color name="MapColor" recordType="RCLR" extraByte="true" />
@@ -41,7 +41,7 @@
   </Object>
   <Object name="RegionDataObject" objType="Subrecord" GUID="e814f192-a945-4518-bfd0-00e67eae8105" ID="117">
     <Fields>
-      <FormIDLink name="Object" refName="Bethesda.MajorRecord" />
+      <FormIDLink name="Object" refName="OblivionMajorRecord" />
       <UInt16 name="ParentIndex" />
       <ByteArray name="Unknown1" nullable="NotNull" length="2" />
       <Float name="Density" />

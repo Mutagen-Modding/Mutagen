@@ -36,7 +36,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class Climate : 
-        MajorRecord,
+        OblivionMajorRecord,
         IClimate,
         ILoquiObject<Climate>,
         ILoquiObjectSetter,
@@ -235,24 +235,6 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
         public static RangeUInt8 PhaseLength_Range = new RangeUInt8(0, 63);
-        #endregion
-
-        #region Loqui Getter Interface
-
-        protected override object GetNthObject(ushort index) => ClimateCommon.GetNthObject(index, this);
-
-        protected override bool GetNthObjectHasBeenSet(ushort index) => ClimateCommon.GetNthObjectHasBeenSet(index, this);
-
-        protected override void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => ClimateCommon.UnsetNthObject(index, this, cmds);
-
-        #endregion
-
-        #region Loqui Interface
-        protected override void SetNthObjectHasBeenSet(ushort index, bool on)
-        {
-            ClimateCommon.SetNthObjectHasBeenSet(index, on, this);
-        }
-
         #endregion
 
         IMask<bool> IEqualsMask<Climate>.GetEqualsMask(Climate rhs, EqualsMaskHelper.Include include) => ClimateCommon.GetEqualsMask(this, rhs, include);
@@ -592,6 +574,22 @@ namespace Mutagen.Bethesda.Oblivion
         #region Base Class Trickdown Overrides
         public override void Write_Xml(
             XElement node,
+            out OblivionMajorRecord_ErrorMask errorMask,
+            bool doMasks = true,
+            OblivionMajorRecord_TranslationMask translationMask = null,
+            string name = null)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            this.Write_Xml(
+                name: name,
+                node: node,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal());
+            errorMask = Climate_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public override void Write_Xml(
+            XElement node,
             out MajorRecord_ErrorMask errorMask,
             bool doMasks = true,
             MajorRecord_TranslationMask translationMask = null,
@@ -636,7 +634,7 @@ namespace Mutagen.Bethesda.Oblivion
                     item.TNAMDataTypeState |= Climate.TNAMDataType.Has;
                     break;
                 default:
-                    MajorRecord.FillPrivateElement_Xml(
+                    OblivionMajorRecord.FillPrivateElement_Xml(
                         item: item,
                         node: node,
                         name: name,
@@ -718,9 +716,9 @@ namespace Mutagen.Bethesda.Oblivion
             CustomCtor();
         }
 
-        partial void PostDuplicate(Climate obj, Climate rhs, Func<FormKey> getNextFormKey, IList<(MajorRecord Record, FormKey OriginalFormKey)> duplicatedRecords);
+        partial void PostDuplicate(Climate obj, Climate rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
 
-        public override MajorRecord Duplicate(Func<FormKey> getNextFormKey, IList<(MajorRecord Record, FormKey OriginalFormKey)> duplicatedRecords)
+        public override IMajorRecordCommon Duplicate(Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
         {
             var ret = new Climate(getNextFormKey());
             ret.CopyFieldsFrom(this);
@@ -798,6 +796,21 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         #region Base Class Trickdown Overrides
+        public override void Write_Binary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            out OblivionMajorRecord_ErrorMask errorMask,
+            bool doMasks = true)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            this.Write_Binary(
+                masterReferences: masterReferences,
+                writer: writer,
+                errorMask: errorMaskBuilder,
+                recordTypeConverter: null);
+            errorMask = Climate_ErrorMask.Factory(errorMaskBuilder);
+        }
+
         public override void Write_Binary(
             MutagenWriter writer,
             MasterReferences masterReferences,
@@ -986,7 +999,7 @@ namespace Mutagen.Bethesda.Oblivion
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            MajorRecord.Fill_Binary_Structs(
+            OblivionMajorRecord.Fill_Binary_Structs(
                 item: item,
                 frame: frame,
                 masterReferences: masterReferences,
@@ -1179,7 +1192,7 @@ namespace Mutagen.Bethesda.Oblivion
                     return TryGet<int?>.Succeed((int)Climate_FieldIndex.PhaseLength);
                 }
                 default:
-                    return MajorRecord.Fill_Binary_RecordTypes(
+                    return OblivionMajorRecord.Fill_Binary_RecordTypes(
                         item: item,
                         frame: frame,
                         nextRecordType: nextRecordType,
@@ -1373,7 +1386,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             if (!EnumExt.TryParse(pair.Key, out Climate_FieldIndex enu))
             {
-                CopyInInternal_MajorRecord(obj, pair);
+                CopyInInternal_OblivionMajorRecord(obj, pair);
             }
             switch (enu)
             {
@@ -1414,16 +1427,11 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, Climate obj)
-        {
-            ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
-        }
-
     }
     #endregion
 
     #region Interface
-    public partial interface IClimate : IClimateGetter, IMajorRecord, ILoquiClass<IClimate, IClimateGetter>, ILoquiClass<Climate, IClimateGetter>
+    public partial interface IClimate : IClimateGetter, IOblivionMajorRecord, ILoquiClass<IClimate, IClimateGetter>, ILoquiClass<Climate, IClimateGetter>
     {
         new ISourceSetList<WeatherChance> Weathers { get; }
         new String SunTexture { get; set; }
@@ -1457,7 +1465,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
-    public partial interface IClimateGetter : IMajorRecordGetter
+    public partial interface IClimateGetter : IOblivionMajorRecordGetter
     {
         #region Weathers
         IObservableSetList<WeatherChance> Weathers { get; }
@@ -1517,11 +1525,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #region Field Index
     public enum Climate_FieldIndex
     {
-        MajorRecordFlags = 0,
-        FormKey = 1,
-        Version = 2,
-        EditorID = 3,
-        RecordType = 4,
+        FormKey = 0,
+        Version = 1,
+        EditorID = 2,
+        RecordType = 3,
+        OblivionMajorRecordFlags = 4,
         Weathers = 5,
         SunTexture = 6,
         SunGlareTexture = 7,
@@ -1626,7 +1634,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Climate_FieldIndex.PhaseLength:
                     return false;
                 default:
-                    return MajorRecord_Registration.GetNthIsEnumerable(index);
+                    return OblivionMajorRecord_Registration.GetNthIsEnumerable(index);
             }
         }
 
@@ -1649,7 +1657,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Climate_FieldIndex.PhaseLength:
                     return false;
                 default:
-                    return MajorRecord_Registration.GetNthIsLoqui(index);
+                    return OblivionMajorRecord_Registration.GetNthIsLoqui(index);
             }
         }
 
@@ -1671,7 +1679,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Climate_FieldIndex.PhaseLength:
                     return false;
                 default:
-                    return MajorRecord_Registration.GetNthIsSingleton(index);
+                    return OblivionMajorRecord_Registration.GetNthIsSingleton(index);
             }
         }
 
@@ -1703,7 +1711,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Climate_FieldIndex.PhaseLength:
                     return "PhaseLength";
                 default:
-                    return MajorRecord_Registration.GetNthName(index);
+                    return OblivionMajorRecord_Registration.GetNthName(index);
             }
         }
 
@@ -1725,7 +1733,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Climate_FieldIndex.PhaseLength:
                     return false;
                 default:
-                    return MajorRecord_Registration.IsNthDerivative(index);
+                    return OblivionMajorRecord_Registration.IsNthDerivative(index);
             }
         }
 
@@ -1747,7 +1755,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Climate_FieldIndex.PhaseLength:
                     return false;
                 default:
-                    return MajorRecord_Registration.IsProtected(index);
+                    return OblivionMajorRecord_Registration.IsProtected(index);
             }
         }
 
@@ -1779,7 +1787,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Climate_FieldIndex.PhaseLength:
                     return typeof(Byte);
                 default:
-                    return MajorRecord_Registration.GetNthType(index);
+                    return OblivionMajorRecord_Registration.GetNthType(index);
             }
         }
 
@@ -1834,7 +1842,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Climate_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {
-            MajorRecordCommon.CopyFieldsFrom(
+            OblivionMajorRecordCommon.CopyFieldsFrom(
                 item,
                 rhs,
                 def,
@@ -2113,151 +2121,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void SetNthObjectHasBeenSet(
-            ushort index,
-            bool on,
-            IClimate obj,
-            NotifyingFireParameters cmds = null)
-        {
-            Climate_FieldIndex enu = (Climate_FieldIndex)index;
-            switch (enu)
-            {
-                case Climate_FieldIndex.SunriseBegin:
-                case Climate_FieldIndex.SunriseEnd:
-                case Climate_FieldIndex.SunsetBegin:
-                case Climate_FieldIndex.SunsetEnd:
-                case Climate_FieldIndex.Volatility:
-                case Climate_FieldIndex.Phase:
-                case Climate_FieldIndex.PhaseLength:
-                    if (on) break;
-                    throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
-                case Climate_FieldIndex.Weathers:
-                    obj.Weathers.HasBeenSet = on;
-                    break;
-                case Climate_FieldIndex.SunTexture:
-                    obj.SunTexture_IsSet = on;
-                    break;
-                case Climate_FieldIndex.SunGlareTexture:
-                    obj.SunGlareTexture_IsSet = on;
-                    break;
-                case Climate_FieldIndex.Model:
-                    obj.Model_IsSet = on;
-                    break;
-                default:
-                    MajorRecordCommon.SetNthObjectHasBeenSet(index, on, obj);
-                    break;
-            }
-        }
-
-        public static void UnsetNthObject(
-            ushort index,
-            IClimate obj,
-            NotifyingUnsetParameters cmds = null)
-        {
-            Climate_FieldIndex enu = (Climate_FieldIndex)index;
-            switch (enu)
-            {
-                case Climate_FieldIndex.Weathers:
-                    obj.Weathers.Unset();
-                    break;
-                case Climate_FieldIndex.SunTexture:
-                    obj.SunTexture_Unset();
-                    break;
-                case Climate_FieldIndex.SunGlareTexture:
-                    obj.SunGlareTexture_Unset();
-                    break;
-                case Climate_FieldIndex.Model:
-                    obj.Model_Unset();
-                    break;
-                case Climate_FieldIndex.SunriseBegin:
-                    obj.SunriseBegin = default(DateTime);
-                    break;
-                case Climate_FieldIndex.SunriseEnd:
-                    obj.SunriseEnd = default(DateTime);
-                    break;
-                case Climate_FieldIndex.SunsetBegin:
-                    obj.SunsetBegin = default(DateTime);
-                    break;
-                case Climate_FieldIndex.SunsetEnd:
-                    obj.SunsetEnd = default(DateTime);
-                    break;
-                case Climate_FieldIndex.Volatility:
-                    obj.Volatility = default(Byte);
-                    break;
-                case Climate_FieldIndex.Phase:
-                    obj.Phase = default(Climate.MoonPhase);
-                    break;
-                case Climate_FieldIndex.PhaseLength:
-                    obj.PhaseLength = default(Byte);
-                    break;
-                default:
-                    MajorRecordCommon.UnsetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public static bool GetNthObjectHasBeenSet(
-            ushort index,
-            IClimate obj)
-        {
-            Climate_FieldIndex enu = (Climate_FieldIndex)index;
-            switch (enu)
-            {
-                case Climate_FieldIndex.SunriseBegin:
-                case Climate_FieldIndex.SunriseEnd:
-                case Climate_FieldIndex.SunsetBegin:
-                case Climate_FieldIndex.SunsetEnd:
-                case Climate_FieldIndex.Volatility:
-                case Climate_FieldIndex.Phase:
-                case Climate_FieldIndex.PhaseLength:
-                    return true;
-                case Climate_FieldIndex.Weathers:
-                    return obj.Weathers.HasBeenSet;
-                case Climate_FieldIndex.SunTexture:
-                    return obj.SunTexture_IsSet;
-                case Climate_FieldIndex.SunGlareTexture:
-                    return obj.SunGlareTexture_IsSet;
-                case Climate_FieldIndex.Model:
-                    return obj.Model_IsSet;
-                default:
-                    return MajorRecordCommon.GetNthObjectHasBeenSet(index, obj);
-            }
-        }
-
-        public static object GetNthObject(
-            ushort index,
-            IClimateGetter obj)
-        {
-            Climate_FieldIndex enu = (Climate_FieldIndex)index;
-            switch (enu)
-            {
-                case Climate_FieldIndex.Weathers:
-                    return obj.Weathers;
-                case Climate_FieldIndex.SunTexture:
-                    return obj.SunTexture;
-                case Climate_FieldIndex.SunGlareTexture:
-                    return obj.SunGlareTexture;
-                case Climate_FieldIndex.Model:
-                    return obj.Model;
-                case Climate_FieldIndex.SunriseBegin:
-                    return obj.SunriseBegin;
-                case Climate_FieldIndex.SunriseEnd:
-                    return obj.SunriseEnd;
-                case Climate_FieldIndex.SunsetBegin:
-                    return obj.SunsetBegin;
-                case Climate_FieldIndex.SunsetEnd:
-                    return obj.SunsetEnd;
-                case Climate_FieldIndex.Volatility:
-                    return obj.Volatility;
-                case Climate_FieldIndex.Phase:
-                    return obj.Phase;
-                case Climate_FieldIndex.PhaseLength:
-                    return obj.PhaseLength;
-                default:
-                    return MajorRecordCommon.GetNthObject(index, obj);
-            }
-        }
-
         public static void Clear(
             IClimate item,
             NotifyingUnsetParameters cmds = null)
@@ -2316,7 +2179,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Volatility = item.Volatility == rhs.Volatility;
             ret.Phase = item.Phase == rhs.Phase;
             ret.PhaseLength = item.PhaseLength == rhs.PhaseLength;
-            MajorRecordCommon.FillEqualsMask(item, rhs, ret);
+            OblivionMajorRecordCommon.FillEqualsMask(item, rhs, ret);
         }
 
         public static string ToString(
@@ -2437,6 +2300,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ret;
         }
 
+        public static Climate_FieldIndex? ConvertFieldIndex(OblivionMajorRecord_FieldIndex? index)
+        {
+            if (!index.HasValue) return null;
+            return ConvertFieldIndex(index: index.Value);
+        }
+
+        public static Climate_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
+        {
+            switch (index)
+            {
+                case OblivionMajorRecord_FieldIndex.FormKey:
+                    return (Climate_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.Version:
+                    return (Climate_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.EditorID:
+                    return (Climate_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.RecordType:
+                    return (Climate_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
+                    return (Climate_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
+        }
+
         public static Climate_FieldIndex? ConvertFieldIndex(MajorRecord_FieldIndex? index)
         {
             if (!index.HasValue) return null;
@@ -2447,8 +2335,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (index)
             {
-                case MajorRecord_FieldIndex.MajorRecordFlags:
-                    return (Climate_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
                     return (Climate_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.Version:
@@ -2509,7 +2395,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
         {
-            MajorRecordCommon.WriteToNode_Xml(
+            OblivionMajorRecordCommon.WriteToNode_Xml(
                 item: item,
                 node: node,
                 errorMask: errorMask,
@@ -2959,7 +2845,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 default:
-                    MajorRecordCommon.FillPublicElement_Xml(
+                    OblivionMajorRecordCommon.FillPublicElement_Xml(
                         item: item,
                         node: node,
                         name: name,
@@ -3003,7 +2889,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: Climate_Registration.CLMT_HEADER,
                 type: ObjectType.Record))
             {
-                MajorRecordCommon.Write_Binary_Embedded(
+                OblivionMajorRecordCommon.Write_Binary_Embedded(
                     item: item,
                     writer: writer,
                     errorMask: errorMask,
@@ -3128,7 +3014,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     #region Modules
     #region Mask
-    public class Climate_Mask<T> : MajorRecord_Mask<T>, IMask<T>, IEquatable<Climate_Mask<T>>
+    public class Climate_Mask<T> : OblivionMajorRecord_Mask<T>, IMask<T>, IEquatable<Climate_Mask<T>>
     {
         #region Ctors
         public Climate_Mask()
@@ -3399,7 +3285,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public class Climate_ErrorMask : MajorRecord_ErrorMask, IErrorMask<Climate_ErrorMask>
+    public class Climate_ErrorMask : OblivionMajorRecord_ErrorMask, IErrorMask<Climate_ErrorMask>
     {
         #region Members
         public MaskItem<Exception, IEnumerable<MaskItem<Exception, WeatherChance_ErrorMask>>> Weathers;
@@ -3653,7 +3539,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
-    public class Climate_CopyMask : MajorRecord_CopyMask
+    public class Climate_CopyMask : OblivionMajorRecord_CopyMask
     {
         public Climate_CopyMask()
         {
@@ -3690,7 +3576,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public class Climate_TranslationMask : MajorRecord_TranslationMask
+    public class Climate_TranslationMask : OblivionMajorRecord_TranslationMask
     {
         #region Members
         public MaskItem<bool, WeatherChance_TranslationMask> Weathers;

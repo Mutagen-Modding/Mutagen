@@ -36,7 +36,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class AIPackage : 
-        MajorRecord,
+        OblivionMajorRecord,
         IAIPackage,
         ILoquiObject<AIPackage>,
         ILoquiObjectSetter,
@@ -176,24 +176,6 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IObservableSetList<Condition> IAIPackageGetter.Conditions => _Conditions;
         #endregion
-
-        #endregion
-
-        #region Loqui Getter Interface
-
-        protected override object GetNthObject(ushort index) => AIPackageCommon.GetNthObject(index, this);
-
-        protected override bool GetNthObjectHasBeenSet(ushort index) => AIPackageCommon.GetNthObjectHasBeenSet(index, this);
-
-        protected override void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => AIPackageCommon.UnsetNthObject(index, this, cmds);
-
-        #endregion
-
-        #region Loqui Interface
-        protected override void SetNthObjectHasBeenSet(ushort index, bool on)
-        {
-            AIPackageCommon.SetNthObjectHasBeenSet(index, on, this);
-        }
 
         #endregion
 
@@ -524,6 +506,22 @@ namespace Mutagen.Bethesda.Oblivion
         #region Base Class Trickdown Overrides
         public override void Write_Xml(
             XElement node,
+            out OblivionMajorRecord_ErrorMask errorMask,
+            bool doMasks = true,
+            OblivionMajorRecord_TranslationMask translationMask = null,
+            string name = null)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            this.Write_Xml(
+                name: name,
+                node: node,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal());
+            errorMask = AIPackage_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public override void Write_Xml(
+            XElement node,
             out MajorRecord_ErrorMask errorMask,
             bool doMasks = true,
             MajorRecord_TranslationMask translationMask = null,
@@ -568,7 +566,7 @@ namespace Mutagen.Bethesda.Oblivion
                     item.PKDTDataTypeState |= AIPackage.PKDTDataType.Has;
                     break;
                 default:
-                    MajorRecord.FillPrivateElement_Xml(
+                    OblivionMajorRecord.FillPrivateElement_Xml(
                         item: item,
                         node: node,
                         name: name,
@@ -648,9 +646,9 @@ namespace Mutagen.Bethesda.Oblivion
             CustomCtor();
         }
 
-        partial void PostDuplicate(AIPackage obj, AIPackage rhs, Func<FormKey> getNextFormKey, IList<(MajorRecord Record, FormKey OriginalFormKey)> duplicatedRecords);
+        partial void PostDuplicate(AIPackage obj, AIPackage rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
 
-        public override MajorRecord Duplicate(Func<FormKey> getNextFormKey, IList<(MajorRecord Record, FormKey OriginalFormKey)> duplicatedRecords)
+        public override IMajorRecordCommon Duplicate(Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
         {
             var ret = new AIPackage(getNextFormKey());
             ret.CopyFieldsFrom(this);
@@ -728,6 +726,21 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         #region Base Class Trickdown Overrides
+        public override void Write_Binary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            out OblivionMajorRecord_ErrorMask errorMask,
+            bool doMasks = true)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            this.Write_Binary(
+                masterReferences: masterReferences,
+                writer: writer,
+                errorMask: errorMaskBuilder,
+                recordTypeConverter: null);
+            errorMask = AIPackage_ErrorMask.Factory(errorMaskBuilder);
+        }
+
         public override void Write_Binary(
             MutagenWriter writer,
             MasterReferences masterReferences,
@@ -816,7 +829,7 @@ namespace Mutagen.Bethesda.Oblivion
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            MajorRecord.Fill_Binary_Structs(
+            OblivionMajorRecord.Fill_Binary_Structs(
                 item: item,
                 frame: frame,
                 masterReferences: masterReferences,
@@ -964,7 +977,7 @@ namespace Mutagen.Bethesda.Oblivion
                     return TryGet<int?>.Succeed((int)AIPackage_FieldIndex.Conditions);
                 }
                 default:
-                    return MajorRecord.Fill_Binary_RecordTypes(
+                    return OblivionMajorRecord.Fill_Binary_RecordTypes(
                         item: item,
                         frame: frame,
                         nextRecordType: nextRecordType,
@@ -1143,7 +1156,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             if (!EnumExt.TryParse(pair.Key, out AIPackage_FieldIndex enu))
             {
-                CopyInInternal_MajorRecord(obj, pair);
+                CopyInInternal_OblivionMajorRecord(obj, pair);
             }
             switch (enu)
             {
@@ -1169,16 +1182,11 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, AIPackage obj)
-        {
-            ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
-        }
-
     }
     #endregion
 
     #region Interface
-    public partial interface IAIPackage : IAIPackageGetter, IMajorRecord, ILoquiClass<IAIPackage, IAIPackageGetter>, ILoquiClass<AIPackage, IAIPackageGetter>
+    public partial interface IAIPackage : IAIPackageGetter, IOblivionMajorRecord, ILoquiClass<IAIPackage, IAIPackageGetter>, ILoquiClass<AIPackage, IAIPackageGetter>
     {
         new AIPackage.Flag Flags { get; set; }
 
@@ -1202,7 +1210,7 @@ namespace Mutagen.Bethesda.Oblivion
         new ISourceSetList<Condition> Conditions { get; }
     }
 
-    public partial interface IAIPackageGetter : IMajorRecordGetter
+    public partial interface IAIPackageGetter : IOblivionMajorRecordGetter
     {
         #region Flags
         AIPackage.Flag Flags { get; }
@@ -1242,11 +1250,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #region Field Index
     public enum AIPackage_FieldIndex
     {
-        MajorRecordFlags = 0,
-        FormKey = 1,
-        Version = 2,
-        EditorID = 3,
-        RecordType = 4,
+        FormKey = 0,
+        Version = 1,
+        EditorID = 2,
+        RecordType = 3,
+        OblivionMajorRecordFlags = 4,
         Flags = 5,
         GeneralType = 6,
         Location = 7,
@@ -1331,7 +1339,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case AIPackage_FieldIndex.Target:
                     return false;
                 default:
-                    return MajorRecord_Registration.GetNthIsEnumerable(index);
+                    return OblivionMajorRecord_Registration.GetNthIsEnumerable(index);
             }
         }
 
@@ -1349,7 +1357,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case AIPackage_FieldIndex.GeneralType:
                     return false;
                 default:
-                    return MajorRecord_Registration.GetNthIsLoqui(index);
+                    return OblivionMajorRecord_Registration.GetNthIsLoqui(index);
             }
         }
 
@@ -1366,7 +1374,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case AIPackage_FieldIndex.Conditions:
                     return false;
                 default:
-                    return MajorRecord_Registration.GetNthIsSingleton(index);
+                    return OblivionMajorRecord_Registration.GetNthIsSingleton(index);
             }
         }
 
@@ -1388,7 +1396,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case AIPackage_FieldIndex.Conditions:
                     return "Conditions";
                 default:
-                    return MajorRecord_Registration.GetNthName(index);
+                    return OblivionMajorRecord_Registration.GetNthName(index);
             }
         }
 
@@ -1405,7 +1413,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case AIPackage_FieldIndex.Conditions:
                     return false;
                 default:
-                    return MajorRecord_Registration.IsNthDerivative(index);
+                    return OblivionMajorRecord_Registration.IsNthDerivative(index);
             }
         }
 
@@ -1422,7 +1430,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case AIPackage_FieldIndex.Conditions:
                     return false;
                 default:
-                    return MajorRecord_Registration.IsProtected(index);
+                    return OblivionMajorRecord_Registration.IsProtected(index);
             }
         }
 
@@ -1444,7 +1452,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case AIPackage_FieldIndex.Conditions:
                     return typeof(SourceSetList<Condition>);
                 default:
-                    return MajorRecord_Registration.GetNthType(index);
+                    return OblivionMajorRecord_Registration.GetNthType(index);
             }
         }
 
@@ -1500,7 +1508,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             AIPackage_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {
-            MajorRecordCommon.CopyFieldsFrom(
+            OblivionMajorRecordCommon.CopyFieldsFrom(
                 item,
                 rhs,
                 def,
@@ -1742,116 +1750,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void SetNthObjectHasBeenSet(
-            ushort index,
-            bool on,
-            IAIPackage obj,
-            NotifyingFireParameters cmds = null)
-        {
-            AIPackage_FieldIndex enu = (AIPackage_FieldIndex)index;
-            switch (enu)
-            {
-                case AIPackage_FieldIndex.Flags:
-                case AIPackage_FieldIndex.GeneralType:
-                    if (on) break;
-                    throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
-                case AIPackage_FieldIndex.Location:
-                    obj.Location_IsSet = on;
-                    break;
-                case AIPackage_FieldIndex.Schedule:
-                    obj.Schedule_IsSet = on;
-                    break;
-                case AIPackage_FieldIndex.Target:
-                    obj.Target_IsSet = on;
-                    break;
-                case AIPackage_FieldIndex.Conditions:
-                    obj.Conditions.HasBeenSet = on;
-                    break;
-                default:
-                    MajorRecordCommon.SetNthObjectHasBeenSet(index, on, obj);
-                    break;
-            }
-        }
-
-        public static void UnsetNthObject(
-            ushort index,
-            IAIPackage obj,
-            NotifyingUnsetParameters cmds = null)
-        {
-            AIPackage_FieldIndex enu = (AIPackage_FieldIndex)index;
-            switch (enu)
-            {
-                case AIPackage_FieldIndex.Flags:
-                    obj.Flags = default(AIPackage.Flag);
-                    break;
-                case AIPackage_FieldIndex.GeneralType:
-                    obj.GeneralType = default(AIPackage.GeneralTypeEnum);
-                    break;
-                case AIPackage_FieldIndex.Location:
-                    obj.Location_Unset();
-                    break;
-                case AIPackage_FieldIndex.Schedule:
-                    obj.Schedule_Unset();
-                    break;
-                case AIPackage_FieldIndex.Target:
-                    obj.Target_Unset();
-                    break;
-                case AIPackage_FieldIndex.Conditions:
-                    obj.Conditions.Unset();
-                    break;
-                default:
-                    MajorRecordCommon.UnsetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public static bool GetNthObjectHasBeenSet(
-            ushort index,
-            IAIPackage obj)
-        {
-            AIPackage_FieldIndex enu = (AIPackage_FieldIndex)index;
-            switch (enu)
-            {
-                case AIPackage_FieldIndex.Flags:
-                case AIPackage_FieldIndex.GeneralType:
-                    return true;
-                case AIPackage_FieldIndex.Location:
-                    return obj.Location_IsSet;
-                case AIPackage_FieldIndex.Schedule:
-                    return obj.Schedule_IsSet;
-                case AIPackage_FieldIndex.Target:
-                    return obj.Target_IsSet;
-                case AIPackage_FieldIndex.Conditions:
-                    return obj.Conditions.HasBeenSet;
-                default:
-                    return MajorRecordCommon.GetNthObjectHasBeenSet(index, obj);
-            }
-        }
-
-        public static object GetNthObject(
-            ushort index,
-            IAIPackageGetter obj)
-        {
-            AIPackage_FieldIndex enu = (AIPackage_FieldIndex)index;
-            switch (enu)
-            {
-                case AIPackage_FieldIndex.Flags:
-                    return obj.Flags;
-                case AIPackage_FieldIndex.GeneralType:
-                    return obj.GeneralType;
-                case AIPackage_FieldIndex.Location:
-                    return obj.Location;
-                case AIPackage_FieldIndex.Schedule:
-                    return obj.Schedule;
-                case AIPackage_FieldIndex.Target:
-                    return obj.Target;
-                case AIPackage_FieldIndex.Conditions:
-                    return obj.Conditions;
-                default:
-                    return MajorRecordCommon.GetNthObject(index, obj);
-            }
-        }
-
         public static void Clear(
             IAIPackage item,
             NotifyingUnsetParameters cmds = null)
@@ -1912,7 +1810,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 rhs.Conditions,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
-            MajorRecordCommon.FillEqualsMask(item, rhs, ret);
+            OblivionMajorRecordCommon.FillEqualsMask(item, rhs, ret);
         }
 
         public static string ToString(
@@ -2010,6 +1908,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ret;
         }
 
+        public static AIPackage_FieldIndex? ConvertFieldIndex(OblivionMajorRecord_FieldIndex? index)
+        {
+            if (!index.HasValue) return null;
+            return ConvertFieldIndex(index: index.Value);
+        }
+
+        public static AIPackage_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
+        {
+            switch (index)
+            {
+                case OblivionMajorRecord_FieldIndex.FormKey:
+                    return (AIPackage_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.Version:
+                    return (AIPackage_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.EditorID:
+                    return (AIPackage_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.RecordType:
+                    return (AIPackage_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
+                    return (AIPackage_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
+        }
+
         public static AIPackage_FieldIndex? ConvertFieldIndex(MajorRecord_FieldIndex? index)
         {
             if (!index.HasValue) return null;
@@ -2020,8 +1943,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (index)
             {
-                case MajorRecord_FieldIndex.MajorRecordFlags:
-                    return (AIPackage_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
                     return (AIPackage_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.Version:
@@ -2082,7 +2003,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
         {
-            MajorRecordCommon.WriteToNode_Xml(
+            OblivionMajorRecordCommon.WriteToNode_Xml(
                 item: item,
                 node: node,
                 errorMask: errorMask,
@@ -2361,7 +2282,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 default:
-                    MajorRecordCommon.FillPublicElement_Xml(
+                    OblivionMajorRecordCommon.FillPublicElement_Xml(
                         item: item,
                         node: node,
                         name: name,
@@ -2405,7 +2326,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: AIPackage_Registration.PACK_HEADER,
                 type: ObjectType.Record))
             {
-                MajorRecordCommon.Write_Binary_Embedded(
+                OblivionMajorRecordCommon.Write_Binary_Embedded(
                     item: item,
                     writer: writer,
                     errorMask: errorMask,
@@ -2502,7 +2423,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     #region Modules
     #region Mask
-    public class AIPackage_Mask<T> : MajorRecord_Mask<T>, IMask<T>, IEquatable<AIPackage_Mask<T>>
+    public class AIPackage_Mask<T> : OblivionMajorRecord_Mask<T>, IMask<T>, IEquatable<AIPackage_Mask<T>>
     {
         #region Ctors
         public AIPackage_Mask()
@@ -2747,7 +2668,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public class AIPackage_ErrorMask : MajorRecord_ErrorMask, IErrorMask<AIPackage_ErrorMask>
+    public class AIPackage_ErrorMask : OblivionMajorRecord_ErrorMask, IErrorMask<AIPackage_ErrorMask>
     {
         #region Members
         public Exception Flags;
@@ -2941,7 +2862,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
-    public class AIPackage_CopyMask : MajorRecord_CopyMask
+    public class AIPackage_CopyMask : OblivionMajorRecord_CopyMask
     {
         public AIPackage_CopyMask()
         {
@@ -2968,7 +2889,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public class AIPackage_TranslationMask : MajorRecord_TranslationMask
+    public class AIPackage_TranslationMask : OblivionMajorRecord_TranslationMask
     {
         #region Members
         public bool Flags;

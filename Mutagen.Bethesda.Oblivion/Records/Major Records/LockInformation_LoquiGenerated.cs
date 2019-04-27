@@ -90,28 +90,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        #region Loqui Getter Interface
-
-        protected object GetNthObject(ushort index) => LockInformationCommon.GetNthObject(index, this);
-        object ILoquiObjectGetter.GetNthObject(ushort index) => this.GetNthObject(index);
-
-        protected bool GetNthObjectHasBeenSet(ushort index) => LockInformationCommon.GetNthObjectHasBeenSet(index, this);
-        bool ILoquiObjectGetter.GetNthObjectHasBeenSet(ushort index) => this.GetNthObjectHasBeenSet(index);
-
-        protected void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => LockInformationCommon.UnsetNthObject(index, this, cmds);
-        void ILoquiObjectSetter.UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => this.UnsetNthObject(index, cmds);
-
-        #endregion
-
-        #region Loqui Interface
-        protected void SetNthObjectHasBeenSet(ushort index, bool on)
-        {
-            LockInformationCommon.SetNthObjectHasBeenSet(index, on, this);
-        }
-        void ILoquiObjectSetter.SetNthObjectHasBeenSet(ushort index, bool on) => this.SetNthObjectHasBeenSet(index, on);
-
-        #endregion
-
         IMask<bool> IEqualsMask<LockInformation>.GetEqualsMask(LockInformation rhs, EqualsMaskHelper.Include include) => LockInformationCommon.GetEqualsMask(this, rhs, include);
         IMask<bool> IEqualsMask<ILockInformationGetter>.GetEqualsMask(ILockInformationGetter rhs, EqualsMaskHelper.Include include) => LockInformationCommon.GetEqualsMask(this, rhs, include);
         #region To String
@@ -789,7 +767,6 @@ namespace Mutagen.Bethesda.Oblivion
                 cmds: cmds);
         }
 
-        void ILoquiObjectSetter.SetNthObject(ushort index, object obj, NotifyingFireParameters cmds) => this.SetNthObject(index, obj, cmds);
         protected void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
         {
             LockInformation_FieldIndex enu = (LockInformation_FieldIndex)index;
@@ -864,11 +841,6 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, LockInformation obj)
-        {
-            ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
-        }
-
     }
     #endregion
 
@@ -1209,88 +1181,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         #endregion
-
-        public static void SetNthObjectHasBeenSet(
-            ushort index,
-            bool on,
-            ILockInformation obj,
-            NotifyingFireParameters cmds = null)
-        {
-            LockInformation_FieldIndex enu = (LockInformation_FieldIndex)index;
-            switch (enu)
-            {
-                case LockInformation_FieldIndex.LockLevel:
-                case LockInformation_FieldIndex.Fluff:
-                case LockInformation_FieldIndex.Key:
-                case LockInformation_FieldIndex.Flags:
-                    if (on) break;
-                    throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static void UnsetNthObject(
-            ushort index,
-            ILockInformation obj,
-            NotifyingUnsetParameters cmds = null)
-        {
-            LockInformation_FieldIndex enu = (LockInformation_FieldIndex)index;
-            switch (enu)
-            {
-                case LockInformation_FieldIndex.LockLevel:
-                    obj.LockLevel = default(Byte);
-                    break;
-                case LockInformation_FieldIndex.Fluff:
-                    obj.Fluff = default(Byte[]);
-                    break;
-                case LockInformation_FieldIndex.Key:
-                    obj.Key = default(Key);
-                    break;
-                case LockInformation_FieldIndex.Flags:
-                    obj.Flags = default(LockInformation.Flag);
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthObjectHasBeenSet(
-            ushort index,
-            ILockInformation obj)
-        {
-            LockInformation_FieldIndex enu = (LockInformation_FieldIndex)index;
-            switch (enu)
-            {
-                case LockInformation_FieldIndex.LockLevel:
-                case LockInformation_FieldIndex.Fluff:
-                case LockInformation_FieldIndex.Key:
-                case LockInformation_FieldIndex.Flags:
-                    return true;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static object GetNthObject(
-            ushort index,
-            ILockInformationGetter obj)
-        {
-            LockInformation_FieldIndex enu = (LockInformation_FieldIndex)index;
-            switch (enu)
-            {
-                case LockInformation_FieldIndex.LockLevel:
-                    return obj.LockLevel;
-                case LockInformation_FieldIndex.Fluff:
-                    return obj.Fluff;
-                case LockInformation_FieldIndex.Key:
-                    return obj.Key;
-                case LockInformation_FieldIndex.Flags:
-                    return obj.Flags;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
 
         public static void Clear(
             ILockInformation item,

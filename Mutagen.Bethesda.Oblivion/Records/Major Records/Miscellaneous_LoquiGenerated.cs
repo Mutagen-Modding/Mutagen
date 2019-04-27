@@ -164,24 +164,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        #region Loqui Getter Interface
-
-        protected override object GetNthObject(ushort index) => MiscellaneousCommon.GetNthObject(index, this);
-
-        protected override bool GetNthObjectHasBeenSet(ushort index) => MiscellaneousCommon.GetNthObjectHasBeenSet(index, this);
-
-        protected override void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => MiscellaneousCommon.UnsetNthObject(index, this, cmds);
-
-        #endregion
-
-        #region Loqui Interface
-        protected override void SetNthObjectHasBeenSet(ushort index, bool on)
-        {
-            MiscellaneousCommon.SetNthObjectHasBeenSet(index, on, this);
-        }
-
-        #endregion
-
         IMask<bool> IEqualsMask<Miscellaneous>.GetEqualsMask(Miscellaneous rhs, EqualsMaskHelper.Include include) => MiscellaneousCommon.GetEqualsMask(this, rhs, include);
         IMask<bool> IEqualsMask<IMiscellaneousGetter>.GetEqualsMask(IMiscellaneousGetter rhs, EqualsMaskHelper.Include include) => MiscellaneousCommon.GetEqualsMask(this, rhs, include);
         #region To String
@@ -525,6 +507,22 @@ namespace Mutagen.Bethesda.Oblivion
 
         public override void Write_Xml(
             XElement node,
+            out OblivionMajorRecord_ErrorMask errorMask,
+            bool doMasks = true,
+            OblivionMajorRecord_TranslationMask translationMask = null,
+            string name = null)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            this.Write_Xml(
+                name: name,
+                node: node,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal());
+            errorMask = Miscellaneous_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public override void Write_Xml(
+            XElement node,
             out MajorRecord_ErrorMask errorMask,
             bool doMasks = true,
             MajorRecord_TranslationMask translationMask = null,
@@ -640,9 +638,9 @@ namespace Mutagen.Bethesda.Oblivion
             CustomCtor();
         }
 
-        partial void PostDuplicate(Miscellaneous obj, Miscellaneous rhs, Func<FormKey> getNextFormKey, IList<(MajorRecord Record, FormKey OriginalFormKey)> duplicatedRecords);
+        partial void PostDuplicate(Miscellaneous obj, Miscellaneous rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
 
-        public override MajorRecord Duplicate(Func<FormKey> getNextFormKey, IList<(MajorRecord Record, FormKey OriginalFormKey)> duplicatedRecords)
+        public override IMajorRecordCommon Duplicate(Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
         {
             var ret = new Miscellaneous(getNextFormKey());
             ret.CopyFieldsFrom(this);
@@ -724,6 +722,21 @@ namespace Mutagen.Bethesda.Oblivion
             MutagenWriter writer,
             MasterReferences masterReferences,
             out ItemAbstract_ErrorMask errorMask,
+            bool doMasks = true)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            this.Write_Binary(
+                masterReferences: masterReferences,
+                writer: writer,
+                errorMask: errorMaskBuilder,
+                recordTypeConverter: null);
+            errorMask = Miscellaneous_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public override void Write_Binary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            out OblivionMajorRecord_ErrorMask errorMask,
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
@@ -1160,11 +1173,6 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, Miscellaneous obj)
-        {
-            ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
-        }
-
     }
     #endregion
 
@@ -1235,11 +1243,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #region Field Index
     public enum Miscellaneous_FieldIndex
     {
-        MajorRecordFlags = 0,
-        FormKey = 1,
-        Version = 2,
-        EditorID = 3,
-        RecordType = 4,
+        FormKey = 0,
+        Version = 1,
+        EditorID = 2,
+        RecordType = 3,
+        OblivionMajorRecordFlags = 4,
         Name = 5,
         Model = 6,
         Icon = 7,
@@ -1670,116 +1678,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void SetNthObjectHasBeenSet(
-            ushort index,
-            bool on,
-            IMiscellaneous obj,
-            NotifyingFireParameters cmds = null)
-        {
-            Miscellaneous_FieldIndex enu = (Miscellaneous_FieldIndex)index;
-            switch (enu)
-            {
-                case Miscellaneous_FieldIndex.Value:
-                case Miscellaneous_FieldIndex.Weight:
-                    if (on) break;
-                    throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
-                case Miscellaneous_FieldIndex.Name:
-                    obj.Name_IsSet = on;
-                    break;
-                case Miscellaneous_FieldIndex.Model:
-                    obj.Model_IsSet = on;
-                    break;
-                case Miscellaneous_FieldIndex.Icon:
-                    obj.Icon_IsSet = on;
-                    break;
-                case Miscellaneous_FieldIndex.Script:
-                    obj.Script_Property.HasBeenSet = on;
-                    break;
-                default:
-                    ItemAbstractCommon.SetNthObjectHasBeenSet(index, on, obj);
-                    break;
-            }
-        }
-
-        public static void UnsetNthObject(
-            ushort index,
-            IMiscellaneous obj,
-            NotifyingUnsetParameters cmds = null)
-        {
-            Miscellaneous_FieldIndex enu = (Miscellaneous_FieldIndex)index;
-            switch (enu)
-            {
-                case Miscellaneous_FieldIndex.Name:
-                    obj.Name_Unset();
-                    break;
-                case Miscellaneous_FieldIndex.Model:
-                    obj.Model_Unset();
-                    break;
-                case Miscellaneous_FieldIndex.Icon:
-                    obj.Icon_Unset();
-                    break;
-                case Miscellaneous_FieldIndex.Script:
-                    obj.Script_Property.Unset(cmds);
-                    break;
-                case Miscellaneous_FieldIndex.Value:
-                    obj.Value = default(Int32);
-                    break;
-                case Miscellaneous_FieldIndex.Weight:
-                    obj.Weight = default(Single);
-                    break;
-                default:
-                    ItemAbstractCommon.UnsetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public static bool GetNthObjectHasBeenSet(
-            ushort index,
-            IMiscellaneous obj)
-        {
-            Miscellaneous_FieldIndex enu = (Miscellaneous_FieldIndex)index;
-            switch (enu)
-            {
-                case Miscellaneous_FieldIndex.Value:
-                case Miscellaneous_FieldIndex.Weight:
-                    return true;
-                case Miscellaneous_FieldIndex.Name:
-                    return obj.Name_IsSet;
-                case Miscellaneous_FieldIndex.Model:
-                    return obj.Model_IsSet;
-                case Miscellaneous_FieldIndex.Icon:
-                    return obj.Icon_IsSet;
-                case Miscellaneous_FieldIndex.Script:
-                    return obj.Script_Property.HasBeenSet;
-                default:
-                    return ItemAbstractCommon.GetNthObjectHasBeenSet(index, obj);
-            }
-        }
-
-        public static object GetNthObject(
-            ushort index,
-            IMiscellaneousGetter obj)
-        {
-            Miscellaneous_FieldIndex enu = (Miscellaneous_FieldIndex)index;
-            switch (enu)
-            {
-                case Miscellaneous_FieldIndex.Name:
-                    return obj.Name;
-                case Miscellaneous_FieldIndex.Model:
-                    return obj.Model;
-                case Miscellaneous_FieldIndex.Icon:
-                    return obj.Icon;
-                case Miscellaneous_FieldIndex.Script:
-                    return obj.Script;
-                case Miscellaneous_FieldIndex.Value:
-                    return obj.Value;
-                case Miscellaneous_FieldIndex.Weight:
-                    return obj.Weight;
-                default:
-                    return ItemAbstractCommon.GetNthObject(index, obj);
-            }
-        }
-
         public static void Clear(
             IMiscellaneous item,
             NotifyingUnsetParameters cmds = null)
@@ -1917,8 +1815,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (index)
             {
-                case ItemAbstract_FieldIndex.MajorRecordFlags:
-                    return (Miscellaneous_FieldIndex)((int)index);
                 case ItemAbstract_FieldIndex.FormKey:
                     return (Miscellaneous_FieldIndex)((int)index);
                 case ItemAbstract_FieldIndex.Version:
@@ -1926,6 +1822,33 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case ItemAbstract_FieldIndex.EditorID:
                     return (Miscellaneous_FieldIndex)((int)index);
                 case ItemAbstract_FieldIndex.RecordType:
+                    return (Miscellaneous_FieldIndex)((int)index);
+                case ItemAbstract_FieldIndex.OblivionMajorRecordFlags:
+                    return (Miscellaneous_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
+        }
+
+        public static Miscellaneous_FieldIndex? ConvertFieldIndex(OblivionMajorRecord_FieldIndex? index)
+        {
+            if (!index.HasValue) return null;
+            return ConvertFieldIndex(index: index.Value);
+        }
+
+        public static Miscellaneous_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
+        {
+            switch (index)
+            {
+                case OblivionMajorRecord_FieldIndex.FormKey:
+                    return (Miscellaneous_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.Version:
+                    return (Miscellaneous_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.EditorID:
+                    return (Miscellaneous_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.RecordType:
+                    return (Miscellaneous_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
                     return (Miscellaneous_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
@@ -1942,8 +1865,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (index)
             {
-                case MajorRecord_FieldIndex.MajorRecordFlags:
-                    return (Miscellaneous_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
                     return (Miscellaneous_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.Version:
@@ -2291,7 +2212,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: Miscellaneous_Registration.MISC_HEADER,
                 type: ObjectType.Record))
             {
-                MajorRecordCommon.Write_Binary_Embedded(
+                OblivionMajorRecordCommon.Write_Binary_Embedded(
                     item: item,
                     writer: writer,
                     errorMask: errorMask,

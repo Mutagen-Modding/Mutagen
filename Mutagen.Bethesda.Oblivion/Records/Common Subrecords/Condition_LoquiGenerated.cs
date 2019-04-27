@@ -123,28 +123,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        #region Loqui Getter Interface
-
-        protected object GetNthObject(ushort index) => ConditionCommon.GetNthObject(index, this);
-        object ILoquiObjectGetter.GetNthObject(ushort index) => this.GetNthObject(index);
-
-        protected bool GetNthObjectHasBeenSet(ushort index) => ConditionCommon.GetNthObjectHasBeenSet(index, this);
-        bool ILoquiObjectGetter.GetNthObjectHasBeenSet(ushort index) => this.GetNthObjectHasBeenSet(index);
-
-        protected void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => ConditionCommon.UnsetNthObject(index, this, cmds);
-        void ILoquiObjectSetter.UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => this.UnsetNthObject(index, cmds);
-
-        #endregion
-
-        #region Loqui Interface
-        protected void SetNthObjectHasBeenSet(ushort index, bool on)
-        {
-            ConditionCommon.SetNthObjectHasBeenSet(index, on, this);
-        }
-        void ILoquiObjectSetter.SetNthObjectHasBeenSet(ushort index, bool on) => this.SetNthObjectHasBeenSet(index, on);
-
-        #endregion
-
         IMask<bool> IEqualsMask<Condition>.GetEqualsMask(Condition rhs, EqualsMaskHelper.Include include) => ConditionCommon.GetEqualsMask(this, rhs, include);
         IMask<bool> IEqualsMask<IConditionGetter>.GetEqualsMask(IConditionGetter rhs, EqualsMaskHelper.Include include) => ConditionCommon.GetEqualsMask(this, rhs, include);
         #region To String
@@ -953,7 +931,6 @@ namespace Mutagen.Bethesda.Oblivion
                 cmds: cmds);
         }
 
-        void ILoquiObjectSetter.SetNthObject(ushort index, object obj, NotifyingFireParameters cmds) => this.SetNthObject(index, obj, cmds);
         protected void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
         {
             Condition_FieldIndex enu = (Condition_FieldIndex)index;
@@ -1048,11 +1025,6 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, Condition obj)
-        {
-            ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
-        }
-
     }
     #endregion
 
@@ -1543,116 +1515,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         #endregion
-
-        public static void SetNthObjectHasBeenSet(
-            ushort index,
-            bool on,
-            ICondition obj,
-            NotifyingFireParameters cmds = null)
-        {
-            Condition_FieldIndex enu = (Condition_FieldIndex)index;
-            switch (enu)
-            {
-                case Condition_FieldIndex.CompareOperator:
-                case Condition_FieldIndex.Flags:
-                case Condition_FieldIndex.Fluff:
-                case Condition_FieldIndex.ComparisonValue:
-                case Condition_FieldIndex.Function:
-                case Condition_FieldIndex.FirstParameter:
-                case Condition_FieldIndex.SecondParameter:
-                case Condition_FieldIndex.ThirdParameter:
-                    if (on) break;
-                    throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static void UnsetNthObject(
-            ushort index,
-            ICondition obj,
-            NotifyingUnsetParameters cmds = null)
-        {
-            Condition_FieldIndex enu = (Condition_FieldIndex)index;
-            switch (enu)
-            {
-                case Condition_FieldIndex.CompareOperator:
-                    obj.CompareOperator = default(CompareOperator);
-                    break;
-                case Condition_FieldIndex.Flags:
-                    obj.Flags = default(Condition.Flag);
-                    break;
-                case Condition_FieldIndex.Fluff:
-                    obj.Fluff = default(Byte[]);
-                    break;
-                case Condition_FieldIndex.ComparisonValue:
-                    obj.ComparisonValue = default(Single);
-                    break;
-                case Condition_FieldIndex.Function:
-                    obj.Function = default(Function);
-                    break;
-                case Condition_FieldIndex.FirstParameter:
-                    obj.FirstParameter = default(Int32);
-                    break;
-                case Condition_FieldIndex.SecondParameter:
-                    obj.SecondParameter = default(Int32);
-                    break;
-                case Condition_FieldIndex.ThirdParameter:
-                    obj.ThirdParameter = default(Int32);
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthObjectHasBeenSet(
-            ushort index,
-            ICondition obj)
-        {
-            Condition_FieldIndex enu = (Condition_FieldIndex)index;
-            switch (enu)
-            {
-                case Condition_FieldIndex.CompareOperator:
-                case Condition_FieldIndex.Flags:
-                case Condition_FieldIndex.Fluff:
-                case Condition_FieldIndex.ComparisonValue:
-                case Condition_FieldIndex.Function:
-                case Condition_FieldIndex.FirstParameter:
-                case Condition_FieldIndex.SecondParameter:
-                case Condition_FieldIndex.ThirdParameter:
-                    return true;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static object GetNthObject(
-            ushort index,
-            IConditionGetter obj)
-        {
-            Condition_FieldIndex enu = (Condition_FieldIndex)index;
-            switch (enu)
-            {
-                case Condition_FieldIndex.CompareOperator:
-                    return obj.CompareOperator;
-                case Condition_FieldIndex.Flags:
-                    return obj.Flags;
-                case Condition_FieldIndex.Fluff:
-                    return obj.Fluff;
-                case Condition_FieldIndex.ComparisonValue:
-                    return obj.ComparisonValue;
-                case Condition_FieldIndex.Function:
-                    return obj.Function;
-                case Condition_FieldIndex.FirstParameter:
-                    return obj.FirstParameter;
-                case Condition_FieldIndex.SecondParameter:
-                    return obj.SecondParameter;
-                case Condition_FieldIndex.ThirdParameter:
-                    return obj.ThirdParameter;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
 
         public static void Clear(
             ICondition item,

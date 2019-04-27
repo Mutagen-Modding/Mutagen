@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Furnature" baseClass="Bethesda.MajorRecord" recordType="FURN" objType="Record" GUID="05555eb3-61f6-4609-a88f-6f61f0bf001a" ID="81">
+  <Object name="Furnature" baseClass="OblivionMajorRecord" recordType="FURN" objType="Record" GUID="05555eb3-61f6-4609-a88f-6f61f0bf001a" ID="81">
     <Interface>INamed</Interface>
     <Fields>
       <String name="Name" recordType="FULL" />

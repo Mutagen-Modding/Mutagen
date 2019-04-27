@@ -99,28 +99,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        #region Loqui Getter Interface
-
-        protected object GetNthObject(ushort index) => MagicEffectSubDataCommon.GetNthObject(index, this);
-        object ILoquiObjectGetter.GetNthObject(ushort index) => this.GetNthObject(index);
-
-        protected bool GetNthObjectHasBeenSet(ushort index) => MagicEffectSubDataCommon.GetNthObjectHasBeenSet(index, this);
-        bool ILoquiObjectGetter.GetNthObjectHasBeenSet(ushort index) => this.GetNthObjectHasBeenSet(index);
-
-        protected void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => MagicEffectSubDataCommon.UnsetNthObject(index, this, cmds);
-        void ILoquiObjectSetter.UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => this.UnsetNthObject(index, cmds);
-
-        #endregion
-
-        #region Loqui Interface
-        protected void SetNthObjectHasBeenSet(ushort index, bool on)
-        {
-            MagicEffectSubDataCommon.SetNthObjectHasBeenSet(index, on, this);
-        }
-        void ILoquiObjectSetter.SetNthObjectHasBeenSet(ushort index, bool on) => this.SetNthObjectHasBeenSet(index, on);
-
-        #endregion
-
         IMask<bool> IEqualsMask<MagicEffectSubData>.GetEqualsMask(MagicEffectSubData rhs, EqualsMaskHelper.Include include) => MagicEffectSubDataCommon.GetEqualsMask(this, rhs, include);
         IMask<bool> IEqualsMask<IMagicEffectSubDataGetter>.GetEqualsMask(IMagicEffectSubDataGetter rhs, EqualsMaskHelper.Include include) => MagicEffectSubDataCommon.GetEqualsMask(this, rhs, include);
         #region To String
@@ -823,7 +801,6 @@ namespace Mutagen.Bethesda.Oblivion
                 cmds: cmds);
         }
 
-        void ILoquiObjectSetter.SetNthObject(ushort index, object obj, NotifyingFireParameters cmds) => this.SetNthObject(index, obj, cmds);
         protected void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
         {
             MagicEffectSubData_FieldIndex enu = (MagicEffectSubData_FieldIndex)index;
@@ -932,11 +909,6 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, MagicEffectSubData obj)
-        {
-            ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
-        }
-
     }
     #endregion
 
@@ -1388,109 +1360,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         #endregion
-
-        public static void SetNthObjectHasBeenSet(
-            ushort index,
-            bool on,
-            IMagicEffectSubData obj,
-            NotifyingFireParameters cmds = null)
-        {
-            MagicEffectSubData_FieldIndex enu = (MagicEffectSubData_FieldIndex)index;
-            switch (enu)
-            {
-                case MagicEffectSubData_FieldIndex.EnchantEffect:
-                case MagicEffectSubData_FieldIndex.CastingSound:
-                case MagicEffectSubData_FieldIndex.BoltSound:
-                case MagicEffectSubData_FieldIndex.HitSound:
-                case MagicEffectSubData_FieldIndex.AreaSound:
-                case MagicEffectSubData_FieldIndex.ConstantEffectEnchantmentFactor:
-                case MagicEffectSubData_FieldIndex.ConstantEffectBarterFactor:
-                    if (on) break;
-                    throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static void UnsetNthObject(
-            ushort index,
-            IMagicEffectSubData obj,
-            NotifyingUnsetParameters cmds = null)
-        {
-            MagicEffectSubData_FieldIndex enu = (MagicEffectSubData_FieldIndex)index;
-            switch (enu)
-            {
-                case MagicEffectSubData_FieldIndex.EnchantEffect:
-                    obj.EnchantEffect = default(EffectShader);
-                    break;
-                case MagicEffectSubData_FieldIndex.CastingSound:
-                    obj.CastingSound = default(Sound);
-                    break;
-                case MagicEffectSubData_FieldIndex.BoltSound:
-                    obj.BoltSound = default(Sound);
-                    break;
-                case MagicEffectSubData_FieldIndex.HitSound:
-                    obj.HitSound = default(Sound);
-                    break;
-                case MagicEffectSubData_FieldIndex.AreaSound:
-                    obj.AreaSound = default(Sound);
-                    break;
-                case MagicEffectSubData_FieldIndex.ConstantEffectEnchantmentFactor:
-                    obj.ConstantEffectEnchantmentFactor = default(Single);
-                    break;
-                case MagicEffectSubData_FieldIndex.ConstantEffectBarterFactor:
-                    obj.ConstantEffectBarterFactor = default(Single);
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthObjectHasBeenSet(
-            ushort index,
-            IMagicEffectSubData obj)
-        {
-            MagicEffectSubData_FieldIndex enu = (MagicEffectSubData_FieldIndex)index;
-            switch (enu)
-            {
-                case MagicEffectSubData_FieldIndex.EnchantEffect:
-                case MagicEffectSubData_FieldIndex.CastingSound:
-                case MagicEffectSubData_FieldIndex.BoltSound:
-                case MagicEffectSubData_FieldIndex.HitSound:
-                case MagicEffectSubData_FieldIndex.AreaSound:
-                case MagicEffectSubData_FieldIndex.ConstantEffectEnchantmentFactor:
-                case MagicEffectSubData_FieldIndex.ConstantEffectBarterFactor:
-                    return true;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static object GetNthObject(
-            ushort index,
-            IMagicEffectSubDataGetter obj)
-        {
-            MagicEffectSubData_FieldIndex enu = (MagicEffectSubData_FieldIndex)index;
-            switch (enu)
-            {
-                case MagicEffectSubData_FieldIndex.EnchantEffect:
-                    return obj.EnchantEffect;
-                case MagicEffectSubData_FieldIndex.CastingSound:
-                    return obj.CastingSound;
-                case MagicEffectSubData_FieldIndex.BoltSound:
-                    return obj.BoltSound;
-                case MagicEffectSubData_FieldIndex.HitSound:
-                    return obj.HitSound;
-                case MagicEffectSubData_FieldIndex.AreaSound:
-                    return obj.AreaSound;
-                case MagicEffectSubData_FieldIndex.ConstantEffectEnchantmentFactor:
-                    return obj.ConstantEffectEnchantmentFactor;
-                case MagicEffectSubData_FieldIndex.ConstantEffectBarterFactor:
-                    return obj.ConstantEffectBarterFactor;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
 
         public static void Clear(
             IMagicEffectSubData item,

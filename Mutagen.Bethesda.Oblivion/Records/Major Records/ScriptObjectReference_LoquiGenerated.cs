@@ -53,28 +53,10 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Reference
-        public FormIDLink<MajorRecord> Reference_Property { get; } = new FormIDLink<MajorRecord>();
-        public MajorRecord Reference { get => Reference_Property.Item; set => Reference_Property.Item = value; }
+        public FormIDLink<OblivionMajorRecord> Reference_Property { get; } = new FormIDLink<OblivionMajorRecord>();
+        public OblivionMajorRecord Reference { get => Reference_Property.Item; set => Reference_Property.Item = value; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormIDLink<MajorRecord> IScriptObjectReferenceGetter.Reference_Property => this.Reference_Property;
-        #endregion
-
-        #region Loqui Getter Interface
-
-        protected override object GetNthObject(ushort index) => ScriptObjectReferenceCommon.GetNthObject(index, this);
-
-        protected override bool GetNthObjectHasBeenSet(ushort index) => ScriptObjectReferenceCommon.GetNthObjectHasBeenSet(index, this);
-
-        protected override void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => ScriptObjectReferenceCommon.UnsetNthObject(index, this, cmds);
-
-        #endregion
-
-        #region Loqui Interface
-        protected override void SetNthObjectHasBeenSet(ushort index, bool on)
-        {
-            ScriptObjectReferenceCommon.SetNthObjectHasBeenSet(index, on, this);
-        }
-
+        FormIDLink<OblivionMajorRecord> IScriptObjectReferenceGetter.Reference_Property => this.Reference_Property;
         #endregion
 
         IMask<bool> IEqualsMask<ScriptObjectReference>.GetEqualsMask(ScriptObjectReference rhs, EqualsMaskHelper.Include include) => ScriptObjectReferenceCommon.GetEqualsMask(this, rhs, include);
@@ -688,7 +670,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case ScriptObjectReference_FieldIndex.Reference:
                     this.Reference_Property.Set(
-                        (FormIDLink<MajorRecord>)obj,
+                        (FormIDLink<OblivionMajorRecord>)obj,
                         cmds);
                     break;
                 default:
@@ -724,32 +706,27 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case ScriptObjectReference_FieldIndex.Reference:
                     obj.Reference_Property.Set(
-                        (FormIDLink<MajorRecord>)pair.Value,
+                        (FormIDLink<OblivionMajorRecord>)pair.Value,
                         null);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, ScriptObjectReference obj)
-        {
-            ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
-        }
-
     }
     #endregion
 
     #region Interface
     public partial interface IScriptObjectReference : IScriptObjectReferenceGetter, IScriptReference, ILoquiClass<IScriptObjectReference, IScriptObjectReferenceGetter>, ILoquiClass<ScriptObjectReference, IScriptObjectReferenceGetter>
     {
-        new MajorRecord Reference { get; set; }
+        new OblivionMajorRecord Reference { get; set; }
     }
 
     public partial interface IScriptObjectReferenceGetter : IScriptReferenceGetter
     {
         #region Reference
-        MajorRecord Reference { get; }
-        FormIDLink<MajorRecord> Reference_Property { get; }
+        OblivionMajorRecord Reference { get; }
+        FormIDLink<OblivionMajorRecord> Reference_Property { get; }
 
         #endregion
 
@@ -897,7 +874,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case ScriptObjectReference_FieldIndex.Reference:
-                    return typeof(FormIDLink<MajorRecord>);
+                    return typeof(FormIDLink<OblivionMajorRecord>);
                 default:
                     return ScriptReference_Registration.GetNthType(index);
             }
@@ -979,74 +956,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void SetNthObjectHasBeenSet(
-            ushort index,
-            bool on,
-            IScriptObjectReference obj,
-            NotifyingFireParameters cmds = null)
-        {
-            ScriptObjectReference_FieldIndex enu = (ScriptObjectReference_FieldIndex)index;
-            switch (enu)
-            {
-                case ScriptObjectReference_FieldIndex.Reference:
-                    if (on) break;
-                    throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
-                default:
-                    ScriptReferenceCommon.SetNthObjectHasBeenSet(index, on, obj);
-                    break;
-            }
-        }
-
-        public static void UnsetNthObject(
-            ushort index,
-            IScriptObjectReference obj,
-            NotifyingUnsetParameters cmds = null)
-        {
-            ScriptObjectReference_FieldIndex enu = (ScriptObjectReference_FieldIndex)index;
-            switch (enu)
-            {
-                case ScriptObjectReference_FieldIndex.Reference:
-                    obj.Reference = default(MajorRecord);
-                    break;
-                default:
-                    ScriptReferenceCommon.UnsetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public static bool GetNthObjectHasBeenSet(
-            ushort index,
-            IScriptObjectReference obj)
-        {
-            ScriptObjectReference_FieldIndex enu = (ScriptObjectReference_FieldIndex)index;
-            switch (enu)
-            {
-                case ScriptObjectReference_FieldIndex.Reference:
-                    return true;
-                default:
-                    return ScriptReferenceCommon.GetNthObjectHasBeenSet(index, obj);
-            }
-        }
-
-        public static object GetNthObject(
-            ushort index,
-            IScriptObjectReferenceGetter obj)
-        {
-            ScriptObjectReference_FieldIndex enu = (ScriptObjectReference_FieldIndex)index;
-            switch (enu)
-            {
-                case ScriptObjectReference_FieldIndex.Reference:
-                    return obj.Reference;
-                default:
-                    return ScriptReferenceCommon.GetNthObject(index, obj);
-            }
-        }
-
         public static void Clear(
             IScriptObjectReference item,
             NotifyingUnsetParameters cmds = null)
         {
-            item.Reference = default(MajorRecord);
+            item.Reference = default(OblivionMajorRecord);
         }
 
         public static ScriptObjectReference_Mask<bool> GetEqualsMask(

@@ -36,7 +36,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class Race : 
-        MajorRecord,
+        OblivionMajorRecord,
         IRace,
         ILoquiObject<Race>,
         ILoquiObjectSetter,
@@ -533,24 +533,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        #region Loqui Getter Interface
-
-        protected override object GetNthObject(ushort index) => RaceCommon.GetNthObject(index, this);
-
-        protected override bool GetNthObjectHasBeenSet(ushort index) => RaceCommon.GetNthObjectHasBeenSet(index, this);
-
-        protected override void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => RaceCommon.UnsetNthObject(index, this, cmds);
-
-        #endregion
-
-        #region Loqui Interface
-        protected override void SetNthObjectHasBeenSet(ushort index, bool on)
-        {
-            RaceCommon.SetNthObjectHasBeenSet(index, on, this);
-        }
-
-        #endregion
-
         IMask<bool> IEqualsMask<Race>.GetEqualsMask(Race rhs, EqualsMaskHelper.Include include) => RaceCommon.GetEqualsMask(this, rhs, include);
         IMask<bool> IEqualsMask<IRaceGetter>.GetEqualsMask(IRaceGetter rhs, EqualsMaskHelper.Include include) => RaceCommon.GetEqualsMask(this, rhs, include);
         #region To String
@@ -996,6 +978,22 @@ namespace Mutagen.Bethesda.Oblivion
         #region Base Class Trickdown Overrides
         public override void Write_Xml(
             XElement node,
+            out OblivionMajorRecord_ErrorMask errorMask,
+            bool doMasks = true,
+            OblivionMajorRecord_TranslationMask translationMask = null,
+            string name = null)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            this.Write_Xml(
+                name: name,
+                node: node,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal());
+            errorMask = Race_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public override void Write_Xml(
+            XElement node,
             out MajorRecord_ErrorMask errorMask,
             bool doMasks = true,
             MajorRecord_TranslationMask translationMask = null,
@@ -1040,7 +1038,7 @@ namespace Mutagen.Bethesda.Oblivion
                     item.DATADataTypeState |= Race.DATADataType.Has;
                     break;
                 default:
-                    MajorRecord.FillPrivateElement_Xml(
+                    OblivionMajorRecord.FillPrivateElement_Xml(
                         item: item,
                         node: node,
                         name: name,
@@ -1199,9 +1197,9 @@ namespace Mutagen.Bethesda.Oblivion
             CustomCtor();
         }
 
-        partial void PostDuplicate(Race obj, Race rhs, Func<FormKey> getNextFormKey, IList<(MajorRecord Record, FormKey OriginalFormKey)> duplicatedRecords);
+        partial void PostDuplicate(Race obj, Race rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
 
-        public override MajorRecord Duplicate(Func<FormKey> getNextFormKey, IList<(MajorRecord Record, FormKey OriginalFormKey)> duplicatedRecords)
+        public override IMajorRecordCommon Duplicate(Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
         {
             var ret = new Race(getNextFormKey());
             ret.CopyFieldsFrom(this);
@@ -1282,6 +1280,21 @@ namespace Mutagen.Bethesda.Oblivion
         public override void Write_Binary(
             MutagenWriter writer,
             MasterReferences masterReferences,
+            out OblivionMajorRecord_ErrorMask errorMask,
+            bool doMasks = true)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            this.Write_Binary(
+                masterReferences: masterReferences,
+                writer: writer,
+                errorMask: errorMaskBuilder,
+                recordTypeConverter: null);
+            errorMask = Race_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public override void Write_Binary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
             out MajorRecord_ErrorMask errorMask,
             bool doMasks = true)
         {
@@ -1317,7 +1330,7 @@ namespace Mutagen.Bethesda.Oblivion
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            MajorRecord.Fill_Binary_Structs(
+            OblivionMajorRecord.Fill_Binary_Structs(
                 item: item,
                 frame: frame,
                 masterReferences: masterReferences,
@@ -1910,7 +1923,7 @@ namespace Mutagen.Bethesda.Oblivion
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.Unknown);
                 }
                 default:
-                    return MajorRecord.Fill_Binary_RecordTypes(
+                    return OblivionMajorRecord.Fill_Binary_RecordTypes(
                         item: item,
                         frame: frame,
                         nextRecordType: nextRecordType,
@@ -2140,7 +2153,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             if (!EnumExt.TryParse(pair.Key, out Race_FieldIndex enu))
             {
-                CopyInInternal_MajorRecord(obj, pair);
+                CopyInInternal_OblivionMajorRecord(obj, pair);
             }
             switch (enu)
             {
@@ -2217,16 +2230,11 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, Race obj)
-        {
-            ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
-        }
-
     }
     #endregion
 
     #region Interface
-    public partial interface IRace : IRaceGetter, IMajorRecord, ILoquiClass<IRace, IRaceGetter>, ILoquiClass<Race, IRaceGetter>
+    public partial interface IRace : IRaceGetter, IOblivionMajorRecord, ILoquiClass<IRace, IRaceGetter>, ILoquiClass<Race, IRaceGetter>
     {
         new String Name { get; set; }
         new bool Name_IsSet { get; set; }
@@ -2303,7 +2311,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
-    public partial interface IRaceGetter : IMajorRecordGetter
+    public partial interface IRaceGetter : IOblivionMajorRecordGetter
     {
         #region Name
         String Name { get; }
@@ -2414,11 +2422,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #region Field Index
     public enum Race_FieldIndex
     {
-        MajorRecordFlags = 0,
-        FormKey = 1,
-        Version = 2,
-        EditorID = 3,
-        RecordType = 4,
+        FormKey = 0,
+        Version = 1,
+        EditorID = 2,
+        RecordType = 3,
+        OblivionMajorRecordFlags = 4,
         Name = 5,
         Description = 6,
         Spells = 7,
@@ -2571,7 +2579,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Race_FieldIndex.Unknown:
                     return false;
                 default:
-                    return MajorRecord_Registration.GetNthIsEnumerable(index);
+                    return OblivionMajorRecord_Registration.GetNthIsEnumerable(index);
             }
         }
 
@@ -2606,7 +2614,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Race_FieldIndex.Unknown:
                     return false;
                 default:
-                    return MajorRecord_Registration.GetNthIsLoqui(index);
+                    return OblivionMajorRecord_Registration.GetNthIsLoqui(index);
             }
         }
 
@@ -2640,7 +2648,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Race_FieldIndex.Unknown:
                     return false;
                 default:
-                    return MajorRecord_Registration.GetNthIsSingleton(index);
+                    return OblivionMajorRecord_Registration.GetNthIsSingleton(index);
             }
         }
 
@@ -2696,7 +2704,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Race_FieldIndex.Unknown:
                     return "Unknown";
                 default:
-                    return MajorRecord_Registration.GetNthName(index);
+                    return OblivionMajorRecord_Registration.GetNthName(index);
             }
         }
 
@@ -2730,7 +2738,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Race_FieldIndex.Unknown:
                     return false;
                 default:
-                    return MajorRecord_Registration.IsNthDerivative(index);
+                    return OblivionMajorRecord_Registration.IsNthDerivative(index);
             }
         }
 
@@ -2764,7 +2772,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Race_FieldIndex.Unknown:
                     return false;
                 default:
-                    return MajorRecord_Registration.IsProtected(index);
+                    return OblivionMajorRecord_Registration.IsProtected(index);
             }
         }
 
@@ -2820,7 +2828,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Race_FieldIndex.Unknown:
                     return typeof(Byte[]);
                 default:
-                    return MajorRecord_Registration.GetNthType(index);
+                    return OblivionMajorRecord_Registration.GetNthType(index);
             }
         }
 
@@ -2892,7 +2900,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Race_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {
-            MajorRecordCommon.CopyFieldsFrom(
+            OblivionMajorRecordCommon.CopyFieldsFrom(
                 item,
                 rhs,
                 def,
@@ -3617,271 +3625,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void SetNthObjectHasBeenSet(
-            ushort index,
-            bool on,
-            IRace obj,
-            NotifyingFireParameters cmds = null)
-        {
-            Race_FieldIndex enu = (Race_FieldIndex)index;
-            switch (enu)
-            {
-                case Race_FieldIndex.SkillBoosts:
-                case Race_FieldIndex.Fluff:
-                case Race_FieldIndex.MaleHeight:
-                case Race_FieldIndex.FemaleHeight:
-                case Race_FieldIndex.MaleWeight:
-                case Race_FieldIndex.FemaleWeight:
-                case Race_FieldIndex.Flags:
-                    if (on) break;
-                    throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
-                case Race_FieldIndex.Name:
-                    obj.Name_IsSet = on;
-                    break;
-                case Race_FieldIndex.Description:
-                    obj.Description_IsSet = on;
-                    break;
-                case Race_FieldIndex.Spells:
-                    obj.Spells.HasBeenSet = on;
-                    break;
-                case Race_FieldIndex.Relations:
-                    obj.Relations.HasBeenSet = on;
-                    break;
-                case Race_FieldIndex.Voices:
-                    obj.Voices_IsSet = on;
-                    break;
-                case Race_FieldIndex.DefaultHair:
-                    obj.DefaultHair_IsSet = on;
-                    break;
-                case Race_FieldIndex.DefaultHairColor:
-                    obj.DefaultHairColor_IsSet = on;
-                    break;
-                case Race_FieldIndex.FaceGenMainClamp:
-                    obj.FaceGenMainClamp_IsSet = on;
-                    break;
-                case Race_FieldIndex.FaceGenFaceClamp:
-                    obj.FaceGenFaceClamp_IsSet = on;
-                    break;
-                case Race_FieldIndex.RaceStats:
-                    obj.RaceStats_IsSet = on;
-                    break;
-                case Race_FieldIndex.FaceData:
-                    obj.FaceData.HasBeenSet = on;
-                    break;
-                case Race_FieldIndex.BodyData:
-                    obj.BodyData_IsSet = on;
-                    break;
-                case Race_FieldIndex.Hairs:
-                    obj.Hairs.HasBeenSet = on;
-                    break;
-                case Race_FieldIndex.Eyes:
-                    obj.Eyes.HasBeenSet = on;
-                    break;
-                case Race_FieldIndex.FaceGenData:
-                    obj.FaceGenData_IsSet = on;
-                    break;
-                case Race_FieldIndex.Unknown:
-                    obj.Unknown_IsSet = on;
-                    break;
-                default:
-                    MajorRecordCommon.SetNthObjectHasBeenSet(index, on, obj);
-                    break;
-            }
-        }
-
-        public static void UnsetNthObject(
-            ushort index,
-            IRace obj,
-            NotifyingUnsetParameters cmds = null)
-        {
-            Race_FieldIndex enu = (Race_FieldIndex)index;
-            switch (enu)
-            {
-                case Race_FieldIndex.Name:
-                    obj.Name_Unset();
-                    break;
-                case Race_FieldIndex.Description:
-                    obj.Description_Unset();
-                    break;
-                case Race_FieldIndex.Spells:
-                    obj.Spells.Unset();
-                    break;
-                case Race_FieldIndex.Relations:
-                    obj.Relations.Unset();
-                    break;
-                case Race_FieldIndex.SkillBoosts:
-                    obj.SkillBoosts.Unset();
-                    break;
-                case Race_FieldIndex.Fluff:
-                    obj.Fluff = default(Byte[]);
-                    break;
-                case Race_FieldIndex.MaleHeight:
-                    obj.MaleHeight = default(Single);
-                    break;
-                case Race_FieldIndex.FemaleHeight:
-                    obj.FemaleHeight = default(Single);
-                    break;
-                case Race_FieldIndex.MaleWeight:
-                    obj.MaleWeight = default(Single);
-                    break;
-                case Race_FieldIndex.FemaleWeight:
-                    obj.FemaleWeight = default(Single);
-                    break;
-                case Race_FieldIndex.Flags:
-                    obj.Flags = default(Race.Flag);
-                    break;
-                case Race_FieldIndex.Voices:
-                    obj.Voices_Unset();
-                    break;
-                case Race_FieldIndex.DefaultHair:
-                    obj.DefaultHair_Unset();
-                    break;
-                case Race_FieldIndex.DefaultHairColor:
-                    obj.DefaultHairColor_Unset();
-                    break;
-                case Race_FieldIndex.FaceGenMainClamp:
-                    obj.FaceGenMainClamp_Unset();
-                    break;
-                case Race_FieldIndex.FaceGenFaceClamp:
-                    obj.FaceGenFaceClamp_Unset();
-                    break;
-                case Race_FieldIndex.RaceStats:
-                    obj.RaceStats_Unset();
-                    break;
-                case Race_FieldIndex.FaceData:
-                    obj.FaceData.Unset();
-                    break;
-                case Race_FieldIndex.BodyData:
-                    obj.BodyData_Unset();
-                    break;
-                case Race_FieldIndex.Hairs:
-                    obj.Hairs.Unset();
-                    break;
-                case Race_FieldIndex.Eyes:
-                    obj.Eyes.Unset();
-                    break;
-                case Race_FieldIndex.FaceGenData:
-                    obj.FaceGenData_Unset();
-                    break;
-                case Race_FieldIndex.Unknown:
-                    obj.Unknown_Unset();
-                    break;
-                default:
-                    MajorRecordCommon.UnsetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public static bool GetNthObjectHasBeenSet(
-            ushort index,
-            IRace obj)
-        {
-            Race_FieldIndex enu = (Race_FieldIndex)index;
-            switch (enu)
-            {
-                case Race_FieldIndex.SkillBoosts:
-                case Race_FieldIndex.Fluff:
-                case Race_FieldIndex.MaleHeight:
-                case Race_FieldIndex.FemaleHeight:
-                case Race_FieldIndex.MaleWeight:
-                case Race_FieldIndex.FemaleWeight:
-                case Race_FieldIndex.Flags:
-                    return true;
-                case Race_FieldIndex.Name:
-                    return obj.Name_IsSet;
-                case Race_FieldIndex.Description:
-                    return obj.Description_IsSet;
-                case Race_FieldIndex.Spells:
-                    return obj.Spells.HasBeenSet;
-                case Race_FieldIndex.Relations:
-                    return obj.Relations.HasBeenSet;
-                case Race_FieldIndex.Voices:
-                    return obj.Voices_IsSet;
-                case Race_FieldIndex.DefaultHair:
-                    return obj.DefaultHair_IsSet;
-                case Race_FieldIndex.DefaultHairColor:
-                    return obj.DefaultHairColor_IsSet;
-                case Race_FieldIndex.FaceGenMainClamp:
-                    return obj.FaceGenMainClamp_IsSet;
-                case Race_FieldIndex.FaceGenFaceClamp:
-                    return obj.FaceGenFaceClamp_IsSet;
-                case Race_FieldIndex.RaceStats:
-                    return obj.RaceStats_IsSet;
-                case Race_FieldIndex.FaceData:
-                    return obj.FaceData.HasBeenSet;
-                case Race_FieldIndex.BodyData:
-                    return obj.BodyData_IsSet;
-                case Race_FieldIndex.Hairs:
-                    return obj.Hairs.HasBeenSet;
-                case Race_FieldIndex.Eyes:
-                    return obj.Eyes.HasBeenSet;
-                case Race_FieldIndex.FaceGenData:
-                    return obj.FaceGenData_IsSet;
-                case Race_FieldIndex.Unknown:
-                    return obj.Unknown_IsSet;
-                default:
-                    return MajorRecordCommon.GetNthObjectHasBeenSet(index, obj);
-            }
-        }
-
-        public static object GetNthObject(
-            ushort index,
-            IRaceGetter obj)
-        {
-            Race_FieldIndex enu = (Race_FieldIndex)index;
-            switch (enu)
-            {
-                case Race_FieldIndex.Name:
-                    return obj.Name;
-                case Race_FieldIndex.Description:
-                    return obj.Description;
-                case Race_FieldIndex.Spells:
-                    return obj.Spells;
-                case Race_FieldIndex.Relations:
-                    return obj.Relations;
-                case Race_FieldIndex.SkillBoosts:
-                    return obj.SkillBoosts;
-                case Race_FieldIndex.Fluff:
-                    return obj.Fluff;
-                case Race_FieldIndex.MaleHeight:
-                    return obj.MaleHeight;
-                case Race_FieldIndex.FemaleHeight:
-                    return obj.FemaleHeight;
-                case Race_FieldIndex.MaleWeight:
-                    return obj.MaleWeight;
-                case Race_FieldIndex.FemaleWeight:
-                    return obj.FemaleWeight;
-                case Race_FieldIndex.Flags:
-                    return obj.Flags;
-                case Race_FieldIndex.Voices:
-                    return obj.Voices;
-                case Race_FieldIndex.DefaultHair:
-                    return obj.DefaultHair;
-                case Race_FieldIndex.DefaultHairColor:
-                    return obj.DefaultHairColor;
-                case Race_FieldIndex.FaceGenMainClamp:
-                    return obj.FaceGenMainClamp;
-                case Race_FieldIndex.FaceGenFaceClamp:
-                    return obj.FaceGenFaceClamp;
-                case Race_FieldIndex.RaceStats:
-                    return obj.RaceStats;
-                case Race_FieldIndex.FaceData:
-                    return obj.FaceData;
-                case Race_FieldIndex.BodyData:
-                    return obj.BodyData;
-                case Race_FieldIndex.Hairs:
-                    return obj.Hairs;
-                case Race_FieldIndex.Eyes:
-                    return obj.Eyes;
-                case Race_FieldIndex.FaceGenData:
-                    return obj.FaceGenData;
-                case Race_FieldIndex.Unknown:
-                    return obj.Unknown;
-                default:
-                    return MajorRecordCommon.GetNthObject(index, obj);
-            }
-        }
-
         public static void Clear(
             IRace item,
             NotifyingUnsetParameters cmds = null)
@@ -4003,7 +3746,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
                 include);
             ret.Unknown = item.Unknown_IsSet == rhs.Unknown_IsSet && item.Unknown.EqualsFast(rhs.Unknown);
-            MajorRecordCommon.FillEqualsMask(item, rhs, ret);
+            OblivionMajorRecordCommon.FillEqualsMask(item, rhs, ret);
         }
 
         public static string ToString(
@@ -4271,6 +4014,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ret;
         }
 
+        public static Race_FieldIndex? ConvertFieldIndex(OblivionMajorRecord_FieldIndex? index)
+        {
+            if (!index.HasValue) return null;
+            return ConvertFieldIndex(index: index.Value);
+        }
+
+        public static Race_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
+        {
+            switch (index)
+            {
+                case OblivionMajorRecord_FieldIndex.FormKey:
+                    return (Race_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.Version:
+                    return (Race_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.EditorID:
+                    return (Race_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.RecordType:
+                    return (Race_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
+                    return (Race_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
+        }
+
         public static Race_FieldIndex? ConvertFieldIndex(MajorRecord_FieldIndex? index)
         {
             if (!index.HasValue) return null;
@@ -4281,8 +4049,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (index)
             {
-                case MajorRecord_FieldIndex.MajorRecordFlags:
-                    return (Race_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
                     return (Race_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.Version:
@@ -4343,7 +4109,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
         {
-            MajorRecordCommon.WriteToNode_Xml(
+            OblivionMajorRecordCommon.WriteToNode_Xml(
                 item: item,
                 node: node,
                 errorMask: errorMask,
@@ -5295,7 +5061,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 default:
-                    MajorRecordCommon.FillPublicElement_Xml(
+                    OblivionMajorRecordCommon.FillPublicElement_Xml(
                         item: item,
                         node: node,
                         name: name,
@@ -5339,7 +5105,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: Race_Registration.RACE_HEADER,
                 type: ObjectType.Record))
             {
-                MajorRecordCommon.Write_Binary_Embedded(
+                OblivionMajorRecordCommon.Write_Binary_Embedded(
                     item: item,
                     writer: writer,
                     errorMask: errorMask,
@@ -5623,7 +5389,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     #region Modules
     #region Mask
-    public class Race_Mask<T> : MajorRecord_Mask<T>, IMask<T>, IEquatable<Race_Mask<T>>
+    public class Race_Mask<T> : OblivionMajorRecord_Mask<T>, IMask<T>, IEquatable<Race_Mask<T>>
     {
         #region Ctors
         public Race_Mask()
@@ -6320,7 +6086,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public class Race_ErrorMask : MajorRecord_ErrorMask, IErrorMask<Race_ErrorMask>
+    public class Race_ErrorMask : OblivionMajorRecord_ErrorMask, IErrorMask<Race_ErrorMask>
     {
         #region Members
         public Exception Name;
@@ -6823,7 +6589,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
-    public class Race_CopyMask : MajorRecord_CopyMask
+    public class Race_CopyMask : OblivionMajorRecord_CopyMask
     {
         public Race_CopyMask()
         {
@@ -6884,7 +6650,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public class Race_TranslationMask : MajorRecord_TranslationMask
+    public class Race_TranslationMask : OblivionMajorRecord_TranslationMask
     {
         #region Members
         public bool Name;

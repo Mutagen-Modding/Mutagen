@@ -36,7 +36,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class Water : 
-        MajorRecord,
+        OblivionMajorRecord,
         IWater,
         ILoquiObject<Water>,
         ILoquiObjectSetter,
@@ -563,24 +563,6 @@ namespace Mutagen.Bethesda.Oblivion
         RelatedWaters IWaterGetter.RelatedWaters => this.RelatedWaters;
         #endregion
 
-        #region Loqui Getter Interface
-
-        protected override object GetNthObject(ushort index) => WaterCommon.GetNthObject(index, this);
-
-        protected override bool GetNthObjectHasBeenSet(ushort index) => WaterCommon.GetNthObjectHasBeenSet(index, this);
-
-        protected override void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => WaterCommon.UnsetNthObject(index, this, cmds);
-
-        #endregion
-
-        #region Loqui Interface
-        protected override void SetNthObjectHasBeenSet(ushort index, bool on)
-        {
-            WaterCommon.SetNthObjectHasBeenSet(index, on, this);
-        }
-
-        #endregion
-
         IMask<bool> IEqualsMask<Water>.GetEqualsMask(Water rhs, EqualsMaskHelper.Include include) => WaterCommon.GetEqualsMask(this, rhs, include);
         IMask<bool> IEqualsMask<IWaterGetter>.GetEqualsMask(IWaterGetter rhs, EqualsMaskHelper.Include include) => WaterCommon.GetEqualsMask(this, rhs, include);
         #region To String
@@ -978,6 +960,22 @@ namespace Mutagen.Bethesda.Oblivion
         #region Base Class Trickdown Overrides
         public override void Write_Xml(
             XElement node,
+            out OblivionMajorRecord_ErrorMask errorMask,
+            bool doMasks = true,
+            OblivionMajorRecord_TranslationMask translationMask = null,
+            string name = null)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            this.Write_Xml(
+                name: name,
+                node: node,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal());
+            errorMask = Water_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public override void Write_Xml(
+            XElement node,
             out MajorRecord_ErrorMask errorMask,
             bool doMasks = true,
             MajorRecord_TranslationMask translationMask = null,
@@ -1022,7 +1020,7 @@ namespace Mutagen.Bethesda.Oblivion
                     item.DATADataTypeState |= Water.DATADataType.Has;
                     break;
                 default:
-                    MajorRecord.FillPrivateElement_Xml(
+                    OblivionMajorRecord.FillPrivateElement_Xml(
                         item: item,
                         node: node,
                         name: name,
@@ -1137,9 +1135,9 @@ namespace Mutagen.Bethesda.Oblivion
             CustomCtor();
         }
 
-        partial void PostDuplicate(Water obj, Water rhs, Func<FormKey> getNextFormKey, IList<(MajorRecord Record, FormKey OriginalFormKey)> duplicatedRecords);
+        partial void PostDuplicate(Water obj, Water rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
 
-        public override MajorRecord Duplicate(Func<FormKey> getNextFormKey, IList<(MajorRecord Record, FormKey OriginalFormKey)> duplicatedRecords)
+        public override IMajorRecordCommon Duplicate(Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
         {
             var ret = new Water(getNextFormKey());
             ret.CopyFieldsFrom(this);
@@ -1217,6 +1215,21 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         #region Base Class Trickdown Overrides
+        public override void Write_Binary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            out OblivionMajorRecord_ErrorMask errorMask,
+            bool doMasks = true)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            this.Write_Binary(
+                masterReferences: masterReferences,
+                writer: writer,
+                errorMask: errorMaskBuilder,
+                recordTypeConverter: null);
+            errorMask = Water_ErrorMask.Factory(errorMaskBuilder);
+        }
+
         public override void Write_Binary(
             MutagenWriter writer,
             MasterReferences masterReferences,
@@ -1355,7 +1368,7 @@ namespace Mutagen.Bethesda.Oblivion
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            MajorRecord.Fill_Binary_Structs(
+            OblivionMajorRecord.Fill_Binary_Structs(
                 item: item,
                 frame: frame,
                 masterReferences: masterReferences,
@@ -2211,7 +2224,7 @@ namespace Mutagen.Bethesda.Oblivion
                     return TryGet<int?>.Succeed((int)Water_FieldIndex.RelatedWaters);
                 }
                 default:
-                    return MajorRecord.Fill_Binary_RecordTypes(
+                    return OblivionMajorRecord.Fill_Binary_RecordTypes(
                         item: item,
                         frame: frame,
                         nextRecordType: nextRecordType,
@@ -2470,7 +2483,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             if (!EnumExt.TryParse(pair.Key, out Water_FieldIndex enu))
             {
-                CopyInInternal_MajorRecord(obj, pair);
+                CopyInInternal_OblivionMajorRecord(obj, pair);
             }
             switch (enu)
             {
@@ -2576,16 +2589,11 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, Water obj)
-        {
-            ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
-        }
-
     }
     #endregion
 
     #region Interface
-    public partial interface IWater : IWaterGetter, IMajorRecord, ILoquiClass<IWater, IWaterGetter>, ILoquiClass<Water, IWaterGetter>
+    public partial interface IWater : IWaterGetter, IOblivionMajorRecord, ILoquiClass<IWater, IWaterGetter>, ILoquiClass<Water, IWaterGetter>
     {
         new String Texture { get; set; }
         new bool Texture_IsSet { get; set; }
@@ -2667,7 +2675,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
-    public partial interface IWaterGetter : IMajorRecordGetter
+    public partial interface IWaterGetter : IOblivionMajorRecordGetter
     {
         #region Texture
         String Texture { get; }
@@ -2815,11 +2823,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #region Field Index
     public enum Water_FieldIndex
     {
-        MajorRecordFlags = 0,
-        FormKey = 1,
-        Version = 2,
-        EditorID = 3,
-        RecordType = 4,
+        FormKey = 0,
+        Version = 1,
+        EditorID = 2,
+        RecordType = 3,
+        OblivionMajorRecordFlags = 4,
         Texture = 5,
         Opacity = 6,
         Flags = 7,
@@ -3007,7 +3015,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Water_FieldIndex.RelatedWaters:
                     return false;
                 default:
-                    return MajorRecord_Registration.GetNthIsEnumerable(index);
+                    return OblivionMajorRecord_Registration.GetNthIsEnumerable(index);
             }
         }
 
@@ -3051,7 +3059,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Water_FieldIndex.Damage:
                     return false;
                 default:
-                    return MajorRecord_Registration.GetNthIsLoqui(index);
+                    return OblivionMajorRecord_Registration.GetNthIsLoqui(index);
             }
         }
 
@@ -3094,7 +3102,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Water_FieldIndex.RelatedWaters:
                     return false;
                 default:
-                    return MajorRecord_Registration.GetNthIsSingleton(index);
+                    return OblivionMajorRecord_Registration.GetNthIsSingleton(index);
             }
         }
 
@@ -3168,7 +3176,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Water_FieldIndex.RelatedWaters:
                     return "RelatedWaters";
                 default:
-                    return MajorRecord_Registration.GetNthName(index);
+                    return OblivionMajorRecord_Registration.GetNthName(index);
             }
         }
 
@@ -3211,7 +3219,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Water_FieldIndex.RelatedWaters:
                     return false;
                 default:
-                    return MajorRecord_Registration.IsNthDerivative(index);
+                    return OblivionMajorRecord_Registration.IsNthDerivative(index);
             }
         }
 
@@ -3254,7 +3262,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Water_FieldIndex.RelatedWaters:
                     return false;
                 default:
-                    return MajorRecord_Registration.IsProtected(index);
+                    return OblivionMajorRecord_Registration.IsProtected(index);
             }
         }
 
@@ -3328,7 +3336,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Water_FieldIndex.RelatedWaters:
                     return typeof(RelatedWaters);
                 default:
-                    return MajorRecord_Registration.GetNthType(index);
+                    return OblivionMajorRecord_Registration.GetNthType(index);
             }
         }
 
@@ -3385,7 +3393,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Water_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {
-            MajorRecordCommon.CopyFieldsFrom(
+            OblivionMajorRecordCommon.CopyFieldsFrom(
                 item,
                 rhs,
                 def,
@@ -4032,304 +4040,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void SetNthObjectHasBeenSet(
-            ushort index,
-            bool on,
-            IWater obj,
-            NotifyingFireParameters cmds = null)
-        {
-            Water_FieldIndex enu = (Water_FieldIndex)index;
-            switch (enu)
-            {
-                case Water_FieldIndex.WindVelocity:
-                case Water_FieldIndex.WindDirection:
-                case Water_FieldIndex.WaveAmplitude:
-                case Water_FieldIndex.WaveFrequency:
-                case Water_FieldIndex.SunPower:
-                case Water_FieldIndex.ReflectivityAmount:
-                case Water_FieldIndex.FresnelAmount:
-                case Water_FieldIndex.ScrollXSpeed:
-                case Water_FieldIndex.ScrollYSpeed:
-                case Water_FieldIndex.FogDistanceNearPlane:
-                case Water_FieldIndex.FogDistanceFarPlane:
-                case Water_FieldIndex.ShallowColor:
-                case Water_FieldIndex.DeepColor:
-                case Water_FieldIndex.ReflectionColor:
-                case Water_FieldIndex.TextureBlend:
-                case Water_FieldIndex.RainSimulatorForce:
-                case Water_FieldIndex.RainSimulatorVelocity:
-                case Water_FieldIndex.RainSimulatorFalloff:
-                case Water_FieldIndex.RainSimulatorDampner:
-                case Water_FieldIndex.RainSimulatorStartingSize:
-                case Water_FieldIndex.DisplacementSimulatorForce:
-                case Water_FieldIndex.DisplacementSimulatorVelocity:
-                case Water_FieldIndex.DisplacementSimulatorFalloff:
-                case Water_FieldIndex.DisplacementSimulatorDampner:
-                case Water_FieldIndex.DisplacementSimulatorStartingSize:
-                case Water_FieldIndex.Damage:
-                    if (on) break;
-                    throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
-                case Water_FieldIndex.Texture:
-                    obj.Texture_IsSet = on;
-                    break;
-                case Water_FieldIndex.Opacity:
-                    obj.Opacity_IsSet = on;
-                    break;
-                case Water_FieldIndex.Flags:
-                    obj.Flags_IsSet = on;
-                    break;
-                case Water_FieldIndex.MaterialID:
-                    obj.MaterialID_IsSet = on;
-                    break;
-                case Water_FieldIndex.Sound:
-                    obj.Sound_Property.HasBeenSet = on;
-                    break;
-                case Water_FieldIndex.RelatedWaters:
-                    obj.RelatedWaters_IsSet = on;
-                    break;
-                default:
-                    MajorRecordCommon.SetNthObjectHasBeenSet(index, on, obj);
-                    break;
-            }
-        }
-
-        public static void UnsetNthObject(
-            ushort index,
-            IWater obj,
-            NotifyingUnsetParameters cmds = null)
-        {
-            Water_FieldIndex enu = (Water_FieldIndex)index;
-            switch (enu)
-            {
-                case Water_FieldIndex.Texture:
-                    obj.Texture_Unset();
-                    break;
-                case Water_FieldIndex.Opacity:
-                    obj.Opacity_Unset();
-                    break;
-                case Water_FieldIndex.Flags:
-                    obj.Flags_Unset();
-                    break;
-                case Water_FieldIndex.MaterialID:
-                    obj.MaterialID_Unset();
-                    break;
-                case Water_FieldIndex.Sound:
-                    obj.Sound_Property.Unset(cmds);
-                    break;
-                case Water_FieldIndex.WindVelocity:
-                    obj.WindVelocity = default(Single);
-                    break;
-                case Water_FieldIndex.WindDirection:
-                    obj.WindDirection = default(Single);
-                    break;
-                case Water_FieldIndex.WaveAmplitude:
-                    obj.WaveAmplitude = default(Single);
-                    break;
-                case Water_FieldIndex.WaveFrequency:
-                    obj.WaveFrequency = default(Single);
-                    break;
-                case Water_FieldIndex.SunPower:
-                    obj.SunPower = default(Single);
-                    break;
-                case Water_FieldIndex.ReflectivityAmount:
-                    obj.ReflectivityAmount = default(Single);
-                    break;
-                case Water_FieldIndex.FresnelAmount:
-                    obj.FresnelAmount = default(Single);
-                    break;
-                case Water_FieldIndex.ScrollXSpeed:
-                    obj.ScrollXSpeed = default(Single);
-                    break;
-                case Water_FieldIndex.ScrollYSpeed:
-                    obj.ScrollYSpeed = default(Single);
-                    break;
-                case Water_FieldIndex.FogDistanceNearPlane:
-                    obj.FogDistanceNearPlane = default(Single);
-                    break;
-                case Water_FieldIndex.FogDistanceFarPlane:
-                    obj.FogDistanceFarPlane = default(Single);
-                    break;
-                case Water_FieldIndex.ShallowColor:
-                    obj.ShallowColor = default(Color);
-                    break;
-                case Water_FieldIndex.DeepColor:
-                    obj.DeepColor = default(Color);
-                    break;
-                case Water_FieldIndex.ReflectionColor:
-                    obj.ReflectionColor = default(Color);
-                    break;
-                case Water_FieldIndex.TextureBlend:
-                    obj.TextureBlend = default(Byte);
-                    break;
-                case Water_FieldIndex.RainSimulatorForce:
-                    obj.RainSimulatorForce = default(Single);
-                    break;
-                case Water_FieldIndex.RainSimulatorVelocity:
-                    obj.RainSimulatorVelocity = default(Single);
-                    break;
-                case Water_FieldIndex.RainSimulatorFalloff:
-                    obj.RainSimulatorFalloff = default(Single);
-                    break;
-                case Water_FieldIndex.RainSimulatorDampner:
-                    obj.RainSimulatorDampner = default(Single);
-                    break;
-                case Water_FieldIndex.RainSimulatorStartingSize:
-                    obj.RainSimulatorStartingSize = default(Single);
-                    break;
-                case Water_FieldIndex.DisplacementSimulatorForce:
-                    obj.DisplacementSimulatorForce = default(Single);
-                    break;
-                case Water_FieldIndex.DisplacementSimulatorVelocity:
-                    obj.DisplacementSimulatorVelocity = default(Single);
-                    break;
-                case Water_FieldIndex.DisplacementSimulatorFalloff:
-                    obj.DisplacementSimulatorFalloff = default(Single);
-                    break;
-                case Water_FieldIndex.DisplacementSimulatorDampner:
-                    obj.DisplacementSimulatorDampner = default(Single);
-                    break;
-                case Water_FieldIndex.DisplacementSimulatorStartingSize:
-                    obj.DisplacementSimulatorStartingSize = default(Single);
-                    break;
-                case Water_FieldIndex.Damage:
-                    obj.Damage = default(UInt16);
-                    break;
-                case Water_FieldIndex.RelatedWaters:
-                    obj.RelatedWaters_Unset();
-                    break;
-                default:
-                    MajorRecordCommon.UnsetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public static bool GetNthObjectHasBeenSet(
-            ushort index,
-            IWater obj)
-        {
-            Water_FieldIndex enu = (Water_FieldIndex)index;
-            switch (enu)
-            {
-                case Water_FieldIndex.WindVelocity:
-                case Water_FieldIndex.WindDirection:
-                case Water_FieldIndex.WaveAmplitude:
-                case Water_FieldIndex.WaveFrequency:
-                case Water_FieldIndex.SunPower:
-                case Water_FieldIndex.ReflectivityAmount:
-                case Water_FieldIndex.FresnelAmount:
-                case Water_FieldIndex.ScrollXSpeed:
-                case Water_FieldIndex.ScrollYSpeed:
-                case Water_FieldIndex.FogDistanceNearPlane:
-                case Water_FieldIndex.FogDistanceFarPlane:
-                case Water_FieldIndex.ShallowColor:
-                case Water_FieldIndex.DeepColor:
-                case Water_FieldIndex.ReflectionColor:
-                case Water_FieldIndex.TextureBlend:
-                case Water_FieldIndex.RainSimulatorForce:
-                case Water_FieldIndex.RainSimulatorVelocity:
-                case Water_FieldIndex.RainSimulatorFalloff:
-                case Water_FieldIndex.RainSimulatorDampner:
-                case Water_FieldIndex.RainSimulatorStartingSize:
-                case Water_FieldIndex.DisplacementSimulatorForce:
-                case Water_FieldIndex.DisplacementSimulatorVelocity:
-                case Water_FieldIndex.DisplacementSimulatorFalloff:
-                case Water_FieldIndex.DisplacementSimulatorDampner:
-                case Water_FieldIndex.DisplacementSimulatorStartingSize:
-                case Water_FieldIndex.Damage:
-                    return true;
-                case Water_FieldIndex.Texture:
-                    return obj.Texture_IsSet;
-                case Water_FieldIndex.Opacity:
-                    return obj.Opacity_IsSet;
-                case Water_FieldIndex.Flags:
-                    return obj.Flags_IsSet;
-                case Water_FieldIndex.MaterialID:
-                    return obj.MaterialID_IsSet;
-                case Water_FieldIndex.Sound:
-                    return obj.Sound_Property.HasBeenSet;
-                case Water_FieldIndex.RelatedWaters:
-                    return obj.RelatedWaters_IsSet;
-                default:
-                    return MajorRecordCommon.GetNthObjectHasBeenSet(index, obj);
-            }
-        }
-
-        public static object GetNthObject(
-            ushort index,
-            IWaterGetter obj)
-        {
-            Water_FieldIndex enu = (Water_FieldIndex)index;
-            switch (enu)
-            {
-                case Water_FieldIndex.Texture:
-                    return obj.Texture;
-                case Water_FieldIndex.Opacity:
-                    return obj.Opacity;
-                case Water_FieldIndex.Flags:
-                    return obj.Flags;
-                case Water_FieldIndex.MaterialID:
-                    return obj.MaterialID;
-                case Water_FieldIndex.Sound:
-                    return obj.Sound;
-                case Water_FieldIndex.WindVelocity:
-                    return obj.WindVelocity;
-                case Water_FieldIndex.WindDirection:
-                    return obj.WindDirection;
-                case Water_FieldIndex.WaveAmplitude:
-                    return obj.WaveAmplitude;
-                case Water_FieldIndex.WaveFrequency:
-                    return obj.WaveFrequency;
-                case Water_FieldIndex.SunPower:
-                    return obj.SunPower;
-                case Water_FieldIndex.ReflectivityAmount:
-                    return obj.ReflectivityAmount;
-                case Water_FieldIndex.FresnelAmount:
-                    return obj.FresnelAmount;
-                case Water_FieldIndex.ScrollXSpeed:
-                    return obj.ScrollXSpeed;
-                case Water_FieldIndex.ScrollYSpeed:
-                    return obj.ScrollYSpeed;
-                case Water_FieldIndex.FogDistanceNearPlane:
-                    return obj.FogDistanceNearPlane;
-                case Water_FieldIndex.FogDistanceFarPlane:
-                    return obj.FogDistanceFarPlane;
-                case Water_FieldIndex.ShallowColor:
-                    return obj.ShallowColor;
-                case Water_FieldIndex.DeepColor:
-                    return obj.DeepColor;
-                case Water_FieldIndex.ReflectionColor:
-                    return obj.ReflectionColor;
-                case Water_FieldIndex.TextureBlend:
-                    return obj.TextureBlend;
-                case Water_FieldIndex.RainSimulatorForce:
-                    return obj.RainSimulatorForce;
-                case Water_FieldIndex.RainSimulatorVelocity:
-                    return obj.RainSimulatorVelocity;
-                case Water_FieldIndex.RainSimulatorFalloff:
-                    return obj.RainSimulatorFalloff;
-                case Water_FieldIndex.RainSimulatorDampner:
-                    return obj.RainSimulatorDampner;
-                case Water_FieldIndex.RainSimulatorStartingSize:
-                    return obj.RainSimulatorStartingSize;
-                case Water_FieldIndex.DisplacementSimulatorForce:
-                    return obj.DisplacementSimulatorForce;
-                case Water_FieldIndex.DisplacementSimulatorVelocity:
-                    return obj.DisplacementSimulatorVelocity;
-                case Water_FieldIndex.DisplacementSimulatorFalloff:
-                    return obj.DisplacementSimulatorFalloff;
-                case Water_FieldIndex.DisplacementSimulatorDampner:
-                    return obj.DisplacementSimulatorDampner;
-                case Water_FieldIndex.DisplacementSimulatorStartingSize:
-                    return obj.DisplacementSimulatorStartingSize;
-                case Water_FieldIndex.Damage:
-                    return obj.Damage;
-                case Water_FieldIndex.RelatedWaters:
-                    return obj.RelatedWaters;
-                default:
-                    return MajorRecordCommon.GetNthObject(index, obj);
-            }
-        }
-
         public static void Clear(
             IWater item,
             NotifyingUnsetParameters cmds = null)
@@ -4427,7 +4137,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 rhs.RelatedWaters,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
                 include);
-            MajorRecordCommon.FillEqualsMask(item, rhs, ret);
+            OblivionMajorRecordCommon.FillEqualsMask(item, rhs, ret);
         }
 
         public static string ToString(
@@ -4641,6 +4351,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ret;
         }
 
+        public static Water_FieldIndex? ConvertFieldIndex(OblivionMajorRecord_FieldIndex? index)
+        {
+            if (!index.HasValue) return null;
+            return ConvertFieldIndex(index: index.Value);
+        }
+
+        public static Water_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
+        {
+            switch (index)
+            {
+                case OblivionMajorRecord_FieldIndex.FormKey:
+                    return (Water_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.Version:
+                    return (Water_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.EditorID:
+                    return (Water_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.RecordType:
+                    return (Water_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
+                    return (Water_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
+        }
+
         public static Water_FieldIndex? ConvertFieldIndex(MajorRecord_FieldIndex? index)
         {
             if (!index.HasValue) return null;
@@ -4651,8 +4386,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (index)
             {
-                case MajorRecord_FieldIndex.MajorRecordFlags:
-                    return (Water_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
                     return (Water_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.Version:
@@ -4713,7 +4446,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
         {
-            MajorRecordCommon.WriteToNode_Xml(
+            OblivionMajorRecordCommon.WriteToNode_Xml(
                 item: item,
                 node: node,
                 errorMask: errorMask,
@@ -5887,7 +5620,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 default:
-                    MajorRecordCommon.FillPublicElement_Xml(
+                    OblivionMajorRecordCommon.FillPublicElement_Xml(
                         item: item,
                         node: node,
                         name: name,
@@ -5931,7 +5664,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: Water_Registration.WATR_HEADER,
                 type: ObjectType.Record))
             {
-                MajorRecordCommon.Write_Binary_Embedded(
+                OblivionMajorRecordCommon.Write_Binary_Embedded(
                     item: item,
                     writer: writer,
                     errorMask: errorMask,
@@ -6201,7 +5934,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     #region Modules
     #region Mask
-    public class Water_Mask<T> : MajorRecord_Mask<T>, IMask<T>, IEquatable<Water_Mask<T>>
+    public class Water_Mask<T> : OblivionMajorRecord_Mask<T>, IMask<T>, IEquatable<Water_Mask<T>>
     {
         #region Ctors
         public Water_Mask()
@@ -6625,7 +6358,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public class Water_ErrorMask : MajorRecord_ErrorMask, IErrorMask<Water_ErrorMask>
+    public class Water_ErrorMask : OblivionMajorRecord_ErrorMask, IErrorMask<Water_ErrorMask>
     {
         #region Members
         public Exception Texture;
@@ -7110,7 +6843,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
-    public class Water_CopyMask : MajorRecord_CopyMask
+    public class Water_CopyMask : OblivionMajorRecord_CopyMask
     {
         public Water_CopyMask()
         {
@@ -7189,7 +6922,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public class Water_TranslationMask : MajorRecord_TranslationMask
+    public class Water_TranslationMask : OblivionMajorRecord_TranslationMask
     {
         #region Members
         public bool Texture;

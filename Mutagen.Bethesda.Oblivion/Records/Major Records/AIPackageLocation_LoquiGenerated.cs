@@ -75,28 +75,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        #region Loqui Getter Interface
-
-        protected object GetNthObject(ushort index) => AIPackageLocationCommon.GetNthObject(index, this);
-        object ILoquiObjectGetter.GetNthObject(ushort index) => this.GetNthObject(index);
-
-        protected bool GetNthObjectHasBeenSet(ushort index) => AIPackageLocationCommon.GetNthObjectHasBeenSet(index, this);
-        bool ILoquiObjectGetter.GetNthObjectHasBeenSet(ushort index) => this.GetNthObjectHasBeenSet(index);
-
-        protected void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => AIPackageLocationCommon.UnsetNthObject(index, this, cmds);
-        void ILoquiObjectSetter.UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => this.UnsetNthObject(index, cmds);
-
-        #endregion
-
-        #region Loqui Interface
-        protected void SetNthObjectHasBeenSet(ushort index, bool on)
-        {
-            AIPackageLocationCommon.SetNthObjectHasBeenSet(index, on, this);
-        }
-        void ILoquiObjectSetter.SetNthObjectHasBeenSet(ushort index, bool on) => this.SetNthObjectHasBeenSet(index, on);
-
-        #endregion
-
         IMask<bool> IEqualsMask<AIPackageLocation>.GetEqualsMask(AIPackageLocation rhs, EqualsMaskHelper.Include include) => AIPackageLocationCommon.GetEqualsMask(this, rhs, include);
         IMask<bool> IEqualsMask<IAIPackageLocationGetter>.GetEqualsMask(IAIPackageLocationGetter rhs, EqualsMaskHelper.Include include) => AIPackageLocationCommon.GetEqualsMask(this, rhs, include);
         #region To String
@@ -747,7 +725,6 @@ namespace Mutagen.Bethesda.Oblivion
                 cmds: cmds);
         }
 
-        void ILoquiObjectSetter.SetNthObject(ushort index, object obj, NotifyingFireParameters cmds) => this.SetNthObject(index, obj, cmds);
         protected void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
         {
             AIPackageLocation_FieldIndex enu = (AIPackageLocation_FieldIndex)index;
@@ -816,11 +793,6 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, AIPackageLocation obj)
-        {
-            ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
-        }
-
     }
     #endregion
 
@@ -1126,81 +1098,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         #endregion
-
-        public static void SetNthObjectHasBeenSet(
-            ushort index,
-            bool on,
-            IAIPackageLocation obj,
-            NotifyingFireParameters cmds = null)
-        {
-            AIPackageLocation_FieldIndex enu = (AIPackageLocation_FieldIndex)index;
-            switch (enu)
-            {
-                case AIPackageLocation_FieldIndex.Type:
-                case AIPackageLocation_FieldIndex.LocationReference:
-                case AIPackageLocation_FieldIndex.Radius:
-                    if (on) break;
-                    throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static void UnsetNthObject(
-            ushort index,
-            IAIPackageLocation obj,
-            NotifyingUnsetParameters cmds = null)
-        {
-            AIPackageLocation_FieldIndex enu = (AIPackageLocation_FieldIndex)index;
-            switch (enu)
-            {
-                case AIPackageLocation_FieldIndex.Type:
-                    obj.Type = default(AIPackageLocation.LocationType);
-                    break;
-                case AIPackageLocation_FieldIndex.LocationReference:
-                    obj.LocationReference = default(IPlaced);
-                    break;
-                case AIPackageLocation_FieldIndex.Radius:
-                    obj.Radius = default(Single);
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthObjectHasBeenSet(
-            ushort index,
-            IAIPackageLocation obj)
-        {
-            AIPackageLocation_FieldIndex enu = (AIPackageLocation_FieldIndex)index;
-            switch (enu)
-            {
-                case AIPackageLocation_FieldIndex.Type:
-                case AIPackageLocation_FieldIndex.LocationReference:
-                case AIPackageLocation_FieldIndex.Radius:
-                    return true;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static object GetNthObject(
-            ushort index,
-            IAIPackageLocationGetter obj)
-        {
-            AIPackageLocation_FieldIndex enu = (AIPackageLocation_FieldIndex)index;
-            switch (enu)
-            {
-                case AIPackageLocation_FieldIndex.Type:
-                    return obj.Type;
-                case AIPackageLocation_FieldIndex.LocationReference:
-                    return obj.LocationReference;
-                case AIPackageLocation_FieldIndex.Radius:
-                    return obj.Radius;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
 
         public static void Clear(
             IAIPackageLocation item,

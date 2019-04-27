@@ -80,24 +80,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        #region Loqui Getter Interface
-
-        protected override object GetNthObject(ushort index) => AlphaLayerCommon.GetNthObject(index, this);
-
-        protected override bool GetNthObjectHasBeenSet(ushort index) => AlphaLayerCommon.GetNthObjectHasBeenSet(index, this);
-
-        protected override void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => AlphaLayerCommon.UnsetNthObject(index, this, cmds);
-
-        #endregion
-
-        #region Loqui Interface
-        protected override void SetNthObjectHasBeenSet(ushort index, bool on)
-        {
-            AlphaLayerCommon.SetNthObjectHasBeenSet(index, on, this);
-        }
-
-        #endregion
-
         IMask<bool> IEqualsMask<AlphaLayer>.GetEqualsMask(AlphaLayer rhs, EqualsMaskHelper.Include include) => AlphaLayerCommon.GetEqualsMask(this, rhs, include);
         IMask<bool> IEqualsMask<IAlphaLayerGetter>.GetEqualsMask(IAlphaLayerGetter rhs, EqualsMaskHelper.Include include) => AlphaLayerCommon.GetEqualsMask(this, rhs, include);
         #region To String
@@ -782,11 +764,6 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, AlphaLayer obj)
-        {
-            ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
-        }
-
     }
     #endregion
 
@@ -1053,69 +1030,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         #endregion
-
-        public static void SetNthObjectHasBeenSet(
-            ushort index,
-            bool on,
-            IAlphaLayer obj,
-            NotifyingFireParameters cmds = null)
-        {
-            AlphaLayer_FieldIndex enu = (AlphaLayer_FieldIndex)index;
-            switch (enu)
-            {
-                case AlphaLayer_FieldIndex.AlphaLayerData:
-                    obj.AlphaLayerData_IsSet = on;
-                    break;
-                default:
-                    BaseLayerCommon.SetNthObjectHasBeenSet(index, on, obj);
-                    break;
-            }
-        }
-
-        public static void UnsetNthObject(
-            ushort index,
-            IAlphaLayer obj,
-            NotifyingUnsetParameters cmds = null)
-        {
-            AlphaLayer_FieldIndex enu = (AlphaLayer_FieldIndex)index;
-            switch (enu)
-            {
-                case AlphaLayer_FieldIndex.AlphaLayerData:
-                    obj.AlphaLayerData_Unset();
-                    break;
-                default:
-                    BaseLayerCommon.UnsetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public static bool GetNthObjectHasBeenSet(
-            ushort index,
-            IAlphaLayer obj)
-        {
-            AlphaLayer_FieldIndex enu = (AlphaLayer_FieldIndex)index;
-            switch (enu)
-            {
-                case AlphaLayer_FieldIndex.AlphaLayerData:
-                    return obj.AlphaLayerData_IsSet;
-                default:
-                    return BaseLayerCommon.GetNthObjectHasBeenSet(index, obj);
-            }
-        }
-
-        public static object GetNthObject(
-            ushort index,
-            IAlphaLayerGetter obj)
-        {
-            AlphaLayer_FieldIndex enu = (AlphaLayer_FieldIndex)index;
-            switch (enu)
-            {
-                case AlphaLayer_FieldIndex.AlphaLayerData:
-                    return obj.AlphaLayerData;
-                default:
-                    return BaseLayerCommon.GetNthObject(index, obj);
-            }
-        }
 
         public static void Clear(
             IAlphaLayer item,

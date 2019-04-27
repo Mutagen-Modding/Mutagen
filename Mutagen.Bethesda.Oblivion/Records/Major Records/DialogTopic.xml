@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="DialogTopic" recordType="DIAL" objType="Record" baseClass="Bethesda.MajorRecord" customBinaryEnd="true" GUID="64f03683-28fd-43e3-8141-da8e95a52f89" ID="147">
+  <Object name="DialogTopic" recordType="DIAL" objType="Record" baseClass="OblivionMajorRecord" customBinaryEnd="true" GUID="64f03683-28fd-43e3-8141-da8e95a52f89" ID="147">
     <Interface>INamed</Interface>
     <Fields>
       <List name="Quests">
@@ -12,7 +12,7 @@
       <RefList name="Items" noBinary="true" refName="DialogItem" />
     </Fields>
   </Object>
-  <Object name="DialogItem" objType="Record" baseClass="Bethesda.MajorRecord" recordType="INFO" GUID="2d9149e0-aa5e-4b4e-8bef-93b32f602f3b" ID="149">
+  <Object name="DialogItem" objType="Record" baseClass="OblivionMajorRecord" recordType="INFO" GUID="2d9149e0-aa5e-4b4e-8bef-93b32f602f3b" ID="149">
     <Fields>
       <Data>
         <Fields>

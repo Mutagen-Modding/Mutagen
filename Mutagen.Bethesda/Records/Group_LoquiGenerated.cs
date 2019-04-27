@@ -100,28 +100,6 @@ namespace Mutagen.Bethesda
 
         #endregion
 
-        #region Loqui Getter Interface
-
-        protected object GetNthObject(ushort index) => GroupCommon.GetNthObject<T>(index, this);
-        object ILoquiObjectGetter.GetNthObject(ushort index) => this.GetNthObject(index);
-
-        protected bool GetNthObjectHasBeenSet(ushort index) => GroupCommon.GetNthObjectHasBeenSet<T>(index, this);
-        bool ILoquiObjectGetter.GetNthObjectHasBeenSet(ushort index) => this.GetNthObjectHasBeenSet(index);
-
-        protected void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => GroupCommon.UnsetNthObject<T>(index, this, cmds);
-        void ILoquiObjectSetter.UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => this.UnsetNthObject(index, cmds);
-
-        #endregion
-
-        #region Loqui Interface
-        protected void SetNthObjectHasBeenSet(ushort index, bool on)
-        {
-            GroupCommon.SetNthObjectHasBeenSet<T>(index, on, this);
-        }
-        void ILoquiObjectSetter.SetNthObjectHasBeenSet(ushort index, bool on) => this.SetNthObjectHasBeenSet(index, on);
-
-        #endregion
-
         IMask<bool> IEqualsMask<Group<T>>.GetEqualsMask(Group<T> rhs, EqualsMaskHelper.Include include) => GroupCommon.GetEqualsMask(this, rhs, include);
         IMask<bool> IEqualsMask<IGroupGetter<T>>.GetEqualsMask(IGroupGetter<T> rhs, EqualsMaskHelper.Include include) => GroupCommon.GetEqualsMask(this, rhs, include);
         #region To String
@@ -852,7 +830,6 @@ namespace Mutagen.Bethesda
                 cmds: cmds);
         }
 
-        void ILoquiObjectSetter.SetNthObject(ushort index, object obj, NotifyingFireParameters cmds) => this.SetNthObject(index, obj, cmds);
         protected void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
         {
             Group_FieldIndex enu = (Group_FieldIndex)index;
@@ -919,11 +896,6 @@ namespace Mutagen.Bethesda
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, Group<T> obj)
-        {
-            ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
-        }
-
     }
     #endregion
 
@@ -1271,95 +1243,6 @@ namespace Mutagen.Bethesda.Internals
         }
 
         #endregion
-
-        public static void SetNthObjectHasBeenSet<T>(
-            ushort index,
-            bool on,
-            IGroup<T> obj,
-            NotifyingFireParameters cmds = null)
-            where T : IMajorRecord, ILoquiObject<T>
-        {
-            Group_FieldIndex enu = (Group_FieldIndex)index;
-            switch (enu)
-            {
-                case Group_FieldIndex.ContainedRecordType:
-                    throw new ArgumentException($"Tried to set at a derivative index {index}");
-                case Group_FieldIndex.GroupType:
-                case Group_FieldIndex.LastModified:
-                    if (on) break;
-                    throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
-                case Group_FieldIndex.Items:
-                    obj.Items.HasBeenSet = on;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static void UnsetNthObject<T>(
-            ushort index,
-            IGroup<T> obj,
-            NotifyingUnsetParameters cmds = null)
-            where T : IMajorRecord, ILoquiObject<T>
-        {
-            Group_FieldIndex enu = (Group_FieldIndex)index;
-            switch (enu)
-            {
-                case Group_FieldIndex.ContainedRecordType:
-                    throw new ArgumentException($"Tried to unset at a derivative index {index}");
-                case Group_FieldIndex.GroupType:
-                    obj.GroupType = default(GroupTypeEnum);
-                    break;
-                case Group_FieldIndex.LastModified:
-                    obj.LastModified = default(Byte[]);
-                    break;
-                case Group_FieldIndex.Items:
-                    obj.Items.Unset();
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthObjectHasBeenSet<T>(
-            ushort index,
-            IGroup<T> obj)
-            where T : IMajorRecord, ILoquiObject<T>
-        {
-            Group_FieldIndex enu = (Group_FieldIndex)index;
-            switch (enu)
-            {
-                case Group_FieldIndex.ContainedRecordType:
-                case Group_FieldIndex.GroupType:
-                case Group_FieldIndex.LastModified:
-                    return true;
-                case Group_FieldIndex.Items:
-                    return obj.Items.HasBeenSet;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static object GetNthObject<T>(
-            ushort index,
-            IGroupGetter<T> obj)
-            where T : IMajorRecord, ILoquiObject<T>
-        {
-            Group_FieldIndex enu = (Group_FieldIndex)index;
-            switch (enu)
-            {
-                case Group_FieldIndex.ContainedRecordType:
-                    return obj.ContainedRecordType;
-                case Group_FieldIndex.GroupType:
-                    return obj.GroupType;
-                case Group_FieldIndex.LastModified:
-                    return obj.LastModified;
-                case Group_FieldIndex.Items:
-                    return obj.Items;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
 
         public static void Clear<T>(
             IGroup<T> item,

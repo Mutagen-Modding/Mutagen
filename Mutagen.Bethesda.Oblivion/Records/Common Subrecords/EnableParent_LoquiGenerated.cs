@@ -67,28 +67,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        #region Loqui Getter Interface
-
-        protected object GetNthObject(ushort index) => EnableParentCommon.GetNthObject(index, this);
-        object ILoquiObjectGetter.GetNthObject(ushort index) => this.GetNthObject(index);
-
-        protected bool GetNthObjectHasBeenSet(ushort index) => EnableParentCommon.GetNthObjectHasBeenSet(index, this);
-        bool ILoquiObjectGetter.GetNthObjectHasBeenSet(ushort index) => this.GetNthObjectHasBeenSet(index);
-
-        protected void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => EnableParentCommon.UnsetNthObject(index, this, cmds);
-        void ILoquiObjectSetter.UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => this.UnsetNthObject(index, cmds);
-
-        #endregion
-
-        #region Loqui Interface
-        protected void SetNthObjectHasBeenSet(ushort index, bool on)
-        {
-            EnableParentCommon.SetNthObjectHasBeenSet(index, on, this);
-        }
-        void ILoquiObjectSetter.SetNthObjectHasBeenSet(ushort index, bool on) => this.SetNthObjectHasBeenSet(index, on);
-
-        #endregion
-
         IMask<bool> IEqualsMask<EnableParent>.GetEqualsMask(EnableParent rhs, EqualsMaskHelper.Include include) => EnableParentCommon.GetEqualsMask(this, rhs, include);
         IMask<bool> IEqualsMask<IEnableParentGetter>.GetEqualsMask(IEnableParentGetter rhs, EqualsMaskHelper.Include include) => EnableParentCommon.GetEqualsMask(this, rhs, include);
         #region To String
@@ -712,7 +690,6 @@ namespace Mutagen.Bethesda.Oblivion
                 cmds: cmds);
         }
 
-        void ILoquiObjectSetter.SetNthObject(ushort index, object obj, NotifyingFireParameters cmds) => this.SetNthObject(index, obj, cmds);
         protected void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
         {
             EnableParent_FieldIndex enu = (EnableParent_FieldIndex)index;
@@ -775,11 +752,6 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, EnableParent obj)
-        {
-            ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
-        }
-
     }
     #endregion
 
@@ -1050,74 +1022,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         #endregion
-
-        public static void SetNthObjectHasBeenSet(
-            ushort index,
-            bool on,
-            IEnableParent obj,
-            NotifyingFireParameters cmds = null)
-        {
-            EnableParent_FieldIndex enu = (EnableParent_FieldIndex)index;
-            switch (enu)
-            {
-                case EnableParent_FieldIndex.Reference:
-                case EnableParent_FieldIndex.Flags:
-                    if (on) break;
-                    throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static void UnsetNthObject(
-            ushort index,
-            IEnableParent obj,
-            NotifyingUnsetParameters cmds = null)
-        {
-            EnableParent_FieldIndex enu = (EnableParent_FieldIndex)index;
-            switch (enu)
-            {
-                case EnableParent_FieldIndex.Reference:
-                    obj.Reference = default(IPlaced);
-                    break;
-                case EnableParent_FieldIndex.Flags:
-                    obj.Flags = default(EnableParent.Flag);
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthObjectHasBeenSet(
-            ushort index,
-            IEnableParent obj)
-        {
-            EnableParent_FieldIndex enu = (EnableParent_FieldIndex)index;
-            switch (enu)
-            {
-                case EnableParent_FieldIndex.Reference:
-                case EnableParent_FieldIndex.Flags:
-                    return true;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static object GetNthObject(
-            ushort index,
-            IEnableParentGetter obj)
-        {
-            EnableParent_FieldIndex enu = (EnableParent_FieldIndex)index;
-            switch (enu)
-            {
-                case EnableParent_FieldIndex.Reference:
-                    return obj.Reference;
-                case EnableParent_FieldIndex.Flags:
-                    return obj.Flags;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
 
         public static void Clear(
             IEnableParent item,

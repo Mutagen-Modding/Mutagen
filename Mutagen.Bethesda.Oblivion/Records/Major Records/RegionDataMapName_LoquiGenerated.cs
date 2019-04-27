@@ -78,24 +78,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        #region Loqui Getter Interface
-
-        protected override object GetNthObject(ushort index) => RegionDataMapNameCommon.GetNthObject(index, this);
-
-        protected override bool GetNthObjectHasBeenSet(ushort index) => RegionDataMapNameCommon.GetNthObjectHasBeenSet(index, this);
-
-        protected override void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => RegionDataMapNameCommon.UnsetNthObject(index, this, cmds);
-
-        #endregion
-
-        #region Loqui Interface
-        protected override void SetNthObjectHasBeenSet(ushort index, bool on)
-        {
-            RegionDataMapNameCommon.SetNthObjectHasBeenSet(index, on, this);
-        }
-
-        #endregion
-
         IMask<bool> IEqualsMask<RegionDataMapName>.GetEqualsMask(RegionDataMapName rhs, EqualsMaskHelper.Include include) => RegionDataMapNameCommon.GetEqualsMask(this, rhs, include);
         IMask<bool> IEqualsMask<IRegionDataMapNameGetter>.GetEqualsMask(IRegionDataMapNameGetter rhs, EqualsMaskHelper.Include include) => RegionDataMapNameCommon.GetEqualsMask(this, rhs, include);
         #region To String
@@ -788,11 +770,6 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, RegionDataMapName obj)
-        {
-            ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
-        }
-
     }
     #endregion
 
@@ -1054,69 +1031,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         #endregion
-
-        public static void SetNthObjectHasBeenSet(
-            ushort index,
-            bool on,
-            IRegionDataMapName obj,
-            NotifyingFireParameters cmds = null)
-        {
-            RegionDataMapName_FieldIndex enu = (RegionDataMapName_FieldIndex)index;
-            switch (enu)
-            {
-                case RegionDataMapName_FieldIndex.MapName:
-                    obj.MapName_IsSet = on;
-                    break;
-                default:
-                    RegionDataCommon.SetNthObjectHasBeenSet(index, on, obj);
-                    break;
-            }
-        }
-
-        public static void UnsetNthObject(
-            ushort index,
-            IRegionDataMapName obj,
-            NotifyingUnsetParameters cmds = null)
-        {
-            RegionDataMapName_FieldIndex enu = (RegionDataMapName_FieldIndex)index;
-            switch (enu)
-            {
-                case RegionDataMapName_FieldIndex.MapName:
-                    obj.MapName_Unset();
-                    break;
-                default:
-                    RegionDataCommon.UnsetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public static bool GetNthObjectHasBeenSet(
-            ushort index,
-            IRegionDataMapName obj)
-        {
-            RegionDataMapName_FieldIndex enu = (RegionDataMapName_FieldIndex)index;
-            switch (enu)
-            {
-                case RegionDataMapName_FieldIndex.MapName:
-                    return obj.MapName_IsSet;
-                default:
-                    return RegionDataCommon.GetNthObjectHasBeenSet(index, obj);
-            }
-        }
-
-        public static object GetNthObject(
-            ushort index,
-            IRegionDataMapNameGetter obj)
-        {
-            RegionDataMapName_FieldIndex enu = (RegionDataMapName_FieldIndex)index;
-            switch (enu)
-            {
-                case RegionDataMapName_FieldIndex.MapName:
-                    return obj.MapName;
-                default:
-                    return RegionDataCommon.GetNthObject(index, obj);
-            }
-        }
 
         public static void Clear(
             IRegionDataMapName item,

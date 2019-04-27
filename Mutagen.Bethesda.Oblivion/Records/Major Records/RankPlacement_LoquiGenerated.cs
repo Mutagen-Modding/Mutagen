@@ -82,28 +82,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        #region Loqui Getter Interface
-
-        protected object GetNthObject(ushort index) => RankPlacementCommon.GetNthObject(index, this);
-        object ILoquiObjectGetter.GetNthObject(ushort index) => this.GetNthObject(index);
-
-        protected bool GetNthObjectHasBeenSet(ushort index) => RankPlacementCommon.GetNthObjectHasBeenSet(index, this);
-        bool ILoquiObjectGetter.GetNthObjectHasBeenSet(ushort index) => this.GetNthObjectHasBeenSet(index);
-
-        protected void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => RankPlacementCommon.UnsetNthObject(index, this, cmds);
-        void ILoquiObjectSetter.UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => this.UnsetNthObject(index, cmds);
-
-        #endregion
-
-        #region Loqui Interface
-        protected void SetNthObjectHasBeenSet(ushort index, bool on)
-        {
-            RankPlacementCommon.SetNthObjectHasBeenSet(index, on, this);
-        }
-        void ILoquiObjectSetter.SetNthObjectHasBeenSet(ushort index, bool on) => this.SetNthObjectHasBeenSet(index, on);
-
-        #endregion
-
         IMask<bool> IEqualsMask<RankPlacement>.GetEqualsMask(RankPlacement rhs, EqualsMaskHelper.Include include) => RankPlacementCommon.GetEqualsMask(this, rhs, include);
         IMask<bool> IEqualsMask<IRankPlacementGetter>.GetEqualsMask(IRankPlacementGetter rhs, EqualsMaskHelper.Include include) => RankPlacementCommon.GetEqualsMask(this, rhs, include);
         #region To String
@@ -754,7 +732,6 @@ namespace Mutagen.Bethesda.Oblivion
                 cmds: cmds);
         }
 
-        void ILoquiObjectSetter.SetNthObject(ushort index, object obj, NotifyingFireParameters cmds) => this.SetNthObject(index, obj, cmds);
         protected void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
         {
             RankPlacement_FieldIndex enu = (RankPlacement_FieldIndex)index;
@@ -823,11 +800,6 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, RankPlacement obj)
-        {
-            ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
-        }
-
     }
     #endregion
 
@@ -1133,81 +1105,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         #endregion
-
-        public static void SetNthObjectHasBeenSet(
-            ushort index,
-            bool on,
-            IRankPlacement obj,
-            NotifyingFireParameters cmds = null)
-        {
-            RankPlacement_FieldIndex enu = (RankPlacement_FieldIndex)index;
-            switch (enu)
-            {
-                case RankPlacement_FieldIndex.Faction:
-                case RankPlacement_FieldIndex.Rank:
-                case RankPlacement_FieldIndex.Fluff:
-                    if (on) break;
-                    throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static void UnsetNthObject(
-            ushort index,
-            IRankPlacement obj,
-            NotifyingUnsetParameters cmds = null)
-        {
-            RankPlacement_FieldIndex enu = (RankPlacement_FieldIndex)index;
-            switch (enu)
-            {
-                case RankPlacement_FieldIndex.Faction:
-                    obj.Faction = default(Faction);
-                    break;
-                case RankPlacement_FieldIndex.Rank:
-                    obj.Rank = default(Byte);
-                    break;
-                case RankPlacement_FieldIndex.Fluff:
-                    obj.Fluff = default(Byte[]);
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthObjectHasBeenSet(
-            ushort index,
-            IRankPlacement obj)
-        {
-            RankPlacement_FieldIndex enu = (RankPlacement_FieldIndex)index;
-            switch (enu)
-            {
-                case RankPlacement_FieldIndex.Faction:
-                case RankPlacement_FieldIndex.Rank:
-                case RankPlacement_FieldIndex.Fluff:
-                    return true;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static object GetNthObject(
-            ushort index,
-            IRankPlacementGetter obj)
-        {
-            RankPlacement_FieldIndex enu = (RankPlacement_FieldIndex)index;
-            switch (enu)
-            {
-                case RankPlacement_FieldIndex.Faction:
-                    return obj.Faction;
-                case RankPlacement_FieldIndex.Rank:
-                    return obj.Rank;
-                case RankPlacement_FieldIndex.Fluff:
-                    return obj.Fluff;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
 
         public static void Clear(
             IRankPlacement item,

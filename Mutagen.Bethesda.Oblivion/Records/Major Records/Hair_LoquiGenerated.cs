@@ -34,7 +34,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class Hair : 
-        MajorRecord,
+        OblivionMajorRecord,
         IHair,
         ILoquiObject<Hair>,
         ILoquiObjectSetter,
@@ -157,24 +157,6 @@ namespace Mutagen.Bethesda.Oblivion
         {
             this.Flags_Set(default(Hair.HairFlag), false);
         }
-        #endregion
-
-        #region Loqui Getter Interface
-
-        protected override object GetNthObject(ushort index) => HairCommon.GetNthObject(index, this);
-
-        protected override bool GetNthObjectHasBeenSet(ushort index) => HairCommon.GetNthObjectHasBeenSet(index, this);
-
-        protected override void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => HairCommon.UnsetNthObject(index, this, cmds);
-
-        #endregion
-
-        #region Loqui Interface
-        protected override void SetNthObjectHasBeenSet(ushort index, bool on)
-        {
-            HairCommon.SetNthObjectHasBeenSet(index, on, this);
-        }
-
         #endregion
 
         IMask<bool> IEqualsMask<Hair>.GetEqualsMask(Hair rhs, EqualsMaskHelper.Include include) => HairCommon.GetEqualsMask(this, rhs, include);
@@ -500,6 +482,22 @@ namespace Mutagen.Bethesda.Oblivion
         #region Base Class Trickdown Overrides
         public override void Write_Xml(
             XElement node,
+            out OblivionMajorRecord_ErrorMask errorMask,
+            bool doMasks = true,
+            OblivionMajorRecord_TranslationMask translationMask = null,
+            string name = null)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            this.Write_Xml(
+                name: name,
+                node: node,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal());
+            errorMask = Hair_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public override void Write_Xml(
+            XElement node,
             out MajorRecord_ErrorMask errorMask,
             bool doMasks = true,
             MajorRecord_TranslationMask translationMask = null,
@@ -541,7 +539,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 default:
-                    MajorRecord.FillPrivateElement_Xml(
+                    OblivionMajorRecord.FillPrivateElement_Xml(
                         item: item,
                         node: node,
                         name: name,
@@ -575,9 +573,9 @@ namespace Mutagen.Bethesda.Oblivion
             CustomCtor();
         }
 
-        partial void PostDuplicate(Hair obj, Hair rhs, Func<FormKey> getNextFormKey, IList<(MajorRecord Record, FormKey OriginalFormKey)> duplicatedRecords);
+        partial void PostDuplicate(Hair obj, Hair rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
 
-        public override MajorRecord Duplicate(Func<FormKey> getNextFormKey, IList<(MajorRecord Record, FormKey OriginalFormKey)> duplicatedRecords)
+        public override IMajorRecordCommon Duplicate(Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
         {
             var ret = new Hair(getNextFormKey());
             ret.CopyFieldsFrom(this);
@@ -658,6 +656,21 @@ namespace Mutagen.Bethesda.Oblivion
         public override void Write_Binary(
             MutagenWriter writer,
             MasterReferences masterReferences,
+            out OblivionMajorRecord_ErrorMask errorMask,
+            bool doMasks = true)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            this.Write_Binary(
+                masterReferences: masterReferences,
+                writer: writer,
+                errorMask: errorMaskBuilder,
+                recordTypeConverter: null);
+            errorMask = Hair_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public override void Write_Binary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
             out MajorRecord_ErrorMask errorMask,
             bool doMasks = true)
         {
@@ -693,7 +706,7 @@ namespace Mutagen.Bethesda.Oblivion
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            MajorRecord.Fill_Binary_Structs(
+            OblivionMajorRecord.Fill_Binary_Structs(
                 item: item,
                 frame: frame,
                 masterReferences: masterReferences,
@@ -831,7 +844,7 @@ namespace Mutagen.Bethesda.Oblivion
                     return TryGet<int?>.Succeed((int)Hair_FieldIndex.Flags);
                 }
                 default:
-                    return MajorRecord.Fill_Binary_RecordTypes(
+                    return OblivionMajorRecord.Fill_Binary_RecordTypes(
                         item: item,
                         frame: frame,
                         nextRecordType: nextRecordType,
@@ -1004,7 +1017,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             if (!EnumExt.TryParse(pair.Key, out Hair_FieldIndex enu))
             {
-                CopyInInternal_MajorRecord(obj, pair);
+                CopyInInternal_OblivionMajorRecord(obj, pair);
             }
             switch (enu)
             {
@@ -1024,16 +1037,11 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, Hair obj)
-        {
-            ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
-        }
-
     }
     #endregion
 
     #region Interface
-    public partial interface IHair : IHairGetter, IMajorRecord, ILoquiClass<IHair, IHairGetter>, ILoquiClass<Hair, IHairGetter>
+    public partial interface IHair : IHairGetter, IOblivionMajorRecord, ILoquiClass<IHair, IHairGetter>, ILoquiClass<Hair, IHairGetter>
     {
         new String Name { get; set; }
         new bool Name_IsSet { get; set; }
@@ -1057,7 +1065,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
-    public partial interface IHairGetter : IMajorRecordGetter
+    public partial interface IHairGetter : IOblivionMajorRecordGetter
     {
         #region Name
         String Name { get; }
@@ -1091,11 +1099,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #region Field Index
     public enum Hair_FieldIndex
     {
-        MajorRecordFlags = 0,
-        FormKey = 1,
-        Version = 2,
-        EditorID = 3,
-        RecordType = 4,
+        FormKey = 0,
+        Version = 1,
+        EditorID = 2,
+        RecordType = 3,
+        OblivionMajorRecordFlags = 4,
         Name = 5,
         Model = 6,
         Icon = 7,
@@ -1171,7 +1179,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Hair_FieldIndex.Flags:
                     return false;
                 default:
-                    return MajorRecord_Registration.GetNthIsEnumerable(index);
+                    return OblivionMajorRecord_Registration.GetNthIsEnumerable(index);
             }
         }
 
@@ -1187,7 +1195,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Hair_FieldIndex.Flags:
                     return false;
                 default:
-                    return MajorRecord_Registration.GetNthIsLoqui(index);
+                    return OblivionMajorRecord_Registration.GetNthIsLoqui(index);
             }
         }
 
@@ -1202,7 +1210,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Hair_FieldIndex.Flags:
                     return false;
                 default:
-                    return MajorRecord_Registration.GetNthIsSingleton(index);
+                    return OblivionMajorRecord_Registration.GetNthIsSingleton(index);
             }
         }
 
@@ -1220,7 +1228,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Hair_FieldIndex.Flags:
                     return "Flags";
                 default:
-                    return MajorRecord_Registration.GetNthName(index);
+                    return OblivionMajorRecord_Registration.GetNthName(index);
             }
         }
 
@@ -1235,7 +1243,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Hair_FieldIndex.Flags:
                     return false;
                 default:
-                    return MajorRecord_Registration.IsNthDerivative(index);
+                    return OblivionMajorRecord_Registration.IsNthDerivative(index);
             }
         }
 
@@ -1250,7 +1258,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Hair_FieldIndex.Flags:
                     return false;
                 default:
-                    return MajorRecord_Registration.IsProtected(index);
+                    return OblivionMajorRecord_Registration.IsProtected(index);
             }
         }
 
@@ -1268,7 +1276,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Hair_FieldIndex.Flags:
                     return typeof(Hair.HairFlag);
                 default:
-                    return MajorRecord_Registration.GetNthType(index);
+                    return OblivionMajorRecord_Registration.GetNthType(index);
             }
         }
 
@@ -1322,7 +1330,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Hair_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {
-            MajorRecordCommon.CopyFieldsFrom(
+            OblivionMajorRecordCommon.CopyFieldsFrom(
                 item,
                 rhs,
                 def,
@@ -1477,99 +1485,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void SetNthObjectHasBeenSet(
-            ushort index,
-            bool on,
-            IHair obj,
-            NotifyingFireParameters cmds = null)
-        {
-            Hair_FieldIndex enu = (Hair_FieldIndex)index;
-            switch (enu)
-            {
-                case Hair_FieldIndex.Name:
-                    obj.Name_IsSet = on;
-                    break;
-                case Hair_FieldIndex.Model:
-                    obj.Model_IsSet = on;
-                    break;
-                case Hair_FieldIndex.Icon:
-                    obj.Icon_IsSet = on;
-                    break;
-                case Hair_FieldIndex.Flags:
-                    obj.Flags_IsSet = on;
-                    break;
-                default:
-                    MajorRecordCommon.SetNthObjectHasBeenSet(index, on, obj);
-                    break;
-            }
-        }
-
-        public static void UnsetNthObject(
-            ushort index,
-            IHair obj,
-            NotifyingUnsetParameters cmds = null)
-        {
-            Hair_FieldIndex enu = (Hair_FieldIndex)index;
-            switch (enu)
-            {
-                case Hair_FieldIndex.Name:
-                    obj.Name_Unset();
-                    break;
-                case Hair_FieldIndex.Model:
-                    obj.Model_Unset();
-                    break;
-                case Hair_FieldIndex.Icon:
-                    obj.Icon_Unset();
-                    break;
-                case Hair_FieldIndex.Flags:
-                    obj.Flags_Unset();
-                    break;
-                default:
-                    MajorRecordCommon.UnsetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public static bool GetNthObjectHasBeenSet(
-            ushort index,
-            IHair obj)
-        {
-            Hair_FieldIndex enu = (Hair_FieldIndex)index;
-            switch (enu)
-            {
-                case Hair_FieldIndex.Name:
-                    return obj.Name_IsSet;
-                case Hair_FieldIndex.Model:
-                    return obj.Model_IsSet;
-                case Hair_FieldIndex.Icon:
-                    return obj.Icon_IsSet;
-                case Hair_FieldIndex.Flags:
-                    return obj.Flags_IsSet;
-                default:
-                    return MajorRecordCommon.GetNthObjectHasBeenSet(index, obj);
-            }
-        }
-
-        public static object GetNthObject(
-            ushort index,
-            IHairGetter obj)
-        {
-            Hair_FieldIndex enu = (Hair_FieldIndex)index;
-            switch (enu)
-            {
-                case Hair_FieldIndex.Name:
-                    return obj.Name;
-                case Hair_FieldIndex.Model:
-                    return obj.Model;
-                case Hair_FieldIndex.Icon:
-                    return obj.Icon;
-                case Hair_FieldIndex.Flags:
-                    return obj.Flags;
-                default:
-                    return MajorRecordCommon.GetNthObject(index, obj);
-            }
-        }
-
         public static void Clear(
             IHair item,
             NotifyingUnsetParameters cmds = null)
@@ -1611,7 +1526,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 include);
             ret.Icon = item.Icon_IsSet == rhs.Icon_IsSet && object.Equals(item.Icon, rhs.Icon);
             ret.Flags = item.Flags_IsSet == rhs.Flags_IsSet && item.Flags == rhs.Flags;
-            MajorRecordCommon.FillEqualsMask(item, rhs, ret);
+            OblivionMajorRecordCommon.FillEqualsMask(item, rhs, ret);
         }
 
         public static string ToString(
@@ -1683,6 +1598,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ret;
         }
 
+        public static Hair_FieldIndex? ConvertFieldIndex(OblivionMajorRecord_FieldIndex? index)
+        {
+            if (!index.HasValue) return null;
+            return ConvertFieldIndex(index: index.Value);
+        }
+
+        public static Hair_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
+        {
+            switch (index)
+            {
+                case OblivionMajorRecord_FieldIndex.FormKey:
+                    return (Hair_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.Version:
+                    return (Hair_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.EditorID:
+                    return (Hair_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.RecordType:
+                    return (Hair_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
+                    return (Hair_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
+        }
+
         public static Hair_FieldIndex? ConvertFieldIndex(MajorRecord_FieldIndex? index)
         {
             if (!index.HasValue) return null;
@@ -1693,8 +1633,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (index)
             {
-                case MajorRecord_FieldIndex.MajorRecordFlags:
-                    return (Hair_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
                     return (Hair_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.Version:
@@ -1755,7 +1693,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
         {
-            MajorRecordCommon.WriteToNode_Xml(
+            OblivionMajorRecordCommon.WriteToNode_Xml(
                 item: item,
                 node: node,
                 errorMask: errorMask,
@@ -1943,7 +1881,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 default:
-                    MajorRecordCommon.FillPublicElement_Xml(
+                    OblivionMajorRecordCommon.FillPublicElement_Xml(
                         item: item,
                         node: node,
                         name: name,
@@ -1987,7 +1925,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: Hair_Registration.HAIR_HEADER,
                 type: ObjectType.Record))
             {
-                MajorRecordCommon.Write_Binary_Embedded(
+                OblivionMajorRecordCommon.Write_Binary_Embedded(
                     item: item,
                     writer: writer,
                     errorMask: errorMask,
@@ -2064,7 +2002,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     #region Modules
     #region Mask
-    public class Hair_Mask<T> : MajorRecord_Mask<T>, IMask<T>, IEquatable<Hair_Mask<T>>
+    public class Hair_Mask<T> : OblivionMajorRecord_Mask<T>, IMask<T>, IEquatable<Hair_Mask<T>>
     {
         #region Ctors
         public Hair_Mask()
@@ -2208,7 +2146,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public class Hair_ErrorMask : MajorRecord_ErrorMask, IErrorMask<Hair_ErrorMask>
+    public class Hair_ErrorMask : OblivionMajorRecord_ErrorMask, IErrorMask<Hair_ErrorMask>
     {
         #region Members
         public Exception Name;
@@ -2357,7 +2295,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
-    public class Hair_CopyMask : MajorRecord_CopyMask
+    public class Hair_CopyMask : OblivionMajorRecord_CopyMask
     {
         public Hair_CopyMask()
         {
@@ -2380,7 +2318,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public class Hair_TranslationMask : MajorRecord_TranslationMask
+    public class Hair_TranslationMask : OblivionMajorRecord_TranslationMask
     {
         #region Members
         public bool Name;

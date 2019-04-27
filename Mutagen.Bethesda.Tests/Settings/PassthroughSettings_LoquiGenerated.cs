@@ -65,28 +65,6 @@ namespace Mutagen.Bethesda.Tests
         public String DataFolder { get; set; }
         #endregion
 
-        #region Loqui Getter Interface
-
-        protected object GetNthObject(ushort index) => PassthroughSettingsCommon.GetNthObject(index, this);
-        object ILoquiObjectGetter.GetNthObject(ushort index) => this.GetNthObject(index);
-
-        protected bool GetNthObjectHasBeenSet(ushort index) => PassthroughSettingsCommon.GetNthObjectHasBeenSet(index, this);
-        bool ILoquiObjectGetter.GetNthObjectHasBeenSet(ushort index) => this.GetNthObjectHasBeenSet(index);
-
-        protected void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => PassthroughSettingsCommon.UnsetNthObject(index, this, cmds);
-        void ILoquiObjectSetter.UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => this.UnsetNthObject(index, cmds);
-
-        #endregion
-
-        #region Loqui Interface
-        protected void SetNthObjectHasBeenSet(ushort index, bool on)
-        {
-            PassthroughSettingsCommon.SetNthObjectHasBeenSet(index, on, this);
-        }
-        void ILoquiObjectSetter.SetNthObjectHasBeenSet(ushort index, bool on) => this.SetNthObjectHasBeenSet(index, on);
-
-        #endregion
-
         IMask<bool> IEqualsMask<PassthroughSettings>.GetEqualsMask(PassthroughSettings rhs, EqualsMaskHelper.Include include) => PassthroughSettingsCommon.GetEqualsMask(this, rhs, include);
         IMask<bool> IEqualsMask<IPassthroughSettingsGetter>.GetEqualsMask(IPassthroughSettingsGetter rhs, EqualsMaskHelper.Include include) => PassthroughSettingsCommon.GetEqualsMask(this, rhs, include);
         #region To String
@@ -664,7 +642,6 @@ namespace Mutagen.Bethesda.Tests
                 cmds: cmds);
         }
 
-        void ILoquiObjectSetter.SetNthObject(ushort index, object obj, NotifyingFireParameters cmds) => this.SetNthObject(index, obj, cmds);
         protected void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
         {
             PassthroughSettings_FieldIndex enu = (PassthroughSettings_FieldIndex)index;
@@ -753,11 +730,6 @@ namespace Mutagen.Bethesda.Tests
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, PassthroughSettings obj)
-        {
-            ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
-        }
-
     }
     #endregion
 
@@ -1121,109 +1093,6 @@ namespace Mutagen.Bethesda.Tests.Internals
 
         #endregion
 
-        public static void SetNthObjectHasBeenSet(
-            ushort index,
-            bool on,
-            IPassthroughSettings obj,
-            NotifyingFireParameters cmds = null)
-        {
-            PassthroughSettings_FieldIndex enu = (PassthroughSettings_FieldIndex)index;
-            switch (enu)
-            {
-                case PassthroughSettings_FieldIndex.ReuseCaches:
-                case PassthroughSettings_FieldIndex.DeleteCachesAfter:
-                case PassthroughSettings_FieldIndex.TestNormal:
-                case PassthroughSettings_FieldIndex.TestImport:
-                case PassthroughSettings_FieldIndex.TestObservable:
-                case PassthroughSettings_FieldIndex.TestFolder:
-                case PassthroughSettings_FieldIndex.DataFolder:
-                    if (on) break;
-                    throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static void UnsetNthObject(
-            ushort index,
-            IPassthroughSettings obj,
-            NotifyingUnsetParameters cmds = null)
-        {
-            PassthroughSettings_FieldIndex enu = (PassthroughSettings_FieldIndex)index;
-            switch (enu)
-            {
-                case PassthroughSettings_FieldIndex.ReuseCaches:
-                    obj.ReuseCaches = default(Boolean);
-                    break;
-                case PassthroughSettings_FieldIndex.DeleteCachesAfter:
-                    obj.DeleteCachesAfter = PassthroughSettings._DeleteCachesAfter_Default;
-                    break;
-                case PassthroughSettings_FieldIndex.TestNormal:
-                    obj.TestNormal = default(Boolean);
-                    break;
-                case PassthroughSettings_FieldIndex.TestImport:
-                    obj.TestImport = default(Boolean);
-                    break;
-                case PassthroughSettings_FieldIndex.TestObservable:
-                    obj.TestObservable = default(Boolean);
-                    break;
-                case PassthroughSettings_FieldIndex.TestFolder:
-                    obj.TestFolder = default(Boolean);
-                    break;
-                case PassthroughSettings_FieldIndex.DataFolder:
-                    obj.DataFolder = default(String);
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthObjectHasBeenSet(
-            ushort index,
-            IPassthroughSettings obj)
-        {
-            PassthroughSettings_FieldIndex enu = (PassthroughSettings_FieldIndex)index;
-            switch (enu)
-            {
-                case PassthroughSettings_FieldIndex.ReuseCaches:
-                case PassthroughSettings_FieldIndex.DeleteCachesAfter:
-                case PassthroughSettings_FieldIndex.TestNormal:
-                case PassthroughSettings_FieldIndex.TestImport:
-                case PassthroughSettings_FieldIndex.TestObservable:
-                case PassthroughSettings_FieldIndex.TestFolder:
-                case PassthroughSettings_FieldIndex.DataFolder:
-                    return true;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static object GetNthObject(
-            ushort index,
-            IPassthroughSettingsGetter obj)
-        {
-            PassthroughSettings_FieldIndex enu = (PassthroughSettings_FieldIndex)index;
-            switch (enu)
-            {
-                case PassthroughSettings_FieldIndex.ReuseCaches:
-                    return obj.ReuseCaches;
-                case PassthroughSettings_FieldIndex.DeleteCachesAfter:
-                    return obj.DeleteCachesAfter;
-                case PassthroughSettings_FieldIndex.TestNormal:
-                    return obj.TestNormal;
-                case PassthroughSettings_FieldIndex.TestImport:
-                    return obj.TestImport;
-                case PassthroughSettings_FieldIndex.TestObservable:
-                    return obj.TestObservable;
-                case PassthroughSettings_FieldIndex.TestFolder:
-                    return obj.TestFolder;
-                case PassthroughSettings_FieldIndex.DataFolder:
-                    return obj.DataFolder;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
         public static void Clear(
             IPassthroughSettings item,
             NotifyingUnsetParameters cmds = null)
@@ -1493,185 +1362,206 @@ namespace Mutagen.Bethesda.Tests.Internals
             switch (name)
             {
                 case "ReuseCaches":
-                    try
+                    if ((translationMask?.GetShouldTranslate((int)PassthroughSettings_FieldIndex.ReuseCaches) ?? true))
                     {
-                        errorMask?.PushIndex((int)PassthroughSettings_FieldIndex.ReuseCaches);
-                        if (BooleanXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Boolean ReuseCachesParse,
-                            errorMask: errorMask))
+                        try
                         {
-                            item.ReuseCaches = ReuseCachesParse;
+                            errorMask?.PushIndex((int)PassthroughSettings_FieldIndex.ReuseCaches);
+                            if (BooleanXmlTranslation.Instance.Parse(
+                                node: node,
+                                item: out Boolean ReuseCachesParse,
+                                errorMask: errorMask))
+                            {
+                                item.ReuseCaches = ReuseCachesParse;
+                            }
+                            else
+                            {
+                                item.ReuseCaches = default(Boolean);
+                            }
                         }
-                        else
+                        catch (Exception ex)
+                        when (errorMask != null)
                         {
-                            item.ReuseCaches = default(Boolean);
+                            errorMask.ReportException(ex);
                         }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
+                        finally
+                        {
+                            errorMask?.PopIndex();
+                        }
                     }
                     break;
                 case "DeleteCachesAfter":
-                    try
+                    if ((translationMask?.GetShouldTranslate((int)PassthroughSettings_FieldIndex.DeleteCachesAfter) ?? true))
                     {
-                        errorMask?.PushIndex((int)PassthroughSettings_FieldIndex.DeleteCachesAfter);
-                        if (BooleanXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Boolean DeleteCachesAfterParse,
-                            errorMask: errorMask))
+                        try
                         {
-                            item.DeleteCachesAfter = DeleteCachesAfterParse;
+                            errorMask?.PushIndex((int)PassthroughSettings_FieldIndex.DeleteCachesAfter);
+                            if (BooleanXmlTranslation.Instance.Parse(
+                                node: node,
+                                item: out Boolean DeleteCachesAfterParse,
+                                errorMask: errorMask))
+                            {
+                                item.DeleteCachesAfter = DeleteCachesAfterParse;
+                            }
+                            else
+                            {
+                                item.DeleteCachesAfter = default(Boolean);
+                            }
                         }
-                        else
+                        catch (Exception ex)
+                        when (errorMask != null)
                         {
-                            item.DeleteCachesAfter = default(Boolean);
+                            errorMask.ReportException(ex);
                         }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
+                        finally
+                        {
+                            errorMask?.PopIndex();
+                        }
                     }
                     break;
                 case "TestNormal":
-                    try
+                    if ((translationMask?.GetShouldTranslate((int)PassthroughSettings_FieldIndex.TestNormal) ?? true))
                     {
-                        errorMask?.PushIndex((int)PassthroughSettings_FieldIndex.TestNormal);
-                        if (BooleanXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Boolean TestNormalParse,
-                            errorMask: errorMask))
+                        try
                         {
-                            item.TestNormal = TestNormalParse;
+                            errorMask?.PushIndex((int)PassthroughSettings_FieldIndex.TestNormal);
+                            if (BooleanXmlTranslation.Instance.Parse(
+                                node: node,
+                                item: out Boolean TestNormalParse,
+                                errorMask: errorMask))
+                            {
+                                item.TestNormal = TestNormalParse;
+                            }
+                            else
+                            {
+                                item.TestNormal = default(Boolean);
+                            }
                         }
-                        else
+                        catch (Exception ex)
+                        when (errorMask != null)
                         {
-                            item.TestNormal = default(Boolean);
+                            errorMask.ReportException(ex);
                         }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
+                        finally
+                        {
+                            errorMask?.PopIndex();
+                        }
                     }
                     break;
                 case "TestImport":
-                    try
+                    if ((translationMask?.GetShouldTranslate((int)PassthroughSettings_FieldIndex.TestImport) ?? true))
                     {
-                        errorMask?.PushIndex((int)PassthroughSettings_FieldIndex.TestImport);
-                        if (BooleanXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Boolean TestImportParse,
-                            errorMask: errorMask))
+                        try
                         {
-                            item.TestImport = TestImportParse;
+                            errorMask?.PushIndex((int)PassthroughSettings_FieldIndex.TestImport);
+                            if (BooleanXmlTranslation.Instance.Parse(
+                                node: node,
+                                item: out Boolean TestImportParse,
+                                errorMask: errorMask))
+                            {
+                                item.TestImport = TestImportParse;
+                            }
+                            else
+                            {
+                                item.TestImport = default(Boolean);
+                            }
                         }
-                        else
+                        catch (Exception ex)
+                        when (errorMask != null)
                         {
-                            item.TestImport = default(Boolean);
+                            errorMask.ReportException(ex);
                         }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
+                        finally
+                        {
+                            errorMask?.PopIndex();
+                        }
                     }
                     break;
                 case "TestObservable":
-                    try
+                    if ((translationMask?.GetShouldTranslate((int)PassthroughSettings_FieldIndex.TestObservable) ?? true))
                     {
-                        errorMask?.PushIndex((int)PassthroughSettings_FieldIndex.TestObservable);
-                        if (BooleanXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Boolean TestObservableParse,
-                            errorMask: errorMask))
+                        try
                         {
-                            item.TestObservable = TestObservableParse;
+                            errorMask?.PushIndex((int)PassthroughSettings_FieldIndex.TestObservable);
+                            if (BooleanXmlTranslation.Instance.Parse(
+                                node: node,
+                                item: out Boolean TestObservableParse,
+                                errorMask: errorMask))
+                            {
+                                item.TestObservable = TestObservableParse;
+                            }
+                            else
+                            {
+                                item.TestObservable = default(Boolean);
+                            }
                         }
-                        else
+                        catch (Exception ex)
+                        when (errorMask != null)
                         {
-                            item.TestObservable = default(Boolean);
+                            errorMask.ReportException(ex);
                         }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
+                        finally
+                        {
+                            errorMask?.PopIndex();
+                        }
                     }
                     break;
                 case "TestFolder":
-                    try
+                    if ((translationMask?.GetShouldTranslate((int)PassthroughSettings_FieldIndex.TestFolder) ?? true))
                     {
-                        errorMask?.PushIndex((int)PassthroughSettings_FieldIndex.TestFolder);
-                        if (BooleanXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Boolean TestFolderParse,
-                            errorMask: errorMask))
+                        try
                         {
-                            item.TestFolder = TestFolderParse;
+                            errorMask?.PushIndex((int)PassthroughSettings_FieldIndex.TestFolder);
+                            if (BooleanXmlTranslation.Instance.Parse(
+                                node: node,
+                                item: out Boolean TestFolderParse,
+                                errorMask: errorMask))
+                            {
+                                item.TestFolder = TestFolderParse;
+                            }
+                            else
+                            {
+                                item.TestFolder = default(Boolean);
+                            }
                         }
-                        else
+                        catch (Exception ex)
+                        when (errorMask != null)
                         {
-                            item.TestFolder = default(Boolean);
+                            errorMask.ReportException(ex);
                         }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
+                        finally
+                        {
+                            errorMask?.PopIndex();
+                        }
                     }
                     break;
                 case "DataFolder":
-                    try
+                    if ((translationMask?.GetShouldTranslate((int)PassthroughSettings_FieldIndex.DataFolder) ?? true))
                     {
-                        errorMask?.PushIndex((int)PassthroughSettings_FieldIndex.DataFolder);
-                        if (StringXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out String DataFolderParse,
-                            errorMask: errorMask))
+                        try
                         {
-                            item.DataFolder = DataFolderParse;
+                            errorMask?.PushIndex((int)PassthroughSettings_FieldIndex.DataFolder);
+                            if (StringXmlTranslation.Instance.Parse(
+                                node: node,
+                                item: out String DataFolderParse,
+                                errorMask: errorMask))
+                            {
+                                item.DataFolder = DataFolderParse;
+                            }
+                            else
+                            {
+                                item.DataFolder = default(String);
+                            }
                         }
-                        else
+                        catch (Exception ex)
+                        when (errorMask != null)
                         {
-                            item.DataFolder = default(String);
+                            errorMask.ReportException(ex);
                         }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
+                        finally
+                        {
+                            errorMask?.PopIndex();
+                        }
                     }
                     break;
                 default:

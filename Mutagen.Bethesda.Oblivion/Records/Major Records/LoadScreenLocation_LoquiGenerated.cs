@@ -73,28 +73,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        #region Loqui Getter Interface
-
-        protected object GetNthObject(ushort index) => LoadScreenLocationCommon.GetNthObject(index, this);
-        object ILoquiObjectGetter.GetNthObject(ushort index) => this.GetNthObject(index);
-
-        protected bool GetNthObjectHasBeenSet(ushort index) => LoadScreenLocationCommon.GetNthObjectHasBeenSet(index, this);
-        bool ILoquiObjectGetter.GetNthObjectHasBeenSet(ushort index) => this.GetNthObjectHasBeenSet(index);
-
-        protected void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => LoadScreenLocationCommon.UnsetNthObject(index, this, cmds);
-        void ILoquiObjectSetter.UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => this.UnsetNthObject(index, cmds);
-
-        #endregion
-
-        #region Loqui Interface
-        protected void SetNthObjectHasBeenSet(ushort index, bool on)
-        {
-            LoadScreenLocationCommon.SetNthObjectHasBeenSet(index, on, this);
-        }
-        void ILoquiObjectSetter.SetNthObjectHasBeenSet(ushort index, bool on) => this.SetNthObjectHasBeenSet(index, on);
-
-        #endregion
-
         IMask<bool> IEqualsMask<LoadScreenLocation>.GetEqualsMask(LoadScreenLocation rhs, EqualsMaskHelper.Include include) => LoadScreenLocationCommon.GetEqualsMask(this, rhs, include);
         IMask<bool> IEqualsMask<ILoadScreenLocationGetter>.GetEqualsMask(ILoadScreenLocationGetter rhs, EqualsMaskHelper.Include include) => LoadScreenLocationCommon.GetEqualsMask(this, rhs, include);
         #region To String
@@ -732,7 +710,6 @@ namespace Mutagen.Bethesda.Oblivion
                 cmds: cmds);
         }
 
-        void ILoquiObjectSetter.SetNthObject(ushort index, object obj, NotifyingFireParameters cmds) => this.SetNthObject(index, obj, cmds);
         protected void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
         {
             LoadScreenLocation_FieldIndex enu = (LoadScreenLocation_FieldIndex)index;
@@ -805,11 +782,6 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, LoadScreenLocation obj)
-        {
-            ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
-        }
-
     }
     #endregion
 
@@ -1117,81 +1089,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         #endregion
-
-        public static void SetNthObjectHasBeenSet(
-            ushort index,
-            bool on,
-            ILoadScreenLocation obj,
-            NotifyingFireParameters cmds = null)
-        {
-            LoadScreenLocation_FieldIndex enu = (LoadScreenLocation_FieldIndex)index;
-            switch (enu)
-            {
-                case LoadScreenLocation_FieldIndex.Direct:
-                case LoadScreenLocation_FieldIndex.Indirect:
-                case LoadScreenLocation_FieldIndex.GridPoint:
-                    if (on) break;
-                    throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static void UnsetNthObject(
-            ushort index,
-            ILoadScreenLocation obj,
-            NotifyingUnsetParameters cmds = null)
-        {
-            LoadScreenLocation_FieldIndex enu = (LoadScreenLocation_FieldIndex)index;
-            switch (enu)
-            {
-                case LoadScreenLocation_FieldIndex.Direct:
-                    obj.Direct = default(Place);
-                    break;
-                case LoadScreenLocation_FieldIndex.Indirect:
-                    obj.Indirect = default(Worldspace);
-                    break;
-                case LoadScreenLocation_FieldIndex.GridPoint:
-                    obj.GridPoint = default(P2Int16);
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthObjectHasBeenSet(
-            ushort index,
-            ILoadScreenLocation obj)
-        {
-            LoadScreenLocation_FieldIndex enu = (LoadScreenLocation_FieldIndex)index;
-            switch (enu)
-            {
-                case LoadScreenLocation_FieldIndex.Direct:
-                case LoadScreenLocation_FieldIndex.Indirect:
-                case LoadScreenLocation_FieldIndex.GridPoint:
-                    return true;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static object GetNthObject(
-            ushort index,
-            ILoadScreenLocationGetter obj)
-        {
-            LoadScreenLocation_FieldIndex enu = (LoadScreenLocation_FieldIndex)index;
-            switch (enu)
-            {
-                case LoadScreenLocation_FieldIndex.Direct:
-                    return obj.Direct;
-                case LoadScreenLocation_FieldIndex.Indirect:
-                    return obj.Indirect;
-                case LoadScreenLocation_FieldIndex.GridPoint:
-                    return obj.GridPoint;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
 
         public static void Clear(
             ILoadScreenLocation item,

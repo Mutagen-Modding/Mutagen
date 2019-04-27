@@ -231,28 +231,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        #region Loqui Getter Interface
-
-        protected object GetNthObject(ushort index) => TES4Common.GetNthObject(index, this);
-        object ILoquiObjectGetter.GetNthObject(ushort index) => this.GetNthObject(index);
-
-        protected bool GetNthObjectHasBeenSet(ushort index) => TES4Common.GetNthObjectHasBeenSet(index, this);
-        bool ILoquiObjectGetter.GetNthObjectHasBeenSet(ushort index) => this.GetNthObjectHasBeenSet(index);
-
-        protected void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => TES4Common.UnsetNthObject(index, this, cmds);
-        void ILoquiObjectSetter.UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => this.UnsetNthObject(index, cmds);
-
-        #endregion
-
-        #region Loqui Interface
-        protected void SetNthObjectHasBeenSet(ushort index, bool on)
-        {
-            TES4Common.SetNthObjectHasBeenSet(index, on, this);
-        }
-        void ILoquiObjectSetter.SetNthObjectHasBeenSet(ushort index, bool on) => this.SetNthObjectHasBeenSet(index, on);
-
-        #endregion
-
         IMask<bool> IEqualsMask<TES4>.GetEqualsMask(TES4 rhs, EqualsMaskHelper.Include include) => TES4Common.GetEqualsMask(this, rhs, include);
         IMask<bool> IEqualsMask<ITES4Getter>.GetEqualsMask(ITES4Getter rhs, EqualsMaskHelper.Include include) => TES4Common.GetEqualsMask(this, rhs, include);
         #region To String
@@ -1141,7 +1119,6 @@ namespace Mutagen.Bethesda.Oblivion
                 cmds: cmds);
         }
 
-        void ILoquiObjectSetter.SetNthObject(ushort index, object obj, NotifyingFireParameters cmds) => this.SetNthObject(index, obj, cmds);
         protected void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
         {
             TES4_FieldIndex enu = (TES4_FieldIndex)index;
@@ -1236,11 +1213,6 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, TES4 obj)
-        {
-            ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
-        }
-
     }
     #endregion
 
@@ -1858,134 +1830,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         #endregion
-
-        public static void SetNthObjectHasBeenSet(
-            ushort index,
-            bool on,
-            ITES4 obj,
-            NotifyingFireParameters cmds = null)
-        {
-            TES4_FieldIndex enu = (TES4_FieldIndex)index;
-            switch (enu)
-            {
-                case TES4_FieldIndex.Fluff:
-                case TES4_FieldIndex.Header:
-                    if (on) break;
-                    throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
-                case TES4_FieldIndex.TypeOffsets:
-                    obj.TypeOffsets_IsSet = on;
-                    break;
-                case TES4_FieldIndex.Deleted:
-                    obj.Deleted_IsSet = on;
-                    break;
-                case TES4_FieldIndex.Author:
-                    obj.Author_IsSet = on;
-                    break;
-                case TES4_FieldIndex.Description:
-                    obj.Description_IsSet = on;
-                    break;
-                case TES4_FieldIndex.MasterReferences:
-                    obj.MasterReferences.HasBeenSet = on;
-                    break;
-                case TES4_FieldIndex.VestigialData:
-                    obj.VestigialData_IsSet = on;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static void UnsetNthObject(
-            ushort index,
-            ITES4 obj,
-            NotifyingUnsetParameters cmds = null)
-        {
-            TES4_FieldIndex enu = (TES4_FieldIndex)index;
-            switch (enu)
-            {
-                case TES4_FieldIndex.Fluff:
-                    obj.Fluff = default(Byte[]);
-                    break;
-                case TES4_FieldIndex.Header:
-                    obj.Header = default(Header);
-                    break;
-                case TES4_FieldIndex.TypeOffsets:
-                    obj.TypeOffsets_Unset();
-                    break;
-                case TES4_FieldIndex.Deleted:
-                    obj.Deleted_Unset();
-                    break;
-                case TES4_FieldIndex.Author:
-                    obj.Author_Unset();
-                    break;
-                case TES4_FieldIndex.Description:
-                    obj.Description_Unset();
-                    break;
-                case TES4_FieldIndex.MasterReferences:
-                    obj.MasterReferences.Unset();
-                    break;
-                case TES4_FieldIndex.VestigialData:
-                    obj.VestigialData_Unset();
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthObjectHasBeenSet(
-            ushort index,
-            ITES4 obj)
-        {
-            TES4_FieldIndex enu = (TES4_FieldIndex)index;
-            switch (enu)
-            {
-                case TES4_FieldIndex.Fluff:
-                case TES4_FieldIndex.Header:
-                    return true;
-                case TES4_FieldIndex.TypeOffsets:
-                    return obj.TypeOffsets_IsSet;
-                case TES4_FieldIndex.Deleted:
-                    return obj.Deleted_IsSet;
-                case TES4_FieldIndex.Author:
-                    return obj.Author_IsSet;
-                case TES4_FieldIndex.Description:
-                    return obj.Description_IsSet;
-                case TES4_FieldIndex.MasterReferences:
-                    return obj.MasterReferences.HasBeenSet;
-                case TES4_FieldIndex.VestigialData:
-                    return obj.VestigialData_IsSet;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static object GetNthObject(
-            ushort index,
-            ITES4Getter obj)
-        {
-            TES4_FieldIndex enu = (TES4_FieldIndex)index;
-            switch (enu)
-            {
-                case TES4_FieldIndex.Fluff:
-                    return obj.Fluff;
-                case TES4_FieldIndex.Header:
-                    return obj.Header;
-                case TES4_FieldIndex.TypeOffsets:
-                    return obj.TypeOffsets;
-                case TES4_FieldIndex.Deleted:
-                    return obj.Deleted;
-                case TES4_FieldIndex.Author:
-                    return obj.Author;
-                case TES4_FieldIndex.Description:
-                    return obj.Description;
-                case TES4_FieldIndex.MasterReferences:
-                    return obj.MasterReferences;
-                case TES4_FieldIndex.VestigialData:
-                    return obj.VestigialData;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
 
         public static void Clear(
             ITES4 item,

@@ -2,26 +2,26 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>b3188c55b583de3956796c00c1093dce3e696f34</Sha>
+         <Sha>b1fbc716290f506af6a067c8a03469d29f007b38</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>04-27-2019 16:26:14</CommitDate>
-         <Description>IBinaryReadStream get accessors</Description>
+         <CommitDate>04-27-2019 16:26:38</CommitDate>
+         <Description>Merge remote-tracking branch 'origin/master'</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>ac0fb8805583bf867fe50880685588ae053cd210</Sha>
+         <Sha>0546dd1ad78b0dacb184e4c4824ddb5496ee28b3</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>04-20-2019 16:08:55</CommitDate>
-         <Description>Nuget Updates</Description>
+         <CommitDate>04-27-2019 17:00:08</CommitDate>
+         <Description>Merge remote-tracking branch 'origin/master'</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>
          <Nickname>DynamicData</Nickname>
-         <Sha>777d9f0ab67693df8f9746170de6b1df09e16e38</Sha>
+         <Sha>cf7da29e7a13829f638210d1ce6c58c30de4dd86</Sha>
          <Path>../DynamicData</Path>
-         <CommitDate>03-26-2019 21:04:17</CommitDate>
-         <Description>Merge remote-tracking branch 'source/master'</Description>
+         <CommitDate>04-20-2019 16:23:13</CommitDate>
+         <Description>Nuget updates</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
    </ParentRepos>

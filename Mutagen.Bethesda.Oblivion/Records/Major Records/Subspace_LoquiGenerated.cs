@@ -15,6 +15,7 @@ using Mutagen.Bethesda.Oblivion.Internals;
 using ReactiveUI;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
 using System.Xml;
@@ -33,7 +34,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class Subspace : 
-        MajorRecord,
+        OblivionMajorRecord,
         ISubspace,
         ILoquiObject<Subspace>,
         ILoquiObjectSetter,
@@ -86,24 +87,6 @@ namespace Mutagen.Bethesda.Oblivion
                 this.RaiseAndSetIfChanged(ref this._Z, value, nameof(Z));
             }
         }
-        #endregion
-
-        #region Loqui Getter Interface
-
-        protected override object GetNthObject(ushort index) => SubspaceCommon.GetNthObject(index, this);
-
-        protected override bool GetNthObjectHasBeenSet(ushort index) => SubspaceCommon.GetNthObjectHasBeenSet(index, this);
-
-        protected override void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => SubspaceCommon.UnsetNthObject(index, this, cmds);
-
-        #endregion
-
-        #region Loqui Interface
-        protected override void SetNthObjectHasBeenSet(ushort index, bool on)
-        {
-            SubspaceCommon.SetNthObjectHasBeenSet(index, on, this);
-        }
-
         #endregion
 
         IMask<bool> IEqualsMask<Subspace>.GetEqualsMask(Subspace rhs, EqualsMaskHelper.Include include) => SubspaceCommon.GetEqualsMask(this, rhs, include);
@@ -399,6 +382,22 @@ namespace Mutagen.Bethesda.Oblivion
         #region Base Class Trickdown Overrides
         public override void Write_Xml(
             XElement node,
+            out OblivionMajorRecord_ErrorMask errorMask,
+            bool doMasks = true,
+            OblivionMajorRecord_TranslationMask translationMask = null,
+            string name = null)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            this.Write_Xml(
+                name: name,
+                node: node,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal());
+            errorMask = Subspace_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public override void Write_Xml(
+            XElement node,
             out MajorRecord_ErrorMask errorMask,
             bool doMasks = true,
             MajorRecord_TranslationMask translationMask = null,
@@ -443,7 +442,7 @@ namespace Mutagen.Bethesda.Oblivion
                     item.DNAMDataTypeState |= Subspace.DNAMDataType.Has;
                     break;
                 default:
-                    MajorRecord.FillPrivateElement_Xml(
+                    OblivionMajorRecord.FillPrivateElement_Xml(
                         item: item,
                         node: node,
                         name: name,
@@ -482,9 +481,9 @@ namespace Mutagen.Bethesda.Oblivion
             CustomCtor();
         }
 
-        partial void PostDuplicate(Subspace obj, Subspace rhs, Func<FormKey> getNextFormKey, IList<(MajorRecord Record, FormKey OriginalFormKey)> duplicatedRecords);
+        partial void PostDuplicate(Subspace obj, Subspace rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
 
-        public override MajorRecord Duplicate(Func<FormKey> getNextFormKey, IList<(MajorRecord Record, FormKey OriginalFormKey)> duplicatedRecords)
+        public override IMajorRecordCommon Duplicate(Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
         {
             var ret = new Subspace(getNextFormKey());
             ret.CopyFieldsFrom(this);
@@ -565,6 +564,21 @@ namespace Mutagen.Bethesda.Oblivion
         public override void Write_Binary(
             MutagenWriter writer,
             MasterReferences masterReferences,
+            out OblivionMajorRecord_ErrorMask errorMask,
+            bool doMasks = true)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            this.Write_Binary(
+                masterReferences: masterReferences,
+                writer: writer,
+                errorMask: errorMaskBuilder,
+                recordTypeConverter: null);
+            errorMask = Subspace_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public override void Write_Binary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
             out MajorRecord_ErrorMask errorMask,
             bool doMasks = true)
         {
@@ -600,7 +614,7 @@ namespace Mutagen.Bethesda.Oblivion
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            MajorRecord.Fill_Binary_Structs(
+            OblivionMajorRecord.Fill_Binary_Structs(
                 item: item,
                 frame: frame,
                 masterReferences: masterReferences,
@@ -702,7 +716,7 @@ namespace Mutagen.Bethesda.Oblivion
                     return TryGet<int?>.Succeed((int)Subspace_FieldIndex.Z);
                 }
                 default:
-                    return MajorRecord.Fill_Binary_RecordTypes(
+                    return OblivionMajorRecord.Fill_Binary_RecordTypes(
                         item: item,
                         frame: frame,
                         nextRecordType: nextRecordType,
@@ -872,7 +886,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             if (!EnumExt.TryParse(pair.Key, out Subspace_FieldIndex enu))
             {
-                CopyInInternal_MajorRecord(obj, pair);
+                CopyInInternal_OblivionMajorRecord(obj, pair);
             }
             switch (enu)
             {
@@ -889,16 +903,11 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, Subspace obj)
-        {
-            ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
-        }
-
     }
     #endregion
 
     #region Interface
-    public partial interface ISubspace : ISubspaceGetter, IMajorRecord, ILoquiClass<ISubspace, ISubspaceGetter>, ILoquiClass<Subspace, ISubspaceGetter>
+    public partial interface ISubspace : ISubspaceGetter, IOblivionMajorRecord, ILoquiClass<ISubspace, ISubspaceGetter>, ILoquiClass<Subspace, ISubspaceGetter>
     {
         new Single X { get; set; }
 
@@ -908,7 +917,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
-    public partial interface ISubspaceGetter : IMajorRecordGetter
+    public partial interface ISubspaceGetter : IOblivionMajorRecordGetter
     {
         #region X
         Single X { get; }
@@ -934,11 +943,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #region Field Index
     public enum Subspace_FieldIndex
     {
-        MajorRecordFlags = 0,
-        FormKey = 1,
-        Version = 2,
-        EditorID = 3,
-        RecordType = 4,
+        FormKey = 0,
+        Version = 1,
+        EditorID = 2,
+        RecordType = 3,
+        OblivionMajorRecordFlags = 4,
         X = 5,
         Y = 6,
         Z = 7,
@@ -1010,7 +1019,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Subspace_FieldIndex.Z:
                     return false;
                 default:
-                    return MajorRecord_Registration.GetNthIsEnumerable(index);
+                    return OblivionMajorRecord_Registration.GetNthIsEnumerable(index);
             }
         }
 
@@ -1024,7 +1033,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Subspace_FieldIndex.Z:
                     return false;
                 default:
-                    return MajorRecord_Registration.GetNthIsLoqui(index);
+                    return OblivionMajorRecord_Registration.GetNthIsLoqui(index);
             }
         }
 
@@ -1038,7 +1047,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Subspace_FieldIndex.Z:
                     return false;
                 default:
-                    return MajorRecord_Registration.GetNthIsSingleton(index);
+                    return OblivionMajorRecord_Registration.GetNthIsSingleton(index);
             }
         }
 
@@ -1054,7 +1063,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Subspace_FieldIndex.Z:
                     return "Z";
                 default:
-                    return MajorRecord_Registration.GetNthName(index);
+                    return OblivionMajorRecord_Registration.GetNthName(index);
             }
         }
 
@@ -1068,7 +1077,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Subspace_FieldIndex.Z:
                     return false;
                 default:
-                    return MajorRecord_Registration.IsNthDerivative(index);
+                    return OblivionMajorRecord_Registration.IsNthDerivative(index);
             }
         }
 
@@ -1082,7 +1091,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Subspace_FieldIndex.Z:
                     return false;
                 default:
-                    return MajorRecord_Registration.IsProtected(index);
+                    return OblivionMajorRecord_Registration.IsProtected(index);
             }
         }
 
@@ -1098,7 +1107,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Subspace_FieldIndex.Z:
                     return typeof(Single);
                 default:
-                    return MajorRecord_Registration.GetNthType(index);
+                    return OblivionMajorRecord_Registration.GetNthType(index);
             }
         }
 
@@ -1149,7 +1158,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Subspace_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {
-            MajorRecordCommon.CopyFieldsFrom(
+            OblivionMajorRecordCommon.CopyFieldsFrom(
                 item,
                 rhs,
                 def,
@@ -1211,83 +1220,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void SetNthObjectHasBeenSet(
-            ushort index,
-            bool on,
-            ISubspace obj,
-            NotifyingFireParameters cmds = null)
-        {
-            Subspace_FieldIndex enu = (Subspace_FieldIndex)index;
-            switch (enu)
-            {
-                case Subspace_FieldIndex.X:
-                case Subspace_FieldIndex.Y:
-                case Subspace_FieldIndex.Z:
-                    if (on) break;
-                    throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
-                default:
-                    MajorRecordCommon.SetNthObjectHasBeenSet(index, on, obj);
-                    break;
-            }
-        }
-
-        public static void UnsetNthObject(
-            ushort index,
-            ISubspace obj,
-            NotifyingUnsetParameters cmds = null)
-        {
-            Subspace_FieldIndex enu = (Subspace_FieldIndex)index;
-            switch (enu)
-            {
-                case Subspace_FieldIndex.X:
-                    obj.X = default(Single);
-                    break;
-                case Subspace_FieldIndex.Y:
-                    obj.Y = default(Single);
-                    break;
-                case Subspace_FieldIndex.Z:
-                    obj.Z = default(Single);
-                    break;
-                default:
-                    MajorRecordCommon.UnsetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public static bool GetNthObjectHasBeenSet(
-            ushort index,
-            ISubspace obj)
-        {
-            Subspace_FieldIndex enu = (Subspace_FieldIndex)index;
-            switch (enu)
-            {
-                case Subspace_FieldIndex.X:
-                case Subspace_FieldIndex.Y:
-                case Subspace_FieldIndex.Z:
-                    return true;
-                default:
-                    return MajorRecordCommon.GetNthObjectHasBeenSet(index, obj);
-            }
-        }
-
-        public static object GetNthObject(
-            ushort index,
-            ISubspaceGetter obj)
-        {
-            Subspace_FieldIndex enu = (Subspace_FieldIndex)index;
-            switch (enu)
-            {
-                case Subspace_FieldIndex.X:
-                    return obj.X;
-                case Subspace_FieldIndex.Y:
-                    return obj.Y;
-                case Subspace_FieldIndex.Z:
-                    return obj.Z;
-                default:
-                    return MajorRecordCommon.GetNthObject(index, obj);
-            }
-        }
-
         public static void Clear(
             ISubspace item,
             NotifyingUnsetParameters cmds = null)
@@ -1321,7 +1253,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.X = item.X.EqualsWithin(rhs.X);
             ret.Y = item.Y.EqualsWithin(rhs.Y);
             ret.Z = item.Z.EqualsWithin(rhs.Z);
-            MajorRecordCommon.FillEqualsMask(item, rhs, ret);
+            OblivionMajorRecordCommon.FillEqualsMask(item, rhs, ret);
         }
 
         public static string ToString(
@@ -1383,6 +1315,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ret;
         }
 
+        public static Subspace_FieldIndex? ConvertFieldIndex(OblivionMajorRecord_FieldIndex? index)
+        {
+            if (!index.HasValue) return null;
+            return ConvertFieldIndex(index: index.Value);
+        }
+
+        public static Subspace_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
+        {
+            switch (index)
+            {
+                case OblivionMajorRecord_FieldIndex.FormKey:
+                    return (Subspace_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.Version:
+                    return (Subspace_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.EditorID:
+                    return (Subspace_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.RecordType:
+                    return (Subspace_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
+                    return (Subspace_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
+        }
+
         public static Subspace_FieldIndex? ConvertFieldIndex(MajorRecord_FieldIndex? index)
         {
             if (!index.HasValue) return null;
@@ -1393,8 +1350,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (index)
             {
-                case MajorRecord_FieldIndex.MajorRecordFlags:
-                    return (Subspace_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
                     return (Subspace_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.Version:
@@ -1455,7 +1410,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
         {
-            MajorRecordCommon.WriteToNode_Xml(
+            OblivionMajorRecordCommon.WriteToNode_Xml(
                 item: item,
                 node: node,
                 errorMask: errorMask,
@@ -1606,7 +1561,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 default:
-                    MajorRecordCommon.FillPublicElement_Xml(
+                    OblivionMajorRecordCommon.FillPublicElement_Xml(
                         item: item,
                         node: node,
                         name: name,
@@ -1650,7 +1605,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: Subspace_Registration.SBSP_HEADER,
                 type: ObjectType.Record))
             {
-                MajorRecordCommon.Write_Binary_Embedded(
+                OblivionMajorRecordCommon.Write_Binary_Embedded(
                     item: item,
                     writer: writer,
                     errorMask: errorMask,
@@ -1708,7 +1663,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     #region Modules
     #region Mask
-    public class Subspace_Mask<T> : MajorRecord_Mask<T>, IMask<T>, IEquatable<Subspace_Mask<T>>
+    public class Subspace_Mask<T> : OblivionMajorRecord_Mask<T>, IMask<T>, IEquatable<Subspace_Mask<T>>
     {
         #region Ctors
         public Subspace_Mask()
@@ -1830,7 +1785,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public class Subspace_ErrorMask : MajorRecord_ErrorMask, IErrorMask<Subspace_ErrorMask>
+    public class Subspace_ErrorMask : OblivionMajorRecord_ErrorMask, IErrorMask<Subspace_ErrorMask>
     {
         #region Members
         public Exception X;
@@ -1967,7 +1922,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
-    public class Subspace_CopyMask : MajorRecord_CopyMask
+    public class Subspace_CopyMask : OblivionMajorRecord_CopyMask
     {
         public Subspace_CopyMask()
         {
@@ -1988,7 +1943,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public class Subspace_TranslationMask : MajorRecord_TranslationMask
+    public class Subspace_TranslationMask : OblivionMajorRecord_TranslationMask
     {
         #region Members
         public bool X;

@@ -83,28 +83,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        #region Loqui Getter Interface
-
-        protected virtual object GetNthObject(ushort index) => BaseLayerCommon.GetNthObject(index, this);
-        object ILoquiObjectGetter.GetNthObject(ushort index) => this.GetNthObject(index);
-
-        protected virtual bool GetNthObjectHasBeenSet(ushort index) => BaseLayerCommon.GetNthObjectHasBeenSet(index, this);
-        bool ILoquiObjectGetter.GetNthObjectHasBeenSet(ushort index) => this.GetNthObjectHasBeenSet(index);
-
-        protected virtual void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => BaseLayerCommon.UnsetNthObject(index, this, cmds);
-        void ILoquiObjectSetter.UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => this.UnsetNthObject(index, cmds);
-
-        #endregion
-
-        #region Loqui Interface
-        protected virtual void SetNthObjectHasBeenSet(ushort index, bool on)
-        {
-            BaseLayerCommon.SetNthObjectHasBeenSet(index, on, this);
-        }
-        void ILoquiObjectSetter.SetNthObjectHasBeenSet(ushort index, bool on) => this.SetNthObjectHasBeenSet(index, on);
-
-        #endregion
-
         IMask<bool> IEqualsMask<BaseLayer>.GetEqualsMask(BaseLayer rhs, EqualsMaskHelper.Include include) => BaseLayerCommon.GetEqualsMask(this, rhs, include);
         IMask<bool> IEqualsMask<IBaseLayerGetter>.GetEqualsMask(IBaseLayerGetter rhs, EqualsMaskHelper.Include include) => BaseLayerCommon.GetEqualsMask(this, rhs, include);
         #region To String
@@ -836,7 +814,6 @@ namespace Mutagen.Bethesda.Oblivion
                 cmds: cmds);
         }
 
-        void ILoquiObjectSetter.SetNthObject(ushort index, object obj, NotifyingFireParameters cmds) => this.SetNthObject(index, obj, cmds);
         protected virtual void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
         {
             BaseLayer_FieldIndex enu = (BaseLayer_FieldIndex)index;
@@ -905,11 +882,6 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, BaseLayer obj)
-        {
-            ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
-        }
-
     }
     #endregion
 
@@ -1209,80 +1181,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         #endregion
-
-        public static void SetNthObjectHasBeenSet(
-            ushort index,
-            bool on,
-            IBaseLayer obj,
-            NotifyingFireParameters cmds = null)
-        {
-            BaseLayer_FieldIndex enu = (BaseLayer_FieldIndex)index;
-            switch (enu)
-            {
-                case BaseLayer_FieldIndex.Texture:
-                case BaseLayer_FieldIndex.Quadrant:
-                case BaseLayer_FieldIndex.LayerNumber:
-                    if (on) break;
-                    throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static void UnsetNthObject(
-            ushort index,
-            IBaseLayer obj,
-            NotifyingUnsetParameters cmds = null)
-        {
-            BaseLayer_FieldIndex enu = (BaseLayer_FieldIndex)index;
-            switch (enu)
-            {
-                case BaseLayer_FieldIndex.Texture:
-                    obj.Texture = default(LandTexture);
-                    break;
-                case BaseLayer_FieldIndex.Quadrant:
-                    obj.Quadrant = default(AlphaLayer.QuadrantEnum);
-                    break;
-                case BaseLayer_FieldIndex.LayerNumber:
-                    throw new ArgumentException("Tried to set at a readonly index " + index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthObjectHasBeenSet(
-            ushort index,
-            IBaseLayer obj)
-        {
-            BaseLayer_FieldIndex enu = (BaseLayer_FieldIndex)index;
-            switch (enu)
-            {
-                case BaseLayer_FieldIndex.Texture:
-                case BaseLayer_FieldIndex.Quadrant:
-                case BaseLayer_FieldIndex.LayerNumber:
-                    return true;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static object GetNthObject(
-            ushort index,
-            IBaseLayerGetter obj)
-        {
-            BaseLayer_FieldIndex enu = (BaseLayer_FieldIndex)index;
-            switch (enu)
-            {
-                case BaseLayer_FieldIndex.Texture:
-                    return obj.Texture;
-                case BaseLayer_FieldIndex.Quadrant:
-                    return obj.Quadrant;
-                case BaseLayer_FieldIndex.LayerNumber:
-                    return obj.LayerNumber;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
 
         public static void Clear(
             IBaseLayer item,

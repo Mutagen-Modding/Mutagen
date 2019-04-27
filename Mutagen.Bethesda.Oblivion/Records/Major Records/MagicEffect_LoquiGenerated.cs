@@ -36,7 +36,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class MagicEffect : 
-        MajorRecord,
+        OblivionMajorRecord,
         IMagicEffect,
         ILoquiObject<MagicEffect>,
         ILoquiObjectSetter,
@@ -285,24 +285,6 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IObservableSetList<EDIDLink<MagicEffect>> IMagicEffectGetter.CounterEffects => _CounterEffects;
         #endregion
-
-        #endregion
-
-        #region Loqui Getter Interface
-
-        protected override object GetNthObject(ushort index) => MagicEffectCommon.GetNthObject(index, this);
-
-        protected override bool GetNthObjectHasBeenSet(ushort index) => MagicEffectCommon.GetNthObjectHasBeenSet(index, this);
-
-        protected override void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => MagicEffectCommon.UnsetNthObject(index, this, cmds);
-
-        #endregion
-
-        #region Loqui Interface
-        protected override void SetNthObjectHasBeenSet(ushort index, bool on)
-        {
-            MagicEffectCommon.SetNthObjectHasBeenSet(index, on, this);
-        }
 
         #endregion
 
@@ -659,6 +641,22 @@ namespace Mutagen.Bethesda.Oblivion
         #region Base Class Trickdown Overrides
         public override void Write_Xml(
             XElement node,
+            out OblivionMajorRecord_ErrorMask errorMask,
+            bool doMasks = true,
+            OblivionMajorRecord_TranslationMask translationMask = null,
+            string name = null)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            this.Write_Xml(
+                name: name,
+                node: node,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal());
+            errorMask = MagicEffect_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public override void Write_Xml(
+            XElement node,
             out MajorRecord_ErrorMask errorMask,
             bool doMasks = true,
             MajorRecord_TranslationMask translationMask = null,
@@ -703,7 +701,7 @@ namespace Mutagen.Bethesda.Oblivion
                     item.DATADataTypeState |= MagicEffect.DATADataType.Has;
                     break;
                 default:
-                    MajorRecord.FillPrivateElement_Xml(
+                    OblivionMajorRecord.FillPrivateElement_Xml(
                         item: item,
                         node: node,
                         name: name,
@@ -808,9 +806,9 @@ namespace Mutagen.Bethesda.Oblivion
             CustomCtor();
         }
 
-        partial void PostDuplicate(MagicEffect obj, MagicEffect rhs, Func<FormKey> getNextFormKey, IList<(MajorRecord Record, FormKey OriginalFormKey)> duplicatedRecords);
+        partial void PostDuplicate(MagicEffect obj, MagicEffect rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
 
-        public override MajorRecord Duplicate(Func<FormKey> getNextFormKey, IList<(MajorRecord Record, FormKey OriginalFormKey)> duplicatedRecords)
+        public override IMajorRecordCommon Duplicate(Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
         {
             var ret = new MagicEffect(getNextFormKey());
             ret.CopyFieldsFrom(this);
@@ -891,6 +889,21 @@ namespace Mutagen.Bethesda.Oblivion
         public override void Write_Binary(
             MutagenWriter writer,
             MasterReferences masterReferences,
+            out OblivionMajorRecord_ErrorMask errorMask,
+            bool doMasks = true)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            this.Write_Binary(
+                masterReferences: masterReferences,
+                writer: writer,
+                errorMask: errorMaskBuilder,
+                recordTypeConverter: null);
+            errorMask = MagicEffect_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public override void Write_Binary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
             out MajorRecord_ErrorMask errorMask,
             bool doMasks = true)
         {
@@ -926,7 +939,7 @@ namespace Mutagen.Bethesda.Oblivion
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            MajorRecord.Fill_Binary_Structs(
+            OblivionMajorRecord.Fill_Binary_Structs(
                 item: item,
                 frame: frame,
                 masterReferences: masterReferences,
@@ -1298,7 +1311,7 @@ namespace Mutagen.Bethesda.Oblivion
                     return TryGet<int?>.Succeed((int)MagicEffect_FieldIndex.CounterEffects);
                 }
                 default:
-                    return MajorRecord.Fill_Binary_RecordTypes(
+                    return OblivionMajorRecord.Fill_Binary_RecordTypes(
                         item: item,
                         frame: frame,
                         nextRecordType: nextRecordType,
@@ -1508,7 +1521,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             if (!EnumExt.TryParse(pair.Key, out MagicEffect_FieldIndex enu))
             {
-                CopyInInternal_MajorRecord(obj, pair);
+                CopyInInternal_OblivionMajorRecord(obj, pair);
             }
             switch (enu)
             {
@@ -1565,16 +1578,11 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, MagicEffect obj)
-        {
-            ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
-        }
-
     }
     #endregion
 
     #region Interface
-    public partial interface IMagicEffect : IMagicEffectGetter, IMajorRecord, ILoquiClass<IMagicEffect, IMagicEffectGetter>, ILoquiClass<MagicEffect, IMagicEffectGetter>
+    public partial interface IMagicEffect : IMagicEffectGetter, IOblivionMajorRecord, ILoquiClass<IMagicEffect, IMagicEffectGetter>, ILoquiClass<MagicEffect, IMagicEffectGetter>
     {
         new String Name { get; set; }
         new bool Name_IsSet { get; set; }
@@ -1617,7 +1625,7 @@ namespace Mutagen.Bethesda.Oblivion
         new ISourceSetList<EDIDLink<MagicEffect>> CounterEffects { get; }
     }
 
-    public partial interface IMagicEffectGetter : IMajorRecordGetter
+    public partial interface IMagicEffectGetter : IOblivionMajorRecordGetter
     {
         #region Name
         String Name { get; }
@@ -1696,11 +1704,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #region Field Index
     public enum MagicEffect_FieldIndex
     {
-        MajorRecordFlags = 0,
-        FormKey = 1,
-        Version = 2,
-        EditorID = 3,
-        RecordType = 4,
+        FormKey = 0,
+        Version = 1,
+        EditorID = 2,
+        RecordType = 3,
+        OblivionMajorRecordFlags = 4,
         Name = 5,
         Description = 6,
         Icon = 7,
@@ -1821,7 +1829,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case MagicEffect_FieldIndex.SubData:
                     return false;
                 default:
-                    return MajorRecord_Registration.GetNthIsEnumerable(index);
+                    return OblivionMajorRecord_Registration.GetNthIsEnumerable(index);
             }
         }
 
@@ -1848,7 +1856,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case MagicEffect_FieldIndex.CounterEffects:
                     return false;
                 default:
-                    return MajorRecord_Registration.GetNthIsLoqui(index);
+                    return OblivionMajorRecord_Registration.GetNthIsLoqui(index);
             }
         }
 
@@ -1874,7 +1882,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case MagicEffect_FieldIndex.CounterEffects:
                     return false;
                 default:
-                    return MajorRecord_Registration.GetNthIsSingleton(index);
+                    return OblivionMajorRecord_Registration.GetNthIsSingleton(index);
             }
         }
 
@@ -1914,7 +1922,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case MagicEffect_FieldIndex.CounterEffects:
                     return "CounterEffects";
                 default:
-                    return MajorRecord_Registration.GetNthName(index);
+                    return OblivionMajorRecord_Registration.GetNthName(index);
             }
         }
 
@@ -1940,7 +1948,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case MagicEffect_FieldIndex.CounterEffects:
                     return false;
                 default:
-                    return MajorRecord_Registration.IsNthDerivative(index);
+                    return OblivionMajorRecord_Registration.IsNthDerivative(index);
             }
         }
 
@@ -1966,7 +1974,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case MagicEffect_FieldIndex.CounterEffects:
                     return false;
                 default:
-                    return MajorRecord_Registration.IsProtected(index);
+                    return OblivionMajorRecord_Registration.IsProtected(index);
             }
         }
 
@@ -2006,7 +2014,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case MagicEffect_FieldIndex.CounterEffects:
                     return typeof(SourceSetList<EDIDLink<MagicEffect>>);
                 default:
-                    return MajorRecord_Registration.GetNthType(index);
+                    return OblivionMajorRecord_Registration.GetNthType(index);
             }
         }
 
@@ -2062,7 +2070,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MagicEffect_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {
-            MajorRecordCommon.CopyFieldsFrom(
+            OblivionMajorRecordCommon.CopyFieldsFrom(
                 item,
                 rhs,
                 def,
@@ -2439,182 +2447,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void SetNthObjectHasBeenSet(
-            ushort index,
-            bool on,
-            IMagicEffect obj,
-            NotifyingFireParameters cmds = null)
-        {
-            MagicEffect_FieldIndex enu = (MagicEffect_FieldIndex)index;
-            switch (enu)
-            {
-                case MagicEffect_FieldIndex.Flags:
-                case MagicEffect_FieldIndex.BaseCost:
-                case MagicEffect_FieldIndex.Unused:
-                case MagicEffect_FieldIndex.MagicSchool:
-                case MagicEffect_FieldIndex.Resistance:
-                case MagicEffect_FieldIndex.CounterEffectCount:
-                case MagicEffect_FieldIndex.Light:
-                case MagicEffect_FieldIndex.ProjectileSpeed:
-                case MagicEffect_FieldIndex.EffectShader:
-                case MagicEffect_FieldIndex.SubData:
-                    if (on) break;
-                    throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
-                case MagicEffect_FieldIndex.Name:
-                    obj.Name_IsSet = on;
-                    break;
-                case MagicEffect_FieldIndex.Description:
-                    obj.Description_IsSet = on;
-                    break;
-                case MagicEffect_FieldIndex.Icon:
-                    obj.Icon_IsSet = on;
-                    break;
-                case MagicEffect_FieldIndex.Model:
-                    obj.Model_IsSet = on;
-                    break;
-                case MagicEffect_FieldIndex.CounterEffects:
-                    obj.CounterEffects.HasBeenSet = on;
-                    break;
-                default:
-                    MajorRecordCommon.SetNthObjectHasBeenSet(index, on, obj);
-                    break;
-            }
-        }
-
-        public static void UnsetNthObject(
-            ushort index,
-            IMagicEffect obj,
-            NotifyingUnsetParameters cmds = null)
-        {
-            MagicEffect_FieldIndex enu = (MagicEffect_FieldIndex)index;
-            switch (enu)
-            {
-                case MagicEffect_FieldIndex.Name:
-                    obj.Name_Unset();
-                    break;
-                case MagicEffect_FieldIndex.Description:
-                    obj.Description_Unset();
-                    break;
-                case MagicEffect_FieldIndex.Icon:
-                    obj.Icon_Unset();
-                    break;
-                case MagicEffect_FieldIndex.Model:
-                    obj.Model_Unset();
-                    break;
-                case MagicEffect_FieldIndex.Flags:
-                    obj.Flags = default(MagicEffect.MagicFlag);
-                    break;
-                case MagicEffect_FieldIndex.BaseCost:
-                    obj.BaseCost = default(Single);
-                    break;
-                case MagicEffect_FieldIndex.Unused:
-                    obj.Unused = default(Byte[]);
-                    break;
-                case MagicEffect_FieldIndex.MagicSchool:
-                    obj.MagicSchool = default(MagicSchool);
-                    break;
-                case MagicEffect_FieldIndex.Resistance:
-                    obj.Resistance = default(Resistance);
-                    break;
-                case MagicEffect_FieldIndex.CounterEffectCount:
-                    obj.CounterEffectCount = default(UInt32);
-                    break;
-                case MagicEffect_FieldIndex.Light:
-                    obj.Light = default(Light);
-                    break;
-                case MagicEffect_FieldIndex.ProjectileSpeed:
-                    obj.ProjectileSpeed = default(Single);
-                    break;
-                case MagicEffect_FieldIndex.EffectShader:
-                    obj.EffectShader = default(EffectShader);
-                    break;
-                case MagicEffect_FieldIndex.SubData:
-                    obj.SubData = default(MagicEffectSubData);
-                    break;
-                case MagicEffect_FieldIndex.CounterEffects:
-                    obj.CounterEffects.Unset();
-                    break;
-                default:
-                    MajorRecordCommon.UnsetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public static bool GetNthObjectHasBeenSet(
-            ushort index,
-            IMagicEffect obj)
-        {
-            MagicEffect_FieldIndex enu = (MagicEffect_FieldIndex)index;
-            switch (enu)
-            {
-                case MagicEffect_FieldIndex.Flags:
-                case MagicEffect_FieldIndex.BaseCost:
-                case MagicEffect_FieldIndex.Unused:
-                case MagicEffect_FieldIndex.MagicSchool:
-                case MagicEffect_FieldIndex.Resistance:
-                case MagicEffect_FieldIndex.CounterEffectCount:
-                case MagicEffect_FieldIndex.Light:
-                case MagicEffect_FieldIndex.ProjectileSpeed:
-                case MagicEffect_FieldIndex.EffectShader:
-                case MagicEffect_FieldIndex.SubData:
-                    return true;
-                case MagicEffect_FieldIndex.Name:
-                    return obj.Name_IsSet;
-                case MagicEffect_FieldIndex.Description:
-                    return obj.Description_IsSet;
-                case MagicEffect_FieldIndex.Icon:
-                    return obj.Icon_IsSet;
-                case MagicEffect_FieldIndex.Model:
-                    return obj.Model_IsSet;
-                case MagicEffect_FieldIndex.CounterEffects:
-                    return obj.CounterEffects.HasBeenSet;
-                default:
-                    return MajorRecordCommon.GetNthObjectHasBeenSet(index, obj);
-            }
-        }
-
-        public static object GetNthObject(
-            ushort index,
-            IMagicEffectGetter obj)
-        {
-            MagicEffect_FieldIndex enu = (MagicEffect_FieldIndex)index;
-            switch (enu)
-            {
-                case MagicEffect_FieldIndex.Name:
-                    return obj.Name;
-                case MagicEffect_FieldIndex.Description:
-                    return obj.Description;
-                case MagicEffect_FieldIndex.Icon:
-                    return obj.Icon;
-                case MagicEffect_FieldIndex.Model:
-                    return obj.Model;
-                case MagicEffect_FieldIndex.Flags:
-                    return obj.Flags;
-                case MagicEffect_FieldIndex.BaseCost:
-                    return obj.BaseCost;
-                case MagicEffect_FieldIndex.Unused:
-                    return obj.Unused;
-                case MagicEffect_FieldIndex.MagicSchool:
-                    return obj.MagicSchool;
-                case MagicEffect_FieldIndex.Resistance:
-                    return obj.Resistance;
-                case MagicEffect_FieldIndex.CounterEffectCount:
-                    return obj.CounterEffectCount;
-                case MagicEffect_FieldIndex.Light:
-                    return obj.Light;
-                case MagicEffect_FieldIndex.ProjectileSpeed:
-                    return obj.ProjectileSpeed;
-                case MagicEffect_FieldIndex.EffectShader:
-                    return obj.EffectShader;
-                case MagicEffect_FieldIndex.SubData:
-                    return obj.SubData;
-                case MagicEffect_FieldIndex.CounterEffects:
-                    return obj.CounterEffects;
-                default:
-                    return MajorRecordCommon.GetNthObject(index, obj);
-            }
-        }
-
         public static void Clear(
             IMagicEffect item,
             NotifyingUnsetParameters cmds = null)
@@ -2681,7 +2513,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 rhs.CounterEffects,
                 (l, r) => object.Equals(l, r),
                 include);
-            MajorRecordCommon.FillEqualsMask(item, rhs, ret);
+            OblivionMajorRecordCommon.FillEqualsMask(item, rhs, ret);
         }
 
         public static string ToString(
@@ -2823,6 +2655,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ret;
         }
 
+        public static MagicEffect_FieldIndex? ConvertFieldIndex(OblivionMajorRecord_FieldIndex? index)
+        {
+            if (!index.HasValue) return null;
+            return ConvertFieldIndex(index: index.Value);
+        }
+
+        public static MagicEffect_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
+        {
+            switch (index)
+            {
+                case OblivionMajorRecord_FieldIndex.FormKey:
+                    return (MagicEffect_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.Version:
+                    return (MagicEffect_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.EditorID:
+                    return (MagicEffect_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.RecordType:
+                    return (MagicEffect_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
+                    return (MagicEffect_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
+        }
+
         public static MagicEffect_FieldIndex? ConvertFieldIndex(MajorRecord_FieldIndex? index)
         {
             if (!index.HasValue) return null;
@@ -2833,8 +2690,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (index)
             {
-                case MajorRecord_FieldIndex.MajorRecordFlags:
-                    return (MagicEffect_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
                     return (MagicEffect_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.Version:
@@ -2895,7 +2750,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
         {
-            MajorRecordCommon.WriteToNode_Xml(
+            OblivionMajorRecordCommon.WriteToNode_Xml(
                 item: item,
                 node: node,
                 errorMask: errorMask,
@@ -3457,7 +3312,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 default:
-                    MajorRecordCommon.FillPublicElement_Xml(
+                    OblivionMajorRecordCommon.FillPublicElement_Xml(
                         item: item,
                         node: node,
                         name: name,
@@ -3501,7 +3356,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: MagicEffect_Registration.MGEF_HEADER,
                 type: ObjectType.Record))
             {
-                MajorRecordCommon.Write_Binary_Embedded(
+                OblivionMajorRecordCommon.Write_Binary_Embedded(
                     item: item,
                     writer: writer,
                     errorMask: errorMask,
@@ -3659,7 +3514,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     #region Modules
     #region Mask
-    public class MagicEffect_Mask<T> : MajorRecord_Mask<T>, IMask<T>, IEquatable<MagicEffect_Mask<T>>
+    public class MagicEffect_Mask<T> : OblivionMajorRecord_Mask<T>, IMask<T>, IEquatable<MagicEffect_Mask<T>>
     {
         #region Ctors
         public MagicEffect_Mask()
@@ -3973,7 +3828,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public class MagicEffect_ErrorMask : MajorRecord_ErrorMask, IErrorMask<MagicEffect_ErrorMask>
+    public class MagicEffect_ErrorMask : OblivionMajorRecord_ErrorMask, IErrorMask<MagicEffect_ErrorMask>
     {
         #region Members
         public Exception Name;
@@ -4275,7 +4130,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
-    public class MagicEffect_CopyMask : MajorRecord_CopyMask
+    public class MagicEffect_CopyMask : OblivionMajorRecord_CopyMask
     {
         public MagicEffect_CopyMask()
         {
@@ -4320,7 +4175,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public class MagicEffect_TranslationMask : MajorRecord_TranslationMask
+    public class MagicEffect_TranslationMask : OblivionMajorRecord_TranslationMask
     {
         #region Members
         public bool Name;

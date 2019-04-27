@@ -101,24 +101,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        #region Loqui Getter Interface
-
-        protected override object GetNthObject(ushort index) => ArmorCommon.GetNthObject(index, this);
-
-        protected override bool GetNthObjectHasBeenSet(ushort index) => ArmorCommon.GetNthObjectHasBeenSet(index, this);
-
-        protected override void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => ArmorCommon.UnsetNthObject(index, this, cmds);
-
-        #endregion
-
-        #region Loqui Interface
-        protected override void SetNthObjectHasBeenSet(ushort index, bool on)
-        {
-            ArmorCommon.SetNthObjectHasBeenSet(index, on, this);
-        }
-
-        #endregion
-
         IMask<bool> IEqualsMask<Armor>.GetEqualsMask(Armor rhs, EqualsMaskHelper.Include include) => ArmorCommon.GetEqualsMask(this, rhs, include);
         IMask<bool> IEqualsMask<IArmorGetter>.GetEqualsMask(IArmorGetter rhs, EqualsMaskHelper.Include include) => ArmorCommon.GetEqualsMask(this, rhs, include);
         #region To String
@@ -446,6 +428,22 @@ namespace Mutagen.Bethesda.Oblivion
 
         public override void Write_Xml(
             XElement node,
+            out OblivionMajorRecord_ErrorMask errorMask,
+            bool doMasks = true,
+            OblivionMajorRecord_TranslationMask translationMask = null,
+            string name = null)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            this.Write_Xml(
+                name: name,
+                node: node,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal());
+            errorMask = Armor_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public override void Write_Xml(
+            XElement node,
             out MajorRecord_ErrorMask errorMask,
             bool doMasks = true,
             MajorRecord_TranslationMask translationMask = null,
@@ -530,9 +528,9 @@ namespace Mutagen.Bethesda.Oblivion
             CustomCtor();
         }
 
-        partial void PostDuplicate(Armor obj, Armor rhs, Func<FormKey> getNextFormKey, IList<(MajorRecord Record, FormKey OriginalFormKey)> duplicatedRecords);
+        partial void PostDuplicate(Armor obj, Armor rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
 
-        public override MajorRecord Duplicate(Func<FormKey> getNextFormKey, IList<(MajorRecord Record, FormKey OriginalFormKey)> duplicatedRecords)
+        public override IMajorRecordCommon Duplicate(Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
         {
             var ret = new Armor(getNextFormKey());
             ret.CopyFieldsFrom(this);
@@ -629,6 +627,21 @@ namespace Mutagen.Bethesda.Oblivion
             MutagenWriter writer,
             MasterReferences masterReferences,
             out ItemAbstract_ErrorMask errorMask,
+            bool doMasks = true)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            this.Write_Binary(
+                masterReferences: masterReferences,
+                writer: writer,
+                errorMask: errorMaskBuilder,
+                recordTypeConverter: null);
+            errorMask = Armor_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public override void Write_Binary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            out OblivionMajorRecord_ErrorMask errorMask,
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
@@ -1003,11 +1016,6 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, Armor obj)
-        {
-            ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
-        }
-
     }
     #endregion
 
@@ -1054,11 +1062,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #region Field Index
     public enum Armor_FieldIndex
     {
-        MajorRecordFlags = 0,
-        FormKey = 1,
-        Version = 2,
-        EditorID = 3,
-        RecordType = 4,
+        FormKey = 0,
+        Version = 1,
+        EditorID = 2,
+        RecordType = 3,
+        OblivionMajorRecordFlags = 4,
         Name = 5,
         Script = 6,
         Enchantment = 7,
@@ -1372,90 +1380,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void SetNthObjectHasBeenSet(
-            ushort index,
-            bool on,
-            IArmor obj,
-            NotifyingFireParameters cmds = null)
-        {
-            Armor_FieldIndex enu = (Armor_FieldIndex)index;
-            switch (enu)
-            {
-                case Armor_FieldIndex.ArmorValue:
-                case Armor_FieldIndex.Value:
-                case Armor_FieldIndex.Health:
-                case Armor_FieldIndex.Weight:
-                    if (on) break;
-                    throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
-                default:
-                    ClothingAbstractCommon.SetNthObjectHasBeenSet(index, on, obj);
-                    break;
-            }
-        }
-
-        public static void UnsetNthObject(
-            ushort index,
-            IArmor obj,
-            NotifyingUnsetParameters cmds = null)
-        {
-            Armor_FieldIndex enu = (Armor_FieldIndex)index;
-            switch (enu)
-            {
-                case Armor_FieldIndex.ArmorValue:
-                    obj.ArmorValue = default(Single);
-                    break;
-                case Armor_FieldIndex.Value:
-                    obj.Value = default(UInt32);
-                    break;
-                case Armor_FieldIndex.Health:
-                    obj.Health = default(UInt32);
-                    break;
-                case Armor_FieldIndex.Weight:
-                    obj.Weight = default(Single);
-                    break;
-                default:
-                    ClothingAbstractCommon.UnsetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public static bool GetNthObjectHasBeenSet(
-            ushort index,
-            IArmor obj)
-        {
-            Armor_FieldIndex enu = (Armor_FieldIndex)index;
-            switch (enu)
-            {
-                case Armor_FieldIndex.ArmorValue:
-                case Armor_FieldIndex.Value:
-                case Armor_FieldIndex.Health:
-                case Armor_FieldIndex.Weight:
-                    return true;
-                default:
-                    return ClothingAbstractCommon.GetNthObjectHasBeenSet(index, obj);
-            }
-        }
-
-        public static object GetNthObject(
-            ushort index,
-            IArmorGetter obj)
-        {
-            Armor_FieldIndex enu = (Armor_FieldIndex)index;
-            switch (enu)
-            {
-                case Armor_FieldIndex.ArmorValue:
-                    return obj.ArmorValue;
-                case Armor_FieldIndex.Value:
-                    return obj.Value;
-                case Armor_FieldIndex.Health:
-                    return obj.Health;
-                case Armor_FieldIndex.Weight:
-                    return obj.Weight;
-                default:
-                    return ClothingAbstractCommon.GetNthObject(index, obj);
-            }
-        }
-
         public static void Clear(
             IArmor item,
             NotifyingUnsetParameters cmds = null)
@@ -1568,8 +1492,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (index)
             {
-                case ClothingAbstract_FieldIndex.MajorRecordFlags:
-                    return (Armor_FieldIndex)((int)index);
                 case ClothingAbstract_FieldIndex.FormKey:
                     return (Armor_FieldIndex)((int)index);
                 case ClothingAbstract_FieldIndex.Version:
@@ -1577,6 +1499,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case ClothingAbstract_FieldIndex.EditorID:
                     return (Armor_FieldIndex)((int)index);
                 case ClothingAbstract_FieldIndex.RecordType:
+                    return (Armor_FieldIndex)((int)index);
+                case ClothingAbstract_FieldIndex.OblivionMajorRecordFlags:
                     return (Armor_FieldIndex)((int)index);
                 case ClothingAbstract_FieldIndex.Name:
                     return (Armor_FieldIndex)((int)index);
@@ -1617,8 +1541,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (index)
             {
-                case ItemAbstract_FieldIndex.MajorRecordFlags:
-                    return (Armor_FieldIndex)((int)index);
                 case ItemAbstract_FieldIndex.FormKey:
                     return (Armor_FieldIndex)((int)index);
                 case ItemAbstract_FieldIndex.Version:
@@ -1626,6 +1548,33 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case ItemAbstract_FieldIndex.EditorID:
                     return (Armor_FieldIndex)((int)index);
                 case ItemAbstract_FieldIndex.RecordType:
+                    return (Armor_FieldIndex)((int)index);
+                case ItemAbstract_FieldIndex.OblivionMajorRecordFlags:
+                    return (Armor_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
+        }
+
+        public static Armor_FieldIndex? ConvertFieldIndex(OblivionMajorRecord_FieldIndex? index)
+        {
+            if (!index.HasValue) return null;
+            return ConvertFieldIndex(index: index.Value);
+        }
+
+        public static Armor_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
+        {
+            switch (index)
+            {
+                case OblivionMajorRecord_FieldIndex.FormKey:
+                    return (Armor_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.Version:
+                    return (Armor_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.EditorID:
+                    return (Armor_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.RecordType:
+                    return (Armor_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
                     return (Armor_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
@@ -1642,8 +1591,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (index)
             {
-                case MajorRecord_FieldIndex.MajorRecordFlags:
-                    return (Armor_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
                     return (Armor_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.Version:
@@ -1934,7 +1881,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: Armor_Registration.ARMO_HEADER,
                 type: ObjectType.Record))
             {
-                MajorRecordCommon.Write_Binary_Embedded(
+                OblivionMajorRecordCommon.Write_Binary_Embedded(
                     item: item,
                     writer: writer,
                     errorMask: errorMask,

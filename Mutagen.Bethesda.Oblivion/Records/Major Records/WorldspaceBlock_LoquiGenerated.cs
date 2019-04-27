@@ -112,28 +112,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        #region Loqui Getter Interface
-
-        protected object GetNthObject(ushort index) => WorldspaceBlockCommon.GetNthObject(index, this);
-        object ILoquiObjectGetter.GetNthObject(ushort index) => this.GetNthObject(index);
-
-        protected bool GetNthObjectHasBeenSet(ushort index) => WorldspaceBlockCommon.GetNthObjectHasBeenSet(index, this);
-        bool ILoquiObjectGetter.GetNthObjectHasBeenSet(ushort index) => this.GetNthObjectHasBeenSet(index);
-
-        protected void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => WorldspaceBlockCommon.UnsetNthObject(index, this, cmds);
-        void ILoquiObjectSetter.UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => this.UnsetNthObject(index, cmds);
-
-        #endregion
-
-        #region Loqui Interface
-        protected void SetNthObjectHasBeenSet(ushort index, bool on)
-        {
-            WorldspaceBlockCommon.SetNthObjectHasBeenSet(index, on, this);
-        }
-        void ILoquiObjectSetter.SetNthObjectHasBeenSet(ushort index, bool on) => this.SetNthObjectHasBeenSet(index, on);
-
-        #endregion
-
         IMask<bool> IEqualsMask<WorldspaceBlock>.GetEqualsMask(WorldspaceBlock rhs, EqualsMaskHelper.Include include) => WorldspaceBlockCommon.GetEqualsMask(this, rhs, include);
         IMask<bool> IEqualsMask<IWorldspaceBlockGetter>.GetEqualsMask(IWorldspaceBlockGetter rhs, EqualsMaskHelper.Include include) => WorldspaceBlockCommon.GetEqualsMask(this, rhs, include);
         #region To String
@@ -883,7 +861,6 @@ namespace Mutagen.Bethesda.Oblivion
                 cmds: cmds);
         }
 
-        void ILoquiObjectSetter.SetNthObject(ushort index, object obj, NotifyingFireParameters cmds) => this.SetNthObject(index, obj, cmds);
         protected void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
         {
             WorldspaceBlock_FieldIndex enu = (WorldspaceBlock_FieldIndex)index;
@@ -960,11 +937,6 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, WorldspaceBlock obj)
-        {
-            ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
-        }
-
     }
     #endregion
 
@@ -1356,98 +1328,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         #endregion
-
-        public static void SetNthObjectHasBeenSet(
-            ushort index,
-            bool on,
-            IWorldspaceBlock obj,
-            NotifyingFireParameters cmds = null)
-        {
-            WorldspaceBlock_FieldIndex enu = (WorldspaceBlock_FieldIndex)index;
-            switch (enu)
-            {
-                case WorldspaceBlock_FieldIndex.BlockNumberY:
-                case WorldspaceBlock_FieldIndex.BlockNumberX:
-                case WorldspaceBlock_FieldIndex.GroupType:
-                case WorldspaceBlock_FieldIndex.LastModified:
-                    if (on) break;
-                    throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
-                case WorldspaceBlock_FieldIndex.Items:
-                    obj.Items.HasBeenSet = on;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static void UnsetNthObject(
-            ushort index,
-            IWorldspaceBlock obj,
-            NotifyingUnsetParameters cmds = null)
-        {
-            WorldspaceBlock_FieldIndex enu = (WorldspaceBlock_FieldIndex)index;
-            switch (enu)
-            {
-                case WorldspaceBlock_FieldIndex.BlockNumberY:
-                    obj.BlockNumberY = default(Int16);
-                    break;
-                case WorldspaceBlock_FieldIndex.BlockNumberX:
-                    obj.BlockNumberX = default(Int16);
-                    break;
-                case WorldspaceBlock_FieldIndex.GroupType:
-                    obj.GroupType = default(GroupTypeEnum);
-                    break;
-                case WorldspaceBlock_FieldIndex.LastModified:
-                    obj.LastModified = default(Byte[]);
-                    break;
-                case WorldspaceBlock_FieldIndex.Items:
-                    obj.Items.Unset();
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthObjectHasBeenSet(
-            ushort index,
-            IWorldspaceBlock obj)
-        {
-            WorldspaceBlock_FieldIndex enu = (WorldspaceBlock_FieldIndex)index;
-            switch (enu)
-            {
-                case WorldspaceBlock_FieldIndex.BlockNumberY:
-                case WorldspaceBlock_FieldIndex.BlockNumberX:
-                case WorldspaceBlock_FieldIndex.GroupType:
-                case WorldspaceBlock_FieldIndex.LastModified:
-                    return true;
-                case WorldspaceBlock_FieldIndex.Items:
-                    return obj.Items.HasBeenSet;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static object GetNthObject(
-            ushort index,
-            IWorldspaceBlockGetter obj)
-        {
-            WorldspaceBlock_FieldIndex enu = (WorldspaceBlock_FieldIndex)index;
-            switch (enu)
-            {
-                case WorldspaceBlock_FieldIndex.BlockNumberY:
-                    return obj.BlockNumberY;
-                case WorldspaceBlock_FieldIndex.BlockNumberX:
-                    return obj.BlockNumberX;
-                case WorldspaceBlock_FieldIndex.GroupType:
-                    return obj.GroupType;
-                case WorldspaceBlock_FieldIndex.LastModified:
-                    return obj.LastModified;
-                case WorldspaceBlock_FieldIndex.Items:
-                    return obj.Items;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
 
         public static void Clear(
             IWorldspaceBlock item,

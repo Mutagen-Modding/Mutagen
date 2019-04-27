@@ -36,7 +36,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class DialogItem : 
-        MajorRecord,
+        OblivionMajorRecord,
         IDialogItem,
         ILoquiObject<DialogItem>,
         ILoquiObjectSetter,
@@ -191,24 +191,6 @@ namespace Mutagen.Bethesda.Oblivion
         public ScriptFields Script => _Script_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ScriptFields IDialogItemGetter.Script => this.Script;
-        #endregion
-
-        #region Loqui Getter Interface
-
-        protected override object GetNthObject(ushort index) => DialogItemCommon.GetNthObject(index, this);
-
-        protected override bool GetNthObjectHasBeenSet(ushort index) => DialogItemCommon.GetNthObjectHasBeenSet(index, this);
-
-        protected override void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => DialogItemCommon.UnsetNthObject(index, this, cmds);
-
-        #endregion
-
-        #region Loqui Interface
-        protected override void SetNthObjectHasBeenSet(ushort index, bool on)
-        {
-            DialogItemCommon.SetNthObjectHasBeenSet(index, on, this);
-        }
-
         #endregion
 
         IMask<bool> IEqualsMask<DialogItem>.GetEqualsMask(DialogItem rhs, EqualsMaskHelper.Include include) => DialogItemCommon.GetEqualsMask(this, rhs, include);
@@ -575,6 +557,22 @@ namespace Mutagen.Bethesda.Oblivion
         #region Base Class Trickdown Overrides
         public override void Write_Xml(
             XElement node,
+            out OblivionMajorRecord_ErrorMask errorMask,
+            bool doMasks = true,
+            OblivionMajorRecord_TranslationMask translationMask = null,
+            string name = null)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            this.Write_Xml(
+                name: name,
+                node: node,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal());
+            errorMask = DialogItem_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public override void Write_Xml(
+            XElement node,
             out MajorRecord_ErrorMask errorMask,
             bool doMasks = true,
             MajorRecord_TranslationMask translationMask = null,
@@ -644,7 +642,7 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     break;
                 default:
-                    MajorRecord.FillPrivateElement_Xml(
+                    OblivionMajorRecord.FillPrivateElement_Xml(
                         item: item,
                         node: node,
                         name: name,
@@ -778,9 +776,9 @@ namespace Mutagen.Bethesda.Oblivion
             CustomCtor();
         }
 
-        partial void PostDuplicate(DialogItem obj, DialogItem rhs, Func<FormKey> getNextFormKey, IList<(MajorRecord Record, FormKey OriginalFormKey)> duplicatedRecords);
+        partial void PostDuplicate(DialogItem obj, DialogItem rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
 
-        public override MajorRecord Duplicate(Func<FormKey> getNextFormKey, IList<(MajorRecord Record, FormKey OriginalFormKey)> duplicatedRecords)
+        public override IMajorRecordCommon Duplicate(Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
         {
             var ret = new DialogItem(getNextFormKey());
             ret.CopyFieldsFrom(this);
@@ -861,6 +859,21 @@ namespace Mutagen.Bethesda.Oblivion
         public override void Write_Binary(
             MutagenWriter writer,
             MasterReferences masterReferences,
+            out OblivionMajorRecord_ErrorMask errorMask,
+            bool doMasks = true)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            this.Write_Binary(
+                masterReferences: masterReferences,
+                writer: writer,
+                errorMask: errorMaskBuilder,
+                recordTypeConverter: null);
+            errorMask = DialogItem_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public override void Write_Binary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
             out MajorRecord_ErrorMask errorMask,
             bool doMasks = true)
         {
@@ -896,7 +909,7 @@ namespace Mutagen.Bethesda.Oblivion
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            MajorRecord.Fill_Binary_Structs(
+            OblivionMajorRecord.Fill_Binary_Structs(
                 item: item,
                 frame: frame,
                 masterReferences: masterReferences,
@@ -1104,7 +1117,7 @@ namespace Mutagen.Bethesda.Oblivion
                     return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.Script);
                 }
                 default:
-                    return MajorRecord.Fill_Binary_RecordTypes(
+                    return OblivionMajorRecord.Fill_Binary_RecordTypes(
                         item: item,
                         frame: frame,
                         nextRecordType: nextRecordType,
@@ -1299,7 +1312,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             if (!EnumExt.TryParse(pair.Key, out DialogItem_FieldIndex enu))
             {
-                CopyInInternal_MajorRecord(obj, pair);
+                CopyInInternal_OblivionMajorRecord(obj, pair);
             }
             switch (enu)
             {
@@ -1341,16 +1354,11 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, DialogItem obj)
-        {
-            ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
-        }
-
     }
     #endregion
 
     #region Interface
-    public partial interface IDialogItem : IDialogItemGetter, IMajorRecord, ILoquiClass<IDialogItem, IDialogItemGetter>, ILoquiClass<DialogItem, IDialogItemGetter>
+    public partial interface IDialogItem : IDialogItemGetter, IOblivionMajorRecord, ILoquiClass<IDialogItem, IDialogItemGetter>, ILoquiClass<DialogItem, IDialogItemGetter>
     {
         new DialogType DialogType { get; set; }
 
@@ -1365,7 +1373,7 @@ namespace Mutagen.Bethesda.Oblivion
         new ISourceSetList<FormIDSetLink<DialogTopic>> LinkFrom { get; }
     }
 
-    public partial interface IDialogItemGetter : IMajorRecordGetter
+    public partial interface IDialogItemGetter : IOblivionMajorRecordGetter
     {
         #region DialogType
         DialogType DialogType { get; }
@@ -1417,11 +1425,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #region Field Index
     public enum DialogItem_FieldIndex
     {
-        MajorRecordFlags = 0,
-        FormKey = 1,
-        Version = 2,
-        EditorID = 3,
-        RecordType = 4,
+        FormKey = 0,
+        Version = 1,
+        EditorID = 2,
+        RecordType = 3,
+        OblivionMajorRecordFlags = 4,
         DialogType = 5,
         Flags = 6,
         Quest = 7,
@@ -1522,7 +1530,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case DialogItem_FieldIndex.Script:
                     return false;
                 default:
-                    return MajorRecord_Registration.GetNthIsEnumerable(index);
+                    return OblivionMajorRecord_Registration.GetNthIsEnumerable(index);
             }
         }
 
@@ -1544,7 +1552,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case DialogItem_FieldIndex.LinkFrom:
                     return false;
                 default:
-                    return MajorRecord_Registration.GetNthIsLoqui(index);
+                    return OblivionMajorRecord_Registration.GetNthIsLoqui(index);
             }
         }
 
@@ -1566,7 +1574,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case DialogItem_FieldIndex.LinkFrom:
                     return false;
                 default:
-                    return MajorRecord_Registration.GetNthIsSingleton(index);
+                    return OblivionMajorRecord_Registration.GetNthIsSingleton(index);
             }
         }
 
@@ -1596,7 +1604,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case DialogItem_FieldIndex.Script:
                     return "Script";
                 default:
-                    return MajorRecord_Registration.GetNthName(index);
+                    return OblivionMajorRecord_Registration.GetNthName(index);
             }
         }
 
@@ -1617,7 +1625,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case DialogItem_FieldIndex.Script:
                     return false;
                 default:
-                    return MajorRecord_Registration.IsNthDerivative(index);
+                    return OblivionMajorRecord_Registration.IsNthDerivative(index);
             }
         }
 
@@ -1639,7 +1647,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case DialogItem_FieldIndex.LinkFrom:
                     return false;
                 default:
-                    return MajorRecord_Registration.IsProtected(index);
+                    return OblivionMajorRecord_Registration.IsProtected(index);
             }
         }
 
@@ -1669,7 +1677,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case DialogItem_FieldIndex.Script:
                     return typeof(ScriptFields);
                 default:
-                    return MajorRecord_Registration.GetNthType(index);
+                    return OblivionMajorRecord_Registration.GetNthType(index);
             }
         }
 
@@ -1734,7 +1742,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             DialogItem_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {
-            MajorRecordCommon.CopyFieldsFrom(
+            OblivionMajorRecordCommon.CopyFieldsFrom(
                 item,
                 rhs,
                 def,
@@ -1969,154 +1977,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void SetNthObjectHasBeenSet(
-            ushort index,
-            bool on,
-            IDialogItem obj,
-            NotifyingFireParameters cmds = null)
-        {
-            DialogItem_FieldIndex enu = (DialogItem_FieldIndex)index;
-            switch (enu)
-            {
-                case DialogItem_FieldIndex.DialogType:
-                case DialogItem_FieldIndex.Flags:
-                    if (on) break;
-                    throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
-                case DialogItem_FieldIndex.Script:
-                    throw new ArgumentException("Tried to set at a readonly index " + index);
-                case DialogItem_FieldIndex.Quest:
-                    obj.Quest_Property.HasBeenSet = on;
-                    break;
-                case DialogItem_FieldIndex.PreviousTopic:
-                    obj.PreviousTopic_Property.HasBeenSet = on;
-                    break;
-                case DialogItem_FieldIndex.Topics:
-                    obj.Topics.HasBeenSet = on;
-                    break;
-                case DialogItem_FieldIndex.Responses:
-                    obj.Responses.HasBeenSet = on;
-                    break;
-                case DialogItem_FieldIndex.Conditions:
-                    obj.Conditions.HasBeenSet = on;
-                    break;
-                case DialogItem_FieldIndex.Choices:
-                    obj.Choices.HasBeenSet = on;
-                    break;
-                case DialogItem_FieldIndex.LinkFrom:
-                    obj.LinkFrom.HasBeenSet = on;
-                    break;
-                default:
-                    MajorRecordCommon.SetNthObjectHasBeenSet(index, on, obj);
-                    break;
-            }
-        }
-
-        public static void UnsetNthObject(
-            ushort index,
-            IDialogItem obj,
-            NotifyingUnsetParameters cmds = null)
-        {
-            DialogItem_FieldIndex enu = (DialogItem_FieldIndex)index;
-            switch (enu)
-            {
-                case DialogItem_FieldIndex.DialogType:
-                    obj.DialogType = default(DialogType);
-                    break;
-                case DialogItem_FieldIndex.Flags:
-                    obj.Flags = default(DialogItem.Flag);
-                    break;
-                case DialogItem_FieldIndex.Quest:
-                    obj.Quest_Property.Unset(cmds);
-                    break;
-                case DialogItem_FieldIndex.PreviousTopic:
-                    obj.PreviousTopic_Property.Unset(cmds);
-                    break;
-                case DialogItem_FieldIndex.Topics:
-                    obj.Topics.Unset();
-                    break;
-                case DialogItem_FieldIndex.Responses:
-                    obj.Responses.Unset();
-                    break;
-                case DialogItem_FieldIndex.Conditions:
-                    obj.Conditions.Unset();
-                    break;
-                case DialogItem_FieldIndex.Choices:
-                    obj.Choices.Unset();
-                    break;
-                case DialogItem_FieldIndex.LinkFrom:
-                    obj.LinkFrom.Unset();
-                    break;
-                case DialogItem_FieldIndex.Script:
-                    throw new ArgumentException("Tried to set at a readonly index " + index);
-                default:
-                    MajorRecordCommon.UnsetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public static bool GetNthObjectHasBeenSet(
-            ushort index,
-            IDialogItem obj)
-        {
-            DialogItem_FieldIndex enu = (DialogItem_FieldIndex)index;
-            switch (enu)
-            {
-                case DialogItem_FieldIndex.DialogType:
-                case DialogItem_FieldIndex.Flags:
-                    return true;
-                case DialogItem_FieldIndex.Quest:
-                    return obj.Quest_Property.HasBeenSet;
-                case DialogItem_FieldIndex.PreviousTopic:
-                    return obj.PreviousTopic_Property.HasBeenSet;
-                case DialogItem_FieldIndex.Topics:
-                    return obj.Topics.HasBeenSet;
-                case DialogItem_FieldIndex.Responses:
-                    return obj.Responses.HasBeenSet;
-                case DialogItem_FieldIndex.Conditions:
-                    return obj.Conditions.HasBeenSet;
-                case DialogItem_FieldIndex.Choices:
-                    return obj.Choices.HasBeenSet;
-                case DialogItem_FieldIndex.LinkFrom:
-                    return obj.LinkFrom.HasBeenSet;
-                case DialogItem_FieldIndex.Script:
-                    return obj.Script_IsSet;
-                default:
-                    return MajorRecordCommon.GetNthObjectHasBeenSet(index, obj);
-            }
-        }
-
-        public static object GetNthObject(
-            ushort index,
-            IDialogItemGetter obj)
-        {
-            DialogItem_FieldIndex enu = (DialogItem_FieldIndex)index;
-            switch (enu)
-            {
-                case DialogItem_FieldIndex.DialogType:
-                    return obj.DialogType;
-                case DialogItem_FieldIndex.Flags:
-                    return obj.Flags;
-                case DialogItem_FieldIndex.Quest:
-                    return obj.Quest;
-                case DialogItem_FieldIndex.PreviousTopic:
-                    return obj.PreviousTopic;
-                case DialogItem_FieldIndex.Topics:
-                    return obj.Topics;
-                case DialogItem_FieldIndex.Responses:
-                    return obj.Responses;
-                case DialogItem_FieldIndex.Conditions:
-                    return obj.Conditions;
-                case DialogItem_FieldIndex.Choices:
-                    return obj.Choices;
-                case DialogItem_FieldIndex.LinkFrom:
-                    return obj.LinkFrom;
-                case DialogItem_FieldIndex.Script:
-                    return obj.Script;
-                default:
-                    return MajorRecordCommon.GetNthObject(index, obj);
-            }
-        }
-
         public static void Clear(
             IDialogItem item,
             NotifyingUnsetParameters cmds = null)
@@ -2184,7 +2044,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 rhs.Script,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
                 include);
-            MajorRecordCommon.FillEqualsMask(item, rhs, ret);
+            OblivionMajorRecordCommon.FillEqualsMask(item, rhs, ret);
         }
 
         public static string ToString(
@@ -2360,6 +2220,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ret;
         }
 
+        public static DialogItem_FieldIndex? ConvertFieldIndex(OblivionMajorRecord_FieldIndex? index)
+        {
+            if (!index.HasValue) return null;
+            return ConvertFieldIndex(index: index.Value);
+        }
+
+        public static DialogItem_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
+        {
+            switch (index)
+            {
+                case OblivionMajorRecord_FieldIndex.FormKey:
+                    return (DialogItem_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.Version:
+                    return (DialogItem_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.EditorID:
+                    return (DialogItem_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.RecordType:
+                    return (DialogItem_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
+                    return (DialogItem_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
+        }
+
         public static DialogItem_FieldIndex? ConvertFieldIndex(MajorRecord_FieldIndex? index)
         {
             if (!index.HasValue) return null;
@@ -2370,8 +2255,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (index)
             {
-                case MajorRecord_FieldIndex.MajorRecordFlags:
-                    return (DialogItem_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
                     return (DialogItem_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.Version:
@@ -2432,7 +2315,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
         {
-            MajorRecordCommon.WriteToNode_Xml(
+            OblivionMajorRecordCommon.WriteToNode_Xml(
                 item: item,
                 node: node,
                 errorMask: errorMask,
@@ -2843,7 +2726,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 default:
-                    MajorRecordCommon.FillPublicElement_Xml(
+                    OblivionMajorRecordCommon.FillPublicElement_Xml(
                         item: item,
                         node: node,
                         name: name,
@@ -2887,7 +2770,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: DialogItem_Registration.INFO_HEADER,
                 type: ObjectType.Record))
             {
-                MajorRecordCommon.Write_Binary_Embedded(
+                OblivionMajorRecordCommon.Write_Binary_Embedded(
                     item: item,
                     writer: writer,
                     errorMask: errorMask,
@@ -3067,7 +2950,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     #region Modules
     #region Mask
-    public class DialogItem_Mask<T> : MajorRecord_Mask<T>, IMask<T>, IEquatable<DialogItem_Mask<T>>
+    public class DialogItem_Mask<T> : OblivionMajorRecord_Mask<T>, IMask<T>, IEquatable<DialogItem_Mask<T>>
     {
         #region Ctors
         public DialogItem_Mask()
@@ -3529,7 +3412,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public class DialogItem_ErrorMask : MajorRecord_ErrorMask, IErrorMask<DialogItem_ErrorMask>
+    public class DialogItem_ErrorMask : OblivionMajorRecord_ErrorMask, IErrorMask<DialogItem_ErrorMask>
     {
         #region Members
         public Exception DialogType;
@@ -3855,7 +3738,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
-    public class DialogItem_CopyMask : MajorRecord_CopyMask
+    public class DialogItem_CopyMask : OblivionMajorRecord_CopyMask
     {
         public DialogItem_CopyMask()
         {
@@ -3890,7 +3773,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public class DialogItem_TranslationMask : MajorRecord_TranslationMask
+    public class DialogItem_TranslationMask : OblivionMajorRecord_TranslationMask
     {
         #region Members
         public bool DialogType;

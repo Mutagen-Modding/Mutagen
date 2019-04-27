@@ -15,6 +15,7 @@ using Mutagen.Bethesda.Oblivion.Internals;
 using ReactiveUI;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
 using System.Xml;
@@ -33,7 +34,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class SkillRecord : 
-        MajorRecord,
+        OblivionMajorRecord,
         ISkillRecord,
         ILoquiObject<SkillRecord>,
         ILoquiObjectSetter,
@@ -292,24 +293,6 @@ namespace Mutagen.Bethesda.Oblivion
         {
             this.MasterText_Set(default(String), false);
         }
-        #endregion
-
-        #region Loqui Getter Interface
-
-        protected override object GetNthObject(ushort index) => SkillRecordCommon.GetNthObject(index, this);
-
-        protected override bool GetNthObjectHasBeenSet(ushort index) => SkillRecordCommon.GetNthObjectHasBeenSet(index, this);
-
-        protected override void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => SkillRecordCommon.UnsetNthObject(index, this, cmds);
-
-        #endregion
-
-        #region Loqui Interface
-        protected override void SetNthObjectHasBeenSet(ushort index, bool on)
-        {
-            SkillRecordCommon.SetNthObjectHasBeenSet(index, on, this);
-        }
-
         #endregion
 
         IMask<bool> IEqualsMask<SkillRecord>.GetEqualsMask(SkillRecord rhs, EqualsMaskHelper.Include include) => SkillRecordCommon.GetEqualsMask(this, rhs, include);
@@ -672,6 +655,22 @@ namespace Mutagen.Bethesda.Oblivion
         #region Base Class Trickdown Overrides
         public override void Write_Xml(
             XElement node,
+            out OblivionMajorRecord_ErrorMask errorMask,
+            bool doMasks = true,
+            OblivionMajorRecord_TranslationMask translationMask = null,
+            string name = null)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            this.Write_Xml(
+                name: name,
+                node: node,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal());
+            errorMask = SkillRecord_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public override void Write_Xml(
+            XElement node,
             out MajorRecord_ErrorMask errorMask,
             bool doMasks = true,
             MajorRecord_TranslationMask translationMask = null,
@@ -716,7 +715,7 @@ namespace Mutagen.Bethesda.Oblivion
                     item.DATADataTypeState |= SkillRecord.DATADataType.Has;
                     break;
                 default:
-                    MajorRecord.FillPrivateElement_Xml(
+                    OblivionMajorRecord.FillPrivateElement_Xml(
                         item: item,
                         node: node,
                         name: name,
@@ -765,9 +764,9 @@ namespace Mutagen.Bethesda.Oblivion
             CustomCtor();
         }
 
-        partial void PostDuplicate(SkillRecord obj, SkillRecord rhs, Func<FormKey> getNextFormKey, IList<(MajorRecord Record, FormKey OriginalFormKey)> duplicatedRecords);
+        partial void PostDuplicate(SkillRecord obj, SkillRecord rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
 
-        public override MajorRecord Duplicate(Func<FormKey> getNextFormKey, IList<(MajorRecord Record, FormKey OriginalFormKey)> duplicatedRecords)
+        public override IMajorRecordCommon Duplicate(Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
         {
             var ret = new SkillRecord(getNextFormKey());
             ret.CopyFieldsFrom(this);
@@ -848,6 +847,21 @@ namespace Mutagen.Bethesda.Oblivion
         public override void Write_Binary(
             MutagenWriter writer,
             MasterReferences masterReferences,
+            out OblivionMajorRecord_ErrorMask errorMask,
+            bool doMasks = true)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            this.Write_Binary(
+                masterReferences: masterReferences,
+                writer: writer,
+                errorMask: errorMaskBuilder,
+                recordTypeConverter: null);
+            errorMask = SkillRecord_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public override void Write_Binary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
             out MajorRecord_ErrorMask errorMask,
             bool doMasks = true)
         {
@@ -883,7 +897,7 @@ namespace Mutagen.Bethesda.Oblivion
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            MajorRecord.Fill_Binary_Structs(
+            OblivionMajorRecord.Fill_Binary_Structs(
                 item: item,
                 frame: frame,
                 masterReferences: masterReferences,
@@ -1242,7 +1256,7 @@ namespace Mutagen.Bethesda.Oblivion
                     return TryGet<int?>.Succeed((int)SkillRecord_FieldIndex.MasterText);
                 }
                 default:
-                    return MajorRecord.Fill_Binary_RecordTypes(
+                    return OblivionMajorRecord.Fill_Binary_RecordTypes(
                         item: item,
                         frame: frame,
                         nextRecordType: nextRecordType,
@@ -1439,7 +1453,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             if (!EnumExt.TryParse(pair.Key, out SkillRecord_FieldIndex enu))
             {
-                CopyInInternal_MajorRecord(obj, pair);
+                CopyInInternal_OblivionMajorRecord(obj, pair);
             }
             switch (enu)
             {
@@ -1483,16 +1497,11 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, SkillRecord obj)
-        {
-            ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
-        }
-
     }
     #endregion
 
     #region Interface
-    public partial interface ISkillRecord : ISkillRecordGetter, IMajorRecord, ILoquiClass<ISkillRecord, ISkillRecordGetter>, ILoquiClass<SkillRecord, ISkillRecordGetter>
+    public partial interface ISkillRecord : ISkillRecordGetter, IOblivionMajorRecord, ILoquiClass<ISkillRecord, ISkillRecordGetter>, ILoquiClass<SkillRecord, ISkillRecordGetter>
     {
         new ActorValue Skill { get; set; }
         new bool Skill_IsSet { get; set; }
@@ -1541,7 +1550,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
-    public partial interface ISkillRecordGetter : IMajorRecordGetter
+    public partial interface ISkillRecordGetter : IOblivionMajorRecordGetter
     {
         #region Skill
         ActorValue Skill { get; }
@@ -1610,11 +1619,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #region Field Index
     public enum SkillRecord_FieldIndex
     {
-        MajorRecordFlags = 0,
-        FormKey = 1,
-        Version = 2,
-        EditorID = 3,
-        RecordType = 4,
+        FormKey = 0,
+        Version = 1,
+        EditorID = 2,
+        RecordType = 3,
+        OblivionMajorRecordFlags = 4,
         Skill = 5,
         Description = 6,
         Icon = 7,
@@ -1722,7 +1731,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case SkillRecord_FieldIndex.MasterText:
                     return false;
                 default:
-                    return MajorRecord_Registration.GetNthIsEnumerable(index);
+                    return OblivionMajorRecord_Registration.GetNthIsEnumerable(index);
             }
         }
 
@@ -1745,7 +1754,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case SkillRecord_FieldIndex.MasterText:
                     return false;
                 default:
-                    return MajorRecord_Registration.GetNthIsLoqui(index);
+                    return OblivionMajorRecord_Registration.GetNthIsLoqui(index);
             }
         }
 
@@ -1768,7 +1777,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case SkillRecord_FieldIndex.MasterText:
                     return false;
                 default:
-                    return MajorRecord_Registration.GetNthIsSingleton(index);
+                    return OblivionMajorRecord_Registration.GetNthIsSingleton(index);
             }
         }
 
@@ -1802,7 +1811,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case SkillRecord_FieldIndex.MasterText:
                     return "MasterText";
                 default:
-                    return MajorRecord_Registration.GetNthName(index);
+                    return OblivionMajorRecord_Registration.GetNthName(index);
             }
         }
 
@@ -1825,7 +1834,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case SkillRecord_FieldIndex.MasterText:
                     return false;
                 default:
-                    return MajorRecord_Registration.IsNthDerivative(index);
+                    return OblivionMajorRecord_Registration.IsNthDerivative(index);
             }
         }
 
@@ -1848,7 +1857,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case SkillRecord_FieldIndex.MasterText:
                     return false;
                 default:
-                    return MajorRecord_Registration.IsProtected(index);
+                    return OblivionMajorRecord_Registration.IsProtected(index);
             }
         }
 
@@ -1882,7 +1891,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case SkillRecord_FieldIndex.MasterText:
                     return typeof(String);
                 default:
-                    return MajorRecord_Registration.GetNthType(index);
+                    return OblivionMajorRecord_Registration.GetNthType(index);
             }
         }
 
@@ -1940,7 +1949,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             SkillRecord_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {
-            MajorRecordCommon.CopyFieldsFrom(
+            OblivionMajorRecordCommon.CopyFieldsFrom(
                 item,
                 rhs,
                 def,
@@ -2246,167 +2255,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void SetNthObjectHasBeenSet(
-            ushort index,
-            bool on,
-            ISkillRecord obj,
-            NotifyingFireParameters cmds = null)
-        {
-            SkillRecord_FieldIndex enu = (SkillRecord_FieldIndex)index;
-            switch (enu)
-            {
-                case SkillRecord_FieldIndex.Action:
-                case SkillRecord_FieldIndex.Attribute:
-                case SkillRecord_FieldIndex.Specialization:
-                case SkillRecord_FieldIndex.UseValueFirst:
-                case SkillRecord_FieldIndex.UseValueSecond:
-                    if (on) break;
-                    throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
-                case SkillRecord_FieldIndex.Skill:
-                    obj.Skill_IsSet = on;
-                    break;
-                case SkillRecord_FieldIndex.Description:
-                    obj.Description_IsSet = on;
-                    break;
-                case SkillRecord_FieldIndex.Icon:
-                    obj.Icon_IsSet = on;
-                    break;
-                case SkillRecord_FieldIndex.ApprenticeText:
-                    obj.ApprenticeText_IsSet = on;
-                    break;
-                case SkillRecord_FieldIndex.JourneymanText:
-                    obj.JourneymanText_IsSet = on;
-                    break;
-                case SkillRecord_FieldIndex.ExpertText:
-                    obj.ExpertText_IsSet = on;
-                    break;
-                case SkillRecord_FieldIndex.MasterText:
-                    obj.MasterText_IsSet = on;
-                    break;
-                default:
-                    MajorRecordCommon.SetNthObjectHasBeenSet(index, on, obj);
-                    break;
-            }
-        }
-
-        public static void UnsetNthObject(
-            ushort index,
-            ISkillRecord obj,
-            NotifyingUnsetParameters cmds = null)
-        {
-            SkillRecord_FieldIndex enu = (SkillRecord_FieldIndex)index;
-            switch (enu)
-            {
-                case SkillRecord_FieldIndex.Skill:
-                    obj.Skill_Unset();
-                    break;
-                case SkillRecord_FieldIndex.Description:
-                    obj.Description_Unset();
-                    break;
-                case SkillRecord_FieldIndex.Icon:
-                    obj.Icon_Unset();
-                    break;
-                case SkillRecord_FieldIndex.Action:
-                    obj.Action = default(ActorValue);
-                    break;
-                case SkillRecord_FieldIndex.Attribute:
-                    obj.Attribute = default(ActorValue);
-                    break;
-                case SkillRecord_FieldIndex.Specialization:
-                    obj.Specialization = default(Specialization);
-                    break;
-                case SkillRecord_FieldIndex.UseValueFirst:
-                    obj.UseValueFirst = default(Single);
-                    break;
-                case SkillRecord_FieldIndex.UseValueSecond:
-                    obj.UseValueSecond = default(Single);
-                    break;
-                case SkillRecord_FieldIndex.ApprenticeText:
-                    obj.ApprenticeText_Unset();
-                    break;
-                case SkillRecord_FieldIndex.JourneymanText:
-                    obj.JourneymanText_Unset();
-                    break;
-                case SkillRecord_FieldIndex.ExpertText:
-                    obj.ExpertText_Unset();
-                    break;
-                case SkillRecord_FieldIndex.MasterText:
-                    obj.MasterText_Unset();
-                    break;
-                default:
-                    MajorRecordCommon.UnsetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public static bool GetNthObjectHasBeenSet(
-            ushort index,
-            ISkillRecord obj)
-        {
-            SkillRecord_FieldIndex enu = (SkillRecord_FieldIndex)index;
-            switch (enu)
-            {
-                case SkillRecord_FieldIndex.Action:
-                case SkillRecord_FieldIndex.Attribute:
-                case SkillRecord_FieldIndex.Specialization:
-                case SkillRecord_FieldIndex.UseValueFirst:
-                case SkillRecord_FieldIndex.UseValueSecond:
-                    return true;
-                case SkillRecord_FieldIndex.Skill:
-                    return obj.Skill_IsSet;
-                case SkillRecord_FieldIndex.Description:
-                    return obj.Description_IsSet;
-                case SkillRecord_FieldIndex.Icon:
-                    return obj.Icon_IsSet;
-                case SkillRecord_FieldIndex.ApprenticeText:
-                    return obj.ApprenticeText_IsSet;
-                case SkillRecord_FieldIndex.JourneymanText:
-                    return obj.JourneymanText_IsSet;
-                case SkillRecord_FieldIndex.ExpertText:
-                    return obj.ExpertText_IsSet;
-                case SkillRecord_FieldIndex.MasterText:
-                    return obj.MasterText_IsSet;
-                default:
-                    return MajorRecordCommon.GetNthObjectHasBeenSet(index, obj);
-            }
-        }
-
-        public static object GetNthObject(
-            ushort index,
-            ISkillRecordGetter obj)
-        {
-            SkillRecord_FieldIndex enu = (SkillRecord_FieldIndex)index;
-            switch (enu)
-            {
-                case SkillRecord_FieldIndex.Skill:
-                    return obj.Skill;
-                case SkillRecord_FieldIndex.Description:
-                    return obj.Description;
-                case SkillRecord_FieldIndex.Icon:
-                    return obj.Icon;
-                case SkillRecord_FieldIndex.Action:
-                    return obj.Action;
-                case SkillRecord_FieldIndex.Attribute:
-                    return obj.Attribute;
-                case SkillRecord_FieldIndex.Specialization:
-                    return obj.Specialization;
-                case SkillRecord_FieldIndex.UseValueFirst:
-                    return obj.UseValueFirst;
-                case SkillRecord_FieldIndex.UseValueSecond:
-                    return obj.UseValueSecond;
-                case SkillRecord_FieldIndex.ApprenticeText:
-                    return obj.ApprenticeText;
-                case SkillRecord_FieldIndex.JourneymanText:
-                    return obj.JourneymanText;
-                case SkillRecord_FieldIndex.ExpertText:
-                    return obj.ExpertText;
-                case SkillRecord_FieldIndex.MasterText:
-                    return obj.MasterText;
-                default:
-                    return MajorRecordCommon.GetNthObject(index, obj);
-            }
-        }
-
         public static void Clear(
             ISkillRecord item,
             NotifyingUnsetParameters cmds = null)
@@ -2458,7 +2306,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.JourneymanText = item.JourneymanText_IsSet == rhs.JourneymanText_IsSet && object.Equals(item.JourneymanText, rhs.JourneymanText);
             ret.ExpertText = item.ExpertText_IsSet == rhs.ExpertText_IsSet && object.Equals(item.ExpertText, rhs.ExpertText);
             ret.MasterText = item.MasterText_IsSet == rhs.MasterText_IsSet && object.Equals(item.MasterText, rhs.MasterText);
-            MajorRecordCommon.FillEqualsMask(item, rhs, ret);
+            OblivionMajorRecordCommon.FillEqualsMask(item, rhs, ret);
         }
 
         public static string ToString(
@@ -2572,6 +2420,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ret;
         }
 
+        public static SkillRecord_FieldIndex? ConvertFieldIndex(OblivionMajorRecord_FieldIndex? index)
+        {
+            if (!index.HasValue) return null;
+            return ConvertFieldIndex(index: index.Value);
+        }
+
+        public static SkillRecord_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
+        {
+            switch (index)
+            {
+                case OblivionMajorRecord_FieldIndex.FormKey:
+                    return (SkillRecord_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.Version:
+                    return (SkillRecord_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.EditorID:
+                    return (SkillRecord_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.RecordType:
+                    return (SkillRecord_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
+                    return (SkillRecord_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
+        }
+
         public static SkillRecord_FieldIndex? ConvertFieldIndex(MajorRecord_FieldIndex? index)
         {
             if (!index.HasValue) return null;
@@ -2582,8 +2455,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (index)
             {
-                case MajorRecord_FieldIndex.MajorRecordFlags:
-                    return (SkillRecord_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
                     return (SkillRecord_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.Version:
@@ -2644,7 +2515,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
         {
-            MajorRecordCommon.WriteToNode_Xml(
+            OblivionMajorRecordCommon.WriteToNode_Xml(
                 item: item,
                 node: node,
                 errorMask: errorMask,
@@ -3117,7 +2988,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 default:
-                    MajorRecordCommon.FillPublicElement_Xml(
+                    OblivionMajorRecordCommon.FillPublicElement_Xml(
                         item: item,
                         node: node,
                         name: name,
@@ -3161,7 +3032,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: SkillRecord_Registration.SKIL_HEADER,
                 type: ObjectType.Record))
             {
-                MajorRecordCommon.Write_Binary_Embedded(
+                OblivionMajorRecordCommon.Write_Binary_Embedded(
                     item: item,
                     writer: writer,
                     errorMask: errorMask,
@@ -3303,7 +3174,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     #region Modules
     #region Mask
-    public class SkillRecord_Mask<T> : MajorRecord_Mask<T>, IMask<T>, IEquatable<SkillRecord_Mask<T>>
+    public class SkillRecord_Mask<T> : OblivionMajorRecord_Mask<T>, IMask<T>, IEquatable<SkillRecord_Mask<T>>
     {
         #region Ctors
         public SkillRecord_Mask()
@@ -3515,7 +3386,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public class SkillRecord_ErrorMask : MajorRecord_ErrorMask, IErrorMask<SkillRecord_ErrorMask>
+    public class SkillRecord_ErrorMask : OblivionMajorRecord_ErrorMask, IErrorMask<SkillRecord_ErrorMask>
     {
         #region Members
         public Exception Skill;
@@ -3760,7 +3631,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
-    public class SkillRecord_CopyMask : MajorRecord_CopyMask
+    public class SkillRecord_CopyMask : OblivionMajorRecord_CopyMask
     {
         public SkillRecord_CopyMask()
         {
@@ -3799,7 +3670,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public class SkillRecord_TranslationMask : MajorRecord_TranslationMask
+    public class SkillRecord_TranslationMask : OblivionMajorRecord_TranslationMask
     {
         #region Members
         public bool Skill;

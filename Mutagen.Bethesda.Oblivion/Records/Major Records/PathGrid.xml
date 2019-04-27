@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="PathGrid" objType="Record" baseClass="Bethesda.MajorRecord" recordType="PGRD" GUID="9fc6e922-dfb7-4ad4-81d3-bea823f22198" ID="129">
+  <Object name="PathGrid" objType="Record" baseClass="OblivionMajorRecord" recordType="PGRD" GUID="9fc6e922-dfb7-4ad4-81d3-bea823f22198" ID="129">
     <Fields>
       <RefList name="PointToPointConnections" refName="PathGridPoint" recordType="DATA" customBinary="true" />
       <ByteArray name="Unknown" recordType="PGAG" customBinary="true" />

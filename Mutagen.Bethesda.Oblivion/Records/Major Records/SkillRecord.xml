@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="SkillRecord" objType="Record" baseClass="Bethesda.MajorRecord" recordType="SKIL" GUID="d6afa219-e0d6-4f44-83d4-2d0298897f4d" ID="42">
+  <Object name="SkillRecord" objType="Record" baseClass="OblivionMajorRecord" recordType="SKIL" GUID="d6afa219-e0d6-4f44-83d4-2d0298897f4d" ID="42">
     <Fields>
       <Enum name="Skill" enumName="ActorValue" byteLength="4" recordType="INDX" />
       <String name="Description" recordType="DESC" hasBeenSet="True" />

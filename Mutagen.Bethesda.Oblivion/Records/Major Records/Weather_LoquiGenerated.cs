@@ -38,7 +38,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class Weather : 
-        MajorRecord,
+        OblivionMajorRecord,
         IWeather,
         ILoquiObject<Weather>,
         ILoquiObjectSetter,
@@ -545,24 +545,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        #region Loqui Getter Interface
-
-        protected override object GetNthObject(ushort index) => WeatherCommon.GetNthObject(index, this);
-
-        protected override bool GetNthObjectHasBeenSet(ushort index) => WeatherCommon.GetNthObjectHasBeenSet(index, this);
-
-        protected override void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => WeatherCommon.UnsetNthObject(index, this, cmds);
-
-        #endregion
-
-        #region Loqui Interface
-        protected override void SetNthObjectHasBeenSet(ushort index, bool on)
-        {
-            WeatherCommon.SetNthObjectHasBeenSet(index, on, this);
-        }
-
-        #endregion
-
         IMask<bool> IEqualsMask<Weather>.GetEqualsMask(Weather rhs, EqualsMaskHelper.Include include) => WeatherCommon.GetEqualsMask(this, rhs, include);
         IMask<bool> IEqualsMask<IWeatherGetter>.GetEqualsMask(IWeatherGetter rhs, EqualsMaskHelper.Include include) => WeatherCommon.GetEqualsMask(this, rhs, include);
         #region To String
@@ -957,6 +939,22 @@ namespace Mutagen.Bethesda.Oblivion
         #region Base Class Trickdown Overrides
         public override void Write_Xml(
             XElement node,
+            out OblivionMajorRecord_ErrorMask errorMask,
+            bool doMasks = true,
+            OblivionMajorRecord_TranslationMask translationMask = null,
+            string name = null)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            this.Write_Xml(
+                name: name,
+                node: node,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal());
+            errorMask = Weather_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public override void Write_Xml(
+            XElement node,
             out MajorRecord_ErrorMask errorMask,
             bool doMasks = true,
             MajorRecord_TranslationMask translationMask = null,
@@ -1007,7 +1005,7 @@ namespace Mutagen.Bethesda.Oblivion
                     item.DATADataTypeState |= Weather.DATADataType.Has;
                     break;
                 default:
-                    MajorRecord.FillPrivateElement_Xml(
+                    OblivionMajorRecord.FillPrivateElement_Xml(
                         item: item,
                         node: node,
                         name: name,
@@ -1127,9 +1125,9 @@ namespace Mutagen.Bethesda.Oblivion
             CustomCtor();
         }
 
-        partial void PostDuplicate(Weather obj, Weather rhs, Func<FormKey> getNextFormKey, IList<(MajorRecord Record, FormKey OriginalFormKey)> duplicatedRecords);
+        partial void PostDuplicate(Weather obj, Weather rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
 
-        public override MajorRecord Duplicate(Func<FormKey> getNextFormKey, IList<(MajorRecord Record, FormKey OriginalFormKey)> duplicatedRecords)
+        public override IMajorRecordCommon Duplicate(Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
         {
             var ret = new Weather(getNextFormKey());
             ret.CopyFieldsFrom(this);
@@ -1210,6 +1208,21 @@ namespace Mutagen.Bethesda.Oblivion
         public override void Write_Binary(
             MutagenWriter writer,
             MasterReferences masterReferences,
+            out OblivionMajorRecord_ErrorMask errorMask,
+            bool doMasks = true)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            this.Write_Binary(
+                masterReferences: masterReferences,
+                writer: writer,
+                errorMask: errorMaskBuilder,
+                recordTypeConverter: null);
+            errorMask = Weather_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public override void Write_Binary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
             out MajorRecord_ErrorMask errorMask,
             bool doMasks = true)
         {
@@ -1245,7 +1258,7 @@ namespace Mutagen.Bethesda.Oblivion
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            MajorRecord.Fill_Binary_Structs(
+            OblivionMajorRecord.Fill_Binary_Structs(
                 item: item,
                 frame: frame,
                 masterReferences: masterReferences,
@@ -2168,7 +2181,7 @@ namespace Mutagen.Bethesda.Oblivion
                     return TryGet<int?>.Succeed((int)Weather_FieldIndex.Sounds);
                 }
                 default:
-                    return MajorRecord.Fill_Binary_RecordTypes(
+                    return OblivionMajorRecord.Fill_Binary_RecordTypes(
                         item: item,
                         frame: frame,
                         nextRecordType: nextRecordType,
@@ -2437,7 +2450,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             if (!EnumExt.TryParse(pair.Key, out Weather_FieldIndex enu))
             {
-                CopyInInternal_MajorRecord(obj, pair);
+                CopyInInternal_OblivionMajorRecord(obj, pair);
             }
             switch (enu)
             {
@@ -2553,16 +2566,11 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, Weather obj)
-        {
-            ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
-        }
-
     }
     #endregion
 
     #region Interface
-    public partial interface IWeather : IWeatherGetter, IMajorRecord, ILoquiClass<IWeather, IWeatherGetter>, ILoquiClass<Weather, IWeatherGetter>
+    public partial interface IWeather : IWeatherGetter, IOblivionMajorRecord, ILoquiClass<IWeather, IWeatherGetter>, ILoquiClass<Weather, IWeatherGetter>
     {
         new String TextureLowerLayer { get; set; }
         new bool TextureLowerLayer_IsSet { get; set; }
@@ -2645,7 +2653,7 @@ namespace Mutagen.Bethesda.Oblivion
         new ISourceSetList<WeatherSound> Sounds { get; }
     }
 
-    public partial interface IWeatherGetter : IMajorRecordGetter
+    public partial interface IWeatherGetter : IOblivionMajorRecordGetter
     {
         #region TextureLowerLayer
         String TextureLowerLayer { get; }
@@ -2804,11 +2812,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #region Field Index
     public enum Weather_FieldIndex
     {
-        MajorRecordFlags = 0,
-        FormKey = 1,
-        Version = 2,
-        EditorID = 3,
-        RecordType = 4,
+        FormKey = 0,
+        Version = 1,
+        EditorID = 2,
+        RecordType = 3,
+        OblivionMajorRecordFlags = 4,
         TextureLowerLayer = 5,
         TextureUpperLayer = 6,
         Model = 7,
@@ -3013,7 +3021,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Weather_FieldIndex.LightningColor:
                     return false;
                 default:
-                    return MajorRecord_Registration.GetNthIsEnumerable(index);
+                    return OblivionMajorRecord_Registration.GetNthIsEnumerable(index);
             }
         }
 
@@ -3061,7 +3069,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Weather_FieldIndex.LightningColor:
                     return false;
                 default:
-                    return MajorRecord_Registration.GetNthIsLoqui(index);
+                    return OblivionMajorRecord_Registration.GetNthIsLoqui(index);
             }
         }
 
@@ -3108,7 +3116,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Weather_FieldIndex.Sounds:
                     return false;
                 default:
-                    return MajorRecord_Registration.GetNthIsSingleton(index);
+                    return OblivionMajorRecord_Registration.GetNthIsSingleton(index);
             }
         }
 
@@ -3190,7 +3198,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Weather_FieldIndex.Sounds:
                     return "Sounds";
                 default:
-                    return MajorRecord_Registration.GetNthName(index);
+                    return OblivionMajorRecord_Registration.GetNthName(index);
             }
         }
 
@@ -3237,7 +3245,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Weather_FieldIndex.Sounds:
                     return false;
                 default:
-                    return MajorRecord_Registration.IsNthDerivative(index);
+                    return OblivionMajorRecord_Registration.IsNthDerivative(index);
             }
         }
 
@@ -3284,7 +3292,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Weather_FieldIndex.Sounds:
                     return false;
                 default:
-                    return MajorRecord_Registration.IsProtected(index);
+                    return OblivionMajorRecord_Registration.IsProtected(index);
             }
         }
 
@@ -3366,7 +3374,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Weather_FieldIndex.Sounds:
                     return typeof(SourceSetList<WeatherSound>);
                 default:
-                    return MajorRecord_Registration.GetNthType(index);
+                    return OblivionMajorRecord_Registration.GetNthType(index);
             }
         }
 
@@ -3424,7 +3432,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Weather_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {
-            MajorRecordCommon.CopyFieldsFrom(
+            OblivionMajorRecordCommon.CopyFieldsFrom(
                 item,
                 rhs,
                 def,
@@ -4146,329 +4154,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void SetNthObjectHasBeenSet(
-            ushort index,
-            bool on,
-            IWeather obj,
-            NotifyingFireParameters cmds = null)
-        {
-            Weather_FieldIndex enu = (Weather_FieldIndex)index;
-            switch (enu)
-            {
-                case Weather_FieldIndex.FogDayNear:
-                case Weather_FieldIndex.FogDayFar:
-                case Weather_FieldIndex.FogNightNear:
-                case Weather_FieldIndex.FogNightFar:
-                case Weather_FieldIndex.HdrEyeAdaptSpeed:
-                case Weather_FieldIndex.HdrBlurRadius:
-                case Weather_FieldIndex.HdrBlurPasses:
-                case Weather_FieldIndex.HdrEmissiveMult:
-                case Weather_FieldIndex.HdrTargetLum:
-                case Weather_FieldIndex.HdrUpperLumClamp:
-                case Weather_FieldIndex.HdrBrightScale:
-                case Weather_FieldIndex.HdrBrightClamp:
-                case Weather_FieldIndex.HdrLumRampNoTex:
-                case Weather_FieldIndex.HdrLumRampMin:
-                case Weather_FieldIndex.HdrLumRampMax:
-                case Weather_FieldIndex.HdrSunlightDimmer:
-                case Weather_FieldIndex.HdrGrassDimmer:
-                case Weather_FieldIndex.HdrTreeDimmer:
-                case Weather_FieldIndex.WindSpeed:
-                case Weather_FieldIndex.CloudSpeedLower:
-                case Weather_FieldIndex.CloudSpeedUpper:
-                case Weather_FieldIndex.TransDelta:
-                case Weather_FieldIndex.SunGlare:
-                case Weather_FieldIndex.SunDamage:
-                case Weather_FieldIndex.PrecipitationBeginFadeIn:
-                case Weather_FieldIndex.PrecipitationEndFadeOut:
-                case Weather_FieldIndex.ThunderLightningBeginFadeIn:
-                case Weather_FieldIndex.ThunderLightningEndFadeOut:
-                case Weather_FieldIndex.ThunderLightningFrequency:
-                case Weather_FieldIndex.Classification:
-                case Weather_FieldIndex.LightningColor:
-                    if (on) break;
-                    throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
-                case Weather_FieldIndex.TextureLowerLayer:
-                    obj.TextureLowerLayer_IsSet = on;
-                    break;
-                case Weather_FieldIndex.TextureUpperLayer:
-                    obj.TextureUpperLayer_IsSet = on;
-                    break;
-                case Weather_FieldIndex.Model:
-                    obj.Model_IsSet = on;
-                    break;
-                case Weather_FieldIndex.WeatherTypes:
-                    obj.WeatherTypes.HasBeenSet = on;
-                    break;
-                case Weather_FieldIndex.Sounds:
-                    obj.Sounds.HasBeenSet = on;
-                    break;
-                default:
-                    MajorRecordCommon.SetNthObjectHasBeenSet(index, on, obj);
-                    break;
-            }
-        }
-
-        public static void UnsetNthObject(
-            ushort index,
-            IWeather obj,
-            NotifyingUnsetParameters cmds = null)
-        {
-            Weather_FieldIndex enu = (Weather_FieldIndex)index;
-            switch (enu)
-            {
-                case Weather_FieldIndex.TextureLowerLayer:
-                    obj.TextureLowerLayer_Unset();
-                    break;
-                case Weather_FieldIndex.TextureUpperLayer:
-                    obj.TextureUpperLayer_Unset();
-                    break;
-                case Weather_FieldIndex.Model:
-                    obj.Model_Unset();
-                    break;
-                case Weather_FieldIndex.WeatherTypes:
-                    obj.WeatherTypes.Unset();
-                    break;
-                case Weather_FieldIndex.FogDayNear:
-                    obj.FogDayNear = default(Single);
-                    break;
-                case Weather_FieldIndex.FogDayFar:
-                    obj.FogDayFar = default(Single);
-                    break;
-                case Weather_FieldIndex.FogNightNear:
-                    obj.FogNightNear = default(Single);
-                    break;
-                case Weather_FieldIndex.FogNightFar:
-                    obj.FogNightFar = default(Single);
-                    break;
-                case Weather_FieldIndex.HdrEyeAdaptSpeed:
-                    obj.HdrEyeAdaptSpeed = default(Single);
-                    break;
-                case Weather_FieldIndex.HdrBlurRadius:
-                    obj.HdrBlurRadius = default(Single);
-                    break;
-                case Weather_FieldIndex.HdrBlurPasses:
-                    obj.HdrBlurPasses = default(Single);
-                    break;
-                case Weather_FieldIndex.HdrEmissiveMult:
-                    obj.HdrEmissiveMult = default(Single);
-                    break;
-                case Weather_FieldIndex.HdrTargetLum:
-                    obj.HdrTargetLum = default(Single);
-                    break;
-                case Weather_FieldIndex.HdrUpperLumClamp:
-                    obj.HdrUpperLumClamp = default(Single);
-                    break;
-                case Weather_FieldIndex.HdrBrightScale:
-                    obj.HdrBrightScale = default(Single);
-                    break;
-                case Weather_FieldIndex.HdrBrightClamp:
-                    obj.HdrBrightClamp = default(Single);
-                    break;
-                case Weather_FieldIndex.HdrLumRampNoTex:
-                    obj.HdrLumRampNoTex = default(Single);
-                    break;
-                case Weather_FieldIndex.HdrLumRampMin:
-                    obj.HdrLumRampMin = default(Single);
-                    break;
-                case Weather_FieldIndex.HdrLumRampMax:
-                    obj.HdrLumRampMax = default(Single);
-                    break;
-                case Weather_FieldIndex.HdrSunlightDimmer:
-                    obj.HdrSunlightDimmer = default(Single);
-                    break;
-                case Weather_FieldIndex.HdrGrassDimmer:
-                    obj.HdrGrassDimmer = default(Single);
-                    break;
-                case Weather_FieldIndex.HdrTreeDimmer:
-                    obj.HdrTreeDimmer = default(Single);
-                    break;
-                case Weather_FieldIndex.WindSpeed:
-                    obj.WindSpeed = default(Byte);
-                    break;
-                case Weather_FieldIndex.CloudSpeedLower:
-                    obj.CloudSpeedLower = default(Byte);
-                    break;
-                case Weather_FieldIndex.CloudSpeedUpper:
-                    obj.CloudSpeedUpper = default(Byte);
-                    break;
-                case Weather_FieldIndex.TransDelta:
-                    obj.TransDelta = default(Byte);
-                    break;
-                case Weather_FieldIndex.SunGlare:
-                    obj.SunGlare = default(Byte);
-                    break;
-                case Weather_FieldIndex.SunDamage:
-                    obj.SunDamage = default(Byte);
-                    break;
-                case Weather_FieldIndex.PrecipitationBeginFadeIn:
-                    obj.PrecipitationBeginFadeIn = default(Byte);
-                    break;
-                case Weather_FieldIndex.PrecipitationEndFadeOut:
-                    obj.PrecipitationEndFadeOut = default(Byte);
-                    break;
-                case Weather_FieldIndex.ThunderLightningBeginFadeIn:
-                    obj.ThunderLightningBeginFadeIn = default(Byte);
-                    break;
-                case Weather_FieldIndex.ThunderLightningEndFadeOut:
-                    obj.ThunderLightningEndFadeOut = default(Byte);
-                    break;
-                case Weather_FieldIndex.ThunderLightningFrequency:
-                    obj.ThunderLightningFrequency = default(Byte);
-                    break;
-                case Weather_FieldIndex.Classification:
-                    obj.Classification = default(Weather.WeatherClassification);
-                    break;
-                case Weather_FieldIndex.LightningColor:
-                    obj.LightningColor = default(Color);
-                    break;
-                case Weather_FieldIndex.Sounds:
-                    obj.Sounds.Unset();
-                    break;
-                default:
-                    MajorRecordCommon.UnsetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public static bool GetNthObjectHasBeenSet(
-            ushort index,
-            IWeather obj)
-        {
-            Weather_FieldIndex enu = (Weather_FieldIndex)index;
-            switch (enu)
-            {
-                case Weather_FieldIndex.FogDayNear:
-                case Weather_FieldIndex.FogDayFar:
-                case Weather_FieldIndex.FogNightNear:
-                case Weather_FieldIndex.FogNightFar:
-                case Weather_FieldIndex.HdrEyeAdaptSpeed:
-                case Weather_FieldIndex.HdrBlurRadius:
-                case Weather_FieldIndex.HdrBlurPasses:
-                case Weather_FieldIndex.HdrEmissiveMult:
-                case Weather_FieldIndex.HdrTargetLum:
-                case Weather_FieldIndex.HdrUpperLumClamp:
-                case Weather_FieldIndex.HdrBrightScale:
-                case Weather_FieldIndex.HdrBrightClamp:
-                case Weather_FieldIndex.HdrLumRampNoTex:
-                case Weather_FieldIndex.HdrLumRampMin:
-                case Weather_FieldIndex.HdrLumRampMax:
-                case Weather_FieldIndex.HdrSunlightDimmer:
-                case Weather_FieldIndex.HdrGrassDimmer:
-                case Weather_FieldIndex.HdrTreeDimmer:
-                case Weather_FieldIndex.WindSpeed:
-                case Weather_FieldIndex.CloudSpeedLower:
-                case Weather_FieldIndex.CloudSpeedUpper:
-                case Weather_FieldIndex.TransDelta:
-                case Weather_FieldIndex.SunGlare:
-                case Weather_FieldIndex.SunDamage:
-                case Weather_FieldIndex.PrecipitationBeginFadeIn:
-                case Weather_FieldIndex.PrecipitationEndFadeOut:
-                case Weather_FieldIndex.ThunderLightningBeginFadeIn:
-                case Weather_FieldIndex.ThunderLightningEndFadeOut:
-                case Weather_FieldIndex.ThunderLightningFrequency:
-                case Weather_FieldIndex.Classification:
-                case Weather_FieldIndex.LightningColor:
-                    return true;
-                case Weather_FieldIndex.TextureLowerLayer:
-                    return obj.TextureLowerLayer_IsSet;
-                case Weather_FieldIndex.TextureUpperLayer:
-                    return obj.TextureUpperLayer_IsSet;
-                case Weather_FieldIndex.Model:
-                    return obj.Model_IsSet;
-                case Weather_FieldIndex.WeatherTypes:
-                    return obj.WeatherTypes.HasBeenSet;
-                case Weather_FieldIndex.Sounds:
-                    return obj.Sounds.HasBeenSet;
-                default:
-                    return MajorRecordCommon.GetNthObjectHasBeenSet(index, obj);
-            }
-        }
-
-        public static object GetNthObject(
-            ushort index,
-            IWeatherGetter obj)
-        {
-            Weather_FieldIndex enu = (Weather_FieldIndex)index;
-            switch (enu)
-            {
-                case Weather_FieldIndex.TextureLowerLayer:
-                    return obj.TextureLowerLayer;
-                case Weather_FieldIndex.TextureUpperLayer:
-                    return obj.TextureUpperLayer;
-                case Weather_FieldIndex.Model:
-                    return obj.Model;
-                case Weather_FieldIndex.WeatherTypes:
-                    return obj.WeatherTypes;
-                case Weather_FieldIndex.FogDayNear:
-                    return obj.FogDayNear;
-                case Weather_FieldIndex.FogDayFar:
-                    return obj.FogDayFar;
-                case Weather_FieldIndex.FogNightNear:
-                    return obj.FogNightNear;
-                case Weather_FieldIndex.FogNightFar:
-                    return obj.FogNightFar;
-                case Weather_FieldIndex.HdrEyeAdaptSpeed:
-                    return obj.HdrEyeAdaptSpeed;
-                case Weather_FieldIndex.HdrBlurRadius:
-                    return obj.HdrBlurRadius;
-                case Weather_FieldIndex.HdrBlurPasses:
-                    return obj.HdrBlurPasses;
-                case Weather_FieldIndex.HdrEmissiveMult:
-                    return obj.HdrEmissiveMult;
-                case Weather_FieldIndex.HdrTargetLum:
-                    return obj.HdrTargetLum;
-                case Weather_FieldIndex.HdrUpperLumClamp:
-                    return obj.HdrUpperLumClamp;
-                case Weather_FieldIndex.HdrBrightScale:
-                    return obj.HdrBrightScale;
-                case Weather_FieldIndex.HdrBrightClamp:
-                    return obj.HdrBrightClamp;
-                case Weather_FieldIndex.HdrLumRampNoTex:
-                    return obj.HdrLumRampNoTex;
-                case Weather_FieldIndex.HdrLumRampMin:
-                    return obj.HdrLumRampMin;
-                case Weather_FieldIndex.HdrLumRampMax:
-                    return obj.HdrLumRampMax;
-                case Weather_FieldIndex.HdrSunlightDimmer:
-                    return obj.HdrSunlightDimmer;
-                case Weather_FieldIndex.HdrGrassDimmer:
-                    return obj.HdrGrassDimmer;
-                case Weather_FieldIndex.HdrTreeDimmer:
-                    return obj.HdrTreeDimmer;
-                case Weather_FieldIndex.WindSpeed:
-                    return obj.WindSpeed;
-                case Weather_FieldIndex.CloudSpeedLower:
-                    return obj.CloudSpeedLower;
-                case Weather_FieldIndex.CloudSpeedUpper:
-                    return obj.CloudSpeedUpper;
-                case Weather_FieldIndex.TransDelta:
-                    return obj.TransDelta;
-                case Weather_FieldIndex.SunGlare:
-                    return obj.SunGlare;
-                case Weather_FieldIndex.SunDamage:
-                    return obj.SunDamage;
-                case Weather_FieldIndex.PrecipitationBeginFadeIn:
-                    return obj.PrecipitationBeginFadeIn;
-                case Weather_FieldIndex.PrecipitationEndFadeOut:
-                    return obj.PrecipitationEndFadeOut;
-                case Weather_FieldIndex.ThunderLightningBeginFadeIn:
-                    return obj.ThunderLightningBeginFadeIn;
-                case Weather_FieldIndex.ThunderLightningEndFadeOut:
-                    return obj.ThunderLightningEndFadeOut;
-                case Weather_FieldIndex.ThunderLightningFrequency:
-                    return obj.ThunderLightningFrequency;
-                case Weather_FieldIndex.Classification:
-                    return obj.Classification;
-                case Weather_FieldIndex.LightningColor:
-                    return obj.LightningColor;
-                case Weather_FieldIndex.Sounds:
-                    return obj.Sounds;
-                default:
-                    return MajorRecordCommon.GetNthObject(index, obj);
-            }
-        }
-
         public static void Clear(
             IWeather item,
             NotifyingUnsetParameters cmds = null)
@@ -4580,7 +4265,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 rhs.Sounds,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
-            MajorRecordCommon.FillEqualsMask(item, rhs, ret);
+            OblivionMajorRecordCommon.FillEqualsMask(item, rhs, ret);
         }
 
         public static string ToString(
@@ -4841,6 +4526,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ret;
         }
 
+        public static Weather_FieldIndex? ConvertFieldIndex(OblivionMajorRecord_FieldIndex? index)
+        {
+            if (!index.HasValue) return null;
+            return ConvertFieldIndex(index: index.Value);
+        }
+
+        public static Weather_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
+        {
+            switch (index)
+            {
+                case OblivionMajorRecord_FieldIndex.FormKey:
+                    return (Weather_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.Version:
+                    return (Weather_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.EditorID:
+                    return (Weather_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.RecordType:
+                    return (Weather_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
+                    return (Weather_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
+        }
+
         public static Weather_FieldIndex? ConvertFieldIndex(MajorRecord_FieldIndex? index)
         {
             if (!index.HasValue) return null;
@@ -4851,8 +4561,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (index)
             {
-                case MajorRecord_FieldIndex.MajorRecordFlags:
-                    return (Weather_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
                     return (Weather_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.Version:
@@ -4913,7 +4621,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
         {
-            MajorRecordCommon.WriteToNode_Xml(
+            OblivionMajorRecordCommon.WriteToNode_Xml(
                 item: item,
                 node: node,
                 errorMask: errorMask,
@@ -6260,7 +5968,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 default:
-                    MajorRecordCommon.FillPublicElement_Xml(
+                    OblivionMajorRecordCommon.FillPublicElement_Xml(
                         item: item,
                         node: node,
                         name: name,
@@ -6304,7 +6012,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: Weather_Registration.WTHR_HEADER,
                 type: ObjectType.Record))
             {
-                MajorRecordCommon.Write_Binary_Embedded(
+                OblivionMajorRecordCommon.Write_Binary_Embedded(
                     item: item,
                     writer: writer,
                     errorMask: errorMask,
@@ -6579,7 +6287,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     #region Modules
     #region Mask
-    public class Weather_Mask<T> : MajorRecord_Mask<T>, IMask<T>, IEquatable<Weather_Mask<T>>
+    public class Weather_Mask<T> : OblivionMajorRecord_Mask<T>, IMask<T>, IEquatable<Weather_Mask<T>>
     {
         #region Ctors
         public Weather_Mask()
@@ -7157,7 +6865,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public class Weather_ErrorMask : MajorRecord_ErrorMask, IErrorMask<Weather_ErrorMask>
+    public class Weather_ErrorMask : OblivionMajorRecord_ErrorMask, IErrorMask<Weather_ErrorMask>
     {
         #region Members
         public Exception TextureLowerLayer;
@@ -7732,7 +7440,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
-    public class Weather_CopyMask : MajorRecord_CopyMask
+    public class Weather_CopyMask : OblivionMajorRecord_CopyMask
     {
         public Weather_CopyMask()
         {
@@ -7819,7 +7527,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public class Weather_TranslationMask : MajorRecord_TranslationMask
+    public class Weather_TranslationMask : OblivionMajorRecord_TranslationMask
     {
         #region Members
         public bool TextureLowerLayer;

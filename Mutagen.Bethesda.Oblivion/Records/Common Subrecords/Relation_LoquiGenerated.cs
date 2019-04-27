@@ -67,28 +67,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        #region Loqui Getter Interface
-
-        protected object GetNthObject(ushort index) => RelationCommon.GetNthObject(index, this);
-        object ILoquiObjectGetter.GetNthObject(ushort index) => this.GetNthObject(index);
-
-        protected bool GetNthObjectHasBeenSet(ushort index) => RelationCommon.GetNthObjectHasBeenSet(index, this);
-        bool ILoquiObjectGetter.GetNthObjectHasBeenSet(ushort index) => this.GetNthObjectHasBeenSet(index);
-
-        protected void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => RelationCommon.UnsetNthObject(index, this, cmds);
-        void ILoquiObjectSetter.UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => this.UnsetNthObject(index, cmds);
-
-        #endregion
-
-        #region Loqui Interface
-        protected void SetNthObjectHasBeenSet(ushort index, bool on)
-        {
-            RelationCommon.SetNthObjectHasBeenSet(index, on, this);
-        }
-        void ILoquiObjectSetter.SetNthObjectHasBeenSet(ushort index, bool on) => this.SetNthObjectHasBeenSet(index, on);
-
-        #endregion
-
         IMask<bool> IEqualsMask<Relation>.GetEqualsMask(Relation rhs, EqualsMaskHelper.Include include) => RelationCommon.GetEqualsMask(this, rhs, include);
         IMask<bool> IEqualsMask<IRelationGetter>.GetEqualsMask(IRelationGetter rhs, EqualsMaskHelper.Include include) => RelationCommon.GetEqualsMask(this, rhs, include);
         #region To String
@@ -712,7 +690,6 @@ namespace Mutagen.Bethesda.Oblivion
                 cmds: cmds);
         }
 
-        void ILoquiObjectSetter.SetNthObject(ushort index, object obj, NotifyingFireParameters cmds) => this.SetNthObject(index, obj, cmds);
         protected void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
         {
             Relation_FieldIndex enu = (Relation_FieldIndex)index;
@@ -775,11 +752,6 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, Relation obj)
-        {
-            ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
-        }
-
     }
     #endregion
 
@@ -1050,74 +1022,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         #endregion
-
-        public static void SetNthObjectHasBeenSet(
-            ushort index,
-            bool on,
-            IRelation obj,
-            NotifyingFireParameters cmds = null)
-        {
-            Relation_FieldIndex enu = (Relation_FieldIndex)index;
-            switch (enu)
-            {
-                case Relation_FieldIndex.Faction:
-                case Relation_FieldIndex.Modifier:
-                    if (on) break;
-                    throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static void UnsetNthObject(
-            ushort index,
-            IRelation obj,
-            NotifyingUnsetParameters cmds = null)
-        {
-            Relation_FieldIndex enu = (Relation_FieldIndex)index;
-            switch (enu)
-            {
-                case Relation_FieldIndex.Faction:
-                    obj.Faction = default(Faction);
-                    break;
-                case Relation_FieldIndex.Modifier:
-                    obj.Modifier = default(Int32);
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthObjectHasBeenSet(
-            ushort index,
-            IRelation obj)
-        {
-            Relation_FieldIndex enu = (Relation_FieldIndex)index;
-            switch (enu)
-            {
-                case Relation_FieldIndex.Faction:
-                case Relation_FieldIndex.Modifier:
-                    return true;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static object GetNthObject(
-            ushort index,
-            IRelationGetter obj)
-        {
-            Relation_FieldIndex enu = (Relation_FieldIndex)index;
-            switch (enu)
-            {
-                case Relation_FieldIndex.Faction:
-                    return obj.Faction;
-                case Relation_FieldIndex.Modifier:
-                    return obj.Modifier;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
 
         public static void Clear(
             IRelation item,

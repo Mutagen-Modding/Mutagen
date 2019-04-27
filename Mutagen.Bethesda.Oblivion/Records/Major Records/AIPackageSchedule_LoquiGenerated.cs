@@ -92,28 +92,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        #region Loqui Getter Interface
-
-        protected object GetNthObject(ushort index) => AIPackageScheduleCommon.GetNthObject(index, this);
-        object ILoquiObjectGetter.GetNthObject(ushort index) => this.GetNthObject(index);
-
-        protected bool GetNthObjectHasBeenSet(ushort index) => AIPackageScheduleCommon.GetNthObjectHasBeenSet(index, this);
-        bool ILoquiObjectGetter.GetNthObjectHasBeenSet(ushort index) => this.GetNthObjectHasBeenSet(index);
-
-        protected void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => AIPackageScheduleCommon.UnsetNthObject(index, this, cmds);
-        void ILoquiObjectSetter.UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => this.UnsetNthObject(index, cmds);
-
-        #endregion
-
-        #region Loqui Interface
-        protected void SetNthObjectHasBeenSet(ushort index, bool on)
-        {
-            AIPackageScheduleCommon.SetNthObjectHasBeenSet(index, on, this);
-        }
-        void ILoquiObjectSetter.SetNthObjectHasBeenSet(ushort index, bool on) => this.SetNthObjectHasBeenSet(index, on);
-
-        #endregion
-
         IMask<bool> IEqualsMask<AIPackageSchedule>.GetEqualsMask(AIPackageSchedule rhs, EqualsMaskHelper.Include include) => AIPackageScheduleCommon.GetEqualsMask(this, rhs, include);
         IMask<bool> IEqualsMask<IAIPackageScheduleGetter>.GetEqualsMask(IAIPackageScheduleGetter rhs, EqualsMaskHelper.Include include) => AIPackageScheduleCommon.GetEqualsMask(this, rhs, include);
         #region To String
@@ -817,7 +795,6 @@ namespace Mutagen.Bethesda.Oblivion
                 cmds: cmds);
         }
 
-        void ILoquiObjectSetter.SetNthObject(ushort index, object obj, NotifyingFireParameters cmds) => this.SetNthObject(index, obj, cmds);
         protected void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
         {
             AIPackageSchedule_FieldIndex enu = (AIPackageSchedule_FieldIndex)index;
@@ -894,11 +871,6 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, AIPackageSchedule obj)
-        {
-            ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
-        }
-
     }
     #endregion
 
@@ -1272,95 +1244,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         #endregion
-
-        public static void SetNthObjectHasBeenSet(
-            ushort index,
-            bool on,
-            IAIPackageSchedule obj,
-            NotifyingFireParameters cmds = null)
-        {
-            AIPackageSchedule_FieldIndex enu = (AIPackageSchedule_FieldIndex)index;
-            switch (enu)
-            {
-                case AIPackageSchedule_FieldIndex.Month:
-                case AIPackageSchedule_FieldIndex.DayOfWeek:
-                case AIPackageSchedule_FieldIndex.Day:
-                case AIPackageSchedule_FieldIndex.Time:
-                case AIPackageSchedule_FieldIndex.Duration:
-                    if (on) break;
-                    throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static void UnsetNthObject(
-            ushort index,
-            IAIPackageSchedule obj,
-            NotifyingUnsetParameters cmds = null)
-        {
-            AIPackageSchedule_FieldIndex enu = (AIPackageSchedule_FieldIndex)index;
-            switch (enu)
-            {
-                case AIPackageSchedule_FieldIndex.Month:
-                    obj.Month = default(Month);
-                    break;
-                case AIPackageSchedule_FieldIndex.DayOfWeek:
-                    obj.DayOfWeek = default(Weekday);
-                    break;
-                case AIPackageSchedule_FieldIndex.Day:
-                    obj.Day = default(Byte);
-                    break;
-                case AIPackageSchedule_FieldIndex.Time:
-                    obj.Time = default(Byte);
-                    break;
-                case AIPackageSchedule_FieldIndex.Duration:
-                    obj.Duration = default(Int32);
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthObjectHasBeenSet(
-            ushort index,
-            IAIPackageSchedule obj)
-        {
-            AIPackageSchedule_FieldIndex enu = (AIPackageSchedule_FieldIndex)index;
-            switch (enu)
-            {
-                case AIPackageSchedule_FieldIndex.Month:
-                case AIPackageSchedule_FieldIndex.DayOfWeek:
-                case AIPackageSchedule_FieldIndex.Day:
-                case AIPackageSchedule_FieldIndex.Time:
-                case AIPackageSchedule_FieldIndex.Duration:
-                    return true;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static object GetNthObject(
-            ushort index,
-            IAIPackageScheduleGetter obj)
-        {
-            AIPackageSchedule_FieldIndex enu = (AIPackageSchedule_FieldIndex)index;
-            switch (enu)
-            {
-                case AIPackageSchedule_FieldIndex.Month:
-                    return obj.Month;
-                case AIPackageSchedule_FieldIndex.DayOfWeek:
-                    return obj.DayOfWeek;
-                case AIPackageSchedule_FieldIndex.Day:
-                    return obj.Day;
-                case AIPackageSchedule_FieldIndex.Time:
-                    return obj.Time;
-                case AIPackageSchedule_FieldIndex.Duration:
-                    return obj.Duration;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
 
         public static void Clear(
             IAIPackageSchedule item,

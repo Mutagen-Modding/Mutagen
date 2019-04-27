@@ -246,24 +246,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        #region Loqui Getter Interface
-
-        protected override object GetNthObject(ushort index) => BookCommon.GetNthObject(index, this);
-
-        protected override bool GetNthObjectHasBeenSet(ushort index) => BookCommon.GetNthObjectHasBeenSet(index, this);
-
-        protected override void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => BookCommon.UnsetNthObject(index, this, cmds);
-
-        #endregion
-
-        #region Loqui Interface
-        protected override void SetNthObjectHasBeenSet(ushort index, bool on)
-        {
-            BookCommon.SetNthObjectHasBeenSet(index, on, this);
-        }
-
-        #endregion
-
         IMask<bool> IEqualsMask<Book>.GetEqualsMask(Book rhs, EqualsMaskHelper.Include include) => BookCommon.GetEqualsMask(this, rhs, include);
         IMask<bool> IEqualsMask<IBookGetter>.GetEqualsMask(IBookGetter rhs, EqualsMaskHelper.Include include) => BookCommon.GetEqualsMask(this, rhs, include);
         #region To String
@@ -638,6 +620,22 @@ namespace Mutagen.Bethesda.Oblivion
 
         public override void Write_Xml(
             XElement node,
+            out OblivionMajorRecord_ErrorMask errorMask,
+            bool doMasks = true,
+            OblivionMajorRecord_TranslationMask translationMask = null,
+            string name = null)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            this.Write_Xml(
+                name: name,
+                node: node,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal());
+            errorMask = Book_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public override void Write_Xml(
+            XElement node,
             out MajorRecord_ErrorMask errorMask,
             bool doMasks = true,
             MajorRecord_TranslationMask translationMask = null,
@@ -764,9 +762,9 @@ namespace Mutagen.Bethesda.Oblivion
             CustomCtor();
         }
 
-        partial void PostDuplicate(Book obj, Book rhs, Func<FormKey> getNextFormKey, IList<(MajorRecord Record, FormKey OriginalFormKey)> duplicatedRecords);
+        partial void PostDuplicate(Book obj, Book rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
 
-        public override MajorRecord Duplicate(Func<FormKey> getNextFormKey, IList<(MajorRecord Record, FormKey OriginalFormKey)> duplicatedRecords)
+        public override IMajorRecordCommon Duplicate(Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
         {
             var ret = new Book(getNextFormKey());
             ret.CopyFieldsFrom(this);
@@ -848,6 +846,21 @@ namespace Mutagen.Bethesda.Oblivion
             MutagenWriter writer,
             MasterReferences masterReferences,
             out ItemAbstract_ErrorMask errorMask,
+            bool doMasks = true)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            this.Write_Binary(
+                masterReferences: masterReferences,
+                writer: writer,
+                errorMask: errorMaskBuilder,
+                recordTypeConverter: null);
+            errorMask = Book_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public override void Write_Binary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            out OblivionMajorRecord_ErrorMask errorMask,
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
@@ -1436,11 +1449,6 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, Book obj)
-        {
-            ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
-        }
-
     }
     #endregion
 
@@ -1549,11 +1557,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #region Field Index
     public enum Book_FieldIndex
     {
-        MajorRecordFlags = 0,
-        FormKey = 1,
-        Version = 2,
-        EditorID = 3,
-        RecordType = 4,
+        FormKey = 0,
+        Version = 1,
+        EditorID = 2,
+        RecordType = 3,
+        OblivionMajorRecordFlags = 4,
         Name = 5,
         Model = 6,
         Icon = 7,
@@ -2161,160 +2169,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void SetNthObjectHasBeenSet(
-            ushort index,
-            bool on,
-            IBook obj,
-            NotifyingFireParameters cmds = null)
-        {
-            Book_FieldIndex enu = (Book_FieldIndex)index;
-            switch (enu)
-            {
-                case Book_FieldIndex.Flags:
-                case Book_FieldIndex.Teaches:
-                case Book_FieldIndex.Value:
-                case Book_FieldIndex.Weight:
-                    if (on) break;
-                    throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
-                case Book_FieldIndex.Name:
-                    obj.Name_IsSet = on;
-                    break;
-                case Book_FieldIndex.Model:
-                    obj.Model_IsSet = on;
-                    break;
-                case Book_FieldIndex.Icon:
-                    obj.Icon_IsSet = on;
-                    break;
-                case Book_FieldIndex.Script:
-                    obj.Script_Property.HasBeenSet = on;
-                    break;
-                case Book_FieldIndex.Enchantment:
-                    obj.Enchantment_Property.HasBeenSet = on;
-                    break;
-                case Book_FieldIndex.EnchantmentPoints:
-                    obj.EnchantmentPoints_IsSet = on;
-                    break;
-                case Book_FieldIndex.Description:
-                    obj.Description_IsSet = on;
-                    break;
-                default:
-                    ItemAbstractCommon.SetNthObjectHasBeenSet(index, on, obj);
-                    break;
-            }
-        }
-
-        public static void UnsetNthObject(
-            ushort index,
-            IBook obj,
-            NotifyingUnsetParameters cmds = null)
-        {
-            Book_FieldIndex enu = (Book_FieldIndex)index;
-            switch (enu)
-            {
-                case Book_FieldIndex.Name:
-                    obj.Name_Unset();
-                    break;
-                case Book_FieldIndex.Model:
-                    obj.Model_Unset();
-                    break;
-                case Book_FieldIndex.Icon:
-                    obj.Icon_Unset();
-                    break;
-                case Book_FieldIndex.Script:
-                    obj.Script_Property.Unset(cmds);
-                    break;
-                case Book_FieldIndex.Enchantment:
-                    obj.Enchantment_Property.Unset(cmds);
-                    break;
-                case Book_FieldIndex.EnchantmentPoints:
-                    obj.EnchantmentPoints_Unset();
-                    break;
-                case Book_FieldIndex.Description:
-                    obj.Description_Unset();
-                    break;
-                case Book_FieldIndex.Flags:
-                    obj.Flags = default(Book.BookFlag);
-                    break;
-                case Book_FieldIndex.Teaches:
-                    obj.Teaches = default(Skill);
-                    break;
-                case Book_FieldIndex.Value:
-                    obj.Value = default(Single);
-                    break;
-                case Book_FieldIndex.Weight:
-                    obj.Weight = default(Single);
-                    break;
-                default:
-                    ItemAbstractCommon.UnsetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public static bool GetNthObjectHasBeenSet(
-            ushort index,
-            IBook obj)
-        {
-            Book_FieldIndex enu = (Book_FieldIndex)index;
-            switch (enu)
-            {
-                case Book_FieldIndex.Flags:
-                case Book_FieldIndex.Teaches:
-                case Book_FieldIndex.Value:
-                case Book_FieldIndex.Weight:
-                    return true;
-                case Book_FieldIndex.Name:
-                    return obj.Name_IsSet;
-                case Book_FieldIndex.Model:
-                    return obj.Model_IsSet;
-                case Book_FieldIndex.Icon:
-                    return obj.Icon_IsSet;
-                case Book_FieldIndex.Script:
-                    return obj.Script_Property.HasBeenSet;
-                case Book_FieldIndex.Enchantment:
-                    return obj.Enchantment_Property.HasBeenSet;
-                case Book_FieldIndex.EnchantmentPoints:
-                    return obj.EnchantmentPoints_IsSet;
-                case Book_FieldIndex.Description:
-                    return obj.Description_IsSet;
-                default:
-                    return ItemAbstractCommon.GetNthObjectHasBeenSet(index, obj);
-            }
-        }
-
-        public static object GetNthObject(
-            ushort index,
-            IBookGetter obj)
-        {
-            Book_FieldIndex enu = (Book_FieldIndex)index;
-            switch (enu)
-            {
-                case Book_FieldIndex.Name:
-                    return obj.Name;
-                case Book_FieldIndex.Model:
-                    return obj.Model;
-                case Book_FieldIndex.Icon:
-                    return obj.Icon;
-                case Book_FieldIndex.Script:
-                    return obj.Script;
-                case Book_FieldIndex.Enchantment:
-                    return obj.Enchantment;
-                case Book_FieldIndex.EnchantmentPoints:
-                    return obj.EnchantmentPoints;
-                case Book_FieldIndex.Description:
-                    return obj.Description;
-                case Book_FieldIndex.Flags:
-                    return obj.Flags;
-                case Book_FieldIndex.Teaches:
-                    return obj.Teaches;
-                case Book_FieldIndex.Value:
-                    return obj.Value;
-                case Book_FieldIndex.Weight:
-                    return obj.Weight;
-                default:
-                    return ItemAbstractCommon.GetNthObject(index, obj);
-            }
-        }
-
         public static void Clear(
             IBook item,
             NotifyingUnsetParameters cmds = null)
@@ -2490,8 +2344,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (index)
             {
-                case ItemAbstract_FieldIndex.MajorRecordFlags:
-                    return (Book_FieldIndex)((int)index);
                 case ItemAbstract_FieldIndex.FormKey:
                     return (Book_FieldIndex)((int)index);
                 case ItemAbstract_FieldIndex.Version:
@@ -2499,6 +2351,33 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case ItemAbstract_FieldIndex.EditorID:
                     return (Book_FieldIndex)((int)index);
                 case ItemAbstract_FieldIndex.RecordType:
+                    return (Book_FieldIndex)((int)index);
+                case ItemAbstract_FieldIndex.OblivionMajorRecordFlags:
+                    return (Book_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
+        }
+
+        public static Book_FieldIndex? ConvertFieldIndex(OblivionMajorRecord_FieldIndex? index)
+        {
+            if (!index.HasValue) return null;
+            return ConvertFieldIndex(index: index.Value);
+        }
+
+        public static Book_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
+        {
+            switch (index)
+            {
+                case OblivionMajorRecord_FieldIndex.FormKey:
+                    return (Book_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.Version:
+                    return (Book_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.EditorID:
+                    return (Book_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.RecordType:
+                    return (Book_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
                     return (Book_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
@@ -2515,8 +2394,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (index)
             {
-                case MajorRecord_FieldIndex.MajorRecordFlags:
-                    return (Book_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
                     return (Book_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.Version:
@@ -3023,7 +2900,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: Book_Registration.BOOK_HEADER,
                 type: ObjectType.Record))
             {
-                MajorRecordCommon.Write_Binary_Embedded(
+                OblivionMajorRecordCommon.Write_Binary_Embedded(
                     item: item,
                     writer: writer,
                     errorMask: errorMask,

@@ -964,24 +964,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        #region Loqui Getter Interface
-
-        protected override object GetNthObject(ushort index) => NPCCommon.GetNthObject(index, this);
-
-        protected override bool GetNthObjectHasBeenSet(ushort index) => NPCCommon.GetNthObjectHasBeenSet(index, this);
-
-        protected override void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => NPCCommon.UnsetNthObject(index, this, cmds);
-
-        #endregion
-
-        #region Loqui Interface
-        protected override void SetNthObjectHasBeenSet(ushort index, bool on)
-        {
-            NPCCommon.SetNthObjectHasBeenSet(index, on, this);
-        }
-
-        #endregion
-
         IMask<bool> IEqualsMask<NPC>.GetEqualsMask(NPC rhs, EqualsMaskHelper.Include include) => NPCCommon.GetEqualsMask(this, rhs, include);
         IMask<bool> IEqualsMask<INPCGetter>.GetEqualsMask(INPCGetter rhs, EqualsMaskHelper.Include include) => NPCCommon.GetEqualsMask(this, rhs, include);
         #region To String
@@ -1571,6 +1553,22 @@ namespace Mutagen.Bethesda.Oblivion
 
         public override void Write_Xml(
             XElement node,
+            out OblivionMajorRecord_ErrorMask errorMask,
+            bool doMasks = true,
+            OblivionMajorRecord_TranslationMask translationMask = null,
+            string name = null)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            this.Write_Xml(
+                name: name,
+                node: node,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal());
+            errorMask = NPC_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public override void Write_Xml(
+            XElement node,
             out MajorRecord_ErrorMask errorMask,
             bool doMasks = true,
             MajorRecord_TranslationMask translationMask = null,
@@ -1854,9 +1852,9 @@ namespace Mutagen.Bethesda.Oblivion
             CustomCtor();
         }
 
-        partial void PostDuplicate(NPC obj, NPC rhs, Func<FormKey> getNextFormKey, IList<(MajorRecord Record, FormKey OriginalFormKey)> duplicatedRecords);
+        partial void PostDuplicate(NPC obj, NPC rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
 
-        public override MajorRecord Duplicate(Func<FormKey> getNextFormKey, IList<(MajorRecord Record, FormKey OriginalFormKey)> duplicatedRecords)
+        public override IMajorRecordCommon Duplicate(Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
         {
             var ret = new NPC(getNextFormKey());
             ret.CopyFieldsFrom(this);
@@ -1953,6 +1951,21 @@ namespace Mutagen.Bethesda.Oblivion
             MutagenWriter writer,
             MasterReferences masterReferences,
             out NPCSpawn_ErrorMask errorMask,
+            bool doMasks = true)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            this.Write_Binary(
+                masterReferences: masterReferences,
+                writer: writer,
+                errorMask: errorMaskBuilder,
+                recordTypeConverter: null);
+            errorMask = NPC_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public override void Write_Binary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            out OblivionMajorRecord_ErrorMask errorMask,
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
@@ -4114,11 +4127,6 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, NPC obj)
-        {
-            ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
-        }
-
     }
     #endregion
 
@@ -4551,11 +4559,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #region Field Index
     public enum NPC_FieldIndex
     {
-        MajorRecordFlags = 0,
-        FormKey = 1,
-        Version = 2,
-        EditorID = 3,
-        RecordType = 4,
+        FormKey = 0,
+        Version = 1,
+        EditorID = 2,
+        RecordType = 3,
+        OblivionMajorRecordFlags = 4,
         Name = 5,
         Model = 6,
         Flags = 7,
@@ -6840,577 +6848,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void SetNthObjectHasBeenSet(
-            ushort index,
-            bool on,
-            INPC obj,
-            NotifyingFireParameters cmds = null)
-        {
-            NPC_FieldIndex enu = (NPC_FieldIndex)index;
-            switch (enu)
-            {
-                case NPC_FieldIndex.Flags:
-                case NPC_FieldIndex.BaseSpellPoints:
-                case NPC_FieldIndex.Fatigue:
-                case NPC_FieldIndex.BarterGold:
-                case NPC_FieldIndex.LevelOffset:
-                case NPC_FieldIndex.CalcMin:
-                case NPC_FieldIndex.CalcMax:
-                case NPC_FieldIndex.Aggression:
-                case NPC_FieldIndex.Confidence:
-                case NPC_FieldIndex.EnergyLevel:
-                case NPC_FieldIndex.Responsibility:
-                case NPC_FieldIndex.BuySellServices:
-                case NPC_FieldIndex.Teaches:
-                case NPC_FieldIndex.MaximumTrainingLevel:
-                case NPC_FieldIndex.Fluff:
-                case NPC_FieldIndex.Armorer:
-                case NPC_FieldIndex.Athletics:
-                case NPC_FieldIndex.Blade:
-                case NPC_FieldIndex.Block:
-                case NPC_FieldIndex.Blunt:
-                case NPC_FieldIndex.HandToHand:
-                case NPC_FieldIndex.HeavyArmor:
-                case NPC_FieldIndex.Alchemy:
-                case NPC_FieldIndex.Alteration:
-                case NPC_FieldIndex.Conjuration:
-                case NPC_FieldIndex.Destruction:
-                case NPC_FieldIndex.Illusion:
-                case NPC_FieldIndex.Mysticism:
-                case NPC_FieldIndex.Restoration:
-                case NPC_FieldIndex.Acrobatics:
-                case NPC_FieldIndex.LightArmor:
-                case NPC_FieldIndex.Marksman:
-                case NPC_FieldIndex.Mercantile:
-                case NPC_FieldIndex.Security:
-                case NPC_FieldIndex.Sneak:
-                case NPC_FieldIndex.Speechcraft:
-                case NPC_FieldIndex.Health:
-                case NPC_FieldIndex.Strength:
-                case NPC_FieldIndex.Intelligence:
-                case NPC_FieldIndex.Willpower:
-                case NPC_FieldIndex.Agility:
-                case NPC_FieldIndex.Speed:
-                case NPC_FieldIndex.Endurance:
-                case NPC_FieldIndex.Personality:
-                case NPC_FieldIndex.Luck:
-                    if (on) break;
-                    throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
-                case NPC_FieldIndex.Name:
-                    obj.Name_IsSet = on;
-                    break;
-                case NPC_FieldIndex.Model:
-                    obj.Model_IsSet = on;
-                    break;
-                case NPC_FieldIndex.Factions:
-                    obj.Factions.HasBeenSet = on;
-                    break;
-                case NPC_FieldIndex.DeathItem:
-                    obj.DeathItem_Property.HasBeenSet = on;
-                    break;
-                case NPC_FieldIndex.Race:
-                    obj.Race_Property.HasBeenSet = on;
-                    break;
-                case NPC_FieldIndex.Spells:
-                    obj.Spells.HasBeenSet = on;
-                    break;
-                case NPC_FieldIndex.Script:
-                    obj.Script_Property.HasBeenSet = on;
-                    break;
-                case NPC_FieldIndex.Items:
-                    obj.Items.HasBeenSet = on;
-                    break;
-                case NPC_FieldIndex.AIPackages:
-                    obj.AIPackages.HasBeenSet = on;
-                    break;
-                case NPC_FieldIndex.Animations:
-                    obj.Animations.HasBeenSet = on;
-                    break;
-                case NPC_FieldIndex.Class:
-                    obj.Class_Property.HasBeenSet = on;
-                    break;
-                case NPC_FieldIndex.Hair:
-                    obj.Hair_Property.HasBeenSet = on;
-                    break;
-                case NPC_FieldIndex.HairLength:
-                    obj.HairLength_IsSet = on;
-                    break;
-                case NPC_FieldIndex.Eyes:
-                    obj.Eyes.HasBeenSet = on;
-                    break;
-                case NPC_FieldIndex.HairColor:
-                    obj.HairColor_IsSet = on;
-                    break;
-                case NPC_FieldIndex.CombatStyle:
-                    obj.CombatStyle_Property.HasBeenSet = on;
-                    break;
-                case NPC_FieldIndex.FaceGenGeometrySymmetric:
-                    obj.FaceGenGeometrySymmetric_IsSet = on;
-                    break;
-                case NPC_FieldIndex.FaceGenGeometryAsymmetric:
-                    obj.FaceGenGeometryAsymmetric_IsSet = on;
-                    break;
-                case NPC_FieldIndex.FaceGenTextureSymmetric:
-                    obj.FaceGenTextureSymmetric_IsSet = on;
-                    break;
-                case NPC_FieldIndex.Unknown:
-                    obj.Unknown_IsSet = on;
-                    break;
-                default:
-                    NPCAbstractCommon.SetNthObjectHasBeenSet(index, on, obj);
-                    break;
-            }
-        }
-
-        public static void UnsetNthObject(
-            ushort index,
-            INPC obj,
-            NotifyingUnsetParameters cmds = null)
-        {
-            NPC_FieldIndex enu = (NPC_FieldIndex)index;
-            switch (enu)
-            {
-                case NPC_FieldIndex.Name:
-                    obj.Name_Unset();
-                    break;
-                case NPC_FieldIndex.Model:
-                    obj.Model_Unset();
-                    break;
-                case NPC_FieldIndex.Flags:
-                    obj.Flags = default(NPC.NPCFlag);
-                    break;
-                case NPC_FieldIndex.BaseSpellPoints:
-                    obj.BaseSpellPoints = default(UInt16);
-                    break;
-                case NPC_FieldIndex.Fatigue:
-                    obj.Fatigue = default(UInt16);
-                    break;
-                case NPC_FieldIndex.BarterGold:
-                    obj.BarterGold = default(UInt16);
-                    break;
-                case NPC_FieldIndex.LevelOffset:
-                    obj.LevelOffset = default(Int16);
-                    break;
-                case NPC_FieldIndex.CalcMin:
-                    obj.CalcMin = default(UInt16);
-                    break;
-                case NPC_FieldIndex.CalcMax:
-                    obj.CalcMax = default(UInt16);
-                    break;
-                case NPC_FieldIndex.Factions:
-                    obj.Factions.Unset();
-                    break;
-                case NPC_FieldIndex.DeathItem:
-                    obj.DeathItem_Property.Unset(cmds);
-                    break;
-                case NPC_FieldIndex.Race:
-                    obj.Race_Property.Unset(cmds);
-                    break;
-                case NPC_FieldIndex.Spells:
-                    obj.Spells.Unset();
-                    break;
-                case NPC_FieldIndex.Script:
-                    obj.Script_Property.Unset(cmds);
-                    break;
-                case NPC_FieldIndex.Items:
-                    obj.Items.Unset();
-                    break;
-                case NPC_FieldIndex.Aggression:
-                    obj.Aggression = default(Byte);
-                    break;
-                case NPC_FieldIndex.Confidence:
-                    obj.Confidence = default(Byte);
-                    break;
-                case NPC_FieldIndex.EnergyLevel:
-                    obj.EnergyLevel = default(Byte);
-                    break;
-                case NPC_FieldIndex.Responsibility:
-                    obj.Responsibility = default(Byte);
-                    break;
-                case NPC_FieldIndex.BuySellServices:
-                    obj.BuySellServices = default(NPC.BuySellServiceFlag);
-                    break;
-                case NPC_FieldIndex.Teaches:
-                    obj.Teaches = default(Skill);
-                    break;
-                case NPC_FieldIndex.MaximumTrainingLevel:
-                    obj.MaximumTrainingLevel = default(Byte);
-                    break;
-                case NPC_FieldIndex.Fluff:
-                    obj.Fluff = default(Byte[]);
-                    break;
-                case NPC_FieldIndex.AIPackages:
-                    obj.AIPackages.Unset();
-                    break;
-                case NPC_FieldIndex.Animations:
-                    obj.Animations.Unset();
-                    break;
-                case NPC_FieldIndex.Class:
-                    obj.Class_Property.Unset(cmds);
-                    break;
-                case NPC_FieldIndex.Armorer:
-                    obj.Armorer = default(Byte);
-                    break;
-                case NPC_FieldIndex.Athletics:
-                    obj.Athletics = default(Byte);
-                    break;
-                case NPC_FieldIndex.Blade:
-                    obj.Blade = default(Byte);
-                    break;
-                case NPC_FieldIndex.Block:
-                    obj.Block = default(Byte);
-                    break;
-                case NPC_FieldIndex.Blunt:
-                    obj.Blunt = default(Byte);
-                    break;
-                case NPC_FieldIndex.HandToHand:
-                    obj.HandToHand = default(Byte);
-                    break;
-                case NPC_FieldIndex.HeavyArmor:
-                    obj.HeavyArmor = default(Byte);
-                    break;
-                case NPC_FieldIndex.Alchemy:
-                    obj.Alchemy = default(Byte);
-                    break;
-                case NPC_FieldIndex.Alteration:
-                    obj.Alteration = default(Byte);
-                    break;
-                case NPC_FieldIndex.Conjuration:
-                    obj.Conjuration = default(Byte);
-                    break;
-                case NPC_FieldIndex.Destruction:
-                    obj.Destruction = default(Byte);
-                    break;
-                case NPC_FieldIndex.Illusion:
-                    obj.Illusion = default(Byte);
-                    break;
-                case NPC_FieldIndex.Mysticism:
-                    obj.Mysticism = default(Byte);
-                    break;
-                case NPC_FieldIndex.Restoration:
-                    obj.Restoration = default(Byte);
-                    break;
-                case NPC_FieldIndex.Acrobatics:
-                    obj.Acrobatics = default(Byte);
-                    break;
-                case NPC_FieldIndex.LightArmor:
-                    obj.LightArmor = default(Byte);
-                    break;
-                case NPC_FieldIndex.Marksman:
-                    obj.Marksman = default(Byte);
-                    break;
-                case NPC_FieldIndex.Mercantile:
-                    obj.Mercantile = default(Byte);
-                    break;
-                case NPC_FieldIndex.Security:
-                    obj.Security = default(Byte);
-                    break;
-                case NPC_FieldIndex.Sneak:
-                    obj.Sneak = default(Byte);
-                    break;
-                case NPC_FieldIndex.Speechcraft:
-                    obj.Speechcraft = default(Byte);
-                    break;
-                case NPC_FieldIndex.Health:
-                    obj.Health = default(UInt32);
-                    break;
-                case NPC_FieldIndex.Strength:
-                    obj.Strength = default(Byte);
-                    break;
-                case NPC_FieldIndex.Intelligence:
-                    obj.Intelligence = default(Byte);
-                    break;
-                case NPC_FieldIndex.Willpower:
-                    obj.Willpower = default(Byte);
-                    break;
-                case NPC_FieldIndex.Agility:
-                    obj.Agility = default(Byte);
-                    break;
-                case NPC_FieldIndex.Speed:
-                    obj.Speed = default(Byte);
-                    break;
-                case NPC_FieldIndex.Endurance:
-                    obj.Endurance = default(Byte);
-                    break;
-                case NPC_FieldIndex.Personality:
-                    obj.Personality = default(Byte);
-                    break;
-                case NPC_FieldIndex.Luck:
-                    obj.Luck = default(Byte);
-                    break;
-                case NPC_FieldIndex.Hair:
-                    obj.Hair_Property.Unset(cmds);
-                    break;
-                case NPC_FieldIndex.HairLength:
-                    obj.HairLength_Unset();
-                    break;
-                case NPC_FieldIndex.Eyes:
-                    obj.Eyes.Unset();
-                    break;
-                case NPC_FieldIndex.HairColor:
-                    obj.HairColor_Unset();
-                    break;
-                case NPC_FieldIndex.CombatStyle:
-                    obj.CombatStyle_Property.Unset(cmds);
-                    break;
-                case NPC_FieldIndex.FaceGenGeometrySymmetric:
-                    obj.FaceGenGeometrySymmetric_Unset();
-                    break;
-                case NPC_FieldIndex.FaceGenGeometryAsymmetric:
-                    obj.FaceGenGeometryAsymmetric_Unset();
-                    break;
-                case NPC_FieldIndex.FaceGenTextureSymmetric:
-                    obj.FaceGenTextureSymmetric_Unset();
-                    break;
-                case NPC_FieldIndex.Unknown:
-                    obj.Unknown_Unset();
-                    break;
-                default:
-                    NPCAbstractCommon.UnsetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public static bool GetNthObjectHasBeenSet(
-            ushort index,
-            INPC obj)
-        {
-            NPC_FieldIndex enu = (NPC_FieldIndex)index;
-            switch (enu)
-            {
-                case NPC_FieldIndex.Flags:
-                case NPC_FieldIndex.BaseSpellPoints:
-                case NPC_FieldIndex.Fatigue:
-                case NPC_FieldIndex.BarterGold:
-                case NPC_FieldIndex.LevelOffset:
-                case NPC_FieldIndex.CalcMin:
-                case NPC_FieldIndex.CalcMax:
-                case NPC_FieldIndex.Aggression:
-                case NPC_FieldIndex.Confidence:
-                case NPC_FieldIndex.EnergyLevel:
-                case NPC_FieldIndex.Responsibility:
-                case NPC_FieldIndex.BuySellServices:
-                case NPC_FieldIndex.Teaches:
-                case NPC_FieldIndex.MaximumTrainingLevel:
-                case NPC_FieldIndex.Fluff:
-                case NPC_FieldIndex.Armorer:
-                case NPC_FieldIndex.Athletics:
-                case NPC_FieldIndex.Blade:
-                case NPC_FieldIndex.Block:
-                case NPC_FieldIndex.Blunt:
-                case NPC_FieldIndex.HandToHand:
-                case NPC_FieldIndex.HeavyArmor:
-                case NPC_FieldIndex.Alchemy:
-                case NPC_FieldIndex.Alteration:
-                case NPC_FieldIndex.Conjuration:
-                case NPC_FieldIndex.Destruction:
-                case NPC_FieldIndex.Illusion:
-                case NPC_FieldIndex.Mysticism:
-                case NPC_FieldIndex.Restoration:
-                case NPC_FieldIndex.Acrobatics:
-                case NPC_FieldIndex.LightArmor:
-                case NPC_FieldIndex.Marksman:
-                case NPC_FieldIndex.Mercantile:
-                case NPC_FieldIndex.Security:
-                case NPC_FieldIndex.Sneak:
-                case NPC_FieldIndex.Speechcraft:
-                case NPC_FieldIndex.Health:
-                case NPC_FieldIndex.Strength:
-                case NPC_FieldIndex.Intelligence:
-                case NPC_FieldIndex.Willpower:
-                case NPC_FieldIndex.Agility:
-                case NPC_FieldIndex.Speed:
-                case NPC_FieldIndex.Endurance:
-                case NPC_FieldIndex.Personality:
-                case NPC_FieldIndex.Luck:
-                    return true;
-                case NPC_FieldIndex.Name:
-                    return obj.Name_IsSet;
-                case NPC_FieldIndex.Model:
-                    return obj.Model_IsSet;
-                case NPC_FieldIndex.Factions:
-                    return obj.Factions.HasBeenSet;
-                case NPC_FieldIndex.DeathItem:
-                    return obj.DeathItem_Property.HasBeenSet;
-                case NPC_FieldIndex.Race:
-                    return obj.Race_Property.HasBeenSet;
-                case NPC_FieldIndex.Spells:
-                    return obj.Spells.HasBeenSet;
-                case NPC_FieldIndex.Script:
-                    return obj.Script_Property.HasBeenSet;
-                case NPC_FieldIndex.Items:
-                    return obj.Items.HasBeenSet;
-                case NPC_FieldIndex.AIPackages:
-                    return obj.AIPackages.HasBeenSet;
-                case NPC_FieldIndex.Animations:
-                    return obj.Animations.HasBeenSet;
-                case NPC_FieldIndex.Class:
-                    return obj.Class_Property.HasBeenSet;
-                case NPC_FieldIndex.Hair:
-                    return obj.Hair_Property.HasBeenSet;
-                case NPC_FieldIndex.HairLength:
-                    return obj.HairLength_IsSet;
-                case NPC_FieldIndex.Eyes:
-                    return obj.Eyes.HasBeenSet;
-                case NPC_FieldIndex.HairColor:
-                    return obj.HairColor_IsSet;
-                case NPC_FieldIndex.CombatStyle:
-                    return obj.CombatStyle_Property.HasBeenSet;
-                case NPC_FieldIndex.FaceGenGeometrySymmetric:
-                    return obj.FaceGenGeometrySymmetric_IsSet;
-                case NPC_FieldIndex.FaceGenGeometryAsymmetric:
-                    return obj.FaceGenGeometryAsymmetric_IsSet;
-                case NPC_FieldIndex.FaceGenTextureSymmetric:
-                    return obj.FaceGenTextureSymmetric_IsSet;
-                case NPC_FieldIndex.Unknown:
-                    return obj.Unknown_IsSet;
-                default:
-                    return NPCAbstractCommon.GetNthObjectHasBeenSet(index, obj);
-            }
-        }
-
-        public static object GetNthObject(
-            ushort index,
-            INPCGetter obj)
-        {
-            NPC_FieldIndex enu = (NPC_FieldIndex)index;
-            switch (enu)
-            {
-                case NPC_FieldIndex.Name:
-                    return obj.Name;
-                case NPC_FieldIndex.Model:
-                    return obj.Model;
-                case NPC_FieldIndex.Flags:
-                    return obj.Flags;
-                case NPC_FieldIndex.BaseSpellPoints:
-                    return obj.BaseSpellPoints;
-                case NPC_FieldIndex.Fatigue:
-                    return obj.Fatigue;
-                case NPC_FieldIndex.BarterGold:
-                    return obj.BarterGold;
-                case NPC_FieldIndex.LevelOffset:
-                    return obj.LevelOffset;
-                case NPC_FieldIndex.CalcMin:
-                    return obj.CalcMin;
-                case NPC_FieldIndex.CalcMax:
-                    return obj.CalcMax;
-                case NPC_FieldIndex.Factions:
-                    return obj.Factions;
-                case NPC_FieldIndex.DeathItem:
-                    return obj.DeathItem;
-                case NPC_FieldIndex.Race:
-                    return obj.Race;
-                case NPC_FieldIndex.Spells:
-                    return obj.Spells;
-                case NPC_FieldIndex.Script:
-                    return obj.Script;
-                case NPC_FieldIndex.Items:
-                    return obj.Items;
-                case NPC_FieldIndex.Aggression:
-                    return obj.Aggression;
-                case NPC_FieldIndex.Confidence:
-                    return obj.Confidence;
-                case NPC_FieldIndex.EnergyLevel:
-                    return obj.EnergyLevel;
-                case NPC_FieldIndex.Responsibility:
-                    return obj.Responsibility;
-                case NPC_FieldIndex.BuySellServices:
-                    return obj.BuySellServices;
-                case NPC_FieldIndex.Teaches:
-                    return obj.Teaches;
-                case NPC_FieldIndex.MaximumTrainingLevel:
-                    return obj.MaximumTrainingLevel;
-                case NPC_FieldIndex.Fluff:
-                    return obj.Fluff;
-                case NPC_FieldIndex.AIPackages:
-                    return obj.AIPackages;
-                case NPC_FieldIndex.Animations:
-                    return obj.Animations;
-                case NPC_FieldIndex.Class:
-                    return obj.Class;
-                case NPC_FieldIndex.Armorer:
-                    return obj.Armorer;
-                case NPC_FieldIndex.Athletics:
-                    return obj.Athletics;
-                case NPC_FieldIndex.Blade:
-                    return obj.Blade;
-                case NPC_FieldIndex.Block:
-                    return obj.Block;
-                case NPC_FieldIndex.Blunt:
-                    return obj.Blunt;
-                case NPC_FieldIndex.HandToHand:
-                    return obj.HandToHand;
-                case NPC_FieldIndex.HeavyArmor:
-                    return obj.HeavyArmor;
-                case NPC_FieldIndex.Alchemy:
-                    return obj.Alchemy;
-                case NPC_FieldIndex.Alteration:
-                    return obj.Alteration;
-                case NPC_FieldIndex.Conjuration:
-                    return obj.Conjuration;
-                case NPC_FieldIndex.Destruction:
-                    return obj.Destruction;
-                case NPC_FieldIndex.Illusion:
-                    return obj.Illusion;
-                case NPC_FieldIndex.Mysticism:
-                    return obj.Mysticism;
-                case NPC_FieldIndex.Restoration:
-                    return obj.Restoration;
-                case NPC_FieldIndex.Acrobatics:
-                    return obj.Acrobatics;
-                case NPC_FieldIndex.LightArmor:
-                    return obj.LightArmor;
-                case NPC_FieldIndex.Marksman:
-                    return obj.Marksman;
-                case NPC_FieldIndex.Mercantile:
-                    return obj.Mercantile;
-                case NPC_FieldIndex.Security:
-                    return obj.Security;
-                case NPC_FieldIndex.Sneak:
-                    return obj.Sneak;
-                case NPC_FieldIndex.Speechcraft:
-                    return obj.Speechcraft;
-                case NPC_FieldIndex.Health:
-                    return obj.Health;
-                case NPC_FieldIndex.Strength:
-                    return obj.Strength;
-                case NPC_FieldIndex.Intelligence:
-                    return obj.Intelligence;
-                case NPC_FieldIndex.Willpower:
-                    return obj.Willpower;
-                case NPC_FieldIndex.Agility:
-                    return obj.Agility;
-                case NPC_FieldIndex.Speed:
-                    return obj.Speed;
-                case NPC_FieldIndex.Endurance:
-                    return obj.Endurance;
-                case NPC_FieldIndex.Personality:
-                    return obj.Personality;
-                case NPC_FieldIndex.Luck:
-                    return obj.Luck;
-                case NPC_FieldIndex.Hair:
-                    return obj.Hair;
-                case NPC_FieldIndex.HairLength:
-                    return obj.HairLength;
-                case NPC_FieldIndex.Eyes:
-                    return obj.Eyes;
-                case NPC_FieldIndex.HairColor:
-                    return obj.HairColor;
-                case NPC_FieldIndex.CombatStyle:
-                    return obj.CombatStyle;
-                case NPC_FieldIndex.FaceGenGeometrySymmetric:
-                    return obj.FaceGenGeometrySymmetric;
-                case NPC_FieldIndex.FaceGenGeometryAsymmetric:
-                    return obj.FaceGenGeometryAsymmetric;
-                case NPC_FieldIndex.FaceGenTextureSymmetric:
-                    return obj.FaceGenTextureSymmetric;
-                case NPC_FieldIndex.Unknown:
-                    return obj.Unknown;
-                default:
-                    return NPCAbstractCommon.GetNthObject(index, obj);
-            }
-        }
-
         public static void Clear(
             INPC item,
             NotifyingUnsetParameters cmds = null)
@@ -8079,8 +7516,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (index)
             {
-                case NPCAbstract_FieldIndex.MajorRecordFlags:
-                    return (NPC_FieldIndex)((int)index);
                 case NPCAbstract_FieldIndex.FormKey:
                     return (NPC_FieldIndex)((int)index);
                 case NPCAbstract_FieldIndex.Version:
@@ -8088,6 +7523,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case NPCAbstract_FieldIndex.EditorID:
                     return (NPC_FieldIndex)((int)index);
                 case NPCAbstract_FieldIndex.RecordType:
+                    return (NPC_FieldIndex)((int)index);
+                case NPCAbstract_FieldIndex.OblivionMajorRecordFlags:
                     return (NPC_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
@@ -8104,8 +7541,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (index)
             {
-                case NPCSpawn_FieldIndex.MajorRecordFlags:
-                    return (NPC_FieldIndex)((int)index);
                 case NPCSpawn_FieldIndex.FormKey:
                     return (NPC_FieldIndex)((int)index);
                 case NPCSpawn_FieldIndex.Version:
@@ -8113,6 +7548,33 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case NPCSpawn_FieldIndex.EditorID:
                     return (NPC_FieldIndex)((int)index);
                 case NPCSpawn_FieldIndex.RecordType:
+                    return (NPC_FieldIndex)((int)index);
+                case NPCSpawn_FieldIndex.OblivionMajorRecordFlags:
+                    return (NPC_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
+        }
+
+        public static NPC_FieldIndex? ConvertFieldIndex(OblivionMajorRecord_FieldIndex? index)
+        {
+            if (!index.HasValue) return null;
+            return ConvertFieldIndex(index: index.Value);
+        }
+
+        public static NPC_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
+        {
+            switch (index)
+            {
+                case OblivionMajorRecord_FieldIndex.FormKey:
+                    return (NPC_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.Version:
+                    return (NPC_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.EditorID:
+                    return (NPC_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.RecordType:
+                    return (NPC_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
                     return (NPC_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
@@ -8129,8 +7591,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (index)
             {
-                case MajorRecord_FieldIndex.MajorRecordFlags:
-                    return (NPC_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
                     return (NPC_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.Version:
@@ -10546,7 +10006,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: NPC_Registration.NPC__HEADER,
                 type: ObjectType.Record))
             {
-                MajorRecordCommon.Write_Binary_Embedded(
+                OblivionMajorRecordCommon.Write_Binary_Embedded(
                     item: item,
                     writer: writer,
                     errorMask: errorMask,

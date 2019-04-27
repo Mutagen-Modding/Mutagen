@@ -51,14 +51,6 @@ namespace Mutagen.Bethesda
         partial void CustomCtor();
         #endregion
 
-        #region MajorRecordFlags
-        private MajorRecord.MajorRecordFlag _MajorRecordFlags;
-        public MajorRecord.MajorRecordFlag MajorRecordFlags
-        {
-            get => this._MajorRecordFlags;
-            set => this.RaiseAndSetIfChanged(ref this._MajorRecordFlags, value, nameof(MajorRecordFlags));
-        }
-        #endregion
         #region FormKey
         public FormKey FormKey { get; protected set; }
         protected void UnsetFormKey()
@@ -110,28 +102,6 @@ namespace Mutagen.Bethesda
         }
         #endregion
 
-        #region Loqui Getter Interface
-
-        protected virtual object GetNthObject(ushort index) => MajorRecordCommon.GetNthObject(index, this);
-        object ILoquiObjectGetter.GetNthObject(ushort index) => this.GetNthObject(index);
-
-        protected virtual bool GetNthObjectHasBeenSet(ushort index) => MajorRecordCommon.GetNthObjectHasBeenSet(index, this);
-        bool ILoquiObjectGetter.GetNthObjectHasBeenSet(ushort index) => this.GetNthObjectHasBeenSet(index);
-
-        protected virtual void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => MajorRecordCommon.UnsetNthObject(index, this, cmds);
-        void ILoquiObjectSetter.UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => this.UnsetNthObject(index, cmds);
-
-        #endregion
-
-        #region Loqui Interface
-        protected virtual void SetNthObjectHasBeenSet(ushort index, bool on)
-        {
-            MajorRecordCommon.SetNthObjectHasBeenSet(index, on, this);
-        }
-        void ILoquiObjectSetter.SetNthObjectHasBeenSet(ushort index, bool on) => this.SetNthObjectHasBeenSet(index, on);
-
-        #endregion
-
         IMask<bool> IEqualsMask<MajorRecord>.GetEqualsMask(MajorRecord rhs, EqualsMaskHelper.Include include) => MajorRecordCommon.GetEqualsMask(this, rhs, include);
         IMask<bool> IEqualsMask<IMajorRecordGetter>.GetEqualsMask(IMajorRecordGetter rhs, EqualsMaskHelper.Include include) => MajorRecordCommon.GetEqualsMask(this, rhs, include);
         #region To String
@@ -166,7 +136,6 @@ namespace Mutagen.Bethesda
         public bool Equals(MajorRecord rhs)
         {
             if (rhs == null) return false;
-            if (this.MajorRecordFlags != rhs.MajorRecordFlags) return false;
             if (this.FormKey != rhs.FormKey) return false;
             if (this.Version != rhs.Version) return false;
             if (EditorID_IsSet != rhs.EditorID_IsSet) return false;
@@ -181,7 +150,6 @@ namespace Mutagen.Bethesda
         public override int GetHashCode()
         {
             int ret = 0;
-            ret = HashHelper.GetHashCode(MajorRecordFlags).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(FormKey).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(Version).CombineHashCode(ret);
             if (EditorID_IsSet)
@@ -514,7 +482,6 @@ namespace Mutagen.Bethesda
             {
                 case MajorRecord_FieldIndex.EditorID:
                     return _hasBeenSetTracker[index];
-                case MajorRecord_FieldIndex.MajorRecordFlags:
                 case MajorRecord_FieldIndex.FormKey:
                 case MajorRecord_FieldIndex.Version:
                 case MajorRecord_FieldIndex.RecordType:
@@ -525,20 +492,6 @@ namespace Mutagen.Bethesda
         }
 
         #region Mutagen
-        public virtual IEnumerable<ILink> Links => GetLinks();
-        private IEnumerable<ILink> GetLinks()
-        {
-            yield break;
-        }
-
-        public virtual void Link<M>(
-            ModList<M> modList,
-            M sourceMod,
-            NotifyingFireParameters cmds = null)
-            where M : IMod<M>
-        {
-        }
-
         public virtual async Task Write_Xml_Folder(
             DirectoryPath? dir,
             string name,
@@ -557,7 +510,21 @@ namespace Mutagen.Bethesda
             CustomCtor();
         }
 
-        public abstract MajorRecord Duplicate(Func<FormKey> getNextFormKey, IList<(MajorRecord Record, FormKey OriginalFormKey)> duplicatedRecords = null);
+        public abstract IMajorRecordCommon Duplicate(Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords = null);
+        public virtual IEnumerable<ILink> Links => GetLinks();
+        private IEnumerable<ILink> GetLinks()
+        {
+            yield break;
+        }
+
+        public virtual void Link<M>(
+            ModList<M> modList,
+            M sourceMod,
+            NotifyingFireParameters cmds = null)
+            where M : IMod<M>
+        {
+        }
+
         #endregion
 
         #region Binary Translation
@@ -603,36 +570,42 @@ namespace Mutagen.Bethesda
         }
         #endregion
 
+        static partial void FillBinary_MajorRecordFlagsRaw_Custom(
+            MutagenFrame frame,
+            MajorRecord item,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask);
+
+        static partial void WriteBinary_MajorRecordFlagsRaw_Custom(
+            MutagenWriter writer,
+            MajorRecord item,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask);
+
+        public static void WriteBinary_MajorRecordFlagsRaw(
+            MutagenWriter writer,
+            MajorRecord item,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask)
+        {
+            WriteBinary_MajorRecordFlagsRaw_Custom(
+                writer: writer,
+                item: item,
+                masterReferences: masterReferences,
+                errorMask: errorMask);
+        }
+
         protected static void Fill_Binary_Structs(
             MajorRecord item,
             MutagenFrame frame,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            try
-            {
-                errorMask?.PushIndex((int)MajorRecord_FieldIndex.MajorRecordFlags);
-                if (EnumBinaryTranslation<MajorRecord.MajorRecordFlag>.Instance.Parse(
-                    frame: frame.SpawnWithLength(4),
-                    item: out MajorRecord.MajorRecordFlag MajorRecordFlagsParse,
-                    errorMask: errorMask))
-                {
-                    item.MajorRecordFlags = MajorRecordFlagsParse;
-                }
-                else
-                {
-                    item.MajorRecordFlags = default(MajorRecord.MajorRecordFlag);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
-            }
+            FillBinary_MajorRecordFlagsRaw_Custom(
+                frame: frame,
+                item: item,
+                masterReferences: masterReferences,
+                errorMask: errorMask);
             try
             {
                 errorMask?.PushIndex((int)MajorRecord_FieldIndex.FormKey);
@@ -835,7 +808,6 @@ namespace Mutagen.Bethesda
                 cmds: cmds);
         }
 
-        void ILoquiObjectSetter.SetNthObject(ushort index, object obj, NotifyingFireParameters cmds) => this.SetNthObject(index, obj, cmds);
         protected virtual void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
         {
             MajorRecord_FieldIndex enu = (MajorRecord_FieldIndex)index;
@@ -843,9 +815,6 @@ namespace Mutagen.Bethesda
             {
                 case MajorRecord_FieldIndex.RecordType:
                     throw new ArgumentException($"Tried to set at a derivative index {index}");
-                case MajorRecord_FieldIndex.MajorRecordFlags:
-                    this.MajorRecordFlags = (MajorRecord.MajorRecordFlag)obj;
-                    break;
                 case MajorRecord_FieldIndex.FormKey:
                     this.FormKey = (FormKey)obj;
                     break;
@@ -882,9 +851,6 @@ namespace Mutagen.Bethesda
             }
             switch (enu)
             {
-                case MajorRecord_FieldIndex.MajorRecordFlags:
-                    obj.MajorRecordFlags = (MajorRecord.MajorRecordFlag)pair.Value;
-                    break;
                 case MajorRecord_FieldIndex.FormKey:
                     obj.FormKey = (FormKey)pair.Value;
                     break;
@@ -898,19 +864,12 @@ namespace Mutagen.Bethesda
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, MajorRecord obj)
-        {
-            ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
-        }
-
     }
     #endregion
 
     #region Interface
     public partial interface IMajorRecord : IMajorRecordGetter, ILoquiClass<IMajorRecord, IMajorRecordGetter>, ILoquiClass<MajorRecord, IMajorRecordGetter>
     {
-        new MajorRecord.MajorRecordFlag MajorRecordFlags { get; set; }
-
         new UInt32 Version { get; set; }
 
         new String EditorID { get; set; }
@@ -922,10 +881,6 @@ namespace Mutagen.Bethesda
 
     public partial interface IMajorRecordGetter : ILoquiObject
     {
-        #region MajorRecordFlags
-        MajorRecord.MajorRecordFlag MajorRecordFlags { get; }
-
-        #endregion
         #region FormKey
         FormKey FormKey { get; }
 
@@ -955,11 +910,10 @@ namespace Mutagen.Bethesda.Internals
     #region Field Index
     public enum MajorRecord_FieldIndex
     {
-        MajorRecordFlags = 0,
-        FormKey = 1,
-        Version = 2,
-        EditorID = 3,
-        RecordType = 4,
+        FormKey = 0,
+        Version = 1,
+        EditorID = 2,
+        RecordType = 3,
     }
     #endregion
 
@@ -977,9 +931,9 @@ namespace Mutagen.Bethesda.Internals
 
         public const string GUID = "1382b2d8-9016-424e-923f-502a4417cbc7";
 
-        public const ushort AdditionalFieldCount = 5;
+        public const ushort AdditionalFieldCount = 4;
 
-        public const ushort FieldCount = 5;
+        public const ushort FieldCount = 4;
 
         public static readonly Type MaskType = typeof(MajorRecord_Mask<>);
 
@@ -1007,8 +961,6 @@ namespace Mutagen.Bethesda.Internals
         {
             switch (str.Upper)
             {
-                case "MAJORRECORDFLAGS":
-                    return (ushort)MajorRecord_FieldIndex.MajorRecordFlags;
                 case "FORMKEY":
                     return (ushort)MajorRecord_FieldIndex.FormKey;
                 case "VERSION":
@@ -1027,7 +979,6 @@ namespace Mutagen.Bethesda.Internals
             MajorRecord_FieldIndex enu = (MajorRecord_FieldIndex)index;
             switch (enu)
             {
-                case MajorRecord_FieldIndex.MajorRecordFlags:
                 case MajorRecord_FieldIndex.FormKey:
                 case MajorRecord_FieldIndex.Version:
                 case MajorRecord_FieldIndex.EditorID:
@@ -1043,7 +994,6 @@ namespace Mutagen.Bethesda.Internals
             MajorRecord_FieldIndex enu = (MajorRecord_FieldIndex)index;
             switch (enu)
             {
-                case MajorRecord_FieldIndex.MajorRecordFlags:
                 case MajorRecord_FieldIndex.FormKey:
                 case MajorRecord_FieldIndex.Version:
                 case MajorRecord_FieldIndex.EditorID:
@@ -1059,7 +1009,6 @@ namespace Mutagen.Bethesda.Internals
             MajorRecord_FieldIndex enu = (MajorRecord_FieldIndex)index;
             switch (enu)
             {
-                case MajorRecord_FieldIndex.MajorRecordFlags:
                 case MajorRecord_FieldIndex.FormKey:
                 case MajorRecord_FieldIndex.Version:
                 case MajorRecord_FieldIndex.EditorID:
@@ -1075,8 +1024,6 @@ namespace Mutagen.Bethesda.Internals
             MajorRecord_FieldIndex enu = (MajorRecord_FieldIndex)index;
             switch (enu)
             {
-                case MajorRecord_FieldIndex.MajorRecordFlags:
-                    return "MajorRecordFlags";
                 case MajorRecord_FieldIndex.FormKey:
                     return "FormKey";
                 case MajorRecord_FieldIndex.Version:
@@ -1097,7 +1044,6 @@ namespace Mutagen.Bethesda.Internals
             {
                 case MajorRecord_FieldIndex.RecordType:
                     return true;
-                case MajorRecord_FieldIndex.MajorRecordFlags:
                 case MajorRecord_FieldIndex.FormKey:
                 case MajorRecord_FieldIndex.Version:
                 case MajorRecord_FieldIndex.EditorID:
@@ -1115,7 +1061,6 @@ namespace Mutagen.Bethesda.Internals
                 case MajorRecord_FieldIndex.FormKey:
                 case MajorRecord_FieldIndex.RecordType:
                     return true;
-                case MajorRecord_FieldIndex.MajorRecordFlags:
                 case MajorRecord_FieldIndex.Version:
                 case MajorRecord_FieldIndex.EditorID:
                     return false;
@@ -1129,8 +1074,6 @@ namespace Mutagen.Bethesda.Internals
             MajorRecord_FieldIndex enu = (MajorRecord_FieldIndex)index;
             switch (enu)
             {
-                case MajorRecord_FieldIndex.MajorRecordFlags:
-                    return typeof(MajorRecord.MajorRecordFlag);
                 case MajorRecord_FieldIndex.FormKey:
                     return typeof(FormKey);
                 case MajorRecord_FieldIndex.Version:
@@ -1291,7 +1234,7 @@ namespace Mutagen.Bethesda.Internals
                     })
             );
         });
-        public const int NumStructFields = 4;
+        public const int NumStructFields = 3;
         public const int NumTypedFields = 1;
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1335,23 +1278,6 @@ namespace Mutagen.Bethesda.Internals
             MajorRecord_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {
-            if (copyMask?.MajorRecordFlags ?? true)
-            {
-                errorMask?.PushIndex((int)MajorRecord_FieldIndex.MajorRecordFlags);
-                try
-                {
-                    item.MajorRecordFlags = rhs.MajorRecordFlags;
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
-            }
             if (copyMask?.Version ?? true)
             {
                 errorMask?.PushIndex((int)MajorRecord_FieldIndex.Version);
@@ -1403,102 +1329,10 @@ namespace Mutagen.Bethesda.Internals
 
         #endregion
 
-        public static void SetNthObjectHasBeenSet(
-            ushort index,
-            bool on,
-            IMajorRecord obj,
-            NotifyingFireParameters cmds = null)
-        {
-            MajorRecord_FieldIndex enu = (MajorRecord_FieldIndex)index;
-            switch (enu)
-            {
-                case MajorRecord_FieldIndex.RecordType:
-                    throw new ArgumentException($"Tried to set at a derivative index {index}");
-                case MajorRecord_FieldIndex.MajorRecordFlags:
-                case MajorRecord_FieldIndex.FormKey:
-                case MajorRecord_FieldIndex.Version:
-                    if (on) break;
-                    throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
-                case MajorRecord_FieldIndex.EditorID:
-                    obj.EditorID_IsSet = on;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static void UnsetNthObject(
-            ushort index,
-            IMajorRecord obj,
-            NotifyingUnsetParameters cmds = null)
-        {
-            MajorRecord_FieldIndex enu = (MajorRecord_FieldIndex)index;
-            switch (enu)
-            {
-                case MajorRecord_FieldIndex.RecordType:
-                    throw new ArgumentException($"Tried to unset at a derivative index {index}");
-                case MajorRecord_FieldIndex.MajorRecordFlags:
-                    obj.MajorRecordFlags = default(MajorRecord.MajorRecordFlag);
-                    break;
-                case MajorRecord_FieldIndex.FormKey:
-                    throw new ArgumentException("Tried to set at a readonly index " + index);
-                case MajorRecord_FieldIndex.Version:
-                    obj.Version = default(UInt32);
-                    break;
-                case MajorRecord_FieldIndex.EditorID:
-                    obj.EditorID_Unset();
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthObjectHasBeenSet(
-            ushort index,
-            IMajorRecord obj)
-        {
-            MajorRecord_FieldIndex enu = (MajorRecord_FieldIndex)index;
-            switch (enu)
-            {
-                case MajorRecord_FieldIndex.MajorRecordFlags:
-                case MajorRecord_FieldIndex.FormKey:
-                case MajorRecord_FieldIndex.Version:
-                case MajorRecord_FieldIndex.RecordType:
-                    return true;
-                case MajorRecord_FieldIndex.EditorID:
-                    return obj.EditorID_IsSet;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static object GetNthObject(
-            ushort index,
-            IMajorRecordGetter obj)
-        {
-            MajorRecord_FieldIndex enu = (MajorRecord_FieldIndex)index;
-            switch (enu)
-            {
-                case MajorRecord_FieldIndex.MajorRecordFlags:
-                    return obj.MajorRecordFlags;
-                case MajorRecord_FieldIndex.FormKey:
-                    return obj.FormKey;
-                case MajorRecord_FieldIndex.Version:
-                    return obj.Version;
-                case MajorRecord_FieldIndex.EditorID:
-                    return obj.EditorID;
-                case MajorRecord_FieldIndex.RecordType:
-                    return obj.RecordType;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
         public static void Clear(
             IMajorRecord item,
             NotifyingUnsetParameters cmds = null)
         {
-            item.MajorRecordFlags = default(MajorRecord.MajorRecordFlag);
             item.Version = default(UInt32);
             item.EditorID_Unset();
         }
@@ -1524,7 +1358,6 @@ namespace Mutagen.Bethesda.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.MajorRecordFlags = item.MajorRecordFlags == rhs.MajorRecordFlags;
             ret.FormKey = item.FormKey == rhs.FormKey;
             ret.Version = item.Version == rhs.Version;
             ret.EditorID = item.EditorID_IsSet == rhs.EditorID_IsSet && object.Equals(item.EditorID, rhs.EditorID);
@@ -1558,10 +1391,6 @@ namespace Mutagen.Bethesda.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
-                if (printMask?.MajorRecordFlags ?? true)
-                {
-                    fg.AppendLine($"MajorRecordFlags => {item.MajorRecordFlags}");
-                }
                 if (printMask?.FormKey ?? true)
                 {
                     fg.AppendLine($"FormKey => {item.FormKey}");
@@ -1593,7 +1422,6 @@ namespace Mutagen.Bethesda.Internals
         public static MajorRecord_Mask<bool> GetHasBeenSetMask(IMajorRecordGetter item)
         {
             var ret = new MajorRecord_Mask<bool>();
-            ret.MajorRecordFlags = true;
             ret.FormKey = true;
             ret.Version = true;
             ret.EditorID = item.EditorID_IsSet;
@@ -1648,15 +1476,6 @@ namespace Mutagen.Bethesda.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
         {
-            if ((translationMask?.GetShouldTranslate((int)MajorRecord_FieldIndex.MajorRecordFlags) ?? true))
-            {
-                EnumXmlTranslation<MajorRecord.MajorRecordFlag>.Instance.Write(
-                    node: node,
-                    name: nameof(item.MajorRecordFlags),
-                    item: item.MajorRecordFlags,
-                    fieldIndex: (int)MajorRecord_FieldIndex.MajorRecordFlags,
-                    errorMask: errorMask);
-            }
             if ((translationMask?.GetShouldTranslate((int)MajorRecord_FieldIndex.FormKey) ?? true))
             {
                 FormKeyXmlTranslation.Instance.Write(
@@ -1721,32 +1540,6 @@ namespace Mutagen.Bethesda.Internals
         {
             switch (name)
             {
-                case "MajorRecordFlags":
-                    try
-                    {
-                        errorMask?.PushIndex((int)MajorRecord_FieldIndex.MajorRecordFlags);
-                        if (EnumXmlTranslation<MajorRecord.MajorRecordFlag>.Instance.Parse(
-                            node: node,
-                            item: out MajorRecord.MajorRecordFlag MajorRecordFlagsParse,
-                            errorMask: errorMask))
-                        {
-                            item.MajorRecordFlags = MajorRecordFlagsParse;
-                        }
-                        else
-                        {
-                            item.MajorRecordFlags = default(MajorRecord.MajorRecordFlag);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
                 case "Version":
                     try
                     {
@@ -1853,11 +1646,10 @@ namespace Mutagen.Bethesda.Internals
             ErrorMaskBuilder errorMask,
             MasterReferences masterReferences)
         {
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<MajorRecord.MajorRecordFlag>.Instance.Write(
-                writer,
-                item.MajorRecordFlags,
-                length: 4,
-                fieldIndex: (int)MajorRecord_FieldIndex.MajorRecordFlags,
+            MajorRecord.WriteBinary_MajorRecordFlagsRaw(
+                writer: writer,
+                item: item,
+                masterReferences: masterReferences,
                 errorMask: errorMask);
             Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.Write(
                 writer: writer,
@@ -1907,7 +1699,6 @@ namespace Mutagen.Bethesda.Internals
 
         public MajorRecord_Mask(T initialValue)
         {
-            this.MajorRecordFlags = initialValue;
             this.FormKey = initialValue;
             this.Version = initialValue;
             this.EditorID = initialValue;
@@ -1916,7 +1707,6 @@ namespace Mutagen.Bethesda.Internals
         #endregion
 
         #region Members
-        public T MajorRecordFlags;
         public T FormKey;
         public T Version;
         public T EditorID;
@@ -1933,7 +1723,6 @@ namespace Mutagen.Bethesda.Internals
         public bool Equals(MajorRecord_Mask<T> rhs)
         {
             if (rhs == null) return false;
-            if (!object.Equals(this.MajorRecordFlags, rhs.MajorRecordFlags)) return false;
             if (!object.Equals(this.FormKey, rhs.FormKey)) return false;
             if (!object.Equals(this.Version, rhs.Version)) return false;
             if (!object.Equals(this.EditorID, rhs.EditorID)) return false;
@@ -1943,7 +1732,6 @@ namespace Mutagen.Bethesda.Internals
         public override int GetHashCode()
         {
             int ret = 0;
-            ret = ret.CombineHashCode(this.MajorRecordFlags?.GetHashCode());
             ret = ret.CombineHashCode(this.FormKey?.GetHashCode());
             ret = ret.CombineHashCode(this.Version?.GetHashCode());
             ret = ret.CombineHashCode(this.EditorID?.GetHashCode());
@@ -1956,7 +1744,6 @@ namespace Mutagen.Bethesda.Internals
         #region All Equal
         public virtual bool AllEqual(Func<T, bool> eval)
         {
-            if (!eval(this.MajorRecordFlags)) return false;
             if (!eval(this.FormKey)) return false;
             if (!eval(this.Version)) return false;
             if (!eval(this.EditorID)) return false;
@@ -1975,7 +1762,6 @@ namespace Mutagen.Bethesda.Internals
 
         protected void Translate_InternalFill<R>(MajorRecord_Mask<R> obj, Func<T, R> eval)
         {
-            obj.MajorRecordFlags = eval(this.MajorRecordFlags);
             obj.FormKey = eval(this.FormKey);
             obj.Version = eval(this.Version);
             obj.EditorID = eval(this.EditorID);
@@ -2008,10 +1794,6 @@ namespace Mutagen.Bethesda.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
-                if (printMask?.MajorRecordFlags ?? true)
-                {
-                    fg.AppendLine($"MajorRecordFlags => {MajorRecordFlags}");
-                }
                 if (printMask?.FormKey ?? true)
                 {
                     fg.AppendLine($"FormKey => {FormKey}");
@@ -2051,7 +1833,6 @@ namespace Mutagen.Bethesda.Internals
                 return _warnings;
             }
         }
-        public Exception MajorRecordFlags;
         public Exception FormKey;
         public Exception Version;
         public Exception EditorID;
@@ -2064,8 +1845,6 @@ namespace Mutagen.Bethesda.Internals
             MajorRecord_FieldIndex enu = (MajorRecord_FieldIndex)index;
             switch (enu)
             {
-                case MajorRecord_FieldIndex.MajorRecordFlags:
-                    return MajorRecordFlags;
                 case MajorRecord_FieldIndex.FormKey:
                     return FormKey;
                 case MajorRecord_FieldIndex.Version:
@@ -2084,9 +1863,6 @@ namespace Mutagen.Bethesda.Internals
             MajorRecord_FieldIndex enu = (MajorRecord_FieldIndex)index;
             switch (enu)
             {
-                case MajorRecord_FieldIndex.MajorRecordFlags:
-                    this.MajorRecordFlags = ex;
-                    break;
                 case MajorRecord_FieldIndex.FormKey:
                     this.FormKey = ex;
                     break;
@@ -2109,9 +1885,6 @@ namespace Mutagen.Bethesda.Internals
             MajorRecord_FieldIndex enu = (MajorRecord_FieldIndex)index;
             switch (enu)
             {
-                case MajorRecord_FieldIndex.MajorRecordFlags:
-                    this.MajorRecordFlags = (Exception)obj;
-                    break;
                 case MajorRecord_FieldIndex.FormKey:
                     this.FormKey = (Exception)obj;
                     break;
@@ -2132,7 +1905,6 @@ namespace Mutagen.Bethesda.Internals
         public virtual bool IsInError()
         {
             if (Overall != null) return true;
-            if (MajorRecordFlags != null) return true;
             if (FormKey != null) return true;
             if (Version != null) return true;
             if (EditorID != null) return true;
@@ -2171,7 +1943,6 @@ namespace Mutagen.Bethesda.Internals
         }
         protected virtual void ToString_FillInternal(FileGeneration fg)
         {
-            fg.AppendLine($"MajorRecordFlags => {MajorRecordFlags}");
             fg.AppendLine($"FormKey => {FormKey}");
             fg.AppendLine($"Version => {Version}");
             fg.AppendLine($"EditorID => {EditorID}");
@@ -2183,7 +1954,6 @@ namespace Mutagen.Bethesda.Internals
         public MajorRecord_ErrorMask Combine(MajorRecord_ErrorMask rhs)
         {
             var ret = new MajorRecord_ErrorMask();
-            ret.MajorRecordFlags = this.MajorRecordFlags.Combine(rhs.MajorRecordFlags);
             ret.FormKey = this.FormKey.Combine(rhs.FormKey);
             ret.Version = this.Version.Combine(rhs.Version);
             ret.EditorID = this.EditorID.Combine(rhs.EditorID);
@@ -2214,7 +1984,6 @@ namespace Mutagen.Bethesda.Internals
 
         public MajorRecord_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
         {
-            this.MajorRecordFlags = defaultOn;
             this.FormKey = defaultOn;
             this.Version = defaultOn;
             this.EditorID = defaultOn;
@@ -2222,7 +1991,6 @@ namespace Mutagen.Bethesda.Internals
         }
 
         #region Members
-        public bool MajorRecordFlags;
         public bool FormKey;
         public bool Version;
         public bool EditorID;
@@ -2235,7 +2003,6 @@ namespace Mutagen.Bethesda.Internals
     {
         #region Members
         private TranslationCrystal _crystal;
-        public bool MajorRecordFlags;
         public bool FormKey;
         public bool Version;
         public bool EditorID;
@@ -2249,7 +2016,6 @@ namespace Mutagen.Bethesda.Internals
 
         public MajorRecord_TranslationMask(bool defaultOn)
         {
-            this.MajorRecordFlags = defaultOn;
             this.FormKey = defaultOn;
             this.Version = defaultOn;
             this.EditorID = defaultOn;
@@ -2272,7 +2038,6 @@ namespace Mutagen.Bethesda.Internals
 
         protected virtual void GetCrystal(List<(bool On, TranslationCrystal SubCrystal)> ret)
         {
-            ret.Add((MajorRecordFlags, null));
             ret.Add((FormKey, null));
             ret.Add((Version, null));
             ret.Add((EditorID, null));

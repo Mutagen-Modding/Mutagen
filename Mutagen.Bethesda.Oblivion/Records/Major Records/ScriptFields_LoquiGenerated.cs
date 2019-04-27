@@ -156,28 +156,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        #region Loqui Getter Interface
-
-        protected object GetNthObject(ushort index) => ScriptFieldsCommon.GetNthObject(index, this);
-        object ILoquiObjectGetter.GetNthObject(ushort index) => this.GetNthObject(index);
-
-        protected bool GetNthObjectHasBeenSet(ushort index) => ScriptFieldsCommon.GetNthObjectHasBeenSet(index, this);
-        bool ILoquiObjectGetter.GetNthObjectHasBeenSet(ushort index) => this.GetNthObjectHasBeenSet(index);
-
-        protected void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => ScriptFieldsCommon.UnsetNthObject(index, this, cmds);
-        void ILoquiObjectSetter.UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => this.UnsetNthObject(index, cmds);
-
-        #endregion
-
-        #region Loqui Interface
-        protected void SetNthObjectHasBeenSet(ushort index, bool on)
-        {
-            ScriptFieldsCommon.SetNthObjectHasBeenSet(index, on, this);
-        }
-        void ILoquiObjectSetter.SetNthObjectHasBeenSet(ushort index, bool on) => this.SetNthObjectHasBeenSet(index, on);
-
-        #endregion
-
         IMask<bool> IEqualsMask<ScriptFields>.GetEqualsMask(ScriptFields rhs, EqualsMaskHelper.Include include) => ScriptFieldsCommon.GetEqualsMask(this, rhs, include);
         IMask<bool> IEqualsMask<IScriptFieldsGetter>.GetEqualsMask(IScriptFieldsGetter rhs, EqualsMaskHelper.Include include) => ScriptFieldsCommon.GetEqualsMask(this, rhs, include);
         #region To String
@@ -1053,7 +1031,6 @@ namespace Mutagen.Bethesda.Oblivion
                 cmds: cmds);
         }
 
-        void ILoquiObjectSetter.SetNthObject(ushort index, object obj, NotifyingFireParameters cmds) => this.SetNthObject(index, obj, cmds);
         protected void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
         {
             ScriptFields_FieldIndex enu = (ScriptFields_FieldIndex)index;
@@ -1130,11 +1107,6 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, ScriptFields obj)
-        {
-            ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
-        }
-
     }
     #endregion
 
@@ -1604,105 +1576,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         #endregion
-
-        public static void SetNthObjectHasBeenSet(
-            ushort index,
-            bool on,
-            IScriptFields obj,
-            NotifyingFireParameters cmds = null)
-        {
-            ScriptFields_FieldIndex enu = (ScriptFields_FieldIndex)index;
-            switch (enu)
-            {
-                case ScriptFields_FieldIndex.MetadataSummary:
-                    throw new ArgumentException("Tried to set at a readonly index " + index);
-                case ScriptFields_FieldIndex.CompiledScript:
-                    obj.CompiledScript_IsSet = on;
-                    break;
-                case ScriptFields_FieldIndex.SourceCode:
-                    obj.SourceCode_IsSet = on;
-                    break;
-                case ScriptFields_FieldIndex.LocalVariables:
-                    obj.LocalVariables.HasBeenSet = on;
-                    break;
-                case ScriptFields_FieldIndex.References:
-                    obj.References.HasBeenSet = on;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static void UnsetNthObject(
-            ushort index,
-            IScriptFields obj,
-            NotifyingUnsetParameters cmds = null)
-        {
-            ScriptFields_FieldIndex enu = (ScriptFields_FieldIndex)index;
-            switch (enu)
-            {
-                case ScriptFields_FieldIndex.MetadataSummary:
-                    throw new ArgumentException("Tried to set at a readonly index " + index);
-                case ScriptFields_FieldIndex.CompiledScript:
-                    obj.CompiledScript_Unset();
-                    break;
-                case ScriptFields_FieldIndex.SourceCode:
-                    obj.SourceCode_Unset();
-                    break;
-                case ScriptFields_FieldIndex.LocalVariables:
-                    obj.LocalVariables.Unset();
-                    break;
-                case ScriptFields_FieldIndex.References:
-                    obj.References.Unset();
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthObjectHasBeenSet(
-            ushort index,
-            IScriptFields obj)
-        {
-            ScriptFields_FieldIndex enu = (ScriptFields_FieldIndex)index;
-            switch (enu)
-            {
-                case ScriptFields_FieldIndex.MetadataSummary:
-                    return obj.MetadataSummary_IsSet;
-                case ScriptFields_FieldIndex.CompiledScript:
-                    return obj.CompiledScript_IsSet;
-                case ScriptFields_FieldIndex.SourceCode:
-                    return obj.SourceCode_IsSet;
-                case ScriptFields_FieldIndex.LocalVariables:
-                    return obj.LocalVariables.HasBeenSet;
-                case ScriptFields_FieldIndex.References:
-                    return obj.References.HasBeenSet;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static object GetNthObject(
-            ushort index,
-            IScriptFieldsGetter obj)
-        {
-            ScriptFields_FieldIndex enu = (ScriptFields_FieldIndex)index;
-            switch (enu)
-            {
-                case ScriptFields_FieldIndex.MetadataSummary:
-                    return obj.MetadataSummary;
-                case ScriptFields_FieldIndex.CompiledScript:
-                    return obj.CompiledScript;
-                case ScriptFields_FieldIndex.SourceCode:
-                    return obj.SourceCode;
-                case ScriptFields_FieldIndex.LocalVariables:
-                    return obj.LocalVariables;
-                case ScriptFields_FieldIndex.References:
-                    return obj.References;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
 
         public static void Clear(
             IScriptFields item,

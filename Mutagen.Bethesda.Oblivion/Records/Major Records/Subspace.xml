@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Subspace" objType="Record" baseClass="Bethesda.MajorRecord" recordType="SBSP" GUID="138316d3-f53c-491f-ad98-a9732f8547af" ID="99">
+  <Object name="Subspace" objType="Record" baseClass="OblivionMajorRecord" recordType="SBSP" GUID="138316d3-f53c-491f-ad98-a9732f8547af" ID="99">
     <Fields>
       <Data recordType="DNAM">
         <Fields>

@@ -119,28 +119,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        #region Loqui Getter Interface
-
-        protected object GetNthObject(ushort index) => ScriptEffectCommon.GetNthObject(index, this);
-        object ILoquiObjectGetter.GetNthObject(ushort index) => this.GetNthObject(index);
-
-        protected bool GetNthObjectHasBeenSet(ushort index) => ScriptEffectCommon.GetNthObjectHasBeenSet(index, this);
-        bool ILoquiObjectGetter.GetNthObjectHasBeenSet(ushort index) => this.GetNthObjectHasBeenSet(index);
-
-        protected void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => ScriptEffectCommon.UnsetNthObject(index, this, cmds);
-        void ILoquiObjectSetter.UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => this.UnsetNthObject(index, cmds);
-
-        #endregion
-
-        #region Loqui Interface
-        protected void SetNthObjectHasBeenSet(ushort index, bool on)
-        {
-            ScriptEffectCommon.SetNthObjectHasBeenSet(index, on, this);
-        }
-        void ILoquiObjectSetter.SetNthObjectHasBeenSet(ushort index, bool on) => this.SetNthObjectHasBeenSet(index, on);
-
-        #endregion
-
         IMask<bool> IEqualsMask<ScriptEffect>.GetEqualsMask(ScriptEffect rhs, EqualsMaskHelper.Include include) => ScriptEffectCommon.GetEqualsMask(this, rhs, include);
         IMask<bool> IEqualsMask<IScriptEffectGetter>.GetEqualsMask(IScriptEffectGetter rhs, EqualsMaskHelper.Include include) => ScriptEffectCommon.GetEqualsMask(this, rhs, include);
         #region To String
@@ -913,7 +891,6 @@ namespace Mutagen.Bethesda.Oblivion
                 cmds: cmds);
         }
 
-        void ILoquiObjectSetter.SetNthObject(ushort index, object obj, NotifyingFireParameters cmds) => this.SetNthObject(index, obj, cmds);
         protected void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
         {
             ScriptEffect_FieldIndex enu = (ScriptEffect_FieldIndex)index;
@@ -998,11 +975,6 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, ScriptEffect obj)
-        {
-            ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
-        }
-
     }
     #endregion
 
@@ -1398,98 +1370,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         #endregion
-
-        public static void SetNthObjectHasBeenSet(
-            ushort index,
-            bool on,
-            IScriptEffect obj,
-            NotifyingFireParameters cmds = null)
-        {
-            ScriptEffect_FieldIndex enu = (ScriptEffect_FieldIndex)index;
-            switch (enu)
-            {
-                case ScriptEffect_FieldIndex.Script:
-                case ScriptEffect_FieldIndex.MagicSchool:
-                case ScriptEffect_FieldIndex.VisualEffect:
-                case ScriptEffect_FieldIndex.Flags:
-                    if (on) break;
-                    throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
-                case ScriptEffect_FieldIndex.Name:
-                    obj.Name_IsSet = on;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static void UnsetNthObject(
-            ushort index,
-            IScriptEffect obj,
-            NotifyingUnsetParameters cmds = null)
-        {
-            ScriptEffect_FieldIndex enu = (ScriptEffect_FieldIndex)index;
-            switch (enu)
-            {
-                case ScriptEffect_FieldIndex.Script:
-                    obj.Script = default(Script);
-                    break;
-                case ScriptEffect_FieldIndex.MagicSchool:
-                    obj.MagicSchool = default(MagicSchool);
-                    break;
-                case ScriptEffect_FieldIndex.VisualEffect:
-                    obj.VisualEffect = default(MagicEffect);
-                    break;
-                case ScriptEffect_FieldIndex.Flags:
-                    obj.Flags = default(ScriptEffect.Flag);
-                    break;
-                case ScriptEffect_FieldIndex.Name:
-                    obj.Name_Unset();
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthObjectHasBeenSet(
-            ushort index,
-            IScriptEffect obj)
-        {
-            ScriptEffect_FieldIndex enu = (ScriptEffect_FieldIndex)index;
-            switch (enu)
-            {
-                case ScriptEffect_FieldIndex.Script:
-                case ScriptEffect_FieldIndex.MagicSchool:
-                case ScriptEffect_FieldIndex.VisualEffect:
-                case ScriptEffect_FieldIndex.Flags:
-                    return true;
-                case ScriptEffect_FieldIndex.Name:
-                    return obj.Name_IsSet;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static object GetNthObject(
-            ushort index,
-            IScriptEffectGetter obj)
-        {
-            ScriptEffect_FieldIndex enu = (ScriptEffect_FieldIndex)index;
-            switch (enu)
-            {
-                case ScriptEffect_FieldIndex.Script:
-                    return obj.Script;
-                case ScriptEffect_FieldIndex.MagicSchool:
-                    return obj.MagicSchool;
-                case ScriptEffect_FieldIndex.VisualEffect:
-                    return obj.VisualEffect;
-                case ScriptEffect_FieldIndex.Flags:
-                    return obj.Flags;
-                case ScriptEffect_FieldIndex.Name:
-                    return obj.Name;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
 
         public static void Clear(
             IScriptEffect item,

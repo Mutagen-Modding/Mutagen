@@ -127,14 +127,14 @@ namespace Mutagen.Bethesda.Generation
             fg.AppendLine();
 
             using (var args = new FunctionWrapper(fg,
-                "public Dictionary<FormKey, MajorRecord> CopyInDuplicate"))
+                $"public Dictionary<FormKey, {nameof(IMajorRecordCommon)}> CopyInDuplicate"))
             {
                 args.Add($"{obj.Name} rhs");
                 args.Add($"GroupMask mask = null");
             }
             using (new BraceWrapper(fg))
             {
-                fg.AppendLine("var duppedRecords = new List<(MajorRecord Record, FormKey OriginalFormKey)>();");
+                fg.AppendLine($"var duppedRecords = new List<({nameof(IMajorRecordCommon)} Record, FormKey OriginalFormKey)>();");
                 foreach (var field in obj.IterateFields())
                 {
                     if (!(field is LoquiType loqui)) continue;
@@ -154,8 +154,8 @@ namespace Mutagen.Bethesda.Generation
                         }
                     }
                 }
-                fg.AppendLine("Dictionary<FormKey, MajorRecord> router = new Dictionary<FormKey, MajorRecord>();");
-                fg.AppendLine("router.Set(duppedRecords.Select(dup => new KeyValuePair<FormKey, MajorRecord>(dup.OriginalFormKey, dup.Record)));");
+                fg.AppendLine($"Dictionary<FormKey, {nameof(IMajorRecordCommon)}> router = new Dictionary<FormKey, {nameof(IMajorRecordCommon)}>();");
+                fg.AppendLine($"router.Set(duppedRecords.Select(dup => new KeyValuePair<FormKey, {nameof(IMajorRecordCommon)}>(dup.OriginalFormKey, dup.Record)));");
                 fg.AppendLine("foreach (var rec in router.Values)");
                 using (new BraceWrapper(fg))
                 {

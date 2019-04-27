@@ -116,28 +116,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        #region Loqui Getter Interface
-
-        protected object GetNthObject(ushort index) => RaceStatsCommon.GetNthObject(index, this);
-        object ILoquiObjectGetter.GetNthObject(ushort index) => this.GetNthObject(index);
-
-        protected bool GetNthObjectHasBeenSet(ushort index) => RaceStatsCommon.GetNthObjectHasBeenSet(index, this);
-        bool ILoquiObjectGetter.GetNthObjectHasBeenSet(ushort index) => this.GetNthObjectHasBeenSet(index);
-
-        protected void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => RaceStatsCommon.UnsetNthObject(index, this, cmds);
-        void ILoquiObjectSetter.UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => this.UnsetNthObject(index, cmds);
-
-        #endregion
-
-        #region Loqui Interface
-        protected void SetNthObjectHasBeenSet(ushort index, bool on)
-        {
-            RaceStatsCommon.SetNthObjectHasBeenSet(index, on, this);
-        }
-        void ILoquiObjectSetter.SetNthObjectHasBeenSet(ushort index, bool on) => this.SetNthObjectHasBeenSet(index, on);
-
-        #endregion
-
         IMask<bool> IEqualsMask<RaceStats>.GetEqualsMask(RaceStats rhs, EqualsMaskHelper.Include include) => RaceStatsCommon.GetEqualsMask(this, rhs, include);
         IMask<bool> IEqualsMask<IRaceStatsGetter>.GetEqualsMask(IRaceStatsGetter rhs, EqualsMaskHelper.Include include) => RaceStatsCommon.GetEqualsMask(this, rhs, include);
         #region To String
@@ -915,7 +893,6 @@ namespace Mutagen.Bethesda.Oblivion
                 cmds: cmds);
         }
 
-        void ILoquiObjectSetter.SetNthObject(ushort index, object obj, NotifyingFireParameters cmds) => this.SetNthObject(index, obj, cmds);
         protected void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
         {
             RaceStats_FieldIndex enu = (RaceStats_FieldIndex)index;
@@ -1010,11 +987,6 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, RaceStats obj)
-        {
-            ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
-        }
-
     }
     #endregion
 
@@ -1491,116 +1463,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         #endregion
-
-        public static void SetNthObjectHasBeenSet(
-            ushort index,
-            bool on,
-            IRaceStats obj,
-            NotifyingFireParameters cmds = null)
-        {
-            RaceStats_FieldIndex enu = (RaceStats_FieldIndex)index;
-            switch (enu)
-            {
-                case RaceStats_FieldIndex.Strength:
-                case RaceStats_FieldIndex.Intelligence:
-                case RaceStats_FieldIndex.Willpower:
-                case RaceStats_FieldIndex.Agility:
-                case RaceStats_FieldIndex.Speed:
-                case RaceStats_FieldIndex.Endurance:
-                case RaceStats_FieldIndex.Personality:
-                case RaceStats_FieldIndex.Luck:
-                    if (on) break;
-                    throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static void UnsetNthObject(
-            ushort index,
-            IRaceStats obj,
-            NotifyingUnsetParameters cmds = null)
-        {
-            RaceStats_FieldIndex enu = (RaceStats_FieldIndex)index;
-            switch (enu)
-            {
-                case RaceStats_FieldIndex.Strength:
-                    obj.Strength = default(Byte);
-                    break;
-                case RaceStats_FieldIndex.Intelligence:
-                    obj.Intelligence = default(Byte);
-                    break;
-                case RaceStats_FieldIndex.Willpower:
-                    obj.Willpower = default(Byte);
-                    break;
-                case RaceStats_FieldIndex.Agility:
-                    obj.Agility = default(Byte);
-                    break;
-                case RaceStats_FieldIndex.Speed:
-                    obj.Speed = default(Byte);
-                    break;
-                case RaceStats_FieldIndex.Endurance:
-                    obj.Endurance = default(Byte);
-                    break;
-                case RaceStats_FieldIndex.Personality:
-                    obj.Personality = default(Byte);
-                    break;
-                case RaceStats_FieldIndex.Luck:
-                    obj.Luck = default(Byte);
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthObjectHasBeenSet(
-            ushort index,
-            IRaceStats obj)
-        {
-            RaceStats_FieldIndex enu = (RaceStats_FieldIndex)index;
-            switch (enu)
-            {
-                case RaceStats_FieldIndex.Strength:
-                case RaceStats_FieldIndex.Intelligence:
-                case RaceStats_FieldIndex.Willpower:
-                case RaceStats_FieldIndex.Agility:
-                case RaceStats_FieldIndex.Speed:
-                case RaceStats_FieldIndex.Endurance:
-                case RaceStats_FieldIndex.Personality:
-                case RaceStats_FieldIndex.Luck:
-                    return true;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static object GetNthObject(
-            ushort index,
-            IRaceStatsGetter obj)
-        {
-            RaceStats_FieldIndex enu = (RaceStats_FieldIndex)index;
-            switch (enu)
-            {
-                case RaceStats_FieldIndex.Strength:
-                    return obj.Strength;
-                case RaceStats_FieldIndex.Intelligence:
-                    return obj.Intelligence;
-                case RaceStats_FieldIndex.Willpower:
-                    return obj.Willpower;
-                case RaceStats_FieldIndex.Agility:
-                    return obj.Agility;
-                case RaceStats_FieldIndex.Speed:
-                    return obj.Speed;
-                case RaceStats_FieldIndex.Endurance:
-                    return obj.Endurance;
-                case RaceStats_FieldIndex.Personality:
-                    return obj.Personality;
-                case RaceStats_FieldIndex.Luck:
-                    return obj.Luck;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
 
         public static void Clear(
             IRaceStats item,

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Faction" objType="Record" baseClass="Bethesda.MajorRecord" recordType="FACT" GUID="153fd2c1-b407-450e-af54-30f99328faff" ID="22">
+  <Object name="Faction" objType="Record" baseClass="OblivionMajorRecord" recordType="FACT" GUID="153fd2c1-b407-450e-af54-30f99328faff" ID="22">
     <Interface>INamed</Interface>
     <Interface>IOwner</Interface>
     <Fields>

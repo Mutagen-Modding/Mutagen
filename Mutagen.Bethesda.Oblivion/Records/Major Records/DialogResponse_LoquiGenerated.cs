@@ -170,28 +170,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        #region Loqui Getter Interface
-
-        protected object GetNthObject(ushort index) => DialogResponseCommon.GetNthObject(index, this);
-        object ILoquiObjectGetter.GetNthObject(ushort index) => this.GetNthObject(index);
-
-        protected bool GetNthObjectHasBeenSet(ushort index) => DialogResponseCommon.GetNthObjectHasBeenSet(index, this);
-        bool ILoquiObjectGetter.GetNthObjectHasBeenSet(ushort index) => this.GetNthObjectHasBeenSet(index);
-
-        protected void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => DialogResponseCommon.UnsetNthObject(index, this, cmds);
-        void ILoquiObjectSetter.UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => this.UnsetNthObject(index, cmds);
-
-        #endregion
-
-        #region Loqui Interface
-        protected void SetNthObjectHasBeenSet(ushort index, bool on)
-        {
-            DialogResponseCommon.SetNthObjectHasBeenSet(index, on, this);
-        }
-        void ILoquiObjectSetter.SetNthObjectHasBeenSet(ushort index, bool on) => this.SetNthObjectHasBeenSet(index, on);
-
-        #endregion
-
         IMask<bool> IEqualsMask<DialogResponse>.GetEqualsMask(DialogResponse rhs, EqualsMaskHelper.Include include) => DialogResponseCommon.GetEqualsMask(this, rhs, include);
         IMask<bool> IEqualsMask<IDialogResponseGetter>.GetEqualsMask(IDialogResponseGetter rhs, EqualsMaskHelper.Include include) => DialogResponseCommon.GetEqualsMask(this, rhs, include);
         #region To String
@@ -1009,7 +987,6 @@ namespace Mutagen.Bethesda.Oblivion
                 cmds: cmds);
         }
 
-        void ILoquiObjectSetter.SetNthObject(ushort index, object obj, NotifyingFireParameters cmds) => this.SetNthObject(index, obj, cmds);
         protected void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
         {
             DialogResponse_FieldIndex enu = (DialogResponse_FieldIndex)index;
@@ -1098,11 +1075,6 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, DialogResponse obj)
-        {
-            ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
-        }
-
     }
     #endregion
 
@@ -1582,115 +1554,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         #endregion
-
-        public static void SetNthObjectHasBeenSet(
-            ushort index,
-            bool on,
-            IDialogResponse obj,
-            NotifyingFireParameters cmds = null)
-        {
-            DialogResponse_FieldIndex enu = (DialogResponse_FieldIndex)index;
-            switch (enu)
-            {
-                case DialogResponse_FieldIndex.Emotion:
-                case DialogResponse_FieldIndex.EmotionValue:
-                case DialogResponse_FieldIndex.Fluff1:
-                case DialogResponse_FieldIndex.ResponseNumber:
-                case DialogResponse_FieldIndex.Fluff2:
-                    if (on) break;
-                    throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
-                case DialogResponse_FieldIndex.ResponseText:
-                    obj.ResponseText_IsSet = on;
-                    break;
-                case DialogResponse_FieldIndex.ActorNotes:
-                    obj.ActorNotes_IsSet = on;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static void UnsetNthObject(
-            ushort index,
-            IDialogResponse obj,
-            NotifyingUnsetParameters cmds = null)
-        {
-            DialogResponse_FieldIndex enu = (DialogResponse_FieldIndex)index;
-            switch (enu)
-            {
-                case DialogResponse_FieldIndex.Emotion:
-                    obj.Emotion = default(EmotionType);
-                    break;
-                case DialogResponse_FieldIndex.EmotionValue:
-                    obj.EmotionValue = default(Int32);
-                    break;
-                case DialogResponse_FieldIndex.Fluff1:
-                    obj.Fluff1 = default(Byte[]);
-                    break;
-                case DialogResponse_FieldIndex.ResponseNumber:
-                    obj.ResponseNumber = default(Byte);
-                    break;
-                case DialogResponse_FieldIndex.Fluff2:
-                    obj.Fluff2 = default(Byte[]);
-                    break;
-                case DialogResponse_FieldIndex.ResponseText:
-                    obj.ResponseText_Unset();
-                    break;
-                case DialogResponse_FieldIndex.ActorNotes:
-                    obj.ActorNotes_Unset();
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthObjectHasBeenSet(
-            ushort index,
-            IDialogResponse obj)
-        {
-            DialogResponse_FieldIndex enu = (DialogResponse_FieldIndex)index;
-            switch (enu)
-            {
-                case DialogResponse_FieldIndex.Emotion:
-                case DialogResponse_FieldIndex.EmotionValue:
-                case DialogResponse_FieldIndex.Fluff1:
-                case DialogResponse_FieldIndex.ResponseNumber:
-                case DialogResponse_FieldIndex.Fluff2:
-                    return true;
-                case DialogResponse_FieldIndex.ResponseText:
-                    return obj.ResponseText_IsSet;
-                case DialogResponse_FieldIndex.ActorNotes:
-                    return obj.ActorNotes_IsSet;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static object GetNthObject(
-            ushort index,
-            IDialogResponseGetter obj)
-        {
-            DialogResponse_FieldIndex enu = (DialogResponse_FieldIndex)index;
-            switch (enu)
-            {
-                case DialogResponse_FieldIndex.Emotion:
-                    return obj.Emotion;
-                case DialogResponse_FieldIndex.EmotionValue:
-                    return obj.EmotionValue;
-                case DialogResponse_FieldIndex.Fluff1:
-                    return obj.Fluff1;
-                case DialogResponse_FieldIndex.ResponseNumber:
-                    return obj.ResponseNumber;
-                case DialogResponse_FieldIndex.Fluff2:
-                    return obj.Fluff2;
-                case DialogResponse_FieldIndex.ResponseText:
-                    return obj.ResponseText;
-                case DialogResponse_FieldIndex.ActorNotes:
-                    return obj.ActorNotes;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
 
         public static void Clear(
             IDialogResponse item,

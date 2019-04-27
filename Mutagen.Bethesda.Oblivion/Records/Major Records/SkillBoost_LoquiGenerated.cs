@@ -68,28 +68,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        #region Loqui Getter Interface
-
-        protected object GetNthObject(ushort index) => SkillBoostCommon.GetNthObject(index, this);
-        object ILoquiObjectGetter.GetNthObject(ushort index) => this.GetNthObject(index);
-
-        protected bool GetNthObjectHasBeenSet(ushort index) => SkillBoostCommon.GetNthObjectHasBeenSet(index, this);
-        bool ILoquiObjectGetter.GetNthObjectHasBeenSet(ushort index) => this.GetNthObjectHasBeenSet(index);
-
-        protected void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => SkillBoostCommon.UnsetNthObject(index, this, cmds);
-        void ILoquiObjectSetter.UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => this.UnsetNthObject(index, cmds);
-
-        #endregion
-
-        #region Loqui Interface
-        protected void SetNthObjectHasBeenSet(ushort index, bool on)
-        {
-            SkillBoostCommon.SetNthObjectHasBeenSet(index, on, this);
-        }
-        void ILoquiObjectSetter.SetNthObjectHasBeenSet(ushort index, bool on) => this.SetNthObjectHasBeenSet(index, on);
-
-        #endregion
-
         IMask<bool> IEqualsMask<SkillBoost>.GetEqualsMask(SkillBoost rhs, EqualsMaskHelper.Include include) => SkillBoostCommon.GetEqualsMask(this, rhs, include);
         IMask<bool> IEqualsMask<ISkillBoostGetter>.GetEqualsMask(ISkillBoostGetter rhs, EqualsMaskHelper.Include include) => SkillBoostCommon.GetEqualsMask(this, rhs, include);
         #region To String
@@ -705,7 +683,6 @@ namespace Mutagen.Bethesda.Oblivion
                 cmds: cmds);
         }
 
-        void ILoquiObjectSetter.SetNthObject(ushort index, object obj, NotifyingFireParameters cmds) => this.SetNthObject(index, obj, cmds);
         protected void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
         {
             SkillBoost_FieldIndex enu = (SkillBoost_FieldIndex)index;
@@ -764,11 +741,6 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, SkillBoost obj)
-        {
-            ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
-        }
-
     }
     #endregion
 
@@ -1035,74 +1007,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         #endregion
-
-        public static void SetNthObjectHasBeenSet(
-            ushort index,
-            bool on,
-            ISkillBoost obj,
-            NotifyingFireParameters cmds = null)
-        {
-            SkillBoost_FieldIndex enu = (SkillBoost_FieldIndex)index;
-            switch (enu)
-            {
-                case SkillBoost_FieldIndex.Skill:
-                case SkillBoost_FieldIndex.Boost:
-                    if (on) break;
-                    throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static void UnsetNthObject(
-            ushort index,
-            ISkillBoost obj,
-            NotifyingUnsetParameters cmds = null)
-        {
-            SkillBoost_FieldIndex enu = (SkillBoost_FieldIndex)index;
-            switch (enu)
-            {
-                case SkillBoost_FieldIndex.Skill:
-                    obj.Skill = default(ActorValue);
-                    break;
-                case SkillBoost_FieldIndex.Boost:
-                    obj.Boost = default(SByte);
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthObjectHasBeenSet(
-            ushort index,
-            ISkillBoost obj)
-        {
-            SkillBoost_FieldIndex enu = (SkillBoost_FieldIndex)index;
-            switch (enu)
-            {
-                case SkillBoost_FieldIndex.Skill:
-                case SkillBoost_FieldIndex.Boost:
-                    return true;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static object GetNthObject(
-            ushort index,
-            ISkillBoostGetter obj)
-        {
-            SkillBoost_FieldIndex enu = (SkillBoost_FieldIndex)index;
-            switch (enu)
-            {
-                case SkillBoost_FieldIndex.Skill:
-                    return obj.Skill;
-                case SkillBoost_FieldIndex.Boost:
-                    return obj.Boost;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
 
         public static void Clear(
             ISkillBoost item,

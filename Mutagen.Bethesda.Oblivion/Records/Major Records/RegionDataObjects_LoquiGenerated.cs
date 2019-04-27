@@ -73,24 +73,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        #region Loqui Getter Interface
-
-        protected override object GetNthObject(ushort index) => RegionDataObjectsCommon.GetNthObject(index, this);
-
-        protected override bool GetNthObjectHasBeenSet(ushort index) => RegionDataObjectsCommon.GetNthObjectHasBeenSet(index, this);
-
-        protected override void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => RegionDataObjectsCommon.UnsetNthObject(index, this, cmds);
-
-        #endregion
-
-        #region Loqui Interface
-        protected override void SetNthObjectHasBeenSet(ushort index, bool on)
-        {
-            RegionDataObjectsCommon.SetNthObjectHasBeenSet(index, on, this);
-        }
-
-        #endregion
-
         IMask<bool> IEqualsMask<RegionDataObjects>.GetEqualsMask(RegionDataObjects rhs, EqualsMaskHelper.Include include) => RegionDataObjectsCommon.GetEqualsMask(this, rhs, include);
         IMask<bool> IEqualsMask<IRegionDataObjectsGetter>.GetEqualsMask(IRegionDataObjectsGetter rhs, EqualsMaskHelper.Include include) => RegionDataObjectsCommon.GetEqualsMask(this, rhs, include);
         #region To String
@@ -795,11 +777,6 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, RegionDataObjects obj)
-        {
-            ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
-        }
-
     }
     #endregion
 
@@ -1060,69 +1037,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         #endregion
-
-        public static void SetNthObjectHasBeenSet(
-            ushort index,
-            bool on,
-            IRegionDataObjects obj,
-            NotifyingFireParameters cmds = null)
-        {
-            RegionDataObjects_FieldIndex enu = (RegionDataObjects_FieldIndex)index;
-            switch (enu)
-            {
-                case RegionDataObjects_FieldIndex.Objects:
-                    obj.Objects.HasBeenSet = on;
-                    break;
-                default:
-                    RegionDataCommon.SetNthObjectHasBeenSet(index, on, obj);
-                    break;
-            }
-        }
-
-        public static void UnsetNthObject(
-            ushort index,
-            IRegionDataObjects obj,
-            NotifyingUnsetParameters cmds = null)
-        {
-            RegionDataObjects_FieldIndex enu = (RegionDataObjects_FieldIndex)index;
-            switch (enu)
-            {
-                case RegionDataObjects_FieldIndex.Objects:
-                    obj.Objects.Unset();
-                    break;
-                default:
-                    RegionDataCommon.UnsetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public static bool GetNthObjectHasBeenSet(
-            ushort index,
-            IRegionDataObjects obj)
-        {
-            RegionDataObjects_FieldIndex enu = (RegionDataObjects_FieldIndex)index;
-            switch (enu)
-            {
-                case RegionDataObjects_FieldIndex.Objects:
-                    return obj.Objects.HasBeenSet;
-                default:
-                    return RegionDataCommon.GetNthObjectHasBeenSet(index, obj);
-            }
-        }
-
-        public static object GetNthObject(
-            ushort index,
-            IRegionDataObjectsGetter obj)
-        {
-            RegionDataObjects_FieldIndex enu = (RegionDataObjects_FieldIndex)index;
-            switch (enu)
-            {
-                case RegionDataObjects_FieldIndex.Objects:
-                    return obj.Objects;
-                default:
-                    return RegionDataCommon.GetNthObject(index, obj);
-            }
-        }
 
         public static void Clear(
             IRegionDataObjects item,

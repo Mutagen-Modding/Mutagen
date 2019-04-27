@@ -220,28 +220,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        #region Loqui Getter Interface
-
-        protected object GetNthObject(ushort index) => CombatStyleAdvancedCommon.GetNthObject(index, this);
-        object ILoquiObjectGetter.GetNthObject(ushort index) => this.GetNthObject(index);
-
-        protected bool GetNthObjectHasBeenSet(ushort index) => CombatStyleAdvancedCommon.GetNthObjectHasBeenSet(index, this);
-        bool ILoquiObjectGetter.GetNthObjectHasBeenSet(ushort index) => this.GetNthObjectHasBeenSet(index);
-
-        protected void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => CombatStyleAdvancedCommon.UnsetNthObject(index, this, cmds);
-        void ILoquiObjectSetter.UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => this.UnsetNthObject(index, cmds);
-
-        #endregion
-
-        #region Loqui Interface
-        protected void SetNthObjectHasBeenSet(ushort index, bool on)
-        {
-            CombatStyleAdvancedCommon.SetNthObjectHasBeenSet(index, on, this);
-        }
-        void ILoquiObjectSetter.SetNthObjectHasBeenSet(ushort index, bool on) => this.SetNthObjectHasBeenSet(index, on);
-
-        #endregion
-
         IMask<bool> IEqualsMask<CombatStyleAdvanced>.GetEqualsMask(CombatStyleAdvanced rhs, EqualsMaskHelper.Include include) => CombatStyleAdvancedCommon.GetEqualsMask(this, rhs, include);
         IMask<bool> IEqualsMask<ICombatStyleAdvancedGetter>.GetEqualsMask(ICombatStyleAdvancedGetter rhs, EqualsMaskHelper.Include include) => CombatStyleAdvancedCommon.GetEqualsMask(this, rhs, include);
         #region To String
@@ -1377,7 +1355,6 @@ namespace Mutagen.Bethesda.Oblivion
                 cmds: cmds);
         }
 
-        void ILoquiObjectSetter.SetNthObject(ushort index, object obj, NotifyingFireParameters cmds) => this.SetNthObject(index, obj, cmds);
         protected void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
         {
             CombatStyleAdvanced_FieldIndex enu = (CombatStyleAdvanced_FieldIndex)index;
@@ -1550,11 +1527,6 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, CombatStyleAdvanced obj)
-        {
-            ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
-        }
-
     }
     #endregion
 
@@ -2488,207 +2460,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         #endregion
-
-        public static void SetNthObjectHasBeenSet(
-            ushort index,
-            bool on,
-            ICombatStyleAdvanced obj,
-            NotifyingFireParameters cmds = null)
-        {
-            CombatStyleAdvanced_FieldIndex enu = (CombatStyleAdvanced_FieldIndex)index;
-            switch (enu)
-            {
-                case CombatStyleAdvanced_FieldIndex.DodgeFatigueModMult:
-                case CombatStyleAdvanced_FieldIndex.DodgeFatigueModBase:
-                case CombatStyleAdvanced_FieldIndex.EncumbSpeedModBase:
-                case CombatStyleAdvanced_FieldIndex.EncumbSpeedModMult:
-                case CombatStyleAdvanced_FieldIndex.DodgeWhileUnderAttackMult:
-                case CombatStyleAdvanced_FieldIndex.DodgeNotUnderAttackMult:
-                case CombatStyleAdvanced_FieldIndex.DodgeBackWhileUnderAttackMult:
-                case CombatStyleAdvanced_FieldIndex.DodgeBackNotUnderAttackMult:
-                case CombatStyleAdvanced_FieldIndex.DodgeForwardWhileUnderAttackMult:
-                case CombatStyleAdvanced_FieldIndex.DodgeForwardNotUnderAttackMult:
-                case CombatStyleAdvanced_FieldIndex.BlockSkillModifierMult:
-                case CombatStyleAdvanced_FieldIndex.BlockSkillModifierBase:
-                case CombatStyleAdvanced_FieldIndex.BlockWhileUnderAttackMult:
-                case CombatStyleAdvanced_FieldIndex.BlockNotUnderAttackMult:
-                case CombatStyleAdvanced_FieldIndex.AttackSkillModifierMult:
-                case CombatStyleAdvanced_FieldIndex.AttackSkillModifierBase:
-                case CombatStyleAdvanced_FieldIndex.AttackWhileUnderAttackMult:
-                case CombatStyleAdvanced_FieldIndex.AttackNotUnderAttackMult:
-                case CombatStyleAdvanced_FieldIndex.AttackDuringBlockMult:
-                case CombatStyleAdvanced_FieldIndex.PowerAttackFatigueModBase:
-                case CombatStyleAdvanced_FieldIndex.PowerAttackFatigueModMult:
-                    if (on) break;
-                    throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static void UnsetNthObject(
-            ushort index,
-            ICombatStyleAdvanced obj,
-            NotifyingUnsetParameters cmds = null)
-        {
-            CombatStyleAdvanced_FieldIndex enu = (CombatStyleAdvanced_FieldIndex)index;
-            switch (enu)
-            {
-                case CombatStyleAdvanced_FieldIndex.DodgeFatigueModMult:
-                    obj.DodgeFatigueModMult = default(Single);
-                    break;
-                case CombatStyleAdvanced_FieldIndex.DodgeFatigueModBase:
-                    obj.DodgeFatigueModBase = default(Single);
-                    break;
-                case CombatStyleAdvanced_FieldIndex.EncumbSpeedModBase:
-                    obj.EncumbSpeedModBase = default(Single);
-                    break;
-                case CombatStyleAdvanced_FieldIndex.EncumbSpeedModMult:
-                    obj.EncumbSpeedModMult = default(Single);
-                    break;
-                case CombatStyleAdvanced_FieldIndex.DodgeWhileUnderAttackMult:
-                    obj.DodgeWhileUnderAttackMult = default(Single);
-                    break;
-                case CombatStyleAdvanced_FieldIndex.DodgeNotUnderAttackMult:
-                    obj.DodgeNotUnderAttackMult = default(Single);
-                    break;
-                case CombatStyleAdvanced_FieldIndex.DodgeBackWhileUnderAttackMult:
-                    obj.DodgeBackWhileUnderAttackMult = default(Single);
-                    break;
-                case CombatStyleAdvanced_FieldIndex.DodgeBackNotUnderAttackMult:
-                    obj.DodgeBackNotUnderAttackMult = default(Single);
-                    break;
-                case CombatStyleAdvanced_FieldIndex.DodgeForwardWhileUnderAttackMult:
-                    obj.DodgeForwardWhileUnderAttackMult = default(Single);
-                    break;
-                case CombatStyleAdvanced_FieldIndex.DodgeForwardNotUnderAttackMult:
-                    obj.DodgeForwardNotUnderAttackMult = default(Single);
-                    break;
-                case CombatStyleAdvanced_FieldIndex.BlockSkillModifierMult:
-                    obj.BlockSkillModifierMult = default(Single);
-                    break;
-                case CombatStyleAdvanced_FieldIndex.BlockSkillModifierBase:
-                    obj.BlockSkillModifierBase = default(Single);
-                    break;
-                case CombatStyleAdvanced_FieldIndex.BlockWhileUnderAttackMult:
-                    obj.BlockWhileUnderAttackMult = default(Single);
-                    break;
-                case CombatStyleAdvanced_FieldIndex.BlockNotUnderAttackMult:
-                    obj.BlockNotUnderAttackMult = default(Single);
-                    break;
-                case CombatStyleAdvanced_FieldIndex.AttackSkillModifierMult:
-                    obj.AttackSkillModifierMult = default(Single);
-                    break;
-                case CombatStyleAdvanced_FieldIndex.AttackSkillModifierBase:
-                    obj.AttackSkillModifierBase = default(Single);
-                    break;
-                case CombatStyleAdvanced_FieldIndex.AttackWhileUnderAttackMult:
-                    obj.AttackWhileUnderAttackMult = default(Single);
-                    break;
-                case CombatStyleAdvanced_FieldIndex.AttackNotUnderAttackMult:
-                    obj.AttackNotUnderAttackMult = default(Single);
-                    break;
-                case CombatStyleAdvanced_FieldIndex.AttackDuringBlockMult:
-                    obj.AttackDuringBlockMult = default(Single);
-                    break;
-                case CombatStyleAdvanced_FieldIndex.PowerAttackFatigueModBase:
-                    obj.PowerAttackFatigueModBase = default(Single);
-                    break;
-                case CombatStyleAdvanced_FieldIndex.PowerAttackFatigueModMult:
-                    obj.PowerAttackFatigueModMult = default(Single);
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthObjectHasBeenSet(
-            ushort index,
-            ICombatStyleAdvanced obj)
-        {
-            CombatStyleAdvanced_FieldIndex enu = (CombatStyleAdvanced_FieldIndex)index;
-            switch (enu)
-            {
-                case CombatStyleAdvanced_FieldIndex.DodgeFatigueModMult:
-                case CombatStyleAdvanced_FieldIndex.DodgeFatigueModBase:
-                case CombatStyleAdvanced_FieldIndex.EncumbSpeedModBase:
-                case CombatStyleAdvanced_FieldIndex.EncumbSpeedModMult:
-                case CombatStyleAdvanced_FieldIndex.DodgeWhileUnderAttackMult:
-                case CombatStyleAdvanced_FieldIndex.DodgeNotUnderAttackMult:
-                case CombatStyleAdvanced_FieldIndex.DodgeBackWhileUnderAttackMult:
-                case CombatStyleAdvanced_FieldIndex.DodgeBackNotUnderAttackMult:
-                case CombatStyleAdvanced_FieldIndex.DodgeForwardWhileUnderAttackMult:
-                case CombatStyleAdvanced_FieldIndex.DodgeForwardNotUnderAttackMult:
-                case CombatStyleAdvanced_FieldIndex.BlockSkillModifierMult:
-                case CombatStyleAdvanced_FieldIndex.BlockSkillModifierBase:
-                case CombatStyleAdvanced_FieldIndex.BlockWhileUnderAttackMult:
-                case CombatStyleAdvanced_FieldIndex.BlockNotUnderAttackMult:
-                case CombatStyleAdvanced_FieldIndex.AttackSkillModifierMult:
-                case CombatStyleAdvanced_FieldIndex.AttackSkillModifierBase:
-                case CombatStyleAdvanced_FieldIndex.AttackWhileUnderAttackMult:
-                case CombatStyleAdvanced_FieldIndex.AttackNotUnderAttackMult:
-                case CombatStyleAdvanced_FieldIndex.AttackDuringBlockMult:
-                case CombatStyleAdvanced_FieldIndex.PowerAttackFatigueModBase:
-                case CombatStyleAdvanced_FieldIndex.PowerAttackFatigueModMult:
-                    return true;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static object GetNthObject(
-            ushort index,
-            ICombatStyleAdvancedGetter obj)
-        {
-            CombatStyleAdvanced_FieldIndex enu = (CombatStyleAdvanced_FieldIndex)index;
-            switch (enu)
-            {
-                case CombatStyleAdvanced_FieldIndex.DodgeFatigueModMult:
-                    return obj.DodgeFatigueModMult;
-                case CombatStyleAdvanced_FieldIndex.DodgeFatigueModBase:
-                    return obj.DodgeFatigueModBase;
-                case CombatStyleAdvanced_FieldIndex.EncumbSpeedModBase:
-                    return obj.EncumbSpeedModBase;
-                case CombatStyleAdvanced_FieldIndex.EncumbSpeedModMult:
-                    return obj.EncumbSpeedModMult;
-                case CombatStyleAdvanced_FieldIndex.DodgeWhileUnderAttackMult:
-                    return obj.DodgeWhileUnderAttackMult;
-                case CombatStyleAdvanced_FieldIndex.DodgeNotUnderAttackMult:
-                    return obj.DodgeNotUnderAttackMult;
-                case CombatStyleAdvanced_FieldIndex.DodgeBackWhileUnderAttackMult:
-                    return obj.DodgeBackWhileUnderAttackMult;
-                case CombatStyleAdvanced_FieldIndex.DodgeBackNotUnderAttackMult:
-                    return obj.DodgeBackNotUnderAttackMult;
-                case CombatStyleAdvanced_FieldIndex.DodgeForwardWhileUnderAttackMult:
-                    return obj.DodgeForwardWhileUnderAttackMult;
-                case CombatStyleAdvanced_FieldIndex.DodgeForwardNotUnderAttackMult:
-                    return obj.DodgeForwardNotUnderAttackMult;
-                case CombatStyleAdvanced_FieldIndex.BlockSkillModifierMult:
-                    return obj.BlockSkillModifierMult;
-                case CombatStyleAdvanced_FieldIndex.BlockSkillModifierBase:
-                    return obj.BlockSkillModifierBase;
-                case CombatStyleAdvanced_FieldIndex.BlockWhileUnderAttackMult:
-                    return obj.BlockWhileUnderAttackMult;
-                case CombatStyleAdvanced_FieldIndex.BlockNotUnderAttackMult:
-                    return obj.BlockNotUnderAttackMult;
-                case CombatStyleAdvanced_FieldIndex.AttackSkillModifierMult:
-                    return obj.AttackSkillModifierMult;
-                case CombatStyleAdvanced_FieldIndex.AttackSkillModifierBase:
-                    return obj.AttackSkillModifierBase;
-                case CombatStyleAdvanced_FieldIndex.AttackWhileUnderAttackMult:
-                    return obj.AttackWhileUnderAttackMult;
-                case CombatStyleAdvanced_FieldIndex.AttackNotUnderAttackMult:
-                    return obj.AttackNotUnderAttackMult;
-                case CombatStyleAdvanced_FieldIndex.AttackDuringBlockMult:
-                    return obj.AttackDuringBlockMult;
-                case CombatStyleAdvanced_FieldIndex.PowerAttackFatigueModBase:
-                    return obj.PowerAttackFatigueModBase;
-                case CombatStyleAdvanced_FieldIndex.PowerAttackFatigueModMult:
-                    return obj.PowerAttackFatigueModMult;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
 
         public static void Clear(
             ICombatStyleAdvanced item,

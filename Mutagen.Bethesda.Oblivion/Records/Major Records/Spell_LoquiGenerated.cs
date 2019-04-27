@@ -81,24 +81,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        #region Loqui Getter Interface
-
-        protected override object GetNthObject(ushort index) => SpellCommon.GetNthObject(index, this);
-
-        protected override bool GetNthObjectHasBeenSet(ushort index) => SpellCommon.GetNthObjectHasBeenSet(index, this);
-
-        protected override void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => SpellCommon.UnsetNthObject(index, this, cmds);
-
-        #endregion
-
-        #region Loqui Interface
-        protected override void SetNthObjectHasBeenSet(ushort index, bool on)
-        {
-            SpellCommon.SetNthObjectHasBeenSet(index, on, this);
-        }
-
-        #endregion
-
         IMask<bool> IEqualsMask<Spell>.GetEqualsMask(Spell rhs, EqualsMaskHelper.Include include) => SpellCommon.GetEqualsMask(this, rhs, include);
         IMask<bool> IEqualsMask<ISpellGetter>.GetEqualsMask(ISpellGetter rhs, EqualsMaskHelper.Include include) => SpellCommon.GetEqualsMask(this, rhs, include);
         #region To String
@@ -392,6 +374,22 @@ namespace Mutagen.Bethesda.Oblivion
 
         public override void Write_Xml(
             XElement node,
+            out OblivionMajorRecord_ErrorMask errorMask,
+            bool doMasks = true,
+            OblivionMajorRecord_TranslationMask translationMask = null,
+            string name = null)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            this.Write_Xml(
+                name: name,
+                node: node,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal());
+            errorMask = Spell_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public override void Write_Xml(
+            XElement node,
             out MajorRecord_ErrorMask errorMask,
             bool doMasks = true,
             MajorRecord_TranslationMask translationMask = null,
@@ -509,6 +507,21 @@ namespace Mutagen.Bethesda.Oblivion
             MutagenWriter writer,
             MasterReferences masterReferences,
             out SpellAbstract_ErrorMask errorMask,
+            bool doMasks = true)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            this.Write_Binary(
+                masterReferences: masterReferences,
+                writer: writer,
+                errorMask: errorMaskBuilder,
+                recordTypeConverter: null);
+            errorMask = Spell_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public override void Write_Binary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            out OblivionMajorRecord_ErrorMask errorMask,
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
@@ -744,11 +757,6 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, Spell obj)
-        {
-            ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
-        }
-
     }
     #endregion
 
@@ -781,11 +789,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #region Field Index
     public enum Spell_FieldIndex
     {
-        MajorRecordFlags = 0,
-        FormKey = 1,
-        Version = 2,
-        EditorID = 3,
-        RecordType = 4,
+        FormKey = 0,
+        Version = 1,
+        EditorID = 2,
+        RecordType = 3,
+        OblivionMajorRecordFlags = 4,
         Name = 5,
     }
     #endregion
@@ -1026,69 +1034,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void SetNthObjectHasBeenSet(
-            ushort index,
-            bool on,
-            ISpell obj,
-            NotifyingFireParameters cmds = null)
-        {
-            Spell_FieldIndex enu = (Spell_FieldIndex)index;
-            switch (enu)
-            {
-                case Spell_FieldIndex.Name:
-                    obj.Name_IsSet = on;
-                    break;
-                default:
-                    SpellAbstractCommon.SetNthObjectHasBeenSet(index, on, obj);
-                    break;
-            }
-        }
-
-        public static void UnsetNthObject(
-            ushort index,
-            ISpell obj,
-            NotifyingUnsetParameters cmds = null)
-        {
-            Spell_FieldIndex enu = (Spell_FieldIndex)index;
-            switch (enu)
-            {
-                case Spell_FieldIndex.Name:
-                    obj.Name_Unset();
-                    break;
-                default:
-                    SpellAbstractCommon.UnsetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public static bool GetNthObjectHasBeenSet(
-            ushort index,
-            ISpell obj)
-        {
-            Spell_FieldIndex enu = (Spell_FieldIndex)index;
-            switch (enu)
-            {
-                case Spell_FieldIndex.Name:
-                    return obj.Name_IsSet;
-                default:
-                    return SpellAbstractCommon.GetNthObjectHasBeenSet(index, obj);
-            }
-        }
-
-        public static object GetNthObject(
-            ushort index,
-            ISpellGetter obj)
-        {
-            Spell_FieldIndex enu = (Spell_FieldIndex)index;
-            switch (enu)
-            {
-                case Spell_FieldIndex.Name:
-                    return obj.Name;
-                default:
-                    return SpellAbstractCommon.GetNthObject(index, obj);
-            }
-        }
-
         public static void Clear(
             ISpell item,
             NotifyingUnsetParameters cmds = null)
@@ -1181,8 +1126,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (index)
             {
-                case SpellAbstract_FieldIndex.MajorRecordFlags:
-                    return (Spell_FieldIndex)((int)index);
                 case SpellAbstract_FieldIndex.FormKey:
                     return (Spell_FieldIndex)((int)index);
                 case SpellAbstract_FieldIndex.Version:
@@ -1190,6 +1133,33 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case SpellAbstract_FieldIndex.EditorID:
                     return (Spell_FieldIndex)((int)index);
                 case SpellAbstract_FieldIndex.RecordType:
+                    return (Spell_FieldIndex)((int)index);
+                case SpellAbstract_FieldIndex.OblivionMajorRecordFlags:
+                    return (Spell_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
+        }
+
+        public static Spell_FieldIndex? ConvertFieldIndex(OblivionMajorRecord_FieldIndex? index)
+        {
+            if (!index.HasValue) return null;
+            return ConvertFieldIndex(index: index.Value);
+        }
+
+        public static Spell_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
+        {
+            switch (index)
+            {
+                case OblivionMajorRecord_FieldIndex.FormKey:
+                    return (Spell_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.Version:
+                    return (Spell_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.EditorID:
+                    return (Spell_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.RecordType:
+                    return (Spell_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
                     return (Spell_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
@@ -1206,8 +1176,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (index)
             {
-                case MajorRecord_FieldIndex.MajorRecordFlags:
-                    return (Spell_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
                     return (Spell_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.Version:
@@ -1385,7 +1353,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            MajorRecordCommon.Write_Binary_Embedded(
+            OblivionMajorRecordCommon.Write_Binary_Embedded(
                 item: item,
                 writer: writer,
                 errorMask: errorMask,

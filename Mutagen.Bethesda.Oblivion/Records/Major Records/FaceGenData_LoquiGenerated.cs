@@ -136,28 +136,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        #region Loqui Getter Interface
-
-        protected object GetNthObject(ushort index) => FaceGenDataCommon.GetNthObject(index, this);
-        object ILoquiObjectGetter.GetNthObject(ushort index) => this.GetNthObject(index);
-
-        protected bool GetNthObjectHasBeenSet(ushort index) => FaceGenDataCommon.GetNthObjectHasBeenSet(index, this);
-        bool ILoquiObjectGetter.GetNthObjectHasBeenSet(ushort index) => this.GetNthObjectHasBeenSet(index);
-
-        protected void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => FaceGenDataCommon.UnsetNthObject(index, this, cmds);
-        void ILoquiObjectSetter.UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => this.UnsetNthObject(index, cmds);
-
-        #endregion
-
-        #region Loqui Interface
-        protected void SetNthObjectHasBeenSet(ushort index, bool on)
-        {
-            FaceGenDataCommon.SetNthObjectHasBeenSet(index, on, this);
-        }
-        void ILoquiObjectSetter.SetNthObjectHasBeenSet(ushort index, bool on) => this.SetNthObjectHasBeenSet(index, on);
-
-        #endregion
-
         IMask<bool> IEqualsMask<FaceGenData>.GetEqualsMask(FaceGenData rhs, EqualsMaskHelper.Include include) => FaceGenDataCommon.GetEqualsMask(this, rhs, include);
         IMask<bool> IEqualsMask<IFaceGenDataGetter>.GetEqualsMask(IFaceGenDataGetter rhs, EqualsMaskHelper.Include include) => FaceGenDataCommon.GetEqualsMask(this, rhs, include);
         #region To String
@@ -858,7 +836,6 @@ namespace Mutagen.Bethesda.Oblivion
                 cmds: cmds);
         }
 
-        void ILoquiObjectSetter.SetNthObject(ushort index, object obj, NotifyingFireParameters cmds) => this.SetNthObject(index, obj, cmds);
         protected void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
         {
             FaceGenData_FieldIndex enu = (FaceGenData_FieldIndex)index;
@@ -923,11 +900,6 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, FaceGenData obj)
-        {
-            ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
-        }
-
     }
     #endregion
 
@@ -1296,87 +1268,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         #endregion
-
-        public static void SetNthObjectHasBeenSet(
-            ushort index,
-            bool on,
-            IFaceGenData obj,
-            NotifyingFireParameters cmds = null)
-        {
-            FaceGenData_FieldIndex enu = (FaceGenData_FieldIndex)index;
-            switch (enu)
-            {
-                case FaceGenData_FieldIndex.SymmetricGeometry:
-                    obj.SymmetricGeometry_IsSet = on;
-                    break;
-                case FaceGenData_FieldIndex.AsymmetricGeometry:
-                    obj.AsymmetricGeometry_IsSet = on;
-                    break;
-                case FaceGenData_FieldIndex.SymmetricTexture:
-                    obj.SymmetricTexture_IsSet = on;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static void UnsetNthObject(
-            ushort index,
-            IFaceGenData obj,
-            NotifyingUnsetParameters cmds = null)
-        {
-            FaceGenData_FieldIndex enu = (FaceGenData_FieldIndex)index;
-            switch (enu)
-            {
-                case FaceGenData_FieldIndex.SymmetricGeometry:
-                    obj.SymmetricGeometry_Unset();
-                    break;
-                case FaceGenData_FieldIndex.AsymmetricGeometry:
-                    obj.AsymmetricGeometry_Unset();
-                    break;
-                case FaceGenData_FieldIndex.SymmetricTexture:
-                    obj.SymmetricTexture_Unset();
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthObjectHasBeenSet(
-            ushort index,
-            IFaceGenData obj)
-        {
-            FaceGenData_FieldIndex enu = (FaceGenData_FieldIndex)index;
-            switch (enu)
-            {
-                case FaceGenData_FieldIndex.SymmetricGeometry:
-                    return obj.SymmetricGeometry_IsSet;
-                case FaceGenData_FieldIndex.AsymmetricGeometry:
-                    return obj.AsymmetricGeometry_IsSet;
-                case FaceGenData_FieldIndex.SymmetricTexture:
-                    return obj.SymmetricTexture_IsSet;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static object GetNthObject(
-            ushort index,
-            IFaceGenDataGetter obj)
-        {
-            FaceGenData_FieldIndex enu = (FaceGenData_FieldIndex)index;
-            switch (enu)
-            {
-                case FaceGenData_FieldIndex.SymmetricGeometry:
-                    return obj.SymmetricGeometry;
-                case FaceGenData_FieldIndex.AsymmetricGeometry:
-                    return obj.AsymmetricGeometry;
-                case FaceGenData_FieldIndex.SymmetricTexture:
-                    return obj.SymmetricTexture;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
 
         public static void Clear(
             IFaceGenData item,

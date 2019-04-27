@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Tree" baseClass="Bethesda.MajorRecord" objType="Record" recordType="TREE" GUID="82606775-b1a1-4c44-9052-b021c5ccc13a" ID="79">
+  <Object name="Tree" baseClass="OblivionMajorRecord" objType="Record" recordType="TREE" GUID="82606775-b1a1-4c44-9052-b021c5ccc13a" ID="79">
     <Fields>
       <RefDirect name="Model" refName="Model" />
       <String name="Icon" recordType="ICON" />

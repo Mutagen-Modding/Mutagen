@@ -138,24 +138,6 @@ namespace Mutagen.Bethesda.Oblivion
         FormIDSetLink<NPCAbstract> ILeveledCreatureGetter.Template_Property => this.Template_Property;
         #endregion
 
-        #region Loqui Getter Interface
-
-        protected override object GetNthObject(ushort index) => LeveledCreatureCommon.GetNthObject(index, this);
-
-        protected override bool GetNthObjectHasBeenSet(ushort index) => LeveledCreatureCommon.GetNthObjectHasBeenSet(index, this);
-
-        protected override void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => LeveledCreatureCommon.UnsetNthObject(index, this, cmds);
-
-        #endregion
-
-        #region Loqui Interface
-        protected override void SetNthObjectHasBeenSet(ushort index, bool on)
-        {
-            LeveledCreatureCommon.SetNthObjectHasBeenSet(index, on, this);
-        }
-
-        #endregion
-
         IMask<bool> IEqualsMask<LeveledCreature>.GetEqualsMask(LeveledCreature rhs, EqualsMaskHelper.Include include) => LeveledCreatureCommon.GetEqualsMask(this, rhs, include);
         IMask<bool> IEqualsMask<ILeveledCreatureGetter>.GetEqualsMask(ILeveledCreatureGetter rhs, EqualsMaskHelper.Include include) => LeveledCreatureCommon.GetEqualsMask(this, rhs, include);
         #region To String
@@ -504,6 +486,22 @@ namespace Mutagen.Bethesda.Oblivion
 
         public override void Write_Xml(
             XElement node,
+            out OblivionMajorRecord_ErrorMask errorMask,
+            bool doMasks = true,
+            OblivionMajorRecord_TranslationMask translationMask = null,
+            string name = null)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            this.Write_Xml(
+                name: name,
+                node: node,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal());
+            errorMask = LeveledCreature_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public override void Write_Xml(
+            XElement node,
             out MajorRecord_ErrorMask errorMask,
             bool doMasks = true,
             MajorRecord_TranslationMask translationMask = null,
@@ -626,9 +624,9 @@ namespace Mutagen.Bethesda.Oblivion
             CustomCtor();
         }
 
-        partial void PostDuplicate(LeveledCreature obj, LeveledCreature rhs, Func<FormKey> getNextFormKey, IList<(MajorRecord Record, FormKey OriginalFormKey)> duplicatedRecords);
+        partial void PostDuplicate(LeveledCreature obj, LeveledCreature rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
 
-        public override MajorRecord Duplicate(Func<FormKey> getNextFormKey, IList<(MajorRecord Record, FormKey OriginalFormKey)> duplicatedRecords)
+        public override IMajorRecordCommon Duplicate(Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
         {
             var ret = new LeveledCreature(getNextFormKey());
             ret.CopyFieldsFrom(this);
@@ -710,6 +708,21 @@ namespace Mutagen.Bethesda.Oblivion
             MutagenWriter writer,
             MasterReferences masterReferences,
             out NPCSpawn_ErrorMask errorMask,
+            bool doMasks = true)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            this.Write_Binary(
+                masterReferences: masterReferences,
+                writer: writer,
+                errorMask: errorMaskBuilder,
+                recordTypeConverter: null);
+            errorMask = LeveledCreature_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public override void Write_Binary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            out OblivionMajorRecord_ErrorMask errorMask,
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
@@ -1086,11 +1099,6 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, LeveledCreature obj)
-        {
-            ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
-        }
-
     }
     #endregion
 
@@ -1149,11 +1157,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #region Field Index
     public enum LeveledCreature_FieldIndex
     {
-        MajorRecordFlags = 0,
-        FormKey = 1,
-        Version = 2,
-        EditorID = 3,
-        RecordType = 4,
+        FormKey = 0,
+        Version = 1,
+        EditorID = 2,
+        RecordType = 3,
+        OblivionMajorRecordFlags = 4,
         ChanceNone = 5,
         Flags = 6,
         Entries = 7,
@@ -1540,109 +1548,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void SetNthObjectHasBeenSet(
-            ushort index,
-            bool on,
-            ILeveledCreature obj,
-            NotifyingFireParameters cmds = null)
-        {
-            LeveledCreature_FieldIndex enu = (LeveledCreature_FieldIndex)index;
-            switch (enu)
-            {
-                case LeveledCreature_FieldIndex.ChanceNone:
-                    obj.ChanceNone_IsSet = on;
-                    break;
-                case LeveledCreature_FieldIndex.Flags:
-                    obj.Flags_IsSet = on;
-                    break;
-                case LeveledCreature_FieldIndex.Entries:
-                    obj.Entries.HasBeenSet = on;
-                    break;
-                case LeveledCreature_FieldIndex.Script:
-                    obj.Script_Property.HasBeenSet = on;
-                    break;
-                case LeveledCreature_FieldIndex.Template:
-                    obj.Template_Property.HasBeenSet = on;
-                    break;
-                default:
-                    NPCSpawnCommon.SetNthObjectHasBeenSet(index, on, obj);
-                    break;
-            }
-        }
-
-        public static void UnsetNthObject(
-            ushort index,
-            ILeveledCreature obj,
-            NotifyingUnsetParameters cmds = null)
-        {
-            LeveledCreature_FieldIndex enu = (LeveledCreature_FieldIndex)index;
-            switch (enu)
-            {
-                case LeveledCreature_FieldIndex.ChanceNone:
-                    obj.ChanceNone_Unset();
-                    break;
-                case LeveledCreature_FieldIndex.Flags:
-                    obj.Flags_Unset();
-                    break;
-                case LeveledCreature_FieldIndex.Entries:
-                    obj.Entries.Unset();
-                    break;
-                case LeveledCreature_FieldIndex.Script:
-                    obj.Script_Property.Unset(cmds);
-                    break;
-                case LeveledCreature_FieldIndex.Template:
-                    obj.Template_Property.Unset(cmds);
-                    break;
-                default:
-                    NPCSpawnCommon.UnsetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public static bool GetNthObjectHasBeenSet(
-            ushort index,
-            ILeveledCreature obj)
-        {
-            LeveledCreature_FieldIndex enu = (LeveledCreature_FieldIndex)index;
-            switch (enu)
-            {
-                case LeveledCreature_FieldIndex.ChanceNone:
-                    return obj.ChanceNone_IsSet;
-                case LeveledCreature_FieldIndex.Flags:
-                    return obj.Flags_IsSet;
-                case LeveledCreature_FieldIndex.Entries:
-                    return obj.Entries.HasBeenSet;
-                case LeveledCreature_FieldIndex.Script:
-                    return obj.Script_Property.HasBeenSet;
-                case LeveledCreature_FieldIndex.Template:
-                    return obj.Template_Property.HasBeenSet;
-                default:
-                    return NPCSpawnCommon.GetNthObjectHasBeenSet(index, obj);
-            }
-        }
-
-        public static object GetNthObject(
-            ushort index,
-            ILeveledCreatureGetter obj)
-        {
-            LeveledCreature_FieldIndex enu = (LeveledCreature_FieldIndex)index;
-            switch (enu)
-            {
-                case LeveledCreature_FieldIndex.ChanceNone:
-                    return obj.ChanceNone;
-                case LeveledCreature_FieldIndex.Flags:
-                    return obj.Flags;
-                case LeveledCreature_FieldIndex.Entries:
-                    return obj.Entries;
-                case LeveledCreature_FieldIndex.Script:
-                    return obj.Script;
-                case LeveledCreature_FieldIndex.Template:
-                    return obj.Template;
-                default:
-                    return NPCSpawnCommon.GetNthObject(index, obj);
-            }
-        }
-
         public static void Clear(
             ILeveledCreature item,
             NotifyingUnsetParameters cmds = null)
@@ -1784,8 +1689,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (index)
             {
-                case NPCSpawn_FieldIndex.MajorRecordFlags:
-                    return (LeveledCreature_FieldIndex)((int)index);
                 case NPCSpawn_FieldIndex.FormKey:
                     return (LeveledCreature_FieldIndex)((int)index);
                 case NPCSpawn_FieldIndex.Version:
@@ -1793,6 +1696,33 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case NPCSpawn_FieldIndex.EditorID:
                     return (LeveledCreature_FieldIndex)((int)index);
                 case NPCSpawn_FieldIndex.RecordType:
+                    return (LeveledCreature_FieldIndex)((int)index);
+                case NPCSpawn_FieldIndex.OblivionMajorRecordFlags:
+                    return (LeveledCreature_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
+        }
+
+        public static LeveledCreature_FieldIndex? ConvertFieldIndex(OblivionMajorRecord_FieldIndex? index)
+        {
+            if (!index.HasValue) return null;
+            return ConvertFieldIndex(index: index.Value);
+        }
+
+        public static LeveledCreature_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
+        {
+            switch (index)
+            {
+                case OblivionMajorRecord_FieldIndex.FormKey:
+                    return (LeveledCreature_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.Version:
+                    return (LeveledCreature_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.EditorID:
+                    return (LeveledCreature_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.RecordType:
+                    return (LeveledCreature_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
                     return (LeveledCreature_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
@@ -1809,8 +1739,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (index)
             {
-                case MajorRecord_FieldIndex.MajorRecordFlags:
-                    return (LeveledCreature_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
                     return (LeveledCreature_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.Version:
@@ -2112,7 +2040,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: LeveledCreature_Registration.LVLC_HEADER,
                 type: ObjectType.Record))
             {
-                MajorRecordCommon.Write_Binary_Embedded(
+                OblivionMajorRecordCommon.Write_Binary_Embedded(
                     item: item,
                     writer: writer,
                     errorMask: errorMask,

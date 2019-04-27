@@ -86,28 +86,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        #region Loqui Getter Interface
-
-        protected object GetNthObject(ushort index) => WeatherTypeCommon.GetNthObject(index, this);
-        object ILoquiObjectGetter.GetNthObject(ushort index) => this.GetNthObject(index);
-
-        protected bool GetNthObjectHasBeenSet(ushort index) => WeatherTypeCommon.GetNthObjectHasBeenSet(index, this);
-        bool ILoquiObjectGetter.GetNthObjectHasBeenSet(ushort index) => this.GetNthObjectHasBeenSet(index);
-
-        protected void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => WeatherTypeCommon.UnsetNthObject(index, this, cmds);
-        void ILoquiObjectSetter.UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => this.UnsetNthObject(index, cmds);
-
-        #endregion
-
-        #region Loqui Interface
-        protected void SetNthObjectHasBeenSet(ushort index, bool on)
-        {
-            WeatherTypeCommon.SetNthObjectHasBeenSet(index, on, this);
-        }
-        void ILoquiObjectSetter.SetNthObjectHasBeenSet(ushort index, bool on) => this.SetNthObjectHasBeenSet(index, on);
-
-        #endregion
-
         IMask<bool> IEqualsMask<WeatherType>.GetEqualsMask(WeatherType rhs, EqualsMaskHelper.Include include) => WeatherTypeCommon.GetEqualsMask(this, rhs, include);
         IMask<bool> IEqualsMask<IWeatherTypeGetter>.GetEqualsMask(IWeatherTypeGetter rhs, EqualsMaskHelper.Include include) => WeatherTypeCommon.GetEqualsMask(this, rhs, include);
         #region To String
@@ -781,7 +759,6 @@ namespace Mutagen.Bethesda.Oblivion
                 cmds: cmds);
         }
 
-        void ILoquiObjectSetter.SetNthObject(ushort index, object obj, NotifyingFireParameters cmds) => this.SetNthObject(index, obj, cmds);
         protected void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
         {
             WeatherType_FieldIndex enu = (WeatherType_FieldIndex)index;
@@ -852,11 +829,6 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, WeatherType obj)
-        {
-            ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
-        }
-
     }
     #endregion
 
@@ -1193,88 +1165,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         #endregion
-
-        public static void SetNthObjectHasBeenSet(
-            ushort index,
-            bool on,
-            IWeatherType obj,
-            NotifyingFireParameters cmds = null)
-        {
-            WeatherType_FieldIndex enu = (WeatherType_FieldIndex)index;
-            switch (enu)
-            {
-                case WeatherType_FieldIndex.Sunrise:
-                case WeatherType_FieldIndex.Day:
-                case WeatherType_FieldIndex.Sunset:
-                case WeatherType_FieldIndex.Night:
-                    if (on) break;
-                    throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static void UnsetNthObject(
-            ushort index,
-            IWeatherType obj,
-            NotifyingUnsetParameters cmds = null)
-        {
-            WeatherType_FieldIndex enu = (WeatherType_FieldIndex)index;
-            switch (enu)
-            {
-                case WeatherType_FieldIndex.Sunrise:
-                    obj.Sunrise = default(Color);
-                    break;
-                case WeatherType_FieldIndex.Day:
-                    obj.Day = default(Color);
-                    break;
-                case WeatherType_FieldIndex.Sunset:
-                    obj.Sunset = default(Color);
-                    break;
-                case WeatherType_FieldIndex.Night:
-                    obj.Night = default(Color);
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthObjectHasBeenSet(
-            ushort index,
-            IWeatherType obj)
-        {
-            WeatherType_FieldIndex enu = (WeatherType_FieldIndex)index;
-            switch (enu)
-            {
-                case WeatherType_FieldIndex.Sunrise:
-                case WeatherType_FieldIndex.Day:
-                case WeatherType_FieldIndex.Sunset:
-                case WeatherType_FieldIndex.Night:
-                    return true;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static object GetNthObject(
-            ushort index,
-            IWeatherTypeGetter obj)
-        {
-            WeatherType_FieldIndex enu = (WeatherType_FieldIndex)index;
-            switch (enu)
-            {
-                case WeatherType_FieldIndex.Sunrise:
-                    return obj.Sunrise;
-                case WeatherType_FieldIndex.Day:
-                    return obj.Day;
-                case WeatherType_FieldIndex.Sunset:
-                    return obj.Sunset;
-                case WeatherType_FieldIndex.Night:
-                    return obj.Night;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
 
         public static void Clear(
             IWeatherType item,

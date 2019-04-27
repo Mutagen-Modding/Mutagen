@@ -17,6 +17,7 @@ using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Drawing;
 using Loqui.Presentation;
+using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
 using System.Xml;
@@ -35,7 +36,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class EffectShader : 
-        MajorRecord,
+        OblivionMajorRecord,
         IEffectShader,
         ILoquiObject<EffectShader>,
         ILoquiObjectSetter,
@@ -810,24 +811,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        #region Loqui Getter Interface
-
-        protected override object GetNthObject(ushort index) => EffectShaderCommon.GetNthObject(index, this);
-
-        protected override bool GetNthObjectHasBeenSet(ushort index) => EffectShaderCommon.GetNthObjectHasBeenSet(index, this);
-
-        protected override void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => EffectShaderCommon.UnsetNthObject(index, this, cmds);
-
-        #endregion
-
-        #region Loqui Interface
-        protected override void SetNthObjectHasBeenSet(ushort index, bool on)
-        {
-            EffectShaderCommon.SetNthObjectHasBeenSet(index, on, this);
-        }
-
-        #endregion
-
         IMask<bool> IEqualsMask<EffectShader>.GetEqualsMask(EffectShader rhs, EqualsMaskHelper.Include include) => EffectShaderCommon.GetEqualsMask(this, rhs, include);
         IMask<bool> IEqualsMask<IEffectShaderGetter>.GetEqualsMask(IEffectShaderGetter rhs, EqualsMaskHelper.Include include) => EffectShaderCommon.GetEqualsMask(this, rhs, include);
         #region To String
@@ -1246,6 +1229,22 @@ namespace Mutagen.Bethesda.Oblivion
         #region Base Class Trickdown Overrides
         public override void Write_Xml(
             XElement node,
+            out OblivionMajorRecord_ErrorMask errorMask,
+            bool doMasks = true,
+            OblivionMajorRecord_TranslationMask translationMask = null,
+            string name = null)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            this.Write_Xml(
+                name: name,
+                node: node,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal());
+            errorMask = EffectShader_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public override void Write_Xml(
+            XElement node,
             out MajorRecord_ErrorMask errorMask,
             bool doMasks = true,
             MajorRecord_TranslationMask translationMask = null,
@@ -1290,7 +1289,7 @@ namespace Mutagen.Bethesda.Oblivion
                     item.DATADataTypeState |= EffectShader.DATADataType.Has;
                     break;
                 default:
-                    MajorRecord.FillPrivateElement_Xml(
+                    OblivionMajorRecord.FillPrivateElement_Xml(
                         item: item,
                         node: node,
                         name: name,
@@ -1386,9 +1385,9 @@ namespace Mutagen.Bethesda.Oblivion
             CustomCtor();
         }
 
-        partial void PostDuplicate(EffectShader obj, EffectShader rhs, Func<FormKey> getNextFormKey, IList<(MajorRecord Record, FormKey OriginalFormKey)> duplicatedRecords);
+        partial void PostDuplicate(EffectShader obj, EffectShader rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
 
-        public override MajorRecord Duplicate(Func<FormKey> getNextFormKey, IList<(MajorRecord Record, FormKey OriginalFormKey)> duplicatedRecords)
+        public override IMajorRecordCommon Duplicate(Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
         {
             var ret = new EffectShader(getNextFormKey());
             ret.CopyFieldsFrom(this);
@@ -1469,6 +1468,21 @@ namespace Mutagen.Bethesda.Oblivion
         public override void Write_Binary(
             MutagenWriter writer,
             MasterReferences masterReferences,
+            out OblivionMajorRecord_ErrorMask errorMask,
+            bool doMasks = true)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            this.Write_Binary(
+                masterReferences: masterReferences,
+                writer: writer,
+                errorMask: errorMaskBuilder,
+                recordTypeConverter: null);
+            errorMask = EffectShader_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public override void Write_Binary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
             out MajorRecord_ErrorMask errorMask,
             bool doMasks = true)
         {
@@ -1504,7 +1518,7 @@ namespace Mutagen.Bethesda.Oblivion
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            MajorRecord.Fill_Binary_Structs(
+            OblivionMajorRecord.Fill_Binary_Structs(
                 item: item,
                 frame: frame,
                 masterReferences: masterReferences,
@@ -2948,7 +2962,7 @@ namespace Mutagen.Bethesda.Oblivion
                     return TryGet<int?>.Succeed((int)EffectShader_FieldIndex.ColorKey3ColorKeyTime);
                 }
                 default:
-                    return MajorRecord.Fill_Binary_RecordTypes(
+                    return OblivionMajorRecord.Fill_Binary_RecordTypes(
                         item: item,
                         frame: frame,
                         nextRecordType: nextRecordType,
@@ -3283,7 +3297,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             if (!EnumExt.TryParse(pair.Key, out EffectShader_FieldIndex enu))
             {
-                CopyInInternal_MajorRecord(obj, pair);
+                CopyInInternal_OblivionMajorRecord(obj, pair);
             }
             switch (enu)
             {
@@ -3465,16 +3479,11 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, EffectShader obj)
-        {
-            ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
-        }
-
     }
     #endregion
 
     #region Interface
-    public partial interface IEffectShader : IEffectShaderGetter, IMajorRecord, ILoquiClass<IEffectShader, IEffectShaderGetter>, ILoquiClass<EffectShader, IEffectShaderGetter>
+    public partial interface IEffectShader : IEffectShaderGetter, IOblivionMajorRecord, ILoquiClass<IEffectShader, IEffectShaderGetter>, ILoquiClass<EffectShader, IEffectShaderGetter>
     {
         new String FillTexture { get; set; }
         new bool FillTexture_IsSet { get; set; }
@@ -3600,7 +3609,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
-    public partial interface IEffectShaderGetter : IMajorRecordGetter
+    public partial interface IEffectShaderGetter : IOblivionMajorRecordGetter
     {
         #region FillTexture
         String FillTexture { get; }
@@ -3848,11 +3857,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #region Field Index
     public enum EffectShader_FieldIndex
     {
-        MajorRecordFlags = 0,
-        FormKey = 1,
-        Version = 2,
-        EditorID = 3,
-        RecordType = 4,
+        FormKey = 0,
+        Version = 1,
+        EditorID = 2,
+        RecordType = 3,
+        OblivionMajorRecordFlags = 4,
         FillTexture = 5,
         ParticleShaderTexture = 6,
         Flags = 7,
@@ -4144,7 +4153,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case EffectShader_FieldIndex.ColorKey3ColorKeyTime:
                     return false;
                 default:
-                    return MajorRecord_Registration.GetNthIsEnumerable(index);
+                    return OblivionMajorRecord_Registration.GetNthIsEnumerable(index);
             }
         }
 
@@ -4213,7 +4222,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case EffectShader_FieldIndex.ColorKey3ColorKeyTime:
                     return false;
                 default:
-                    return MajorRecord_Registration.GetNthIsLoqui(index);
+                    return OblivionMajorRecord_Registration.GetNthIsLoqui(index);
             }
         }
 
@@ -4282,7 +4291,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case EffectShader_FieldIndex.ColorKey3ColorKeyTime:
                     return false;
                 default:
-                    return MajorRecord_Registration.GetNthIsSingleton(index);
+                    return OblivionMajorRecord_Registration.GetNthIsSingleton(index);
             }
         }
 
@@ -4408,7 +4417,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case EffectShader_FieldIndex.ColorKey3ColorKeyTime:
                     return "ColorKey3ColorKeyTime";
                 default:
-                    return MajorRecord_Registration.GetNthName(index);
+                    return OblivionMajorRecord_Registration.GetNthName(index);
             }
         }
 
@@ -4477,7 +4486,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case EffectShader_FieldIndex.ColorKey3ColorKeyTime:
                     return false;
                 default:
-                    return MajorRecord_Registration.IsNthDerivative(index);
+                    return OblivionMajorRecord_Registration.IsNthDerivative(index);
             }
         }
 
@@ -4546,7 +4555,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case EffectShader_FieldIndex.ColorKey3ColorKeyTime:
                     return false;
                 default:
-                    return MajorRecord_Registration.IsProtected(index);
+                    return OblivionMajorRecord_Registration.IsProtected(index);
             }
         }
 
@@ -4672,7 +4681,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case EffectShader_FieldIndex.ColorKey3ColorKeyTime:
                     return typeof(Single);
                 default:
-                    return MajorRecord_Registration.GetNthType(index);
+                    return OblivionMajorRecord_Registration.GetNthType(index);
             }
         }
 
@@ -4725,7 +4734,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EffectShader_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {
-            MajorRecordCommon.CopyFieldsFrom(
+            OblivionMajorRecordCommon.CopyFieldsFrom(
                 item,
                 rhs,
                 def,
@@ -5748,474 +5757,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void SetNthObjectHasBeenSet(
-            ushort index,
-            bool on,
-            IEffectShader obj,
-            NotifyingFireParameters cmds = null)
-        {
-            EffectShader_FieldIndex enu = (EffectShader_FieldIndex)index;
-            switch (enu)
-            {
-                case EffectShader_FieldIndex.Flags:
-                case EffectShader_FieldIndex.MembraneShaderSourceBlendMode:
-                case EffectShader_FieldIndex.MembraneShaderBlendOperation:
-                case EffectShader_FieldIndex.MembraneShaderZTestFunction:
-                case EffectShader_FieldIndex.FillTextureEffectColor:
-                case EffectShader_FieldIndex.FillTextureEffectAlphaFadeInTime:
-                case EffectShader_FieldIndex.FillTextureEffectFullAlphaTime:
-                case EffectShader_FieldIndex.FillTextureEffectAlphaFadeOutTime:
-                case EffectShader_FieldIndex.FillTextureEffectPersistentAlphaRatio:
-                case EffectShader_FieldIndex.FillTextureEffectAlphaPulseAmplitude:
-                case EffectShader_FieldIndex.FillTextureEffectAlphaPulseFrequency:
-                case EffectShader_FieldIndex.FillTextureEffectTextureAnimationSpeedU:
-                case EffectShader_FieldIndex.FillTextureEffectTextureAnimationSpeedV:
-                case EffectShader_FieldIndex.EdgeEffectFallOff:
-                case EffectShader_FieldIndex.EdgeEffectColor:
-                case EffectShader_FieldIndex.EdgeEffectAlphaFadeInTime:
-                case EffectShader_FieldIndex.EdgeEffectFullAlphaTime:
-                case EffectShader_FieldIndex.EdgeEffectAlphaFadeOutTime:
-                case EffectShader_FieldIndex.EdgeEffectPersistentAlphaRatio:
-                case EffectShader_FieldIndex.EdgeEffectAlphaPulseAmplitude:
-                case EffectShader_FieldIndex.EdgeEffectAlphaPulseFrequency:
-                case EffectShader_FieldIndex.FillTextureEffectFullAlphaRatio:
-                case EffectShader_FieldIndex.EdgeEffectFullAlphaRatio:
-                case EffectShader_FieldIndex.MembraneShaderDestBlendMode:
-                case EffectShader_FieldIndex.ParticleShaderSourceBlendMode:
-                case EffectShader_FieldIndex.ParticleShaderBlendOperation:
-                case EffectShader_FieldIndex.ParticleShaderZTestFunction:
-                case EffectShader_FieldIndex.ParticleShaderDestBlendMode:
-                case EffectShader_FieldIndex.ParticleShaderParticleBirthRampUpTime:
-                case EffectShader_FieldIndex.ParticleShaderFullParticleBirthTime:
-                case EffectShader_FieldIndex.ParticleShaderParticleBirthRampDownTime:
-                case EffectShader_FieldIndex.ParticleShaderFullParticleBirthRatio:
-                case EffectShader_FieldIndex.ParticleShaderPersistentParticleBirthRatio:
-                case EffectShader_FieldIndex.ParticleShaderParticleLifetime:
-                case EffectShader_FieldIndex.ParticleShaderParticleLifetimePlusMinus:
-                case EffectShader_FieldIndex.ParticleShaderInitialSpeedAlongNormal:
-                case EffectShader_FieldIndex.ParticleShaderAccelerationAlongNormal:
-                case EffectShader_FieldIndex.ParticleShaderInitialVelocity1:
-                case EffectShader_FieldIndex.ParticleShaderInitialVelocity2:
-                case EffectShader_FieldIndex.ParticleShaderInitialVelocity3:
-                case EffectShader_FieldIndex.ParticleShaderAcceleration1:
-                case EffectShader_FieldIndex.ParticleShaderAcceleration2:
-                case EffectShader_FieldIndex.ParticleShaderAcceleration3:
-                case EffectShader_FieldIndex.ParticleShaderScaleKey1:
-                case EffectShader_FieldIndex.ParticleShaderScaleKey2:
-                case EffectShader_FieldIndex.ParticleShaderScaleKey1Time:
-                case EffectShader_FieldIndex.ParticleShaderScaleKey2Time:
-                case EffectShader_FieldIndex.ColorKey1Color:
-                case EffectShader_FieldIndex.ColorKey2Color:
-                case EffectShader_FieldIndex.ColorKey3Color:
-                case EffectShader_FieldIndex.ColorKey1ColorAlpha:
-                case EffectShader_FieldIndex.ColorKey2ColorAlpha:
-                case EffectShader_FieldIndex.ColorKey3ColorAlpha:
-                case EffectShader_FieldIndex.ColorKey1ColorKeyTime:
-                case EffectShader_FieldIndex.ColorKey2ColorKeyTime:
-                case EffectShader_FieldIndex.ColorKey3ColorKeyTime:
-                    if (on) break;
-                    throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
-                case EffectShader_FieldIndex.FillTexture:
-                    obj.FillTexture_IsSet = on;
-                    break;
-                case EffectShader_FieldIndex.ParticleShaderTexture:
-                    obj.ParticleShaderTexture_IsSet = on;
-                    break;
-                default:
-                    MajorRecordCommon.SetNthObjectHasBeenSet(index, on, obj);
-                    break;
-            }
-        }
-
-        public static void UnsetNthObject(
-            ushort index,
-            IEffectShader obj,
-            NotifyingUnsetParameters cmds = null)
-        {
-            EffectShader_FieldIndex enu = (EffectShader_FieldIndex)index;
-            switch (enu)
-            {
-                case EffectShader_FieldIndex.FillTexture:
-                    obj.FillTexture_Unset();
-                    break;
-                case EffectShader_FieldIndex.ParticleShaderTexture:
-                    obj.ParticleShaderTexture_Unset();
-                    break;
-                case EffectShader_FieldIndex.Flags:
-                    obj.Flags = default(EffectShader.Flag);
-                    break;
-                case EffectShader_FieldIndex.MembraneShaderSourceBlendMode:
-                    obj.MembraneShaderSourceBlendMode = default(EffectShader.SourceBlendMode);
-                    break;
-                case EffectShader_FieldIndex.MembraneShaderBlendOperation:
-                    obj.MembraneShaderBlendOperation = default(EffectShader.BlendOperation);
-                    break;
-                case EffectShader_FieldIndex.MembraneShaderZTestFunction:
-                    obj.MembraneShaderZTestFunction = default(EffectShader.ZTestFunction);
-                    break;
-                case EffectShader_FieldIndex.FillTextureEffectColor:
-                    obj.FillTextureEffectColor = default(Color);
-                    break;
-                case EffectShader_FieldIndex.FillTextureEffectAlphaFadeInTime:
-                    obj.FillTextureEffectAlphaFadeInTime = default(Single);
-                    break;
-                case EffectShader_FieldIndex.FillTextureEffectFullAlphaTime:
-                    obj.FillTextureEffectFullAlphaTime = default(Single);
-                    break;
-                case EffectShader_FieldIndex.FillTextureEffectAlphaFadeOutTime:
-                    obj.FillTextureEffectAlphaFadeOutTime = default(Single);
-                    break;
-                case EffectShader_FieldIndex.FillTextureEffectPersistentAlphaRatio:
-                    obj.FillTextureEffectPersistentAlphaRatio = default(Single);
-                    break;
-                case EffectShader_FieldIndex.FillTextureEffectAlphaPulseAmplitude:
-                    obj.FillTextureEffectAlphaPulseAmplitude = default(Single);
-                    break;
-                case EffectShader_FieldIndex.FillTextureEffectAlphaPulseFrequency:
-                    obj.FillTextureEffectAlphaPulseFrequency = default(Single);
-                    break;
-                case EffectShader_FieldIndex.FillTextureEffectTextureAnimationSpeedU:
-                    obj.FillTextureEffectTextureAnimationSpeedU = default(Single);
-                    break;
-                case EffectShader_FieldIndex.FillTextureEffectTextureAnimationSpeedV:
-                    obj.FillTextureEffectTextureAnimationSpeedV = default(Single);
-                    break;
-                case EffectShader_FieldIndex.EdgeEffectFallOff:
-                    obj.EdgeEffectFallOff = default(Single);
-                    break;
-                case EffectShader_FieldIndex.EdgeEffectColor:
-                    obj.EdgeEffectColor = default(Color);
-                    break;
-                case EffectShader_FieldIndex.EdgeEffectAlphaFadeInTime:
-                    obj.EdgeEffectAlphaFadeInTime = default(Single);
-                    break;
-                case EffectShader_FieldIndex.EdgeEffectFullAlphaTime:
-                    obj.EdgeEffectFullAlphaTime = default(Single);
-                    break;
-                case EffectShader_FieldIndex.EdgeEffectAlphaFadeOutTime:
-                    obj.EdgeEffectAlphaFadeOutTime = default(Single);
-                    break;
-                case EffectShader_FieldIndex.EdgeEffectPersistentAlphaRatio:
-                    obj.EdgeEffectPersistentAlphaRatio = default(Single);
-                    break;
-                case EffectShader_FieldIndex.EdgeEffectAlphaPulseAmplitude:
-                    obj.EdgeEffectAlphaPulseAmplitude = default(Single);
-                    break;
-                case EffectShader_FieldIndex.EdgeEffectAlphaPulseFrequency:
-                    obj.EdgeEffectAlphaPulseFrequency = default(Single);
-                    break;
-                case EffectShader_FieldIndex.FillTextureEffectFullAlphaRatio:
-                    obj.FillTextureEffectFullAlphaRatio = default(Single);
-                    break;
-                case EffectShader_FieldIndex.EdgeEffectFullAlphaRatio:
-                    obj.EdgeEffectFullAlphaRatio = default(Single);
-                    break;
-                case EffectShader_FieldIndex.MembraneShaderDestBlendMode:
-                    obj.MembraneShaderDestBlendMode = default(EffectShader.SourceBlendMode);
-                    break;
-                case EffectShader_FieldIndex.ParticleShaderSourceBlendMode:
-                    obj.ParticleShaderSourceBlendMode = default(EffectShader.SourceBlendMode);
-                    break;
-                case EffectShader_FieldIndex.ParticleShaderBlendOperation:
-                    obj.ParticleShaderBlendOperation = default(EffectShader.BlendOperation);
-                    break;
-                case EffectShader_FieldIndex.ParticleShaderZTestFunction:
-                    obj.ParticleShaderZTestFunction = default(EffectShader.ZTestFunction);
-                    break;
-                case EffectShader_FieldIndex.ParticleShaderDestBlendMode:
-                    obj.ParticleShaderDestBlendMode = default(EffectShader.SourceBlendMode);
-                    break;
-                case EffectShader_FieldIndex.ParticleShaderParticleBirthRampUpTime:
-                    obj.ParticleShaderParticleBirthRampUpTime = default(Single);
-                    break;
-                case EffectShader_FieldIndex.ParticleShaderFullParticleBirthTime:
-                    obj.ParticleShaderFullParticleBirthTime = default(Single);
-                    break;
-                case EffectShader_FieldIndex.ParticleShaderParticleBirthRampDownTime:
-                    obj.ParticleShaderParticleBirthRampDownTime = default(Single);
-                    break;
-                case EffectShader_FieldIndex.ParticleShaderFullParticleBirthRatio:
-                    obj.ParticleShaderFullParticleBirthRatio = default(Single);
-                    break;
-                case EffectShader_FieldIndex.ParticleShaderPersistentParticleBirthRatio:
-                    obj.ParticleShaderPersistentParticleBirthRatio = default(Single);
-                    break;
-                case EffectShader_FieldIndex.ParticleShaderParticleLifetime:
-                    obj.ParticleShaderParticleLifetime = default(Single);
-                    break;
-                case EffectShader_FieldIndex.ParticleShaderParticleLifetimePlusMinus:
-                    obj.ParticleShaderParticleLifetimePlusMinus = default(Single);
-                    break;
-                case EffectShader_FieldIndex.ParticleShaderInitialSpeedAlongNormal:
-                    obj.ParticleShaderInitialSpeedAlongNormal = default(Single);
-                    break;
-                case EffectShader_FieldIndex.ParticleShaderAccelerationAlongNormal:
-                    obj.ParticleShaderAccelerationAlongNormal = default(Single);
-                    break;
-                case EffectShader_FieldIndex.ParticleShaderInitialVelocity1:
-                    obj.ParticleShaderInitialVelocity1 = default(Single);
-                    break;
-                case EffectShader_FieldIndex.ParticleShaderInitialVelocity2:
-                    obj.ParticleShaderInitialVelocity2 = default(Single);
-                    break;
-                case EffectShader_FieldIndex.ParticleShaderInitialVelocity3:
-                    obj.ParticleShaderInitialVelocity3 = default(Single);
-                    break;
-                case EffectShader_FieldIndex.ParticleShaderAcceleration1:
-                    obj.ParticleShaderAcceleration1 = default(Single);
-                    break;
-                case EffectShader_FieldIndex.ParticleShaderAcceleration2:
-                    obj.ParticleShaderAcceleration2 = default(Single);
-                    break;
-                case EffectShader_FieldIndex.ParticleShaderAcceleration3:
-                    obj.ParticleShaderAcceleration3 = default(Single);
-                    break;
-                case EffectShader_FieldIndex.ParticleShaderScaleKey1:
-                    obj.ParticleShaderScaleKey1 = default(Single);
-                    break;
-                case EffectShader_FieldIndex.ParticleShaderScaleKey2:
-                    obj.ParticleShaderScaleKey2 = default(Single);
-                    break;
-                case EffectShader_FieldIndex.ParticleShaderScaleKey1Time:
-                    obj.ParticleShaderScaleKey1Time = default(Single);
-                    break;
-                case EffectShader_FieldIndex.ParticleShaderScaleKey2Time:
-                    obj.ParticleShaderScaleKey2Time = default(Single);
-                    break;
-                case EffectShader_FieldIndex.ColorKey1Color:
-                    obj.ColorKey1Color = default(Color);
-                    break;
-                case EffectShader_FieldIndex.ColorKey2Color:
-                    obj.ColorKey2Color = default(Color);
-                    break;
-                case EffectShader_FieldIndex.ColorKey3Color:
-                    obj.ColorKey3Color = default(Color);
-                    break;
-                case EffectShader_FieldIndex.ColorKey1ColorAlpha:
-                    obj.ColorKey1ColorAlpha = default(Single);
-                    break;
-                case EffectShader_FieldIndex.ColorKey2ColorAlpha:
-                    obj.ColorKey2ColorAlpha = default(Single);
-                    break;
-                case EffectShader_FieldIndex.ColorKey3ColorAlpha:
-                    obj.ColorKey3ColorAlpha = default(Single);
-                    break;
-                case EffectShader_FieldIndex.ColorKey1ColorKeyTime:
-                    obj.ColorKey1ColorKeyTime = default(Single);
-                    break;
-                case EffectShader_FieldIndex.ColorKey2ColorKeyTime:
-                    obj.ColorKey2ColorKeyTime = default(Single);
-                    break;
-                case EffectShader_FieldIndex.ColorKey3ColorKeyTime:
-                    obj.ColorKey3ColorKeyTime = default(Single);
-                    break;
-                default:
-                    MajorRecordCommon.UnsetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public static bool GetNthObjectHasBeenSet(
-            ushort index,
-            IEffectShader obj)
-        {
-            EffectShader_FieldIndex enu = (EffectShader_FieldIndex)index;
-            switch (enu)
-            {
-                case EffectShader_FieldIndex.Flags:
-                case EffectShader_FieldIndex.MembraneShaderSourceBlendMode:
-                case EffectShader_FieldIndex.MembraneShaderBlendOperation:
-                case EffectShader_FieldIndex.MembraneShaderZTestFunction:
-                case EffectShader_FieldIndex.FillTextureEffectColor:
-                case EffectShader_FieldIndex.FillTextureEffectAlphaFadeInTime:
-                case EffectShader_FieldIndex.FillTextureEffectFullAlphaTime:
-                case EffectShader_FieldIndex.FillTextureEffectAlphaFadeOutTime:
-                case EffectShader_FieldIndex.FillTextureEffectPersistentAlphaRatio:
-                case EffectShader_FieldIndex.FillTextureEffectAlphaPulseAmplitude:
-                case EffectShader_FieldIndex.FillTextureEffectAlphaPulseFrequency:
-                case EffectShader_FieldIndex.FillTextureEffectTextureAnimationSpeedU:
-                case EffectShader_FieldIndex.FillTextureEffectTextureAnimationSpeedV:
-                case EffectShader_FieldIndex.EdgeEffectFallOff:
-                case EffectShader_FieldIndex.EdgeEffectColor:
-                case EffectShader_FieldIndex.EdgeEffectAlphaFadeInTime:
-                case EffectShader_FieldIndex.EdgeEffectFullAlphaTime:
-                case EffectShader_FieldIndex.EdgeEffectAlphaFadeOutTime:
-                case EffectShader_FieldIndex.EdgeEffectPersistentAlphaRatio:
-                case EffectShader_FieldIndex.EdgeEffectAlphaPulseAmplitude:
-                case EffectShader_FieldIndex.EdgeEffectAlphaPulseFrequency:
-                case EffectShader_FieldIndex.FillTextureEffectFullAlphaRatio:
-                case EffectShader_FieldIndex.EdgeEffectFullAlphaRatio:
-                case EffectShader_FieldIndex.MembraneShaderDestBlendMode:
-                case EffectShader_FieldIndex.ParticleShaderSourceBlendMode:
-                case EffectShader_FieldIndex.ParticleShaderBlendOperation:
-                case EffectShader_FieldIndex.ParticleShaderZTestFunction:
-                case EffectShader_FieldIndex.ParticleShaderDestBlendMode:
-                case EffectShader_FieldIndex.ParticleShaderParticleBirthRampUpTime:
-                case EffectShader_FieldIndex.ParticleShaderFullParticleBirthTime:
-                case EffectShader_FieldIndex.ParticleShaderParticleBirthRampDownTime:
-                case EffectShader_FieldIndex.ParticleShaderFullParticleBirthRatio:
-                case EffectShader_FieldIndex.ParticleShaderPersistentParticleBirthRatio:
-                case EffectShader_FieldIndex.ParticleShaderParticleLifetime:
-                case EffectShader_FieldIndex.ParticleShaderParticleLifetimePlusMinus:
-                case EffectShader_FieldIndex.ParticleShaderInitialSpeedAlongNormal:
-                case EffectShader_FieldIndex.ParticleShaderAccelerationAlongNormal:
-                case EffectShader_FieldIndex.ParticleShaderInitialVelocity1:
-                case EffectShader_FieldIndex.ParticleShaderInitialVelocity2:
-                case EffectShader_FieldIndex.ParticleShaderInitialVelocity3:
-                case EffectShader_FieldIndex.ParticleShaderAcceleration1:
-                case EffectShader_FieldIndex.ParticleShaderAcceleration2:
-                case EffectShader_FieldIndex.ParticleShaderAcceleration3:
-                case EffectShader_FieldIndex.ParticleShaderScaleKey1:
-                case EffectShader_FieldIndex.ParticleShaderScaleKey2:
-                case EffectShader_FieldIndex.ParticleShaderScaleKey1Time:
-                case EffectShader_FieldIndex.ParticleShaderScaleKey2Time:
-                case EffectShader_FieldIndex.ColorKey1Color:
-                case EffectShader_FieldIndex.ColorKey2Color:
-                case EffectShader_FieldIndex.ColorKey3Color:
-                case EffectShader_FieldIndex.ColorKey1ColorAlpha:
-                case EffectShader_FieldIndex.ColorKey2ColorAlpha:
-                case EffectShader_FieldIndex.ColorKey3ColorAlpha:
-                case EffectShader_FieldIndex.ColorKey1ColorKeyTime:
-                case EffectShader_FieldIndex.ColorKey2ColorKeyTime:
-                case EffectShader_FieldIndex.ColorKey3ColorKeyTime:
-                    return true;
-                case EffectShader_FieldIndex.FillTexture:
-                    return obj.FillTexture_IsSet;
-                case EffectShader_FieldIndex.ParticleShaderTexture:
-                    return obj.ParticleShaderTexture_IsSet;
-                default:
-                    return MajorRecordCommon.GetNthObjectHasBeenSet(index, obj);
-            }
-        }
-
-        public static object GetNthObject(
-            ushort index,
-            IEffectShaderGetter obj)
-        {
-            EffectShader_FieldIndex enu = (EffectShader_FieldIndex)index;
-            switch (enu)
-            {
-                case EffectShader_FieldIndex.FillTexture:
-                    return obj.FillTexture;
-                case EffectShader_FieldIndex.ParticleShaderTexture:
-                    return obj.ParticleShaderTexture;
-                case EffectShader_FieldIndex.Flags:
-                    return obj.Flags;
-                case EffectShader_FieldIndex.MembraneShaderSourceBlendMode:
-                    return obj.MembraneShaderSourceBlendMode;
-                case EffectShader_FieldIndex.MembraneShaderBlendOperation:
-                    return obj.MembraneShaderBlendOperation;
-                case EffectShader_FieldIndex.MembraneShaderZTestFunction:
-                    return obj.MembraneShaderZTestFunction;
-                case EffectShader_FieldIndex.FillTextureEffectColor:
-                    return obj.FillTextureEffectColor;
-                case EffectShader_FieldIndex.FillTextureEffectAlphaFadeInTime:
-                    return obj.FillTextureEffectAlphaFadeInTime;
-                case EffectShader_FieldIndex.FillTextureEffectFullAlphaTime:
-                    return obj.FillTextureEffectFullAlphaTime;
-                case EffectShader_FieldIndex.FillTextureEffectAlphaFadeOutTime:
-                    return obj.FillTextureEffectAlphaFadeOutTime;
-                case EffectShader_FieldIndex.FillTextureEffectPersistentAlphaRatio:
-                    return obj.FillTextureEffectPersistentAlphaRatio;
-                case EffectShader_FieldIndex.FillTextureEffectAlphaPulseAmplitude:
-                    return obj.FillTextureEffectAlphaPulseAmplitude;
-                case EffectShader_FieldIndex.FillTextureEffectAlphaPulseFrequency:
-                    return obj.FillTextureEffectAlphaPulseFrequency;
-                case EffectShader_FieldIndex.FillTextureEffectTextureAnimationSpeedU:
-                    return obj.FillTextureEffectTextureAnimationSpeedU;
-                case EffectShader_FieldIndex.FillTextureEffectTextureAnimationSpeedV:
-                    return obj.FillTextureEffectTextureAnimationSpeedV;
-                case EffectShader_FieldIndex.EdgeEffectFallOff:
-                    return obj.EdgeEffectFallOff;
-                case EffectShader_FieldIndex.EdgeEffectColor:
-                    return obj.EdgeEffectColor;
-                case EffectShader_FieldIndex.EdgeEffectAlphaFadeInTime:
-                    return obj.EdgeEffectAlphaFadeInTime;
-                case EffectShader_FieldIndex.EdgeEffectFullAlphaTime:
-                    return obj.EdgeEffectFullAlphaTime;
-                case EffectShader_FieldIndex.EdgeEffectAlphaFadeOutTime:
-                    return obj.EdgeEffectAlphaFadeOutTime;
-                case EffectShader_FieldIndex.EdgeEffectPersistentAlphaRatio:
-                    return obj.EdgeEffectPersistentAlphaRatio;
-                case EffectShader_FieldIndex.EdgeEffectAlphaPulseAmplitude:
-                    return obj.EdgeEffectAlphaPulseAmplitude;
-                case EffectShader_FieldIndex.EdgeEffectAlphaPulseFrequency:
-                    return obj.EdgeEffectAlphaPulseFrequency;
-                case EffectShader_FieldIndex.FillTextureEffectFullAlphaRatio:
-                    return obj.FillTextureEffectFullAlphaRatio;
-                case EffectShader_FieldIndex.EdgeEffectFullAlphaRatio:
-                    return obj.EdgeEffectFullAlphaRatio;
-                case EffectShader_FieldIndex.MembraneShaderDestBlendMode:
-                    return obj.MembraneShaderDestBlendMode;
-                case EffectShader_FieldIndex.ParticleShaderSourceBlendMode:
-                    return obj.ParticleShaderSourceBlendMode;
-                case EffectShader_FieldIndex.ParticleShaderBlendOperation:
-                    return obj.ParticleShaderBlendOperation;
-                case EffectShader_FieldIndex.ParticleShaderZTestFunction:
-                    return obj.ParticleShaderZTestFunction;
-                case EffectShader_FieldIndex.ParticleShaderDestBlendMode:
-                    return obj.ParticleShaderDestBlendMode;
-                case EffectShader_FieldIndex.ParticleShaderParticleBirthRampUpTime:
-                    return obj.ParticleShaderParticleBirthRampUpTime;
-                case EffectShader_FieldIndex.ParticleShaderFullParticleBirthTime:
-                    return obj.ParticleShaderFullParticleBirthTime;
-                case EffectShader_FieldIndex.ParticleShaderParticleBirthRampDownTime:
-                    return obj.ParticleShaderParticleBirthRampDownTime;
-                case EffectShader_FieldIndex.ParticleShaderFullParticleBirthRatio:
-                    return obj.ParticleShaderFullParticleBirthRatio;
-                case EffectShader_FieldIndex.ParticleShaderPersistentParticleBirthRatio:
-                    return obj.ParticleShaderPersistentParticleBirthRatio;
-                case EffectShader_FieldIndex.ParticleShaderParticleLifetime:
-                    return obj.ParticleShaderParticleLifetime;
-                case EffectShader_FieldIndex.ParticleShaderParticleLifetimePlusMinus:
-                    return obj.ParticleShaderParticleLifetimePlusMinus;
-                case EffectShader_FieldIndex.ParticleShaderInitialSpeedAlongNormal:
-                    return obj.ParticleShaderInitialSpeedAlongNormal;
-                case EffectShader_FieldIndex.ParticleShaderAccelerationAlongNormal:
-                    return obj.ParticleShaderAccelerationAlongNormal;
-                case EffectShader_FieldIndex.ParticleShaderInitialVelocity1:
-                    return obj.ParticleShaderInitialVelocity1;
-                case EffectShader_FieldIndex.ParticleShaderInitialVelocity2:
-                    return obj.ParticleShaderInitialVelocity2;
-                case EffectShader_FieldIndex.ParticleShaderInitialVelocity3:
-                    return obj.ParticleShaderInitialVelocity3;
-                case EffectShader_FieldIndex.ParticleShaderAcceleration1:
-                    return obj.ParticleShaderAcceleration1;
-                case EffectShader_FieldIndex.ParticleShaderAcceleration2:
-                    return obj.ParticleShaderAcceleration2;
-                case EffectShader_FieldIndex.ParticleShaderAcceleration3:
-                    return obj.ParticleShaderAcceleration3;
-                case EffectShader_FieldIndex.ParticleShaderScaleKey1:
-                    return obj.ParticleShaderScaleKey1;
-                case EffectShader_FieldIndex.ParticleShaderScaleKey2:
-                    return obj.ParticleShaderScaleKey2;
-                case EffectShader_FieldIndex.ParticleShaderScaleKey1Time:
-                    return obj.ParticleShaderScaleKey1Time;
-                case EffectShader_FieldIndex.ParticleShaderScaleKey2Time:
-                    return obj.ParticleShaderScaleKey2Time;
-                case EffectShader_FieldIndex.ColorKey1Color:
-                    return obj.ColorKey1Color;
-                case EffectShader_FieldIndex.ColorKey2Color:
-                    return obj.ColorKey2Color;
-                case EffectShader_FieldIndex.ColorKey3Color:
-                    return obj.ColorKey3Color;
-                case EffectShader_FieldIndex.ColorKey1ColorAlpha:
-                    return obj.ColorKey1ColorAlpha;
-                case EffectShader_FieldIndex.ColorKey2ColorAlpha:
-                    return obj.ColorKey2ColorAlpha;
-                case EffectShader_FieldIndex.ColorKey3ColorAlpha:
-                    return obj.ColorKey3ColorAlpha;
-                case EffectShader_FieldIndex.ColorKey1ColorKeyTime:
-                    return obj.ColorKey1ColorKeyTime;
-                case EffectShader_FieldIndex.ColorKey2ColorKeyTime:
-                    return obj.ColorKey2ColorKeyTime;
-                case EffectShader_FieldIndex.ColorKey3ColorKeyTime:
-                    return obj.ColorKey3ColorKeyTime;
-                default:
-                    return MajorRecordCommon.GetNthObject(index, obj);
-            }
-        }
-
         public static void Clear(
             IEffectShader item,
             NotifyingUnsetParameters cmds = null)
@@ -6359,7 +5900,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.ColorKey1ColorKeyTime = item.ColorKey1ColorKeyTime.EqualsWithin(rhs.ColorKey1ColorKeyTime);
             ret.ColorKey2ColorKeyTime = item.ColorKey2ColorKeyTime.EqualsWithin(rhs.ColorKey2ColorKeyTime);
             ret.ColorKey3ColorKeyTime = item.ColorKey3ColorKeyTime.EqualsWithin(rhs.ColorKey3ColorKeyTime);
-            MajorRecordCommon.FillEqualsMask(item, rhs, ret);
+            OblivionMajorRecordCommon.FillEqualsMask(item, rhs, ret);
         }
 
         public static string ToString(
@@ -6698,6 +6239,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ret;
         }
 
+        public static EffectShader_FieldIndex? ConvertFieldIndex(OblivionMajorRecord_FieldIndex? index)
+        {
+            if (!index.HasValue) return null;
+            return ConvertFieldIndex(index: index.Value);
+        }
+
+        public static EffectShader_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
+        {
+            switch (index)
+            {
+                case OblivionMajorRecord_FieldIndex.FormKey:
+                    return (EffectShader_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.Version:
+                    return (EffectShader_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.EditorID:
+                    return (EffectShader_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.RecordType:
+                    return (EffectShader_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
+                    return (EffectShader_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
+        }
+
         public static EffectShader_FieldIndex? ConvertFieldIndex(MajorRecord_FieldIndex? index)
         {
             if (!index.HasValue) return null;
@@ -6708,8 +6274,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (index)
             {
-                case MajorRecord_FieldIndex.MajorRecordFlags:
-                    return (EffectShader_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
                     return (EffectShader_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.Version:
@@ -6770,7 +6334,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
         {
-            MajorRecordCommon.WriteToNode_Xml(
+            OblivionMajorRecordCommon.WriteToNode_Xml(
                 item: item,
                 node: node,
                 errorMask: errorMask,
@@ -8856,7 +8420,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 default:
-                    MajorRecordCommon.FillPublicElement_Xml(
+                    OblivionMajorRecordCommon.FillPublicElement_Xml(
                         item: item,
                         node: node,
                         name: name,
@@ -8900,7 +8464,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: EffectShader_Registration.EFSH_HEADER,
                 type: ObjectType.Record))
             {
-                MajorRecordCommon.Write_Binary_Embedded(
+                OblivionMajorRecordCommon.Write_Binary_Embedded(
                     item: item,
                     writer: writer,
                     errorMask: errorMask,
@@ -9260,7 +8824,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     #region Modules
     #region Mask
-    public class EffectShader_Mask<T> : MajorRecord_Mask<T>, IMask<T>, IEquatable<EffectShader_Mask<T>>
+    public class EffectShader_Mask<T> : OblivionMajorRecord_Mask<T>, IMask<T>, IEquatable<EffectShader_Mask<T>>
     {
         #region Ctors
         public EffectShader_Mask()
@@ -9932,7 +9496,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public class EffectShader_ErrorMask : MajorRecord_ErrorMask, IErrorMask<EffectShader_ErrorMask>
+    public class EffectShader_ErrorMask : OblivionMajorRecord_ErrorMask, IErrorMask<EffectShader_ErrorMask>
     {
         #region Members
         public Exception FillTexture;
@@ -10729,7 +10293,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
-    public class EffectShader_CopyMask : MajorRecord_CopyMask
+    public class EffectShader_CopyMask : OblivionMajorRecord_CopyMask
     {
         public EffectShader_CopyMask()
         {
@@ -10860,7 +10424,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public class EffectShader_TranslationMask : MajorRecord_TranslationMask
+    public class EffectShader_TranslationMask : OblivionMajorRecord_TranslationMask
     {
         #region Members
         public bool FillTexture;

@@ -34,7 +34,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class Activator : 
-        MajorRecord,
+        OblivionMajorRecord,
         IActivator,
         ILoquiObject<Activator>,
         ILoquiObjectSetter,
@@ -118,24 +118,6 @@ namespace Mutagen.Bethesda.Oblivion
         public Sound Sound { get => Sound_Property.Item; set => Sound_Property.Item = value; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         FormIDSetLink<Sound> IActivatorGetter.Sound_Property => this.Sound_Property;
-        #endregion
-
-        #region Loqui Getter Interface
-
-        protected override object GetNthObject(ushort index) => ActivatorCommon.GetNthObject(index, this);
-
-        protected override bool GetNthObjectHasBeenSet(ushort index) => ActivatorCommon.GetNthObjectHasBeenSet(index, this);
-
-        protected override void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => ActivatorCommon.UnsetNthObject(index, this, cmds);
-
-        #endregion
-
-        #region Loqui Interface
-        protected override void SetNthObjectHasBeenSet(ushort index, bool on)
-        {
-            ActivatorCommon.SetNthObjectHasBeenSet(index, on, this);
-        }
-
         #endregion
 
         IMask<bool> IEqualsMask<Activator>.GetEqualsMask(Activator rhs, EqualsMaskHelper.Include include) => ActivatorCommon.GetEqualsMask(this, rhs, include);
@@ -461,6 +443,22 @@ namespace Mutagen.Bethesda.Oblivion
         #region Base Class Trickdown Overrides
         public override void Write_Xml(
             XElement node,
+            out OblivionMajorRecord_ErrorMask errorMask,
+            bool doMasks = true,
+            OblivionMajorRecord_TranslationMask translationMask = null,
+            string name = null)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            this.Write_Xml(
+                name: name,
+                node: node,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal());
+            errorMask = Activator_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public override void Write_Xml(
+            XElement node,
             out MajorRecord_ErrorMask errorMask,
             bool doMasks = true,
             MajorRecord_TranslationMask translationMask = null,
@@ -502,7 +500,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 default:
-                    MajorRecord.FillPrivateElement_Xml(
+                    OblivionMajorRecord.FillPrivateElement_Xml(
                         item: item,
                         node: node,
                         name: name,
@@ -570,9 +568,9 @@ namespace Mutagen.Bethesda.Oblivion
             CustomCtor();
         }
 
-        partial void PostDuplicate(Activator obj, Activator rhs, Func<FormKey> getNextFormKey, IList<(MajorRecord Record, FormKey OriginalFormKey)> duplicatedRecords);
+        partial void PostDuplicate(Activator obj, Activator rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
 
-        public override MajorRecord Duplicate(Func<FormKey> getNextFormKey, IList<(MajorRecord Record, FormKey OriginalFormKey)> duplicatedRecords)
+        public override IMajorRecordCommon Duplicate(Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
         {
             var ret = new Activator(getNextFormKey());
             ret.CopyFieldsFrom(this);
@@ -653,6 +651,21 @@ namespace Mutagen.Bethesda.Oblivion
         public override void Write_Binary(
             MutagenWriter writer,
             MasterReferences masterReferences,
+            out OblivionMajorRecord_ErrorMask errorMask,
+            bool doMasks = true)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            this.Write_Binary(
+                masterReferences: masterReferences,
+                writer: writer,
+                errorMask: errorMaskBuilder,
+                recordTypeConverter: null);
+            errorMask = Activator_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public override void Write_Binary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
             out MajorRecord_ErrorMask errorMask,
             bool doMasks = true)
         {
@@ -688,7 +701,7 @@ namespace Mutagen.Bethesda.Oblivion
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            MajorRecord.Fill_Binary_Structs(
+            OblivionMajorRecord.Fill_Binary_Structs(
                 item: item,
                 frame: frame,
                 masterReferences: masterReferences,
@@ -789,7 +802,7 @@ namespace Mutagen.Bethesda.Oblivion
                     return TryGet<int?>.Succeed((int)Activator_FieldIndex.Sound);
                 }
                 default:
-                    return MajorRecord.Fill_Binary_RecordTypes(
+                    return OblivionMajorRecord.Fill_Binary_RecordTypes(
                         item: item,
                         frame: frame,
                         nextRecordType: nextRecordType,
@@ -966,7 +979,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             if (!EnumExt.TryParse(pair.Key, out Activator_FieldIndex enu))
             {
-                CopyInInternal_MajorRecord(obj, pair);
+                CopyInInternal_OblivionMajorRecord(obj, pair);
             }
             switch (enu)
             {
@@ -990,16 +1003,11 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, Activator obj)
-        {
-            ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
-        }
-
     }
     #endregion
 
     #region Interface
-    public partial interface IActivator : IActivatorGetter, IMajorRecord, ILoquiClass<IActivator, IActivatorGetter>, ILoquiClass<Activator, IActivatorGetter>
+    public partial interface IActivator : IActivatorGetter, IOblivionMajorRecord, ILoquiClass<IActivator, IActivatorGetter>, ILoquiClass<Activator, IActivatorGetter>
     {
         new String Name { get; set; }
         new bool Name_IsSet { get; set; }
@@ -1015,7 +1023,7 @@ namespace Mutagen.Bethesda.Oblivion
         new Sound Sound { get; set; }
     }
 
-    public partial interface IActivatorGetter : IMajorRecordGetter
+    public partial interface IActivatorGetter : IOblivionMajorRecordGetter
     {
         #region Name
         String Name { get; }
@@ -1049,11 +1057,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #region Field Index
     public enum Activator_FieldIndex
     {
-        MajorRecordFlags = 0,
-        FormKey = 1,
-        Version = 2,
-        EditorID = 3,
-        RecordType = 4,
+        FormKey = 0,
+        Version = 1,
+        EditorID = 2,
+        RecordType = 3,
+        OblivionMajorRecordFlags = 4,
         Name = 5,
         Model = 6,
         Script = 7,
@@ -1129,7 +1137,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Activator_FieldIndex.Sound:
                     return false;
                 default:
-                    return MajorRecord_Registration.GetNthIsEnumerable(index);
+                    return OblivionMajorRecord_Registration.GetNthIsEnumerable(index);
             }
         }
 
@@ -1145,7 +1153,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Activator_FieldIndex.Sound:
                     return false;
                 default:
-                    return MajorRecord_Registration.GetNthIsLoqui(index);
+                    return OblivionMajorRecord_Registration.GetNthIsLoqui(index);
             }
         }
 
@@ -1160,7 +1168,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Activator_FieldIndex.Sound:
                     return false;
                 default:
-                    return MajorRecord_Registration.GetNthIsSingleton(index);
+                    return OblivionMajorRecord_Registration.GetNthIsSingleton(index);
             }
         }
 
@@ -1178,7 +1186,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Activator_FieldIndex.Sound:
                     return "Sound";
                 default:
-                    return MajorRecord_Registration.GetNthName(index);
+                    return OblivionMajorRecord_Registration.GetNthName(index);
             }
         }
 
@@ -1193,7 +1201,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Activator_FieldIndex.Sound:
                     return false;
                 default:
-                    return MajorRecord_Registration.IsNthDerivative(index);
+                    return OblivionMajorRecord_Registration.IsNthDerivative(index);
             }
         }
 
@@ -1208,7 +1216,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Activator_FieldIndex.Sound:
                     return false;
                 default:
-                    return MajorRecord_Registration.IsProtected(index);
+                    return OblivionMajorRecord_Registration.IsProtected(index);
             }
         }
 
@@ -1226,7 +1234,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Activator_FieldIndex.Sound:
                     return typeof(FormIDSetLink<Sound>);
                 default:
-                    return MajorRecord_Registration.GetNthType(index);
+                    return OblivionMajorRecord_Registration.GetNthType(index);
             }
         }
 
@@ -1280,7 +1288,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Activator_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {
-            MajorRecordCommon.CopyFieldsFrom(
+            OblivionMajorRecordCommon.CopyFieldsFrom(
                 item,
                 rhs,
                 def,
@@ -1415,99 +1423,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void SetNthObjectHasBeenSet(
-            ushort index,
-            bool on,
-            IActivator obj,
-            NotifyingFireParameters cmds = null)
-        {
-            Activator_FieldIndex enu = (Activator_FieldIndex)index;
-            switch (enu)
-            {
-                case Activator_FieldIndex.Name:
-                    obj.Name_IsSet = on;
-                    break;
-                case Activator_FieldIndex.Model:
-                    obj.Model_IsSet = on;
-                    break;
-                case Activator_FieldIndex.Script:
-                    obj.Script_Property.HasBeenSet = on;
-                    break;
-                case Activator_FieldIndex.Sound:
-                    obj.Sound_Property.HasBeenSet = on;
-                    break;
-                default:
-                    MajorRecordCommon.SetNthObjectHasBeenSet(index, on, obj);
-                    break;
-            }
-        }
-
-        public static void UnsetNthObject(
-            ushort index,
-            IActivator obj,
-            NotifyingUnsetParameters cmds = null)
-        {
-            Activator_FieldIndex enu = (Activator_FieldIndex)index;
-            switch (enu)
-            {
-                case Activator_FieldIndex.Name:
-                    obj.Name_Unset();
-                    break;
-                case Activator_FieldIndex.Model:
-                    obj.Model_Unset();
-                    break;
-                case Activator_FieldIndex.Script:
-                    obj.Script_Property.Unset(cmds);
-                    break;
-                case Activator_FieldIndex.Sound:
-                    obj.Sound_Property.Unset(cmds);
-                    break;
-                default:
-                    MajorRecordCommon.UnsetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public static bool GetNthObjectHasBeenSet(
-            ushort index,
-            IActivator obj)
-        {
-            Activator_FieldIndex enu = (Activator_FieldIndex)index;
-            switch (enu)
-            {
-                case Activator_FieldIndex.Name:
-                    return obj.Name_IsSet;
-                case Activator_FieldIndex.Model:
-                    return obj.Model_IsSet;
-                case Activator_FieldIndex.Script:
-                    return obj.Script_Property.HasBeenSet;
-                case Activator_FieldIndex.Sound:
-                    return obj.Sound_Property.HasBeenSet;
-                default:
-                    return MajorRecordCommon.GetNthObjectHasBeenSet(index, obj);
-            }
-        }
-
-        public static object GetNthObject(
-            ushort index,
-            IActivatorGetter obj)
-        {
-            Activator_FieldIndex enu = (Activator_FieldIndex)index;
-            switch (enu)
-            {
-                case Activator_FieldIndex.Name:
-                    return obj.Name;
-                case Activator_FieldIndex.Model:
-                    return obj.Model;
-                case Activator_FieldIndex.Script:
-                    return obj.Script;
-                case Activator_FieldIndex.Sound:
-                    return obj.Sound;
-                default:
-                    return MajorRecordCommon.GetNthObject(index, obj);
-            }
-        }
-
         public static void Clear(
             IActivator item,
             NotifyingUnsetParameters cmds = null)
@@ -1549,7 +1464,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 include);
             ret.Script = item.Script_Property.FormKey == rhs.Script_Property.FormKey;
             ret.Sound = item.Sound_Property.FormKey == rhs.Sound_Property.FormKey;
-            MajorRecordCommon.FillEqualsMask(item, rhs, ret);
+            OblivionMajorRecordCommon.FillEqualsMask(item, rhs, ret);
         }
 
         public static string ToString(
@@ -1621,6 +1536,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ret;
         }
 
+        public static Activator_FieldIndex? ConvertFieldIndex(OblivionMajorRecord_FieldIndex? index)
+        {
+            if (!index.HasValue) return null;
+            return ConvertFieldIndex(index: index.Value);
+        }
+
+        public static Activator_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
+        {
+            switch (index)
+            {
+                case OblivionMajorRecord_FieldIndex.FormKey:
+                    return (Activator_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.Version:
+                    return (Activator_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.EditorID:
+                    return (Activator_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.RecordType:
+                    return (Activator_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
+                    return (Activator_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
+        }
+
         public static Activator_FieldIndex? ConvertFieldIndex(MajorRecord_FieldIndex? index)
         {
             if (!index.HasValue) return null;
@@ -1631,8 +1571,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (index)
             {
-                case MajorRecord_FieldIndex.MajorRecordFlags:
-                    return (Activator_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
                     return (Activator_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.Version:
@@ -1693,7 +1631,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
         {
-            MajorRecordCommon.WriteToNode_Xml(
+            OblivionMajorRecordCommon.WriteToNode_Xml(
                 item: item,
                 node: node,
                 errorMask: errorMask,
@@ -1843,7 +1781,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask: errorMask);
                     break;
                 default:
-                    MajorRecordCommon.FillPublicElement_Xml(
+                    OblivionMajorRecordCommon.FillPublicElement_Xml(
                         item: item,
                         node: node,
                         name: name,
@@ -1887,7 +1825,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: Activator_Registration.ACTI_HEADER,
                 type: ObjectType.Record))
             {
-                MajorRecordCommon.Write_Binary_Embedded(
+                OblivionMajorRecordCommon.Write_Binary_Embedded(
                     item: item,
                     writer: writer,
                     errorMask: errorMask,
@@ -1965,7 +1903,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     #region Modules
     #region Mask
-    public class Activator_Mask<T> : MajorRecord_Mask<T>, IMask<T>, IEquatable<Activator_Mask<T>>
+    public class Activator_Mask<T> : OblivionMajorRecord_Mask<T>, IMask<T>, IEquatable<Activator_Mask<T>>
     {
         #region Ctors
         public Activator_Mask()
@@ -2109,7 +2047,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public class Activator_ErrorMask : MajorRecord_ErrorMask, IErrorMask<Activator_ErrorMask>
+    public class Activator_ErrorMask : OblivionMajorRecord_ErrorMask, IErrorMask<Activator_ErrorMask>
     {
         #region Members
         public Exception Name;
@@ -2258,7 +2196,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
-    public class Activator_CopyMask : MajorRecord_CopyMask
+    public class Activator_CopyMask : OblivionMajorRecord_CopyMask
     {
         public Activator_CopyMask()
         {
@@ -2281,7 +2219,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public class Activator_TranslationMask : MajorRecord_TranslationMask
+    public class Activator_TranslationMask : OblivionMajorRecord_TranslationMask
     {
         #region Members
         public bool Name;

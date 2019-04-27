@@ -76,28 +76,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        #region Loqui Getter Interface
-
-        protected object GetNthObject(ushort index) => HavokDataCommon.GetNthObject(index, this);
-        object ILoquiObjectGetter.GetNthObject(ushort index) => this.GetNthObject(index);
-
-        protected bool GetNthObjectHasBeenSet(ushort index) => HavokDataCommon.GetNthObjectHasBeenSet(index, this);
-        bool ILoquiObjectGetter.GetNthObjectHasBeenSet(ushort index) => this.GetNthObjectHasBeenSet(index);
-
-        protected void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => HavokDataCommon.UnsetNthObject(index, this, cmds);
-        void ILoquiObjectSetter.UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => this.UnsetNthObject(index, cmds);
-
-        #endregion
-
-        #region Loqui Interface
-        protected void SetNthObjectHasBeenSet(ushort index, bool on)
-        {
-            HavokDataCommon.SetNthObjectHasBeenSet(index, on, this);
-        }
-        void ILoquiObjectSetter.SetNthObjectHasBeenSet(ushort index, bool on) => this.SetNthObjectHasBeenSet(index, on);
-
-        #endregion
-
         IMask<bool> IEqualsMask<HavokData>.GetEqualsMask(HavokData rhs, EqualsMaskHelper.Include include) => HavokDataCommon.GetEqualsMask(this, rhs, include);
         IMask<bool> IEqualsMask<IHavokDataGetter>.GetEqualsMask(IHavokDataGetter rhs, EqualsMaskHelper.Include include) => HavokDataCommon.GetEqualsMask(this, rhs, include);
         #region To String
@@ -747,7 +725,6 @@ namespace Mutagen.Bethesda.Oblivion
                 cmds: cmds);
         }
 
-        void ILoquiObjectSetter.SetNthObject(ushort index, object obj, NotifyingFireParameters cmds) => this.SetNthObject(index, obj, cmds);
         protected void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
         {
             HavokData_FieldIndex enu = (HavokData_FieldIndex)index;
@@ -812,11 +789,6 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, HavokData obj)
-        {
-            ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
-        }
-
     }
     #endregion
 
@@ -1120,81 +1092,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         #endregion
-
-        public static void SetNthObjectHasBeenSet(
-            ushort index,
-            bool on,
-            IHavokData obj,
-            NotifyingFireParameters cmds = null)
-        {
-            HavokData_FieldIndex enu = (HavokData_FieldIndex)index;
-            switch (enu)
-            {
-                case HavokData_FieldIndex.Material:
-                case HavokData_FieldIndex.Friction:
-                case HavokData_FieldIndex.Restitution:
-                    if (on) break;
-                    throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static void UnsetNthObject(
-            ushort index,
-            IHavokData obj,
-            NotifyingUnsetParameters cmds = null)
-        {
-            HavokData_FieldIndex enu = (HavokData_FieldIndex)index;
-            switch (enu)
-            {
-                case HavokData_FieldIndex.Material:
-                    obj.Material = default(HavokData.MaterialType);
-                    break;
-                case HavokData_FieldIndex.Friction:
-                    obj.Friction = default(Byte);
-                    break;
-                case HavokData_FieldIndex.Restitution:
-                    obj.Restitution = default(Byte);
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthObjectHasBeenSet(
-            ushort index,
-            IHavokData obj)
-        {
-            HavokData_FieldIndex enu = (HavokData_FieldIndex)index;
-            switch (enu)
-            {
-                case HavokData_FieldIndex.Material:
-                case HavokData_FieldIndex.Friction:
-                case HavokData_FieldIndex.Restitution:
-                    return true;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static object GetNthObject(
-            ushort index,
-            IHavokDataGetter obj)
-        {
-            HavokData_FieldIndex enu = (HavokData_FieldIndex)index;
-            switch (enu)
-            {
-                case HavokData_FieldIndex.Material:
-                    return obj.Material;
-                case HavokData_FieldIndex.Friction:
-                    return obj.Friction;
-                case HavokData_FieldIndex.Restitution:
-                    return obj.Restitution;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
 
         public static void Clear(
             IHavokData item,

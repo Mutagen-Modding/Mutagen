@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Water" objType="Record" baseClass="Bethesda.MajorRecord" recordType="WATR" GUID="31d50641-f6df-4533-89c3-e764dc35a702" ID="127">
+  <Object name="Water" objType="Record" baseClass="OblivionMajorRecord" recordType="WATR" GUID="31d50641-f6df-4533-89c3-e764dc35a702" ID="127">
     <Fields>
       <String name="Texture" recordType="TNAM" />
       <UInt8 name="Opacity" recordType="ANAM" />

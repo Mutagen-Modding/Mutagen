@@ -34,7 +34,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class Flora : 
-        MajorRecord,
+        OblivionMajorRecord,
         IFlora,
         ILoquiObject<Flora>,
         ILoquiObjectSetter,
@@ -166,24 +166,6 @@ namespace Mutagen.Bethesda.Oblivion
                 this.RaiseAndSetIfChanged(ref this._Winter, value, nameof(Winter));
             }
         }
-        #endregion
-
-        #region Loqui Getter Interface
-
-        protected override object GetNthObject(ushort index) => FloraCommon.GetNthObject(index, this);
-
-        protected override bool GetNthObjectHasBeenSet(ushort index) => FloraCommon.GetNthObjectHasBeenSet(index, this);
-
-        protected override void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => FloraCommon.UnsetNthObject(index, this, cmds);
-
-        #endregion
-
-        #region Loqui Interface
-        protected override void SetNthObjectHasBeenSet(ushort index, bool on)
-        {
-            FloraCommon.SetNthObjectHasBeenSet(index, on, this);
-        }
-
         #endregion
 
         IMask<bool> IEqualsMask<Flora>.GetEqualsMask(Flora rhs, EqualsMaskHelper.Include include) => FloraCommon.GetEqualsMask(this, rhs, include);
@@ -517,6 +499,22 @@ namespace Mutagen.Bethesda.Oblivion
         #region Base Class Trickdown Overrides
         public override void Write_Xml(
             XElement node,
+            out OblivionMajorRecord_ErrorMask errorMask,
+            bool doMasks = true,
+            OblivionMajorRecord_TranslationMask translationMask = null,
+            string name = null)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            this.Write_Xml(
+                name: name,
+                node: node,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal());
+            errorMask = Flora_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public override void Write_Xml(
+            XElement node,
             out MajorRecord_ErrorMask errorMask,
             bool doMasks = true,
             MajorRecord_TranslationMask translationMask = null,
@@ -561,7 +559,7 @@ namespace Mutagen.Bethesda.Oblivion
                     item.PFPCDataTypeState |= Flora.PFPCDataType.Has;
                     break;
                 default:
-                    MajorRecord.FillPrivateElement_Xml(
+                    OblivionMajorRecord.FillPrivateElement_Xml(
                         item: item,
                         node: node,
                         name: name,
@@ -640,9 +638,9 @@ namespace Mutagen.Bethesda.Oblivion
             CustomCtor();
         }
 
-        partial void PostDuplicate(Flora obj, Flora rhs, Func<FormKey> getNextFormKey, IList<(MajorRecord Record, FormKey OriginalFormKey)> duplicatedRecords);
+        partial void PostDuplicate(Flora obj, Flora rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
 
-        public override MajorRecord Duplicate(Func<FormKey> getNextFormKey, IList<(MajorRecord Record, FormKey OriginalFormKey)> duplicatedRecords)
+        public override IMajorRecordCommon Duplicate(Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
         {
             var ret = new Flora(getNextFormKey());
             ret.CopyFieldsFrom(this);
@@ -723,6 +721,21 @@ namespace Mutagen.Bethesda.Oblivion
         public override void Write_Binary(
             MutagenWriter writer,
             MasterReferences masterReferences,
+            out OblivionMajorRecord_ErrorMask errorMask,
+            bool doMasks = true)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            this.Write_Binary(
+                masterReferences: masterReferences,
+                writer: writer,
+                errorMask: errorMaskBuilder,
+                recordTypeConverter: null);
+            errorMask = Flora_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public override void Write_Binary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
             out MajorRecord_ErrorMask errorMask,
             bool doMasks = true)
         {
@@ -758,7 +771,7 @@ namespace Mutagen.Bethesda.Oblivion
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            MajorRecord.Fill_Binary_Structs(
+            OblivionMajorRecord.Fill_Binary_Structs(
                 item: item,
                 frame: frame,
                 masterReferences: masterReferences,
@@ -965,7 +978,7 @@ namespace Mutagen.Bethesda.Oblivion
                     return TryGet<int?>.Succeed((int)Flora_FieldIndex.Winter);
                 }
                 default:
-                    return MajorRecord.Fill_Binary_RecordTypes(
+                    return OblivionMajorRecord.Fill_Binary_RecordTypes(
                         item: item,
                         frame: frame,
                         nextRecordType: nextRecordType,
@@ -1154,7 +1167,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             if (!EnumExt.TryParse(pair.Key, out Flora_FieldIndex enu))
             {
-                CopyInInternal_MajorRecord(obj, pair);
+                CopyInInternal_OblivionMajorRecord(obj, pair);
             }
             switch (enu)
             {
@@ -1190,16 +1203,11 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, Flora obj)
-        {
-            ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
-        }
-
     }
     #endregion
 
     #region Interface
-    public partial interface IFlora : IFloraGetter, IMajorRecord, ILoquiClass<IFlora, IFloraGetter>, ILoquiClass<Flora, IFloraGetter>
+    public partial interface IFlora : IFloraGetter, IOblivionMajorRecord, ILoquiClass<IFlora, IFloraGetter>, ILoquiClass<Flora, IFloraGetter>
     {
         new String Name { get; set; }
         new bool Name_IsSet { get; set; }
@@ -1223,7 +1231,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
-    public partial interface IFloraGetter : IMajorRecordGetter
+    public partial interface IFloraGetter : IOblivionMajorRecordGetter
     {
         #region Name
         String Name { get; }
@@ -1273,11 +1281,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #region Field Index
     public enum Flora_FieldIndex
     {
-        MajorRecordFlags = 0,
-        FormKey = 1,
-        Version = 2,
-        EditorID = 3,
-        RecordType = 4,
+        FormKey = 0,
+        Version = 1,
+        EditorID = 2,
+        RecordType = 3,
+        OblivionMajorRecordFlags = 4,
         Name = 5,
         Model = 6,
         Script = 7,
@@ -1369,7 +1377,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Flora_FieldIndex.Winter:
                     return false;
                 default:
-                    return MajorRecord_Registration.GetNthIsEnumerable(index);
+                    return OblivionMajorRecord_Registration.GetNthIsEnumerable(index);
             }
         }
 
@@ -1389,7 +1397,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Flora_FieldIndex.Winter:
                     return false;
                 default:
-                    return MajorRecord_Registration.GetNthIsLoqui(index);
+                    return OblivionMajorRecord_Registration.GetNthIsLoqui(index);
             }
         }
 
@@ -1408,7 +1416,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Flora_FieldIndex.Winter:
                     return false;
                 default:
-                    return MajorRecord_Registration.GetNthIsSingleton(index);
+                    return OblivionMajorRecord_Registration.GetNthIsSingleton(index);
             }
         }
 
@@ -1434,7 +1442,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Flora_FieldIndex.Winter:
                     return "Winter";
                 default:
-                    return MajorRecord_Registration.GetNthName(index);
+                    return OblivionMajorRecord_Registration.GetNthName(index);
             }
         }
 
@@ -1453,7 +1461,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Flora_FieldIndex.Winter:
                     return false;
                 default:
-                    return MajorRecord_Registration.IsNthDerivative(index);
+                    return OblivionMajorRecord_Registration.IsNthDerivative(index);
             }
         }
 
@@ -1472,7 +1480,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Flora_FieldIndex.Winter:
                     return false;
                 default:
-                    return MajorRecord_Registration.IsProtected(index);
+                    return OblivionMajorRecord_Registration.IsProtected(index);
             }
         }
 
@@ -1498,7 +1506,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Flora_FieldIndex.Winter:
                     return typeof(Byte);
                 default:
-                    return MajorRecord_Registration.GetNthType(index);
+                    return OblivionMajorRecord_Registration.GetNthType(index);
             }
         }
 
@@ -1553,7 +1561,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Flora_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {
-            MajorRecordCommon.CopyFieldsFrom(
+            OblivionMajorRecordCommon.CopyFieldsFrom(
                 item,
                 rhs,
                 def,
@@ -1756,130 +1764,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void SetNthObjectHasBeenSet(
-            ushort index,
-            bool on,
-            IFlora obj,
-            NotifyingFireParameters cmds = null)
-        {
-            Flora_FieldIndex enu = (Flora_FieldIndex)index;
-            switch (enu)
-            {
-                case Flora_FieldIndex.Spring:
-                case Flora_FieldIndex.Summer:
-                case Flora_FieldIndex.Fall:
-                case Flora_FieldIndex.Winter:
-                    if (on) break;
-                    throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
-                case Flora_FieldIndex.Name:
-                    obj.Name_IsSet = on;
-                    break;
-                case Flora_FieldIndex.Model:
-                    obj.Model_IsSet = on;
-                    break;
-                case Flora_FieldIndex.Script:
-                    obj.Script_Property.HasBeenSet = on;
-                    break;
-                case Flora_FieldIndex.Ingredient:
-                    obj.Ingredient_Property.HasBeenSet = on;
-                    break;
-                default:
-                    MajorRecordCommon.SetNthObjectHasBeenSet(index, on, obj);
-                    break;
-            }
-        }
-
-        public static void UnsetNthObject(
-            ushort index,
-            IFlora obj,
-            NotifyingUnsetParameters cmds = null)
-        {
-            Flora_FieldIndex enu = (Flora_FieldIndex)index;
-            switch (enu)
-            {
-                case Flora_FieldIndex.Name:
-                    obj.Name_Unset();
-                    break;
-                case Flora_FieldIndex.Model:
-                    obj.Model_Unset();
-                    break;
-                case Flora_FieldIndex.Script:
-                    obj.Script_Property.Unset(cmds);
-                    break;
-                case Flora_FieldIndex.Ingredient:
-                    obj.Ingredient_Property.Unset(cmds);
-                    break;
-                case Flora_FieldIndex.Spring:
-                    obj.Spring = default(Byte);
-                    break;
-                case Flora_FieldIndex.Summer:
-                    obj.Summer = default(Byte);
-                    break;
-                case Flora_FieldIndex.Fall:
-                    obj.Fall = default(Byte);
-                    break;
-                case Flora_FieldIndex.Winter:
-                    obj.Winter = default(Byte);
-                    break;
-                default:
-                    MajorRecordCommon.UnsetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public static bool GetNthObjectHasBeenSet(
-            ushort index,
-            IFlora obj)
-        {
-            Flora_FieldIndex enu = (Flora_FieldIndex)index;
-            switch (enu)
-            {
-                case Flora_FieldIndex.Spring:
-                case Flora_FieldIndex.Summer:
-                case Flora_FieldIndex.Fall:
-                case Flora_FieldIndex.Winter:
-                    return true;
-                case Flora_FieldIndex.Name:
-                    return obj.Name_IsSet;
-                case Flora_FieldIndex.Model:
-                    return obj.Model_IsSet;
-                case Flora_FieldIndex.Script:
-                    return obj.Script_Property.HasBeenSet;
-                case Flora_FieldIndex.Ingredient:
-                    return obj.Ingredient_Property.HasBeenSet;
-                default:
-                    return MajorRecordCommon.GetNthObjectHasBeenSet(index, obj);
-            }
-        }
-
-        public static object GetNthObject(
-            ushort index,
-            IFloraGetter obj)
-        {
-            Flora_FieldIndex enu = (Flora_FieldIndex)index;
-            switch (enu)
-            {
-                case Flora_FieldIndex.Name:
-                    return obj.Name;
-                case Flora_FieldIndex.Model:
-                    return obj.Model;
-                case Flora_FieldIndex.Script:
-                    return obj.Script;
-                case Flora_FieldIndex.Ingredient:
-                    return obj.Ingredient;
-                case Flora_FieldIndex.Spring:
-                    return obj.Spring;
-                case Flora_FieldIndex.Summer:
-                    return obj.Summer;
-                case Flora_FieldIndex.Fall:
-                    return obj.Fall;
-                case Flora_FieldIndex.Winter:
-                    return obj.Winter;
-                default:
-                    return MajorRecordCommon.GetNthObject(index, obj);
-            }
-        }
-
         public static void Clear(
             IFlora item,
             NotifyingUnsetParameters cmds = null)
@@ -1929,7 +1813,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Summer = item.Summer == rhs.Summer;
             ret.Fall = item.Fall == rhs.Fall;
             ret.Winter = item.Winter == rhs.Winter;
-            MajorRecordCommon.FillEqualsMask(item, rhs, ret);
+            OblivionMajorRecordCommon.FillEqualsMask(item, rhs, ret);
         }
 
         public static string ToString(
@@ -2021,6 +1905,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ret;
         }
 
+        public static Flora_FieldIndex? ConvertFieldIndex(OblivionMajorRecord_FieldIndex? index)
+        {
+            if (!index.HasValue) return null;
+            return ConvertFieldIndex(index: index.Value);
+        }
+
+        public static Flora_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
+        {
+            switch (index)
+            {
+                case OblivionMajorRecord_FieldIndex.FormKey:
+                    return (Flora_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.Version:
+                    return (Flora_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.EditorID:
+                    return (Flora_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.RecordType:
+                    return (Flora_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
+                    return (Flora_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
+        }
+
         public static Flora_FieldIndex? ConvertFieldIndex(MajorRecord_FieldIndex? index)
         {
             if (!index.HasValue) return null;
@@ -2031,8 +1940,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (index)
             {
-                case MajorRecord_FieldIndex.MajorRecordFlags:
-                    return (Flora_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
                     return (Flora_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.Version:
@@ -2093,7 +2000,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
         {
-            MajorRecordCommon.WriteToNode_Xml(
+            OblivionMajorRecordCommon.WriteToNode_Xml(
                 item: item,
                 node: node,
                 errorMask: errorMask,
@@ -2387,7 +2294,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 default:
-                    MajorRecordCommon.FillPublicElement_Xml(
+                    OblivionMajorRecordCommon.FillPublicElement_Xml(
                         item: item,
                         node: node,
                         name: name,
@@ -2431,7 +2338,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: Flora_Registration.FLOR_HEADER,
                 type: ObjectType.Record))
             {
-                MajorRecordCommon.Write_Binary_Embedded(
+                OblivionMajorRecordCommon.Write_Binary_Embedded(
                     item: item,
                     writer: writer,
                     errorMask: errorMask,
@@ -2535,7 +2442,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     #region Modules
     #region Mask
-    public class Flora_Mask<T> : MajorRecord_Mask<T>, IMask<T>, IEquatable<Flora_Mask<T>>
+    public class Flora_Mask<T> : OblivionMajorRecord_Mask<T>, IMask<T>, IEquatable<Flora_Mask<T>>
     {
         #region Ctors
         public Flora_Mask()
@@ -2719,7 +2626,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public class Flora_ErrorMask : MajorRecord_ErrorMask, IErrorMask<Flora_ErrorMask>
+    public class Flora_ErrorMask : OblivionMajorRecord_ErrorMask, IErrorMask<Flora_ErrorMask>
     {
         #region Members
         public Exception Name;
@@ -2916,7 +2823,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
-    public class Flora_CopyMask : MajorRecord_CopyMask
+    public class Flora_CopyMask : OblivionMajorRecord_CopyMask
     {
         public Flora_CopyMask()
         {
@@ -2947,7 +2854,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public class Flora_TranslationMask : MajorRecord_TranslationMask
+    public class Flora_TranslationMask : OblivionMajorRecord_TranslationMask
     {
         #region Members
         public bool Name;

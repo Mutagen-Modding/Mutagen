@@ -34,7 +34,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class Grass : 
-        MajorRecord,
+        OblivionMajorRecord,
         IGrass,
         ILoquiObject<Grass>,
         ILoquiObjectSetter,
@@ -222,24 +222,6 @@ namespace Mutagen.Bethesda.Oblivion
                 this.RaiseAndSetIfChanged(ref this._Flags, value, nameof(Flags));
             }
         }
-        #endregion
-
-        #region Loqui Getter Interface
-
-        protected override object GetNthObject(ushort index) => GrassCommon.GetNthObject(index, this);
-
-        protected override bool GetNthObjectHasBeenSet(ushort index) => GrassCommon.GetNthObjectHasBeenSet(index, this);
-
-        protected override void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => GrassCommon.UnsetNthObject(index, this, cmds);
-
-        #endregion
-
-        #region Loqui Interface
-        protected override void SetNthObjectHasBeenSet(ushort index, bool on)
-        {
-            GrassCommon.SetNthObjectHasBeenSet(index, on, this);
-        }
-
         #endregion
 
         IMask<bool> IEqualsMask<Grass>.GetEqualsMask(Grass rhs, EqualsMaskHelper.Include include) => GrassCommon.GetEqualsMask(this, rhs, include);
@@ -562,6 +544,22 @@ namespace Mutagen.Bethesda.Oblivion
         #region Base Class Trickdown Overrides
         public override void Write_Xml(
             XElement node,
+            out OblivionMajorRecord_ErrorMask errorMask,
+            bool doMasks = true,
+            OblivionMajorRecord_TranslationMask translationMask = null,
+            string name = null)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            this.Write_Xml(
+                name: name,
+                node: node,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal());
+            errorMask = Grass_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public override void Write_Xml(
+            XElement node,
             out MajorRecord_ErrorMask errorMask,
             bool doMasks = true,
             MajorRecord_TranslationMask translationMask = null,
@@ -606,7 +604,7 @@ namespace Mutagen.Bethesda.Oblivion
                     item.DATADataTypeState |= Grass.DATADataType.Has;
                     break;
                 default:
-                    MajorRecord.FillPrivateElement_Xml(
+                    OblivionMajorRecord.FillPrivateElement_Xml(
                         item: item,
                         node: node,
                         name: name,
@@ -656,9 +654,9 @@ namespace Mutagen.Bethesda.Oblivion
             CustomCtor();
         }
 
-        partial void PostDuplicate(Grass obj, Grass rhs, Func<FormKey> getNextFormKey, IList<(MajorRecord Record, FormKey OriginalFormKey)> duplicatedRecords);
+        partial void PostDuplicate(Grass obj, Grass rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
 
-        public override MajorRecord Duplicate(Func<FormKey> getNextFormKey, IList<(MajorRecord Record, FormKey OriginalFormKey)> duplicatedRecords)
+        public override IMajorRecordCommon Duplicate(Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
         {
             var ret = new Grass(getNextFormKey());
             ret.CopyFieldsFrom(this);
@@ -739,6 +737,21 @@ namespace Mutagen.Bethesda.Oblivion
         public override void Write_Binary(
             MutagenWriter writer,
             MasterReferences masterReferences,
+            out OblivionMajorRecord_ErrorMask errorMask,
+            bool doMasks = true)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            this.Write_Binary(
+                masterReferences: masterReferences,
+                writer: writer,
+                errorMask: errorMaskBuilder,
+                recordTypeConverter: null);
+            errorMask = Grass_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public override void Write_Binary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
             out MajorRecord_ErrorMask errorMask,
             bool doMasks = true)
         {
@@ -774,7 +787,7 @@ namespace Mutagen.Bethesda.Oblivion
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            MajorRecord.Fill_Binary_Structs(
+            OblivionMajorRecord.Fill_Binary_Structs(
                 item: item,
                 frame: frame,
                 masterReferences: masterReferences,
@@ -1121,7 +1134,7 @@ namespace Mutagen.Bethesda.Oblivion
                     return TryGet<int?>.Succeed((int)Grass_FieldIndex.Flags);
                 }
                 default:
-                    return MajorRecord.Fill_Binary_RecordTypes(
+                    return OblivionMajorRecord.Fill_Binary_RecordTypes(
                         item: item,
                         frame: frame,
                         nextRecordType: nextRecordType,
@@ -1321,7 +1334,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             if (!EnumExt.TryParse(pair.Key, out Grass_FieldIndex enu))
             {
-                CopyInInternal_MajorRecord(obj, pair);
+                CopyInInternal_OblivionMajorRecord(obj, pair);
             }
             switch (enu)
             {
@@ -1368,16 +1381,11 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, Grass obj)
-        {
-            ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
-        }
-
     }
     #endregion
 
     #region Interface
-    public partial interface IGrass : IGrassGetter, IMajorRecord, ILoquiClass<IGrass, IGrassGetter>, ILoquiClass<Grass, IGrassGetter>
+    public partial interface IGrass : IGrassGetter, IOblivionMajorRecord, ILoquiClass<IGrass, IGrassGetter>, ILoquiClass<Grass, IGrassGetter>
     {
         new Model Model { get; set; }
         new bool Model_IsSet { get; set; }
@@ -1410,7 +1418,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
-    public partial interface IGrassGetter : IMajorRecordGetter
+    public partial interface IGrassGetter : IOblivionMajorRecordGetter
     {
         #region Model
         Model Model { get; }
@@ -1477,11 +1485,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #region Field Index
     public enum Grass_FieldIndex
     {
-        MajorRecordFlags = 0,
-        FormKey = 1,
-        Version = 2,
-        EditorID = 3,
-        RecordType = 4,
+        FormKey = 0,
+        Version = 1,
+        EditorID = 2,
+        RecordType = 3,
+        OblivionMajorRecordFlags = 4,
         Model = 5,
         Density = 6,
         MinSlope = 7,
@@ -1593,7 +1601,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Grass_FieldIndex.Flags:
                     return false;
                 default:
-                    return MajorRecord_Registration.GetNthIsEnumerable(index);
+                    return OblivionMajorRecord_Registration.GetNthIsEnumerable(index);
             }
         }
 
@@ -1618,7 +1626,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Grass_FieldIndex.Flags:
                     return false;
                 default:
-                    return MajorRecord_Registration.GetNthIsLoqui(index);
+                    return OblivionMajorRecord_Registration.GetNthIsLoqui(index);
             }
         }
 
@@ -1642,7 +1650,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Grass_FieldIndex.Flags:
                     return false;
                 default:
-                    return MajorRecord_Registration.GetNthIsSingleton(index);
+                    return OblivionMajorRecord_Registration.GetNthIsSingleton(index);
             }
         }
 
@@ -1678,7 +1686,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Grass_FieldIndex.Flags:
                     return "Flags";
                 default:
-                    return MajorRecord_Registration.GetNthName(index);
+                    return OblivionMajorRecord_Registration.GetNthName(index);
             }
         }
 
@@ -1702,7 +1710,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Grass_FieldIndex.Flags:
                     return false;
                 default:
-                    return MajorRecord_Registration.IsNthDerivative(index);
+                    return OblivionMajorRecord_Registration.IsNthDerivative(index);
             }
         }
 
@@ -1726,7 +1734,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Grass_FieldIndex.Flags:
                     return false;
                 default:
-                    return MajorRecord_Registration.IsProtected(index);
+                    return OblivionMajorRecord_Registration.IsProtected(index);
             }
         }
 
@@ -1762,7 +1770,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Grass_FieldIndex.Flags:
                     return typeof(Grass.GrassFlag);
                 default:
-                    return MajorRecord_Registration.GetNthType(index);
+                    return OblivionMajorRecord_Registration.GetNthType(index);
             }
         }
 
@@ -1814,7 +1822,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Grass_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {
-            MajorRecordCommon.CopyFieldsFrom(
+            OblivionMajorRecordCommon.CopyFieldsFrom(
                 item,
                 rhs,
                 def,
@@ -2083,156 +2091,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void SetNthObjectHasBeenSet(
-            ushort index,
-            bool on,
-            IGrass obj,
-            NotifyingFireParameters cmds = null)
-        {
-            Grass_FieldIndex enu = (Grass_FieldIndex)index;
-            switch (enu)
-            {
-                case Grass_FieldIndex.Density:
-                case Grass_FieldIndex.MinSlope:
-                case Grass_FieldIndex.MaxSlope:
-                case Grass_FieldIndex.Fluff1:
-                case Grass_FieldIndex.UnitFromWaterAmount:
-                case Grass_FieldIndex.Fluff2:
-                case Grass_FieldIndex.UnitFromWaterMode:
-                case Grass_FieldIndex.PositionRange:
-                case Grass_FieldIndex.HeightRange:
-                case Grass_FieldIndex.ColorRange:
-                case Grass_FieldIndex.WavePeriod:
-                case Grass_FieldIndex.Flags:
-                    if (on) break;
-                    throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
-                case Grass_FieldIndex.Model:
-                    obj.Model_IsSet = on;
-                    break;
-                default:
-                    MajorRecordCommon.SetNthObjectHasBeenSet(index, on, obj);
-                    break;
-            }
-        }
-
-        public static void UnsetNthObject(
-            ushort index,
-            IGrass obj,
-            NotifyingUnsetParameters cmds = null)
-        {
-            Grass_FieldIndex enu = (Grass_FieldIndex)index;
-            switch (enu)
-            {
-                case Grass_FieldIndex.Model:
-                    obj.Model_Unset();
-                    break;
-                case Grass_FieldIndex.Density:
-                    obj.Density = default(Byte);
-                    break;
-                case Grass_FieldIndex.MinSlope:
-                    obj.MinSlope = default(Byte);
-                    break;
-                case Grass_FieldIndex.MaxSlope:
-                    obj.MaxSlope = default(Byte);
-                    break;
-                case Grass_FieldIndex.Fluff1:
-                    obj.Fluff1 = default(Byte);
-                    break;
-                case Grass_FieldIndex.UnitFromWaterAmount:
-                    obj.UnitFromWaterAmount = default(UInt16);
-                    break;
-                case Grass_FieldIndex.Fluff2:
-                    obj.Fluff2 = default(UInt16);
-                    break;
-                case Grass_FieldIndex.UnitFromWaterMode:
-                    obj.UnitFromWaterMode = default(Grass.UnitFromWaterType);
-                    break;
-                case Grass_FieldIndex.PositionRange:
-                    obj.PositionRange = default(Single);
-                    break;
-                case Grass_FieldIndex.HeightRange:
-                    obj.HeightRange = default(Single);
-                    break;
-                case Grass_FieldIndex.ColorRange:
-                    obj.ColorRange = default(Single);
-                    break;
-                case Grass_FieldIndex.WavePeriod:
-                    obj.WavePeriod = default(Single);
-                    break;
-                case Grass_FieldIndex.Flags:
-                    obj.Flags = default(Grass.GrassFlag);
-                    break;
-                default:
-                    MajorRecordCommon.UnsetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public static bool GetNthObjectHasBeenSet(
-            ushort index,
-            IGrass obj)
-        {
-            Grass_FieldIndex enu = (Grass_FieldIndex)index;
-            switch (enu)
-            {
-                case Grass_FieldIndex.Density:
-                case Grass_FieldIndex.MinSlope:
-                case Grass_FieldIndex.MaxSlope:
-                case Grass_FieldIndex.Fluff1:
-                case Grass_FieldIndex.UnitFromWaterAmount:
-                case Grass_FieldIndex.Fluff2:
-                case Grass_FieldIndex.UnitFromWaterMode:
-                case Grass_FieldIndex.PositionRange:
-                case Grass_FieldIndex.HeightRange:
-                case Grass_FieldIndex.ColorRange:
-                case Grass_FieldIndex.WavePeriod:
-                case Grass_FieldIndex.Flags:
-                    return true;
-                case Grass_FieldIndex.Model:
-                    return obj.Model_IsSet;
-                default:
-                    return MajorRecordCommon.GetNthObjectHasBeenSet(index, obj);
-            }
-        }
-
-        public static object GetNthObject(
-            ushort index,
-            IGrassGetter obj)
-        {
-            Grass_FieldIndex enu = (Grass_FieldIndex)index;
-            switch (enu)
-            {
-                case Grass_FieldIndex.Model:
-                    return obj.Model;
-                case Grass_FieldIndex.Density:
-                    return obj.Density;
-                case Grass_FieldIndex.MinSlope:
-                    return obj.MinSlope;
-                case Grass_FieldIndex.MaxSlope:
-                    return obj.MaxSlope;
-                case Grass_FieldIndex.Fluff1:
-                    return obj.Fluff1;
-                case Grass_FieldIndex.UnitFromWaterAmount:
-                    return obj.UnitFromWaterAmount;
-                case Grass_FieldIndex.Fluff2:
-                    return obj.Fluff2;
-                case Grass_FieldIndex.UnitFromWaterMode:
-                    return obj.UnitFromWaterMode;
-                case Grass_FieldIndex.PositionRange:
-                    return obj.PositionRange;
-                case Grass_FieldIndex.HeightRange:
-                    return obj.HeightRange;
-                case Grass_FieldIndex.ColorRange:
-                    return obj.ColorRange;
-                case Grass_FieldIndex.WavePeriod:
-                    return obj.WavePeriod;
-                case Grass_FieldIndex.Flags:
-                    return obj.Flags;
-                default:
-                    return MajorRecordCommon.GetNthObject(index, obj);
-            }
-        }
-
         public static void Clear(
             IGrass item,
             NotifyingUnsetParameters cmds = null)
@@ -2292,7 +2150,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.ColorRange = item.ColorRange.EqualsWithin(rhs.ColorRange);
             ret.WavePeriod = item.WavePeriod.EqualsWithin(rhs.WavePeriod);
             ret.Flags = item.Flags == rhs.Flags;
-            MajorRecordCommon.FillEqualsMask(item, rhs, ret);
+            OblivionMajorRecordCommon.FillEqualsMask(item, rhs, ret);
         }
 
         public static string ToString(
@@ -2406,6 +2264,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ret;
         }
 
+        public static Grass_FieldIndex? ConvertFieldIndex(OblivionMajorRecord_FieldIndex? index)
+        {
+            if (!index.HasValue) return null;
+            return ConvertFieldIndex(index: index.Value);
+        }
+
+        public static Grass_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
+        {
+            switch (index)
+            {
+                case OblivionMajorRecord_FieldIndex.FormKey:
+                    return (Grass_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.Version:
+                    return (Grass_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.EditorID:
+                    return (Grass_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.RecordType:
+                    return (Grass_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
+                    return (Grass_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
+        }
+
         public static Grass_FieldIndex? ConvertFieldIndex(MajorRecord_FieldIndex? index)
         {
             if (!index.HasValue) return null;
@@ -2416,8 +2299,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (index)
             {
-                case MajorRecord_FieldIndex.MajorRecordFlags:
-                    return (Grass_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
                     return (Grass_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.Version:
@@ -2478,7 +2359,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
         {
-            MajorRecordCommon.WriteToNode_Xml(
+            OblivionMajorRecordCommon.WriteToNode_Xml(
                 item: item,
                 node: node,
                 errorMask: errorMask,
@@ -2982,7 +2863,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 default:
-                    MajorRecordCommon.FillPublicElement_Xml(
+                    OblivionMajorRecordCommon.FillPublicElement_Xml(
                         item: item,
                         node: node,
                         name: name,
@@ -3026,7 +2907,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: Grass_Registration.GRAS_HEADER,
                 type: ObjectType.Record))
             {
-                MajorRecordCommon.Write_Binary_Embedded(
+                OblivionMajorRecordCommon.Write_Binary_Embedded(
                     item: item,
                     writer: writer,
                     errorMask: errorMask,
@@ -3140,7 +3021,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     #region Modules
     #region Mask
-    public class Grass_Mask<T> : MajorRecord_Mask<T>, IMask<T>, IEquatable<Grass_Mask<T>>
+    public class Grass_Mask<T> : OblivionMajorRecord_Mask<T>, IMask<T>, IEquatable<Grass_Mask<T>>
     {
         #region Ctors
         public Grass_Mask()
@@ -3374,7 +3255,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public class Grass_ErrorMask : MajorRecord_ErrorMask, IErrorMask<Grass_ErrorMask>
+    public class Grass_ErrorMask : OblivionMajorRecord_ErrorMask, IErrorMask<Grass_ErrorMask>
     {
         #region Members
         public MaskItem<Exception, Model_ErrorMask> Model;
@@ -3631,7 +3512,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
-    public class Grass_CopyMask : MajorRecord_CopyMask
+    public class Grass_CopyMask : OblivionMajorRecord_CopyMask
     {
         public Grass_CopyMask()
         {
@@ -3672,7 +3553,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public class Grass_TranslationMask : MajorRecord_TranslationMask
+    public class Grass_TranslationMask : OblivionMajorRecord_TranslationMask
     {
         #region Members
         public MaskItem<bool, Model_TranslationMask> Model;

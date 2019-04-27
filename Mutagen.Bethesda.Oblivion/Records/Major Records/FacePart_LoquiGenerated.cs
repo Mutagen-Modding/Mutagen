@@ -132,28 +132,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        #region Loqui Getter Interface
-
-        protected object GetNthObject(ushort index) => FacePartCommon.GetNthObject(index, this);
-        object ILoquiObjectGetter.GetNthObject(ushort index) => this.GetNthObject(index);
-
-        protected bool GetNthObjectHasBeenSet(ushort index) => FacePartCommon.GetNthObjectHasBeenSet(index, this);
-        bool ILoquiObjectGetter.GetNthObjectHasBeenSet(ushort index) => this.GetNthObjectHasBeenSet(index);
-
-        protected void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => FacePartCommon.UnsetNthObject(index, this, cmds);
-        void ILoquiObjectSetter.UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => this.UnsetNthObject(index, cmds);
-
-        #endregion
-
-        #region Loqui Interface
-        protected void SetNthObjectHasBeenSet(ushort index, bool on)
-        {
-            FacePartCommon.SetNthObjectHasBeenSet(index, on, this);
-        }
-        void ILoquiObjectSetter.SetNthObjectHasBeenSet(ushort index, bool on) => this.SetNthObjectHasBeenSet(index, on);
-
-        #endregion
-
         IMask<bool> IEqualsMask<FacePart>.GetEqualsMask(FacePart rhs, EqualsMaskHelper.Include include) => FacePartCommon.GetEqualsMask(this, rhs, include);
         IMask<bool> IEqualsMask<IFacePartGetter>.GetEqualsMask(IFacePartGetter rhs, EqualsMaskHelper.Include include) => FacePartCommon.GetEqualsMask(this, rhs, include);
         #region To String
@@ -855,7 +833,6 @@ namespace Mutagen.Bethesda.Oblivion
                 cmds: cmds);
         }
 
-        void ILoquiObjectSetter.SetNthObject(ushort index, object obj, NotifyingFireParameters cmds) => this.SetNthObject(index, obj, cmds);
         protected void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
         {
             FacePart_FieldIndex enu = (FacePart_FieldIndex)index;
@@ -920,11 +897,6 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, FacePart obj)
-        {
-            ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
-        }
-
     }
     #endregion
 
@@ -1318,87 +1290,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         #endregion
-
-        public static void SetNthObjectHasBeenSet(
-            ushort index,
-            bool on,
-            IFacePart obj,
-            NotifyingFireParameters cmds = null)
-        {
-            FacePart_FieldIndex enu = (FacePart_FieldIndex)index;
-            switch (enu)
-            {
-                case FacePart_FieldIndex.Index:
-                    obj.Index_IsSet = on;
-                    break;
-                case FacePart_FieldIndex.Model:
-                    obj.Model_IsSet = on;
-                    break;
-                case FacePart_FieldIndex.Icon:
-                    obj.Icon_IsSet = on;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static void UnsetNthObject(
-            ushort index,
-            IFacePart obj,
-            NotifyingUnsetParameters cmds = null)
-        {
-            FacePart_FieldIndex enu = (FacePart_FieldIndex)index;
-            switch (enu)
-            {
-                case FacePart_FieldIndex.Index:
-                    obj.Index_Unset();
-                    break;
-                case FacePart_FieldIndex.Model:
-                    obj.Model_Unset();
-                    break;
-                case FacePart_FieldIndex.Icon:
-                    obj.Icon_Unset();
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthObjectHasBeenSet(
-            ushort index,
-            IFacePart obj)
-        {
-            FacePart_FieldIndex enu = (FacePart_FieldIndex)index;
-            switch (enu)
-            {
-                case FacePart_FieldIndex.Index:
-                    return obj.Index_IsSet;
-                case FacePart_FieldIndex.Model:
-                    return obj.Model_IsSet;
-                case FacePart_FieldIndex.Icon:
-                    return obj.Icon_IsSet;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static object GetNthObject(
-            ushort index,
-            IFacePartGetter obj)
-        {
-            FacePart_FieldIndex enu = (FacePart_FieldIndex)index;
-            switch (enu)
-            {
-                case FacePart_FieldIndex.Index:
-                    return obj.Index;
-                case FacePart_FieldIndex.Model:
-                    return obj.Model;
-                case FacePart_FieldIndex.Icon:
-                    return obj.Icon;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
 
         public static void Clear(
             IFacePart item,

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="IdleAnimation" objType="Record" recordType="IDLE" baseClass="Bethesda.MajorRecord" GUID="899444e1-4339-4d2c-8fdc-f6c32c68050b" ID="156">
+  <Object name="IdleAnimation" objType="Record" recordType="IDLE" baseClass="OblivionMajorRecord" GUID="899444e1-4339-4d2c-8fdc-f6c32c68050b" ID="156">
     <Fields>
       <RefDirect name="Model" refName="Model" />
       <RefList name="Conditions" refName="Condition" />

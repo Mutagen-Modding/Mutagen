@@ -99,28 +99,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        #region Loqui Getter Interface
-
-        protected object GetNthObject(ushort index) => ScriptMetaSummaryCommon.GetNthObject(index, this);
-        object ILoquiObjectGetter.GetNthObject(ushort index) => this.GetNthObject(index);
-
-        protected bool GetNthObjectHasBeenSet(ushort index) => ScriptMetaSummaryCommon.GetNthObjectHasBeenSet(index, this);
-        bool ILoquiObjectGetter.GetNthObjectHasBeenSet(ushort index) => this.GetNthObjectHasBeenSet(index);
-
-        protected void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => ScriptMetaSummaryCommon.UnsetNthObject(index, this, cmds);
-        void ILoquiObjectSetter.UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => this.UnsetNthObject(index, cmds);
-
-        #endregion
-
-        #region Loqui Interface
-        protected void SetNthObjectHasBeenSet(ushort index, bool on)
-        {
-            ScriptMetaSummaryCommon.SetNthObjectHasBeenSet(index, on, this);
-        }
-        void ILoquiObjectSetter.SetNthObjectHasBeenSet(ushort index, bool on) => this.SetNthObjectHasBeenSet(index, on);
-
-        #endregion
-
         IMask<bool> IEqualsMask<ScriptMetaSummary>.GetEqualsMask(ScriptMetaSummary rhs, EqualsMaskHelper.Include include) => ScriptMetaSummaryCommon.GetEqualsMask(this, rhs, include);
         IMask<bool> IEqualsMask<IScriptMetaSummaryGetter>.GetEqualsMask(IScriptMetaSummaryGetter rhs, EqualsMaskHelper.Include include) => ScriptMetaSummaryCommon.GetEqualsMask(this, rhs, include);
         #region To String
@@ -850,7 +828,6 @@ namespace Mutagen.Bethesda.Oblivion
                 cmds: cmds);
         }
 
-        void ILoquiObjectSetter.SetNthObject(ushort index, object obj, NotifyingFireParameters cmds) => this.SetNthObject(index, obj, cmds);
         protected void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
         {
             ScriptMetaSummary_FieldIndex enu = (ScriptMetaSummary_FieldIndex)index;
@@ -923,11 +900,6 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, ScriptMetaSummary obj)
-        {
-            ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
-        }
-
     }
     #endregion
 
@@ -1284,95 +1256,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         #endregion
-
-        public static void SetNthObjectHasBeenSet(
-            ushort index,
-            bool on,
-            IScriptMetaSummary obj,
-            NotifyingFireParameters cmds = null)
-        {
-            ScriptMetaSummary_FieldIndex enu = (ScriptMetaSummary_FieldIndex)index;
-            switch (enu)
-            {
-                case ScriptMetaSummary_FieldIndex.CompiledSize:
-                    throw new ArgumentException($"Tried to set at a derivative index {index}");
-                case ScriptMetaSummary_FieldIndex.Fluff:
-                case ScriptMetaSummary_FieldIndex.RefCount:
-                case ScriptMetaSummary_FieldIndex.VariableCount:
-                case ScriptMetaSummary_FieldIndex.Type:
-                    if (on) break;
-                    throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static void UnsetNthObject(
-            ushort index,
-            IScriptMetaSummary obj,
-            NotifyingUnsetParameters cmds = null)
-        {
-            ScriptMetaSummary_FieldIndex enu = (ScriptMetaSummary_FieldIndex)index;
-            switch (enu)
-            {
-                case ScriptMetaSummary_FieldIndex.CompiledSize:
-                    throw new ArgumentException($"Tried to unset at a derivative index {index}");
-                case ScriptMetaSummary_FieldIndex.Fluff:
-                    obj.Fluff = default(Byte[]);
-                    break;
-                case ScriptMetaSummary_FieldIndex.RefCount:
-                    obj.RefCount = default(UInt32);
-                    break;
-                case ScriptMetaSummary_FieldIndex.VariableCount:
-                    obj.VariableCount = default(UInt32);
-                    break;
-                case ScriptMetaSummary_FieldIndex.Type:
-                    obj.Type = default(ScriptFields.ScriptType);
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthObjectHasBeenSet(
-            ushort index,
-            IScriptMetaSummary obj)
-        {
-            ScriptMetaSummary_FieldIndex enu = (ScriptMetaSummary_FieldIndex)index;
-            switch (enu)
-            {
-                case ScriptMetaSummary_FieldIndex.Fluff:
-                case ScriptMetaSummary_FieldIndex.RefCount:
-                case ScriptMetaSummary_FieldIndex.CompiledSize:
-                case ScriptMetaSummary_FieldIndex.VariableCount:
-                case ScriptMetaSummary_FieldIndex.Type:
-                    return true;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static object GetNthObject(
-            ushort index,
-            IScriptMetaSummaryGetter obj)
-        {
-            ScriptMetaSummary_FieldIndex enu = (ScriptMetaSummary_FieldIndex)index;
-            switch (enu)
-            {
-                case ScriptMetaSummary_FieldIndex.Fluff:
-                    return obj.Fluff;
-                case ScriptMetaSummary_FieldIndex.RefCount:
-                    return obj.RefCount;
-                case ScriptMetaSummary_FieldIndex.CompiledSize:
-                    return obj.CompiledSize;
-                case ScriptMetaSummary_FieldIndex.VariableCount:
-                    return obj.VariableCount;
-                case ScriptMetaSummary_FieldIndex.Type:
-                    return obj.Type;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
 
         public static void Clear(
             IScriptMetaSummary item,

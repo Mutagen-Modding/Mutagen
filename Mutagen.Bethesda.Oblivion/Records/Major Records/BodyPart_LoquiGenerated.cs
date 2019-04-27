@@ -104,28 +104,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        #region Loqui Getter Interface
-
-        protected object GetNthObject(ushort index) => BodyPartCommon.GetNthObject(index, this);
-        object ILoquiObjectGetter.GetNthObject(ushort index) => this.GetNthObject(index);
-
-        protected bool GetNthObjectHasBeenSet(ushort index) => BodyPartCommon.GetNthObjectHasBeenSet(index, this);
-        bool ILoquiObjectGetter.GetNthObjectHasBeenSet(ushort index) => this.GetNthObjectHasBeenSet(index);
-
-        protected void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => BodyPartCommon.UnsetNthObject(index, this, cmds);
-        void ILoquiObjectSetter.UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => this.UnsetNthObject(index, cmds);
-
-        #endregion
-
-        #region Loqui Interface
-        protected void SetNthObjectHasBeenSet(ushort index, bool on)
-        {
-            BodyPartCommon.SetNthObjectHasBeenSet(index, on, this);
-        }
-        void ILoquiObjectSetter.SetNthObjectHasBeenSet(ushort index, bool on) => this.SetNthObjectHasBeenSet(index, on);
-
-        #endregion
-
         IMask<bool> IEqualsMask<BodyPart>.GetEqualsMask(BodyPart rhs, EqualsMaskHelper.Include include) => BodyPartCommon.GetEqualsMask(this, rhs, include);
         IMask<bool> IEqualsMask<IBodyPartGetter>.GetEqualsMask(IBodyPartGetter rhs, EqualsMaskHelper.Include include) => BodyPartCommon.GetEqualsMask(this, rhs, include);
         #region To String
@@ -787,7 +765,6 @@ namespace Mutagen.Bethesda.Oblivion
                 cmds: cmds);
         }
 
-        void ILoquiObjectSetter.SetNthObject(ushort index, object obj, NotifyingFireParameters cmds) => this.SetNthObject(index, obj, cmds);
         protected void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
         {
             BodyPart_FieldIndex enu = (BodyPart_FieldIndex)index;
@@ -846,11 +823,6 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, BodyPart obj)
-        {
-            ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
-        }
-
     }
     #endregion
 
@@ -1165,77 +1137,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         #endregion
-
-        public static void SetNthObjectHasBeenSet(
-            ushort index,
-            bool on,
-            IBodyPart obj,
-            NotifyingFireParameters cmds = null)
-        {
-            BodyPart_FieldIndex enu = (BodyPart_FieldIndex)index;
-            switch (enu)
-            {
-                case BodyPart_FieldIndex.Index:
-                    obj.Index_IsSet = on;
-                    break;
-                case BodyPart_FieldIndex.Icon:
-                    obj.Icon_IsSet = on;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static void UnsetNthObject(
-            ushort index,
-            IBodyPart obj,
-            NotifyingUnsetParameters cmds = null)
-        {
-            BodyPart_FieldIndex enu = (BodyPart_FieldIndex)index;
-            switch (enu)
-            {
-                case BodyPart_FieldIndex.Index:
-                    obj.Index_Unset();
-                    break;
-                case BodyPart_FieldIndex.Icon:
-                    obj.Icon_Unset();
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthObjectHasBeenSet(
-            ushort index,
-            IBodyPart obj)
-        {
-            BodyPart_FieldIndex enu = (BodyPart_FieldIndex)index;
-            switch (enu)
-            {
-                case BodyPart_FieldIndex.Index:
-                    return obj.Index_IsSet;
-                case BodyPart_FieldIndex.Icon:
-                    return obj.Icon_IsSet;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static object GetNthObject(
-            ushort index,
-            IBodyPartGetter obj)
-        {
-            BodyPart_FieldIndex enu = (BodyPart_FieldIndex)index;
-            switch (enu)
-            {
-                case BodyPart_FieldIndex.Index:
-                    return obj.Index;
-                case BodyPart_FieldIndex.Icon:
-                    return obj.Icon;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
 
         public static void Clear(
             IBodyPart item,

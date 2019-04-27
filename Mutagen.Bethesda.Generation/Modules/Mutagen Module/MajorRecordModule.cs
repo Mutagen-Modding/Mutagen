@@ -10,19 +10,19 @@ namespace Mutagen.Bethesda.Generation
 {
     public class MajorRecordModule : GenerationModule
     {
-        public override Task PostLoad(ObjectGeneration obj)
+        public override async Task PostLoad(ObjectGeneration obj)
         {
-            if (obj.IsMajorRecord())
+            if (await obj.IsMajorRecord())
             {
                 obj.BasicCtorPermission = PermissionLevel.@protected;
             }
-            return base.PostLoad(obj);
+            await base.PostLoad(obj);
         }
 
         public override async Task GenerateInClass(ObjectGeneration obj, FileGeneration fg)
         {
             await base.GenerateInClass(obj, fg);
-            if (!obj.IsMajorRecord()) return;
+            if (!await obj.IsMajorRecord()) return;
             fg.AppendLine($"public {obj.Name}(FormKey formKey)");
             using (new BraceWrapper(fg))
             {
@@ -35,15 +35,15 @@ namespace Mutagen.Bethesda.Generation
             {
                 if (obj.IsTopClass)
                 {
-                    fg.AppendLine($"public abstract MajorRecord Duplicate(Func<FormKey> getNextFormKey, IList<(MajorRecord Record, FormKey OriginalFormKey)> duplicatedRecords = null);");
+                    fg.AppendLine($"public abstract {nameof(IMajorRecordCommon)} Duplicate(Func<FormKey> getNextFormKey, IList<({nameof(IMajorRecordCommon)} Record, FormKey OriginalFormKey)> duplicatedRecords = null);");
                 }
             }
             else
             {
-                fg.AppendLine($"partial void PostDuplicate({obj.Name} obj, {obj.Name} rhs, Func<FormKey> getNextFormKey, IList<(MajorRecord Record, FormKey OriginalFormKey)> duplicatedRecords);");
+                fg.AppendLine($"partial void PostDuplicate({obj.Name} obj, {obj.Name} rhs, Func<FormKey> getNextFormKey, IList<({nameof(IMajorRecordCommon)} Record, FormKey OriginalFormKey)> duplicatedRecords);");
                 fg.AppendLine();
                 
-                fg.AppendLine($"public override MajorRecord Duplicate(Func<FormKey> getNextFormKey, IList<(MajorRecord Record, FormKey OriginalFormKey)> duplicatedRecords)");
+                fg.AppendLine($"public override {nameof(IMajorRecordCommon)} Duplicate(Func<FormKey> getNextFormKey, IList<({nameof(IMajorRecordCommon)} Record, FormKey OriginalFormKey)> duplicatedRecords)");
                 using (new BraceWrapper(fg))
                 {
                     fg.AppendLine($"var ret = new {obj.Name}(getNextFormKey());");

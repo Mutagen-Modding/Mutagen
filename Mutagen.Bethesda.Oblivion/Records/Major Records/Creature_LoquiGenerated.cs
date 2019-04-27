@@ -792,24 +792,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        #region Loqui Getter Interface
-
-        protected override object GetNthObject(ushort index) => CreatureCommon.GetNthObject(index, this);
-
-        protected override bool GetNthObjectHasBeenSet(ushort index) => CreatureCommon.GetNthObjectHasBeenSet(index, this);
-
-        protected override void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => CreatureCommon.UnsetNthObject(index, this, cmds);
-
-        #endregion
-
-        #region Loqui Interface
-        protected override void SetNthObjectHasBeenSet(ushort index, bool on)
-        {
-            CreatureCommon.SetNthObjectHasBeenSet(index, on, this);
-        }
-
-        #endregion
-
         IMask<bool> IEqualsMask<Creature>.GetEqualsMask(Creature rhs, EqualsMaskHelper.Include include) => CreatureCommon.GetEqualsMask(this, rhs, include);
         IMask<bool> IEqualsMask<ICreatureGetter>.GetEqualsMask(ICreatureGetter rhs, EqualsMaskHelper.Include include) => CreatureCommon.GetEqualsMask(this, rhs, include);
         #region To String
@@ -1367,6 +1349,22 @@ namespace Mutagen.Bethesda.Oblivion
 
         public override void Write_Xml(
             XElement node,
+            out OblivionMajorRecord_ErrorMask errorMask,
+            bool doMasks = true,
+            OblivionMajorRecord_TranslationMask translationMask = null,
+            string name = null)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            this.Write_Xml(
+                name: name,
+                node: node,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal());
+            errorMask = Creature_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public override void Write_Xml(
+            XElement node,
             out MajorRecord_ErrorMask errorMask,
             bool doMasks = true,
             MajorRecord_TranslationMask translationMask = null,
@@ -1623,9 +1621,9 @@ namespace Mutagen.Bethesda.Oblivion
             CustomCtor();
         }
 
-        partial void PostDuplicate(Creature obj, Creature rhs, Func<FormKey> getNextFormKey, IList<(MajorRecord Record, FormKey OriginalFormKey)> duplicatedRecords);
+        partial void PostDuplicate(Creature obj, Creature rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
 
-        public override MajorRecord Duplicate(Func<FormKey> getNextFormKey, IList<(MajorRecord Record, FormKey OriginalFormKey)> duplicatedRecords)
+        public override IMajorRecordCommon Duplicate(Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
         {
             var ret = new Creature(getNextFormKey());
             ret.CopyFieldsFrom(this);
@@ -1722,6 +1720,21 @@ namespace Mutagen.Bethesda.Oblivion
             MutagenWriter writer,
             MasterReferences masterReferences,
             out NPCSpawn_ErrorMask errorMask,
+            bool doMasks = true)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            this.Write_Binary(
+                masterReferences: masterReferences,
+                writer: writer,
+                errorMask: errorMaskBuilder,
+                recordTypeConverter: null);
+            errorMask = Creature_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public override void Write_Binary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            out OblivionMajorRecord_ErrorMask errorMask,
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
@@ -3433,11 +3446,6 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, Creature obj)
-        {
-            ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
-        }
-
     }
     #endregion
 
@@ -3776,11 +3784,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #region Field Index
     public enum Creature_FieldIndex
     {
-        MajorRecordFlags = 0,
-        FormKey = 1,
-        Version = 2,
-        EditorID = 3,
-        RecordType = 4,
+        FormKey = 0,
+        Version = 1,
+        EditorID = 2,
+        RecordType = 3,
+        OblivionMajorRecordFlags = 4,
         Name = 5,
         Model = 6,
         Items = 7,
@@ -5628,465 +5636,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void SetNthObjectHasBeenSet(
-            ushort index,
-            bool on,
-            ICreature obj,
-            NotifyingFireParameters cmds = null)
-        {
-            Creature_FieldIndex enu = (Creature_FieldIndex)index;
-            switch (enu)
-            {
-                case Creature_FieldIndex.Flags:
-                case Creature_FieldIndex.BaseSpellPoints:
-                case Creature_FieldIndex.Fatigue:
-                case Creature_FieldIndex.BarterGold:
-                case Creature_FieldIndex.LevelOffset:
-                case Creature_FieldIndex.CalcMin:
-                case Creature_FieldIndex.CalcMax:
-                case Creature_FieldIndex.Aggression:
-                case Creature_FieldIndex.Confidence:
-                case Creature_FieldIndex.EnergyLevel:
-                case Creature_FieldIndex.Responsibility:
-                case Creature_FieldIndex.BuySellServices:
-                case Creature_FieldIndex.Teaches:
-                case Creature_FieldIndex.MaximumTrainingLevel:
-                case Creature_FieldIndex.CreatureType:
-                case Creature_FieldIndex.CombatSkill:
-                case Creature_FieldIndex.MagicSkill:
-                case Creature_FieldIndex.StealthSkill:
-                case Creature_FieldIndex.SoulLevel:
-                case Creature_FieldIndex.Health:
-                case Creature_FieldIndex.AttackDamage:
-                case Creature_FieldIndex.Strength:
-                case Creature_FieldIndex.Intelligence:
-                case Creature_FieldIndex.Willpower:
-                case Creature_FieldIndex.Agility:
-                case Creature_FieldIndex.Speed:
-                case Creature_FieldIndex.Endurance:
-                case Creature_FieldIndex.Personality:
-                case Creature_FieldIndex.Luck:
-                    if (on) break;
-                    throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
-                case Creature_FieldIndex.Name:
-                    obj.Name_IsSet = on;
-                    break;
-                case Creature_FieldIndex.Model:
-                    obj.Model_IsSet = on;
-                    break;
-                case Creature_FieldIndex.Items:
-                    obj.Items.HasBeenSet = on;
-                    break;
-                case Creature_FieldIndex.Spells:
-                    obj.Spells.HasBeenSet = on;
-                    break;
-                case Creature_FieldIndex.Models:
-                    obj.Models.HasBeenSet = on;
-                    break;
-                case Creature_FieldIndex.NIFT:
-                    obj.NIFT_IsSet = on;
-                    break;
-                case Creature_FieldIndex.Factions:
-                    obj.Factions.HasBeenSet = on;
-                    break;
-                case Creature_FieldIndex.DeathItem:
-                    obj.DeathItem_Property.HasBeenSet = on;
-                    break;
-                case Creature_FieldIndex.Script:
-                    obj.Script_Property.HasBeenSet = on;
-                    break;
-                case Creature_FieldIndex.AIPackages:
-                    obj.AIPackages.HasBeenSet = on;
-                    break;
-                case Creature_FieldIndex.Animations:
-                    obj.Animations.HasBeenSet = on;
-                    break;
-                case Creature_FieldIndex.AttackReach:
-                    obj.AttackReach_IsSet = on;
-                    break;
-                case Creature_FieldIndex.CombatStyle:
-                    obj.CombatStyle_Property.HasBeenSet = on;
-                    break;
-                case Creature_FieldIndex.TurningSpeed:
-                    obj.TurningSpeed_IsSet = on;
-                    break;
-                case Creature_FieldIndex.BaseScale:
-                    obj.BaseScale_IsSet = on;
-                    break;
-                case Creature_FieldIndex.FootWeight:
-                    obj.FootWeight_IsSet = on;
-                    break;
-                case Creature_FieldIndex.BloodSpray:
-                    obj.BloodSpray_IsSet = on;
-                    break;
-                case Creature_FieldIndex.BloodDecal:
-                    obj.BloodDecal_IsSet = on;
-                    break;
-                case Creature_FieldIndex.InheritsSoundFrom:
-                    obj.InheritsSoundFrom_Property.HasBeenSet = on;
-                    break;
-                case Creature_FieldIndex.Sounds:
-                    obj.Sounds.HasBeenSet = on;
-                    break;
-                default:
-                    NPCAbstractCommon.SetNthObjectHasBeenSet(index, on, obj);
-                    break;
-            }
-        }
-
-        public static void UnsetNthObject(
-            ushort index,
-            ICreature obj,
-            NotifyingUnsetParameters cmds = null)
-        {
-            Creature_FieldIndex enu = (Creature_FieldIndex)index;
-            switch (enu)
-            {
-                case Creature_FieldIndex.Name:
-                    obj.Name_Unset();
-                    break;
-                case Creature_FieldIndex.Model:
-                    obj.Model_Unset();
-                    break;
-                case Creature_FieldIndex.Items:
-                    obj.Items.Unset();
-                    break;
-                case Creature_FieldIndex.Spells:
-                    obj.Spells.Unset();
-                    break;
-                case Creature_FieldIndex.Models:
-                    obj.Models.Unset();
-                    break;
-                case Creature_FieldIndex.NIFT:
-                    obj.NIFT_Unset();
-                    break;
-                case Creature_FieldIndex.Flags:
-                    obj.Flags = default(Creature.CreatureFlag);
-                    break;
-                case Creature_FieldIndex.BaseSpellPoints:
-                    obj.BaseSpellPoints = default(UInt16);
-                    break;
-                case Creature_FieldIndex.Fatigue:
-                    obj.Fatigue = default(UInt16);
-                    break;
-                case Creature_FieldIndex.BarterGold:
-                    obj.BarterGold = default(UInt16);
-                    break;
-                case Creature_FieldIndex.LevelOffset:
-                    obj.LevelOffset = default(Int16);
-                    break;
-                case Creature_FieldIndex.CalcMin:
-                    obj.CalcMin = default(UInt16);
-                    break;
-                case Creature_FieldIndex.CalcMax:
-                    obj.CalcMax = default(UInt16);
-                    break;
-                case Creature_FieldIndex.Factions:
-                    obj.Factions.Unset();
-                    break;
-                case Creature_FieldIndex.DeathItem:
-                    obj.DeathItem_Property.Unset(cmds);
-                    break;
-                case Creature_FieldIndex.Script:
-                    obj.Script_Property.Unset(cmds);
-                    break;
-                case Creature_FieldIndex.Aggression:
-                    obj.Aggression = default(Byte);
-                    break;
-                case Creature_FieldIndex.Confidence:
-                    obj.Confidence = default(Byte);
-                    break;
-                case Creature_FieldIndex.EnergyLevel:
-                    obj.EnergyLevel = default(Byte);
-                    break;
-                case Creature_FieldIndex.Responsibility:
-                    obj.Responsibility = default(Byte);
-                    break;
-                case Creature_FieldIndex.BuySellServices:
-                    obj.BuySellServices = default(NPC.BuySellServiceFlag);
-                    break;
-                case Creature_FieldIndex.Teaches:
-                    obj.Teaches = default(Skill);
-                    break;
-                case Creature_FieldIndex.MaximumTrainingLevel:
-                    obj.MaximumTrainingLevel = default(Byte);
-                    break;
-                case Creature_FieldIndex.AIPackages:
-                    obj.AIPackages.Unset();
-                    break;
-                case Creature_FieldIndex.Animations:
-                    obj.Animations.Unset();
-                    break;
-                case Creature_FieldIndex.CreatureType:
-                    obj.CreatureType = default(Creature.CreatureTypeEnum);
-                    break;
-                case Creature_FieldIndex.CombatSkill:
-                    obj.CombatSkill = default(Byte);
-                    break;
-                case Creature_FieldIndex.MagicSkill:
-                    obj.MagicSkill = default(Byte);
-                    break;
-                case Creature_FieldIndex.StealthSkill:
-                    obj.StealthSkill = default(Byte);
-                    break;
-                case Creature_FieldIndex.SoulLevel:
-                    obj.SoulLevel = default(SoulLevel);
-                    break;
-                case Creature_FieldIndex.Health:
-                    obj.Health = default(UInt32);
-                    break;
-                case Creature_FieldIndex.AttackDamage:
-                    obj.AttackDamage = default(UInt16);
-                    break;
-                case Creature_FieldIndex.Strength:
-                    obj.Strength = default(Byte);
-                    break;
-                case Creature_FieldIndex.Intelligence:
-                    obj.Intelligence = default(Byte);
-                    break;
-                case Creature_FieldIndex.Willpower:
-                    obj.Willpower = default(Byte);
-                    break;
-                case Creature_FieldIndex.Agility:
-                    obj.Agility = default(Byte);
-                    break;
-                case Creature_FieldIndex.Speed:
-                    obj.Speed = default(Byte);
-                    break;
-                case Creature_FieldIndex.Endurance:
-                    obj.Endurance = default(Byte);
-                    break;
-                case Creature_FieldIndex.Personality:
-                    obj.Personality = default(Byte);
-                    break;
-                case Creature_FieldIndex.Luck:
-                    obj.Luck = default(Byte);
-                    break;
-                case Creature_FieldIndex.AttackReach:
-                    obj.AttackReach_Unset();
-                    break;
-                case Creature_FieldIndex.CombatStyle:
-                    obj.CombatStyle_Property.Unset(cmds);
-                    break;
-                case Creature_FieldIndex.TurningSpeed:
-                    obj.TurningSpeed_Unset();
-                    break;
-                case Creature_FieldIndex.BaseScale:
-                    obj.BaseScale_Unset();
-                    break;
-                case Creature_FieldIndex.FootWeight:
-                    obj.FootWeight_Unset();
-                    break;
-                case Creature_FieldIndex.BloodSpray:
-                    obj.BloodSpray_Unset();
-                    break;
-                case Creature_FieldIndex.BloodDecal:
-                    obj.BloodDecal_Unset();
-                    break;
-                case Creature_FieldIndex.InheritsSoundFrom:
-                    obj.InheritsSoundFrom_Property.Unset(cmds);
-                    break;
-                case Creature_FieldIndex.Sounds:
-                    obj.Sounds.Unset();
-                    break;
-                default:
-                    NPCAbstractCommon.UnsetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public static bool GetNthObjectHasBeenSet(
-            ushort index,
-            ICreature obj)
-        {
-            Creature_FieldIndex enu = (Creature_FieldIndex)index;
-            switch (enu)
-            {
-                case Creature_FieldIndex.Flags:
-                case Creature_FieldIndex.BaseSpellPoints:
-                case Creature_FieldIndex.Fatigue:
-                case Creature_FieldIndex.BarterGold:
-                case Creature_FieldIndex.LevelOffset:
-                case Creature_FieldIndex.CalcMin:
-                case Creature_FieldIndex.CalcMax:
-                case Creature_FieldIndex.Aggression:
-                case Creature_FieldIndex.Confidence:
-                case Creature_FieldIndex.EnergyLevel:
-                case Creature_FieldIndex.Responsibility:
-                case Creature_FieldIndex.BuySellServices:
-                case Creature_FieldIndex.Teaches:
-                case Creature_FieldIndex.MaximumTrainingLevel:
-                case Creature_FieldIndex.CreatureType:
-                case Creature_FieldIndex.CombatSkill:
-                case Creature_FieldIndex.MagicSkill:
-                case Creature_FieldIndex.StealthSkill:
-                case Creature_FieldIndex.SoulLevel:
-                case Creature_FieldIndex.Health:
-                case Creature_FieldIndex.AttackDamage:
-                case Creature_FieldIndex.Strength:
-                case Creature_FieldIndex.Intelligence:
-                case Creature_FieldIndex.Willpower:
-                case Creature_FieldIndex.Agility:
-                case Creature_FieldIndex.Speed:
-                case Creature_FieldIndex.Endurance:
-                case Creature_FieldIndex.Personality:
-                case Creature_FieldIndex.Luck:
-                    return true;
-                case Creature_FieldIndex.Name:
-                    return obj.Name_IsSet;
-                case Creature_FieldIndex.Model:
-                    return obj.Model_IsSet;
-                case Creature_FieldIndex.Items:
-                    return obj.Items.HasBeenSet;
-                case Creature_FieldIndex.Spells:
-                    return obj.Spells.HasBeenSet;
-                case Creature_FieldIndex.Models:
-                    return obj.Models.HasBeenSet;
-                case Creature_FieldIndex.NIFT:
-                    return obj.NIFT_IsSet;
-                case Creature_FieldIndex.Factions:
-                    return obj.Factions.HasBeenSet;
-                case Creature_FieldIndex.DeathItem:
-                    return obj.DeathItem_Property.HasBeenSet;
-                case Creature_FieldIndex.Script:
-                    return obj.Script_Property.HasBeenSet;
-                case Creature_FieldIndex.AIPackages:
-                    return obj.AIPackages.HasBeenSet;
-                case Creature_FieldIndex.Animations:
-                    return obj.Animations.HasBeenSet;
-                case Creature_FieldIndex.AttackReach:
-                    return obj.AttackReach_IsSet;
-                case Creature_FieldIndex.CombatStyle:
-                    return obj.CombatStyle_Property.HasBeenSet;
-                case Creature_FieldIndex.TurningSpeed:
-                    return obj.TurningSpeed_IsSet;
-                case Creature_FieldIndex.BaseScale:
-                    return obj.BaseScale_IsSet;
-                case Creature_FieldIndex.FootWeight:
-                    return obj.FootWeight_IsSet;
-                case Creature_FieldIndex.BloodSpray:
-                    return obj.BloodSpray_IsSet;
-                case Creature_FieldIndex.BloodDecal:
-                    return obj.BloodDecal_IsSet;
-                case Creature_FieldIndex.InheritsSoundFrom:
-                    return obj.InheritsSoundFrom_Property.HasBeenSet;
-                case Creature_FieldIndex.Sounds:
-                    return obj.Sounds.HasBeenSet;
-                default:
-                    return NPCAbstractCommon.GetNthObjectHasBeenSet(index, obj);
-            }
-        }
-
-        public static object GetNthObject(
-            ushort index,
-            ICreatureGetter obj)
-        {
-            Creature_FieldIndex enu = (Creature_FieldIndex)index;
-            switch (enu)
-            {
-                case Creature_FieldIndex.Name:
-                    return obj.Name;
-                case Creature_FieldIndex.Model:
-                    return obj.Model;
-                case Creature_FieldIndex.Items:
-                    return obj.Items;
-                case Creature_FieldIndex.Spells:
-                    return obj.Spells;
-                case Creature_FieldIndex.Models:
-                    return obj.Models;
-                case Creature_FieldIndex.NIFT:
-                    return obj.NIFT;
-                case Creature_FieldIndex.Flags:
-                    return obj.Flags;
-                case Creature_FieldIndex.BaseSpellPoints:
-                    return obj.BaseSpellPoints;
-                case Creature_FieldIndex.Fatigue:
-                    return obj.Fatigue;
-                case Creature_FieldIndex.BarterGold:
-                    return obj.BarterGold;
-                case Creature_FieldIndex.LevelOffset:
-                    return obj.LevelOffset;
-                case Creature_FieldIndex.CalcMin:
-                    return obj.CalcMin;
-                case Creature_FieldIndex.CalcMax:
-                    return obj.CalcMax;
-                case Creature_FieldIndex.Factions:
-                    return obj.Factions;
-                case Creature_FieldIndex.DeathItem:
-                    return obj.DeathItem;
-                case Creature_FieldIndex.Script:
-                    return obj.Script;
-                case Creature_FieldIndex.Aggression:
-                    return obj.Aggression;
-                case Creature_FieldIndex.Confidence:
-                    return obj.Confidence;
-                case Creature_FieldIndex.EnergyLevel:
-                    return obj.EnergyLevel;
-                case Creature_FieldIndex.Responsibility:
-                    return obj.Responsibility;
-                case Creature_FieldIndex.BuySellServices:
-                    return obj.BuySellServices;
-                case Creature_FieldIndex.Teaches:
-                    return obj.Teaches;
-                case Creature_FieldIndex.MaximumTrainingLevel:
-                    return obj.MaximumTrainingLevel;
-                case Creature_FieldIndex.AIPackages:
-                    return obj.AIPackages;
-                case Creature_FieldIndex.Animations:
-                    return obj.Animations;
-                case Creature_FieldIndex.CreatureType:
-                    return obj.CreatureType;
-                case Creature_FieldIndex.CombatSkill:
-                    return obj.CombatSkill;
-                case Creature_FieldIndex.MagicSkill:
-                    return obj.MagicSkill;
-                case Creature_FieldIndex.StealthSkill:
-                    return obj.StealthSkill;
-                case Creature_FieldIndex.SoulLevel:
-                    return obj.SoulLevel;
-                case Creature_FieldIndex.Health:
-                    return obj.Health;
-                case Creature_FieldIndex.AttackDamage:
-                    return obj.AttackDamage;
-                case Creature_FieldIndex.Strength:
-                    return obj.Strength;
-                case Creature_FieldIndex.Intelligence:
-                    return obj.Intelligence;
-                case Creature_FieldIndex.Willpower:
-                    return obj.Willpower;
-                case Creature_FieldIndex.Agility:
-                    return obj.Agility;
-                case Creature_FieldIndex.Speed:
-                    return obj.Speed;
-                case Creature_FieldIndex.Endurance:
-                    return obj.Endurance;
-                case Creature_FieldIndex.Personality:
-                    return obj.Personality;
-                case Creature_FieldIndex.Luck:
-                    return obj.Luck;
-                case Creature_FieldIndex.AttackReach:
-                    return obj.AttackReach;
-                case Creature_FieldIndex.CombatStyle:
-                    return obj.CombatStyle;
-                case Creature_FieldIndex.TurningSpeed:
-                    return obj.TurningSpeed;
-                case Creature_FieldIndex.BaseScale:
-                    return obj.BaseScale;
-                case Creature_FieldIndex.FootWeight:
-                    return obj.FootWeight;
-                case Creature_FieldIndex.BloodSpray:
-                    return obj.BloodSpray;
-                case Creature_FieldIndex.BloodDecal:
-                    return obj.BloodDecal;
-                case Creature_FieldIndex.InheritsSoundFrom:
-                    return obj.InheritsSoundFrom;
-                case Creature_FieldIndex.Sounds:
-                    return obj.Sounds;
-                default:
-                    return NPCAbstractCommon.GetNthObject(index, obj);
-            }
-        }
-
         public static void Clear(
             ICreature item,
             NotifyingUnsetParameters cmds = null)
@@ -6660,8 +6209,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (index)
             {
-                case NPCAbstract_FieldIndex.MajorRecordFlags:
-                    return (Creature_FieldIndex)((int)index);
                 case NPCAbstract_FieldIndex.FormKey:
                     return (Creature_FieldIndex)((int)index);
                 case NPCAbstract_FieldIndex.Version:
@@ -6669,6 +6216,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case NPCAbstract_FieldIndex.EditorID:
                     return (Creature_FieldIndex)((int)index);
                 case NPCAbstract_FieldIndex.RecordType:
+                    return (Creature_FieldIndex)((int)index);
+                case NPCAbstract_FieldIndex.OblivionMajorRecordFlags:
                     return (Creature_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
@@ -6685,8 +6234,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (index)
             {
-                case NPCSpawn_FieldIndex.MajorRecordFlags:
-                    return (Creature_FieldIndex)((int)index);
                 case NPCSpawn_FieldIndex.FormKey:
                     return (Creature_FieldIndex)((int)index);
                 case NPCSpawn_FieldIndex.Version:
@@ -6694,6 +6241,33 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case NPCSpawn_FieldIndex.EditorID:
                     return (Creature_FieldIndex)((int)index);
                 case NPCSpawn_FieldIndex.RecordType:
+                    return (Creature_FieldIndex)((int)index);
+                case NPCSpawn_FieldIndex.OblivionMajorRecordFlags:
+                    return (Creature_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
+        }
+
+        public static Creature_FieldIndex? ConvertFieldIndex(OblivionMajorRecord_FieldIndex? index)
+        {
+            if (!index.HasValue) return null;
+            return ConvertFieldIndex(index: index.Value);
+        }
+
+        public static Creature_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
+        {
+            switch (index)
+            {
+                case OblivionMajorRecord_FieldIndex.FormKey:
+                    return (Creature_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.Version:
+                    return (Creature_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.EditorID:
+                    return (Creature_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.RecordType:
+                    return (Creature_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
                     return (Creature_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
@@ -6710,8 +6284,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (index)
             {
-                case MajorRecord_FieldIndex.MajorRecordFlags:
-                    return (Creature_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
                     return (Creature_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.Version:
@@ -8618,7 +8190,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: Creature_Registration.CREA_HEADER,
                 type: ObjectType.Record))
             {
-                MajorRecordCommon.Write_Binary_Embedded(
+                OblivionMajorRecordCommon.Write_Binary_Embedded(
                     item: item,
                     writer: writer,
                     errorMask: errorMask,

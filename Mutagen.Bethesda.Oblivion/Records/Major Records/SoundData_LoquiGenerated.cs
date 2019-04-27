@@ -84,28 +84,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        #region Loqui Getter Interface
-
-        protected virtual object GetNthObject(ushort index) => SoundDataCommon.GetNthObject(index, this);
-        object ILoquiObjectGetter.GetNthObject(ushort index) => this.GetNthObject(index);
-
-        protected virtual bool GetNthObjectHasBeenSet(ushort index) => SoundDataCommon.GetNthObjectHasBeenSet(index, this);
-        bool ILoquiObjectGetter.GetNthObjectHasBeenSet(ushort index) => this.GetNthObjectHasBeenSet(index);
-
-        protected virtual void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => SoundDataCommon.UnsetNthObject(index, this, cmds);
-        void ILoquiObjectSetter.UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => this.UnsetNthObject(index, cmds);
-
-        #endregion
-
-        #region Loqui Interface
-        protected virtual void SetNthObjectHasBeenSet(ushort index, bool on)
-        {
-            SoundDataCommon.SetNthObjectHasBeenSet(index, on, this);
-        }
-        void ILoquiObjectSetter.SetNthObjectHasBeenSet(ushort index, bool on) => this.SetNthObjectHasBeenSet(index, on);
-
-        #endregion
-
         IMask<bool> IEqualsMask<SoundData>.GetEqualsMask(SoundData rhs, EqualsMaskHelper.Include include) => SoundDataCommon.GetEqualsMask(this, rhs, include);
         IMask<bool> IEqualsMask<ISoundDataGetter>.GetEqualsMask(ISoundDataGetter rhs, EqualsMaskHelper.Include include) => SoundDataCommon.GetEqualsMask(this, rhs, include);
         #region To String
@@ -791,7 +769,6 @@ namespace Mutagen.Bethesda.Oblivion
                 cmds: cmds);
         }
 
-        void ILoquiObjectSetter.SetNthObject(ushort index, object obj, NotifyingFireParameters cmds) => this.SetNthObject(index, obj, cmds);
         protected virtual void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
         {
             SoundData_FieldIndex enu = (SoundData_FieldIndex)index;
@@ -862,11 +839,6 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, SoundData obj)
-        {
-            ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
-        }
-
     }
     #endregion
 
@@ -1217,88 +1189,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         #endregion
-
-        public static void SetNthObjectHasBeenSet(
-            ushort index,
-            bool on,
-            ISoundData obj,
-            NotifyingFireParameters cmds = null)
-        {
-            SoundData_FieldIndex enu = (SoundData_FieldIndex)index;
-            switch (enu)
-            {
-                case SoundData_FieldIndex.MinimumAttenuationDistance:
-                case SoundData_FieldIndex.MaximumAttenuationDistance:
-                case SoundData_FieldIndex.FrequencyAdjustment:
-                case SoundData_FieldIndex.Flags:
-                    if (on) break;
-                    throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static void UnsetNthObject(
-            ushort index,
-            ISoundData obj,
-            NotifyingUnsetParameters cmds = null)
-        {
-            SoundData_FieldIndex enu = (SoundData_FieldIndex)index;
-            switch (enu)
-            {
-                case SoundData_FieldIndex.MinimumAttenuationDistance:
-                    obj.MinimumAttenuationDistance = default(UInt16);
-                    break;
-                case SoundData_FieldIndex.MaximumAttenuationDistance:
-                    obj.MaximumAttenuationDistance = default(UInt16);
-                    break;
-                case SoundData_FieldIndex.FrequencyAdjustment:
-                    obj.FrequencyAdjustment = default(SByte);
-                    break;
-                case SoundData_FieldIndex.Flags:
-                    obj.Flags = default(SoundData.Flag);
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthObjectHasBeenSet(
-            ushort index,
-            ISoundData obj)
-        {
-            SoundData_FieldIndex enu = (SoundData_FieldIndex)index;
-            switch (enu)
-            {
-                case SoundData_FieldIndex.MinimumAttenuationDistance:
-                case SoundData_FieldIndex.MaximumAttenuationDistance:
-                case SoundData_FieldIndex.FrequencyAdjustment:
-                case SoundData_FieldIndex.Flags:
-                    return true;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static object GetNthObject(
-            ushort index,
-            ISoundDataGetter obj)
-        {
-            SoundData_FieldIndex enu = (SoundData_FieldIndex)index;
-            switch (enu)
-            {
-                case SoundData_FieldIndex.MinimumAttenuationDistance:
-                    return obj.MinimumAttenuationDistance;
-                case SoundData_FieldIndex.MaximumAttenuationDistance:
-                    return obj.MaximumAttenuationDistance;
-                case SoundData_FieldIndex.FrequencyAdjustment:
-                    return obj.FrequencyAdjustment;
-                case SoundData_FieldIndex.Flags:
-                    return obj.Flags;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
 
         public static void Clear(
             ISoundData item,

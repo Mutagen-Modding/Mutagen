@@ -374,24 +374,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        #region Loqui Getter Interface
-
-        protected override object GetNthObject(ushort index) => WorldspaceCommon.GetNthObject(index, this);
-
-        protected override bool GetNthObjectHasBeenSet(ushort index) => WorldspaceCommon.GetNthObjectHasBeenSet(index, this);
-
-        protected override void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => WorldspaceCommon.UnsetNthObject(index, this, cmds);
-
-        #endregion
-
-        #region Loqui Interface
-        protected override void SetNthObjectHasBeenSet(ushort index, bool on)
-        {
-            WorldspaceCommon.SetNthObjectHasBeenSet(index, on, this);
-        }
-
-        #endregion
-
         IMask<bool> IEqualsMask<Worldspace>.GetEqualsMask(Worldspace rhs, EqualsMaskHelper.Include include) => WorldspaceCommon.GetEqualsMask(this, rhs, include);
         IMask<bool> IEqualsMask<IWorldspaceGetter>.GetEqualsMask(IWorldspaceGetter rhs, EqualsMaskHelper.Include include) => WorldspaceCommon.GetEqualsMask(this, rhs, include);
         #region To String
@@ -823,6 +805,22 @@ namespace Mutagen.Bethesda.Oblivion
 
         public override void Write_Xml(
             XElement node,
+            out OblivionMajorRecord_ErrorMask errorMask,
+            bool doMasks = true,
+            OblivionMajorRecord_TranslationMask translationMask = null,
+            string name = null)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            this.Write_Xml(
+                name: name,
+                node: node,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal());
+            errorMask = Worldspace_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public override void Write_Xml(
+            XElement node,
             out MajorRecord_ErrorMask errorMask,
             bool doMasks = true,
             MajorRecord_TranslationMask translationMask = null,
@@ -976,9 +974,9 @@ namespace Mutagen.Bethesda.Oblivion
             CustomCtor();
         }
 
-        partial void PostDuplicate(Worldspace obj, Worldspace rhs, Func<FormKey> getNextFormKey, IList<(MajorRecord Record, FormKey OriginalFormKey)> duplicatedRecords);
+        partial void PostDuplicate(Worldspace obj, Worldspace rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
 
-        public override MajorRecord Duplicate(Func<FormKey> getNextFormKey, IList<(MajorRecord Record, FormKey OriginalFormKey)> duplicatedRecords)
+        public override IMajorRecordCommon Duplicate(Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
         {
             var ret = new Worldspace(getNextFormKey());
             ret.CopyFieldsFrom(this);
@@ -1074,6 +1072,21 @@ namespace Mutagen.Bethesda.Oblivion
             MutagenWriter writer,
             MasterReferences masterReferences,
             out Place_ErrorMask errorMask,
+            bool doMasks = true)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            this.Write_Binary(
+                masterReferences: masterReferences,
+                writer: writer,
+                errorMask: errorMaskBuilder,
+                recordTypeConverter: null);
+            errorMask = Worldspace_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public override void Write_Binary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            out OblivionMajorRecord_ErrorMask errorMask,
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
@@ -1742,11 +1755,6 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, Worldspace obj)
-        {
-            ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
-        }
-
     }
     #endregion
 
@@ -1897,11 +1905,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #region Field Index
     public enum Worldspace_FieldIndex
     {
-        MajorRecordFlags = 0,
-        FormKey = 1,
-        Version = 2,
-        EditorID = 3,
-        RecordType = 4,
+        FormKey = 0,
+        Version = 1,
+        EditorID = 2,
+        RecordType = 3,
+        OblivionMajorRecordFlags = 4,
         Name = 5,
         Parent = 6,
         Climate = 7,
@@ -2767,209 +2775,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void SetNthObjectHasBeenSet(
-            ushort index,
-            bool on,
-            IWorldspace obj,
-            NotifyingFireParameters cmds = null)
-        {
-            Worldspace_FieldIndex enu = (Worldspace_FieldIndex)index;
-            switch (enu)
-            {
-                case Worldspace_FieldIndex.SubCellsTimestamp:
-                    if (on) break;
-                    throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
-                case Worldspace_FieldIndex.Name:
-                    obj.Name_IsSet = on;
-                    break;
-                case Worldspace_FieldIndex.Parent:
-                    obj.Parent_Property.HasBeenSet = on;
-                    break;
-                case Worldspace_FieldIndex.Climate:
-                    obj.Climate_Property.HasBeenSet = on;
-                    break;
-                case Worldspace_FieldIndex.Water:
-                    obj.Water_Property.HasBeenSet = on;
-                    break;
-                case Worldspace_FieldIndex.Icon:
-                    obj.Icon_IsSet = on;
-                    break;
-                case Worldspace_FieldIndex.MapData:
-                    obj.MapData_IsSet = on;
-                    break;
-                case Worldspace_FieldIndex.Flags:
-                    obj.Flags_IsSet = on;
-                    break;
-                case Worldspace_FieldIndex.ObjectBoundsMin:
-                    obj.ObjectBoundsMin_IsSet = on;
-                    break;
-                case Worldspace_FieldIndex.ObjectBoundsMax:
-                    obj.ObjectBoundsMax_IsSet = on;
-                    break;
-                case Worldspace_FieldIndex.Music:
-                    obj.Music_IsSet = on;
-                    break;
-                case Worldspace_FieldIndex.OffsetData:
-                    obj.OffsetData_IsSet = on;
-                    break;
-                case Worldspace_FieldIndex.Road:
-                    obj.Road_IsSet = on;
-                    break;
-                case Worldspace_FieldIndex.TopCell:
-                    obj.TopCell_IsSet = on;
-                    break;
-                case Worldspace_FieldIndex.SubCells:
-                    obj.SubCells.HasBeenSet = on;
-                    break;
-                default:
-                    PlaceCommon.SetNthObjectHasBeenSet(index, on, obj);
-                    break;
-            }
-        }
-
-        public static void UnsetNthObject(
-            ushort index,
-            IWorldspace obj,
-            NotifyingUnsetParameters cmds = null)
-        {
-            Worldspace_FieldIndex enu = (Worldspace_FieldIndex)index;
-            switch (enu)
-            {
-                case Worldspace_FieldIndex.Name:
-                    obj.Name_Unset();
-                    break;
-                case Worldspace_FieldIndex.Parent:
-                    obj.Parent_Property.Unset(cmds);
-                    break;
-                case Worldspace_FieldIndex.Climate:
-                    obj.Climate_Property.Unset(cmds);
-                    break;
-                case Worldspace_FieldIndex.Water:
-                    obj.Water_Property.Unset(cmds);
-                    break;
-                case Worldspace_FieldIndex.Icon:
-                    obj.Icon_Unset();
-                    break;
-                case Worldspace_FieldIndex.MapData:
-                    obj.MapData_Unset();
-                    break;
-                case Worldspace_FieldIndex.Flags:
-                    obj.Flags_Unset();
-                    break;
-                case Worldspace_FieldIndex.ObjectBoundsMin:
-                    obj.ObjectBoundsMin_Unset();
-                    break;
-                case Worldspace_FieldIndex.ObjectBoundsMax:
-                    obj.ObjectBoundsMax_Unset();
-                    break;
-                case Worldspace_FieldIndex.Music:
-                    obj.Music_Unset();
-                    break;
-                case Worldspace_FieldIndex.OffsetData:
-                    obj.OffsetData_Unset();
-                    break;
-                case Worldspace_FieldIndex.Road:
-                    obj.Road_Unset();
-                    break;
-                case Worldspace_FieldIndex.TopCell:
-                    obj.TopCell_Unset();
-                    break;
-                case Worldspace_FieldIndex.SubCellsTimestamp:
-                    obj.SubCellsTimestamp = default(Byte[]);
-                    break;
-                case Worldspace_FieldIndex.SubCells:
-                    obj.SubCells.Unset();
-                    break;
-                default:
-                    PlaceCommon.UnsetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public static bool GetNthObjectHasBeenSet(
-            ushort index,
-            IWorldspace obj)
-        {
-            Worldspace_FieldIndex enu = (Worldspace_FieldIndex)index;
-            switch (enu)
-            {
-                case Worldspace_FieldIndex.SubCellsTimestamp:
-                    return true;
-                case Worldspace_FieldIndex.Name:
-                    return obj.Name_IsSet;
-                case Worldspace_FieldIndex.Parent:
-                    return obj.Parent_Property.HasBeenSet;
-                case Worldspace_FieldIndex.Climate:
-                    return obj.Climate_Property.HasBeenSet;
-                case Worldspace_FieldIndex.Water:
-                    return obj.Water_Property.HasBeenSet;
-                case Worldspace_FieldIndex.Icon:
-                    return obj.Icon_IsSet;
-                case Worldspace_FieldIndex.MapData:
-                    return obj.MapData_IsSet;
-                case Worldspace_FieldIndex.Flags:
-                    return obj.Flags_IsSet;
-                case Worldspace_FieldIndex.ObjectBoundsMin:
-                    return obj.ObjectBoundsMin_IsSet;
-                case Worldspace_FieldIndex.ObjectBoundsMax:
-                    return obj.ObjectBoundsMax_IsSet;
-                case Worldspace_FieldIndex.Music:
-                    return obj.Music_IsSet;
-                case Worldspace_FieldIndex.OffsetData:
-                    return obj.OffsetData_IsSet;
-                case Worldspace_FieldIndex.Road:
-                    return obj.Road_IsSet;
-                case Worldspace_FieldIndex.TopCell:
-                    return obj.TopCell_IsSet;
-                case Worldspace_FieldIndex.SubCells:
-                    return obj.SubCells.HasBeenSet;
-                default:
-                    return PlaceCommon.GetNthObjectHasBeenSet(index, obj);
-            }
-        }
-
-        public static object GetNthObject(
-            ushort index,
-            IWorldspaceGetter obj)
-        {
-            Worldspace_FieldIndex enu = (Worldspace_FieldIndex)index;
-            switch (enu)
-            {
-                case Worldspace_FieldIndex.Name:
-                    return obj.Name;
-                case Worldspace_FieldIndex.Parent:
-                    return obj.Parent;
-                case Worldspace_FieldIndex.Climate:
-                    return obj.Climate;
-                case Worldspace_FieldIndex.Water:
-                    return obj.Water;
-                case Worldspace_FieldIndex.Icon:
-                    return obj.Icon;
-                case Worldspace_FieldIndex.MapData:
-                    return obj.MapData;
-                case Worldspace_FieldIndex.Flags:
-                    return obj.Flags;
-                case Worldspace_FieldIndex.ObjectBoundsMin:
-                    return obj.ObjectBoundsMin;
-                case Worldspace_FieldIndex.ObjectBoundsMax:
-                    return obj.ObjectBoundsMax;
-                case Worldspace_FieldIndex.Music:
-                    return obj.Music;
-                case Worldspace_FieldIndex.OffsetData:
-                    return obj.OffsetData;
-                case Worldspace_FieldIndex.Road:
-                    return obj.Road;
-                case Worldspace_FieldIndex.TopCell:
-                    return obj.TopCell;
-                case Worldspace_FieldIndex.SubCellsTimestamp:
-                    return obj.SubCellsTimestamp;
-                case Worldspace_FieldIndex.SubCells:
-                    return obj.SubCells;
-                default:
-                    return PlaceCommon.GetNthObject(index, obj);
-            }
-        }
-
         public static void Clear(
             IWorldspace item,
             NotifyingUnsetParameters cmds = null)
@@ -3211,8 +3016,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (index)
             {
-                case Place_FieldIndex.MajorRecordFlags:
-                    return (Worldspace_FieldIndex)((int)index);
                 case Place_FieldIndex.FormKey:
                     return (Worldspace_FieldIndex)((int)index);
                 case Place_FieldIndex.Version:
@@ -3220,6 +3023,33 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Place_FieldIndex.EditorID:
                     return (Worldspace_FieldIndex)((int)index);
                 case Place_FieldIndex.RecordType:
+                    return (Worldspace_FieldIndex)((int)index);
+                case Place_FieldIndex.OblivionMajorRecordFlags:
+                    return (Worldspace_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
+        }
+
+        public static Worldspace_FieldIndex? ConvertFieldIndex(OblivionMajorRecord_FieldIndex? index)
+        {
+            if (!index.HasValue) return null;
+            return ConvertFieldIndex(index: index.Value);
+        }
+
+        public static Worldspace_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
+        {
+            switch (index)
+            {
+                case OblivionMajorRecord_FieldIndex.FormKey:
+                    return (Worldspace_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.Version:
+                    return (Worldspace_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.EditorID:
+                    return (Worldspace_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.RecordType:
+                    return (Worldspace_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
                     return (Worldspace_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
@@ -3236,8 +3066,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (index)
             {
-                case MajorRecord_FieldIndex.MajorRecordFlags:
-                    return (Worldspace_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
                     return (Worldspace_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.Version:
@@ -3911,7 +3739,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             MasterReferences masterReferences)
         {
-            MajorRecordCommon.Write_Binary_Embedded(
+            OblivionMajorRecordCommon.Write_Binary_Embedded(
                 item: item,
                 writer: writer,
                 errorMask: errorMask,

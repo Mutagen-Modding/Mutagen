@@ -79,28 +79,6 @@ namespace Mutagen.Bethesda.Tests
 
         #endregion
 
-        #region Loqui Getter Interface
-
-        protected object GetNthObject(ushort index) => TestingSettingsCommon.GetNthObject(index, this);
-        object ILoquiObjectGetter.GetNthObject(ushort index) => this.GetNthObject(index);
-
-        protected bool GetNthObjectHasBeenSet(ushort index) => TestingSettingsCommon.GetNthObjectHasBeenSet(index, this);
-        bool ILoquiObjectGetter.GetNthObjectHasBeenSet(ushort index) => this.GetNthObjectHasBeenSet(index);
-
-        protected void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => TestingSettingsCommon.UnsetNthObject(index, this, cmds);
-        void ILoquiObjectSetter.UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => this.UnsetNthObject(index, cmds);
-
-        #endregion
-
-        #region Loqui Interface
-        protected void SetNthObjectHasBeenSet(ushort index, bool on)
-        {
-            TestingSettingsCommon.SetNthObjectHasBeenSet(index, on, this);
-        }
-        void ILoquiObjectSetter.SetNthObjectHasBeenSet(ushort index, bool on) => this.SetNthObjectHasBeenSet(index, on);
-
-        #endregion
-
         IMask<bool> IEqualsMask<TestingSettings>.GetEqualsMask(TestingSettings rhs, EqualsMaskHelper.Include include) => TestingSettingsCommon.GetEqualsMask(this, rhs, include);
         IMask<bool> IEqualsMask<ITestingSettingsGetter>.GetEqualsMask(ITestingSettingsGetter rhs, EqualsMaskHelper.Include include) => TestingSettingsCommon.GetEqualsMask(this, rhs, include);
         #region To String
@@ -676,7 +654,6 @@ namespace Mutagen.Bethesda.Tests
                 cmds: cmds);
         }
 
-        void ILoquiObjectSetter.SetNthObject(ushort index, object obj, NotifyingFireParameters cmds) => this.SetNthObject(index, obj, cmds);
         protected void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
         {
             TestingSettings_FieldIndex enu = (TestingSettings_FieldIndex)index;
@@ -759,11 +736,6 @@ namespace Mutagen.Bethesda.Tests
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, TestingSettings obj)
-        {
-            ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
-        }
-
     }
     #endregion
 
@@ -1210,102 +1182,6 @@ namespace Mutagen.Bethesda.Tests.Internals
 
         #endregion
 
-        public static void SetNthObjectHasBeenSet(
-            ushort index,
-            bool on,
-            ITestingSettings obj,
-            NotifyingFireParameters cmds = null)
-        {
-            TestingSettings_FieldIndex enu = (TestingSettings_FieldIndex)index;
-            switch (enu)
-            {
-                case TestingSettings_FieldIndex.TestGroupMasks:
-                case TestingSettings_FieldIndex.TestModList:
-                case TestingSettings_FieldIndex.TestFlattenedMod:
-                case TestingSettings_FieldIndex.PassthroughSettings:
-                case TestingSettings_FieldIndex.OblivionESM:
-                case TestingSettings_FieldIndex.OtherPassthroughs:
-                    if (on) break;
-                    throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static void UnsetNthObject(
-            ushort index,
-            ITestingSettings obj,
-            NotifyingUnsetParameters cmds = null)
-        {
-            TestingSettings_FieldIndex enu = (TestingSettings_FieldIndex)index;
-            switch (enu)
-            {
-                case TestingSettings_FieldIndex.TestGroupMasks:
-                    obj.TestGroupMasks = default(Boolean);
-                    break;
-                case TestingSettings_FieldIndex.TestModList:
-                    obj.TestModList = default(Boolean);
-                    break;
-                case TestingSettings_FieldIndex.TestFlattenedMod:
-                    obj.TestFlattenedMod = default(Boolean);
-                    break;
-                case TestingSettings_FieldIndex.PassthroughSettings:
-                    obj.PassthroughSettings = default(PassthroughSettings);
-                    break;
-                case TestingSettings_FieldIndex.OblivionESM:
-                    obj.OblivionESM = default(Passthrough);
-                    break;
-                case TestingSettings_FieldIndex.OtherPassthroughs:
-                    obj.OtherPassthroughs.Unset();
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthObjectHasBeenSet(
-            ushort index,
-            ITestingSettings obj)
-        {
-            TestingSettings_FieldIndex enu = (TestingSettings_FieldIndex)index;
-            switch (enu)
-            {
-                case TestingSettings_FieldIndex.TestGroupMasks:
-                case TestingSettings_FieldIndex.TestModList:
-                case TestingSettings_FieldIndex.TestFlattenedMod:
-                case TestingSettings_FieldIndex.PassthroughSettings:
-                case TestingSettings_FieldIndex.OblivionESM:
-                case TestingSettings_FieldIndex.OtherPassthroughs:
-                    return true;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static object GetNthObject(
-            ushort index,
-            ITestingSettingsGetter obj)
-        {
-            TestingSettings_FieldIndex enu = (TestingSettings_FieldIndex)index;
-            switch (enu)
-            {
-                case TestingSettings_FieldIndex.TestGroupMasks:
-                    return obj.TestGroupMasks;
-                case TestingSettings_FieldIndex.TestModList:
-                    return obj.TestModList;
-                case TestingSettings_FieldIndex.TestFlattenedMod:
-                    return obj.TestFlattenedMod;
-                case TestingSettings_FieldIndex.PassthroughSettings:
-                    return obj.PassthroughSettings;
-                case TestingSettings_FieldIndex.OblivionESM:
-                    return obj.OblivionESM;
-                case TestingSettings_FieldIndex.OtherPassthroughs:
-                    return obj.OtherPassthroughs;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
         public static void Clear(
             ITestingSettings item,
             NotifyingUnsetParameters cmds = null)
@@ -1589,163 +1465,181 @@ namespace Mutagen.Bethesda.Tests.Internals
             switch (name)
             {
                 case "TestGroupMasks":
-                    try
+                    if ((translationMask?.GetShouldTranslate((int)TestingSettings_FieldIndex.TestGroupMasks) ?? true))
                     {
-                        errorMask?.PushIndex((int)TestingSettings_FieldIndex.TestGroupMasks);
-                        if (BooleanXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Boolean TestGroupMasksParse,
-                            errorMask: errorMask))
+                        try
                         {
-                            item.TestGroupMasks = TestGroupMasksParse;
+                            errorMask?.PushIndex((int)TestingSettings_FieldIndex.TestGroupMasks);
+                            if (BooleanXmlTranslation.Instance.Parse(
+                                node: node,
+                                item: out Boolean TestGroupMasksParse,
+                                errorMask: errorMask))
+                            {
+                                item.TestGroupMasks = TestGroupMasksParse;
+                            }
+                            else
+                            {
+                                item.TestGroupMasks = default(Boolean);
+                            }
                         }
-                        else
+                        catch (Exception ex)
+                        when (errorMask != null)
                         {
-                            item.TestGroupMasks = default(Boolean);
+                            errorMask.ReportException(ex);
                         }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
+                        finally
+                        {
+                            errorMask?.PopIndex();
+                        }
                     }
                     break;
                 case "TestModList":
-                    try
+                    if ((translationMask?.GetShouldTranslate((int)TestingSettings_FieldIndex.TestModList) ?? true))
                     {
-                        errorMask?.PushIndex((int)TestingSettings_FieldIndex.TestModList);
-                        if (BooleanXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Boolean TestModListParse,
-                            errorMask: errorMask))
+                        try
                         {
-                            item.TestModList = TestModListParse;
+                            errorMask?.PushIndex((int)TestingSettings_FieldIndex.TestModList);
+                            if (BooleanXmlTranslation.Instance.Parse(
+                                node: node,
+                                item: out Boolean TestModListParse,
+                                errorMask: errorMask))
+                            {
+                                item.TestModList = TestModListParse;
+                            }
+                            else
+                            {
+                                item.TestModList = default(Boolean);
+                            }
                         }
-                        else
+                        catch (Exception ex)
+                        when (errorMask != null)
                         {
-                            item.TestModList = default(Boolean);
+                            errorMask.ReportException(ex);
                         }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
+                        finally
+                        {
+                            errorMask?.PopIndex();
+                        }
                     }
                     break;
                 case "TestFlattenedMod":
-                    try
+                    if ((translationMask?.GetShouldTranslate((int)TestingSettings_FieldIndex.TestFlattenedMod) ?? true))
                     {
-                        errorMask?.PushIndex((int)TestingSettings_FieldIndex.TestFlattenedMod);
-                        if (BooleanXmlTranslation.Instance.Parse(
-                            node: node,
-                            item: out Boolean TestFlattenedModParse,
-                            errorMask: errorMask))
+                        try
                         {
-                            item.TestFlattenedMod = TestFlattenedModParse;
+                            errorMask?.PushIndex((int)TestingSettings_FieldIndex.TestFlattenedMod);
+                            if (BooleanXmlTranslation.Instance.Parse(
+                                node: node,
+                                item: out Boolean TestFlattenedModParse,
+                                errorMask: errorMask))
+                            {
+                                item.TestFlattenedMod = TestFlattenedModParse;
+                            }
+                            else
+                            {
+                                item.TestFlattenedMod = default(Boolean);
+                            }
                         }
-                        else
+                        catch (Exception ex)
+                        when (errorMask != null)
                         {
-                            item.TestFlattenedMod = default(Boolean);
+                            errorMask.ReportException(ex);
                         }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
+                        finally
+                        {
+                            errorMask?.PopIndex();
+                        }
                     }
                     break;
                 case "PassthroughSettings":
-                    try
+                    if ((translationMask?.GetShouldTranslate((int)TestingSettings_FieldIndex.PassthroughSettings) ?? true))
                     {
-                        errorMask?.PushIndex((int)TestingSettings_FieldIndex.PassthroughSettings);
-                        if (LoquiXmlTranslation<PassthroughSettings>.Instance.Parse(
-                            node: node,
-                            item: out PassthroughSettings PassthroughSettingsParse,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)TestingSettings_FieldIndex.PassthroughSettings)))
+                        try
                         {
-                            item.PassthroughSettings = PassthroughSettingsParse;
+                            errorMask?.PushIndex((int)TestingSettings_FieldIndex.PassthroughSettings);
+                            if (LoquiXmlTranslation<PassthroughSettings>.Instance.Parse(
+                                node: node,
+                                item: out PassthroughSettings PassthroughSettingsParse,
+                                errorMask: errorMask,
+                                translationMask: translationMask?.GetSubCrystal((int)TestingSettings_FieldIndex.PassthroughSettings)))
+                            {
+                                item.PassthroughSettings = PassthroughSettingsParse;
+                            }
+                            else
+                            {
+                                item.PassthroughSettings = default(PassthroughSettings);
+                            }
                         }
-                        else
+                        catch (Exception ex)
+                        when (errorMask != null)
                         {
-                            item.PassthroughSettings = default(PassthroughSettings);
+                            errorMask.ReportException(ex);
                         }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
+                        finally
+                        {
+                            errorMask?.PopIndex();
+                        }
                     }
                     break;
                 case "OblivionESM":
-                    try
+                    if ((translationMask?.GetShouldTranslate((int)TestingSettings_FieldIndex.OblivionESM) ?? true))
                     {
-                        errorMask?.PushIndex((int)TestingSettings_FieldIndex.OblivionESM);
-                        if (LoquiXmlTranslation<Passthrough>.Instance.Parse(
-                            node: node,
-                            item: out Passthrough OblivionESMParse,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)TestingSettings_FieldIndex.OblivionESM)))
+                        try
                         {
-                            item.OblivionESM = OblivionESMParse;
+                            errorMask?.PushIndex((int)TestingSettings_FieldIndex.OblivionESM);
+                            if (LoquiXmlTranslation<Passthrough>.Instance.Parse(
+                                node: node,
+                                item: out Passthrough OblivionESMParse,
+                                errorMask: errorMask,
+                                translationMask: translationMask?.GetSubCrystal((int)TestingSettings_FieldIndex.OblivionESM)))
+                            {
+                                item.OblivionESM = OblivionESMParse;
+                            }
+                            else
+                            {
+                                item.OblivionESM = default(Passthrough);
+                            }
                         }
-                        else
+                        catch (Exception ex)
+                        when (errorMask != null)
                         {
-                            item.OblivionESM = default(Passthrough);
+                            errorMask.ReportException(ex);
                         }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
+                        finally
+                        {
+                            errorMask?.PopIndex();
+                        }
                     }
                     break;
                 case "OtherPassthroughs":
-                    try
+                    if ((translationMask?.GetShouldTranslate((int)TestingSettings_FieldIndex.OtherPassthroughs) ?? true))
                     {
-                        errorMask?.PushIndex((int)TestingSettings_FieldIndex.OtherPassthroughs);
-                        if (ListXmlTranslation<Passthrough>.Instance.Parse(
-                            node: node,
-                            enumer: out var OtherPassthroughsItem,
-                            transl: LoquiXmlTranslation<Passthrough>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
+                        try
                         {
-                            item.OtherPassthroughs.SetTo(OtherPassthroughsItem);
+                            errorMask?.PushIndex((int)TestingSettings_FieldIndex.OtherPassthroughs);
+                            if (ListXmlTranslation<Passthrough>.Instance.Parse(
+                                node: node,
+                                enumer: out var OtherPassthroughsItem,
+                                transl: LoquiXmlTranslation<Passthrough>.Instance.Parse,
+                                errorMask: errorMask,
+                                translationMask: translationMask))
+                            {
+                                item.OtherPassthroughs.SetTo(OtherPassthroughsItem);
+                            }
+                            else
+                            {
+                                item.OtherPassthroughs.Unset();
+                            }
                         }
-                        else
+                        catch (Exception ex)
+                        when (errorMask != null)
                         {
-                            item.OtherPassthroughs.Unset();
+                            errorMask.ReportException(ex);
                         }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
+                        finally
+                        {
+                            errorMask?.PopIndex();
+                        }
                     }
                     break;
                 default:

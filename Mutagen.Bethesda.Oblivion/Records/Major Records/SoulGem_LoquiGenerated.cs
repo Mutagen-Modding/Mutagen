@@ -216,24 +216,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        #region Loqui Getter Interface
-
-        protected override object GetNthObject(ushort index) => SoulGemCommon.GetNthObject(index, this);
-
-        protected override bool GetNthObjectHasBeenSet(ushort index) => SoulGemCommon.GetNthObjectHasBeenSet(index, this);
-
-        protected override void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => SoulGemCommon.UnsetNthObject(index, this, cmds);
-
-        #endregion
-
-        #region Loqui Interface
-        protected override void SetNthObjectHasBeenSet(ushort index, bool on)
-        {
-            SoulGemCommon.SetNthObjectHasBeenSet(index, on, this);
-        }
-
-        #endregion
-
         IMask<bool> IEqualsMask<SoulGem>.GetEqualsMask(SoulGem rhs, EqualsMaskHelper.Include include) => SoulGemCommon.GetEqualsMask(this, rhs, include);
         IMask<bool> IEqualsMask<ISoulGemGetter>.GetEqualsMask(ISoulGemGetter rhs, EqualsMaskHelper.Include include) => SoulGemCommon.GetEqualsMask(this, rhs, include);
         #region To String
@@ -595,6 +577,22 @@ namespace Mutagen.Bethesda.Oblivion
 
         public override void Write_Xml(
             XElement node,
+            out OblivionMajorRecord_ErrorMask errorMask,
+            bool doMasks = true,
+            OblivionMajorRecord_TranslationMask translationMask = null,
+            string name = null)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            this.Write_Xml(
+                name: name,
+                node: node,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal());
+            errorMask = SoulGem_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public override void Write_Xml(
+            XElement node,
             out MajorRecord_ErrorMask errorMask,
             bool doMasks = true,
             MajorRecord_TranslationMask translationMask = null,
@@ -712,9 +710,9 @@ namespace Mutagen.Bethesda.Oblivion
             CustomCtor();
         }
 
-        partial void PostDuplicate(SoulGem obj, SoulGem rhs, Func<FormKey> getNextFormKey, IList<(MajorRecord Record, FormKey OriginalFormKey)> duplicatedRecords);
+        partial void PostDuplicate(SoulGem obj, SoulGem rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
 
-        public override MajorRecord Duplicate(Func<FormKey> getNextFormKey, IList<(MajorRecord Record, FormKey OriginalFormKey)> duplicatedRecords)
+        public override IMajorRecordCommon Duplicate(Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
         {
             var ret = new SoulGem(getNextFormKey());
             ret.CopyFieldsFrom(this);
@@ -796,6 +794,21 @@ namespace Mutagen.Bethesda.Oblivion
             MutagenWriter writer,
             MasterReferences masterReferences,
             out ItemAbstract_ErrorMask errorMask,
+            bool doMasks = true)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            this.Write_Binary(
+                masterReferences: masterReferences,
+                writer: writer,
+                errorMask: errorMaskBuilder,
+                recordTypeConverter: null);
+            errorMask = SoulGem_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public override void Write_Binary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
+            out OblivionMajorRecord_ErrorMask errorMask,
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
@@ -1302,11 +1315,6 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, SoulGem obj)
-        {
-            ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
-        }
-
     }
     #endregion
 
@@ -1397,11 +1405,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #region Field Index
     public enum SoulGem_FieldIndex
     {
-        MajorRecordFlags = 0,
-        FormKey = 1,
-        Version = 2,
-        EditorID = 3,
-        RecordType = 4,
+        FormKey = 0,
+        Version = 1,
+        EditorID = 2,
+        RecordType = 3,
+        OblivionMajorRecordFlags = 4,
         Name = 5,
         Model = 6,
         Icon = 7,
@@ -1918,136 +1926,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void SetNthObjectHasBeenSet(
-            ushort index,
-            bool on,
-            ISoulGem obj,
-            NotifyingFireParameters cmds = null)
-        {
-            SoulGem_FieldIndex enu = (SoulGem_FieldIndex)index;
-            switch (enu)
-            {
-                case SoulGem_FieldIndex.Value:
-                case SoulGem_FieldIndex.Weight:
-                    if (on) break;
-                    throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
-                case SoulGem_FieldIndex.Name:
-                    obj.Name_IsSet = on;
-                    break;
-                case SoulGem_FieldIndex.Model:
-                    obj.Model_IsSet = on;
-                    break;
-                case SoulGem_FieldIndex.Icon:
-                    obj.Icon_IsSet = on;
-                    break;
-                case SoulGem_FieldIndex.Script:
-                    obj.Script_Property.HasBeenSet = on;
-                    break;
-                case SoulGem_FieldIndex.ContainedSoul:
-                    obj.ContainedSoul_IsSet = on;
-                    break;
-                case SoulGem_FieldIndex.MaximumCapacity:
-                    obj.MaximumCapacity_IsSet = on;
-                    break;
-                default:
-                    ItemAbstractCommon.SetNthObjectHasBeenSet(index, on, obj);
-                    break;
-            }
-        }
-
-        public static void UnsetNthObject(
-            ushort index,
-            ISoulGem obj,
-            NotifyingUnsetParameters cmds = null)
-        {
-            SoulGem_FieldIndex enu = (SoulGem_FieldIndex)index;
-            switch (enu)
-            {
-                case SoulGem_FieldIndex.Name:
-                    obj.Name_Unset();
-                    break;
-                case SoulGem_FieldIndex.Model:
-                    obj.Model_Unset();
-                    break;
-                case SoulGem_FieldIndex.Icon:
-                    obj.Icon_Unset();
-                    break;
-                case SoulGem_FieldIndex.Script:
-                    obj.Script_Property.Unset(cmds);
-                    break;
-                case SoulGem_FieldIndex.Value:
-                    obj.Value = default(UInt32);
-                    break;
-                case SoulGem_FieldIndex.Weight:
-                    obj.Weight = default(Single);
-                    break;
-                case SoulGem_FieldIndex.ContainedSoul:
-                    obj.ContainedSoul_Unset();
-                    break;
-                case SoulGem_FieldIndex.MaximumCapacity:
-                    obj.MaximumCapacity_Unset();
-                    break;
-                default:
-                    ItemAbstractCommon.UnsetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public static bool GetNthObjectHasBeenSet(
-            ushort index,
-            ISoulGem obj)
-        {
-            SoulGem_FieldIndex enu = (SoulGem_FieldIndex)index;
-            switch (enu)
-            {
-                case SoulGem_FieldIndex.Value:
-                case SoulGem_FieldIndex.Weight:
-                    return true;
-                case SoulGem_FieldIndex.Name:
-                    return obj.Name_IsSet;
-                case SoulGem_FieldIndex.Model:
-                    return obj.Model_IsSet;
-                case SoulGem_FieldIndex.Icon:
-                    return obj.Icon_IsSet;
-                case SoulGem_FieldIndex.Script:
-                    return obj.Script_Property.HasBeenSet;
-                case SoulGem_FieldIndex.ContainedSoul:
-                    return obj.ContainedSoul_IsSet;
-                case SoulGem_FieldIndex.MaximumCapacity:
-                    return obj.MaximumCapacity_IsSet;
-                default:
-                    return ItemAbstractCommon.GetNthObjectHasBeenSet(index, obj);
-            }
-        }
-
-        public static object GetNthObject(
-            ushort index,
-            ISoulGemGetter obj)
-        {
-            SoulGem_FieldIndex enu = (SoulGem_FieldIndex)index;
-            switch (enu)
-            {
-                case SoulGem_FieldIndex.Name:
-                    return obj.Name;
-                case SoulGem_FieldIndex.Model:
-                    return obj.Model;
-                case SoulGem_FieldIndex.Icon:
-                    return obj.Icon;
-                case SoulGem_FieldIndex.Script:
-                    return obj.Script;
-                case SoulGem_FieldIndex.Value:
-                    return obj.Value;
-                case SoulGem_FieldIndex.Weight:
-                    return obj.Weight;
-                case SoulGem_FieldIndex.ContainedSoul:
-                    return obj.ContainedSoul;
-                case SoulGem_FieldIndex.MaximumCapacity:
-                    return obj.MaximumCapacity;
-                default:
-                    return ItemAbstractCommon.GetNthObject(index, obj);
-            }
-        }
-
         public static void Clear(
             ISoulGem item,
             NotifyingUnsetParameters cmds = null)
@@ -2201,8 +2079,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (index)
             {
-                case ItemAbstract_FieldIndex.MajorRecordFlags:
-                    return (SoulGem_FieldIndex)((int)index);
                 case ItemAbstract_FieldIndex.FormKey:
                     return (SoulGem_FieldIndex)((int)index);
                 case ItemAbstract_FieldIndex.Version:
@@ -2210,6 +2086,33 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case ItemAbstract_FieldIndex.EditorID:
                     return (SoulGem_FieldIndex)((int)index);
                 case ItemAbstract_FieldIndex.RecordType:
+                    return (SoulGem_FieldIndex)((int)index);
+                case ItemAbstract_FieldIndex.OblivionMajorRecordFlags:
+                    return (SoulGem_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
+        }
+
+        public static SoulGem_FieldIndex? ConvertFieldIndex(OblivionMajorRecord_FieldIndex? index)
+        {
+            if (!index.HasValue) return null;
+            return ConvertFieldIndex(index: index.Value);
+        }
+
+        public static SoulGem_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
+        {
+            switch (index)
+            {
+                case OblivionMajorRecord_FieldIndex.FormKey:
+                    return (SoulGem_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.Version:
+                    return (SoulGem_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.EditorID:
+                    return (SoulGem_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.RecordType:
+                    return (SoulGem_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
                     return (SoulGem_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
@@ -2226,8 +2129,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (index)
             {
-                case MajorRecord_FieldIndex.MajorRecordFlags:
-                    return (SoulGem_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
                     return (SoulGem_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.Version:
@@ -2647,7 +2548,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: SoulGem_Registration.SLGM_HEADER,
                 type: ObjectType.Record))
             {
-                MajorRecordCommon.Write_Binary_Embedded(
+                OblivionMajorRecordCommon.Write_Binary_Embedded(
                     item: item,
                     writer: writer,
                     errorMask: errorMask,

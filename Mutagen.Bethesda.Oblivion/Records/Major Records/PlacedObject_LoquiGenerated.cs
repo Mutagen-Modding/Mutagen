@@ -34,7 +34,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class PlacedObject : 
-        MajorRecord,
+        OblivionMajorRecord,
         IPlacedObject,
         ILoquiObject<PlacedObject>,
         ILoquiObjectSetter,
@@ -55,10 +55,10 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Base
-        public FormIDSetLink<MajorRecord> Base_Property { get; } = new FormIDSetLink<MajorRecord>();
-        public MajorRecord Base { get => Base_Property.Item; set => Base_Property.Item = value; }
+        public FormIDSetLink<OblivionMajorRecord> Base_Property { get; } = new FormIDSetLink<OblivionMajorRecord>();
+        public OblivionMajorRecord Base { get => Base_Property.Item; set => Base_Property.Item = value; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormIDSetLink<MajorRecord> IPlacedObjectGetter.Base_Property => this.Base_Property;
+        FormIDSetLink<OblivionMajorRecord> IPlacedObjectGetter.Base_Property => this.Base_Property;
         #endregion
         #region XPCIFluff
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -373,10 +373,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region Unknown
-        public FormIDSetLink<MajorRecord> Unknown_Property { get; } = new FormIDSetLink<MajorRecord>();
-        public MajorRecord Unknown { get => Unknown_Property.Item; set => Unknown_Property.Item = value; }
+        public FormIDSetLink<OblivionMajorRecord> Unknown_Property { get; } = new FormIDSetLink<OblivionMajorRecord>();
+        public OblivionMajorRecord Unknown { get => Unknown_Property.Item; set => Unknown_Property.Item = value; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormIDSetLink<MajorRecord> IPlacedObjectGetter.Unknown_Property => this.Unknown_Property;
+        FormIDSetLink<OblivionMajorRecord> IPlacedObjectGetter.Unknown_Property => this.Unknown_Property;
         #endregion
         #region ActionFlags
         public bool ActionFlags_IsSet
@@ -548,24 +548,6 @@ namespace Mutagen.Bethesda.Oblivion
                 this.RaiseAndSetIfChanged(ref this._Rotation, value, nameof(Rotation));
             }
         }
-        #endregion
-
-        #region Loqui Getter Interface
-
-        protected override object GetNthObject(ushort index) => PlacedObjectCommon.GetNthObject(index, this);
-
-        protected override bool GetNthObjectHasBeenSet(ushort index) => PlacedObjectCommon.GetNthObjectHasBeenSet(index, this);
-
-        protected override void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => PlacedObjectCommon.UnsetNthObject(index, this, cmds);
-
-        #endregion
-
-        #region Loqui Interface
-        protected override void SetNthObjectHasBeenSet(ushort index, bool on)
-        {
-            PlacedObjectCommon.SetNthObjectHasBeenSet(index, on, this);
-        }
-
         #endregion
 
         IMask<bool> IEqualsMask<PlacedObject>.GetEqualsMask(PlacedObject rhs, EqualsMaskHelper.Include include) => PlacedObjectCommon.GetEqualsMask(this, rhs, include);
@@ -1059,6 +1041,22 @@ namespace Mutagen.Bethesda.Oblivion
         #region Base Class Trickdown Overrides
         public override void Write_Xml(
             XElement node,
+            out OblivionMajorRecord_ErrorMask errorMask,
+            bool doMasks = true,
+            OblivionMajorRecord_TranslationMask translationMask = null,
+            string name = null)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            this.Write_Xml(
+                name: name,
+                node: node,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal());
+            errorMask = PlacedObject_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public override void Write_Xml(
+            XElement node,
             out MajorRecord_ErrorMask errorMask,
             bool doMasks = true,
             MajorRecord_TranslationMask translationMask = null,
@@ -1103,7 +1101,7 @@ namespace Mutagen.Bethesda.Oblivion
                     item.DATADataTypeState |= PlacedObject.DATADataType.Has;
                     break;
                 default:
-                    MajorRecord.FillPrivateElement_Xml(
+                    OblivionMajorRecord.FillPrivateElement_Xml(
                         item: item,
                         node: node,
                         name: name,
@@ -1265,9 +1263,9 @@ namespace Mutagen.Bethesda.Oblivion
             CustomCtor();
         }
 
-        partial void PostDuplicate(PlacedObject obj, PlacedObject rhs, Func<FormKey> getNextFormKey, IList<(MajorRecord Record, FormKey OriginalFormKey)> duplicatedRecords);
+        partial void PostDuplicate(PlacedObject obj, PlacedObject rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
 
-        public override MajorRecord Duplicate(Func<FormKey> getNextFormKey, IList<(MajorRecord Record, FormKey OriginalFormKey)> duplicatedRecords)
+        public override IMajorRecordCommon Duplicate(Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
         {
             var ret = new PlacedObject(getNextFormKey());
             ret.CopyFieldsFrom(this);
@@ -1348,6 +1346,21 @@ namespace Mutagen.Bethesda.Oblivion
         public override void Write_Binary(
             MutagenWriter writer,
             MasterReferences masterReferences,
+            out OblivionMajorRecord_ErrorMask errorMask,
+            bool doMasks = true)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            this.Write_Binary(
+                masterReferences: masterReferences,
+                writer: writer,
+                errorMask: errorMaskBuilder,
+                recordTypeConverter: null);
+            errorMask = PlacedObject_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public override void Write_Binary(
+            MutagenWriter writer,
+            MasterReferences masterReferences,
             out MajorRecord_ErrorMask errorMask,
             bool doMasks = true)
         {
@@ -1408,7 +1421,7 @@ namespace Mutagen.Bethesda.Oblivion
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            MajorRecord.Fill_Binary_Structs(
+            OblivionMajorRecord.Fill_Binary_Structs(
                 item: item,
                 frame: frame,
                 masterReferences: masterReferences,
@@ -2026,7 +2039,7 @@ namespace Mutagen.Bethesda.Oblivion
                     return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Rotation);
                 }
                 default:
-                    return MajorRecord.Fill_Binary_RecordTypes(
+                    return OblivionMajorRecord.Fill_Binary_RecordTypes(
                         item: item,
                         frame: frame,
                         nextRecordType: nextRecordType,
@@ -2162,7 +2175,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case PlacedObject_FieldIndex.Base:
                     this.Base_Property.Set(
-                        (FormIDSetLink<MajorRecord>)obj,
+                        (FormIDSetLink<OblivionMajorRecord>)obj,
                         cmds);
                     break;
                 case PlacedObject_FieldIndex.XPCIFluff:
@@ -2215,7 +2228,7 @@ namespace Mutagen.Bethesda.Oblivion
                     break;
                 case PlacedObject_FieldIndex.Unknown:
                     this.Unknown_Property.Set(
-                        (FormIDSetLink<MajorRecord>)obj,
+                        (FormIDSetLink<OblivionMajorRecord>)obj,
                         cmds);
                     break;
                 case PlacedObject_FieldIndex.ActionFlags:
@@ -2274,13 +2287,13 @@ namespace Mutagen.Bethesda.Oblivion
         {
             if (!EnumExt.TryParse(pair.Key, out PlacedObject_FieldIndex enu))
             {
-                CopyInInternal_MajorRecord(obj, pair);
+                CopyInInternal_OblivionMajorRecord(obj, pair);
             }
             switch (enu)
             {
                 case PlacedObject_FieldIndex.Base:
                     obj.Base_Property.Set(
-                        (FormIDSetLink<MajorRecord>)pair.Value,
+                        (FormIDSetLink<OblivionMajorRecord>)pair.Value,
                         null);
                     break;
                 case PlacedObject_FieldIndex.XPCIFluff:
@@ -2333,7 +2346,7 @@ namespace Mutagen.Bethesda.Oblivion
                     break;
                 case PlacedObject_FieldIndex.Unknown:
                     obj.Unknown_Property.Set(
-                        (FormIDSetLink<MajorRecord>)pair.Value,
+                        (FormIDSetLink<OblivionMajorRecord>)pair.Value,
                         null);
                     break;
                 case PlacedObject_FieldIndex.ActionFlags:
@@ -2369,18 +2382,13 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, PlacedObject obj)
-        {
-            ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
-        }
-
     }
     #endregion
 
     #region Interface
-    public partial interface IPlacedObject : IPlacedObjectGetter, IMajorRecord, ILoquiClass<IPlacedObject, IPlacedObjectGetter>, ILoquiClass<PlacedObject, IPlacedObjectGetter>
+    public partial interface IPlacedObject : IPlacedObjectGetter, IOblivionMajorRecord, ILoquiClass<IPlacedObject, IPlacedObjectGetter>, ILoquiClass<PlacedObject, IPlacedObjectGetter>
     {
-        new MajorRecord Base { get; set; }
+        new OblivionMajorRecord Base { get; set; }
         new Byte[] XPCIFluff { get; set; }
         new bool XPCIFluff_IsSet { get; set; }
         void XPCIFluff_Set(Byte[] item, bool hasBeenSet = true);
@@ -2439,7 +2447,7 @@ namespace Mutagen.Bethesda.Oblivion
         void LevelModifier_Set(Int32 item, bool hasBeenSet = true);
         void LevelModifier_Unset();
 
-        new MajorRecord Unknown { get; set; }
+        new OblivionMajorRecord Unknown { get; set; }
         new PlacedObject.ActionFlag ActionFlags { get; set; }
         new bool ActionFlags_IsSet { get; set; }
         void ActionFlags_Set(PlacedObject.ActionFlag item, bool hasBeenSet = true);
@@ -2474,11 +2482,11 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
-    public partial interface IPlacedObjectGetter : IMajorRecordGetter
+    public partial interface IPlacedObjectGetter : IOblivionMajorRecordGetter
     {
         #region Base
-        MajorRecord Base { get; }
-        FormIDSetLink<MajorRecord> Base_Property { get; }
+        OblivionMajorRecord Base { get; }
+        FormIDSetLink<OblivionMajorRecord> Base_Property { get; }
 
         #endregion
         #region XPCIFluff
@@ -2552,8 +2560,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Unknown
-        MajorRecord Unknown { get; }
-        FormIDSetLink<MajorRecord> Unknown_Property { get; }
+        OblivionMajorRecord Unknown { get; }
+        FormIDSetLink<OblivionMajorRecord> Unknown_Property { get; }
 
         #endregion
         #region ActionFlags
@@ -2610,11 +2618,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #region Field Index
     public enum PlacedObject_FieldIndex
     {
-        MajorRecordFlags = 0,
-        FormKey = 1,
-        Version = 2,
-        EditorID = 3,
-        RecordType = 4,
+        FormKey = 0,
+        Version = 1,
+        EditorID = 2,
+        RecordType = 3,
+        OblivionMajorRecordFlags = 4,
         Base = 5,
         XPCIFluff = 6,
         FULLFluff = 7,
@@ -2774,7 +2782,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case PlacedObject_FieldIndex.Rotation:
                     return false;
                 default:
-                    return MajorRecord_Registration.GetNthIsEnumerable(index);
+                    return OblivionMajorRecord_Registration.GetNthIsEnumerable(index);
             }
         }
 
@@ -2811,7 +2819,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case PlacedObject_FieldIndex.Rotation:
                     return false;
                 default:
-                    return MajorRecord_Registration.GetNthIsLoqui(index);
+                    return OblivionMajorRecord_Registration.GetNthIsLoqui(index);
             }
         }
 
@@ -2847,7 +2855,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case PlacedObject_FieldIndex.Rotation:
                     return false;
                 default:
-                    return MajorRecord_Registration.GetNthIsSingleton(index);
+                    return OblivionMajorRecord_Registration.GetNthIsSingleton(index);
             }
         }
 
@@ -2907,7 +2915,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case PlacedObject_FieldIndex.Rotation:
                     return "Rotation";
                 default:
-                    return MajorRecord_Registration.GetNthName(index);
+                    return OblivionMajorRecord_Registration.GetNthName(index);
             }
         }
 
@@ -2943,7 +2951,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case PlacedObject_FieldIndex.Rotation:
                     return false;
                 default:
-                    return MajorRecord_Registration.IsNthDerivative(index);
+                    return OblivionMajorRecord_Registration.IsNthDerivative(index);
             }
         }
 
@@ -2979,7 +2987,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case PlacedObject_FieldIndex.Rotation:
                     return false;
                 default:
-                    return MajorRecord_Registration.IsProtected(index);
+                    return OblivionMajorRecord_Registration.IsProtected(index);
             }
         }
 
@@ -2989,7 +2997,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case PlacedObject_FieldIndex.Base:
-                    return typeof(FormIDSetLink<MajorRecord>);
+                    return typeof(FormIDSetLink<OblivionMajorRecord>);
                 case PlacedObject_FieldIndex.XPCIFluff:
                     return typeof(Byte[]);
                 case PlacedObject_FieldIndex.FULLFluff:
@@ -3019,7 +3027,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case PlacedObject_FieldIndex.LevelModifier:
                     return typeof(Int32);
                 case PlacedObject_FieldIndex.Unknown:
-                    return typeof(FormIDSetLink<MajorRecord>);
+                    return typeof(FormIDSetLink<OblivionMajorRecord>);
                 case PlacedObject_FieldIndex.ActionFlags:
                     return typeof(PlacedObject.ActionFlag);
                 case PlacedObject_FieldIndex.Count:
@@ -3039,7 +3047,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case PlacedObject_FieldIndex.Rotation:
                     return typeof(P3Float);
                 default:
-                    return MajorRecord_Registration.GetNthType(index);
+                    return OblivionMajorRecord_Registration.GetNthType(index);
             }
         }
 
@@ -3113,7 +3121,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             PlacedObject_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {
-            MajorRecordCommon.CopyFieldsFrom(
+            OblivionMajorRecordCommon.CopyFieldsFrom(
                 item,
                 rhs,
                 def,
@@ -3895,303 +3903,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void SetNthObjectHasBeenSet(
-            ushort index,
-            bool on,
-            IPlacedObject obj,
-            NotifyingFireParameters cmds = null)
-        {
-            PlacedObject_FieldIndex enu = (PlacedObject_FieldIndex)index;
-            switch (enu)
-            {
-                case PlacedObject_FieldIndex.OpenByDefault:
-                case PlacedObject_FieldIndex.Position:
-                case PlacedObject_FieldIndex.Rotation:
-                    if (on) break;
-                    throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
-                case PlacedObject_FieldIndex.Base:
-                    obj.Base_Property.HasBeenSet = on;
-                    break;
-                case PlacedObject_FieldIndex.XPCIFluff:
-                    obj.XPCIFluff_IsSet = on;
-                    break;
-                case PlacedObject_FieldIndex.FULLFluff:
-                    obj.FULLFluff_IsSet = on;
-                    break;
-                case PlacedObject_FieldIndex.TeleportDestination:
-                    obj.TeleportDestination_IsSet = on;
-                    break;
-                case PlacedObject_FieldIndex.Lock:
-                    obj.Lock_IsSet = on;
-                    break;
-                case PlacedObject_FieldIndex.Owner:
-                    obj.Owner_Property.HasBeenSet = on;
-                    break;
-                case PlacedObject_FieldIndex.FactionRank:
-                    obj.FactionRank_IsSet = on;
-                    break;
-                case PlacedObject_FieldIndex.GlobalVariable:
-                    obj.GlobalVariable_Property.HasBeenSet = on;
-                    break;
-                case PlacedObject_FieldIndex.EnableParent:
-                    obj.EnableParent_IsSet = on;
-                    break;
-                case PlacedObject_FieldIndex.Target:
-                    obj.Target_Property.HasBeenSet = on;
-                    break;
-                case PlacedObject_FieldIndex.SpeedTreeSeed:
-                    obj.SpeedTreeSeed_IsSet = on;
-                    break;
-                case PlacedObject_FieldIndex.DistantLODData:
-                    obj.DistantLODData_IsSet = on;
-                    break;
-                case PlacedObject_FieldIndex.Charge:
-                    obj.Charge_IsSet = on;
-                    break;
-                case PlacedObject_FieldIndex.Health:
-                    obj.Health_IsSet = on;
-                    break;
-                case PlacedObject_FieldIndex.LevelModifier:
-                    obj.LevelModifier_IsSet = on;
-                    break;
-                case PlacedObject_FieldIndex.Unknown:
-                    obj.Unknown_Property.HasBeenSet = on;
-                    break;
-                case PlacedObject_FieldIndex.ActionFlags:
-                    obj.ActionFlags_IsSet = on;
-                    break;
-                case PlacedObject_FieldIndex.Count:
-                    obj.Count_IsSet = on;
-                    break;
-                case PlacedObject_FieldIndex.MapMarker:
-                    obj.MapMarker_IsSet = on;
-                    break;
-                case PlacedObject_FieldIndex.RagdollData:
-                    obj.RagdollData_IsSet = on;
-                    break;
-                case PlacedObject_FieldIndex.Scale:
-                    obj.Scale_IsSet = on;
-                    break;
-                case PlacedObject_FieldIndex.ContainedSoul:
-                    obj.ContainedSoul_Property.HasBeenSet = on;
-                    break;
-                default:
-                    MajorRecordCommon.SetNthObjectHasBeenSet(index, on, obj);
-                    break;
-            }
-        }
-
-        public static void UnsetNthObject(
-            ushort index,
-            IPlacedObject obj,
-            NotifyingUnsetParameters cmds = null)
-        {
-            PlacedObject_FieldIndex enu = (PlacedObject_FieldIndex)index;
-            switch (enu)
-            {
-                case PlacedObject_FieldIndex.Base:
-                    obj.Base_Property.Unset(cmds);
-                    break;
-                case PlacedObject_FieldIndex.XPCIFluff:
-                    obj.XPCIFluff_Unset();
-                    break;
-                case PlacedObject_FieldIndex.FULLFluff:
-                    obj.FULLFluff_Unset();
-                    break;
-                case PlacedObject_FieldIndex.TeleportDestination:
-                    obj.TeleportDestination_Unset();
-                    break;
-                case PlacedObject_FieldIndex.Lock:
-                    obj.Lock_Unset();
-                    break;
-                case PlacedObject_FieldIndex.Owner:
-                    obj.Owner_Property.Unset(cmds);
-                    break;
-                case PlacedObject_FieldIndex.FactionRank:
-                    obj.FactionRank_Unset();
-                    break;
-                case PlacedObject_FieldIndex.GlobalVariable:
-                    obj.GlobalVariable_Property.Unset(cmds);
-                    break;
-                case PlacedObject_FieldIndex.EnableParent:
-                    obj.EnableParent_Unset();
-                    break;
-                case PlacedObject_FieldIndex.Target:
-                    obj.Target_Property.Unset(cmds);
-                    break;
-                case PlacedObject_FieldIndex.SpeedTreeSeed:
-                    obj.SpeedTreeSeed_Unset();
-                    break;
-                case PlacedObject_FieldIndex.DistantLODData:
-                    obj.DistantLODData_Unset();
-                    break;
-                case PlacedObject_FieldIndex.Charge:
-                    obj.Charge_Unset();
-                    break;
-                case PlacedObject_FieldIndex.Health:
-                    obj.Health_Unset();
-                    break;
-                case PlacedObject_FieldIndex.LevelModifier:
-                    obj.LevelModifier_Unset();
-                    break;
-                case PlacedObject_FieldIndex.Unknown:
-                    obj.Unknown_Property.Unset(cmds);
-                    break;
-                case PlacedObject_FieldIndex.ActionFlags:
-                    obj.ActionFlags_Unset();
-                    break;
-                case PlacedObject_FieldIndex.Count:
-                    obj.Count_Unset();
-                    break;
-                case PlacedObject_FieldIndex.MapMarker:
-                    obj.MapMarker_Unset();
-                    break;
-                case PlacedObject_FieldIndex.OpenByDefault:
-                    obj.OpenByDefault = default(Boolean);
-                    break;
-                case PlacedObject_FieldIndex.RagdollData:
-                    obj.RagdollData_Unset();
-                    break;
-                case PlacedObject_FieldIndex.Scale:
-                    obj.Scale_Unset();
-                    break;
-                case PlacedObject_FieldIndex.ContainedSoul:
-                    obj.ContainedSoul_Property.Unset(cmds);
-                    break;
-                case PlacedObject_FieldIndex.Position:
-                    obj.Position = default(P3Float);
-                    break;
-                case PlacedObject_FieldIndex.Rotation:
-                    obj.Rotation = default(P3Float);
-                    break;
-                default:
-                    MajorRecordCommon.UnsetNthObject(index, obj);
-                    break;
-            }
-        }
-
-        public static bool GetNthObjectHasBeenSet(
-            ushort index,
-            IPlacedObject obj)
-        {
-            PlacedObject_FieldIndex enu = (PlacedObject_FieldIndex)index;
-            switch (enu)
-            {
-                case PlacedObject_FieldIndex.OpenByDefault:
-                case PlacedObject_FieldIndex.Position:
-                case PlacedObject_FieldIndex.Rotation:
-                    return true;
-                case PlacedObject_FieldIndex.Base:
-                    return obj.Base_Property.HasBeenSet;
-                case PlacedObject_FieldIndex.XPCIFluff:
-                    return obj.XPCIFluff_IsSet;
-                case PlacedObject_FieldIndex.FULLFluff:
-                    return obj.FULLFluff_IsSet;
-                case PlacedObject_FieldIndex.TeleportDestination:
-                    return obj.TeleportDestination_IsSet;
-                case PlacedObject_FieldIndex.Lock:
-                    return obj.Lock_IsSet;
-                case PlacedObject_FieldIndex.Owner:
-                    return obj.Owner_Property.HasBeenSet;
-                case PlacedObject_FieldIndex.FactionRank:
-                    return obj.FactionRank_IsSet;
-                case PlacedObject_FieldIndex.GlobalVariable:
-                    return obj.GlobalVariable_Property.HasBeenSet;
-                case PlacedObject_FieldIndex.EnableParent:
-                    return obj.EnableParent_IsSet;
-                case PlacedObject_FieldIndex.Target:
-                    return obj.Target_Property.HasBeenSet;
-                case PlacedObject_FieldIndex.SpeedTreeSeed:
-                    return obj.SpeedTreeSeed_IsSet;
-                case PlacedObject_FieldIndex.DistantLODData:
-                    return obj.DistantLODData_IsSet;
-                case PlacedObject_FieldIndex.Charge:
-                    return obj.Charge_IsSet;
-                case PlacedObject_FieldIndex.Health:
-                    return obj.Health_IsSet;
-                case PlacedObject_FieldIndex.LevelModifier:
-                    return obj.LevelModifier_IsSet;
-                case PlacedObject_FieldIndex.Unknown:
-                    return obj.Unknown_Property.HasBeenSet;
-                case PlacedObject_FieldIndex.ActionFlags:
-                    return obj.ActionFlags_IsSet;
-                case PlacedObject_FieldIndex.Count:
-                    return obj.Count_IsSet;
-                case PlacedObject_FieldIndex.MapMarker:
-                    return obj.MapMarker_IsSet;
-                case PlacedObject_FieldIndex.RagdollData:
-                    return obj.RagdollData_IsSet;
-                case PlacedObject_FieldIndex.Scale:
-                    return obj.Scale_IsSet;
-                case PlacedObject_FieldIndex.ContainedSoul:
-                    return obj.ContainedSoul_Property.HasBeenSet;
-                default:
-                    return MajorRecordCommon.GetNthObjectHasBeenSet(index, obj);
-            }
-        }
-
-        public static object GetNthObject(
-            ushort index,
-            IPlacedObjectGetter obj)
-        {
-            PlacedObject_FieldIndex enu = (PlacedObject_FieldIndex)index;
-            switch (enu)
-            {
-                case PlacedObject_FieldIndex.Base:
-                    return obj.Base;
-                case PlacedObject_FieldIndex.XPCIFluff:
-                    return obj.XPCIFluff;
-                case PlacedObject_FieldIndex.FULLFluff:
-                    return obj.FULLFluff;
-                case PlacedObject_FieldIndex.TeleportDestination:
-                    return obj.TeleportDestination;
-                case PlacedObject_FieldIndex.Lock:
-                    return obj.Lock;
-                case PlacedObject_FieldIndex.Owner:
-                    return obj.Owner;
-                case PlacedObject_FieldIndex.FactionRank:
-                    return obj.FactionRank;
-                case PlacedObject_FieldIndex.GlobalVariable:
-                    return obj.GlobalVariable;
-                case PlacedObject_FieldIndex.EnableParent:
-                    return obj.EnableParent;
-                case PlacedObject_FieldIndex.Target:
-                    return obj.Target;
-                case PlacedObject_FieldIndex.SpeedTreeSeed:
-                    return obj.SpeedTreeSeed;
-                case PlacedObject_FieldIndex.DistantLODData:
-                    return obj.DistantLODData;
-                case PlacedObject_FieldIndex.Charge:
-                    return obj.Charge;
-                case PlacedObject_FieldIndex.Health:
-                    return obj.Health;
-                case PlacedObject_FieldIndex.LevelModifier:
-                    return obj.LevelModifier;
-                case PlacedObject_FieldIndex.Unknown:
-                    return obj.Unknown;
-                case PlacedObject_FieldIndex.ActionFlags:
-                    return obj.ActionFlags;
-                case PlacedObject_FieldIndex.Count:
-                    return obj.Count;
-                case PlacedObject_FieldIndex.MapMarker:
-                    return obj.MapMarker;
-                case PlacedObject_FieldIndex.OpenByDefault:
-                    return obj.OpenByDefault;
-                case PlacedObject_FieldIndex.RagdollData:
-                    return obj.RagdollData;
-                case PlacedObject_FieldIndex.Scale:
-                    return obj.Scale;
-                case PlacedObject_FieldIndex.ContainedSoul:
-                    return obj.ContainedSoul;
-                case PlacedObject_FieldIndex.Position:
-                    return obj.Position;
-                case PlacedObject_FieldIndex.Rotation:
-                    return obj.Rotation;
-                default:
-                    return MajorRecordCommon.GetNthObject(index, obj);
-            }
-        }
-
         public static void Clear(
             IPlacedObject item,
             NotifyingUnsetParameters cmds = null)
@@ -4299,7 +4010,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.ContainedSoul = item.ContainedSoul_Property.FormKey == rhs.ContainedSoul_Property.FormKey;
             ret.Position = item.Position == rhs.Position;
             ret.Rotation = item.Rotation == rhs.Rotation;
-            MajorRecordCommon.FillEqualsMask(item, rhs, ret);
+            OblivionMajorRecordCommon.FillEqualsMask(item, rhs, ret);
         }
 
         public static string ToString(
@@ -4498,6 +4209,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ret;
         }
 
+        public static PlacedObject_FieldIndex? ConvertFieldIndex(OblivionMajorRecord_FieldIndex? index)
+        {
+            if (!index.HasValue) return null;
+            return ConvertFieldIndex(index: index.Value);
+        }
+
+        public static PlacedObject_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
+        {
+            switch (index)
+            {
+                case OblivionMajorRecord_FieldIndex.FormKey:
+                    return (PlacedObject_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.Version:
+                    return (PlacedObject_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.EditorID:
+                    return (PlacedObject_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.RecordType:
+                    return (PlacedObject_FieldIndex)((int)index);
+                case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
+                    return (PlacedObject_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
+        }
+
         public static PlacedObject_FieldIndex? ConvertFieldIndex(MajorRecord_FieldIndex? index)
         {
             if (!index.HasValue) return null;
@@ -4508,8 +4244,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (index)
             {
-                case MajorRecord_FieldIndex.MajorRecordFlags:
-                    return (PlacedObject_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
                     return (PlacedObject_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.Version:
@@ -4570,7 +4304,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
         {
-            MajorRecordCommon.WriteToNode_Xml(
+            OblivionMajorRecordCommon.WriteToNode_Xml(
                 item: item,
                 node: node,
                 errorMask: errorMask,
@@ -5409,7 +5143,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 default:
-                    MajorRecordCommon.FillPublicElement_Xml(
+                    OblivionMajorRecordCommon.FillPublicElement_Xml(
                         item: item,
                         node: node,
                         name: name,
@@ -5453,7 +5187,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: PlacedObject_Registration.REFR_HEADER,
                 type: ObjectType.Record))
             {
-                MajorRecordCommon.Write_Binary_Embedded(
+                OblivionMajorRecordCommon.Write_Binary_Embedded(
                     item: item,
                     writer: writer,
                     errorMask: errorMask,
@@ -5734,7 +5468,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     #region Modules
     #region Mask
-    public class PlacedObject_Mask<T> : MajorRecord_Mask<T>, IMask<T>, IEquatable<PlacedObject_Mask<T>>
+    public class PlacedObject_Mask<T> : OblivionMajorRecord_Mask<T>, IMask<T>, IEquatable<PlacedObject_Mask<T>>
     {
         #region Ctors
         public PlacedObject_Mask()
@@ -6136,7 +5870,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public class PlacedObject_ErrorMask : MajorRecord_ErrorMask, IErrorMask<PlacedObject_ErrorMask>
+    public class PlacedObject_ErrorMask : OblivionMajorRecord_ErrorMask, IErrorMask<PlacedObject_ErrorMask>
     {
         #region Members
         public Exception Base;
@@ -6537,7 +6271,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
-    public class PlacedObject_CopyMask : MajorRecord_CopyMask
+    public class PlacedObject_CopyMask : OblivionMajorRecord_CopyMask
     {
         public PlacedObject_CopyMask()
         {
@@ -6602,7 +6336,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public class PlacedObject_TranslationMask : MajorRecord_TranslationMask
+    public class PlacedObject_TranslationMask : OblivionMajorRecord_TranslationMask
     {
         #region Members
         public bool Base;

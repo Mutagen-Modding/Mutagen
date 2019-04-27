@@ -104,28 +104,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        #region Loqui Getter Interface
-
-        protected object GetNthObject(ushort index) => CellBlockCommon.GetNthObject(index, this);
-        object ILoquiObjectGetter.GetNthObject(ushort index) => this.GetNthObject(index);
-
-        protected bool GetNthObjectHasBeenSet(ushort index) => CellBlockCommon.GetNthObjectHasBeenSet(index, this);
-        bool ILoquiObjectGetter.GetNthObjectHasBeenSet(ushort index) => this.GetNthObjectHasBeenSet(index);
-
-        protected void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => CellBlockCommon.UnsetNthObject(index, this, cmds);
-        void ILoquiObjectSetter.UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => this.UnsetNthObject(index, cmds);
-
-        #endregion
-
-        #region Loqui Interface
-        protected void SetNthObjectHasBeenSet(ushort index, bool on)
-        {
-            CellBlockCommon.SetNthObjectHasBeenSet(index, on, this);
-        }
-        void ILoquiObjectSetter.SetNthObjectHasBeenSet(ushort index, bool on) => this.SetNthObjectHasBeenSet(index, on);
-
-        #endregion
-
         IMask<bool> IEqualsMask<CellBlock>.GetEqualsMask(CellBlock rhs, EqualsMaskHelper.Include include) => CellBlockCommon.GetEqualsMask(this, rhs, include);
         IMask<bool> IEqualsMask<ICellBlockGetter>.GetEqualsMask(ICellBlockGetter rhs, EqualsMaskHelper.Include include) => CellBlockCommon.GetEqualsMask(this, rhs, include);
         #region To String
@@ -848,7 +826,6 @@ namespace Mutagen.Bethesda.Oblivion
                 cmds: cmds);
         }
 
-        void ILoquiObjectSetter.SetNthObject(ushort index, object obj, NotifyingFireParameters cmds) => this.SetNthObject(index, obj, cmds);
         protected void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
         {
             CellBlock_FieldIndex enu = (CellBlock_FieldIndex)index;
@@ -919,11 +896,6 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, CellBlock obj)
-        {
-            ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
-        }
-
     }
     #endregion
 
@@ -1280,91 +1252,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         #endregion
-
-        public static void SetNthObjectHasBeenSet(
-            ushort index,
-            bool on,
-            ICellBlock obj,
-            NotifyingFireParameters cmds = null)
-        {
-            CellBlock_FieldIndex enu = (CellBlock_FieldIndex)index;
-            switch (enu)
-            {
-                case CellBlock_FieldIndex.BlockNumber:
-                case CellBlock_FieldIndex.GroupType:
-                case CellBlock_FieldIndex.LastModified:
-                    if (on) break;
-                    throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
-                case CellBlock_FieldIndex.Items:
-                    obj.Items.HasBeenSet = on;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static void UnsetNthObject(
-            ushort index,
-            ICellBlock obj,
-            NotifyingUnsetParameters cmds = null)
-        {
-            CellBlock_FieldIndex enu = (CellBlock_FieldIndex)index;
-            switch (enu)
-            {
-                case CellBlock_FieldIndex.BlockNumber:
-                    obj.BlockNumber = default(Int32);
-                    break;
-                case CellBlock_FieldIndex.GroupType:
-                    obj.GroupType = default(GroupTypeEnum);
-                    break;
-                case CellBlock_FieldIndex.LastModified:
-                    obj.LastModified = default(Byte[]);
-                    break;
-                case CellBlock_FieldIndex.Items:
-                    obj.Items.Unset();
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static bool GetNthObjectHasBeenSet(
-            ushort index,
-            ICellBlock obj)
-        {
-            CellBlock_FieldIndex enu = (CellBlock_FieldIndex)index;
-            switch (enu)
-            {
-                case CellBlock_FieldIndex.BlockNumber:
-                case CellBlock_FieldIndex.GroupType:
-                case CellBlock_FieldIndex.LastModified:
-                    return true;
-                case CellBlock_FieldIndex.Items:
-                    return obj.Items.HasBeenSet;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public static object GetNthObject(
-            ushort index,
-            ICellBlockGetter obj)
-        {
-            CellBlock_FieldIndex enu = (CellBlock_FieldIndex)index;
-            switch (enu)
-            {
-                case CellBlock_FieldIndex.BlockNumber:
-                    return obj.BlockNumber;
-                case CellBlock_FieldIndex.GroupType:
-                    return obj.GroupType;
-                case CellBlock_FieldIndex.LastModified:
-                    return obj.LastModified;
-                case CellBlock_FieldIndex.Items:
-                    return obj.Items;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
 
         public static void Clear(
             ICellBlock item,
