@@ -85,10 +85,11 @@ namespace Mutagen.Bethesda.Generation
                 val: data.TriggeringRecordTypes);
         }
 
-        public static bool IsMajorRecord(this ObjectGeneration objGen)
+        public static async Task<bool> IsMajorRecord(this ObjectGeneration objGen)
         {
             if (objGen.GetObjectType() != ObjectType.Record) return false;
             if (objGen.Name == "MajorRecord") return true;
+            await Task.WhenAll(objGen.BaseClassTrail().Select(bo => bo.LoadingCompleteTask.Task));
             return objGen.BaseClassTrail().Any(bo => bo.Name == "MajorRecord");
         }
 

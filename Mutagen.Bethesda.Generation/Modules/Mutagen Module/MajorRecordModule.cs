@@ -10,19 +10,19 @@ namespace Mutagen.Bethesda.Generation
 {
     public class MajorRecordModule : GenerationModule
     {
-        public override Task PostLoad(ObjectGeneration obj)
+        public override async Task PostLoad(ObjectGeneration obj)
         {
-            if (obj.IsMajorRecord())
+            if (await obj.IsMajorRecord())
             {
                 obj.BasicCtorPermission = PermissionLevel.@protected;
             }
-            return base.PostLoad(obj);
+            await base.PostLoad(obj);
         }
 
         public override async Task GenerateInClass(ObjectGeneration obj, FileGeneration fg)
         {
             await base.GenerateInClass(obj, fg);
-            if (!obj.IsMajorRecord()) return;
+            if (!await obj.IsMajorRecord()) return;
             fg.AppendLine($"public {obj.Name}(FormKey formKey)");
             using (new BraceWrapper(fg))
             {
