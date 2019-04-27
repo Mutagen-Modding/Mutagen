@@ -475,16 +475,14 @@ namespace Mutagen.Bethesda.Oblivion
 
         public void Link<M>(
             ModList<M> modList,
-            M sourceMod,
-            NotifyingFireParameters cmds = null)
+            M sourceMod)
             where M : IMod<M>
         {
             foreach (var item in Sounds.Items)
             {
                 item.Link(
                     modList,
-                    sourceMod,
-                    cmds);
+                    sourceMod);
             }
         }
 

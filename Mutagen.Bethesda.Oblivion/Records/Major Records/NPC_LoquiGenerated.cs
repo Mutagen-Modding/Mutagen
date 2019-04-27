@@ -1777,73 +1777,60 @@ namespace Mutagen.Bethesda.Oblivion
 
         public override void Link<M>(
             ModList<M> modList,
-            M sourceMod,
-            NotifyingFireParameters cmds = null)
+            M sourceMod)
             
         {
             base.Link(
                 modList,
-                sourceMod,
-                cmds);
+                sourceMod);
             foreach (var item in Factions.Items)
             {
                 item.Link(
                     modList,
-                    sourceMod,
-                    cmds);
+                    sourceMod);
             }
             DeathItem_Property.Link(
                 modList,
-                sourceMod,
-                cmds);
+                sourceMod);
             Race_Property.Link(
                 modList,
-                sourceMod,
-                cmds);
+                sourceMod);
             foreach (var item in Spells)
             {
                 item.Link(
                     modList,
-                    sourceMod,
-                    cmds);
+                    sourceMod);
             }
             Script_Property.Link(
                 modList,
-                sourceMod,
-                cmds);
+                sourceMod);
             foreach (var item in Items.Items)
             {
                 item.Link(
                     modList,
-                    sourceMod,
-                    cmds);
+                    sourceMod);
             }
             foreach (var item in AIPackages)
             {
                 item.Link(
                     modList,
-                    sourceMod,
-                    cmds);
+                    sourceMod);
             }
             Class_Property.Link(
                 modList,
-                sourceMod,
-                cmds);
+                sourceMod);
             Hair_Property.Link(
                 modList,
-                sourceMod,
-                cmds);
+                sourceMod);
             foreach (var item in Eyes)
             {
                 item.Link(
                     modList,
-                    sourceMod,
-                    cmds);
+                    sourceMod);
             }
             CombatStyle_Property.Link(
                 modList,
-                sourceMod,
-                cmds);
+                sourceMod);
         }
 
         public NPC(FormKey formKey)

@@ -262,7 +262,6 @@ namespace Mutagen.Bethesda.Generation
                     $"public{await obj.FunctionOverride(async (o) => (await HasLinks(o, includeBaseClass: false)) != LinkCase.No)}void Link"))
                 {
                     args.Add($"ModList<{obj.Name}> modList");
-                    args.Add("NotifyingFireParameters cmds = null");
                 }
                 using (new BraceWrapper(fg))
                 {
@@ -278,7 +277,6 @@ namespace Mutagen.Bethesda.Generation
                 {
                     args.Add("ModList<M> modList");
                     args.Add("M sourceMod");
-                    args.Add("NotifyingFireParameters cmds = null");
                 }
                 using (new BraceWrapper(fg))
                 {
@@ -299,7 +297,6 @@ namespace Mutagen.Bethesda.Generation
                 {
                     args.Add("modList");
                     args.Add(sourceModAccessor);
-                    args.Add("cmds");
                 }
             }
             foreach (var field in obj.IterateFields())
@@ -311,7 +308,6 @@ namespace Mutagen.Bethesda.Generation
                     {
                         args.Add("modList");
                         args.Add(sourceModAccessor);
-                        args.Add("cmds");
                     }
                 }
                 else if (field is LoquiType loqui)
@@ -346,7 +342,6 @@ namespace Mutagen.Bethesda.Generation
                         {
                             args.Add("modList");
                             args.Add(sourceModAccessor);
-                            args.Add("cmds");
                         }
                     }
                 }
@@ -383,7 +378,6 @@ namespace Mutagen.Bethesda.Generation
                         {
                             args.Add("modList");
                             args.Add(sourceModAccessor);
-                            args.Add("cmds");
                         }
                     }
                 }
@@ -421,7 +415,6 @@ namespace Mutagen.Bethesda.Generation
                         {
                             args.Add("modList");
                             args.Add(sourceModAccessor);
-                            args.Add("cmds");
                         }
                     }
                 }

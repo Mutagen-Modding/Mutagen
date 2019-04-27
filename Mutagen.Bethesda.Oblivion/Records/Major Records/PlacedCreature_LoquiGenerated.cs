@@ -683,32 +683,26 @@ namespace Mutagen.Bethesda.Oblivion
 
         public override void Link<M>(
             ModList<M> modList,
-            M sourceMod,
-            NotifyingFireParameters cmds = null)
+            M sourceMod)
             
         {
             base.Link(
                 modList,
-                sourceMod,
-                cmds);
+                sourceMod);
             Base_Property.Link(
                 modList,
-                sourceMod,
-                cmds);
+                sourceMod);
             Owner_Property.Link(
                 modList,
-                sourceMod,
-                cmds);
+                sourceMod);
             GlobalVariable_Property.Link(
                 modList,
-                sourceMod,
-                cmds);
+                sourceMod);
             if (EnableParent != null)
             {
                 EnableParent?.Link(
                     modList,
-                    sourceMod,
-                    cmds);
+                    sourceMod);
             }
         }
 

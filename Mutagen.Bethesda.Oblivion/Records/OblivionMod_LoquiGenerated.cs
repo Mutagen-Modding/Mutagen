@@ -2319,185 +2319,140 @@ namespace Mutagen.Bethesda.Oblivion
             yield break;
         }
 
-        public void Link(
-            ModList<OblivionMod> modList,
-            NotifyingFireParameters cmds = null)
+        public void Link(ModList<OblivionMod> modList)
         {
             Factions?.Link(
                 modList,
-                this,
-                cmds);
+                this);
             Races?.Link(
                 modList,
-                this,
-                cmds);
+                this);
             MagicEffects?.Link(
                 modList,
-                this,
-                cmds);
+                this);
             if (Scripts is ILinkSubContainer ScriptslinkCont)
             {
                 ScriptslinkCont?.Link(
                     modList,
-                    this,
-                    cmds);
+                    this);
             }
             LandTextures?.Link(
                 modList,
-                this,
-                cmds);
+                this);
             Enchantments?.Link(
                 modList,
-                this,
-                cmds);
+                this);
             Spells?.Link(
                 modList,
-                this,
-                cmds);
+                this);
             Birthsigns?.Link(
                 modList,
-                this,
-                cmds);
+                this);
             Activators?.Link(
                 modList,
-                this,
-                cmds);
+                this);
             AlchemicalApparatus?.Link(
                 modList,
-                this,
-                cmds);
+                this);
             Armors?.Link(
                 modList,
-                this,
-                cmds);
+                this);
             Books?.Link(
                 modList,
-                this,
-                cmds);
+                this);
             Clothes?.Link(
                 modList,
-                this,
-                cmds);
+                this);
             Containers?.Link(
                 modList,
-                this,
-                cmds);
+                this);
             Doors?.Link(
                 modList,
-                this,
-                cmds);
+                this);
             Ingredients?.Link(
                 modList,
-                this,
-                cmds);
+                this);
             Lights?.Link(
                 modList,
-                this,
-                cmds);
+                this);
             Miscellaneous?.Link(
                 modList,
-                this,
-                cmds);
+                this);
             Flora?.Link(
                 modList,
-                this,
-                cmds);
+                this);
             Furnature?.Link(
                 modList,
-                this,
-                cmds);
+                this);
             Weapons?.Link(
                 modList,
-                this,
-                cmds);
+                this);
             Ammo?.Link(
                 modList,
-                this,
-                cmds);
+                this);
             NPCs?.Link(
                 modList,
-                this,
-                cmds);
+                this);
             Creatures?.Link(
                 modList,
-                this,
-                cmds);
+                this);
             LeveledCreatures?.Link(
                 modList,
-                this,
-                cmds);
+                this);
             SoulGems?.Link(
                 modList,
-                this,
-                cmds);
+                this);
             Keys?.Link(
                 modList,
-                this,
-                cmds);
+                this);
             Potions?.Link(
                 modList,
-                this,
-                cmds);
+                this);
             SigilStones?.Link(
                 modList,
-                this,
-                cmds);
+                this);
             LeveledItems?.Link(
                 modList,
-                this,
-                cmds);
+                this);
             Weathers?.Link(
                 modList,
-                this,
-                cmds);
+                this);
             Climates?.Link(
                 modList,
-                this,
-                cmds);
+                this);
             Regions?.Link(
                 modList,
-                this,
-                cmds);
+                this);
             Cells?.Link(
                 modList,
-                this,
-                cmds);
+                this);
             Worldspaces?.Link(
                 modList,
-                this,
-                cmds);
+                this);
             DialogTopics?.Link(
                 modList,
-                this,
-                cmds);
+                this);
             Quests?.Link(
                 modList,
-                this,
-                cmds);
+                this);
             IdleAnimations?.Link(
                 modList,
-                this,
-                cmds);
+                this);
             AIPackages?.Link(
                 modList,
-                this,
-                cmds);
+                this);
             LoadScreens?.Link(
                 modList,
-                this,
-                cmds);
+                this);
             LeveledSpells?.Link(
                 modList,
-                this,
-                cmds);
+                this);
             AnimatedObjects?.Link(
                 modList,
-                this,
-                cmds);
+                this);
             Waters?.Link(
                 modList,
-                this,
-                cmds);
+                this);
         }
 
         public static Task<OblivionMod> Create_Xml_Folder(

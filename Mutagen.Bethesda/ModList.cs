@@ -141,9 +141,7 @@ namespace Mutagen.Bethesda
             }
             foreach (var mod in this._modsByLoadOrder)
             {
-                mod.Mod.Link(
-                    modList: this, 
-                    cmds: null);
+                mod.Mod.Link(this);
             }
         }
 

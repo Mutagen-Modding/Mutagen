@@ -1075,71 +1075,59 @@ namespace Mutagen.Bethesda.Oblivion
 
         public override void Link<M>(
             ModList<M> modList,
-            M sourceMod,
-            NotifyingFireParameters cmds = null)
+            M sourceMod)
             
         {
             base.Link(
                 modList,
-                sourceMod,
-                cmds);
+                sourceMod);
             foreach (var item in Regions)
             {
                 item.Link(
                     modList,
-                    sourceMod,
-                    cmds);
+                    sourceMod);
             }
             Climate_Property.Link(
                 modList,
-                sourceMod,
-                cmds);
+                sourceMod);
             Water_Property.Link(
                 modList,
-                sourceMod,
-                cmds);
+                sourceMod);
             Owner_Property.Link(
                 modList,
-                sourceMod,
-                cmds);
+                sourceMod);
             GlobalVariable_Property.Link(
                 modList,
-                sourceMod,
-                cmds);
+                sourceMod);
             if (PathGrid != null)
             {
                 PathGrid?.Link(
                     modList,
-                    sourceMod,
-                    cmds);
+                    sourceMod);
             }
             if (Landscape != null)
             {
                 Landscape?.Link(
                     modList,
-                    sourceMod,
-                    cmds);
+                    sourceMod);
             }
             foreach (var item in Persistent.Items.WhereCastable<IPlaced, ILinkSubContainer>())
             {
                 item.Link(
                     modList,
-                    sourceMod,
-                    cmds);
+                    sourceMod);
             }
             foreach (var item in Temporary.Items.WhereCastable<IPlaced, ILinkSubContainer>())
             {
                 item.Link(
                     modList,
-                    sourceMod,
-                    cmds);
+                    sourceMod);
             }
             foreach (var item in VisibleWhenDistant.Items.WhereCastable<IPlaced, ILinkSubContainer>())
             {
                 item.Link(
                     modList,
-                    sourceMod,
-                    cmds);
+                    sourceMod);
             }
         }
 

@@ -411,18 +411,15 @@ namespace Mutagen.Bethesda.Oblivion
 
         public void Link<M>(
             ModList<M> modList,
-            M sourceMod,
-            NotifyingFireParameters cmds = null)
+            M sourceMod)
             where M : IMod<M>
         {
             Male_Property.Link(
                 modList,
-                sourceMod,
-                cmds);
+                sourceMod);
             Female_Property.Link(
                 modList,
-                sourceMod,
-                cmds);
+                sourceMod);
         }
 
         #endregion

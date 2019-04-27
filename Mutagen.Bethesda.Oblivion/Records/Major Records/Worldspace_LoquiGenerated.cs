@@ -932,39 +932,32 @@ namespace Mutagen.Bethesda.Oblivion
 
         public override void Link<M>(
             ModList<M> modList,
-            M sourceMod,
-            NotifyingFireParameters cmds = null)
+            M sourceMod)
             
         {
             base.Link(
                 modList,
-                sourceMod,
-                cmds);
+                sourceMod);
             Parent_Property.Link(
                 modList,
-                sourceMod,
-                cmds);
+                sourceMod);
             Climate_Property.Link(
                 modList,
-                sourceMod,
-                cmds);
+                sourceMod);
             Water_Property.Link(
                 modList,
-                sourceMod,
-                cmds);
+                sourceMod);
             if (TopCell != null)
             {
                 TopCell?.Link(
                     modList,
-                    sourceMod,
-                    cmds);
+                    sourceMod);
             }
             foreach (var item in SubCells.Items)
             {
                 item.Link(
                     modList,
-                    sourceMod,
-                    cmds);
+                    sourceMod);
             }
         }
 

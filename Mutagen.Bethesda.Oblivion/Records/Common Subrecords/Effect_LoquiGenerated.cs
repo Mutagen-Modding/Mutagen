@@ -560,20 +560,17 @@ namespace Mutagen.Bethesda.Oblivion
 
         public void Link<M>(
             ModList<M> modList,
-            M sourceMod,
-            NotifyingFireParameters cmds = null)
+            M sourceMod)
             where M : IMod<M>
         {
             MagicEffect_Property.Link(
                 modList,
-                sourceMod,
-                cmds);
+                sourceMod);
             if (ScriptEffect != null)
             {
                 ScriptEffect?.Link(
                     modList,
-                    sourceMod,
-                    cmds);
+                    sourceMod);
             }
         }
 

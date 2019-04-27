@@ -724,49 +724,41 @@ namespace Mutagen.Bethesda.Oblivion
 
         public override void Link<M>(
             ModList<M> modList,
-            M sourceMod,
-            NotifyingFireParameters cmds = null)
+            M sourceMod)
             
         {
             base.Link(
                 modList,
-                sourceMod,
-                cmds);
+                sourceMod);
             Quest_Property.Link(
                 modList,
-                sourceMod,
-                cmds);
+                sourceMod);
             PreviousTopic_Property.Link(
                 modList,
-                sourceMod,
-                cmds);
+                sourceMod);
             foreach (var item in Topics)
             {
                 item.Link(
                     modList,
-                    sourceMod,
-                    cmds);
+                    sourceMod);
             }
             foreach (var item in Choices)
             {
                 item.Link(
                     modList,
-                    sourceMod,
-                    cmds);
+                    sourceMod);
             }
             foreach (var item in LinkFrom)
             {
                 item.Link(
                     modList,
-                    sourceMod,
-                    cmds);
+                    sourceMod);
             }
             if (Script is ILinkSubContainer ScriptlinkCont)
             {
                 ScriptlinkCont?.Link(
                     modList,
-                    sourceMod,
-                    cmds);
+                    sourceMod);
             }
         }
 

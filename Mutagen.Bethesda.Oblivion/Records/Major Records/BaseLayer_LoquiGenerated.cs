@@ -499,14 +499,12 @@ namespace Mutagen.Bethesda.Oblivion
 
         public void Link<M>(
             ModList<M> modList,
-            M sourceMod,
-            NotifyingFireParameters cmds = null)
+            M sourceMod)
             where M : IMod<M>
         {
             Texture_Property.Link(
                 modList,
-                sourceMod,
-                cmds);
+                sourceMod);
         }
 
         #endregion

@@ -770,45 +770,38 @@ namespace Mutagen.Bethesda.Oblivion
 
         public override void Link<M>(
             ModList<M> modList,
-            M sourceMod,
-            NotifyingFireParameters cmds = null)
+            M sourceMod)
             
         {
             base.Link(
                 modList,
-                sourceMod,
-                cmds);
+                sourceMod);
             Worldspace_Property.Link(
                 modList,
-                sourceMod,
-                cmds);
+                sourceMod);
             if (Objects != null)
             {
                 Objects?.Link(
                     modList,
-                    sourceMod,
-                    cmds);
+                    sourceMod);
             }
             if (Weather != null)
             {
                 Weather?.Link(
                     modList,
-                    sourceMod,
-                    cmds);
+                    sourceMod);
             }
             if (Grasses != null)
             {
                 Grasses?.Link(
                     modList,
-                    sourceMod,
-                    cmds);
+                    sourceMod);
             }
             if (Sounds != null)
             {
                 Sounds?.Link(
                     modList,
-                    sourceMod,
-                    cmds);
+                    sourceMod);
             }
         }
 

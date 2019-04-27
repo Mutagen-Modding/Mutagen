@@ -760,33 +760,27 @@ namespace Mutagen.Bethesda.Oblivion
 
         public override void Link<M>(
             ModList<M> modList,
-            M sourceMod,
-            NotifyingFireParameters cmds = null)
+            M sourceMod)
             
         {
             base.Link(
                 modList,
-                sourceMod,
-                cmds);
+                sourceMod);
             Base_Property.Link(
                 modList,
-                sourceMod,
-                cmds);
+                sourceMod);
             if (EnableParent != null)
             {
                 EnableParent?.Link(
                     modList,
-                    sourceMod,
-                    cmds);
+                    sourceMod);
             }
             MerchantContainer_Property.Link(
                 modList,
-                sourceMod,
-                cmds);
+                sourceMod);
             Horse_Property.Link(
                 modList,
-                sourceMod,
-                cmds);
+                sourceMod);
         }
 
         public PlacedNPC(FormKey formKey)

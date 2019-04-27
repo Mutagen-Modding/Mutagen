@@ -1108,24 +1108,20 @@ namespace Mutagen.Bethesda.Oblivion
 
         public override void Link<M>(
             ModList<M> modList,
-            M sourceMod,
-            NotifyingFireParameters cmds = null)
+            M sourceMod)
             
         {
             base.Link(
                 modList,
-                sourceMod,
-                cmds);
+                sourceMod);
             Sound_Property.Link(
                 modList,
-                sourceMod,
-                cmds);
+                sourceMod);
             if (RelatedWaters != null)
             {
                 RelatedWaters?.Link(
                     modList,
-                    sourceMod,
-                    cmds);
+                    sourceMod);
             }
         }
 

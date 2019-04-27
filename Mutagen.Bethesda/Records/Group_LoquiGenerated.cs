@@ -479,16 +479,14 @@ namespace Mutagen.Bethesda
 
         public void Link<M>(
             ModList<M> modList,
-            M sourceMod,
-            NotifyingFireParameters cmds = null)
+            M sourceMod)
             where M : IMod<M>
         {
             foreach (var item in Items.Items.WhereCastable<T, ILinkSubContainer>())
             {
                 item.Link(
                     modList,
-                    sourceMod,
-                    cmds);
+                    sourceMod);
             }
         }
 

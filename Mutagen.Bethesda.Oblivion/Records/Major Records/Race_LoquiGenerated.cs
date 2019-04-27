@@ -1139,55 +1139,47 @@ namespace Mutagen.Bethesda.Oblivion
 
         public override void Link<M>(
             ModList<M> modList,
-            M sourceMod,
-            NotifyingFireParameters cmds = null)
+            M sourceMod)
             
         {
             base.Link(
                 modList,
-                sourceMod,
-                cmds);
+                sourceMod);
             foreach (var item in Spells)
             {
                 item.Link(
                     modList,
-                    sourceMod,
-                    cmds);
+                    sourceMod);
             }
             foreach (var item in Relations.Items)
             {
                 item.Link(
                     modList,
-                    sourceMod,
-                    cmds);
+                    sourceMod);
             }
             if (Voices != null)
             {
                 Voices?.Link(
                     modList,
-                    sourceMod,
-                    cmds);
+                    sourceMod);
             }
             if (DefaultHair != null)
             {
                 DefaultHair?.Link(
                     modList,
-                    sourceMod,
-                    cmds);
+                    sourceMod);
             }
             foreach (var item in Hairs)
             {
                 item.Link(
                     modList,
-                    sourceMod,
-                    cmds);
+                    sourceMod);
             }
             foreach (var item in Eyes)
             {
                 item.Link(
                     modList,
-                    sourceMod,
-                    cmds);
+                    sourceMod);
             }
         }
 

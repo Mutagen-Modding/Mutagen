@@ -519,8 +519,7 @@ namespace Mutagen.Bethesda
 
         public virtual void Link<M>(
             ModList<M> modList,
-            M sourceMod,
-            NotifyingFireParameters cmds = null)
+            M sourceMod)
             where M : IMod<M>
         {
         }

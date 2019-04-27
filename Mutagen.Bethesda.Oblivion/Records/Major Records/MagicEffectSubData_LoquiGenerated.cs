@@ -476,30 +476,24 @@ namespace Mutagen.Bethesda.Oblivion
 
         public void Link<M>(
             ModList<M> modList,
-            M sourceMod,
-            NotifyingFireParameters cmds = null)
+            M sourceMod)
             where M : IMod<M>
         {
             EnchantEffect_Property.Link(
                 modList,
-                sourceMod,
-                cmds);
+                sourceMod);
             CastingSound_Property.Link(
                 modList,
-                sourceMod,
-                cmds);
+                sourceMod);
             BoltSound_Property.Link(
                 modList,
-                sourceMod,
-                cmds);
+                sourceMod);
             HitSound_Property.Link(
                 modList,
-                sourceMod,
-                cmds);
+                sourceMod);
             AreaSound_Property.Link(
                 modList,
-                sourceMod,
-                cmds);
+                sourceMod);
         }
 
         #endregion
