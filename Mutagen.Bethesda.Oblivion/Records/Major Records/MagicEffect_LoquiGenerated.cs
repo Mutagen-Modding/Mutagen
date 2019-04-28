@@ -75,7 +75,7 @@ namespace Mutagen.Bethesda.Oblivion
             String value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _Name, value, _hasBeenSetTracker, markSet, (int)MagicEffect_FieldIndex.Name, nameof(Name), nameof(Name_IsSet));
+            this.RaiseAndSetIfReferenceChanged(ref _Name, value, _hasBeenSetTracker, markSet, (int)MagicEffect_FieldIndex.Name, nameof(Name), nameof(Name_IsSet));
         }
         public void Name_Unset()
         {
@@ -101,7 +101,7 @@ namespace Mutagen.Bethesda.Oblivion
             String value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _Description, value, _hasBeenSetTracker, markSet, (int)MagicEffect_FieldIndex.Description, nameof(Description), nameof(Description_IsSet));
+            this.RaiseAndSetIfReferenceChanged(ref _Description, value, _hasBeenSetTracker, markSet, (int)MagicEffect_FieldIndex.Description, nameof(Description), nameof(Description_IsSet));
         }
         public void Description_Unset()
         {
@@ -127,7 +127,7 @@ namespace Mutagen.Bethesda.Oblivion
             String value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _Icon, value, _hasBeenSetTracker, markSet, (int)MagicEffect_FieldIndex.Icon, nameof(Icon), nameof(Icon_IsSet));
+            this.RaiseAndSetIfReferenceChanged(ref _Icon, value, _hasBeenSetTracker, markSet, (int)MagicEffect_FieldIndex.Icon, nameof(Icon), nameof(Icon_IsSet));
         }
         public void Icon_Unset()
         {
@@ -152,7 +152,7 @@ namespace Mutagen.Bethesda.Oblivion
             Model value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _Model, value, _hasBeenSetTracker, markSet, (int)MagicEffect_FieldIndex.Model, nameof(Model), nameof(Model_IsSet));
+            this.RaiseAndSetIfReferenceChanged(ref _Model, value, _hasBeenSetTracker, markSet, (int)MagicEffect_FieldIndex.Model, nameof(Model), nameof(Model_IsSet));
         }
         public void Model_Unset()
         {

@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 namespace Mutagen.Bethesda
 {
     public class FormIDSetLink<T> : LoquiNotifyingObject, IFormIDSetLink<T>, IEquatable<ILink<T>>
-       where T : IMajorRecord
+       where T : class, IMajorRecord
     {
         private bool _HasBeenSet;
         public bool HasBeenSet
@@ -69,7 +69,7 @@ namespace Mutagen.Bethesda
         public virtual void Set(T value, bool hasBeenSet = true)
         {
             UpdateUnlinkedForm(value);
-            this.RaiseAndSetIfChanged(ref this._Item, value, ref this._HasBeenSet, hasBeenSet, nameof(Item), nameof(HasBeenSet));
+            this.RaiseAndSetIfReferenceChanged(ref this._Item, value, ref this._HasBeenSet, hasBeenSet, nameof(Item), nameof(HasBeenSet));
         }
 
         public void SetIfSucceeded(TryGet<FormKey> formKey)
@@ -108,12 +108,12 @@ namespace Mutagen.Bethesda
             if (rhs.HasBeenSet)
             {
                 this.UnlinkedForm = rhs.FormKey;
-                this.RaiseAndSetIfChanged(ref this._Item, rhs.Item, ref this._HasBeenSet, true, nameof(Item), nameof(HasBeenSet));
+                this.RaiseAndSetIfReferenceChanged(ref this._Item, rhs.Item, ref this._HasBeenSet, true, nameof(Item), nameof(HasBeenSet));
             }
             else if (def.HasBeenSet)
             {
                 this.UnlinkedForm = def.FormKey;
-                this.RaiseAndSetIfChanged(ref this._Item, def.Item, ref this._HasBeenSet, true, nameof(Item), nameof(HasBeenSet));
+                this.RaiseAndSetIfReferenceChanged(ref this._Item, def.Item, ref this._HasBeenSet, true, nameof(Item), nameof(HasBeenSet));
             }
             else
             {

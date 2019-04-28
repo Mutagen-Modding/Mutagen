@@ -73,7 +73,7 @@ namespace Mutagen.Bethesda.Oblivion
             String value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _FillTexture, value, _hasBeenSetTracker, markSet, (int)EffectShader_FieldIndex.FillTexture, nameof(FillTexture), nameof(FillTexture_IsSet));
+            this.RaiseAndSetIfReferenceChanged(ref _FillTexture, value, _hasBeenSetTracker, markSet, (int)EffectShader_FieldIndex.FillTexture, nameof(FillTexture), nameof(FillTexture_IsSet));
         }
         public void FillTexture_Unset()
         {
@@ -99,7 +99,7 @@ namespace Mutagen.Bethesda.Oblivion
             String value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _ParticleShaderTexture, value, _hasBeenSetTracker, markSet, (int)EffectShader_FieldIndex.ParticleShaderTexture, nameof(ParticleShaderTexture), nameof(ParticleShaderTexture_IsSet));
+            this.RaiseAndSetIfReferenceChanged(ref _ParticleShaderTexture, value, _hasBeenSetTracker, markSet, (int)EffectShader_FieldIndex.ParticleShaderTexture, nameof(ParticleShaderTexture), nameof(ParticleShaderTexture_IsSet));
         }
         public void ParticleShaderTexture_Unset()
         {

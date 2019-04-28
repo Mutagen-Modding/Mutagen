@@ -75,7 +75,7 @@ namespace Mutagen.Bethesda.Oblivion
             String value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _Name, value, _hasBeenSetTracker, markSet, (int)Race_FieldIndex.Name, nameof(Name), nameof(Name_IsSet));
+            this.RaiseAndSetIfReferenceChanged(ref _Name, value, _hasBeenSetTracker, markSet, (int)Race_FieldIndex.Name, nameof(Name), nameof(Name_IsSet));
         }
         public void Name_Unset()
         {
@@ -101,7 +101,7 @@ namespace Mutagen.Bethesda.Oblivion
             String value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _Description, value, _hasBeenSetTracker, markSet, (int)Race_FieldIndex.Description, nameof(Description), nameof(Description_IsSet));
+            this.RaiseAndSetIfReferenceChanged(ref _Description, value, _hasBeenSetTracker, markSet, (int)Race_FieldIndex.Description, nameof(Description), nameof(Description_IsSet));
         }
         public void Description_Unset()
         {
@@ -255,7 +255,7 @@ namespace Mutagen.Bethesda.Oblivion
             RaceVoices value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _Voices, value, _hasBeenSetTracker, markSet, (int)Race_FieldIndex.Voices, nameof(Voices), nameof(Voices_IsSet));
+            this.RaiseAndSetIfReferenceChanged(ref _Voices, value, _hasBeenSetTracker, markSet, (int)Race_FieldIndex.Voices, nameof(Voices), nameof(Voices_IsSet));
         }
         public void Voices_Unset()
         {
@@ -282,7 +282,7 @@ namespace Mutagen.Bethesda.Oblivion
             RaceHair value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _DefaultHair, value, _hasBeenSetTracker, markSet, (int)Race_FieldIndex.DefaultHair, nameof(DefaultHair), nameof(DefaultHair_IsSet));
+            this.RaiseAndSetIfReferenceChanged(ref _DefaultHair, value, _hasBeenSetTracker, markSet, (int)Race_FieldIndex.DefaultHair, nameof(DefaultHair), nameof(DefaultHair_IsSet));
         }
         public void DefaultHair_Unset()
         {
@@ -387,7 +387,7 @@ namespace Mutagen.Bethesda.Oblivion
             RaceStatsGendered value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _RaceStats, value, _hasBeenSetTracker, markSet, (int)Race_FieldIndex.RaceStats, nameof(RaceStats), nameof(RaceStats_IsSet));
+            this.RaiseAndSetIfReferenceChanged(ref _RaceStats, value, _hasBeenSetTracker, markSet, (int)Race_FieldIndex.RaceStats, nameof(RaceStats), nameof(RaceStats_IsSet));
         }
         public void RaceStats_Unset()
         {
@@ -432,7 +432,7 @@ namespace Mutagen.Bethesda.Oblivion
             GenderedBodyData value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _BodyData, value, _hasBeenSetTracker, markSet, (int)Race_FieldIndex.BodyData, nameof(BodyData), nameof(BodyData_IsSet));
+            this.RaiseAndSetIfReferenceChanged(ref _BodyData, value, _hasBeenSetTracker, markSet, (int)Race_FieldIndex.BodyData, nameof(BodyData), nameof(BodyData_IsSet));
         }
         public void BodyData_Unset()
         {
@@ -495,7 +495,7 @@ namespace Mutagen.Bethesda.Oblivion
             FaceGenData value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _FaceGenData, value, _hasBeenSetTracker, markSet, (int)Race_FieldIndex.FaceGenData, nameof(FaceGenData), nameof(FaceGenData_IsSet));
+            this.RaiseAndSetIfReferenceChanged(ref _FaceGenData, value, _hasBeenSetTracker, markSet, (int)Race_FieldIndex.FaceGenData, nameof(FaceGenData), nameof(FaceGenData_IsSet));
         }
         public void FaceGenData_Unset()
         {
@@ -525,7 +525,7 @@ namespace Mutagen.Bethesda.Oblivion
             Byte[] value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _Unknown, value, _hasBeenSetTracker, markSet, (int)Race_FieldIndex.Unknown, nameof(Unknown), nameof(Unknown_IsSet));
+            this.RaiseAndSetIfReferenceChanged(ref _Unknown, value, _hasBeenSetTracker, markSet, (int)Race_FieldIndex.Unknown, nameof(Unknown), nameof(Unknown_IsSet));
         }
         public void Unknown_Unset()
         {

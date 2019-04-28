@@ -76,7 +76,7 @@ namespace Mutagen.Bethesda.Oblivion
             String value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _TextureLowerLayer, value, _hasBeenSetTracker, markSet, (int)Weather_FieldIndex.TextureLowerLayer, nameof(TextureLowerLayer), nameof(TextureLowerLayer_IsSet));
+            this.RaiseAndSetIfReferenceChanged(ref _TextureLowerLayer, value, _hasBeenSetTracker, markSet, (int)Weather_FieldIndex.TextureLowerLayer, nameof(TextureLowerLayer), nameof(TextureLowerLayer_IsSet));
         }
         public void TextureLowerLayer_Unset()
         {
@@ -102,7 +102,7 @@ namespace Mutagen.Bethesda.Oblivion
             String value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _TextureUpperLayer, value, _hasBeenSetTracker, markSet, (int)Weather_FieldIndex.TextureUpperLayer, nameof(TextureUpperLayer), nameof(TextureUpperLayer_IsSet));
+            this.RaiseAndSetIfReferenceChanged(ref _TextureUpperLayer, value, _hasBeenSetTracker, markSet, (int)Weather_FieldIndex.TextureUpperLayer, nameof(TextureUpperLayer), nameof(TextureUpperLayer_IsSet));
         }
         public void TextureUpperLayer_Unset()
         {
@@ -127,7 +127,7 @@ namespace Mutagen.Bethesda.Oblivion
             Model value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _Model, value, _hasBeenSetTracker, markSet, (int)Weather_FieldIndex.Model, nameof(Model), nameof(Model_IsSet));
+            this.RaiseAndSetIfReferenceChanged(ref _Model, value, _hasBeenSetTracker, markSet, (int)Weather_FieldIndex.Model, nameof(Model), nameof(Model_IsSet));
         }
         public void Model_Unset()
         {

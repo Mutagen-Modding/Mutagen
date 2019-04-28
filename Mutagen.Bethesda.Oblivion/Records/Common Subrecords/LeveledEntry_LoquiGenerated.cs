@@ -129,7 +129,7 @@ namespace Mutagen.Bethesda.Oblivion
             Byte[] value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _Fluff2, value, _hasBeenSetTracker, markSet, (int)LeveledEntry_FieldIndex.Fluff2, nameof(Fluff2), nameof(Fluff2_IsSet));
+            this.RaiseAndSetIfReferenceChanged(ref _Fluff2, value, _hasBeenSetTracker, markSet, (int)LeveledEntry_FieldIndex.Fluff2, nameof(Fluff2), nameof(Fluff2_IsSet));
         }
         public void Fluff2_Unset()
         {

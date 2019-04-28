@@ -16,7 +16,7 @@ namespace Mutagen.Bethesda.Binary
             out FormIDLink<T> item,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
-            where T : IMajorRecord
+            where T : class, IMajorRecord
         {
             if (Parse(frame, out FormKey id, masterReferences, errorMask))
             {
@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Binary
             out FormIDSetLink<T> item,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
-            where T : IMajorRecord
+            where T : class, IMajorRecord
         {
             if (Parse(frame, out FormKey id, masterReferences, errorMask))
             {
@@ -108,7 +108,7 @@ namespace Mutagen.Bethesda.Binary
             MasterReferences masterReferences,
             FormIDSetLink<T> item,
             ErrorMaskBuilder errorMask)
-            where T : IMajorRecord
+            where T : class, IMajorRecord
         {
             using (errorMask.PushIndex(fieldIndex))
             {
@@ -141,7 +141,7 @@ namespace Mutagen.Bethesda.Binary
             MasterReferences masterReferences,
             FormIDLink<T> item, 
             ErrorMaskBuilder errorMask)
-            where T : IMajorRecord
+            where T : class, IMajorRecord
         {
             using (errorMask.PushIndex(fieldIndex))
             {
@@ -213,7 +213,7 @@ namespace Mutagen.Bethesda.Binary
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask,
             bool nullable = false)
-            where T : IMajorRecord
+            where T : class, IMajorRecord
         {
             this.Write(
                 writer,
@@ -228,7 +228,7 @@ namespace Mutagen.Bethesda.Binary
             MasterReferences masterReferences, 
             ErrorMaskBuilder errorMask,
             bool nullable = false)
-            where T : IMajorRecord
+            where T : class, IMajorRecord
         {
             this.Write(
                 writer,
@@ -272,7 +272,7 @@ namespace Mutagen.Bethesda.Binary
             int fieldIndex,
             ErrorMaskBuilder errorMask,
             bool nullable = false)
-            where T : IMajorRecord
+            where T : class, IMajorRecord
         {
             using (errorMask.PushIndex(fieldIndex))
             {
@@ -299,7 +299,7 @@ namespace Mutagen.Bethesda.Binary
             int fieldIndex,
             ErrorMaskBuilder errorMask,
             bool nullable = false)
-            where T : IMajorRecord
+            where T : class, IMajorRecord
         {
             using (errorMask.PushIndex(fieldIndex))
             {
@@ -398,7 +398,7 @@ namespace Mutagen.Bethesda.Binary
             RecordType header,
             ErrorMaskBuilder errorMask,
             bool nullable = false)
-            where T : IMajorRecord
+            where T : class, IMajorRecord
         {
             this.Write(
                 writer,
@@ -415,7 +415,7 @@ namespace Mutagen.Bethesda.Binary
             RecordType header,
             ErrorMaskBuilder errorMask,
             bool nullable = false)
-            where T : IMajorRecord
+            where T : class, IMajorRecord
         {
             if (!item.HasBeenSet) return;
             this.Write(
@@ -434,7 +434,7 @@ namespace Mutagen.Bethesda.Binary
             int fieldIndex,
             ErrorMaskBuilder errorMask,
             bool nullable = false)
-            where T : IMajorRecord
+            where T : class, IMajorRecord
         {
             using (errorMask.PushIndex(fieldIndex))
             {
@@ -463,7 +463,7 @@ namespace Mutagen.Bethesda.Binary
             int fieldIndex,
             ErrorMaskBuilder errorMask,
             bool nullable = false)
-            where T : IMajorRecord
+            where T : class, IMajorRecord
         {
             if (!item.HasBeenSet) return;
             this.Write(

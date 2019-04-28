@@ -86,7 +86,7 @@ namespace Mutagen.Bethesda.Oblivion
             Byte[] value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _CompiledScript, value, _hasBeenSetTracker, markSet, (int)ScriptFields_FieldIndex.CompiledScript, nameof(CompiledScript), nameof(CompiledScript_IsSet));
+            this.RaiseAndSetIfReferenceChanged(ref _CompiledScript, value, _hasBeenSetTracker, markSet, (int)ScriptFields_FieldIndex.CompiledScript, nameof(CompiledScript), nameof(CompiledScript_IsSet));
         }
         public void CompiledScript_Unset()
         {
@@ -112,7 +112,7 @@ namespace Mutagen.Bethesda.Oblivion
             String value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _SourceCode, value, _hasBeenSetTracker, markSet, (int)ScriptFields_FieldIndex.SourceCode, nameof(SourceCode), nameof(SourceCode_IsSet));
+            this.RaiseAndSetIfReferenceChanged(ref _SourceCode, value, _hasBeenSetTracker, markSet, (int)ScriptFields_FieldIndex.SourceCode, nameof(SourceCode), nameof(SourceCode_IsSet));
         }
         public void SourceCode_Unset()
         {

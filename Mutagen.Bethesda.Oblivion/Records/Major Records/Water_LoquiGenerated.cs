@@ -74,7 +74,7 @@ namespace Mutagen.Bethesda.Oblivion
             String value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _Texture, value, _hasBeenSetTracker, markSet, (int)Water_FieldIndex.Texture, nameof(Texture), nameof(Texture_IsSet));
+            this.RaiseAndSetIfReferenceChanged(ref _Texture, value, _hasBeenSetTracker, markSet, (int)Water_FieldIndex.Texture, nameof(Texture), nameof(Texture_IsSet));
         }
         public void Texture_Unset()
         {
@@ -152,7 +152,7 @@ namespace Mutagen.Bethesda.Oblivion
             String value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _MaterialID, value, _hasBeenSetTracker, markSet, (int)Water_FieldIndex.MaterialID, nameof(MaterialID), nameof(MaterialID_IsSet));
+            this.RaiseAndSetIfReferenceChanged(ref _MaterialID, value, _hasBeenSetTracker, markSet, (int)Water_FieldIndex.MaterialID, nameof(MaterialID), nameof(MaterialID_IsSet));
         }
         public void MaterialID_Unset()
         {
@@ -553,7 +553,7 @@ namespace Mutagen.Bethesda.Oblivion
             RelatedWaters value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _RelatedWaters, value, _hasBeenSetTracker, markSet, (int)Water_FieldIndex.RelatedWaters, nameof(RelatedWaters), nameof(RelatedWaters_IsSet));
+            this.RaiseAndSetIfReferenceChanged(ref _RelatedWaters, value, _hasBeenSetTracker, markSet, (int)Water_FieldIndex.RelatedWaters, nameof(RelatedWaters), nameof(RelatedWaters_IsSet));
         }
         public void RelatedWaters_Unset()
         {

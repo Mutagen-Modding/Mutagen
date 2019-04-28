@@ -70,7 +70,7 @@ namespace Mutagen.Bethesda.Oblivion
             String value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _MapName, value, _hasBeenSetTracker, markSet, (int)RegionDataMapName_FieldIndex.MapName, nameof(MapName), nameof(MapName_IsSet));
+            this.RaiseAndSetIfReferenceChanged(ref _MapName, value, _hasBeenSetTracker, markSet, (int)RegionDataMapName_FieldIndex.MapName, nameof(MapName), nameof(MapName_IsSet));
         }
         public void MapName_Unset()
         {

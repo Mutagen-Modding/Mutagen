@@ -73,7 +73,7 @@ namespace Mutagen.Bethesda.Oblivion
             String value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _Name, value, _hasBeenSetTracker, markSet, (int)ClothingAbstract_FieldIndex.Name, nameof(Name), nameof(Name_IsSet));
+            this.RaiseAndSetIfReferenceChanged(ref _Name, value, _hasBeenSetTracker, markSet, (int)ClothingAbstract_FieldIndex.Name, nameof(Name), nameof(Name_IsSet));
         }
         public void Name_Unset()
         {
@@ -160,7 +160,7 @@ namespace Mutagen.Bethesda.Oblivion
             Model value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _MaleBipedModel, value, _hasBeenSetTracker, markSet, (int)ClothingAbstract_FieldIndex.MaleBipedModel, nameof(MaleBipedModel), nameof(MaleBipedModel_IsSet));
+            this.RaiseAndSetIfReferenceChanged(ref _MaleBipedModel, value, _hasBeenSetTracker, markSet, (int)ClothingAbstract_FieldIndex.MaleBipedModel, nameof(MaleBipedModel), nameof(MaleBipedModel_IsSet));
         }
         public void MaleBipedModel_Unset()
         {
@@ -187,7 +187,7 @@ namespace Mutagen.Bethesda.Oblivion
             Model value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _MaleWorldModel, value, _hasBeenSetTracker, markSet, (int)ClothingAbstract_FieldIndex.MaleWorldModel, nameof(MaleWorldModel), nameof(MaleWorldModel_IsSet));
+            this.RaiseAndSetIfReferenceChanged(ref _MaleWorldModel, value, _hasBeenSetTracker, markSet, (int)ClothingAbstract_FieldIndex.MaleWorldModel, nameof(MaleWorldModel), nameof(MaleWorldModel_IsSet));
         }
         public void MaleWorldModel_Unset()
         {
@@ -215,7 +215,7 @@ namespace Mutagen.Bethesda.Oblivion
             String value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _MaleIcon, value, _hasBeenSetTracker, markSet, (int)ClothingAbstract_FieldIndex.MaleIcon, nameof(MaleIcon), nameof(MaleIcon_IsSet));
+            this.RaiseAndSetIfReferenceChanged(ref _MaleIcon, value, _hasBeenSetTracker, markSet, (int)ClothingAbstract_FieldIndex.MaleIcon, nameof(MaleIcon), nameof(MaleIcon_IsSet));
         }
         public void MaleIcon_Unset()
         {
@@ -240,7 +240,7 @@ namespace Mutagen.Bethesda.Oblivion
             Model value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _FemaleBipedModel, value, _hasBeenSetTracker, markSet, (int)ClothingAbstract_FieldIndex.FemaleBipedModel, nameof(FemaleBipedModel), nameof(FemaleBipedModel_IsSet));
+            this.RaiseAndSetIfReferenceChanged(ref _FemaleBipedModel, value, _hasBeenSetTracker, markSet, (int)ClothingAbstract_FieldIndex.FemaleBipedModel, nameof(FemaleBipedModel), nameof(FemaleBipedModel_IsSet));
         }
         public void FemaleBipedModel_Unset()
         {
@@ -267,7 +267,7 @@ namespace Mutagen.Bethesda.Oblivion
             Model value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _FemaleWorldModel, value, _hasBeenSetTracker, markSet, (int)ClothingAbstract_FieldIndex.FemaleWorldModel, nameof(FemaleWorldModel), nameof(FemaleWorldModel_IsSet));
+            this.RaiseAndSetIfReferenceChanged(ref _FemaleWorldModel, value, _hasBeenSetTracker, markSet, (int)ClothingAbstract_FieldIndex.FemaleWorldModel, nameof(FemaleWorldModel), nameof(FemaleWorldModel_IsSet));
         }
         public void FemaleWorldModel_Unset()
         {
@@ -295,7 +295,7 @@ namespace Mutagen.Bethesda.Oblivion
             String value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _FemaleIcon, value, _hasBeenSetTracker, markSet, (int)ClothingAbstract_FieldIndex.FemaleIcon, nameof(FemaleIcon), nameof(FemaleIcon_IsSet));
+            this.RaiseAndSetIfReferenceChanged(ref _FemaleIcon, value, _hasBeenSetTracker, markSet, (int)ClothingAbstract_FieldIndex.FemaleIcon, nameof(FemaleIcon), nameof(FemaleIcon_IsSet));
         }
         public void FemaleIcon_Unset()
         {

@@ -81,7 +81,7 @@ namespace Mutagen.Bethesda.Oblivion
             Byte[] value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _XPCIFluff, value, _hasBeenSetTracker, markSet, (int)PlacedObject_FieldIndex.XPCIFluff, nameof(XPCIFluff), nameof(XPCIFluff_IsSet));
+            this.RaiseAndSetIfReferenceChanged(ref _XPCIFluff, value, _hasBeenSetTracker, markSet, (int)PlacedObject_FieldIndex.XPCIFluff, nameof(XPCIFluff), nameof(XPCIFluff_IsSet));
         }
         public void XPCIFluff_Unset()
         {
@@ -109,7 +109,7 @@ namespace Mutagen.Bethesda.Oblivion
             Byte[] value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _FULLFluff, value, _hasBeenSetTracker, markSet, (int)PlacedObject_FieldIndex.FULLFluff, nameof(FULLFluff), nameof(FULLFluff_IsSet));
+            this.RaiseAndSetIfReferenceChanged(ref _FULLFluff, value, _hasBeenSetTracker, markSet, (int)PlacedObject_FieldIndex.FULLFluff, nameof(FULLFluff), nameof(FULLFluff_IsSet));
         }
         public void FULLFluff_Unset()
         {
@@ -134,7 +134,7 @@ namespace Mutagen.Bethesda.Oblivion
             TeleportDestination value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _TeleportDestination, value, _hasBeenSetTracker, markSet, (int)PlacedObject_FieldIndex.TeleportDestination, nameof(TeleportDestination), nameof(TeleportDestination_IsSet));
+            this.RaiseAndSetIfReferenceChanged(ref _TeleportDestination, value, _hasBeenSetTracker, markSet, (int)PlacedObject_FieldIndex.TeleportDestination, nameof(TeleportDestination), nameof(TeleportDestination_IsSet));
         }
         public void TeleportDestination_Unset()
         {
@@ -161,7 +161,7 @@ namespace Mutagen.Bethesda.Oblivion
             LockInformation value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _Lock, value, _hasBeenSetTracker, markSet, (int)PlacedObject_FieldIndex.Lock, nameof(Lock), nameof(Lock_IsSet));
+            this.RaiseAndSetIfReferenceChanged(ref _Lock, value, _hasBeenSetTracker, markSet, (int)PlacedObject_FieldIndex.Lock, nameof(Lock), nameof(Lock_IsSet));
         }
         public void Lock_Unset()
         {
@@ -226,7 +226,7 @@ namespace Mutagen.Bethesda.Oblivion
             EnableParent value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _EnableParent, value, _hasBeenSetTracker, markSet, (int)PlacedObject_FieldIndex.EnableParent, nameof(EnableParent), nameof(EnableParent_IsSet));
+            this.RaiseAndSetIfReferenceChanged(ref _EnableParent, value, _hasBeenSetTracker, markSet, (int)PlacedObject_FieldIndex.EnableParent, nameof(EnableParent), nameof(EnableParent_IsSet));
         }
         public void EnableParent_Unset()
         {
@@ -285,7 +285,7 @@ namespace Mutagen.Bethesda.Oblivion
             DistantLODData value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _DistantLODData, value, _hasBeenSetTracker, markSet, (int)PlacedObject_FieldIndex.DistantLODData, nameof(DistantLODData), nameof(DistantLODData_IsSet));
+            this.RaiseAndSetIfReferenceChanged(ref _DistantLODData, value, _hasBeenSetTracker, markSet, (int)PlacedObject_FieldIndex.DistantLODData, nameof(DistantLODData), nameof(DistantLODData_IsSet));
         }
         public void DistantLODData_Unset()
         {
@@ -448,7 +448,7 @@ namespace Mutagen.Bethesda.Oblivion
             MapMarker value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _MapMarker, value, _hasBeenSetTracker, markSet, (int)PlacedObject_FieldIndex.MapMarker, nameof(MapMarker), nameof(MapMarker_IsSet));
+            this.RaiseAndSetIfReferenceChanged(ref _MapMarker, value, _hasBeenSetTracker, markSet, (int)PlacedObject_FieldIndex.MapMarker, nameof(MapMarker), nameof(MapMarker_IsSet));
         }
         public void MapMarker_Unset()
         {
@@ -486,7 +486,7 @@ namespace Mutagen.Bethesda.Oblivion
             Byte[] value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _RagdollData, value, _hasBeenSetTracker, markSet, (int)PlacedObject_FieldIndex.RagdollData, nameof(RagdollData), nameof(RagdollData_IsSet));
+            this.RaiseAndSetIfReferenceChanged(ref _RagdollData, value, _hasBeenSetTracker, markSet, (int)PlacedObject_FieldIndex.RagdollData, nameof(RagdollData), nameof(RagdollData_IsSet));
         }
         public void RagdollData_Unset()
         {

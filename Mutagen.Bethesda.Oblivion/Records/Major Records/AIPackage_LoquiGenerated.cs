@@ -97,7 +97,7 @@ namespace Mutagen.Bethesda.Oblivion
             AIPackageLocation value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _Location, value, _hasBeenSetTracker, markSet, (int)AIPackage_FieldIndex.Location, nameof(Location), nameof(Location_IsSet));
+            this.RaiseAndSetIfReferenceChanged(ref _Location, value, _hasBeenSetTracker, markSet, (int)AIPackage_FieldIndex.Location, nameof(Location), nameof(Location_IsSet));
         }
         public void Location_Unset()
         {
@@ -124,7 +124,7 @@ namespace Mutagen.Bethesda.Oblivion
             AIPackageSchedule value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _Schedule, value, _hasBeenSetTracker, markSet, (int)AIPackage_FieldIndex.Schedule, nameof(Schedule), nameof(Schedule_IsSet));
+            this.RaiseAndSetIfReferenceChanged(ref _Schedule, value, _hasBeenSetTracker, markSet, (int)AIPackage_FieldIndex.Schedule, nameof(Schedule), nameof(Schedule_IsSet));
         }
         public void Schedule_Unset()
         {
@@ -151,7 +151,7 @@ namespace Mutagen.Bethesda.Oblivion
             AIPackageTarget value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _Target, value, _hasBeenSetTracker, markSet, (int)AIPackage_FieldIndex.Target, nameof(Target), nameof(Target_IsSet));
+            this.RaiseAndSetIfReferenceChanged(ref _Target, value, _hasBeenSetTracker, markSet, (int)AIPackage_FieldIndex.Target, nameof(Target), nameof(Target_IsSet));
         }
         public void Target_Unset()
         {

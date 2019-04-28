@@ -65,7 +65,7 @@ namespace Mutagen.Bethesda
         public String ContainedRecordType
         {
             get => this._ContainedRecordType;
-            protected set => this.RaiseAndSetIfChanged(ref this._ContainedRecordType, value, nameof(ContainedRecordType));
+            protected set => this.RaiseAndSetIfReferenceChanged(ref this._ContainedRecordType, value, nameof(ContainedRecordType));
         }
         #endregion
         #region GroupType

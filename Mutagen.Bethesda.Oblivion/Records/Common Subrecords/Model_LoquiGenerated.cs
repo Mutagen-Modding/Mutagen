@@ -56,7 +56,7 @@ namespace Mutagen.Bethesda.Oblivion
         public String File
         {
             get => this._File;
-            set => this.RaiseAndSetIfChanged(ref this._File, value, nameof(File));
+            set => this.RaiseAndSetIfReferenceChanged(ref this._File, value, nameof(File));
         }
         #endregion
         #region BoundRadius
@@ -88,7 +88,7 @@ namespace Mutagen.Bethesda.Oblivion
             Byte[] value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _Hashes, value, _hasBeenSetTracker, markSet, (int)Model_FieldIndex.Hashes, nameof(Hashes), nameof(Hashes_IsSet));
+            this.RaiseAndSetIfReferenceChanged(ref _Hashes, value, _hasBeenSetTracker, markSet, (int)Model_FieldIndex.Hashes, nameof(Hashes), nameof(Hashes_IsSet));
         }
         public void Hashes_Unset()
         {

@@ -72,7 +72,7 @@ namespace Mutagen.Bethesda.Oblivion
             Model value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _Model, value, _hasBeenSetTracker, markSet, (int)BodyData_FieldIndex.Model, nameof(Model), nameof(Model_IsSet));
+            this.RaiseAndSetIfReferenceChanged(ref _Model, value, _hasBeenSetTracker, markSet, (int)BodyData_FieldIndex.Model, nameof(Model), nameof(Model_IsSet));
         }
         public void Model_Unset()
         {

@@ -86,7 +86,7 @@ namespace Mutagen.Bethesda
             String value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _EditorID, value, _hasBeenSetTracker, markSet, (int)MajorRecord_FieldIndex.EditorID, nameof(EditorID), nameof(EditorID_IsSet));
+            this.RaiseAndSetIfReferenceChanged(ref _EditorID, value, _hasBeenSetTracker, markSet, (int)MajorRecord_FieldIndex.EditorID, nameof(EditorID), nameof(EditorID_IsSet));
         }
         public void EditorID_Unset()
         {

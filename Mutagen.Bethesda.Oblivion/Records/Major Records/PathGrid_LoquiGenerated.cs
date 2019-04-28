@@ -94,7 +94,7 @@ namespace Mutagen.Bethesda.Oblivion
             Byte[] value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _Unknown, value, _hasBeenSetTracker, markSet, (int)PathGrid_FieldIndex.Unknown, nameof(Unknown), nameof(Unknown_IsSet));
+            this.RaiseAndSetIfReferenceChanged(ref _Unknown, value, _hasBeenSetTracker, markSet, (int)PathGrid_FieldIndex.Unknown, nameof(Unknown), nameof(Unknown_IsSet));
         }
         public void Unknown_Unset()
         {

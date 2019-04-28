@@ -99,7 +99,7 @@ namespace Mutagen.Bethesda.Oblivion
             Byte[] value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _TypeOffsets, value, _hasBeenSetTracker, markSet, (int)TES4_FieldIndex.TypeOffsets, nameof(TypeOffsets), nameof(TypeOffsets_IsSet));
+            this.RaiseAndSetIfReferenceChanged(ref _TypeOffsets, value, _hasBeenSetTracker, markSet, (int)TES4_FieldIndex.TypeOffsets, nameof(TypeOffsets), nameof(TypeOffsets_IsSet));
         }
         public void TypeOffsets_Unset()
         {
@@ -127,7 +127,7 @@ namespace Mutagen.Bethesda.Oblivion
             Byte[] value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _Deleted, value, _hasBeenSetTracker, markSet, (int)TES4_FieldIndex.Deleted, nameof(Deleted), nameof(Deleted_IsSet));
+            this.RaiseAndSetIfReferenceChanged(ref _Deleted, value, _hasBeenSetTracker, markSet, (int)TES4_FieldIndex.Deleted, nameof(Deleted), nameof(Deleted_IsSet));
         }
         public void Deleted_Unset()
         {
@@ -153,7 +153,7 @@ namespace Mutagen.Bethesda.Oblivion
             String value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _Author, value, _hasBeenSetTracker, markSet, (int)TES4_FieldIndex.Author, nameof(Author), nameof(Author_IsSet));
+            this.RaiseAndSetIfReferenceChanged(ref _Author, value, _hasBeenSetTracker, markSet, (int)TES4_FieldIndex.Author, nameof(Author), nameof(Author_IsSet));
         }
         public void Author_Unset()
         {
@@ -179,7 +179,7 @@ namespace Mutagen.Bethesda.Oblivion
             String value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _Description, value, _hasBeenSetTracker, markSet, (int)TES4_FieldIndex.Description, nameof(Description), nameof(Description_IsSet));
+            this.RaiseAndSetIfReferenceChanged(ref _Description, value, _hasBeenSetTracker, markSet, (int)TES4_FieldIndex.Description, nameof(Description), nameof(Description_IsSet));
         }
         public void Description_Unset()
         {

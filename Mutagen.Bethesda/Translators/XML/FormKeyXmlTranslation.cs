@@ -15,7 +15,7 @@ namespace Mutagen.Bethesda
         public readonly static FormKeyXmlTranslation Instance = new FormKeyXmlTranslation();
 
         public void ParseInto<T>(XElement node, int fieldIndex, FormIDSetLink<T> item, ErrorMaskBuilder errorMask)
-            where T : IMajorRecord
+            where T : class, IMajorRecord
         {
             using (errorMask.PushIndex(fieldIndex))
             {
@@ -39,7 +39,7 @@ namespace Mutagen.Bethesda
         }
 
         public void ParseInto<T>(XElement node, int fieldIndex, FormIDLink<T> item, ErrorMaskBuilder errorMask)
-            where T : IMajorRecord
+            where T : class, IMajorRecord
         {
             using (errorMask.PushIndex(fieldIndex))
             {
@@ -114,7 +114,7 @@ namespace Mutagen.Bethesda
             XElement node, 
             out FormIDLink<T> item, 
             ErrorMaskBuilder errorMask)
-            where T : IMajorRecord
+            where T : class, IMajorRecord
         {
             if (Parse(node, out FormKey id, errorMask))
             {
@@ -130,7 +130,7 @@ namespace Mutagen.Bethesda
             out FormIDLink<T> item, 
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
-            where T : IMajorRecord
+            where T : class, IMajorRecord
         {
             return this.Parse(
                 node: node,
@@ -142,7 +142,7 @@ namespace Mutagen.Bethesda
             XElement node, 
             out FormIDSetLink<T> item,
             ErrorMaskBuilder errorMask)
-            where T : IMajorRecord
+            where T : class, IMajorRecord
         {
             if (Parse(node, out FormKey id, errorMask))
             {
@@ -158,7 +158,7 @@ namespace Mutagen.Bethesda
             out FormIDSetLink<T> item, 
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
-            where T : IMajorRecord
+            where T : class, IMajorRecord
         {
             return this.Parse(
                 node: node,

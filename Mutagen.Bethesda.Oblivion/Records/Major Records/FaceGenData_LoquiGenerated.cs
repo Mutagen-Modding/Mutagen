@@ -72,7 +72,7 @@ namespace Mutagen.Bethesda.Oblivion
             Byte[] value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _SymmetricGeometry, value, _hasBeenSetTracker, markSet, (int)FaceGenData_FieldIndex.SymmetricGeometry, nameof(SymmetricGeometry), nameof(SymmetricGeometry_IsSet));
+            this.RaiseAndSetIfReferenceChanged(ref _SymmetricGeometry, value, _hasBeenSetTracker, markSet, (int)FaceGenData_FieldIndex.SymmetricGeometry, nameof(SymmetricGeometry), nameof(SymmetricGeometry_IsSet));
         }
         public void SymmetricGeometry_Unset()
         {
@@ -100,7 +100,7 @@ namespace Mutagen.Bethesda.Oblivion
             Byte[] value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _AsymmetricGeometry, value, _hasBeenSetTracker, markSet, (int)FaceGenData_FieldIndex.AsymmetricGeometry, nameof(AsymmetricGeometry), nameof(AsymmetricGeometry_IsSet));
+            this.RaiseAndSetIfReferenceChanged(ref _AsymmetricGeometry, value, _hasBeenSetTracker, markSet, (int)FaceGenData_FieldIndex.AsymmetricGeometry, nameof(AsymmetricGeometry), nameof(AsymmetricGeometry_IsSet));
         }
         public void AsymmetricGeometry_Unset()
         {
@@ -128,7 +128,7 @@ namespace Mutagen.Bethesda.Oblivion
             Byte[] value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _SymmetricTexture, value, _hasBeenSetTracker, markSet, (int)FaceGenData_FieldIndex.SymmetricTexture, nameof(SymmetricTexture), nameof(SymmetricTexture_IsSet));
+            this.RaiseAndSetIfReferenceChanged(ref _SymmetricTexture, value, _hasBeenSetTracker, markSet, (int)FaceGenData_FieldIndex.SymmetricTexture, nameof(SymmetricTexture), nameof(SymmetricTexture_IsSet));
         }
         public void SymmetricTexture_Unset()
         {

@@ -10,5 +10,6 @@ namespace Mutagen.Bethesda.Generation
     public class ModKeyType : PrimitiveType
     {
         public override Type Type => typeof(ModKey);
+        public override bool IsClass => true;
     }
 }

@@ -72,7 +72,7 @@ namespace Mutagen.Bethesda.Oblivion
             Byte[] value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _AlphaLayerData, value, _hasBeenSetTracker, markSet, (int)AlphaLayer_FieldIndex.AlphaLayerData, nameof(AlphaLayerData), nameof(AlphaLayerData_IsSet));
+            this.RaiseAndSetIfReferenceChanged(ref _AlphaLayerData, value, _hasBeenSetTracker, markSet, (int)AlphaLayer_FieldIndex.AlphaLayerData, nameof(AlphaLayerData), nameof(AlphaLayerData_IsSet));
         }
         public void AlphaLayerData_Unset()
         {

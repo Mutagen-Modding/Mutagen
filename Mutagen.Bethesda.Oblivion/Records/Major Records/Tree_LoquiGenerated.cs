@@ -72,7 +72,7 @@ namespace Mutagen.Bethesda.Oblivion
             Model value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _Model, value, _hasBeenSetTracker, markSet, (int)Tree_FieldIndex.Model, nameof(Model), nameof(Model_IsSet));
+            this.RaiseAndSetIfReferenceChanged(ref _Model, value, _hasBeenSetTracker, markSet, (int)Tree_FieldIndex.Model, nameof(Model), nameof(Model_IsSet));
         }
         public void Model_Unset()
         {
@@ -100,7 +100,7 @@ namespace Mutagen.Bethesda.Oblivion
             String value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _Icon, value, _hasBeenSetTracker, markSet, (int)Tree_FieldIndex.Icon, nameof(Icon), nameof(Icon_IsSet));
+            this.RaiseAndSetIfReferenceChanged(ref _Icon, value, _hasBeenSetTracker, markSet, (int)Tree_FieldIndex.Icon, nameof(Icon), nameof(Icon_IsSet));
         }
         public void Icon_Unset()
         {

@@ -76,7 +76,7 @@ namespace Mutagen.Bethesda.Oblivion
             String value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _Icon, value, _hasBeenSetTracker, markSet, (int)Region_FieldIndex.Icon, nameof(Icon), nameof(Icon_IsSet));
+            this.RaiseAndSetIfReferenceChanged(ref _Icon, value, _hasBeenSetTracker, markSet, (int)Region_FieldIndex.Icon, nameof(Icon), nameof(Icon_IsSet));
         }
         public void Icon_Unset()
         {
@@ -151,7 +151,7 @@ namespace Mutagen.Bethesda.Oblivion
             RegionDataObjects value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _Objects, value, _hasBeenSetTracker, markSet, (int)Region_FieldIndex.Objects, nameof(Objects), nameof(Objects_IsSet));
+            this.RaiseAndSetIfReferenceChanged(ref _Objects, value, _hasBeenSetTracker, markSet, (int)Region_FieldIndex.Objects, nameof(Objects), nameof(Objects_IsSet));
         }
         public void Objects_Unset()
         {
@@ -178,7 +178,7 @@ namespace Mutagen.Bethesda.Oblivion
             RegionDataWeather value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _Weather, value, _hasBeenSetTracker, markSet, (int)Region_FieldIndex.Weather, nameof(Weather), nameof(Weather_IsSet));
+            this.RaiseAndSetIfReferenceChanged(ref _Weather, value, _hasBeenSetTracker, markSet, (int)Region_FieldIndex.Weather, nameof(Weather), nameof(Weather_IsSet));
         }
         public void Weather_Unset()
         {
@@ -205,7 +205,7 @@ namespace Mutagen.Bethesda.Oblivion
             RegionDataMapName value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _MapName, value, _hasBeenSetTracker, markSet, (int)Region_FieldIndex.MapName, nameof(MapName), nameof(MapName_IsSet));
+            this.RaiseAndSetIfReferenceChanged(ref _MapName, value, _hasBeenSetTracker, markSet, (int)Region_FieldIndex.MapName, nameof(MapName), nameof(MapName_IsSet));
         }
         public void MapName_Unset()
         {
@@ -232,7 +232,7 @@ namespace Mutagen.Bethesda.Oblivion
             RegionDataGrasses value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _Grasses, value, _hasBeenSetTracker, markSet, (int)Region_FieldIndex.Grasses, nameof(Grasses), nameof(Grasses_IsSet));
+            this.RaiseAndSetIfReferenceChanged(ref _Grasses, value, _hasBeenSetTracker, markSet, (int)Region_FieldIndex.Grasses, nameof(Grasses), nameof(Grasses_IsSet));
         }
         public void Grasses_Unset()
         {
@@ -259,7 +259,7 @@ namespace Mutagen.Bethesda.Oblivion
             RegionDataSounds value,
             bool markSet = true)
         {
-            this.RaiseAndSetIfChanged(ref _Sounds, value, _hasBeenSetTracker, markSet, (int)Region_FieldIndex.Sounds, nameof(Sounds), nameof(Sounds_IsSet));
+            this.RaiseAndSetIfReferenceChanged(ref _Sounds, value, _hasBeenSetTracker, markSet, (int)Region_FieldIndex.Sounds, nameof(Sounds), nameof(Sounds_IsSet));
         }
         public void Sounds_Unset()
         {
