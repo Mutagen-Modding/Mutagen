@@ -16,8 +16,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             if (UInt16BinaryTranslation.Instance.Parse(
                 frame,
-                out var val,
-                errorMask))
+                out var val))
             {
                 item.ArmorValue = val / 100f;
             }
@@ -27,8 +26,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             UInt16BinaryTranslation.Instance.Write(
                 writer,
-                (ushort)(item.ArmorValue * 100),
-                errorMask);
+                (ushort)(item.ArmorValue * 100));
         }
     }
 }

@@ -2,18 +2,18 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>9ed3419e94e453d0d878db0e3980efb69a3a167f</Sha>
+         <Sha>725f6fd8f0010bd0450601a01d72576a2ab7627a</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>04-27-2019 17:44:38</CommitDate>
-         <Description>Merge remote-tracking branch 'origin/master'</Description>
+         <CommitDate>04-28-2019 18:47:44</CommitDate>
+         <Description>Removed unnecessary exception for BinaryReadStream when position was set to == length</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>9c4ce4e4dabad395aa364308f3bdfb946e3fafcc</Sha>
+         <Sha>f15bbac57385c61210ce66d560b97186936c12ae</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>04-27-2019 23:39:15</CommitDate>
-         <Description>Removed NotifyingItem systems</Description>
+         <CommitDate>04-28-2019 18:07:00</CommitDate>
+         <Description>TranslationModule global DoErrorMasks</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>

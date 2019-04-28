@@ -1038,60 +1038,32 @@ namespace Mutagen.Bethesda.Oblivion
                 case 0x4D414E46: // FNAM
                 {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    try
+                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        parseWhole: true,
+                        item: out String SunTextureParse))
                     {
-                        errorMask?.PushIndex((int)Climate_FieldIndex.SunTexture);
-                        if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
-                            parseWhole: true,
-                            item: out String SunTextureParse,
-                            errorMask: errorMask))
-                        {
-                            item.SunTexture = SunTextureParse;
-                        }
-                        else
-                        {
-                            item.SunTexture = default(String);
-                        }
+                        item.SunTexture = SunTextureParse;
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    else
                     {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
+                        item.SunTexture = default(String);
                     }
                     return TryGet<int?>.Succeed((int)Climate_FieldIndex.SunTexture);
                 }
                 case 0x4D414E47: // GNAM
                 {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    try
+                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        parseWhole: true,
+                        item: out String SunGlareTextureParse))
                     {
-                        errorMask?.PushIndex((int)Climate_FieldIndex.SunGlareTexture);
-                        if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
-                            parseWhole: true,
-                            item: out String SunGlareTextureParse,
-                            errorMask: errorMask))
-                        {
-                            item.SunGlareTexture = SunGlareTextureParse;
-                        }
-                        else
-                        {
-                            item.SunGlareTexture = default(String);
-                        }
+                        item.SunGlareTexture = SunGlareTextureParse;
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    else
                     {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
+                        item.SunGlareTexture = default(String);
                     }
                     return TryGet<int?>.Succeed((int)Climate_FieldIndex.SunGlareTexture);
                 }
@@ -1152,29 +1124,15 @@ namespace Mutagen.Bethesda.Oblivion
                         item: item,
                         masterReferences: masterReferences,
                         errorMask: errorMask);
-                    try
+                    if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Byte VolatilityParse))
                     {
-                        errorMask?.PushIndex((int)Climate_FieldIndex.Volatility);
-                        if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
-                            item: out Byte VolatilityParse,
-                            errorMask: errorMask))
-                        {
-                            item.Volatility = VolatilityParse;
-                        }
-                        else
-                        {
-                            item.Volatility = default(Byte);
-                        }
+                        item.Volatility = VolatilityParse;
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    else
                     {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
+                        item.Volatility = default(Byte);
                     }
                     FillBinary_Phase_Custom(
                         frame: dataFrame,
@@ -2923,8 +2881,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.SunTexture,
-                    fieldIndex: (int)Climate_FieldIndex.SunTexture,
-                    errorMask: errorMask,
                     header: recordTypeConverter.ConvertToCustom(Climate_Registration.FNAM_HEADER),
                     nullable: false);
             }
@@ -2933,8 +2889,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.SunGlareTexture,
-                    fieldIndex: (int)Climate_FieldIndex.SunGlareTexture,
-                    errorMask: errorMask,
                     header: recordTypeConverter.ConvertToCustom(Climate_Registration.GNAM_HEADER),
                     nullable: false);
             }
@@ -2973,9 +2927,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         masterReferences: masterReferences);
                     Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.Volatility,
-                        fieldIndex: (int)Climate_FieldIndex.Volatility,
-                        errorMask: errorMask);
+                        item: item.Volatility);
                     Climate.WriteBinary_Phase(
                         writer: writer,
                         item: item,

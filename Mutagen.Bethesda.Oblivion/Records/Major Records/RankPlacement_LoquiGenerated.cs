@@ -559,56 +559,26 @@ namespace Mutagen.Bethesda.Oblivion
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
                 frame: frame,
                 masterReferences: masterReferences,
-                item: item.Faction_Property,
-                fieldIndex: (int)RankPlacement_FieldIndex.Faction,
-                errorMask: errorMask);
-            try
+                item: item.Faction_Property);
+            if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                frame: frame,
+                item: out Byte RankParse))
             {
-                errorMask?.PushIndex((int)RankPlacement_FieldIndex.Rank);
-                if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                    frame: frame,
-                    item: out Byte RankParse,
-                    errorMask: errorMask))
-                {
-                    item.Rank = RankParse;
-                }
-                else
-                {
-                    item.Rank = default(Byte);
-                }
+                item.Rank = RankParse;
             }
-            catch (Exception ex)
-            when (errorMask != null)
+            else
             {
-                errorMask.ReportException(ex);
+                item.Rank = default(Byte);
             }
-            finally
+            if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+                frame: frame.SpawnWithLength(3),
+                item: out Byte[] FluffParse))
             {
-                errorMask?.PopIndex();
+                item.Fluff = FluffParse;
             }
-            try
+            else
             {
-                errorMask?.PushIndex((int)RankPlacement_FieldIndex.Fluff);
-                if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
-                    frame: frame.SpawnWithLength(3),
-                    item: out Byte[] FluffParse,
-                    errorMask: errorMask))
-                {
-                    item.Fluff = FluffParse;
-                }
-                else
-                {
-                    item.Fluff = default(Byte[]);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
+                item.Fluff = default(Byte[]);
             }
         }
 
@@ -1406,19 +1376,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Faction_Property,
-                fieldIndex: (int)RankPlacement_FieldIndex.Faction,
-                errorMask: errorMask,
                 masterReferences: masterReferences);
             Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Rank,
-                fieldIndex: (int)RankPlacement_FieldIndex.Rank,
-                errorMask: errorMask);
+                item: item.Rank);
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Fluff,
-                fieldIndex: (int)RankPlacement_FieldIndex.Fluff,
-                errorMask: errorMask);
+                item: item.Fluff);
         }
 
         #endregion

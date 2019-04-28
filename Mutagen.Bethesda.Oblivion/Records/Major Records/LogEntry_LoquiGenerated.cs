@@ -684,29 +684,15 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)LogEntry_FieldIndex.Flags) return TryGet<int?>.Failure;
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    try
+                    if (EnumBinaryTranslation<LogEntry.Flag>.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        item: out LogEntry.Flag FlagsParse))
                     {
-                        errorMask?.PushIndex((int)LogEntry_FieldIndex.Flags);
-                        if (EnumBinaryTranslation<LogEntry.Flag>.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
-                            item: out LogEntry.Flag FlagsParse,
-                            errorMask: errorMask))
-                        {
-                            item.Flags = FlagsParse;
-                        }
-                        else
-                        {
-                            item.Flags = default(LogEntry.Flag);
-                        }
+                        item.Flags = FlagsParse;
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    else
                     {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
+                        item.Flags = default(LogEntry.Flag);
                     }
                     return TryGet<int?>.Succeed((int)LogEntry_FieldIndex.Flags);
                 }
@@ -736,30 +722,16 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)LogEntry_FieldIndex.Entry) return TryGet<int?>.Failure;
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    try
+                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        parseWhole: true,
+                        item: out String EntryParse))
                     {
-                        errorMask?.PushIndex((int)LogEntry_FieldIndex.Entry);
-                        if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
-                            parseWhole: true,
-                            item: out String EntryParse,
-                            errorMask: errorMask))
-                        {
-                            item.Entry = EntryParse;
-                        }
-                        else
-                        {
-                            item.Entry = default(String);
-                        }
+                        item.Entry = EntryParse;
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    else
                     {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
+                        item.Entry = default(String);
                     }
                     return TryGet<int?>.Succeed((int)LogEntry_FieldIndex.Entry);
                 }
@@ -1865,8 +1837,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     writer,
                     item.Flags,
                     length: 1,
-                    fieldIndex: (int)LogEntry_FieldIndex.Flags,
-                    errorMask: errorMask,
                     header: recordTypeConverter.ConvertToCustom(LogEntry_Registration.QSDT_HEADER),
                     nullable: false);
             }
@@ -1892,8 +1862,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.Entry,
-                    fieldIndex: (int)LogEntry_FieldIndex.Entry,
-                    errorMask: errorMask,
                     header: recordTypeConverter.ConvertToCustom(LogEntry_Registration.CNAM_HEADER),
                     nullable: false);
             }

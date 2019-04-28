@@ -1,4 +1,4 @@
-﻿using Loqui.Internal;
+using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Noggog.Notifying;
 using ReactiveUI;

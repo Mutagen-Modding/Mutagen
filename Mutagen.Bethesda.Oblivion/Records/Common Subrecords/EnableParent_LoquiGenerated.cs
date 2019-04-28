@@ -541,32 +541,16 @@ namespace Mutagen.Bethesda.Oblivion
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
                 frame: frame,
                 masterReferences: masterReferences,
-                item: item.Reference_Property,
-                fieldIndex: (int)EnableParent_FieldIndex.Reference,
-                errorMask: errorMask);
-            try
+                item: item.Reference_Property);
+            if (EnumBinaryTranslation<EnableParent.Flag>.Instance.Parse(
+                frame: frame.SpawnWithLength(4),
+                item: out EnableParent.Flag FlagsParse))
             {
-                errorMask?.PushIndex((int)EnableParent_FieldIndex.Flags);
-                if (EnumBinaryTranslation<EnableParent.Flag>.Instance.Parse(
-                    frame: frame.SpawnWithLength(4),
-                    item: out EnableParent.Flag FlagsParse,
-                    errorMask: errorMask))
-                {
-                    item.Flags = FlagsParse;
-                }
-                else
-                {
-                    item.Flags = default(EnableParent.Flag);
-                }
+                item.Flags = FlagsParse;
             }
-            catch (Exception ex)
-            when (errorMask != null)
+            else
             {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
+                item.Flags = default(EnableParent.Flag);
             }
         }
 
@@ -1281,15 +1265,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Reference_Property,
-                fieldIndex: (int)EnableParent_FieldIndex.Reference,
-                errorMask: errorMask,
                 masterReferences: masterReferences);
             Mutagen.Bethesda.Binary.EnumBinaryTranslation<EnableParent.Flag>.Instance.Write(
                 writer,
                 item.Flags,
-                length: 4,
-                fieldIndex: (int)EnableParent_FieldIndex.Flags,
-                errorMask: errorMask);
+                length: 4);
         }
 
         #endregion

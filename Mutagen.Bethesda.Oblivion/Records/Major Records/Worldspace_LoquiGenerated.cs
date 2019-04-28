@@ -1201,30 +1201,16 @@ namespace Mutagen.Bethesda.Oblivion
                 case 0x4C4C5546: // FULL
                 {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    try
+                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        parseWhole: true,
+                        item: out String NameParse))
                     {
-                        errorMask?.PushIndex((int)Worldspace_FieldIndex.Name);
-                        if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
-                            parseWhole: true,
-                            item: out String NameParse,
-                            errorMask: errorMask))
-                        {
-                            item.Name = NameParse;
-                        }
-                        else
-                        {
-                            item.Name = default(String);
-                        }
+                        item.Name = NameParse;
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    else
                     {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
+                        item.Name = default(String);
                     }
                     return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.Name);
                 }
@@ -1234,9 +1220,7 @@ namespace Mutagen.Bethesda.Oblivion
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
-                        item: item.Parent_Property,
-                        fieldIndex: (int)Worldspace_FieldIndex.Parent,
-                        errorMask: errorMask);
+                        item: item.Parent_Property);
                     return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.Parent);
                 }
                 case 0x4D414E43: // CNAM
@@ -1245,9 +1229,7 @@ namespace Mutagen.Bethesda.Oblivion
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
-                        item: item.Climate_Property,
-                        fieldIndex: (int)Worldspace_FieldIndex.Climate,
-                        errorMask: errorMask);
+                        item: item.Climate_Property);
                     return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.Climate);
                 }
                 case 0x324D414E: // NAM2
@@ -1256,38 +1238,22 @@ namespace Mutagen.Bethesda.Oblivion
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
-                        item: item.Water_Property,
-                        fieldIndex: (int)Worldspace_FieldIndex.Water,
-                        errorMask: errorMask);
+                        item: item.Water_Property);
                     return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.Water);
                 }
                 case 0x4E4F4349: // ICON
                 {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    try
+                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        parseWhole: true,
+                        item: out String IconParse))
                     {
-                        errorMask?.PushIndex((int)Worldspace_FieldIndex.Icon);
-                        if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
-                            parseWhole: true,
-                            item: out String IconParse,
-                            errorMask: errorMask))
-                        {
-                            item.Icon = IconParse;
-                        }
-                        else
-                        {
-                            item.Icon = default(String);
-                        }
+                        item.Icon = IconParse;
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    else
                     {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
+                        item.Icon = default(String);
                     }
                     return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.Icon);
                 }
@@ -1323,116 +1289,60 @@ namespace Mutagen.Bethesda.Oblivion
                 case 0x41544144: // DATA
                 {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    try
+                    if (EnumBinaryTranslation<Worldspace.Flag>.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        item: out Worldspace.Flag FlagsParse))
                     {
-                        errorMask?.PushIndex((int)Worldspace_FieldIndex.Flags);
-                        if (EnumBinaryTranslation<Worldspace.Flag>.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
-                            item: out Worldspace.Flag FlagsParse,
-                            errorMask: errorMask))
-                        {
-                            item.Flags = FlagsParse;
-                        }
-                        else
-                        {
-                            item.Flags = default(Worldspace.Flag);
-                        }
+                        item.Flags = FlagsParse;
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    else
                     {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
+                        item.Flags = default(Worldspace.Flag);
                     }
                     return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.Flags);
                 }
                 case 0x304D414E: // NAM0
                 {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    try
+                    if (Mutagen.Bethesda.Binary.P2FloatBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        item: out P2Float ObjectBoundsMinParse))
                     {
-                        errorMask?.PushIndex((int)Worldspace_FieldIndex.ObjectBoundsMin);
-                        if (Mutagen.Bethesda.Binary.P2FloatBinaryTranslation.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
-                            item: out P2Float ObjectBoundsMinParse,
-                            errorMask: errorMask))
-                        {
-                            item.ObjectBoundsMin = ObjectBoundsMinParse;
-                        }
-                        else
-                        {
-                            item.ObjectBoundsMin = default(P2Float);
-                        }
+                        item.ObjectBoundsMin = ObjectBoundsMinParse;
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    else
                     {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
+                        item.ObjectBoundsMin = default(P2Float);
                     }
                     return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.ObjectBoundsMin);
                 }
                 case 0x394D414E: // NAM9
                 {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    try
+                    if (Mutagen.Bethesda.Binary.P2FloatBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        item: out P2Float ObjectBoundsMaxParse))
                     {
-                        errorMask?.PushIndex((int)Worldspace_FieldIndex.ObjectBoundsMax);
-                        if (Mutagen.Bethesda.Binary.P2FloatBinaryTranslation.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
-                            item: out P2Float ObjectBoundsMaxParse,
-                            errorMask: errorMask))
-                        {
-                            item.ObjectBoundsMax = ObjectBoundsMaxParse;
-                        }
-                        else
-                        {
-                            item.ObjectBoundsMax = default(P2Float);
-                        }
+                        item.ObjectBoundsMax = ObjectBoundsMaxParse;
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    else
                     {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
+                        item.ObjectBoundsMax = default(P2Float);
                     }
                     return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.ObjectBoundsMax);
                 }
                 case 0x4D414E53: // SNAM
                 {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    try
+                    if (EnumBinaryTranslation<MusicType>.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        item: out MusicType MusicParse))
                     {
-                        errorMask?.PushIndex((int)Worldspace_FieldIndex.Music);
-                        if (EnumBinaryTranslation<MusicType>.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
-                            item: out MusicType MusicParse,
-                            errorMask: errorMask))
-                        {
-                            item.Music = MusicParse;
-                        }
-                        else
-                        {
-                            item.Music = default(MusicType);
-                        }
+                        item.Music = MusicParse;
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    else
                     {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
+                        item.Music = default(MusicType);
                     }
                     return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.Music);
                 }
@@ -3726,8 +3636,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.Name,
-                    fieldIndex: (int)Worldspace_FieldIndex.Name,
-                    errorMask: errorMask,
                     header: recordTypeConverter.ConvertToCustom(Worldspace_Registration.FULL_HEADER),
                     nullable: false);
             }
@@ -3736,8 +3644,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.Parent_Property,
-                    fieldIndex: (int)Worldspace_FieldIndex.Parent,
-                    errorMask: errorMask,
                     header: recordTypeConverter.ConvertToCustom(Worldspace_Registration.WNAM_HEADER),
                     nullable: false,
                     masterReferences: masterReferences);
@@ -3747,8 +3653,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.Climate_Property,
-                    fieldIndex: (int)Worldspace_FieldIndex.Climate,
-                    errorMask: errorMask,
                     header: recordTypeConverter.ConvertToCustom(Worldspace_Registration.CNAM_HEADER),
                     nullable: false,
                     masterReferences: masterReferences);
@@ -3758,8 +3662,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.Water_Property,
-                    fieldIndex: (int)Worldspace_FieldIndex.Water,
-                    errorMask: errorMask,
                     header: recordTypeConverter.ConvertToCustom(Worldspace_Registration.NAM2_HEADER),
                     nullable: false,
                     masterReferences: masterReferences);
@@ -3769,8 +3671,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.Icon,
-                    fieldIndex: (int)Worldspace_FieldIndex.Icon,
-                    errorMask: errorMask,
                     header: recordTypeConverter.ConvertToCustom(Worldspace_Registration.ICON_HEADER),
                     nullable: false);
             }
@@ -3789,8 +3689,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     writer,
                     item.Flags,
                     length: 1,
-                    fieldIndex: (int)Worldspace_FieldIndex.Flags,
-                    errorMask: errorMask,
                     header: recordTypeConverter.ConvertToCustom(Worldspace_Registration.DATA_HEADER),
                     nullable: false);
             }
@@ -3799,8 +3697,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Mutagen.Bethesda.Binary.P2FloatBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.ObjectBoundsMin,
-                    fieldIndex: (int)Worldspace_FieldIndex.ObjectBoundsMin,
-                    errorMask: errorMask,
                     header: recordTypeConverter.ConvertToCustom(Worldspace_Registration.NAM0_HEADER),
                     nullable: false);
             }
@@ -3809,8 +3705,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Mutagen.Bethesda.Binary.P2FloatBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.ObjectBoundsMax,
-                    fieldIndex: (int)Worldspace_FieldIndex.ObjectBoundsMax,
-                    errorMask: errorMask,
                     header: recordTypeConverter.ConvertToCustom(Worldspace_Registration.NAM9_HEADER),
                     nullable: false);
             }
@@ -3820,8 +3714,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     writer,
                     item.Music,
                     length: 4,
-                    fieldIndex: (int)Worldspace_FieldIndex.Music,
-                    errorMask: errorMask,
                     header: recordTypeConverter.ConvertToCustom(Worldspace_Registration.SNAM_HEADER),
                     nullable: false);
             }

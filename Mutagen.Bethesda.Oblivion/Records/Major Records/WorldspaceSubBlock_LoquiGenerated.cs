@@ -604,101 +604,45 @@ namespace Mutagen.Bethesda.Oblivion
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            try
+            if (Mutagen.Bethesda.Binary.Int16BinaryTranslation.Instance.Parse(
+                frame: frame,
+                item: out Int16 BlockNumberYParse))
             {
-                errorMask?.PushIndex((int)WorldspaceSubBlock_FieldIndex.BlockNumberY);
-                if (Mutagen.Bethesda.Binary.Int16BinaryTranslation.Instance.Parse(
-                    frame: frame,
-                    item: out Int16 BlockNumberYParse,
-                    errorMask: errorMask))
-                {
-                    item.BlockNumberY = BlockNumberYParse;
-                }
-                else
-                {
-                    item.BlockNumberY = default(Int16);
-                }
+                item.BlockNumberY = BlockNumberYParse;
             }
-            catch (Exception ex)
-            when (errorMask != null)
+            else
             {
-                errorMask.ReportException(ex);
+                item.BlockNumberY = default(Int16);
             }
-            finally
+            if (Mutagen.Bethesda.Binary.Int16BinaryTranslation.Instance.Parse(
+                frame: frame,
+                item: out Int16 BlockNumberXParse))
             {
-                errorMask?.PopIndex();
+                item.BlockNumberX = BlockNumberXParse;
             }
-            try
+            else
             {
-                errorMask?.PushIndex((int)WorldspaceSubBlock_FieldIndex.BlockNumberX);
-                if (Mutagen.Bethesda.Binary.Int16BinaryTranslation.Instance.Parse(
-                    frame: frame,
-                    item: out Int16 BlockNumberXParse,
-                    errorMask: errorMask))
-                {
-                    item.BlockNumberX = BlockNumberXParse;
-                }
-                else
-                {
-                    item.BlockNumberX = default(Int16);
-                }
+                item.BlockNumberX = default(Int16);
             }
-            catch (Exception ex)
-            when (errorMask != null)
+            if (EnumBinaryTranslation<GroupTypeEnum>.Instance.Parse(
+                frame: frame.SpawnWithLength(4),
+                item: out GroupTypeEnum GroupTypeParse))
             {
-                errorMask.ReportException(ex);
+                item.GroupType = GroupTypeParse;
             }
-            finally
+            else
             {
-                errorMask?.PopIndex();
+                item.GroupType = default(GroupTypeEnum);
             }
-            try
+            if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+                frame: frame.SpawnWithLength(4),
+                item: out Byte[] LastModifiedParse))
             {
-                errorMask?.PushIndex((int)WorldspaceSubBlock_FieldIndex.GroupType);
-                if (EnumBinaryTranslation<GroupTypeEnum>.Instance.Parse(
-                    frame: frame.SpawnWithLength(4),
-                    item: out GroupTypeEnum GroupTypeParse,
-                    errorMask: errorMask))
-                {
-                    item.GroupType = GroupTypeParse;
-                }
-                else
-                {
-                    item.GroupType = default(GroupTypeEnum);
-                }
+                item.LastModified = LastModifiedParse;
             }
-            catch (Exception ex)
-            when (errorMask != null)
+            else
             {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
-            }
-            try
-            {
-                errorMask?.PushIndex((int)WorldspaceSubBlock_FieldIndex.LastModified);
-                if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
-                    frame: frame.SpawnWithLength(4),
-                    item: out Byte[] LastModifiedParse,
-                    errorMask: errorMask))
-                {
-                    item.LastModified = LastModifiedParse;
-                }
-                else
-                {
-                    item.LastModified = default(Byte[]);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
+                item.LastModified = default(Byte[]);
             }
         }
 
@@ -1776,25 +1720,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             Mutagen.Bethesda.Binary.Int16BinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.BlockNumberY,
-                fieldIndex: (int)WorldspaceSubBlock_FieldIndex.BlockNumberY,
-                errorMask: errorMask);
+                item: item.BlockNumberY);
             Mutagen.Bethesda.Binary.Int16BinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.BlockNumberX,
-                fieldIndex: (int)WorldspaceSubBlock_FieldIndex.BlockNumberX,
-                errorMask: errorMask);
+                item: item.BlockNumberX);
             Mutagen.Bethesda.Binary.EnumBinaryTranslation<GroupTypeEnum>.Instance.Write(
                 writer,
                 item.GroupType,
-                length: 4,
-                fieldIndex: (int)WorldspaceSubBlock_FieldIndex.GroupType,
-                errorMask: errorMask);
+                length: 4);
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.LastModified,
-                fieldIndex: (int)WorldspaceSubBlock_FieldIndex.LastModified,
-                errorMask: errorMask);
+                item: item.LastModified);
         }
 
         public static void Write_Binary_RecordTypes(

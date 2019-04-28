@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -107,8 +107,7 @@ namespace Mutagen.Bethesda.Oblivion
                     len = len - 6 - RDAT_LEN;
                     if (StringBinaryTranslation.Instance.Parse(
                         frame.SpawnWithLength(len, checkFraming: false),
-                        out var iconVal,
-                        errorMask))
+                        out var iconVal))
                     {
                         item.Icon = iconVal;
                     }

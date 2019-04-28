@@ -1277,60 +1277,32 @@ namespace Mutagen.Bethesda.Oblivion
                 case 0x4D414E43: // CNAM
                 {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    try
+                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        parseWhole: true,
+                        item: out String TextureLowerLayerParse))
                     {
-                        errorMask?.PushIndex((int)Weather_FieldIndex.TextureLowerLayer);
-                        if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
-                            parseWhole: true,
-                            item: out String TextureLowerLayerParse,
-                            errorMask: errorMask))
-                        {
-                            item.TextureLowerLayer = TextureLowerLayerParse;
-                        }
-                        else
-                        {
-                            item.TextureLowerLayer = default(String);
-                        }
+                        item.TextureLowerLayer = TextureLowerLayerParse;
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    else
                     {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
+                        item.TextureLowerLayer = default(String);
                     }
                     return TryGet<int?>.Succeed((int)Weather_FieldIndex.TextureLowerLayer);
                 }
                 case 0x4D414E44: // DNAM
                 {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    try
+                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        parseWhole: true,
+                        item: out String TextureUpperLayerParse))
                     {
-                        errorMask?.PushIndex((int)Weather_FieldIndex.TextureUpperLayer);
-                        if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
-                            parseWhole: true,
-                            item: out String TextureUpperLayerParse,
-                            errorMask: errorMask))
-                        {
-                            item.TextureUpperLayer = TextureUpperLayerParse;
-                        }
-                        else
-                        {
-                            item.TextureUpperLayer = default(String);
-                        }
+                        item.TextureUpperLayer = TextureUpperLayerParse;
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    else
                     {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
+                        item.TextureUpperLayer = default(String);
                     }
                     return TryGet<int?>.Succeed((int)Weather_FieldIndex.TextureUpperLayer);
                 }
@@ -1391,101 +1363,45 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.FNAMDataTypeState = FNAMDataType.Has;
                     }
-                    try
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single FogDayNearParse))
                     {
-                        errorMask?.PushIndex((int)Weather_FieldIndex.FogDayNear);
-                        if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
-                            item: out Single FogDayNearParse,
-                            errorMask: errorMask))
-                        {
-                            item.FogDayNear = FogDayNearParse;
-                        }
-                        else
-                        {
-                            item.FogDayNear = default(Single);
-                        }
+                        item.FogDayNear = FogDayNearParse;
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    else
                     {
-                        errorMask.ReportException(ex);
+                        item.FogDayNear = default(Single);
                     }
-                    finally
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single FogDayFarParse))
                     {
-                        errorMask?.PopIndex();
+                        item.FogDayFar = FogDayFarParse;
                     }
-                    try
+                    else
                     {
-                        errorMask?.PushIndex((int)Weather_FieldIndex.FogDayFar);
-                        if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
-                            item: out Single FogDayFarParse,
-                            errorMask: errorMask))
-                        {
-                            item.FogDayFar = FogDayFarParse;
-                        }
-                        else
-                        {
-                            item.FogDayFar = default(Single);
-                        }
+                        item.FogDayFar = default(Single);
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single FogNightNearParse))
                     {
-                        errorMask.ReportException(ex);
+                        item.FogNightNear = FogNightNearParse;
                     }
-                    finally
+                    else
                     {
-                        errorMask?.PopIndex();
+                        item.FogNightNear = default(Single);
                     }
-                    try
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single FogNightFarParse))
                     {
-                        errorMask?.PushIndex((int)Weather_FieldIndex.FogNightNear);
-                        if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
-                            item: out Single FogNightNearParse,
-                            errorMask: errorMask))
-                        {
-                            item.FogNightNear = FogNightNearParse;
-                        }
-                        else
-                        {
-                            item.FogNightNear = default(Single);
-                        }
+                        item.FogNightFar = FogNightFarParse;
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    else
                     {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    try
-                    {
-                        errorMask?.PushIndex((int)Weather_FieldIndex.FogNightFar);
-                        if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
-                            item: out Single FogNightFarParse,
-                            errorMask: errorMask))
-                        {
-                            item.FogNightFar = FogNightFarParse;
-                        }
-                        else
-                        {
-                            item.FogNightFar = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
+                        item.FogNightFar = default(Single);
                     }
                     return TryGet<int?>.Succeed((int)Weather_FieldIndex.FogNightFar);
                 }
@@ -1497,341 +1413,145 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.HNAMDataTypeState = HNAMDataType.Has;
                     }
-                    try
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single HdrEyeAdaptSpeedParse))
                     {
-                        errorMask?.PushIndex((int)Weather_FieldIndex.HdrEyeAdaptSpeed);
-                        if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
-                            item: out Single HdrEyeAdaptSpeedParse,
-                            errorMask: errorMask))
-                        {
-                            item.HdrEyeAdaptSpeed = HdrEyeAdaptSpeedParse;
-                        }
-                        else
-                        {
-                            item.HdrEyeAdaptSpeed = default(Single);
-                        }
+                        item.HdrEyeAdaptSpeed = HdrEyeAdaptSpeedParse;
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    else
                     {
-                        errorMask.ReportException(ex);
+                        item.HdrEyeAdaptSpeed = default(Single);
                     }
-                    finally
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single HdrBlurRadiusParse))
                     {
-                        errorMask?.PopIndex();
+                        item.HdrBlurRadius = HdrBlurRadiusParse;
                     }
-                    try
+                    else
                     {
-                        errorMask?.PushIndex((int)Weather_FieldIndex.HdrBlurRadius);
-                        if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
-                            item: out Single HdrBlurRadiusParse,
-                            errorMask: errorMask))
-                        {
-                            item.HdrBlurRadius = HdrBlurRadiusParse;
-                        }
-                        else
-                        {
-                            item.HdrBlurRadius = default(Single);
-                        }
+                        item.HdrBlurRadius = default(Single);
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single HdrBlurPassesParse))
                     {
-                        errorMask.ReportException(ex);
+                        item.HdrBlurPasses = HdrBlurPassesParse;
                     }
-                    finally
+                    else
                     {
-                        errorMask?.PopIndex();
+                        item.HdrBlurPasses = default(Single);
                     }
-                    try
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single HdrEmissiveMultParse))
                     {
-                        errorMask?.PushIndex((int)Weather_FieldIndex.HdrBlurPasses);
-                        if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
-                            item: out Single HdrBlurPassesParse,
-                            errorMask: errorMask))
-                        {
-                            item.HdrBlurPasses = HdrBlurPassesParse;
-                        }
-                        else
-                        {
-                            item.HdrBlurPasses = default(Single);
-                        }
+                        item.HdrEmissiveMult = HdrEmissiveMultParse;
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    else
                     {
-                        errorMask.ReportException(ex);
+                        item.HdrEmissiveMult = default(Single);
                     }
-                    finally
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single HdrTargetLumParse))
                     {
-                        errorMask?.PopIndex();
+                        item.HdrTargetLum = HdrTargetLumParse;
                     }
-                    try
+                    else
                     {
-                        errorMask?.PushIndex((int)Weather_FieldIndex.HdrEmissiveMult);
-                        if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
-                            item: out Single HdrEmissiveMultParse,
-                            errorMask: errorMask))
-                        {
-                            item.HdrEmissiveMult = HdrEmissiveMultParse;
-                        }
-                        else
-                        {
-                            item.HdrEmissiveMult = default(Single);
-                        }
+                        item.HdrTargetLum = default(Single);
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single HdrUpperLumClampParse))
                     {
-                        errorMask.ReportException(ex);
+                        item.HdrUpperLumClamp = HdrUpperLumClampParse;
                     }
-                    finally
+                    else
                     {
-                        errorMask?.PopIndex();
+                        item.HdrUpperLumClamp = default(Single);
                     }
-                    try
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single HdrBrightScaleParse))
                     {
-                        errorMask?.PushIndex((int)Weather_FieldIndex.HdrTargetLum);
-                        if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
-                            item: out Single HdrTargetLumParse,
-                            errorMask: errorMask))
-                        {
-                            item.HdrTargetLum = HdrTargetLumParse;
-                        }
-                        else
-                        {
-                            item.HdrTargetLum = default(Single);
-                        }
+                        item.HdrBrightScale = HdrBrightScaleParse;
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    else
                     {
-                        errorMask.ReportException(ex);
+                        item.HdrBrightScale = default(Single);
                     }
-                    finally
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single HdrBrightClampParse))
                     {
-                        errorMask?.PopIndex();
+                        item.HdrBrightClamp = HdrBrightClampParse;
                     }
-                    try
+                    else
                     {
-                        errorMask?.PushIndex((int)Weather_FieldIndex.HdrUpperLumClamp);
-                        if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
-                            item: out Single HdrUpperLumClampParse,
-                            errorMask: errorMask))
-                        {
-                            item.HdrUpperLumClamp = HdrUpperLumClampParse;
-                        }
-                        else
-                        {
-                            item.HdrUpperLumClamp = default(Single);
-                        }
+                        item.HdrBrightClamp = default(Single);
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single HdrLumRampNoTexParse))
                     {
-                        errorMask.ReportException(ex);
+                        item.HdrLumRampNoTex = HdrLumRampNoTexParse;
                     }
-                    finally
+                    else
                     {
-                        errorMask?.PopIndex();
+                        item.HdrLumRampNoTex = default(Single);
                     }
-                    try
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single HdrLumRampMinParse))
                     {
-                        errorMask?.PushIndex((int)Weather_FieldIndex.HdrBrightScale);
-                        if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
-                            item: out Single HdrBrightScaleParse,
-                            errorMask: errorMask))
-                        {
-                            item.HdrBrightScale = HdrBrightScaleParse;
-                        }
-                        else
-                        {
-                            item.HdrBrightScale = default(Single);
-                        }
+                        item.HdrLumRampMin = HdrLumRampMinParse;
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    else
                     {
-                        errorMask.ReportException(ex);
+                        item.HdrLumRampMin = default(Single);
                     }
-                    finally
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single HdrLumRampMaxParse))
                     {
-                        errorMask?.PopIndex();
+                        item.HdrLumRampMax = HdrLumRampMaxParse;
                     }
-                    try
+                    else
                     {
-                        errorMask?.PushIndex((int)Weather_FieldIndex.HdrBrightClamp);
-                        if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
-                            item: out Single HdrBrightClampParse,
-                            errorMask: errorMask))
-                        {
-                            item.HdrBrightClamp = HdrBrightClampParse;
-                        }
-                        else
-                        {
-                            item.HdrBrightClamp = default(Single);
-                        }
+                        item.HdrLumRampMax = default(Single);
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single HdrSunlightDimmerParse))
                     {
-                        errorMask.ReportException(ex);
+                        item.HdrSunlightDimmer = HdrSunlightDimmerParse;
                     }
-                    finally
+                    else
                     {
-                        errorMask?.PopIndex();
+                        item.HdrSunlightDimmer = default(Single);
                     }
-                    try
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single HdrGrassDimmerParse))
                     {
-                        errorMask?.PushIndex((int)Weather_FieldIndex.HdrLumRampNoTex);
-                        if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
-                            item: out Single HdrLumRampNoTexParse,
-                            errorMask: errorMask))
-                        {
-                            item.HdrLumRampNoTex = HdrLumRampNoTexParse;
-                        }
-                        else
-                        {
-                            item.HdrLumRampNoTex = default(Single);
-                        }
+                        item.HdrGrassDimmer = HdrGrassDimmerParse;
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    else
                     {
-                        errorMask.ReportException(ex);
+                        item.HdrGrassDimmer = default(Single);
                     }
-                    finally
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single HdrTreeDimmerParse))
                     {
-                        errorMask?.PopIndex();
+                        item.HdrTreeDimmer = HdrTreeDimmerParse;
                     }
-                    try
+                    else
                     {
-                        errorMask?.PushIndex((int)Weather_FieldIndex.HdrLumRampMin);
-                        if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
-                            item: out Single HdrLumRampMinParse,
-                            errorMask: errorMask))
-                        {
-                            item.HdrLumRampMin = HdrLumRampMinParse;
-                        }
-                        else
-                        {
-                            item.HdrLumRampMin = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    try
-                    {
-                        errorMask?.PushIndex((int)Weather_FieldIndex.HdrLumRampMax);
-                        if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
-                            item: out Single HdrLumRampMaxParse,
-                            errorMask: errorMask))
-                        {
-                            item.HdrLumRampMax = HdrLumRampMaxParse;
-                        }
-                        else
-                        {
-                            item.HdrLumRampMax = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    try
-                    {
-                        errorMask?.PushIndex((int)Weather_FieldIndex.HdrSunlightDimmer);
-                        if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
-                            item: out Single HdrSunlightDimmerParse,
-                            errorMask: errorMask))
-                        {
-                            item.HdrSunlightDimmer = HdrSunlightDimmerParse;
-                        }
-                        else
-                        {
-                            item.HdrSunlightDimmer = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    try
-                    {
-                        errorMask?.PushIndex((int)Weather_FieldIndex.HdrGrassDimmer);
-                        if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
-                            item: out Single HdrGrassDimmerParse,
-                            errorMask: errorMask))
-                        {
-                            item.HdrGrassDimmer = HdrGrassDimmerParse;
-                        }
-                        else
-                        {
-                            item.HdrGrassDimmer = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    try
-                    {
-                        errorMask?.PushIndex((int)Weather_FieldIndex.HdrTreeDimmer);
-                        if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
-                            item: out Single HdrTreeDimmerParse,
-                            errorMask: errorMask))
-                        {
-                            item.HdrTreeDimmer = HdrTreeDimmerParse;
-                        }
-                        else
-                        {
-                            item.HdrTreeDimmer = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
+                        item.HdrTreeDimmer = default(Single);
                     }
                     return TryGet<int?>.Succeed((int)Weather_FieldIndex.HdrTreeDimmer);
                 }
@@ -1843,317 +1563,135 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.DATADataTypeState = DATADataType.Has;
                     }
-                    try
+                    if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Byte WindSpeedParse))
                     {
-                        errorMask?.PushIndex((int)Weather_FieldIndex.WindSpeed);
-                        if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
-                            item: out Byte WindSpeedParse,
-                            errorMask: errorMask))
-                        {
-                            item.WindSpeed = WindSpeedParse;
-                        }
-                        else
-                        {
-                            item.WindSpeed = default(Byte);
-                        }
+                        item.WindSpeed = WindSpeedParse;
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    else
                     {
-                        errorMask.ReportException(ex);
+                        item.WindSpeed = default(Byte);
                     }
-                    finally
+                    if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Byte CloudSpeedLowerParse))
                     {
-                        errorMask?.PopIndex();
+                        item.CloudSpeedLower = CloudSpeedLowerParse;
                     }
-                    try
+                    else
                     {
-                        errorMask?.PushIndex((int)Weather_FieldIndex.CloudSpeedLower);
-                        if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
-                            item: out Byte CloudSpeedLowerParse,
-                            errorMask: errorMask))
-                        {
-                            item.CloudSpeedLower = CloudSpeedLowerParse;
-                        }
-                        else
-                        {
-                            item.CloudSpeedLower = default(Byte);
-                        }
+                        item.CloudSpeedLower = default(Byte);
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Byte CloudSpeedUpperParse))
                     {
-                        errorMask.ReportException(ex);
+                        item.CloudSpeedUpper = CloudSpeedUpperParse;
                     }
-                    finally
+                    else
                     {
-                        errorMask?.PopIndex();
+                        item.CloudSpeedUpper = default(Byte);
                     }
-                    try
+                    if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Byte TransDeltaParse))
                     {
-                        errorMask?.PushIndex((int)Weather_FieldIndex.CloudSpeedUpper);
-                        if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
-                            item: out Byte CloudSpeedUpperParse,
-                            errorMask: errorMask))
-                        {
-                            item.CloudSpeedUpper = CloudSpeedUpperParse;
-                        }
-                        else
-                        {
-                            item.CloudSpeedUpper = default(Byte);
-                        }
+                        item.TransDelta = TransDeltaParse;
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    else
                     {
-                        errorMask.ReportException(ex);
+                        item.TransDelta = default(Byte);
                     }
-                    finally
+                    if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Byte SunGlareParse))
                     {
-                        errorMask?.PopIndex();
+                        item.SunGlare = SunGlareParse;
                     }
-                    try
+                    else
                     {
-                        errorMask?.PushIndex((int)Weather_FieldIndex.TransDelta);
-                        if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
-                            item: out Byte TransDeltaParse,
-                            errorMask: errorMask))
-                        {
-                            item.TransDelta = TransDeltaParse;
-                        }
-                        else
-                        {
-                            item.TransDelta = default(Byte);
-                        }
+                        item.SunGlare = default(Byte);
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Byte SunDamageParse))
                     {
-                        errorMask.ReportException(ex);
+                        item.SunDamage = SunDamageParse;
                     }
-                    finally
+                    else
                     {
-                        errorMask?.PopIndex();
+                        item.SunDamage = default(Byte);
                     }
-                    try
+                    if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Byte PrecipitationBeginFadeInParse))
                     {
-                        errorMask?.PushIndex((int)Weather_FieldIndex.SunGlare);
-                        if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
-                            item: out Byte SunGlareParse,
-                            errorMask: errorMask))
-                        {
-                            item.SunGlare = SunGlareParse;
-                        }
-                        else
-                        {
-                            item.SunGlare = default(Byte);
-                        }
+                        item.PrecipitationBeginFadeIn = PrecipitationBeginFadeInParse;
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    else
                     {
-                        errorMask.ReportException(ex);
+                        item.PrecipitationBeginFadeIn = default(Byte);
                     }
-                    finally
+                    if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Byte PrecipitationEndFadeOutParse))
                     {
-                        errorMask?.PopIndex();
+                        item.PrecipitationEndFadeOut = PrecipitationEndFadeOutParse;
                     }
-                    try
+                    else
                     {
-                        errorMask?.PushIndex((int)Weather_FieldIndex.SunDamage);
-                        if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
-                            item: out Byte SunDamageParse,
-                            errorMask: errorMask))
-                        {
-                            item.SunDamage = SunDamageParse;
-                        }
-                        else
-                        {
-                            item.SunDamage = default(Byte);
-                        }
+                        item.PrecipitationEndFadeOut = default(Byte);
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Byte ThunderLightningBeginFadeInParse))
                     {
-                        errorMask.ReportException(ex);
+                        item.ThunderLightningBeginFadeIn = ThunderLightningBeginFadeInParse;
                     }
-                    finally
+                    else
                     {
-                        errorMask?.PopIndex();
+                        item.ThunderLightningBeginFadeIn = default(Byte);
                     }
-                    try
+                    if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Byte ThunderLightningEndFadeOutParse))
                     {
-                        errorMask?.PushIndex((int)Weather_FieldIndex.PrecipitationBeginFadeIn);
-                        if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
-                            item: out Byte PrecipitationBeginFadeInParse,
-                            errorMask: errorMask))
-                        {
-                            item.PrecipitationBeginFadeIn = PrecipitationBeginFadeInParse;
-                        }
-                        else
-                        {
-                            item.PrecipitationBeginFadeIn = default(Byte);
-                        }
+                        item.ThunderLightningEndFadeOut = ThunderLightningEndFadeOutParse;
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    else
                     {
-                        errorMask.ReportException(ex);
+                        item.ThunderLightningEndFadeOut = default(Byte);
                     }
-                    finally
+                    if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Byte ThunderLightningFrequencyParse))
                     {
-                        errorMask?.PopIndex();
+                        item.ThunderLightningFrequency = ThunderLightningFrequencyParse;
                     }
-                    try
+                    else
                     {
-                        errorMask?.PushIndex((int)Weather_FieldIndex.PrecipitationEndFadeOut);
-                        if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
-                            item: out Byte PrecipitationEndFadeOutParse,
-                            errorMask: errorMask))
-                        {
-                            item.PrecipitationEndFadeOut = PrecipitationEndFadeOutParse;
-                        }
-                        else
-                        {
-                            item.PrecipitationEndFadeOut = default(Byte);
-                        }
+                        item.ThunderLightningFrequency = default(Byte);
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    if (EnumBinaryTranslation<Weather.WeatherClassification>.Instance.Parse(
+                        frame: dataFrame.SpawnWithLength(1),
+                        item: out Weather.WeatherClassification ClassificationParse))
                     {
-                        errorMask.ReportException(ex);
+                        item.Classification = ClassificationParse;
                     }
-                    finally
+                    else
                     {
-                        errorMask?.PopIndex();
+                        item.Classification = default(Weather.WeatherClassification);
                     }
-                    try
+                    if (Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Color LightningColorParse))
                     {
-                        errorMask?.PushIndex((int)Weather_FieldIndex.ThunderLightningBeginFadeIn);
-                        if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
-                            item: out Byte ThunderLightningBeginFadeInParse,
-                            errorMask: errorMask))
-                        {
-                            item.ThunderLightningBeginFadeIn = ThunderLightningBeginFadeInParse;
-                        }
-                        else
-                        {
-                            item.ThunderLightningBeginFadeIn = default(Byte);
-                        }
+                        item.LightningColor = LightningColorParse;
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    else
                     {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    try
-                    {
-                        errorMask?.PushIndex((int)Weather_FieldIndex.ThunderLightningEndFadeOut);
-                        if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
-                            item: out Byte ThunderLightningEndFadeOutParse,
-                            errorMask: errorMask))
-                        {
-                            item.ThunderLightningEndFadeOut = ThunderLightningEndFadeOutParse;
-                        }
-                        else
-                        {
-                            item.ThunderLightningEndFadeOut = default(Byte);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    try
-                    {
-                        errorMask?.PushIndex((int)Weather_FieldIndex.ThunderLightningFrequency);
-                        if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
-                            item: out Byte ThunderLightningFrequencyParse,
-                            errorMask: errorMask))
-                        {
-                            item.ThunderLightningFrequency = ThunderLightningFrequencyParse;
-                        }
-                        else
-                        {
-                            item.ThunderLightningFrequency = default(Byte);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    try
-                    {
-                        errorMask?.PushIndex((int)Weather_FieldIndex.Classification);
-                        if (EnumBinaryTranslation<Weather.WeatherClassification>.Instance.Parse(
-                            frame: dataFrame.SpawnWithLength(1),
-                            item: out Weather.WeatherClassification ClassificationParse,
-                            errorMask: errorMask))
-                        {
-                            item.Classification = ClassificationParse;
-                        }
-                        else
-                        {
-                            item.Classification = default(Weather.WeatherClassification);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    try
-                    {
-                        errorMask?.PushIndex((int)Weather_FieldIndex.LightningColor);
-                        if (Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
-                            item: out Color LightningColorParse,
-                            errorMask: errorMask))
-                        {
-                            item.LightningColor = LightningColorParse;
-                        }
-                        else
-                        {
-                            item.LightningColor = default(Color);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
+                        item.LightningColor = default(Color);
                     }
                     return TryGet<int?>.Succeed((int)Weather_FieldIndex.LightningColor);
                 }
@@ -6028,8 +5566,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.TextureLowerLayer,
-                    fieldIndex: (int)Weather_FieldIndex.TextureLowerLayer,
-                    errorMask: errorMask,
                     header: recordTypeConverter.ConvertToCustom(Weather_Registration.CNAM_HEADER),
                     nullable: false);
             }
@@ -6038,8 +5574,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.TextureUpperLayer,
-                    fieldIndex: (int)Weather_FieldIndex.TextureUpperLayer,
-                    errorMask: errorMask,
                     header: recordTypeConverter.ConvertToCustom(Weather_Registration.DNAM_HEADER),
                     nullable: false);
             }
@@ -6076,24 +5610,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.FogDayNear,
-                        fieldIndex: (int)Weather_FieldIndex.FogDayNear,
-                        errorMask: errorMask);
+                        item: item.FogDayNear);
                     Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.FogDayFar,
-                        fieldIndex: (int)Weather_FieldIndex.FogDayFar,
-                        errorMask: errorMask);
+                        item: item.FogDayFar);
                     Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.FogNightNear,
-                        fieldIndex: (int)Weather_FieldIndex.FogNightNear,
-                        errorMask: errorMask);
+                        item: item.FogNightNear);
                     Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.FogNightFar,
-                        fieldIndex: (int)Weather_FieldIndex.FogNightFar,
-                        errorMask: errorMask);
+                        item: item.FogNightFar);
                 }
             }
             if (item.HNAMDataTypeState.HasFlag(Weather.HNAMDataType.Has))
@@ -6102,74 +5628,46 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.HdrEyeAdaptSpeed,
-                        fieldIndex: (int)Weather_FieldIndex.HdrEyeAdaptSpeed,
-                        errorMask: errorMask);
+                        item: item.HdrEyeAdaptSpeed);
                     Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.HdrBlurRadius,
-                        fieldIndex: (int)Weather_FieldIndex.HdrBlurRadius,
-                        errorMask: errorMask);
+                        item: item.HdrBlurRadius);
                     Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.HdrBlurPasses,
-                        fieldIndex: (int)Weather_FieldIndex.HdrBlurPasses,
-                        errorMask: errorMask);
+                        item: item.HdrBlurPasses);
                     Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.HdrEmissiveMult,
-                        fieldIndex: (int)Weather_FieldIndex.HdrEmissiveMult,
-                        errorMask: errorMask);
+                        item: item.HdrEmissiveMult);
                     Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.HdrTargetLum,
-                        fieldIndex: (int)Weather_FieldIndex.HdrTargetLum,
-                        errorMask: errorMask);
+                        item: item.HdrTargetLum);
                     Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.HdrUpperLumClamp,
-                        fieldIndex: (int)Weather_FieldIndex.HdrUpperLumClamp,
-                        errorMask: errorMask);
+                        item: item.HdrUpperLumClamp);
                     Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.HdrBrightScale,
-                        fieldIndex: (int)Weather_FieldIndex.HdrBrightScale,
-                        errorMask: errorMask);
+                        item: item.HdrBrightScale);
                     Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.HdrBrightClamp,
-                        fieldIndex: (int)Weather_FieldIndex.HdrBrightClamp,
-                        errorMask: errorMask);
+                        item: item.HdrBrightClamp);
                     Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.HdrLumRampNoTex,
-                        fieldIndex: (int)Weather_FieldIndex.HdrLumRampNoTex,
-                        errorMask: errorMask);
+                        item: item.HdrLumRampNoTex);
                     Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.HdrLumRampMin,
-                        fieldIndex: (int)Weather_FieldIndex.HdrLumRampMin,
-                        errorMask: errorMask);
+                        item: item.HdrLumRampMin);
                     Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.HdrLumRampMax,
-                        fieldIndex: (int)Weather_FieldIndex.HdrLumRampMax,
-                        errorMask: errorMask);
+                        item: item.HdrLumRampMax);
                     Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.HdrSunlightDimmer,
-                        fieldIndex: (int)Weather_FieldIndex.HdrSunlightDimmer,
-                        errorMask: errorMask);
+                        item: item.HdrSunlightDimmer);
                     Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.HdrGrassDimmer,
-                        fieldIndex: (int)Weather_FieldIndex.HdrGrassDimmer,
-                        errorMask: errorMask);
+                        item: item.HdrGrassDimmer);
                     Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.HdrTreeDimmer,
-                        fieldIndex: (int)Weather_FieldIndex.HdrTreeDimmer,
-                        errorMask: errorMask);
+                        item: item.HdrTreeDimmer);
                 }
             }
             if (item.DATADataTypeState.HasFlag(Weather.DATADataType.Has))
@@ -6178,70 +5676,44 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.WindSpeed,
-                        fieldIndex: (int)Weather_FieldIndex.WindSpeed,
-                        errorMask: errorMask);
+                        item: item.WindSpeed);
                     Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.CloudSpeedLower,
-                        fieldIndex: (int)Weather_FieldIndex.CloudSpeedLower,
-                        errorMask: errorMask);
+                        item: item.CloudSpeedLower);
                     Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.CloudSpeedUpper,
-                        fieldIndex: (int)Weather_FieldIndex.CloudSpeedUpper,
-                        errorMask: errorMask);
+                        item: item.CloudSpeedUpper);
                     Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.TransDelta,
-                        fieldIndex: (int)Weather_FieldIndex.TransDelta,
-                        errorMask: errorMask);
+                        item: item.TransDelta);
                     Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.SunGlare,
-                        fieldIndex: (int)Weather_FieldIndex.SunGlare,
-                        errorMask: errorMask);
+                        item: item.SunGlare);
                     Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.SunDamage,
-                        fieldIndex: (int)Weather_FieldIndex.SunDamage,
-                        errorMask: errorMask);
+                        item: item.SunDamage);
                     Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.PrecipitationBeginFadeIn,
-                        fieldIndex: (int)Weather_FieldIndex.PrecipitationBeginFadeIn,
-                        errorMask: errorMask);
+                        item: item.PrecipitationBeginFadeIn);
                     Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.PrecipitationEndFadeOut,
-                        fieldIndex: (int)Weather_FieldIndex.PrecipitationEndFadeOut,
-                        errorMask: errorMask);
+                        item: item.PrecipitationEndFadeOut);
                     Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.ThunderLightningBeginFadeIn,
-                        fieldIndex: (int)Weather_FieldIndex.ThunderLightningBeginFadeIn,
-                        errorMask: errorMask);
+                        item: item.ThunderLightningBeginFadeIn);
                     Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.ThunderLightningEndFadeOut,
-                        fieldIndex: (int)Weather_FieldIndex.ThunderLightningEndFadeOut,
-                        errorMask: errorMask);
+                        item: item.ThunderLightningEndFadeOut);
                     Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.ThunderLightningFrequency,
-                        fieldIndex: (int)Weather_FieldIndex.ThunderLightningFrequency,
-                        errorMask: errorMask);
+                        item: item.ThunderLightningFrequency);
                     Mutagen.Bethesda.Binary.EnumBinaryTranslation<Weather.WeatherClassification>.Instance.Write(
                         writer,
                         item.Classification,
-                        length: 1,
-                        fieldIndex: (int)Weather_FieldIndex.Classification,
-                        errorMask: errorMask);
+                        length: 1);
                     Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.LightningColor,
-                        fieldIndex: (int)Weather_FieldIndex.LightningColor,
-                        errorMask: errorMask);
+                        item: item.LightningColor);
                 }
             }
             if (item.Sounds.HasBeenSet)

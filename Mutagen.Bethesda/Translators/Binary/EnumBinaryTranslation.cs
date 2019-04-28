@@ -14,107 +14,65 @@ namespace Mutagen.Bethesda.Binary
 
         public void ParseInto(
             MutagenFrame frame,
-            int fieldIndex,
-            IHasItem<E> item,
-            ErrorMaskBuilder errorMask)
+            IHasItem<E> item)
         {
-            using (errorMask.PushIndex(fieldIndex))
+            if (Parse(
+                frame,
+                out E subItem))
             {
-                try
-                {
-                    if (Parse(
-                        frame,
-                        out E subItem,
-                        errorMask))
-                    {
-                        item.Item = subItem;
-                    }
-                    else
-                    {
-                        item.Unset();
-                    }
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
+                item.Item = subItem;
+            }
+            else
+            {
+                item.Unset();
             }
         }
 
         public bool Parse(
             MutagenFrame frame,
-            out E item,
-            ErrorMaskBuilder errorMask)
+            out E item)
         {
-            item = ParseValue(frame, errorMask);
+            item = ParseValue(frame);
             return true;
         }
 
         public void ParseInto(
             MutagenFrame frame,
-            int fieldIndex,
-            IHasItem<E?> item,
-            ErrorMaskBuilder errorMask)
+            IHasItem<E?> item)
         {
-            using (errorMask.PushIndex(fieldIndex))
+            if (Parse(
+                frame,
+                out E? subItem))
             {
-                try
-                {
-                    if (Parse(
-                        frame,
-                        out E? subItem,
-                        errorMask))
-                    {
-                        item.Item = subItem;
-                    }
-                    else
-                    {
-                        item.Unset();
-                    }
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
+                item.Item = subItem;
+            }
+            else
+            {
+                item.Unset();
             }
         }
 
         public bool Parse(
             MutagenFrame frame,
-            out E? item,
-            ErrorMaskBuilder errorMask)
+            out E? item)
         {
-            item = ParseValue(frame, errorMask);
+            item = ParseValue(frame);
             return true;
         }
 
-        public void Write(MutagenWriter writer, E item, long length, ErrorMaskBuilder errorMask)
+        public void Write(MutagenWriter writer, E item, long length)
         {
             WriteValue(writer, item, length);
-        }
-
-        public void Write(MutagenWriter writer, E? item, long length, ErrorMaskBuilder errorMask)
-        {
-            if (!item.HasValue)
-            {
-                return;
-            }
-            WriteValue(writer, item.Value, length);
         }
 
         public void Write(
             MutagenWriter writer,
             E? item,
-            long length,
-            int fieldIndex,
-            ErrorMaskBuilder errorMask)
+            long length)
         {
             if (!item.HasValue)
             {
-                errorMask.ReportExceptionOrThrow(new NotImplementedException());
-                return;
+                throw new NotImplementedException();
             }
             WriteValue(writer, item.Value, length);
         }
@@ -122,63 +80,47 @@ namespace Mutagen.Bethesda.Binary
         public void Write(
             MutagenWriter writer,
             IHasBeenSetItemGetter<E?> item,
-            long length,
-            int fieldIndex,
-            ErrorMaskBuilder errorMask)
+            long length)
         {
             if (!item.HasBeenSet) return;
             this.Write(
                 writer,
                 item.Item,
-                length,
-                fieldIndex,
-                errorMask);
+                length);
         }
 
         public void Write(
             MutagenWriter writer,
             IHasBeenSetItemGetter<E> item,
-            long length,
-            int fieldIndex,
-            ErrorMaskBuilder errorMask)
+            long length)
         {
             if (!item.HasBeenSet) return;
             this.Write(
                 writer,
                 item.Item,
-                length,
-                fieldIndex,
-                errorMask);
+                length);
         }
 
         public void Write(
             MutagenWriter writer,
             IHasItemGetter<E?> item,
-            long length,
-            int fieldIndex,
-            ErrorMaskBuilder errorMask)
+            long length)
         {
             this.Write(
                 writer,
                 item.Item,
-                length,
-                fieldIndex,
-                errorMask);
+                length);
         }
 
         public void Write(
             MutagenWriter writer,
             IHasItemGetter<E> item,
-            long length,
-            int fieldIndex,
-            ErrorMaskBuilder errorMask)
+            long length)
         {
             this.Write(
                 writer,
                 item.Item,
-                length,
-                fieldIndex,
-                errorMask);
+                length);
         }
 
         public void Write(
@@ -186,8 +128,7 @@ namespace Mutagen.Bethesda.Binary
             E? item,
             RecordType header,
             long length,
-            bool nullable,
-            ErrorMaskBuilder errorMask)
+            bool nullable)
         {
             if (item == null)
             {
@@ -195,8 +136,7 @@ namespace Mutagen.Bethesda.Binary
                 {
                     return;
                 }
-                errorMask.ReportExceptionOrThrow(new ArgumentException("Non optional string was null."));
-                return;
+                throw new ArgumentException("Non optional string was null.");
             }
             using (HeaderExport.ExportHeader(writer, header, ObjectType.Subrecord))
             {
@@ -206,41 +146,10 @@ namespace Mutagen.Bethesda.Binary
 
         public void Write(
             MutagenWriter writer,
-            E? item,
-            RecordType header,
-            long length,
-            int fieldIndex,
-            bool nullable,
-            ErrorMaskBuilder errorMask)
-        {
-            using (errorMask.PushIndex(fieldIndex))
-            {
-                try
-                {
-                    this.Write(
-                        writer,
-                        item,
-                        header,
-                        length,
-                        nullable,
-                        errorMask);
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-            }
-        }
-
-        public void Write(
-            MutagenWriter writer,
             IHasBeenSetItemGetter<E?> item,
             RecordType header,
             long length,
-            int fieldIndex,
-            bool nullable,
-            ErrorMaskBuilder errorMask)
+            bool nullable)
         {
             if (!item.HasBeenSet) return;
             this.Write(
@@ -248,9 +157,7 @@ namespace Mutagen.Bethesda.Binary
                 item.Item,
                 header,
                 length,
-                fieldIndex,
-                nullable,
-                errorMask);
+                nullable);
         }
 
         public void Write(
@@ -258,9 +165,7 @@ namespace Mutagen.Bethesda.Binary
             IHasBeenSetItemGetter<E> item,
             RecordType header,
             long length,
-            int fieldIndex,
-            bool nullable,
-            ErrorMaskBuilder errorMask)
+            bool nullable)
         {
             if (!item.HasBeenSet) return;
             this.Write(
@@ -268,9 +173,7 @@ namespace Mutagen.Bethesda.Binary
                 item.Item,
                 header,
                 length,
-                fieldIndex,
-                nullable,
-                errorMask);
+                nullable);
         }
 
         public void Write(
@@ -278,18 +181,14 @@ namespace Mutagen.Bethesda.Binary
             IHasItemGetter<E?> item,
             RecordType header,
             long length,
-            int fieldIndex,
-            bool nullable,
-            ErrorMaskBuilder errorMask)
+            bool nullable)
         {
             this.Write(
                 writer,
                 item.Item,
                 header,
                 length,
-                fieldIndex,
-                nullable,
-                errorMask);
+                nullable);
         }
 
         public void Write(
@@ -297,18 +196,14 @@ namespace Mutagen.Bethesda.Binary
             IHasItemGetter<E> item,
             RecordType header,
             long length,
-            int fieldIndex,
-            bool nullable,
-            ErrorMaskBuilder errorMask)
+            bool nullable)
         {
             this.Write(
                 writer,
                 item.Item,
                 header,
                 length,
-                fieldIndex,
-                nullable,
-                errorMask);
+                nullable);
         }
 
         public E ParseValue(MutagenFrame reader, ErrorMaskBuilder errorMask)

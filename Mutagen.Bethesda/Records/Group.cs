@@ -1,4 +1,4 @@
-﻿using Loqui;
+using Loqui;
 using Mutagen.Bethesda.Binary;
 using System;
 using System.Collections.Generic;
@@ -53,8 +53,7 @@ namespace Mutagen.Bethesda
         {
             Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Write(
                 writer,
-                GRUP_RECORD_TYPE.TypeInt,
-                errorMask: errorMask);
+                GRUP_RECORD_TYPE.TypeInt);
         }
 
         public override string ToString()

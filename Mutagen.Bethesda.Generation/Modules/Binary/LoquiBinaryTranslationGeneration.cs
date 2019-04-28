@@ -11,6 +11,7 @@ namespace Mutagen.Bethesda.Generation
     public class LoquiBinaryTranslationGeneration : BinaryTranslationGeneration
     {
         public string ModNickname;
+        public override bool DoErrorMasks => true;
 
         public override bool AllowDirectParse(ObjectGeneration objGen, TypeGeneration typeGen, bool squashedRepeatedList)
         {
@@ -152,6 +153,7 @@ namespace Mutagen.Bethesda.Generation
                             TranslationMaskAccessor = null,
                             IndexAccessor = typeGen.HasIndex ? typeGen.IndexEnumInt : null,
                             ExtraArgs = extraArgs.ToArray(),
+                            SkipErrorMask = !this.DoErrorMasks
                         });
                 }
             }

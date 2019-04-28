@@ -564,58 +564,30 @@ namespace Mutagen.Bethesda
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)MasterReference_FieldIndex.Master) return TryGet<int?>.Failure;
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    try
+                    if (Mutagen.Bethesda.Binary.ModKeyBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        item: out ModKey MasterParse))
                     {
-                        errorMask?.PushIndex((int)MasterReference_FieldIndex.Master);
-                        if (Mutagen.Bethesda.Binary.ModKeyBinaryTranslation.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
-                            item: out ModKey MasterParse,
-                            errorMask: errorMask))
-                        {
-                            item.Master = MasterParse;
-                        }
-                        else
-                        {
-                            item.Master = default(ModKey);
-                        }
+                        item.Master = MasterParse;
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    else
                     {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
+                        item.Master = default(ModKey);
                     }
                     return TryGet<int?>.Succeed((int)MasterReference_FieldIndex.Master);
                 }
                 case 0x41544144: // DATA
                 {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    try
+                    if (Mutagen.Bethesda.Binary.UInt64BinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        item: out UInt64 FileSizeParse))
                     {
-                        errorMask?.PushIndex((int)MasterReference_FieldIndex.FileSize);
-                        if (Mutagen.Bethesda.Binary.UInt64BinaryTranslation.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
-                            item: out UInt64 FileSizeParse,
-                            errorMask: errorMask))
-                        {
-                            item.FileSize = FileSizeParse;
-                        }
-                        else
-                        {
-                            item.FileSize = default(UInt64);
-                        }
+                        item.FileSize = FileSizeParse;
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    else
                     {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
+                        item.FileSize = default(UInt64);
                     }
                     return TryGet<int?>.Succeed((int)MasterReference_FieldIndex.FileSize);
                 }
@@ -1370,8 +1342,6 @@ namespace Mutagen.Bethesda.Internals
             Mutagen.Bethesda.Binary.ModKeyBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Master,
-                fieldIndex: (int)MasterReference_FieldIndex.Master,
-                errorMask: errorMask,
                 header: recordTypeConverter.ConvertToCustom(MasterReference_Registration.MAST_HEADER),
                 nullable: false);
             if (item.FileSize_IsSet)
@@ -1379,8 +1349,6 @@ namespace Mutagen.Bethesda.Internals
                 Mutagen.Bethesda.Binary.UInt64BinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.FileSize,
-                    fieldIndex: (int)MasterReference_FieldIndex.FileSize,
-                    errorMask: errorMask,
                     header: recordTypeConverter.ConvertToCustom(MasterReference_Registration.DATA_HEADER),
                     nullable: false);
             }

@@ -716,392 +716,166 @@ namespace Mutagen.Bethesda.Oblivion
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
                 frame: frame,
                 masterReferences: masterReferences,
-                item: item.Object_Property,
-                fieldIndex: (int)RegionDataObject_FieldIndex.Object,
-                errorMask: errorMask);
-            try
+                item: item.Object_Property);
+            if (Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Parse(
+                frame: frame,
+                item: out UInt16 ParentIndexParse))
             {
-                errorMask?.PushIndex((int)RegionDataObject_FieldIndex.ParentIndex);
-                if (Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Parse(
-                    frame: frame,
-                    item: out UInt16 ParentIndexParse,
-                    errorMask: errorMask))
-                {
-                    item.ParentIndex = ParentIndexParse;
-                }
-                else
-                {
-                    item.ParentIndex = default(UInt16);
-                }
+                item.ParentIndex = ParentIndexParse;
             }
-            catch (Exception ex)
-            when (errorMask != null)
+            else
             {
-                errorMask.ReportException(ex);
+                item.ParentIndex = default(UInt16);
             }
-            finally
+            if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+                frame: frame.SpawnWithLength(2),
+                item: out Byte[] Unknown1Parse))
             {
-                errorMask?.PopIndex();
+                item.Unknown1 = Unknown1Parse;
             }
-            try
+            else
             {
-                errorMask?.PushIndex((int)RegionDataObject_FieldIndex.Unknown1);
-                if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
-                    frame: frame.SpawnWithLength(2),
-                    item: out Byte[] Unknown1Parse,
-                    errorMask: errorMask))
-                {
-                    item.Unknown1 = Unknown1Parse;
-                }
-                else
-                {
-                    item.Unknown1 = default(Byte[]);
-                }
+                item.Unknown1 = default(Byte[]);
             }
-            catch (Exception ex)
-            when (errorMask != null)
+            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                frame: frame,
+                item: out Single DensityParse))
             {
-                errorMask.ReportException(ex);
+                item.Density = DensityParse;
             }
-            finally
+            else
             {
-                errorMask?.PopIndex();
+                item.Density = default(Single);
             }
-            try
+            if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                frame: frame,
+                item: out Byte ClusteringParse))
             {
-                errorMask?.PushIndex((int)RegionDataObject_FieldIndex.Density);
-                if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                    frame: frame,
-                    item: out Single DensityParse,
-                    errorMask: errorMask))
-                {
-                    item.Density = DensityParse;
-                }
-                else
-                {
-                    item.Density = default(Single);
-                }
+                item.Clustering = ClusteringParse;
             }
-            catch (Exception ex)
-            when (errorMask != null)
+            else
             {
-                errorMask.ReportException(ex);
+                item.Clustering = default(Byte);
             }
-            finally
+            if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                frame: frame,
+                item: out Byte MinSlopeParse))
             {
-                errorMask?.PopIndex();
+                item.MinSlope = MinSlopeParse;
             }
-            try
+            else
             {
-                errorMask?.PushIndex((int)RegionDataObject_FieldIndex.Clustering);
-                if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                    frame: frame,
-                    item: out Byte ClusteringParse,
-                    errorMask: errorMask))
-                {
-                    item.Clustering = ClusteringParse;
-                }
-                else
-                {
-                    item.Clustering = default(Byte);
-                }
+                item.MinSlope = default(Byte);
             }
-            catch (Exception ex)
-            when (errorMask != null)
+            if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                frame: frame,
+                item: out Byte MaxSlopeParse))
             {
-                errorMask.ReportException(ex);
+                item.MaxSlope = MaxSlopeParse;
             }
-            finally
+            else
             {
-                errorMask?.PopIndex();
+                item.MaxSlope = default(Byte);
             }
-            try
+            if (EnumBinaryTranslation<RegionDataObject.Flag>.Instance.Parse(
+                frame: frame.SpawnWithLength(1),
+                item: out RegionDataObject.Flag FlagsParse))
             {
-                errorMask?.PushIndex((int)RegionDataObject_FieldIndex.MinSlope);
-                if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                    frame: frame,
-                    item: out Byte MinSlopeParse,
-                    errorMask: errorMask))
-                {
-                    item.MinSlope = MinSlopeParse;
-                }
-                else
-                {
-                    item.MinSlope = default(Byte);
-                }
+                item.Flags = FlagsParse;
             }
-            catch (Exception ex)
-            when (errorMask != null)
+            else
             {
-                errorMask.ReportException(ex);
+                item.Flags = default(RegionDataObject.Flag);
             }
-            finally
+            if (Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Parse(
+                frame: frame,
+                item: out UInt16 RadiusWrtPercentParse))
             {
-                errorMask?.PopIndex();
+                item.RadiusWrtPercent = RadiusWrtPercentParse;
             }
-            try
+            else
             {
-                errorMask?.PushIndex((int)RegionDataObject_FieldIndex.MaxSlope);
-                if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                    frame: frame,
-                    item: out Byte MaxSlopeParse,
-                    errorMask: errorMask))
-                {
-                    item.MaxSlope = MaxSlopeParse;
-                }
-                else
-                {
-                    item.MaxSlope = default(Byte);
-                }
+                item.RadiusWrtPercent = default(UInt16);
             }
-            catch (Exception ex)
-            when (errorMask != null)
+            if (Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Parse(
+                frame: frame,
+                item: out UInt16 RadiusParse))
             {
-                errorMask.ReportException(ex);
+                item.Radius = RadiusParse;
             }
-            finally
+            else
             {
-                errorMask?.PopIndex();
+                item.Radius = default(UInt16);
             }
-            try
+            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                frame: frame,
+                item: out Single MinHeightParse))
             {
-                errorMask?.PushIndex((int)RegionDataObject_FieldIndex.Flags);
-                if (EnumBinaryTranslation<RegionDataObject.Flag>.Instance.Parse(
-                    frame: frame.SpawnWithLength(1),
-                    item: out RegionDataObject.Flag FlagsParse,
-                    errorMask: errorMask))
-                {
-                    item.Flags = FlagsParse;
-                }
-                else
-                {
-                    item.Flags = default(RegionDataObject.Flag);
-                }
+                item.MinHeight = MinHeightParse;
             }
-            catch (Exception ex)
-            when (errorMask != null)
+            else
             {
-                errorMask.ReportException(ex);
+                item.MinHeight = default(Single);
             }
-            finally
+            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                frame: frame,
+                item: out Single MaxHeightParse))
             {
-                errorMask?.PopIndex();
+                item.MaxHeight = MaxHeightParse;
             }
-            try
+            else
             {
-                errorMask?.PushIndex((int)RegionDataObject_FieldIndex.RadiusWrtPercent);
-                if (Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Parse(
-                    frame: frame,
-                    item: out UInt16 RadiusWrtPercentParse,
-                    errorMask: errorMask))
-                {
-                    item.RadiusWrtPercent = RadiusWrtPercentParse;
-                }
-                else
-                {
-                    item.RadiusWrtPercent = default(UInt16);
-                }
+                item.MaxHeight = default(Single);
             }
-            catch (Exception ex)
-            when (errorMask != null)
+            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                frame: frame,
+                item: out Single SinkParse))
             {
-                errorMask.ReportException(ex);
+                item.Sink = SinkParse;
             }
-            finally
+            else
             {
-                errorMask?.PopIndex();
+                item.Sink = default(Single);
             }
-            try
+            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                frame: frame,
+                item: out Single SinkVarianceParse))
             {
-                errorMask?.PushIndex((int)RegionDataObject_FieldIndex.Radius);
-                if (Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Parse(
-                    frame: frame,
-                    item: out UInt16 RadiusParse,
-                    errorMask: errorMask))
-                {
-                    item.Radius = RadiusParse;
-                }
-                else
-                {
-                    item.Radius = default(UInt16);
-                }
+                item.SinkVariance = SinkVarianceParse;
             }
-            catch (Exception ex)
-            when (errorMask != null)
+            else
             {
-                errorMask.ReportException(ex);
+                item.SinkVariance = default(Single);
             }
-            finally
+            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                frame: frame,
+                item: out Single SizeVarianceParse))
             {
-                errorMask?.PopIndex();
+                item.SizeVariance = SizeVarianceParse;
             }
-            try
+            else
             {
-                errorMask?.PushIndex((int)RegionDataObject_FieldIndex.MinHeight);
-                if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                    frame: frame,
-                    item: out Single MinHeightParse,
-                    errorMask: errorMask))
-                {
-                    item.MinHeight = MinHeightParse;
-                }
-                else
-                {
-                    item.MinHeight = default(Single);
-                }
+                item.SizeVariance = default(Single);
             }
-            catch (Exception ex)
-            when (errorMask != null)
+            if (Mutagen.Bethesda.Binary.P3UInt16BinaryTranslation.Instance.Parse(
+                frame: frame,
+                item: out P3UInt16 AngleVarianceParse))
             {
-                errorMask.ReportException(ex);
+                item.AngleVariance = AngleVarianceParse;
             }
-            finally
+            else
             {
-                errorMask?.PopIndex();
+                item.AngleVariance = default(P3UInt16);
             }
-            try
+            if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+                frame: frame.SpawnWithLength(6),
+                item: out Byte[] Unknow2nParse))
             {
-                errorMask?.PushIndex((int)RegionDataObject_FieldIndex.MaxHeight);
-                if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                    frame: frame,
-                    item: out Single MaxHeightParse,
-                    errorMask: errorMask))
-                {
-                    item.MaxHeight = MaxHeightParse;
-                }
-                else
-                {
-                    item.MaxHeight = default(Single);
-                }
+                item.Unknow2n = Unknow2nParse;
             }
-            catch (Exception ex)
-            when (errorMask != null)
+            else
             {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
-            }
-            try
-            {
-                errorMask?.PushIndex((int)RegionDataObject_FieldIndex.Sink);
-                if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                    frame: frame,
-                    item: out Single SinkParse,
-                    errorMask: errorMask))
-                {
-                    item.Sink = SinkParse;
-                }
-                else
-                {
-                    item.Sink = default(Single);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
-            }
-            try
-            {
-                errorMask?.PushIndex((int)RegionDataObject_FieldIndex.SinkVariance);
-                if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                    frame: frame,
-                    item: out Single SinkVarianceParse,
-                    errorMask: errorMask))
-                {
-                    item.SinkVariance = SinkVarianceParse;
-                }
-                else
-                {
-                    item.SinkVariance = default(Single);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
-            }
-            try
-            {
-                errorMask?.PushIndex((int)RegionDataObject_FieldIndex.SizeVariance);
-                if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                    frame: frame,
-                    item: out Single SizeVarianceParse,
-                    errorMask: errorMask))
-                {
-                    item.SizeVariance = SizeVarianceParse;
-                }
-                else
-                {
-                    item.SizeVariance = default(Single);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
-            }
-            try
-            {
-                errorMask?.PushIndex((int)RegionDataObject_FieldIndex.AngleVariance);
-                if (Mutagen.Bethesda.Binary.P3UInt16BinaryTranslation.Instance.Parse(
-                    frame: frame,
-                    item: out P3UInt16 AngleVarianceParse,
-                    errorMask: errorMask))
-                {
-                    item.AngleVariance = AngleVarianceParse;
-                }
-                else
-                {
-                    item.AngleVariance = default(P3UInt16);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
-            }
-            try
-            {
-                errorMask?.PushIndex((int)RegionDataObject_FieldIndex.Unknow2n);
-                if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
-                    frame: frame.SpawnWithLength(6),
-                    item: out Byte[] Unknow2nParse,
-                    errorMask: errorMask))
-                {
-                    item.Unknow2n = Unknow2nParse;
-                }
-                else
-                {
-                    item.Unknow2n = default(Byte[]);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
+                item.Unknow2n = default(Byte[]);
             }
         }
 
@@ -3053,90 +2827,56 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Object_Property,
-                fieldIndex: (int)RegionDataObject_FieldIndex.Object,
-                errorMask: errorMask,
                 masterReferences: masterReferences);
             Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.ParentIndex,
-                fieldIndex: (int)RegionDataObject_FieldIndex.ParentIndex,
-                errorMask: errorMask);
+                item: item.ParentIndex);
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Unknown1,
-                fieldIndex: (int)RegionDataObject_FieldIndex.Unknown1,
-                errorMask: errorMask);
+                item: item.Unknown1);
             Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Density,
-                fieldIndex: (int)RegionDataObject_FieldIndex.Density,
-                errorMask: errorMask);
+                item: item.Density);
             Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Clustering,
-                fieldIndex: (int)RegionDataObject_FieldIndex.Clustering,
-                errorMask: errorMask);
+                item: item.Clustering);
             Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.MinSlope,
-                fieldIndex: (int)RegionDataObject_FieldIndex.MinSlope,
-                errorMask: errorMask);
+                item: item.MinSlope);
             Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.MaxSlope,
-                fieldIndex: (int)RegionDataObject_FieldIndex.MaxSlope,
-                errorMask: errorMask);
+                item: item.MaxSlope);
             Mutagen.Bethesda.Binary.EnumBinaryTranslation<RegionDataObject.Flag>.Instance.Write(
                 writer,
                 item.Flags,
-                length: 1,
-                fieldIndex: (int)RegionDataObject_FieldIndex.Flags,
-                errorMask: errorMask);
+                length: 1);
             Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.RadiusWrtPercent,
-                fieldIndex: (int)RegionDataObject_FieldIndex.RadiusWrtPercent,
-                errorMask: errorMask);
+                item: item.RadiusWrtPercent);
             Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Radius,
-                fieldIndex: (int)RegionDataObject_FieldIndex.Radius,
-                errorMask: errorMask);
+                item: item.Radius);
             Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.MinHeight,
-                fieldIndex: (int)RegionDataObject_FieldIndex.MinHeight,
-                errorMask: errorMask);
+                item: item.MinHeight);
             Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.MaxHeight,
-                fieldIndex: (int)RegionDataObject_FieldIndex.MaxHeight,
-                errorMask: errorMask);
+                item: item.MaxHeight);
             Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Sink,
-                fieldIndex: (int)RegionDataObject_FieldIndex.Sink,
-                errorMask: errorMask);
+                item: item.Sink);
             Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.SinkVariance,
-                fieldIndex: (int)RegionDataObject_FieldIndex.SinkVariance,
-                errorMask: errorMask);
+                item: item.SinkVariance);
             Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.SizeVariance,
-                fieldIndex: (int)RegionDataObject_FieldIndex.SizeVariance,
-                errorMask: errorMask);
+                item: item.SizeVariance);
             Mutagen.Bethesda.Binary.P3UInt16BinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.AngleVariance,
-                fieldIndex: (int)RegionDataObject_FieldIndex.AngleVariance,
-                errorMask: errorMask);
+                item: item.AngleVariance);
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Unknow2n,
-                fieldIndex: (int)RegionDataObject_FieldIndex.Unknow2n,
-                errorMask: errorMask);
+                item: item.Unknow2n);
         }
 
         #endregion

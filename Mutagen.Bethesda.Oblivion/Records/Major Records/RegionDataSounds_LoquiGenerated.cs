@@ -629,29 +629,15 @@ namespace Mutagen.Bethesda.Oblivion
                 case 0x444D4452: // RDMD
                 {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    try
+                    if (EnumBinaryTranslation<MusicType>.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        item: out MusicType MusicTypeParse))
                     {
-                        errorMask?.PushIndex((int)RegionDataSounds_FieldIndex.MusicType);
-                        if (EnumBinaryTranslation<MusicType>.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
-                            item: out MusicType MusicTypeParse,
-                            errorMask: errorMask))
-                        {
-                            item.MusicType = MusicTypeParse;
-                        }
-                        else
-                        {
-                            item.MusicType = default(MusicType);
-                        }
+                        item.MusicType = MusicTypeParse;
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    else
                     {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
+                        item.MusicType = default(MusicType);
                     }
                     return TryGet<int?>.Succeed((int)RegionDataSounds_FieldIndex.MusicType);
                 }
@@ -1529,8 +1515,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     writer,
                     item.MusicType,
                     length: 4,
-                    fieldIndex: (int)RegionDataSounds_FieldIndex.MusicType,
-                    errorMask: errorMask,
                     header: recordTypeConverter.ConvertToCustom(RegionDataSounds_Registration.RDMD_HEADER),
                     nullable: false);
             }

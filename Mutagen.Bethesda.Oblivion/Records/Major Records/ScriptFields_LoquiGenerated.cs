@@ -792,29 +792,15 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)ScriptFields_FieldIndex.CompiledScript) return TryGet<int?>.Failure;
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    try
+                    if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        item: out Byte[] CompiledScriptParse))
                     {
-                        errorMask?.PushIndex((int)ScriptFields_FieldIndex.CompiledScript);
-                        if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
-                            item: out Byte[] CompiledScriptParse,
-                            errorMask: errorMask))
-                        {
-                            item.CompiledScript = CompiledScriptParse;
-                        }
-                        else
-                        {
-                            item.CompiledScript = default(Byte[]);
-                        }
+                        item.CompiledScript = CompiledScriptParse;
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    else
                     {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
+                        item.CompiledScript = default(Byte[]);
                     }
                     return TryGet<int?>.Succeed((int)ScriptFields_FieldIndex.CompiledScript);
                 }
@@ -822,30 +808,16 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)ScriptFields_FieldIndex.SourceCode) return TryGet<int?>.Failure;
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    try
+                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        parseWhole: true,
+                        item: out String SourceCodeParse))
                     {
-                        errorMask?.PushIndex((int)ScriptFields_FieldIndex.SourceCode);
-                        if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
-                            parseWhole: true,
-                            item: out String SourceCodeParse,
-                            errorMask: errorMask))
-                        {
-                            item.SourceCode = SourceCodeParse;
-                        }
-                        else
-                        {
-                            item.SourceCode = default(String);
-                        }
+                        item.SourceCode = SourceCodeParse;
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    else
                     {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
+                        item.SourceCode = default(String);
                     }
                     return TryGet<int?>.Succeed((int)ScriptFields_FieldIndex.SourceCode);
                 }
@@ -2046,8 +2018,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.CompiledScript,
-                    fieldIndex: (int)ScriptFields_FieldIndex.CompiledScript,
-                    errorMask: errorMask,
                     header: recordTypeConverter.ConvertToCustom(ScriptFields_Registration.SCDA_HEADER),
                     nullable: false);
             }
@@ -2056,8 +2026,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.SourceCode,
-                    fieldIndex: (int)ScriptFields_FieldIndex.SourceCode,
-                    errorMask: errorMask,
                     header: recordTypeConverter.ConvertToCustom(ScriptFields_Registration.SCTX_HEADER),
                     nullable: false,
                     nullTerminate: false);

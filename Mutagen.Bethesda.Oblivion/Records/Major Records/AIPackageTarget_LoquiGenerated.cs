@@ -533,77 +533,35 @@ namespace Mutagen.Bethesda.Oblivion
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            try
+            if (EnumBinaryTranslation<AIPackageTarget.ObjectTypeEnum>.Instance.Parse(
+                frame: frame.SpawnWithLength(4),
+                item: out AIPackageTarget.ObjectTypeEnum ObjectTypeParse))
             {
-                errorMask?.PushIndex((int)AIPackageTarget_FieldIndex.ObjectType);
-                if (EnumBinaryTranslation<AIPackageTarget.ObjectTypeEnum>.Instance.Parse(
-                    frame: frame.SpawnWithLength(4),
-                    item: out AIPackageTarget.ObjectTypeEnum ObjectTypeParse,
-                    errorMask: errorMask))
-                {
-                    item.ObjectType = ObjectTypeParse;
-                }
-                else
-                {
-                    item.ObjectType = default(AIPackageTarget.ObjectTypeEnum);
-                }
+                item.ObjectType = ObjectTypeParse;
             }
-            catch (Exception ex)
-            when (errorMask != null)
+            else
             {
-                errorMask.ReportException(ex);
+                item.ObjectType = default(AIPackageTarget.ObjectTypeEnum);
             }
-            finally
+            if (Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
+                frame: frame,
+                item: out Int32 ObjectParse))
             {
-                errorMask?.PopIndex();
+                item.Object = ObjectParse;
             }
-            try
+            else
             {
-                errorMask?.PushIndex((int)AIPackageTarget_FieldIndex.Object);
-                if (Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
-                    frame: frame,
-                    item: out Int32 ObjectParse,
-                    errorMask: errorMask))
-                {
-                    item.Object = ObjectParse;
-                }
-                else
-                {
-                    item.Object = default(Int32);
-                }
+                item.Object = default(Int32);
             }
-            catch (Exception ex)
-            when (errorMask != null)
+            if (Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
+                frame: frame,
+                item: out Int32 CountParse))
             {
-                errorMask.ReportException(ex);
+                item.Count = CountParse;
             }
-            finally
+            else
             {
-                errorMask?.PopIndex();
-            }
-            try
-            {
-                errorMask?.PushIndex((int)AIPackageTarget_FieldIndex.Count);
-                if (Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
-                    frame: frame,
-                    item: out Int32 CountParse,
-                    errorMask: errorMask))
-                {
-                    item.Count = CountParse;
-                }
-                else
-                {
-                    item.Count = default(Int32);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
+                item.Count = default(Int32);
             }
         }
 
@@ -1420,19 +1378,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Binary.EnumBinaryTranslation<AIPackageTarget.ObjectTypeEnum>.Instance.Write(
                 writer,
                 item.ObjectType,
-                length: 4,
-                fieldIndex: (int)AIPackageTarget_FieldIndex.ObjectType,
-                errorMask: errorMask);
+                length: 4);
             Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Object,
-                fieldIndex: (int)AIPackageTarget_FieldIndex.Object,
-                errorMask: errorMask);
+                item: item.Object);
             Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Count,
-                fieldIndex: (int)AIPackageTarget_FieldIndex.Count,
-                errorMask: errorMask);
+                item: item.Count);
         }
 
         #endregion

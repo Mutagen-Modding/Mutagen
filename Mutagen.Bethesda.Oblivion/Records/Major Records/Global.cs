@@ -81,8 +81,7 @@ namespace Mutagen.Bethesda.Oblivion
             frame.Reader.Position += 13;
             if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                 frame,
-                out var rawFloat,
-                errorMask))
+                out var rawFloat))
             {
                 g.RawFloat = rawFloat;
             }
@@ -99,8 +98,7 @@ namespace Mutagen.Bethesda.Oblivion
                 writer,
                 item.TypeChar,
                 header: Global_Registration.FNAM_HEADER,
-                nullable: false,
-                errorMask: errorMask);
+                nullable: false);
         }
     }
 }

@@ -691,89 +691,47 @@ namespace Mutagen.Bethesda.Oblivion
                 case 0x4C4C5546: // FULL
                 {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    try
+                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        parseWhole: true,
+                        item: out String NameParse))
                     {
-                        errorMask?.PushIndex((int)Eye_FieldIndex.Name);
-                        if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
-                            parseWhole: true,
-                            item: out String NameParse,
-                            errorMask: errorMask))
-                        {
-                            item.Name = NameParse;
-                        }
-                        else
-                        {
-                            item.Name = default(String);
-                        }
+                        item.Name = NameParse;
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    else
                     {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
+                        item.Name = default(String);
                     }
                     return TryGet<int?>.Succeed((int)Eye_FieldIndex.Name);
                 }
                 case 0x4E4F4349: // ICON
                 {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    try
+                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        parseWhole: true,
+                        item: out String IconParse))
                     {
-                        errorMask?.PushIndex((int)Eye_FieldIndex.Icon);
-                        if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
-                            parseWhole: true,
-                            item: out String IconParse,
-                            errorMask: errorMask))
-                        {
-                            item.Icon = IconParse;
-                        }
-                        else
-                        {
-                            item.Icon = default(String);
-                        }
+                        item.Icon = IconParse;
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    else
                     {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
+                        item.Icon = default(String);
                     }
                     return TryGet<int?>.Succeed((int)Eye_FieldIndex.Icon);
                 }
                 case 0x41544144: // DATA
                 {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    try
+                    if (EnumBinaryTranslation<Eye.Flag>.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        item: out Eye.Flag FlagsParse))
                     {
-                        errorMask?.PushIndex((int)Eye_FieldIndex.Flags);
-                        if (EnumBinaryTranslation<Eye.Flag>.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
-                            item: out Eye.Flag FlagsParse,
-                            errorMask: errorMask))
-                        {
-                            item.Flags = FlagsParse;
-                        }
-                        else
-                        {
-                            item.Flags = default(Eye.Flag);
-                        }
+                        item.Flags = FlagsParse;
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    else
                     {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
+                        item.Flags = default(Eye.Flag);
                     }
                     return TryGet<int?>.Succeed((int)Eye_FieldIndex.Flags);
                 }
@@ -1742,8 +1700,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.Name,
-                    fieldIndex: (int)Eye_FieldIndex.Name,
-                    errorMask: errorMask,
                     header: recordTypeConverter.ConvertToCustom(Eye_Registration.FULL_HEADER),
                     nullable: false);
             }
@@ -1752,8 +1708,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.Icon,
-                    fieldIndex: (int)Eye_FieldIndex.Icon,
-                    errorMask: errorMask,
                     header: recordTypeConverter.ConvertToCustom(Eye_Registration.ICON_HEADER),
                     nullable: false);
             }
@@ -1763,8 +1717,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     writer,
                     item.Flags,
                     length: 1,
-                    fieldIndex: (int)Eye_FieldIndex.Flags,
-                    errorMask: errorMask,
                     header: recordTypeConverter.ConvertToCustom(Eye_Registration.DATA_HEADER),
                     nullable: false);
             }

@@ -655,30 +655,16 @@ namespace Mutagen.Bethesda.Oblivion
                 case 0x4D414E46: // FNAM
                 {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    try
+                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        parseWhole: true,
+                        item: out String FileParse))
                     {
-                        errorMask?.PushIndex((int)Sound_FieldIndex.File);
-                        if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
-                            parseWhole: true,
-                            item: out String FileParse,
-                            errorMask: errorMask))
-                        {
-                            item.File = FileParse;
-                        }
-                        else
-                        {
-                            item.File = default(String);
-                        }
+                        item.File = FileParse;
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    else
                     {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
+                        item.File = default(String);
                     }
                     return TryGet<int?>.Succeed((int)Sound_FieldIndex.File);
                 }
@@ -1636,8 +1622,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.File,
-                    fieldIndex: (int)Sound_FieldIndex.File,
-                    errorMask: errorMask,
                     header: recordTypeConverter.ConvertToCustom(Sound_Registration.FNAM_HEADER),
                     nullable: false);
             }

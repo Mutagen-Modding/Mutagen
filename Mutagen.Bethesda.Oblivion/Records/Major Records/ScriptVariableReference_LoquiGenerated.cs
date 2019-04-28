@@ -519,29 +519,15 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)ScriptVariableReference_FieldIndex.VariableIndex) return TryGet<int?>.Failure;
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    try
+                    if (Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        item: out Int32 VariableIndexParse))
                     {
-                        errorMask?.PushIndex((int)ScriptVariableReference_FieldIndex.VariableIndex);
-                        if (Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
-                            item: out Int32 VariableIndexParse,
-                            errorMask: errorMask))
-                        {
-                            item.VariableIndex = VariableIndexParse;
-                        }
-                        else
-                        {
-                            item.VariableIndex = default(Int32);
-                        }
+                        item.VariableIndex = VariableIndexParse;
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    else
                     {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
+                        item.VariableIndex = default(Int32);
                     }
                     return TryGet<int?>.Succeed((int)ScriptVariableReference_FieldIndex.VariableIndex);
                 }
@@ -1220,8 +1206,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.VariableIndex,
-                fieldIndex: (int)ScriptVariableReference_FieldIndex.VariableIndex,
-                errorMask: errorMask,
                 header: recordTypeConverter.ConvertToCustom(ScriptVariableReference_Registration.SCRV_HEADER),
                 nullable: false);
         }

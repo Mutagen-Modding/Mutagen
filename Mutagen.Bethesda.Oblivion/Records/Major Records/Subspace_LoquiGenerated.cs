@@ -641,77 +641,35 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.DNAMDataTypeState = DNAMDataType.Has;
                     }
-                    try
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single XParse))
                     {
-                        errorMask?.PushIndex((int)Subspace_FieldIndex.X);
-                        if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
-                            item: out Single XParse,
-                            errorMask: errorMask))
-                        {
-                            item.X = XParse;
-                        }
-                        else
-                        {
-                            item.X = default(Single);
-                        }
+                        item.X = XParse;
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    else
                     {
-                        errorMask.ReportException(ex);
+                        item.X = default(Single);
                     }
-                    finally
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single YParse))
                     {
-                        errorMask?.PopIndex();
+                        item.Y = YParse;
                     }
-                    try
+                    else
                     {
-                        errorMask?.PushIndex((int)Subspace_FieldIndex.Y);
-                        if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
-                            item: out Single YParse,
-                            errorMask: errorMask))
-                        {
-                            item.Y = YParse;
-                        }
-                        else
-                        {
-                            item.Y = default(Single);
-                        }
+                        item.Y = default(Single);
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single ZParse))
                     {
-                        errorMask.ReportException(ex);
+                        item.Z = ZParse;
                     }
-                    finally
+                    else
                     {
-                        errorMask?.PopIndex();
-                    }
-                    try
-                    {
-                        errorMask?.PushIndex((int)Subspace_FieldIndex.Z);
-                        if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
-                            item: out Single ZParse,
-                            errorMask: errorMask))
-                        {
-                            item.Z = ZParse;
-                        }
-                        else
-                        {
-                            item.Z = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
+                        item.Z = default(Single);
                     }
                     return TryGet<int?>.Succeed((int)Subspace_FieldIndex.Z);
                 }
@@ -1626,19 +1584,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.X,
-                        fieldIndex: (int)Subspace_FieldIndex.X,
-                        errorMask: errorMask);
+                        item: item.X);
                     Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.Y,
-                        fieldIndex: (int)Subspace_FieldIndex.Y,
-                        errorMask: errorMask);
+                        item: item.Y);
                     Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.Z,
-                        fieldIndex: (int)Subspace_FieldIndex.Z,
-                        errorMask: errorMask);
+                        item: item.Z);
                 }
             }
         }

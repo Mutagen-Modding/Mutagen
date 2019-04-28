@@ -607,29 +607,15 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)CreatureSound_FieldIndex.SoundType) return TryGet<int?>.Failure;
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    try
+                    if (EnumBinaryTranslation<CreatureSound.CreatureSoundType>.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        item: out CreatureSound.CreatureSoundType SoundTypeParse))
                     {
-                        errorMask?.PushIndex((int)CreatureSound_FieldIndex.SoundType);
-                        if (EnumBinaryTranslation<CreatureSound.CreatureSoundType>.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
-                            item: out CreatureSound.CreatureSoundType SoundTypeParse,
-                            errorMask: errorMask))
-                        {
-                            item.SoundType = SoundTypeParse;
-                        }
-                        else
-                        {
-                            item.SoundType = default(CreatureSound.CreatureSoundType);
-                        }
+                        item.SoundType = SoundTypeParse;
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    else
                     {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
+                        item.SoundType = default(CreatureSound.CreatureSoundType);
                     }
                     return TryGet<int?>.Succeed((int)CreatureSound_FieldIndex.SoundType);
                 }
@@ -1472,8 +1458,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     writer,
                     item.SoundType,
                     length: 4,
-                    fieldIndex: (int)CreatureSound_FieldIndex.SoundType,
-                    errorMask: errorMask,
                     header: recordTypeConverter.ConvertToCustom(CreatureSound_Registration.CSDT_HEADER),
                     nullable: false);
             }

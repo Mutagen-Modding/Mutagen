@@ -584,29 +584,15 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)QuestStage_FieldIndex.Stage) return TryGet<int?>.Failure;
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    try
+                    if (Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        item: out UInt16 StageParse))
                     {
-                        errorMask?.PushIndex((int)QuestStage_FieldIndex.Stage);
-                        if (Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
-                            item: out UInt16 StageParse,
-                            errorMask: errorMask))
-                        {
-                            item.Stage = StageParse;
-                        }
-                        else
-                        {
-                            item.Stage = default(UInt16);
-                        }
+                        item.Stage = StageParse;
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    else
                     {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
+                        item.Stage = default(UInt16);
                     }
                     return TryGet<int?>.Succeed((int)QuestStage_FieldIndex.Stage);
                 }
@@ -1430,8 +1416,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Stage,
-                fieldIndex: (int)QuestStage_FieldIndex.Stage,
-                errorMask: errorMask,
                 header: recordTypeConverter.ConvertToCustom(QuestStage_Registration.INDX_HEADER),
                 nullable: false);
             if (item.LogEntries.HasBeenSet)

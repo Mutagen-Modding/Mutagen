@@ -539,15 +539,11 @@ namespace Mutagen.Bethesda.Oblivion
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
                 frame: frame,
                 masterReferences: masterReferences,
-                item: item.Reference_Property,
-                fieldIndex: (int)PointToReferenceMapping_FieldIndex.Reference,
-                errorMask: errorMask);
+                item: item.Reference_Property);
             Mutagen.Bethesda.Binary.ListBinaryTranslation<Int16>.Instance.ParseRepeatedItem(
                 frame: frame,
                 item: item.Points,
-                fieldIndex: (int)PointToReferenceMapping_FieldIndex.Points,
                 lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
-                errorMask: errorMask,
                 transl: Int16BinaryTranslation.Instance.Parse);
         }
 
@@ -1293,14 +1289,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Reference_Property,
-                fieldIndex: (int)PointToReferenceMapping_FieldIndex.Reference,
-                errorMask: errorMask,
                 masterReferences: masterReferences);
             Mutagen.Bethesda.Binary.ListBinaryTranslation<Int16>.Instance.Write(
                 writer: writer,
                 items: item.Points,
-                fieldIndex: (int)PointToReferenceMapping_FieldIndex.Points,
-                errorMask: errorMask,
                 transl: Int16BinaryTranslation.Instance.Write);
         }
 

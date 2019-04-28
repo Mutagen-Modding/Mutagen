@@ -710,128 +710,56 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     Mutagen.Bethesda.Binary.RecordTypeBinaryTranslation.Instance.ParseInto(
                         frame: dataFrame,
-                        item: item.MagicEffect_Property,
-                        fieldIndex: (int)Effect_FieldIndex.MagicEffect,
-                        errorMask: errorMask);
-                    try
+                        item: item.MagicEffect_Property);
+                    if (Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out UInt32 MagnitudeParse))
                     {
-                        errorMask?.PushIndex((int)Effect_FieldIndex.Magnitude);
-                        if (Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
-                            item: out UInt32 MagnitudeParse,
-                            errorMask: errorMask))
-                        {
-                            item.Magnitude = MagnitudeParse;
-                        }
-                        else
-                        {
-                            item.Magnitude = default(UInt32);
-                        }
+                        item.Magnitude = MagnitudeParse;
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    else
                     {
-                        errorMask.ReportException(ex);
+                        item.Magnitude = default(UInt32);
                     }
-                    finally
+                    if (Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out UInt32 AreaParse))
                     {
-                        errorMask?.PopIndex();
+                        item.Area = AreaParse;
                     }
-                    try
+                    else
                     {
-                        errorMask?.PushIndex((int)Effect_FieldIndex.Area);
-                        if (Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
-                            item: out UInt32 AreaParse,
-                            errorMask: errorMask))
-                        {
-                            item.Area = AreaParse;
-                        }
-                        else
-                        {
-                            item.Area = default(UInt32);
-                        }
+                        item.Area = default(UInt32);
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    if (Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out UInt32 DurationParse))
                     {
-                        errorMask.ReportException(ex);
+                        item.Duration = DurationParse;
                     }
-                    finally
+                    else
                     {
-                        errorMask?.PopIndex();
+                        item.Duration = default(UInt32);
                     }
-                    try
+                    if (EnumBinaryTranslation<Effect.EffectType>.Instance.Parse(
+                        frame: dataFrame.SpawnWithLength(4),
+                        item: out Effect.EffectType TypeParse))
                     {
-                        errorMask?.PushIndex((int)Effect_FieldIndex.Duration);
-                        if (Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
-                            item: out UInt32 DurationParse,
-                            errorMask: errorMask))
-                        {
-                            item.Duration = DurationParse;
-                        }
-                        else
-                        {
-                            item.Duration = default(UInt32);
-                        }
+                        item.Type = TypeParse;
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    else
                     {
-                        errorMask.ReportException(ex);
+                        item.Type = default(Effect.EffectType);
                     }
-                    finally
+                    if (EnumBinaryTranslation<ActorValueExtended>.Instance.Parse(
+                        frame: dataFrame.SpawnWithLength(4),
+                        item: out ActorValueExtended ActorValueParse))
                     {
-                        errorMask?.PopIndex();
+                        item.ActorValue = ActorValueParse;
                     }
-                    try
+                    else
                     {
-                        errorMask?.PushIndex((int)Effect_FieldIndex.Type);
-                        if (EnumBinaryTranslation<Effect.EffectType>.Instance.Parse(
-                            frame: dataFrame.SpawnWithLength(4),
-                            item: out Effect.EffectType TypeParse,
-                            errorMask: errorMask))
-                        {
-                            item.Type = TypeParse;
-                        }
-                        else
-                        {
-                            item.Type = default(Effect.EffectType);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    try
-                    {
-                        errorMask?.PushIndex((int)Effect_FieldIndex.ActorValue);
-                        if (EnumBinaryTranslation<ActorValueExtended>.Instance.Parse(
-                            frame: dataFrame.SpawnWithLength(4),
-                            item: out ActorValueExtended ActorValueParse,
-                            errorMask: errorMask))
-                        {
-                            item.ActorValue = ActorValueParse;
-                        }
-                        else
-                        {
-                            item.ActorValue = default(ActorValueExtended);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
+                        item.ActorValue = default(ActorValueExtended);
                     }
                     return TryGet<int?>.Succeed((int)Effect_FieldIndex.ActorValue);
                 }
@@ -2056,36 +1984,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     Mutagen.Bethesda.Binary.RecordTypeBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.MagicEffect_Property,
-                        fieldIndex: (int)Effect_FieldIndex.MagicEffect,
-                        errorMask: errorMask);
+                        item: item.MagicEffect_Property);
                     Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.Magnitude,
-                        fieldIndex: (int)Effect_FieldIndex.Magnitude,
-                        errorMask: errorMask);
+                        item: item.Magnitude);
                     Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.Area,
-                        fieldIndex: (int)Effect_FieldIndex.Area,
-                        errorMask: errorMask);
+                        item: item.Area);
                     Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.Duration,
-                        fieldIndex: (int)Effect_FieldIndex.Duration,
-                        errorMask: errorMask);
+                        item: item.Duration);
                     Mutagen.Bethesda.Binary.EnumBinaryTranslation<Effect.EffectType>.Instance.Write(
                         writer,
                         item.Type,
-                        length: 4,
-                        fieldIndex: (int)Effect_FieldIndex.Type,
-                        errorMask: errorMask);
+                        length: 4);
                     Mutagen.Bethesda.Binary.EnumBinaryTranslation<ActorValueExtended>.Instance.Write(
                         writer,
                         item.ActorValue,
-                        length: 4,
-                        fieldIndex: (int)Effect_FieldIndex.ActorValue,
-                        errorMask: errorMask);
+                        length: 4);
                 }
             }
             if (item.ScriptEffect_IsSet)

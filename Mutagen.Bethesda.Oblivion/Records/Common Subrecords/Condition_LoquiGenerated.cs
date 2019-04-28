@@ -667,149 +667,65 @@ namespace Mutagen.Bethesda.Oblivion
                 item: item,
                 masterReferences: masterReferences,
                 errorMask: errorMask);
-            try
+            if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+                frame: frame.SpawnWithLength(4),
+                item: out Byte[] FluffParse))
             {
-                errorMask?.PushIndex((int)Condition_FieldIndex.Fluff);
-                if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
-                    frame: frame.SpawnWithLength(4),
-                    item: out Byte[] FluffParse,
-                    errorMask: errorMask))
-                {
-                    item.Fluff = FluffParse;
-                }
-                else
-                {
-                    item.Fluff = default(Byte[]);
-                }
+                item.Fluff = FluffParse;
             }
-            catch (Exception ex)
-            when (errorMask != null)
+            else
             {
-                errorMask.ReportException(ex);
+                item.Fluff = default(Byte[]);
             }
-            finally
+            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                frame: frame,
+                item: out Single ComparisonValueParse))
             {
-                errorMask?.PopIndex();
+                item.ComparisonValue = ComparisonValueParse;
             }
-            try
+            else
             {
-                errorMask?.PushIndex((int)Condition_FieldIndex.ComparisonValue);
-                if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                    frame: frame,
-                    item: out Single ComparisonValueParse,
-                    errorMask: errorMask))
-                {
-                    item.ComparisonValue = ComparisonValueParse;
-                }
-                else
-                {
-                    item.ComparisonValue = default(Single);
-                }
+                item.ComparisonValue = default(Single);
             }
-            catch (Exception ex)
-            when (errorMask != null)
+            if (EnumBinaryTranslation<Function>.Instance.Parse(
+                frame: frame.SpawnWithLength(4),
+                item: out Function FunctionParse))
             {
-                errorMask.ReportException(ex);
+                item.Function = FunctionParse;
             }
-            finally
+            else
             {
-                errorMask?.PopIndex();
+                item.Function = default(Function);
             }
-            try
+            if (Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
+                frame: frame,
+                item: out Int32 FirstParameterParse))
             {
-                errorMask?.PushIndex((int)Condition_FieldIndex.Function);
-                if (EnumBinaryTranslation<Function>.Instance.Parse(
-                    frame: frame.SpawnWithLength(4),
-                    item: out Function FunctionParse,
-                    errorMask: errorMask))
-                {
-                    item.Function = FunctionParse;
-                }
-                else
-                {
-                    item.Function = default(Function);
-                }
+                item.FirstParameter = FirstParameterParse;
             }
-            catch (Exception ex)
-            when (errorMask != null)
+            else
             {
-                errorMask.ReportException(ex);
+                item.FirstParameter = default(Int32);
             }
-            finally
+            if (Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
+                frame: frame,
+                item: out Int32 SecondParameterParse))
             {
-                errorMask?.PopIndex();
+                item.SecondParameter = SecondParameterParse;
             }
-            try
+            else
             {
-                errorMask?.PushIndex((int)Condition_FieldIndex.FirstParameter);
-                if (Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
-                    frame: frame,
-                    item: out Int32 FirstParameterParse,
-                    errorMask: errorMask))
-                {
-                    item.FirstParameter = FirstParameterParse;
-                }
-                else
-                {
-                    item.FirstParameter = default(Int32);
-                }
+                item.SecondParameter = default(Int32);
             }
-            catch (Exception ex)
-            when (errorMask != null)
+            if (Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
+                frame: frame,
+                item: out Int32 ThirdParameterParse))
             {
-                errorMask.ReportException(ex);
+                item.ThirdParameter = ThirdParameterParse;
             }
-            finally
+            else
             {
-                errorMask?.PopIndex();
-            }
-            try
-            {
-                errorMask?.PushIndex((int)Condition_FieldIndex.SecondParameter);
-                if (Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
-                    frame: frame,
-                    item: out Int32 SecondParameterParse,
-                    errorMask: errorMask))
-                {
-                    item.SecondParameter = SecondParameterParse;
-                }
-                else
-                {
-                    item.SecondParameter = default(Int32);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
-            }
-            try
-            {
-                errorMask?.PushIndex((int)Condition_FieldIndex.ThirdParameter);
-                if (Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
-                    frame: frame,
-                    item: out Int32 ThirdParameterParse,
-                    errorMask: errorMask))
-                {
-                    item.ThirdParameter = ThirdParameterParse;
-                }
-                else
-                {
-                    item.ThirdParameter = default(Int32);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
+                item.ThirdParameter = default(Int32);
             }
         }
 
@@ -2062,35 +1978,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask);
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Fluff,
-                fieldIndex: (int)Condition_FieldIndex.Fluff,
-                errorMask: errorMask);
+                item: item.Fluff);
             Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.ComparisonValue,
-                fieldIndex: (int)Condition_FieldIndex.ComparisonValue,
-                errorMask: errorMask);
+                item: item.ComparisonValue);
             Mutagen.Bethesda.Binary.EnumBinaryTranslation<Function>.Instance.Write(
                 writer,
                 item.Function,
-                length: 4,
-                fieldIndex: (int)Condition_FieldIndex.Function,
-                errorMask: errorMask);
+                length: 4);
             Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.FirstParameter,
-                fieldIndex: (int)Condition_FieldIndex.FirstParameter,
-                errorMask: errorMask);
+                item: item.FirstParameter);
             Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.SecondParameter,
-                fieldIndex: (int)Condition_FieldIndex.SecondParameter,
-                errorMask: errorMask);
+                item: item.SecondParameter);
             Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.ThirdParameter,
-                fieldIndex: (int)Condition_FieldIndex.ThirdParameter,
-                errorMask: errorMask);
+                item: item.ThirdParameter);
         }
 
         #endregion

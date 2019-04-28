@@ -1435,66 +1435,36 @@ namespace Mutagen.Bethesda.Oblivion
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
-                        item: item.Base_Property,
-                        fieldIndex: (int)PlacedObject_FieldIndex.Base,
-                        errorMask: errorMask);
+                        item: item.Base_Property);
                     return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Base);
                 }
                 case 0x49435058: // XPCI
                 {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    try
+                    if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        item: out Byte[] XPCIFluffParse))
                     {
-                        errorMask?.PushIndex((int)PlacedObject_FieldIndex.XPCIFluff);
-                        if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
-                            item: out Byte[] XPCIFluffParse,
-                            errorMask: errorMask))
-                        {
-                            item.XPCIFluff = XPCIFluffParse;
-                        }
-                        else
-                        {
-                            item.XPCIFluff = default(Byte[]);
-                        }
+                        item.XPCIFluff = XPCIFluffParse;
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    else
                     {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
+                        item.XPCIFluff = default(Byte[]);
                     }
                     return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.XPCIFluff);
                 }
                 case 0x4C4C5546: // FULL
                 {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    try
+                    if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        item: out Byte[] FULLFluffParse))
                     {
-                        errorMask?.PushIndex((int)PlacedObject_FieldIndex.FULLFluff);
-                        if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
-                            item: out Byte[] FULLFluffParse,
-                            errorMask: errorMask))
-                        {
-                            item.FULLFluff = FULLFluffParse;
-                        }
-                        else
-                        {
-                            item.FULLFluff = default(Byte[]);
-                        }
+                        item.FULLFluff = FULLFluffParse;
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    else
                     {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
+                        item.FULLFluff = default(Byte[]);
                     }
                     return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.FULLFluff);
                 }
@@ -1562,37 +1532,21 @@ namespace Mutagen.Bethesda.Oblivion
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
-                        item: item.Owner_Property,
-                        fieldIndex: (int)PlacedObject_FieldIndex.Owner,
-                        errorMask: errorMask);
+                        item: item.Owner_Property);
                     return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Owner);
                 }
                 case 0x4B4E5258: // XRNK
                 {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    try
+                    if (Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        item: out Int32 FactionRankParse))
                     {
-                        errorMask?.PushIndex((int)PlacedObject_FieldIndex.FactionRank);
-                        if (Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
-                            item: out Int32 FactionRankParse,
-                            errorMask: errorMask))
-                        {
-                            item.FactionRank = FactionRankParse;
-                        }
-                        else
-                        {
-                            item.FactionRank = default(Int32);
-                        }
+                        item.FactionRank = FactionRankParse;
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    else
                     {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
+                        item.FactionRank = default(Int32);
                     }
                     return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.FactionRank);
                 }
@@ -1602,9 +1556,7 @@ namespace Mutagen.Bethesda.Oblivion
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
-                        item: item.GlobalVariable_Property,
-                        fieldIndex: (int)PlacedObject_FieldIndex.GlobalVariable,
-                        errorMask: errorMask);
+                        item: item.GlobalVariable_Property);
                     return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.GlobalVariable);
                 }
                 case 0x50534558: // XESP
@@ -1642,37 +1594,21 @@ namespace Mutagen.Bethesda.Oblivion
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
-                        item: item.Target_Property,
-                        fieldIndex: (int)PlacedObject_FieldIndex.Target,
-                        errorMask: errorMask);
+                        item: item.Target_Property);
                     return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Target);
                 }
                 case 0x44455358: // XSED
                 {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    try
+                    if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        item: out Byte SpeedTreeSeedParse))
                     {
-                        errorMask?.PushIndex((int)PlacedObject_FieldIndex.SpeedTreeSeed);
-                        if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
-                            item: out Byte SpeedTreeSeedParse,
-                            errorMask: errorMask))
-                        {
-                            item.SpeedTreeSeed = SpeedTreeSeedParse;
-                        }
-                        else
-                        {
-                            item.SpeedTreeSeed = default(Byte);
-                        }
+                        item.SpeedTreeSeed = SpeedTreeSeedParse;
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    else
                     {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
+                        item.SpeedTreeSeed = default(Byte);
                     }
                     return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.SpeedTreeSeed);
                 }
@@ -1708,87 +1644,45 @@ namespace Mutagen.Bethesda.Oblivion
                 case 0x47484358: // XCHG
                 {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    try
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        item: out Single ChargeParse))
                     {
-                        errorMask?.PushIndex((int)PlacedObject_FieldIndex.Charge);
-                        if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
-                            item: out Single ChargeParse,
-                            errorMask: errorMask))
-                        {
-                            item.Charge = ChargeParse;
-                        }
-                        else
-                        {
-                            item.Charge = default(Single);
-                        }
+                        item.Charge = ChargeParse;
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    else
                     {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
+                        item.Charge = default(Single);
                     }
                     return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Charge);
                 }
                 case 0x544C4858: // XHLT
                 {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    try
+                    if (Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        item: out Int32 HealthParse))
                     {
-                        errorMask?.PushIndex((int)PlacedObject_FieldIndex.Health);
-                        if (Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
-                            item: out Int32 HealthParse,
-                            errorMask: errorMask))
-                        {
-                            item.Health = HealthParse;
-                        }
-                        else
-                        {
-                            item.Health = default(Int32);
-                        }
+                        item.Health = HealthParse;
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    else
                     {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
+                        item.Health = default(Int32);
                     }
                     return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Health);
                 }
                 case 0x4D434C58: // XLCM
                 {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    try
+                    if (Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        item: out Int32 LevelModifierParse))
                     {
-                        errorMask?.PushIndex((int)PlacedObject_FieldIndex.LevelModifier);
-                        if (Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
-                            item: out Int32 LevelModifierParse,
-                            errorMask: errorMask))
-                        {
-                            item.LevelModifier = LevelModifierParse;
-                        }
-                        else
-                        {
-                            item.LevelModifier = default(Int32);
-                        }
+                        item.LevelModifier = LevelModifierParse;
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    else
                     {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
+                        item.LevelModifier = default(Int32);
                     }
                     return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.LevelModifier);
                 }
@@ -1798,66 +1692,36 @@ namespace Mutagen.Bethesda.Oblivion
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
-                        item: item.Unknown_Property,
-                        fieldIndex: (int)PlacedObject_FieldIndex.Unknown,
-                        errorMask: errorMask);
+                        item: item.Unknown_Property);
                     return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Unknown);
                 }
                 case 0x54434158: // XACT
                 {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    try
+                    if (EnumBinaryTranslation<PlacedObject.ActionFlag>.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        item: out PlacedObject.ActionFlag ActionFlagsParse))
                     {
-                        errorMask?.PushIndex((int)PlacedObject_FieldIndex.ActionFlags);
-                        if (EnumBinaryTranslation<PlacedObject.ActionFlag>.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
-                            item: out PlacedObject.ActionFlag ActionFlagsParse,
-                            errorMask: errorMask))
-                        {
-                            item.ActionFlags = ActionFlagsParse;
-                        }
-                        else
-                        {
-                            item.ActionFlags = default(PlacedObject.ActionFlag);
-                        }
+                        item.ActionFlags = ActionFlagsParse;
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    else
                     {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
+                        item.ActionFlags = default(PlacedObject.ActionFlag);
                     }
                     return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.ActionFlags);
                 }
                 case 0x544E4358: // XCNT
                 {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    try
+                    if (Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        item: out Int32 CountParse))
                     {
-                        errorMask?.PushIndex((int)PlacedObject_FieldIndex.Count);
-                        if (Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
-                            item: out Int32 CountParse,
-                            errorMask: errorMask))
-                        {
-                            item.Count = CountParse;
-                        }
-                        else
-                        {
-                            item.Count = default(Int32);
-                        }
+                        item.Count = CountParse;
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    else
                     {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
+                        item.Count = default(Int32);
                     }
                     return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Count);
                 }
@@ -1903,58 +1767,30 @@ namespace Mutagen.Bethesda.Oblivion
                 case 0x44475258: // XRGD
                 {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    try
+                    if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        item: out Byte[] RagdollDataParse))
                     {
-                        errorMask?.PushIndex((int)PlacedObject_FieldIndex.RagdollData);
-                        if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
-                            item: out Byte[] RagdollDataParse,
-                            errorMask: errorMask))
-                        {
-                            item.RagdollData = RagdollDataParse;
-                        }
-                        else
-                        {
-                            item.RagdollData = default(Byte[]);
-                        }
+                        item.RagdollData = RagdollDataParse;
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    else
                     {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
+                        item.RagdollData = default(Byte[]);
                     }
                     return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.RagdollData);
                 }
                 case 0x4C435358: // XSCL
                 {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    try
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        item: out Single ScaleParse))
                     {
-                        errorMask?.PushIndex((int)PlacedObject_FieldIndex.Scale);
-                        if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
-                            item: out Single ScaleParse,
-                            errorMask: errorMask))
-                        {
-                            item.Scale = ScaleParse;
-                        }
-                        else
-                        {
-                            item.Scale = default(Single);
-                        }
+                        item.Scale = ScaleParse;
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    else
                     {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
+                        item.Scale = default(Single);
                     }
                     return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Scale);
                 }
@@ -1964,9 +1800,7 @@ namespace Mutagen.Bethesda.Oblivion
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
-                        item: item.ContainedSoul_Property,
-                        fieldIndex: (int)PlacedObject_FieldIndex.ContainedSoul,
-                        errorMask: errorMask);
+                        item: item.ContainedSoul_Property);
                     return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.ContainedSoul);
                 }
                 case 0x41544144: // DATA
@@ -1977,53 +1811,25 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.DATADataTypeState = DATADataType.Has;
                     }
-                    try
+                    if (Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out P3Float PositionParse))
                     {
-                        errorMask?.PushIndex((int)PlacedObject_FieldIndex.Position);
-                        if (Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
-                            item: out P3Float PositionParse,
-                            errorMask: errorMask))
-                        {
-                            item.Position = PositionParse;
-                        }
-                        else
-                        {
-                            item.Position = default(P3Float);
-                        }
+                        item.Position = PositionParse;
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    else
                     {
-                        errorMask.ReportException(ex);
+                        item.Position = default(P3Float);
                     }
-                    finally
+                    if (Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out P3Float RotationParse))
                     {
-                        errorMask?.PopIndex();
+                        item.Rotation = RotationParse;
                     }
-                    try
+                    else
                     {
-                        errorMask?.PushIndex((int)PlacedObject_FieldIndex.Rotation);
-                        if (Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
-                            item: out P3Float RotationParse,
-                            errorMask: errorMask))
-                        {
-                            item.Rotation = RotationParse;
-                        }
-                        else
-                        {
-                            item.Rotation = default(P3Float);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
+                        item.Rotation = default(P3Float);
                     }
                     return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Rotation);
                 }
@@ -5161,8 +4967,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.Base_Property,
-                    fieldIndex: (int)PlacedObject_FieldIndex.Base,
-                    errorMask: errorMask,
                     header: recordTypeConverter.ConvertToCustom(PlacedObject_Registration.NAME_HEADER),
                     nullable: false,
                     masterReferences: masterReferences);
@@ -5172,8 +4976,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.XPCIFluff,
-                    fieldIndex: (int)PlacedObject_FieldIndex.XPCIFluff,
-                    errorMask: errorMask,
                     header: recordTypeConverter.ConvertToCustom(PlacedObject_Registration.XPCI_HEADER),
                     nullable: false);
             }
@@ -5182,8 +4984,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.FULLFluff,
-                    fieldIndex: (int)PlacedObject_FieldIndex.FULLFluff,
-                    errorMask: errorMask,
                     header: recordTypeConverter.ConvertToCustom(PlacedObject_Registration.FULL_HEADER),
                     nullable: false);
             }
@@ -5210,8 +5010,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.Owner_Property,
-                    fieldIndex: (int)PlacedObject_FieldIndex.Owner,
-                    errorMask: errorMask,
                     header: recordTypeConverter.ConvertToCustom(PlacedObject_Registration.XOWN_HEADER),
                     nullable: false,
                     masterReferences: masterReferences);
@@ -5221,8 +5019,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.FactionRank,
-                    fieldIndex: (int)PlacedObject_FieldIndex.FactionRank,
-                    errorMask: errorMask,
                     header: recordTypeConverter.ConvertToCustom(PlacedObject_Registration.XRNK_HEADER),
                     nullable: false);
             }
@@ -5231,8 +5027,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.GlobalVariable_Property,
-                    fieldIndex: (int)PlacedObject_FieldIndex.GlobalVariable,
-                    errorMask: errorMask,
                     header: recordTypeConverter.ConvertToCustom(PlacedObject_Registration.XGLB_HEADER),
                     nullable: false,
                     masterReferences: masterReferences);
@@ -5251,8 +5045,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.Target_Property,
-                    fieldIndex: (int)PlacedObject_FieldIndex.Target,
-                    errorMask: errorMask,
                     header: recordTypeConverter.ConvertToCustom(PlacedObject_Registration.XTRG_HEADER),
                     nullable: false,
                     masterReferences: masterReferences);
@@ -5262,8 +5054,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.SpeedTreeSeed,
-                    fieldIndex: (int)PlacedObject_FieldIndex.SpeedTreeSeed,
-                    errorMask: errorMask,
                     header: recordTypeConverter.ConvertToCustom(PlacedObject_Registration.XSED_HEADER),
                     nullable: false);
             }
@@ -5281,8 +5071,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.Charge,
-                    fieldIndex: (int)PlacedObject_FieldIndex.Charge,
-                    errorMask: errorMask,
                     header: recordTypeConverter.ConvertToCustom(PlacedObject_Registration.XCHG_HEADER),
                     nullable: false);
             }
@@ -5291,8 +5079,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.Health,
-                    fieldIndex: (int)PlacedObject_FieldIndex.Health,
-                    errorMask: errorMask,
                     header: recordTypeConverter.ConvertToCustom(PlacedObject_Registration.XHLT_HEADER),
                     nullable: false);
             }
@@ -5301,8 +5087,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.LevelModifier,
-                    fieldIndex: (int)PlacedObject_FieldIndex.LevelModifier,
-                    errorMask: errorMask,
                     header: recordTypeConverter.ConvertToCustom(PlacedObject_Registration.XLCM_HEADER),
                     nullable: false);
             }
@@ -5311,8 +5095,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.Unknown_Property,
-                    fieldIndex: (int)PlacedObject_FieldIndex.Unknown,
-                    errorMask: errorMask,
                     header: recordTypeConverter.ConvertToCustom(PlacedObject_Registration.XRTM_HEADER),
                     nullable: false,
                     masterReferences: masterReferences);
@@ -5323,8 +5105,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     writer,
                     item.ActionFlags,
                     length: 4,
-                    fieldIndex: (int)PlacedObject_FieldIndex.ActionFlags,
-                    errorMask: errorMask,
                     header: recordTypeConverter.ConvertToCustom(PlacedObject_Registration.XACT_HEADER),
                     nullable: false);
             }
@@ -5333,8 +5113,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.Count,
-                    fieldIndex: (int)PlacedObject_FieldIndex.Count,
-                    errorMask: errorMask,
                     header: recordTypeConverter.ConvertToCustom(PlacedObject_Registration.XCNT_HEADER),
                     nullable: false);
             }
@@ -5358,8 +5136,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.RagdollData,
-                    fieldIndex: (int)PlacedObject_FieldIndex.RagdollData,
-                    errorMask: errorMask,
                     header: recordTypeConverter.ConvertToCustom(PlacedObject_Registration.XRGD_HEADER),
                     nullable: false);
             }
@@ -5368,8 +5144,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.Scale,
-                    fieldIndex: (int)PlacedObject_FieldIndex.Scale,
-                    errorMask: errorMask,
                     header: recordTypeConverter.ConvertToCustom(PlacedObject_Registration.XSCL_HEADER),
                     nullable: false);
             }
@@ -5378,8 +5152,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.ContainedSoul_Property,
-                    fieldIndex: (int)PlacedObject_FieldIndex.ContainedSoul,
-                    errorMask: errorMask,
                     header: recordTypeConverter.ConvertToCustom(PlacedObject_Registration.XSOL_HEADER),
                     nullable: false,
                     masterReferences: masterReferences);
@@ -5390,14 +5162,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.Position,
-                        fieldIndex: (int)PlacedObject_FieldIndex.Position,
-                        errorMask: errorMask);
+                        item: item.Position);
                     Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.Rotation,
-                        fieldIndex: (int)PlacedObject_FieldIndex.Rotation,
-                        errorMask: errorMask);
+                        item: item.Rotation);
                 }
             }
         }

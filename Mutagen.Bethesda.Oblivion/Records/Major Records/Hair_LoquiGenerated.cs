@@ -728,30 +728,16 @@ namespace Mutagen.Bethesda.Oblivion
                 case 0x4C4C5546: // FULL
                 {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    try
+                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        parseWhole: true,
+                        item: out String NameParse))
                     {
-                        errorMask?.PushIndex((int)Hair_FieldIndex.Name);
-                        if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
-                            parseWhole: true,
-                            item: out String NameParse,
-                            errorMask: errorMask))
-                        {
-                            item.Name = NameParse;
-                        }
-                        else
-                        {
-                            item.Name = default(String);
-                        }
+                        item.Name = NameParse;
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    else
                     {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
+                        item.Name = default(String);
                     }
                     return TryGet<int?>.Succeed((int)Hair_FieldIndex.Name);
                 }
@@ -787,59 +773,31 @@ namespace Mutagen.Bethesda.Oblivion
                 case 0x4E4F4349: // ICON
                 {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    try
+                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        parseWhole: true,
+                        item: out String IconParse))
                     {
-                        errorMask?.PushIndex((int)Hair_FieldIndex.Icon);
-                        if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
-                            parseWhole: true,
-                            item: out String IconParse,
-                            errorMask: errorMask))
-                        {
-                            item.Icon = IconParse;
-                        }
-                        else
-                        {
-                            item.Icon = default(String);
-                        }
+                        item.Icon = IconParse;
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    else
                     {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
+                        item.Icon = default(String);
                     }
                     return TryGet<int?>.Succeed((int)Hair_FieldIndex.Icon);
                 }
                 case 0x41544144: // DATA
                 {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    try
+                    if (EnumBinaryTranslation<Hair.HairFlag>.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        item: out Hair.HairFlag FlagsParse))
                     {
-                        errorMask?.PushIndex((int)Hair_FieldIndex.Flags);
-                        if (EnumBinaryTranslation<Hair.HairFlag>.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
-                            item: out Hair.HairFlag FlagsParse,
-                            errorMask: errorMask))
-                        {
-                            item.Flags = FlagsParse;
-                        }
-                        else
-                        {
-                            item.Flags = default(Hair.HairFlag);
-                        }
+                        item.Flags = FlagsParse;
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    else
                     {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
+                        item.Flags = default(Hair.HairFlag);
                     }
                     return TryGet<int?>.Succeed((int)Hair_FieldIndex.Flags);
                 }
@@ -1944,8 +1902,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.Name,
-                    fieldIndex: (int)Hair_FieldIndex.Name,
-                    errorMask: errorMask,
                     header: recordTypeConverter.ConvertToCustom(Hair_Registration.FULL_HEADER),
                     nullable: false);
             }
@@ -1963,8 +1919,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.Icon,
-                    fieldIndex: (int)Hair_FieldIndex.Icon,
-                    errorMask: errorMask,
                     header: recordTypeConverter.ConvertToCustom(Hair_Registration.ICON_HEADER),
                     nullable: false);
             }
@@ -1974,8 +1928,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     writer,
                     item.Flags,
                     length: 1,
-                    fieldIndex: (int)Hair_FieldIndex.Flags,
-                    errorMask: errorMask,
                     header: recordTypeConverter.ConvertToCustom(Hair_Registration.DATA_HEADER),
                     nullable: false);
             }

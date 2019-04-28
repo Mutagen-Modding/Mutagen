@@ -14,8 +14,7 @@ namespace Mutagen.Bethesda.Binary
         public bool Parse(
             MutagenFrame frame,
             out FormKey item,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask)
+            MasterReferences masterReferences)
         {
             var id = frame.ReadUInt32();
             var formID = new FormID(id);
@@ -36,39 +35,11 @@ namespace Mutagen.Bethesda.Binary
             MutagenWriter writer,
             FormKey item,
             MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask,
             bool nullable = false)
         {
             UInt32BinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.GetFormID(masterReferences).Raw,
-                errorMask: errorMask);
-        }
-
-        public void Write(
-            MutagenWriter writer,
-            FormKey item,
-            int fieldIndex,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask,
-            bool nullable = false)
-        {
-            using (errorMask.PushIndex(fieldIndex))
-            {
-                try
-                {
-                    this.Write(
-                        writer,
-                        item,
-                        masterReferences,
-                        errorMask);
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-            }
+                item: item.GetFormID(masterReferences).Raw);
         }
 
         public void Write(
@@ -76,7 +47,6 @@ namespace Mutagen.Bethesda.Binary
             FormKey item,
             MasterReferences masterReferences,
             RecordType header,
-            ErrorMaskBuilder errorMask,
             bool nullable = false)
         {
             using (HeaderExport.ExportHeader(writer, header, ObjectType.Subrecord))
@@ -84,8 +54,7 @@ namespace Mutagen.Bethesda.Binary
                 this.Write(
                     writer,
                     item,
-                    masterReferences,
-                    errorMask);
+                    masterReferences);
             }
         }
     }

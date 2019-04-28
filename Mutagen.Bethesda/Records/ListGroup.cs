@@ -1,4 +1,4 @@
-﻿using Loqui;
+using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Folder;
@@ -40,8 +40,7 @@ namespace Mutagen.Bethesda
         {
             Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Write(
                 writer,
-                GRUP_RECORD_TYPE.TypeInt,
-                errorMask: errorMask);
+                GRUP_RECORD_TYPE.TypeInt);
         }
     }
 

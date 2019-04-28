@@ -533,77 +533,35 @@ namespace Mutagen.Bethesda.Oblivion
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            try
+            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                frame: frame,
+                item: out Single Unknown0Parse))
             {
-                errorMask?.PushIndex((int)DistantLODData_FieldIndex.Unknown0);
-                if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                    frame: frame,
-                    item: out Single Unknown0Parse,
-                    errorMask: errorMask))
-                {
-                    item.Unknown0 = Unknown0Parse;
-                }
-                else
-                {
-                    item.Unknown0 = default(Single);
-                }
+                item.Unknown0 = Unknown0Parse;
             }
-            catch (Exception ex)
-            when (errorMask != null)
+            else
             {
-                errorMask.ReportException(ex);
+                item.Unknown0 = default(Single);
             }
-            finally
+            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                frame: frame,
+                item: out Single Unknown1Parse))
             {
-                errorMask?.PopIndex();
+                item.Unknown1 = Unknown1Parse;
             }
-            try
+            else
             {
-                errorMask?.PushIndex((int)DistantLODData_FieldIndex.Unknown1);
-                if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                    frame: frame,
-                    item: out Single Unknown1Parse,
-                    errorMask: errorMask))
-                {
-                    item.Unknown1 = Unknown1Parse;
-                }
-                else
-                {
-                    item.Unknown1 = default(Single);
-                }
+                item.Unknown1 = default(Single);
             }
-            catch (Exception ex)
-            when (errorMask != null)
+            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                frame: frame,
+                item: out Single Unknown2Parse))
             {
-                errorMask.ReportException(ex);
+                item.Unknown2 = Unknown2Parse;
             }
-            finally
+            else
             {
-                errorMask?.PopIndex();
-            }
-            try
-            {
-                errorMask?.PushIndex((int)DistantLODData_FieldIndex.Unknown2);
-                if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                    frame: frame,
-                    item: out Single Unknown2Parse,
-                    errorMask: errorMask))
-                {
-                    item.Unknown2 = Unknown2Parse;
-                }
-                else
-                {
-                    item.Unknown2 = default(Single);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
+                item.Unknown2 = default(Single);
             }
         }
 
@@ -1419,19 +1377,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Unknown0,
-                fieldIndex: (int)DistantLODData_FieldIndex.Unknown0,
-                errorMask: errorMask);
+                item: item.Unknown0);
             Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Unknown1,
-                fieldIndex: (int)DistantLODData_FieldIndex.Unknown1,
-                errorMask: errorMask);
+                item: item.Unknown1);
             Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Unknown2,
-                fieldIndex: (int)DistantLODData_FieldIndex.Unknown2,
-                errorMask: errorMask);
+                item: item.Unknown2);
         }
 
         #endregion

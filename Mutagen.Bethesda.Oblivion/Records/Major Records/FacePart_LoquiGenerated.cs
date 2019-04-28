@@ -623,29 +623,15 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)FacePart_FieldIndex.Index) return TryGet<int?>.Failure;
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    try
+                    if (EnumBinaryTranslation<Race.FaceIndex>.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        item: out Race.FaceIndex IndexParse))
                     {
-                        errorMask?.PushIndex((int)FacePart_FieldIndex.Index);
-                        if (EnumBinaryTranslation<Race.FaceIndex>.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
-                            item: out Race.FaceIndex IndexParse,
-                            errorMask: errorMask))
-                        {
-                            item.Index = IndexParse;
-                        }
-                        else
-                        {
-                            item.Index = default(Race.FaceIndex);
-                        }
+                        item.Index = IndexParse;
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    else
                     {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
+                        item.Index = default(Race.FaceIndex);
                     }
                     return TryGet<int?>.Succeed((int)FacePart_FieldIndex.Index);
                 }
@@ -683,30 +669,16 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)FacePart_FieldIndex.Icon) return TryGet<int?>.Failure;
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    try
+                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        parseWhole: true,
+                        item: out String IconParse))
                     {
-                        errorMask?.PushIndex((int)FacePart_FieldIndex.Icon);
-                        if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
-                            parseWhole: true,
-                            item: out String IconParse,
-                            errorMask: errorMask))
-                        {
-                            item.Icon = IconParse;
-                        }
-                        else
-                        {
-                            item.Icon = default(String);
-                        }
+                        item.Icon = IconParse;
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    else
                     {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
+                        item.Icon = default(String);
                     }
                     return TryGet<int?>.Succeed((int)FacePart_FieldIndex.Icon);
                 }
@@ -1631,8 +1603,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     writer,
                     item.Index,
                     length: 4,
-                    fieldIndex: (int)FacePart_FieldIndex.Index,
-                    errorMask: errorMask,
                     header: recordTypeConverter.ConvertToCustom(FacePart_Registration.INDX_HEADER),
                     nullable: false);
             }
@@ -1650,8 +1620,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.Icon,
-                    fieldIndex: (int)FacePart_FieldIndex.Icon,
-                    errorMask: errorMask,
                     header: recordTypeConverter.ConvertToCustom(FacePart_Registration.ICON_HEADER),
                     nullable: false);
             }

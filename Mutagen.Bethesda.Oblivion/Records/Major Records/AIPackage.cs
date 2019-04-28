@@ -61,15 +61,13 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 if (EnumBinaryTranslation<AIPackage.Flag>.Instance.Parse(
                     frame: frame.SpawnWithLength(4),
-                    item: out AIPackage.Flag FlagsParse,
-                    errorMask: errorMask))
+                    item: out AIPackage.Flag FlagsParse))
                 {
                     item.Flags = FlagsParse;
                 }
                 if (EnumBinaryTranslation<AIPackage.GeneralTypeEnum>.Instance.Parse(
                         frame: frame.SpawnWithLength(4),
-                        item: out AIPackage.GeneralTypeEnum GeneralTypeParse,
-                        errorMask: errorMask))
+                        item: out AIPackage.GeneralTypeEnum GeneralTypeParse))
                 {
                     item.GeneralType = GeneralTypeParse;
                 }
@@ -82,15 +80,13 @@ namespace Mutagen.Bethesda.Oblivion
                     new BinaryMemoryReadStream(buff));
                 if (EnumBinaryTranslation<AIPackage.Flag>.Instance.Parse(
                     frame: subFrame,
-                    item: out AIPackage.Flag FlagsParse,
-                    errorMask: errorMask))
+                    item: out AIPackage.Flag FlagsParse))
                 {
                     item.Flags = FlagsParse;
                 }
                 if (EnumBinaryTranslation<AIPackage.GeneralTypeEnum>.Instance.Parse(
                         frame: frame.SpawnWithLength(1),
-                        item: out AIPackage.GeneralTypeEnum GeneralTypeParse,
-                        errorMask: errorMask))
+                        item: out AIPackage.GeneralTypeEnum GeneralTypeParse))
                 {
                     item.GeneralType = GeneralTypeParse;
                 }
@@ -107,15 +103,11 @@ namespace Mutagen.Bethesda.Oblivion
             Mutagen.Bethesda.Binary.EnumBinaryTranslation<AIPackage.Flag>.Instance.Write(
                 writer,
                 item.Flags,
-                length: 4,
-                fieldIndex: (int)AIPackage_FieldIndex.Flags,
-                errorMask: errorMask);
+                length: 4);
             Mutagen.Bethesda.Binary.EnumBinaryTranslation<AIPackage.GeneralTypeEnum>.Instance.Write(
                 writer,
                 item.GeneralType,
-                length: 4,
-                fieldIndex: (int)AIPackage_FieldIndex.GeneralType,
-                errorMask: errorMask);
+                length: 4);
         }
 
         static partial void FillBinary_GeneralType_Custom(MutagenFrame frame, AIPackage item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)

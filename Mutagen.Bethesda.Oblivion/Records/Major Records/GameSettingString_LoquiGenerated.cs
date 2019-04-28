@@ -649,30 +649,16 @@ namespace Mutagen.Bethesda.Oblivion
                 case 0x41544144: // DATA
                 {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    try
+                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        parseWhole: true,
+                        item: out String DataParse))
                     {
-                        errorMask?.PushIndex((int)GameSettingString_FieldIndex.Data);
-                        if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
-                            parseWhole: true,
-                            item: out String DataParse,
-                            errorMask: errorMask))
-                        {
-                            item.Data = DataParse;
-                        }
-                        else
-                        {
-                            item.Data = default(String);
-                        }
+                        item.Data = DataParse;
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    else
                     {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
+                        item.Data = default(String);
                     }
                     return TryGet<int?>.Succeed((int)GameSettingString_FieldIndex.Data);
                 }
@@ -1460,8 +1446,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.Data,
-                    fieldIndex: (int)GameSettingString_FieldIndex.Data,
-                    errorMask: errorMask,
                     header: recordTypeConverter.ConvertToCustom(GameSettingString_Registration.DATA_HEADER),
                     nullable: false);
             }

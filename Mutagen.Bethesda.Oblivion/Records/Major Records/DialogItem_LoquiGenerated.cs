@@ -927,58 +927,30 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.DATADataTypeState = DATADataType.Has;
                     }
-                    try
+                    if (EnumBinaryTranslation<DialogType>.Instance.Parse(
+                        frame: dataFrame.SpawnWithLength(2),
+                        item: out DialogType DialogTypeParse))
                     {
-                        errorMask?.PushIndex((int)DialogItem_FieldIndex.DialogType);
-                        if (EnumBinaryTranslation<DialogType>.Instance.Parse(
-                            frame: dataFrame.SpawnWithLength(2),
-                            item: out DialogType DialogTypeParse,
-                            errorMask: errorMask))
-                        {
-                            item.DialogType = DialogTypeParse;
-                        }
-                        else
-                        {
-                            item.DialogType = default(DialogType);
-                        }
+                        item.DialogType = DialogTypeParse;
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    else
                     {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
+                        item.DialogType = default(DialogType);
                     }
                     if (dataFrame.Complete)
                     {
                         item.DATADataTypeState |= DATADataType.Break0;
                         return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.DialogType);
                     }
-                    try
+                    if (EnumBinaryTranslation<DialogItem.Flag>.Instance.Parse(
+                        frame: dataFrame.SpawnWithLength(1),
+                        item: out DialogItem.Flag FlagsParse))
                     {
-                        errorMask?.PushIndex((int)DialogItem_FieldIndex.Flags);
-                        if (EnumBinaryTranslation<DialogItem.Flag>.Instance.Parse(
-                            frame: dataFrame.SpawnWithLength(1),
-                            item: out DialogItem.Flag FlagsParse,
-                            errorMask: errorMask))
-                        {
-                            item.Flags = FlagsParse;
-                        }
-                        else
-                        {
-                            item.Flags = default(DialogItem.Flag);
-                        }
+                        item.Flags = FlagsParse;
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    else
                     {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
+                        item.Flags = default(DialogItem.Flag);
                     }
                     return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.Flags);
                 }
@@ -988,9 +960,7 @@ namespace Mutagen.Bethesda.Oblivion
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
-                        item: item.Quest_Property,
-                        fieldIndex: (int)DialogItem_FieldIndex.Quest,
-                        errorMask: errorMask);
+                        item: item.Quest_Property);
                     return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.Quest);
                 }
                 case 0x4D414E50: // PNAM
@@ -999,9 +969,7 @@ namespace Mutagen.Bethesda.Oblivion
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
-                        item: item.PreviousTopic_Property,
-                        fieldIndex: (int)DialogItem_FieldIndex.PreviousTopic,
-                        errorMask: errorMask);
+                        item: item.PreviousTopic_Property);
                     return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.PreviousTopic);
                 }
                 case 0x454D414E: // NAME
@@ -1011,9 +979,7 @@ namespace Mutagen.Bethesda.Oblivion
                         triggeringRecord: DialogItem_Registration.NAME_HEADER,
                         masterReferences: masterReferences,
                         item: item.Topics,
-                        fieldIndex: (int)DialogItem_FieldIndex.Topics,
                         lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
-                        errorMask: errorMask,
                         transl: FormLinkBinaryTranslation.Instance.Parse);
                     return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.Topics);
                 }
@@ -1065,9 +1031,7 @@ namespace Mutagen.Bethesda.Oblivion
                         triggeringRecord: DialogItem_Registration.TCLT_HEADER,
                         masterReferences: masterReferences,
                         item: item.Choices,
-                        fieldIndex: (int)DialogItem_FieldIndex.Choices,
                         lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
-                        errorMask: errorMask,
                         transl: FormLinkBinaryTranslation.Instance.Parse);
                     return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.Choices);
                 }
@@ -1078,9 +1042,7 @@ namespace Mutagen.Bethesda.Oblivion
                         triggeringRecord: DialogItem_Registration.TCLF_HEADER,
                         masterReferences: masterReferences,
                         item: item.LinkFrom,
-                        fieldIndex: (int)DialogItem_FieldIndex.LinkFrom,
                         lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
-                        errorMask: errorMask,
                         transl: FormLinkBinaryTranslation.Instance.Parse);
                     return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.LinkFrom);
                 }
@@ -2771,17 +2733,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     Mutagen.Bethesda.Binary.EnumBinaryTranslation<DialogType>.Instance.Write(
                         writer,
                         item.DialogType,
-                        length: 2,
-                        fieldIndex: (int)DialogItem_FieldIndex.DialogType,
-                        errorMask: errorMask);
+                        length: 2);
                     if (!item.DATADataTypeState.HasFlag(DialogItem.DATADataType.Break0))
                     {
                         Mutagen.Bethesda.Binary.EnumBinaryTranslation<DialogItem.Flag>.Instance.Write(
                             writer,
                             item.Flags,
-                            length: 1,
-                            fieldIndex: (int)DialogItem_FieldIndex.Flags,
-                            errorMask: errorMask);
+                            length: 1);
                     }
                 }
             }
@@ -2790,8 +2748,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.Quest_Property,
-                    fieldIndex: (int)DialogItem_FieldIndex.Quest,
-                    errorMask: errorMask,
                     header: recordTypeConverter.ConvertToCustom(DialogItem_Registration.QSTI_HEADER),
                     nullable: false,
                     masterReferences: masterReferences);
@@ -2801,8 +2757,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.PreviousTopic_Property,
-                    fieldIndex: (int)DialogItem_FieldIndex.PreviousTopic,
-                    errorMask: errorMask,
                     header: recordTypeConverter.ConvertToCustom(DialogItem_Registration.PNAM_HEADER),
                     nullable: false,
                     masterReferences: masterReferences);
@@ -2812,14 +2766,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDSetLink<DialogTopic>>.Instance.Write(
                     writer: writer,
                     items: item.Topics,
-                    fieldIndex: (int)DialogItem_FieldIndex.Topics,
-                    errorMask: errorMask,
-                    transl: (MutagenWriter subWriter, FormIDSetLink<DialogTopic> subItem, ErrorMaskBuilder listErrorMask) =>
+                    transl: (MutagenWriter subWriter, FormIDSetLink<DialogTopic> subItem) =>
                     {
                         Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                             writer: subWriter,
                             item: subItem,
-                            errorMask: listErrorMask,
                             header: recordTypeConverter.ConvertToCustom(DialogItem_Registration.NAME_HEADER),
                             nullable: false,
                             masterReferences: masterReferences);
@@ -2865,14 +2816,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDSetLink<DialogTopic>>.Instance.Write(
                     writer: writer,
                     items: item.Choices,
-                    fieldIndex: (int)DialogItem_FieldIndex.Choices,
-                    errorMask: errorMask,
-                    transl: (MutagenWriter subWriter, FormIDSetLink<DialogTopic> subItem, ErrorMaskBuilder listErrorMask) =>
+                    transl: (MutagenWriter subWriter, FormIDSetLink<DialogTopic> subItem) =>
                     {
                         Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                             writer: subWriter,
                             item: subItem,
-                            errorMask: listErrorMask,
                             header: recordTypeConverter.ConvertToCustom(DialogItem_Registration.TCLT_HEADER),
                             nullable: false,
                             masterReferences: masterReferences);
@@ -2884,14 +2832,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDSetLink<DialogTopic>>.Instance.Write(
                     writer: writer,
                     items: item.LinkFrom,
-                    fieldIndex: (int)DialogItem_FieldIndex.LinkFrom,
-                    errorMask: errorMask,
-                    transl: (MutagenWriter subWriter, FormIDSetLink<DialogTopic> subItem, ErrorMaskBuilder listErrorMask) =>
+                    transl: (MutagenWriter subWriter, FormIDSetLink<DialogTopic> subItem) =>
                     {
                         Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                             writer: subWriter,
                             item: subItem,
-                            errorMask: listErrorMask,
                             header: recordTypeConverter.ConvertToCustom(DialogItem_Registration.TCLF_HEADER),
                             nullable: false,
                             masterReferences: masterReferences);

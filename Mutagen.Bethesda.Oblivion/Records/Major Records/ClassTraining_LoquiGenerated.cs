@@ -537,77 +537,35 @@ namespace Mutagen.Bethesda.Oblivion
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            try
+            if (EnumBinaryTranslation<Skill>.Instance.Parse(
+                frame: frame.SpawnWithLength(1),
+                item: out Skill TrainedSkillParse))
             {
-                errorMask?.PushIndex((int)ClassTraining_FieldIndex.TrainedSkill);
-                if (EnumBinaryTranslation<Skill>.Instance.Parse(
-                    frame: frame.SpawnWithLength(1),
-                    item: out Skill TrainedSkillParse,
-                    errorMask: errorMask))
-                {
-                    item.TrainedSkill = TrainedSkillParse;
-                }
-                else
-                {
-                    item.TrainedSkill = default(Skill);
-                }
+                item.TrainedSkill = TrainedSkillParse;
             }
-            catch (Exception ex)
-            when (errorMask != null)
+            else
             {
-                errorMask.ReportException(ex);
+                item.TrainedSkill = default(Skill);
             }
-            finally
+            if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                frame: frame,
+                item: out Byte MaximumTrainingLevelParse))
             {
-                errorMask?.PopIndex();
+                item.MaximumTrainingLevel = MaximumTrainingLevelParse;
             }
-            try
+            else
             {
-                errorMask?.PushIndex((int)ClassTraining_FieldIndex.MaximumTrainingLevel);
-                if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                    frame: frame,
-                    item: out Byte MaximumTrainingLevelParse,
-                    errorMask: errorMask))
-                {
-                    item.MaximumTrainingLevel = MaximumTrainingLevelParse;
-                }
-                else
-                {
-                    item.MaximumTrainingLevel = default(Byte);
-                }
+                item.MaximumTrainingLevel = default(Byte);
             }
-            catch (Exception ex)
-            when (errorMask != null)
+            if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+                frame: frame.SpawnWithLength(2),
+                item: out Byte[] FluffParse))
             {
-                errorMask.ReportException(ex);
+                item.Fluff = FluffParse;
             }
-            finally
+            else
             {
-                errorMask?.PopIndex();
-            }
-            try
-            {
-                errorMask?.PushIndex((int)ClassTraining_FieldIndex.Fluff);
-                if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
-                    frame: frame.SpawnWithLength(2),
-                    item: out Byte[] FluffParse,
-                    errorMask: errorMask))
-                {
-                    item.Fluff = FluffParse;
-                }
-                else
-                {
-                    item.Fluff = default(Byte[]);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
+                item.Fluff = default(Byte[]);
             }
         }
 
@@ -1416,19 +1374,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Binary.EnumBinaryTranslation<Skill>.Instance.Write(
                 writer,
                 item.TrainedSkill,
-                length: 1,
-                fieldIndex: (int)ClassTraining_FieldIndex.TrainedSkill,
-                errorMask: errorMask);
+                length: 1);
             Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.MaximumTrainingLevel,
-                fieldIndex: (int)ClassTraining_FieldIndex.MaximumTrainingLevel,
-                errorMask: errorMask);
+                item: item.MaximumTrainingLevel);
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Fluff,
-                fieldIndex: (int)ClassTraining_FieldIndex.Fluff,
-                errorMask: errorMask);
+                item: item.Fluff);
         }
 
         #endregion

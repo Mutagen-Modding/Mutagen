@@ -561,29 +561,15 @@ namespace Mutagen.Bethesda.Oblivion
                 case 0x54585456: // VTXT
                 {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    try
+                    if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        item: out Byte[] AlphaLayerDataParse))
                     {
-                        errorMask?.PushIndex((int)AlphaLayer_FieldIndex.AlphaLayerData);
-                        if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
-                            item: out Byte[] AlphaLayerDataParse,
-                            errorMask: errorMask))
-                        {
-                            item.AlphaLayerData = AlphaLayerDataParse;
-                        }
-                        else
-                        {
-                            item.AlphaLayerData = default(Byte[]);
-                        }
+                        item.AlphaLayerData = AlphaLayerDataParse;
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    else
                     {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
+                        item.AlphaLayerData = default(Byte[]);
                     }
                     return TryGet<int?>.Succeed((int)AlphaLayer_FieldIndex.AlphaLayerData);
                 }
@@ -1312,8 +1298,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.AlphaLayerData,
-                    fieldIndex: (int)AlphaLayer_FieldIndex.AlphaLayerData,
-                    errorMask: errorMask,
                     header: recordTypeConverter.ConvertToCustom(AlphaLayer_Registration.VTXT_HEADER),
                     nullable: false);
             }

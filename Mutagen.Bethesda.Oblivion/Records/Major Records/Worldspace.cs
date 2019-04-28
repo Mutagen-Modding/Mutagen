@@ -237,8 +237,7 @@ namespace Mutagen.Bethesda.Oblivion
                 FormKeyBinaryTranslation.Instance.Write(
                     writer,
                     obj.FormKey,
-                    masterReferences,
-                    errorMask);
+                    masterReferences);
                 writer.Write((int)GroupTypeEnum.WorldChildren);
                 writer.Write(obj.SubCellsTimestamp);
 

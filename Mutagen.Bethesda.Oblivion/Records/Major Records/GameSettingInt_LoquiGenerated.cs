@@ -649,29 +649,15 @@ namespace Mutagen.Bethesda.Oblivion
                 case 0x41544144: // DATA
                 {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    try
+                    if (Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        item: out Int32 DataParse))
                     {
-                        errorMask?.PushIndex((int)GameSettingInt_FieldIndex.Data);
-                        if (Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
-                            item: out Int32 DataParse,
-                            errorMask: errorMask))
-                        {
-                            item.Data = DataParse;
-                        }
-                        else
-                        {
-                            item.Data = default(Int32);
-                        }
+                        item.Data = DataParse;
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    else
                     {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
+                        item.Data = default(Int32);
                     }
                     return TryGet<int?>.Succeed((int)GameSettingInt_FieldIndex.Data);
                 }
@@ -1459,8 +1445,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.Data,
-                    fieldIndex: (int)GameSettingInt_FieldIndex.Data,
-                    errorMask: errorMask,
                     header: recordTypeConverter.ConvertToCustom(GameSettingInt_Registration.DATA_HEADER),
                     nullable: false);
             }

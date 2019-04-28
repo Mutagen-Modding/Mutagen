@@ -529,15 +529,11 @@ namespace Mutagen.Bethesda.Oblivion
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
                 frame: frame,
                 masterReferences: masterReferences,
-                item: item.Male_Property,
-                fieldIndex: (int)RaceVoices_FieldIndex.Male,
-                errorMask: errorMask);
+                item: item.Male_Property);
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
                 frame: frame,
                 masterReferences: masterReferences,
-                item: item.Female_Property,
-                fieldIndex: (int)RaceVoices_FieldIndex.Female,
-                errorMask: errorMask);
+                item: item.Female_Property);
         }
 
         #endregion
@@ -1232,14 +1228,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Male_Property,
-                fieldIndex: (int)RaceVoices_FieldIndex.Male,
-                errorMask: errorMask,
                 masterReferences: masterReferences);
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Female_Property,
-                fieldIndex: (int)RaceVoices_FieldIndex.Female,
-                errorMask: errorMask,
                 masterReferences: masterReferences);
         }
 

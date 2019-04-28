@@ -760,29 +760,15 @@ namespace Mutagen.Bethesda.Oblivion
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            try
+            if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+                frame: frame.SpawnWithLength(12),
+                item: out Byte[] FluffParse))
             {
-                errorMask?.PushIndex((int)TES4_FieldIndex.Fluff);
-                if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
-                    frame: frame.SpawnWithLength(12),
-                    item: out Byte[] FluffParse,
-                    errorMask: errorMask))
-                {
-                    item.Fluff = FluffParse;
-                }
-                else
-                {
-                    item.Fluff = default(Byte[]);
-                }
+                item.Fluff = FluffParse;
             }
-            catch (Exception ex)
-            when (errorMask != null)
+            else
             {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
+                item.Fluff = default(Byte[]);
             }
         }
 
@@ -830,118 +816,62 @@ namespace Mutagen.Bethesda.Oblivion
                 case 0x5453464F: // OFST
                 {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    try
+                    if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        item: out Byte[] TypeOffsetsParse))
                     {
-                        errorMask?.PushIndex((int)TES4_FieldIndex.TypeOffsets);
-                        if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
-                            item: out Byte[] TypeOffsetsParse,
-                            errorMask: errorMask))
-                        {
-                            item.TypeOffsets = TypeOffsetsParse;
-                        }
-                        else
-                        {
-                            item.TypeOffsets = default(Byte[]);
-                        }
+                        item.TypeOffsets = TypeOffsetsParse;
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    else
                     {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
+                        item.TypeOffsets = default(Byte[]);
                     }
                     return TryGet<int?>.Succeed((int)TES4_FieldIndex.TypeOffsets);
                 }
                 case 0x454C4544: // DELE
                 {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    try
+                    if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        item: out Byte[] DeletedParse))
                     {
-                        errorMask?.PushIndex((int)TES4_FieldIndex.Deleted);
-                        if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
-                            item: out Byte[] DeletedParse,
-                            errorMask: errorMask))
-                        {
-                            item.Deleted = DeletedParse;
-                        }
-                        else
-                        {
-                            item.Deleted = default(Byte[]);
-                        }
+                        item.Deleted = DeletedParse;
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    else
                     {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
+                        item.Deleted = default(Byte[]);
                     }
                     return TryGet<int?>.Succeed((int)TES4_FieldIndex.Deleted);
                 }
                 case 0x4D414E43: // CNAM
                 {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    try
+                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        parseWhole: true,
+                        item: out String AuthorParse))
                     {
-                        errorMask?.PushIndex((int)TES4_FieldIndex.Author);
-                        if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
-                            parseWhole: true,
-                            item: out String AuthorParse,
-                            errorMask: errorMask))
-                        {
-                            item.Author = AuthorParse;
-                        }
-                        else
-                        {
-                            item.Author = default(String);
-                        }
+                        item.Author = AuthorParse;
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    else
                     {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
+                        item.Author = default(String);
                     }
                     return TryGet<int?>.Succeed((int)TES4_FieldIndex.Author);
                 }
                 case 0x4D414E53: // SNAM
                 {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    try
+                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        parseWhole: true,
+                        item: out String DescriptionParse))
                     {
-                        errorMask?.PushIndex((int)TES4_FieldIndex.Description);
-                        if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
-                            parseWhole: true,
-                            item: out String DescriptionParse,
-                            errorMask: errorMask))
-                        {
-                            item.Description = DescriptionParse;
-                        }
-                        else
-                        {
-                            item.Description = default(String);
-                        }
+                        item.Description = DescriptionParse;
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    else
                     {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
+                        item.Description = default(String);
                     }
                     return TryGet<int?>.Succeed((int)TES4_FieldIndex.Description);
                 }
@@ -968,29 +898,15 @@ namespace Mutagen.Bethesda.Oblivion
                 case 0x41544144: // DATA
                 {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    try
+                    if (Mutagen.Bethesda.Binary.UInt64BinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        item: out UInt64 VestigialDataParse))
                     {
-                        errorMask?.PushIndex((int)TES4_FieldIndex.VestigialData);
-                        if (Mutagen.Bethesda.Binary.UInt64BinaryTranslation.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
-                            item: out UInt64 VestigialDataParse,
-                            errorMask: errorMask))
-                        {
-                            item.VestigialData = VestigialDataParse;
-                        }
-                        else
-                        {
-                            item.VestigialData = default(UInt64);
-                        }
+                        item.VestigialData = VestigialDataParse;
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    else
                     {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
+                        item.VestigialData = default(UInt64);
                     }
                     return TryGet<int?>.Succeed((int)TES4_FieldIndex.VestigialData);
                 }
@@ -2416,9 +2332,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Fluff,
-                fieldIndex: (int)TES4_FieldIndex.Fluff,
-                errorMask: errorMask);
+                item: item.Fluff);
         }
 
         public static void Write_Binary_RecordTypes(
@@ -2439,8 +2353,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.TypeOffsets,
-                    fieldIndex: (int)TES4_FieldIndex.TypeOffsets,
-                    errorMask: errorMask,
                     header: recordTypeConverter.ConvertToCustom(TES4_Registration.OFST_HEADER),
                     nullable: false);
             }
@@ -2449,8 +2361,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.Deleted,
-                    fieldIndex: (int)TES4_FieldIndex.Deleted,
-                    errorMask: errorMask,
                     header: recordTypeConverter.ConvertToCustom(TES4_Registration.DELE_HEADER),
                     nullable: false);
             }
@@ -2459,8 +2369,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.Author,
-                    fieldIndex: (int)TES4_FieldIndex.Author,
-                    errorMask: errorMask,
                     header: recordTypeConverter.ConvertToCustom(TES4_Registration.CNAM_HEADER),
                     nullable: false);
             }
@@ -2469,8 +2377,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.Description,
-                    fieldIndex: (int)TES4_FieldIndex.Description,
-                    errorMask: errorMask,
                     header: recordTypeConverter.ConvertToCustom(TES4_Registration.SNAM_HEADER),
                     nullable: false);
             }
@@ -2496,8 +2402,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Mutagen.Bethesda.Binary.UInt64BinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.VestigialData,
-                    fieldIndex: (int)TES4_FieldIndex.VestigialData,
-                    errorMask: errorMask,
                     header: recordTypeConverter.ConvertToCustom(TES4_Registration.DATA_HEADER),
                     nullable: false);
             }

@@ -288,8 +288,7 @@ namespace Mutagen.Bethesda.Oblivion
                 FormKeyBinaryTranslation.Instance.Write(
                     writer,
                     obj.FormKey,
-                    masterReferences,
-                    errorMask);
+                    masterReferences);
                 writer.Write((int)GroupTypeEnum.CellChildren);
                 writer.Write(obj.Timestamp);
                 if (obj.Persistent.Count > 0)
@@ -299,8 +298,7 @@ namespace Mutagen.Bethesda.Oblivion
                         FormKeyBinaryTranslation.Instance.Write(
                             writer,
                             obj.FormKey,
-                            masterReferences,
-                            errorMask);
+                            masterReferences);
                         writer.Write((int)GroupTypeEnum.CellPersistentChildren);
                         writer.Write(obj.PersistentTimestamp);
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IPlaced>.Instance.Write(
@@ -327,8 +325,7 @@ namespace Mutagen.Bethesda.Oblivion
                         FormKeyBinaryTranslation.Instance.Write(
                             writer,
                             obj.FormKey,
-                            masterReferences,
-                            errorMask);
+                            masterReferences);
                         writer.Write((int)GroupTypeEnum.CellTemporaryChildren);
                         writer.Write(obj.TemporaryTimestamp);
                         if (obj.Landscape_IsSet)
@@ -371,8 +368,7 @@ namespace Mutagen.Bethesda.Oblivion
                         FormKeyBinaryTranslation.Instance.Write(
                             writer,
                             obj.FormKey,
-                            masterReferences,
-                            errorMask);
+                            masterReferences);
                         writer.Write((int)GroupTypeEnum.CellVisibleDistantChildren);
                         writer.Write(obj.VisibleWhenDistantTimestamp);
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IPlaced>.Instance.Write(

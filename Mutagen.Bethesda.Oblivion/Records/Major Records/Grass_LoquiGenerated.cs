@@ -843,293 +843,125 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.DATADataTypeState = DATADataType.Has;
                     }
-                    try
+                    if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Byte DensityParse))
                     {
-                        errorMask?.PushIndex((int)Grass_FieldIndex.Density);
-                        if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
-                            item: out Byte DensityParse,
-                            errorMask: errorMask))
-                        {
-                            item.Density = DensityParse;
-                        }
-                        else
-                        {
-                            item.Density = default(Byte);
-                        }
+                        item.Density = DensityParse;
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    else
                     {
-                        errorMask.ReportException(ex);
+                        item.Density = default(Byte);
                     }
-                    finally
+                    if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Byte MinSlopeParse))
                     {
-                        errorMask?.PopIndex();
+                        item.MinSlope = MinSlopeParse;
                     }
-                    try
+                    else
                     {
-                        errorMask?.PushIndex((int)Grass_FieldIndex.MinSlope);
-                        if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
-                            item: out Byte MinSlopeParse,
-                            errorMask: errorMask))
-                        {
-                            item.MinSlope = MinSlopeParse;
-                        }
-                        else
-                        {
-                            item.MinSlope = default(Byte);
-                        }
+                        item.MinSlope = default(Byte);
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Byte MaxSlopeParse))
                     {
-                        errorMask.ReportException(ex);
+                        item.MaxSlope = MaxSlopeParse;
                     }
-                    finally
+                    else
                     {
-                        errorMask?.PopIndex();
+                        item.MaxSlope = default(Byte);
                     }
-                    try
+                    if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Byte Fluff1Parse))
                     {
-                        errorMask?.PushIndex((int)Grass_FieldIndex.MaxSlope);
-                        if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
-                            item: out Byte MaxSlopeParse,
-                            errorMask: errorMask))
-                        {
-                            item.MaxSlope = MaxSlopeParse;
-                        }
-                        else
-                        {
-                            item.MaxSlope = default(Byte);
-                        }
+                        item.Fluff1 = Fluff1Parse;
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    else
                     {
-                        errorMask.ReportException(ex);
+                        item.Fluff1 = default(Byte);
                     }
-                    finally
+                    if (Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out UInt16 UnitFromWaterAmountParse))
                     {
-                        errorMask?.PopIndex();
+                        item.UnitFromWaterAmount = UnitFromWaterAmountParse;
                     }
-                    try
+                    else
                     {
-                        errorMask?.PushIndex((int)Grass_FieldIndex.Fluff1);
-                        if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
-                            item: out Byte Fluff1Parse,
-                            errorMask: errorMask))
-                        {
-                            item.Fluff1 = Fluff1Parse;
-                        }
-                        else
-                        {
-                            item.Fluff1 = default(Byte);
-                        }
+                        item.UnitFromWaterAmount = default(UInt16);
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    if (Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out UInt16 Fluff2Parse))
                     {
-                        errorMask.ReportException(ex);
+                        item.Fluff2 = Fluff2Parse;
                     }
-                    finally
+                    else
                     {
-                        errorMask?.PopIndex();
+                        item.Fluff2 = default(UInt16);
                     }
-                    try
+                    if (EnumBinaryTranslation<Grass.UnitFromWaterType>.Instance.Parse(
+                        frame: dataFrame.SpawnWithLength(4),
+                        item: out Grass.UnitFromWaterType UnitFromWaterModeParse))
                     {
-                        errorMask?.PushIndex((int)Grass_FieldIndex.UnitFromWaterAmount);
-                        if (Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
-                            item: out UInt16 UnitFromWaterAmountParse,
-                            errorMask: errorMask))
-                        {
-                            item.UnitFromWaterAmount = UnitFromWaterAmountParse;
-                        }
-                        else
-                        {
-                            item.UnitFromWaterAmount = default(UInt16);
-                        }
+                        item.UnitFromWaterMode = UnitFromWaterModeParse;
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    else
                     {
-                        errorMask.ReportException(ex);
+                        item.UnitFromWaterMode = default(Grass.UnitFromWaterType);
                     }
-                    finally
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single PositionRangeParse))
                     {
-                        errorMask?.PopIndex();
+                        item.PositionRange = PositionRangeParse;
                     }
-                    try
+                    else
                     {
-                        errorMask?.PushIndex((int)Grass_FieldIndex.Fluff2);
-                        if (Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
-                            item: out UInt16 Fluff2Parse,
-                            errorMask: errorMask))
-                        {
-                            item.Fluff2 = Fluff2Parse;
-                        }
-                        else
-                        {
-                            item.Fluff2 = default(UInt16);
-                        }
+                        item.PositionRange = default(Single);
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single HeightRangeParse))
                     {
-                        errorMask.ReportException(ex);
+                        item.HeightRange = HeightRangeParse;
                     }
-                    finally
+                    else
                     {
-                        errorMask?.PopIndex();
+                        item.HeightRange = default(Single);
                     }
-                    try
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single ColorRangeParse))
                     {
-                        errorMask?.PushIndex((int)Grass_FieldIndex.UnitFromWaterMode);
-                        if (EnumBinaryTranslation<Grass.UnitFromWaterType>.Instance.Parse(
-                            frame: dataFrame.SpawnWithLength(4),
-                            item: out Grass.UnitFromWaterType UnitFromWaterModeParse,
-                            errorMask: errorMask))
-                        {
-                            item.UnitFromWaterMode = UnitFromWaterModeParse;
-                        }
-                        else
-                        {
-                            item.UnitFromWaterMode = default(Grass.UnitFromWaterType);
-                        }
+                        item.ColorRange = ColorRangeParse;
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    else
                     {
-                        errorMask.ReportException(ex);
+                        item.ColorRange = default(Single);
                     }
-                    finally
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single WavePeriodParse))
                     {
-                        errorMask?.PopIndex();
+                        item.WavePeriod = WavePeriodParse;
                     }
-                    try
+                    else
                     {
-                        errorMask?.PushIndex((int)Grass_FieldIndex.PositionRange);
-                        if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
-                            item: out Single PositionRangeParse,
-                            errorMask: errorMask))
-                        {
-                            item.PositionRange = PositionRangeParse;
-                        }
-                        else
-                        {
-                            item.PositionRange = default(Single);
-                        }
+                        item.WavePeriod = default(Single);
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    if (EnumBinaryTranslation<Grass.GrassFlag>.Instance.Parse(
+                        frame: dataFrame.SpawnWithLength(4),
+                        item: out Grass.GrassFlag FlagsParse))
                     {
-                        errorMask.ReportException(ex);
+                        item.Flags = FlagsParse;
                     }
-                    finally
+                    else
                     {
-                        errorMask?.PopIndex();
-                    }
-                    try
-                    {
-                        errorMask?.PushIndex((int)Grass_FieldIndex.HeightRange);
-                        if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
-                            item: out Single HeightRangeParse,
-                            errorMask: errorMask))
-                        {
-                            item.HeightRange = HeightRangeParse;
-                        }
-                        else
-                        {
-                            item.HeightRange = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    try
-                    {
-                        errorMask?.PushIndex((int)Grass_FieldIndex.ColorRange);
-                        if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
-                            item: out Single ColorRangeParse,
-                            errorMask: errorMask))
-                        {
-                            item.ColorRange = ColorRangeParse;
-                        }
-                        else
-                        {
-                            item.ColorRange = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    try
-                    {
-                        errorMask?.PushIndex((int)Grass_FieldIndex.WavePeriod);
-                        if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
-                            item: out Single WavePeriodParse,
-                            errorMask: errorMask))
-                        {
-                            item.WavePeriod = WavePeriodParse;
-                        }
-                        else
-                        {
-                            item.WavePeriod = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    try
-                    {
-                        errorMask?.PushIndex((int)Grass_FieldIndex.Flags);
-                        if (EnumBinaryTranslation<Grass.GrassFlag>.Instance.Parse(
-                            frame: dataFrame.SpawnWithLength(4),
-                            item: out Grass.GrassFlag FlagsParse,
-                            errorMask: errorMask))
-                        {
-                            item.Flags = FlagsParse;
-                        }
-                        else
-                        {
-                            item.Flags = default(Grass.GrassFlag);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
+                        item.Flags = default(Grass.GrassFlag);
                     }
                     return TryGet<int?>.Succeed((int)Grass_FieldIndex.Flags);
                 }
@@ -2936,66 +2768,42 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.Density,
-                        fieldIndex: (int)Grass_FieldIndex.Density,
-                        errorMask: errorMask);
+                        item: item.Density);
                     Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.MinSlope,
-                        fieldIndex: (int)Grass_FieldIndex.MinSlope,
-                        errorMask: errorMask);
+                        item: item.MinSlope);
                     Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.MaxSlope,
-                        fieldIndex: (int)Grass_FieldIndex.MaxSlope,
-                        errorMask: errorMask);
+                        item: item.MaxSlope);
                     Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.Fluff1,
-                        fieldIndex: (int)Grass_FieldIndex.Fluff1,
-                        errorMask: errorMask);
+                        item: item.Fluff1);
                     Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.UnitFromWaterAmount,
-                        fieldIndex: (int)Grass_FieldIndex.UnitFromWaterAmount,
-                        errorMask: errorMask);
+                        item: item.UnitFromWaterAmount);
                     Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.Fluff2,
-                        fieldIndex: (int)Grass_FieldIndex.Fluff2,
-                        errorMask: errorMask);
+                        item: item.Fluff2);
                     Mutagen.Bethesda.Binary.EnumBinaryTranslation<Grass.UnitFromWaterType>.Instance.Write(
                         writer,
                         item.UnitFromWaterMode,
-                        length: 4,
-                        fieldIndex: (int)Grass_FieldIndex.UnitFromWaterMode,
-                        errorMask: errorMask);
+                        length: 4);
                     Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.PositionRange,
-                        fieldIndex: (int)Grass_FieldIndex.PositionRange,
-                        errorMask: errorMask);
+                        item: item.PositionRange);
                     Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.HeightRange,
-                        fieldIndex: (int)Grass_FieldIndex.HeightRange,
-                        errorMask: errorMask);
+                        item: item.HeightRange);
                     Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.ColorRange,
-                        fieldIndex: (int)Grass_FieldIndex.ColorRange,
-                        errorMask: errorMask);
+                        item: item.ColorRange);
                     Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.WavePeriod,
-                        fieldIndex: (int)Grass_FieldIndex.WavePeriod,
-                        errorMask: errorMask);
+                        item: item.WavePeriod);
                     Mutagen.Bethesda.Binary.EnumBinaryTranslation<Grass.GrassFlag>.Instance.Write(
                         writer,
                         item.Flags,
-                        length: 4,
-                        fieldIndex: (int)Grass_FieldIndex.Flags,
-                        errorMask: errorMask);
+                        length: 4);
                 }
             }
         }

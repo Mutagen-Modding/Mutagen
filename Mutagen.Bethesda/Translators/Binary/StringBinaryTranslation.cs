@@ -16,85 +16,53 @@ namespace Mutagen.Bethesda.Binary
 
         public void ParseInto(
             MutagenFrame frame,
-            int fieldIndex,
-            IHasItem<string> item,
-            ErrorMaskBuilder errorMask)
+            IHasItem<string> item)
         {
-            using (errorMask?.PushIndex(fieldIndex))
+            if (Parse(
+                frame,
+                out string subItem))
             {
-                try
-                {
-                    if (Parse(
-                        frame,
-                        out string subItem,
-                        errorMask))
-                    {
-                        item.Item = subItem;
-                    }
-                    else
-                    {
-                        item.Unset();
-                    }
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
+                item.Item = subItem;
+            }
+            else
+            {
+                item.Unset();
             }
         }
 
         public virtual bool Parse(
             MutagenFrame frame,
-            out string item,
-            ErrorMaskBuilder errorMask)
+            out string item)
         {
             return Parse(
                 frame: frame,
                 parseWhole: true,
-                item: out item,
-                errorMask: errorMask);
+                item: out item);
         }
 
         public void ParseInto(
             MutagenFrame frame,
-            int fieldIndex,
             IHasItem<string> item,
-            bool parseWhole,
-            ErrorMaskBuilder errorMask)
+            bool parseWhole)
         {
-            using (errorMask?.PushIndex(fieldIndex))
+            if (Parse(
+                frame,
+                parseWhole,
+                out string subItem))
             {
-                try
-                {
-                    if (Parse(
-                        frame,
-                        parseWhole,
-                        out string subItem,
-                        errorMask))
-                    {
-                        item.Item = subItem;
-                    }
-                    else
-                    {
-                        item.Unset();
-                    }
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
+                item.Item = subItem;
+            }
+            else
+            {
+                item.Unset();
             }
         }
 
         public virtual bool Parse(
             MutagenFrame frame,
             bool parseWhole,
-            out string item,
-            ErrorMaskBuilder errorMask)
+            out string item)
         {
-            errorMask = null;
             if (parseWhole)
             {
                 item = frame.Reader.ReadString(checked((int)frame.Remaining));
@@ -136,6 +104,13 @@ namespace Mutagen.Bethesda.Binary
 
         public void Write(
             MutagenWriter writer,
+            string item)
+        {
+            Write(writer, item, nullTerminate: true);
+        }
+
+        public void Write(
+            MutagenWriter writer,
             string item,
             bool nullTerminate)
         {
@@ -148,90 +123,25 @@ namespace Mutagen.Bethesda.Binary
 
         public void Write(
             MutagenWriter writer,
-            string item)
-        {
-            Write(writer, item, nullTerminate: true);
-        }
-
-        public void Write(
-            MutagenWriter writer,
-            string item,
-            ErrorMaskBuilder errorMask)
-        {
-            Write(writer, item, nullTerminate: true);
-        }
-
-        public void Write(
-            MutagenWriter writer,
-            string item,
-            int fieldIndex,
-            ErrorMaskBuilder errorMask,
-            bool nullTerminate = true)
-        {
-            using (errorMask?.PushIndex(fieldIndex))
-            {
-                try
-                {
-                    this.Write(
-                        writer,
-                        item,
-                        nullTerminate: nullTerminate);
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-            }
-        }
-
-        public void Write(
-            MutagenWriter writer,
             IHasItemGetter<string> item,
-            int fieldIndex,
-            ErrorMaskBuilder errorMask,
             bool nullTerminate = true)
         {
-            using (errorMask?.PushIndex(fieldIndex))
-            {
-                try
-                {
-                    this.Write(
-                        writer,
-                        item.Item,
-                        nullTerminate: nullTerminate);
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-            }
+            this.Write(
+                writer,
+                item.Item,
+                nullTerminate: nullTerminate);
         }
 
         public void Write(
             MutagenWriter writer,
             IHasBeenSetItemGetter<string> item,
-            int fieldIndex,
-            ErrorMaskBuilder errorMask,
             bool nullTerminate = true)
         {
-            using (errorMask?.PushIndex(fieldIndex))
-            {
-                try
-                {
-                    if (!item.HasBeenSet) return;
-                    this.Write(
-                        writer,
-                        item.Item,
-                        nullTerminate: nullTerminate);
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-            }
+            if (!item.HasBeenSet) return;
+            this.Write(
+                writer,
+                item.Item,
+                nullTerminate: nullTerminate);
         }
 
         public void Write(
@@ -239,7 +149,6 @@ namespace Mutagen.Bethesda.Binary
             string item,
             RecordType header,
             bool nullable,
-            ErrorMaskBuilder errorMask,
             bool nullTerminate = true)
         {
             if (item == null)
@@ -248,9 +157,7 @@ namespace Mutagen.Bethesda.Binary
                 {
                     return;
                 }
-                errorMask.ReportExceptionOrThrow(
-                    new ArgumentException("Non optional string was null."));
-                return;
+                throw new ArgumentException("Non optional string was null.");
             }
             using (HeaderExport.ExportHeader(writer, header, ObjectType.Subrecord))
             {
@@ -263,40 +170,9 @@ namespace Mutagen.Bethesda.Binary
 
         public void Write(
             MutagenWriter writer,
-            string item,
-            RecordType header,
-            int fieldIndex,
-            bool nullable,
-            ErrorMaskBuilder errorMask,
-            bool nullTerminate = true)
-        {
-            using (errorMask?.PushIndex(fieldIndex))
-            {
-                try
-                {
-                    this.Write(
-                        writer,
-                        item,
-                        header,
-                        nullable,
-                        errorMask,
-                        nullTerminate: nullTerminate);
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-            }
-        }
-
-        public void Write(
-            MutagenWriter writer,
             IHasBeenSetItemGetter<string> item,
             RecordType header,
-            int fieldIndex,
             bool nullable,
-            ErrorMaskBuilder errorMask,
             bool nullTerminate = true)
         {
             if (!item.HasBeenSet) return;
@@ -304,9 +180,7 @@ namespace Mutagen.Bethesda.Binary
                 writer,
                 item.Item,
                 header,
-                fieldIndex,
                 nullable,
-                errorMask,
                 nullTerminate: nullTerminate);
         }
 
@@ -314,29 +188,24 @@ namespace Mutagen.Bethesda.Binary
             MutagenWriter writer,
             IHasItemGetter<string> item,
             RecordType header,
-            int fieldIndex,
             bool nullable,
-            ErrorMaskBuilder errorMask,
             bool nullTerminate = true)
         {
             this.Write(
                 writer,
                 item.Item,
                 header,
-                fieldIndex,
                 nullable,
-                errorMask,
                 nullTerminate: nullTerminate);
         }
 
-        public void Write(MutagenWriter writer, string item, long length, ErrorMaskBuilder errorMask)
+        public void Write(MutagenWriter writer, string item, long length)
         {
             if (length != item.Length)
             {
-                errorMask.ReportExceptionOrThrow(
-                    new ArgumentException($"Expected length was {item.Length}, but was passed {length}."));
+                throw new ArgumentException($"Expected length was {item.Length}, but was passed {length}.");
             }
-            Write(writer, item);
+            Write(writer, item, nullTerminate: true);
         }
     }
 }

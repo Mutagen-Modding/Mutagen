@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -49,19 +49,15 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     case 0x47414750: //"PGAG":
                         frame.Reader.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                        using (errorMask.PushIndex((int)PathGrid_FieldIndex.Unknown))
+                        if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+                           frame.SpawnWithLength(len, checkFraming: false),
+                           item: out var unknownBytes))
                         {
-                            if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
-                               frame.SpawnWithLength(len, checkFraming: false),
-                               item: out var unknownBytes,
-                               errorMask: errorMask))
-                            {
-                                item.Unknown = unknownBytes;
-                            }
-                            else
-                            {
-                                item.Unknown_Unset();
-                            }
+                            item.Unknown = unknownBytes;
+                        }
+                        else
+                        {
+                            item.Unknown_Unset();
                         }
                         break;
                     case 0x52524750: // "PGRR":

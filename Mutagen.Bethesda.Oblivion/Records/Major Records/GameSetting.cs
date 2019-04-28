@@ -52,8 +52,7 @@ namespace Mutagen.Bethesda.Oblivion
             frame.Position += 6;
             if (!StringBinaryTranslation.Instance.Parse(
                 frame.SpawnWithLength(edidLength),
-                out var edid,
-                errorMask))
+                out var edid))
             {
                 errorMask.ReportExceptionOrThrow(
                     new ArgumentException($"EDID was parsed in expected position: {frame.Position}"));

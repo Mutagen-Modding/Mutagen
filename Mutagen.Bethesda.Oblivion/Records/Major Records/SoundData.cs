@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -60,8 +60,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             if (ByteBinaryTranslation.Instance.Parse(
                 frame: frame,
-                item: out var b,
-                errorMask: errorMask))
+                item: out var b))
             {
                 item.MinimumAttenuationDistance = (ushort)(b * MinAttenuationDistanceMultiplier);
             }
@@ -72,16 +71,14 @@ namespace Mutagen.Bethesda.Oblivion
             var val = (byte)(item.MinimumAttenuationDistance / MinAttenuationDistanceMultiplier);
             ByteBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: val,
-                errorMask: errorMask);
+                item: val);
         }
 
         static partial void FillBinary_MaximumAttenuationDistance_Custom(MutagenFrame frame, SoundData item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
         {
             if (ByteBinaryTranslation.Instance.Parse(
                 frame: frame,
-                item: out var b,
-                errorMask: errorMask))
+                item: out var b))
             {
                 item.MaximumAttenuationDistance = (ushort)(b * MaxAttenuationDistanceMultiplier);
             }
@@ -92,8 +89,7 @@ namespace Mutagen.Bethesda.Oblivion
             var val = (byte)(item.MaximumAttenuationDistance / MaxAttenuationDistanceMultiplier);
             ByteBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: val,
-                errorMask: errorMask);
+                item: val);
         }
     }
 }

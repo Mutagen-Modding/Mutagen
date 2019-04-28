@@ -736,30 +736,16 @@ namespace Mutagen.Bethesda.Oblivion
                 case 0x4C4C5546: // FULL
                 {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    try
+                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        parseWhole: true,
+                        item: out String NameParse))
                     {
-                        errorMask?.PushIndex((int)Furnature_FieldIndex.Name);
-                        if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
-                            parseWhole: true,
-                            item: out String NameParse,
-                            errorMask: errorMask))
-                        {
-                            item.Name = NameParse;
-                        }
-                        else
-                        {
-                            item.Name = default(String);
-                        }
+                        item.Name = NameParse;
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    else
                     {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
+                        item.Name = default(String);
                     }
                     return TryGet<int?>.Succeed((int)Furnature_FieldIndex.Name);
                 }
@@ -798,37 +784,21 @@ namespace Mutagen.Bethesda.Oblivion
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
-                        item: item.Script_Property,
-                        fieldIndex: (int)Furnature_FieldIndex.Script,
-                        errorMask: errorMask);
+                        item: item.Script_Property);
                     return TryGet<int?>.Succeed((int)Furnature_FieldIndex.Script);
                 }
                 case 0x4D414E4D: // MNAM
                 {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    try
+                    if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        item: out Byte[] MarkerFlagsParse))
                     {
-                        errorMask?.PushIndex((int)Furnature_FieldIndex.MarkerFlags);
-                        if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
-                            item: out Byte[] MarkerFlagsParse,
-                            errorMask: errorMask))
-                        {
-                            item.MarkerFlags = MarkerFlagsParse;
-                        }
-                        else
-                        {
-                            item.MarkerFlags = default(Byte[]);
-                        }
+                        item.MarkerFlags = MarkerFlagsParse;
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    else
                     {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
+                        item.MarkerFlags = default(Byte[]);
                     }
                     return TryGet<int?>.Succeed((int)Furnature_FieldIndex.MarkerFlags);
                 }
@@ -1899,8 +1869,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.Name,
-                    fieldIndex: (int)Furnature_FieldIndex.Name,
-                    errorMask: errorMask,
                     header: recordTypeConverter.ConvertToCustom(Furnature_Registration.FULL_HEADER),
                     nullable: false);
             }
@@ -1918,8 +1886,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.Script_Property,
-                    fieldIndex: (int)Furnature_FieldIndex.Script,
-                    errorMask: errorMask,
                     header: recordTypeConverter.ConvertToCustom(Furnature_Registration.SCRI_HEADER),
                     nullable: false,
                     masterReferences: masterReferences);
@@ -1929,8 +1895,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.MarkerFlags,
-                    fieldIndex: (int)Furnature_FieldIndex.MarkerFlags,
-                    errorMask: errorMask,
                     header: recordTypeConverter.ConvertToCustom(Furnature_Registration.MNAM_HEADER),
                     nullable: false);
             }

@@ -533,77 +533,35 @@ namespace Mutagen.Bethesda.Oblivion
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            try
+            if (EnumBinaryTranslation<HavokData.MaterialType>.Instance.Parse(
+                frame: frame.SpawnWithLength(1),
+                item: out HavokData.MaterialType MaterialParse))
             {
-                errorMask?.PushIndex((int)HavokData_FieldIndex.Material);
-                if (EnumBinaryTranslation<HavokData.MaterialType>.Instance.Parse(
-                    frame: frame.SpawnWithLength(1),
-                    item: out HavokData.MaterialType MaterialParse,
-                    errorMask: errorMask))
-                {
-                    item.Material = MaterialParse;
-                }
-                else
-                {
-                    item.Material = default(HavokData.MaterialType);
-                }
+                item.Material = MaterialParse;
             }
-            catch (Exception ex)
-            when (errorMask != null)
+            else
             {
-                errorMask.ReportException(ex);
+                item.Material = default(HavokData.MaterialType);
             }
-            finally
+            if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                frame: frame,
+                item: out Byte FrictionParse))
             {
-                errorMask?.PopIndex();
+                item.Friction = FrictionParse;
             }
-            try
+            else
             {
-                errorMask?.PushIndex((int)HavokData_FieldIndex.Friction);
-                if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                    frame: frame,
-                    item: out Byte FrictionParse,
-                    errorMask: errorMask))
-                {
-                    item.Friction = FrictionParse;
-                }
-                else
-                {
-                    item.Friction = default(Byte);
-                }
+                item.Friction = default(Byte);
             }
-            catch (Exception ex)
-            when (errorMask != null)
+            if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                frame: frame,
+                item: out Byte RestitutionParse))
             {
-                errorMask.ReportException(ex);
+                item.Restitution = RestitutionParse;
             }
-            finally
+            else
             {
-                errorMask?.PopIndex();
-            }
-            try
-            {
-                errorMask?.PushIndex((int)HavokData_FieldIndex.Restitution);
-                if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                    frame: frame,
-                    item: out Byte RestitutionParse,
-                    errorMask: errorMask))
-                {
-                    item.Restitution = RestitutionParse;
-                }
-                else
-                {
-                    item.Restitution = default(Byte);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
+                item.Restitution = default(Byte);
             }
         }
 
@@ -1420,19 +1378,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Binary.EnumBinaryTranslation<HavokData.MaterialType>.Instance.Write(
                 writer,
                 item.Material,
-                length: 1,
-                fieldIndex: (int)HavokData_FieldIndex.Material,
-                errorMask: errorMask);
+                length: 1);
             Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Friction,
-                fieldIndex: (int)HavokData_FieldIndex.Friction,
-                errorMask: errorMask);
+                item: item.Friction);
             Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Restitution,
-                fieldIndex: (int)HavokData_FieldIndex.Restitution,
-                errorMask: errorMask);
+                item: item.Restitution);
         }
 
         #endregion

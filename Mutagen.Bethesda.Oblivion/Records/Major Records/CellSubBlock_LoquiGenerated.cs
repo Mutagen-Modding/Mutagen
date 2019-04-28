@@ -593,77 +593,35 @@ namespace Mutagen.Bethesda.Oblivion
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            try
+            if (Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
+                frame: frame,
+                item: out Int32 BlockNumberParse))
             {
-                errorMask?.PushIndex((int)CellSubBlock_FieldIndex.BlockNumber);
-                if (Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
-                    frame: frame,
-                    item: out Int32 BlockNumberParse,
-                    errorMask: errorMask))
-                {
-                    item.BlockNumber = BlockNumberParse;
-                }
-                else
-                {
-                    item.BlockNumber = default(Int32);
-                }
+                item.BlockNumber = BlockNumberParse;
             }
-            catch (Exception ex)
-            when (errorMask != null)
+            else
             {
-                errorMask.ReportException(ex);
+                item.BlockNumber = default(Int32);
             }
-            finally
+            if (EnumBinaryTranslation<GroupTypeEnum>.Instance.Parse(
+                frame: frame.SpawnWithLength(4),
+                item: out GroupTypeEnum GroupTypeParse))
             {
-                errorMask?.PopIndex();
+                item.GroupType = GroupTypeParse;
             }
-            try
+            else
             {
-                errorMask?.PushIndex((int)CellSubBlock_FieldIndex.GroupType);
-                if (EnumBinaryTranslation<GroupTypeEnum>.Instance.Parse(
-                    frame: frame.SpawnWithLength(4),
-                    item: out GroupTypeEnum GroupTypeParse,
-                    errorMask: errorMask))
-                {
-                    item.GroupType = GroupTypeParse;
-                }
-                else
-                {
-                    item.GroupType = default(GroupTypeEnum);
-                }
+                item.GroupType = default(GroupTypeEnum);
             }
-            catch (Exception ex)
-            when (errorMask != null)
+            if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+                frame: frame.SpawnWithLength(4),
+                item: out Byte[] LastModifiedParse))
             {
-                errorMask.ReportException(ex);
+                item.LastModified = LastModifiedParse;
             }
-            finally
+            else
             {
-                errorMask?.PopIndex();
-            }
-            try
-            {
-                errorMask?.PushIndex((int)CellSubBlock_FieldIndex.LastModified);
-                if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
-                    frame: frame.SpawnWithLength(4),
-                    item: out Byte[] LastModifiedParse,
-                    errorMask: errorMask))
-                {
-                    item.LastModified = LastModifiedParse;
-                }
-                else
-                {
-                    item.LastModified = default(Byte[]);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
+                item.LastModified = default(Byte[]);
             }
         }
 
@@ -1658,20 +1616,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.BlockNumber,
-                fieldIndex: (int)CellSubBlock_FieldIndex.BlockNumber,
-                errorMask: errorMask);
+                item: item.BlockNumber);
             Mutagen.Bethesda.Binary.EnumBinaryTranslation<GroupTypeEnum>.Instance.Write(
                 writer,
                 item.GroupType,
-                length: 4,
-                fieldIndex: (int)CellSubBlock_FieldIndex.GroupType,
-                errorMask: errorMask);
+                length: 4);
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.LastModified,
-                fieldIndex: (int)CellSubBlock_FieldIndex.LastModified,
-                errorMask: errorMask);
+                item: item.LastModified);
         }
 
         public static void Write_Binary_RecordTypes(

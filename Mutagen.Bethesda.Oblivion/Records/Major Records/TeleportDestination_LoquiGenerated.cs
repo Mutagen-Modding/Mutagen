@@ -552,56 +552,26 @@ namespace Mutagen.Bethesda.Oblivion
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
                 frame: frame,
                 masterReferences: masterReferences,
-                item: item.Destination_Property,
-                fieldIndex: (int)TeleportDestination_FieldIndex.Destination,
-                errorMask: errorMask);
-            try
+                item: item.Destination_Property);
+            if (Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(
+                frame: frame,
+                item: out P3Float PositionParse))
             {
-                errorMask?.PushIndex((int)TeleportDestination_FieldIndex.Position);
-                if (Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(
-                    frame: frame,
-                    item: out P3Float PositionParse,
-                    errorMask: errorMask))
-                {
-                    item.Position = PositionParse;
-                }
-                else
-                {
-                    item.Position = default(P3Float);
-                }
+                item.Position = PositionParse;
             }
-            catch (Exception ex)
-            when (errorMask != null)
+            else
             {
-                errorMask.ReportException(ex);
+                item.Position = default(P3Float);
             }
-            finally
+            if (Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(
+                frame: frame,
+                item: out P3Float RotationParse))
             {
-                errorMask?.PopIndex();
+                item.Rotation = RotationParse;
             }
-            try
+            else
             {
-                errorMask?.PushIndex((int)TeleportDestination_FieldIndex.Rotation);
-                if (Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(
-                    frame: frame,
-                    item: out P3Float RotationParse,
-                    errorMask: errorMask))
-                {
-                    item.Rotation = RotationParse;
-                }
-                else
-                {
-                    item.Rotation = default(P3Float);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
+                item.Rotation = default(P3Float);
             }
         }
 
@@ -1399,19 +1369,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Destination_Property,
-                fieldIndex: (int)TeleportDestination_FieldIndex.Destination,
-                errorMask: errorMask,
                 masterReferences: masterReferences);
             Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Position,
-                fieldIndex: (int)TeleportDestination_FieldIndex.Position,
-                errorMask: errorMask);
+                item: item.Position);
             Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Rotation,
-                fieldIndex: (int)TeleportDestination_FieldIndex.Rotation,
-                errorMask: errorMask);
+                item: item.Rotation);
         }
 
         #endregion

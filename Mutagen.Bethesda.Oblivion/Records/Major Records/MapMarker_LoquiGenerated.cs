@@ -617,29 +617,15 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)MapMarker_FieldIndex.Flags) return TryGet<int?>.Failure;
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    try
+                    if (EnumBinaryTranslation<MapMarker.Flag>.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        item: out MapMarker.Flag FlagsParse))
                     {
-                        errorMask?.PushIndex((int)MapMarker_FieldIndex.Flags);
-                        if (EnumBinaryTranslation<MapMarker.Flag>.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
-                            item: out MapMarker.Flag FlagsParse,
-                            errorMask: errorMask))
-                        {
-                            item.Flags = FlagsParse;
-                        }
-                        else
-                        {
-                            item.Flags = default(MapMarker.Flag);
-                        }
+                        item.Flags = FlagsParse;
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    else
                     {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
+                        item.Flags = default(MapMarker.Flag);
                     }
                     return TryGet<int?>.Succeed((int)MapMarker_FieldIndex.Flags);
                 }
@@ -647,30 +633,16 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)MapMarker_FieldIndex.Name) return TryGet<int?>.Failure;
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    try
+                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        parseWhole: true,
+                        item: out String NameParse))
                     {
-                        errorMask?.PushIndex((int)MapMarker_FieldIndex.Name);
-                        if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
-                            parseWhole: true,
-                            item: out String NameParse,
-                            errorMask: errorMask))
-                        {
-                            item.Name = NameParse;
-                        }
-                        else
-                        {
-                            item.Name = default(String);
-                        }
+                        item.Name = NameParse;
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    else
                     {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
+                        item.Name = default(String);
                     }
                     return TryGet<int?>.Succeed((int)MapMarker_FieldIndex.Name);
                 }
@@ -681,15 +653,12 @@ namespace Mutagen.Bethesda.Oblivion
                     Mutagen.Bethesda.Binary.ListBinaryTranslation<MapMarker.Type>.Instance.ParseRepeatedItem(
                         frame: frame.SpawnWithLength(contentLength),
                         item: item.Types,
-                        fieldIndex: (int)MapMarker_FieldIndex.Types,
                         lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
-                        errorMask: errorMask,
-                        transl: (MutagenFrame r, out MapMarker.Type listSubItem, ErrorMaskBuilder listErrMask) =>
+                        transl: (MutagenFrame r, out MapMarker.Type listSubItem) =>
                         {
                             return Mutagen.Bethesda.Binary.EnumBinaryTranslation<MapMarker.Type>.Instance.Parse(
                                 frame: r.SpawnWithLength(2),
-                                item: out listSubItem,
-                                errorMask: listErrMask);
+                                item: out listSubItem);
                         }
                         );
                     return TryGet<int?>.Succeed((int)MapMarker_FieldIndex.Types);
@@ -1595,8 +1564,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     writer,
                     item.Flags,
                     length: 1,
-                    fieldIndex: (int)MapMarker_FieldIndex.Flags,
-                    errorMask: errorMask,
                     header: recordTypeConverter.ConvertToCustom(MapMarker_Registration.FNAM_HEADER),
                     nullable: false);
             }
@@ -1605,8 +1572,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.Name,
-                    fieldIndex: (int)MapMarker_FieldIndex.Name,
-                    errorMask: errorMask,
                     header: recordTypeConverter.ConvertToCustom(MapMarker_Registration.FULL_HEADER),
                     nullable: false);
             }
@@ -1615,16 +1580,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Mutagen.Bethesda.Binary.ListBinaryTranslation<MapMarker.Type>.Instance.Write(
                     writer: writer,
                     items: item.Types,
-                    fieldIndex: (int)MapMarker_FieldIndex.Types,
                     recordType: MapMarker_Registration.TNAM_HEADER,
-                    errorMask: errorMask,
-                    transl: (MutagenWriter subWriter, MapMarker.Type subItem, ErrorMaskBuilder listErrorMask) =>
+                    transl: (MutagenWriter subWriter, MapMarker.Type subItem) =>
                     {
                         Mutagen.Bethesda.Binary.EnumBinaryTranslation<MapMarker.Type>.Instance.Write(
                             subWriter,
                             subItem,
-                            length: 2,
-                            errorMask: listErrorMask);
+                            length: 2);
                     }
                     );
             }

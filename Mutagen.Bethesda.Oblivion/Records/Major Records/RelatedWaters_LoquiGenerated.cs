@@ -541,21 +541,15 @@ namespace Mutagen.Bethesda.Oblivion
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
                 frame: frame,
                 masterReferences: masterReferences,
-                item: item.RelatedWaterDaytime_Property,
-                fieldIndex: (int)RelatedWaters_FieldIndex.RelatedWaterDaytime,
-                errorMask: errorMask);
+                item: item.RelatedWaterDaytime_Property);
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
                 frame: frame,
                 masterReferences: masterReferences,
-                item: item.RelatedWaterNighttime_Property,
-                fieldIndex: (int)RelatedWaters_FieldIndex.RelatedWaterNighttime,
-                errorMask: errorMask);
+                item: item.RelatedWaterNighttime_Property);
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
                 frame: frame,
                 masterReferences: masterReferences,
-                item: item.RelatedWaterUnderwater_Property,
-                fieldIndex: (int)RelatedWaters_FieldIndex.RelatedWaterUnderwater,
-                errorMask: errorMask);
+                item: item.RelatedWaterUnderwater_Property);
         }
 
         #endregion
@@ -1314,20 +1308,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.RelatedWaterDaytime_Property,
-                fieldIndex: (int)RelatedWaters_FieldIndex.RelatedWaterDaytime,
-                errorMask: errorMask,
                 masterReferences: masterReferences);
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.RelatedWaterNighttime_Property,
-                fieldIndex: (int)RelatedWaters_FieldIndex.RelatedWaterNighttime,
-                errorMask: errorMask,
                 masterReferences: masterReferences);
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.RelatedWaterUnderwater_Property,
-                fieldIndex: (int)RelatedWaters_FieldIndex.RelatedWaterUnderwater,
-                errorMask: errorMask,
                 masterReferences: masterReferences);
         }
 

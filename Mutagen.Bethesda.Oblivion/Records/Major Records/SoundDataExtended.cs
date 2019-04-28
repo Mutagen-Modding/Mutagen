@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -18,8 +18,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             if (!UInt16BinaryTranslation.Instance.Parse(
                 frame,
-                out var i,
-                errorMask))
+                out var i))
             {
                 return;
             }
@@ -30,16 +29,14 @@ namespace Mutagen.Bethesda.Oblivion
         {
             UInt16BinaryTranslation.Instance.Write(
                 writer,
-                (ushort)Math.Round(item.StaticAttenuation * 100),
-                errorMask);
+                (ushort)Math.Round(item.StaticAttenuation * 100));
         }
 
         static partial void FillBinary_StartTime_Custom(MutagenFrame frame, SoundDataExtended item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
         {
             if (!ByteBinaryTranslation.Instance.Parse(
                 frame,
-                out var b,
-                errorMask))
+                out var b))
             {
                 return;
             }
@@ -50,16 +47,14 @@ namespace Mutagen.Bethesda.Oblivion
         {
             ByteBinaryTranslation.Instance.Write(
                 writer,
-                (byte)Math.Round(item.StartTime / 1440f * 256f),
-                errorMask);
+                (byte)Math.Round(item.StartTime / 1440f * 256f));
         }
 
         static partial void FillBinary_StopTime_Custom(MutagenFrame frame, SoundDataExtended item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
         {
             if (!ByteBinaryTranslation.Instance.Parse(
                 frame,
-                out var b,
-                errorMask))
+                out var b))
             {
                 return;
             }
@@ -70,8 +65,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             ByteBinaryTranslation.Instance.Write(
                 writer,
-                (byte)Math.Round(item.StopTime / 1440f * 256f),
-                errorMask);
+                (byte)Math.Round(item.StopTime / 1440f * 256f));
         }
     }
 }

@@ -533,77 +533,35 @@ namespace Mutagen.Bethesda.Oblivion
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            try
+            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                frame: frame,
+                item: out Single VersionParse))
             {
-                errorMask?.PushIndex((int)Header_FieldIndex.Version);
-                if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                    frame: frame,
-                    item: out Single VersionParse,
-                    errorMask: errorMask))
-                {
-                    item.Version = VersionParse;
-                }
-                else
-                {
-                    item.Version = default(Single);
-                }
+                item.Version = VersionParse;
             }
-            catch (Exception ex)
-            when (errorMask != null)
+            else
             {
-                errorMask.ReportException(ex);
+                item.Version = default(Single);
             }
-            finally
+            if (Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
+                frame: frame,
+                item: out Int32 NumRecordsParse))
             {
-                errorMask?.PopIndex();
+                item.NumRecords = NumRecordsParse;
             }
-            try
+            else
             {
-                errorMask?.PushIndex((int)Header_FieldIndex.NumRecords);
-                if (Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
-                    frame: frame,
-                    item: out Int32 NumRecordsParse,
-                    errorMask: errorMask))
-                {
-                    item.NumRecords = NumRecordsParse;
-                }
-                else
-                {
-                    item.NumRecords = default(Int32);
-                }
+                item.NumRecords = default(Int32);
             }
-            catch (Exception ex)
-            when (errorMask != null)
+            if (Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
+                frame: frame,
+                item: out UInt32 NextObjectIDParse))
             {
-                errorMask.ReportException(ex);
+                item.NextObjectID = NextObjectIDParse;
             }
-            finally
+            else
             {
-                errorMask?.PopIndex();
-            }
-            try
-            {
-                errorMask?.PushIndex((int)Header_FieldIndex.NextObjectID);
-                if (Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
-                    frame: frame,
-                    item: out UInt32 NextObjectIDParse,
-                    errorMask: errorMask))
-                {
-                    item.NextObjectID = NextObjectIDParse;
-                }
-                else
-                {
-                    item.NextObjectID = default(UInt32);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
+                item.NextObjectID = default(UInt32);
             }
         }
 
@@ -1419,19 +1377,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Version,
-                fieldIndex: (int)Header_FieldIndex.Version,
-                errorMask: errorMask);
+                item: item.Version);
             Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.NumRecords,
-                fieldIndex: (int)Header_FieldIndex.NumRecords,
-                errorMask: errorMask);
+                item: item.NumRecords);
             Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.NextObjectID,
-                fieldIndex: (int)Header_FieldIndex.NextObjectID,
-                errorMask: errorMask);
+                item: item.NextObjectID);
         }
 
         #endregion

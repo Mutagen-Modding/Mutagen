@@ -748,77 +748,35 @@ namespace Mutagen.Bethesda.Oblivion
                         item: item,
                         masterReferences: masterReferences,
                         errorMask: errorMask);
-                    try
+                    if (Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out UInt32 ValueParse))
                     {
-                        errorMask?.PushIndex((int)Armor_FieldIndex.Value);
-                        if (Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
-                            item: out UInt32 ValueParse,
-                            errorMask: errorMask))
-                        {
-                            item.Value = ValueParse;
-                        }
-                        else
-                        {
-                            item.Value = default(UInt32);
-                        }
+                        item.Value = ValueParse;
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    else
                     {
-                        errorMask.ReportException(ex);
+                        item.Value = default(UInt32);
                     }
-                    finally
+                    if (Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out UInt32 HealthParse))
                     {
-                        errorMask?.PopIndex();
+                        item.Health = HealthParse;
                     }
-                    try
+                    else
                     {
-                        errorMask?.PushIndex((int)Armor_FieldIndex.Health);
-                        if (Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
-                            item: out UInt32 HealthParse,
-                            errorMask: errorMask))
-                        {
-                            item.Health = HealthParse;
-                        }
-                        else
-                        {
-                            item.Health = default(UInt32);
-                        }
+                        item.Health = default(UInt32);
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single WeightParse))
                     {
-                        errorMask.ReportException(ex);
+                        item.Weight = WeightParse;
                     }
-                    finally
+                    else
                     {
-                        errorMask?.PopIndex();
-                    }
-                    try
-                    {
-                        errorMask?.PushIndex((int)Armor_FieldIndex.Weight);
-                        if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
-                            item: out Single WeightParse,
-                            errorMask: errorMask))
-                        {
-                            item.Weight = WeightParse;
-                        }
-                        else
-                        {
-                            item.Weight = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
+                        item.Weight = default(Single);
                     }
                     return TryGet<int?>.Succeed((int)Armor_FieldIndex.Weight);
                 }
@@ -1907,19 +1865,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         masterReferences: masterReferences);
                     Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.Value,
-                        fieldIndex: (int)Armor_FieldIndex.Value,
-                        errorMask: errorMask);
+                        item: item.Value);
                     Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.Health,
-                        fieldIndex: (int)Armor_FieldIndex.Health,
-                        errorMask: errorMask);
+                        item: item.Health);
                     Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.Weight,
-                        fieldIndex: (int)Armor_FieldIndex.Weight,
-                        errorMask: errorMask);
+                        item: item.Weight);
                 }
             }
         }

@@ -751,30 +751,16 @@ namespace Mutagen.Bethesda.Oblivion
                 case 0x4C4C5546: // FULL
                 {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    try
+                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        parseWhole: true,
+                        item: out String NameParse))
                     {
-                        errorMask?.PushIndex((int)Enchantment_FieldIndex.Name);
-                        if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
-                            parseWhole: true,
-                            item: out String NameParse,
-                            errorMask: errorMask))
-                        {
-                            item.Name = NameParse;
-                        }
-                        else
-                        {
-                            item.Name = default(String);
-                        }
+                        item.Name = NameParse;
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    else
                     {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
+                        item.Name = default(String);
                     }
                     return TryGet<int?>.Succeed((int)Enchantment_FieldIndex.Name);
                 }
@@ -786,101 +772,45 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.ENITDataTypeState = ENITDataType.Has;
                     }
-                    try
+                    if (EnumBinaryTranslation<Enchantment.EnchantmentType>.Instance.Parse(
+                        frame: dataFrame.SpawnWithLength(4),
+                        item: out Enchantment.EnchantmentType TypeParse))
                     {
-                        errorMask?.PushIndex((int)Enchantment_FieldIndex.Type);
-                        if (EnumBinaryTranslation<Enchantment.EnchantmentType>.Instance.Parse(
-                            frame: dataFrame.SpawnWithLength(4),
-                            item: out Enchantment.EnchantmentType TypeParse,
-                            errorMask: errorMask))
-                        {
-                            item.Type = TypeParse;
-                        }
-                        else
-                        {
-                            item.Type = default(Enchantment.EnchantmentType);
-                        }
+                        item.Type = TypeParse;
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    else
                     {
-                        errorMask.ReportException(ex);
+                        item.Type = default(Enchantment.EnchantmentType);
                     }
-                    finally
+                    if (Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out UInt32 ChargeAmountParse))
                     {
-                        errorMask?.PopIndex();
+                        item.ChargeAmount = ChargeAmountParse;
                     }
-                    try
+                    else
                     {
-                        errorMask?.PushIndex((int)Enchantment_FieldIndex.ChargeAmount);
-                        if (Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
-                            item: out UInt32 ChargeAmountParse,
-                            errorMask: errorMask))
-                        {
-                            item.ChargeAmount = ChargeAmountParse;
-                        }
-                        else
-                        {
-                            item.ChargeAmount = default(UInt32);
-                        }
+                        item.ChargeAmount = default(UInt32);
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    if (Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out UInt32 EnchantCostParse))
                     {
-                        errorMask.ReportException(ex);
+                        item.EnchantCost = EnchantCostParse;
                     }
-                    finally
+                    else
                     {
-                        errorMask?.PopIndex();
+                        item.EnchantCost = default(UInt32);
                     }
-                    try
+                    if (EnumBinaryTranslation<Enchantment.Flag>.Instance.Parse(
+                        frame: dataFrame.SpawnWithLength(4),
+                        item: out Enchantment.Flag FlagsParse))
                     {
-                        errorMask?.PushIndex((int)Enchantment_FieldIndex.EnchantCost);
-                        if (Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
-                            item: out UInt32 EnchantCostParse,
-                            errorMask: errorMask))
-                        {
-                            item.EnchantCost = EnchantCostParse;
-                        }
-                        else
-                        {
-                            item.EnchantCost = default(UInt32);
-                        }
+                        item.Flags = FlagsParse;
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    else
                     {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    try
-                    {
-                        errorMask?.PushIndex((int)Enchantment_FieldIndex.Flags);
-                        if (EnumBinaryTranslation<Enchantment.Flag>.Instance.Parse(
-                            frame: dataFrame.SpawnWithLength(4),
-                            item: out Enchantment.Flag FlagsParse,
-                            errorMask: errorMask))
-                        {
-                            item.Flags = FlagsParse;
-                        }
-                        else
-                        {
-                            item.Flags = default(Enchantment.Flag);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
+                        item.Flags = default(Enchantment.Flag);
                     }
                     return TryGet<int?>.Succeed((int)Enchantment_FieldIndex.Flags);
                 }
@@ -2134,8 +2064,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.Name,
-                    fieldIndex: (int)Enchantment_FieldIndex.Name,
-                    errorMask: errorMask,
                     header: recordTypeConverter.ConvertToCustom(Enchantment_Registration.FULL_HEADER),
                     nullable: false);
             }
@@ -2146,25 +2074,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     Mutagen.Bethesda.Binary.EnumBinaryTranslation<Enchantment.EnchantmentType>.Instance.Write(
                         writer,
                         item.Type,
-                        length: 4,
-                        fieldIndex: (int)Enchantment_FieldIndex.Type,
-                        errorMask: errorMask);
+                        length: 4);
                     Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.ChargeAmount,
-                        fieldIndex: (int)Enchantment_FieldIndex.ChargeAmount,
-                        errorMask: errorMask);
+                        item: item.ChargeAmount);
                     Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.EnchantCost,
-                        fieldIndex: (int)Enchantment_FieldIndex.EnchantCost,
-                        errorMask: errorMask);
+                        item: item.EnchantCost);
                     Mutagen.Bethesda.Binary.EnumBinaryTranslation<Enchantment.Flag>.Instance.Write(
                         writer,
                         item.Flags,
-                        length: 4,
-                        fieldIndex: (int)Enchantment_FieldIndex.Flags,
-                        errorMask: errorMask);
+                        length: 4);
                 }
             }
             if (item.Effects.HasBeenSet)

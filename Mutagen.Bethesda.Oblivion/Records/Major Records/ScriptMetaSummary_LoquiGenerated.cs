@@ -607,106 +607,50 @@ namespace Mutagen.Bethesda.Oblivion
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            try
+            if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+                frame: frame.SpawnWithLength(4),
+                item: out Byte[] FluffParse))
             {
-                errorMask?.PushIndex((int)ScriptMetaSummary_FieldIndex.Fluff);
-                if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
-                    frame: frame.SpawnWithLength(4),
-                    item: out Byte[] FluffParse,
-                    errorMask: errorMask))
-                {
-                    item.Fluff = FluffParse;
-                }
-                else
-                {
-                    item.Fluff = default(Byte[]);
-                }
+                item.Fluff = FluffParse;
             }
-            catch (Exception ex)
-            when (errorMask != null)
+            else
             {
-                errorMask.ReportException(ex);
+                item.Fluff = default(Byte[]);
             }
-            finally
+            if (Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
+                frame: frame,
+                item: out UInt32 RefCountParse))
             {
-                errorMask?.PopIndex();
+                item.RefCount = RefCountParse;
             }
-            try
+            else
             {
-                errorMask?.PushIndex((int)ScriptMetaSummary_FieldIndex.RefCount);
-                if (Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
-                    frame: frame,
-                    item: out UInt32 RefCountParse,
-                    errorMask: errorMask))
-                {
-                    item.RefCount = RefCountParse;
-                }
-                else
-                {
-                    item.RefCount = default(UInt32);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
+                item.RefCount = default(UInt32);
             }
             FillBinary_CompiledSize_Custom(
                 frame: frame,
                 item: item,
                 masterReferences: masterReferences,
                 errorMask: errorMask);
-            try
+            if (Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
+                frame: frame,
+                item: out UInt32 VariableCountParse))
             {
-                errorMask?.PushIndex((int)ScriptMetaSummary_FieldIndex.VariableCount);
-                if (Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
-                    frame: frame,
-                    item: out UInt32 VariableCountParse,
-                    errorMask: errorMask))
-                {
-                    item.VariableCount = VariableCountParse;
-                }
-                else
-                {
-                    item.VariableCount = default(UInt32);
-                }
+                item.VariableCount = VariableCountParse;
             }
-            catch (Exception ex)
-            when (errorMask != null)
+            else
             {
-                errorMask.ReportException(ex);
+                item.VariableCount = default(UInt32);
             }
-            finally
+            if (EnumBinaryTranslation<ScriptFields.ScriptType>.Instance.Parse(
+                frame: frame.SpawnWithLength(4),
+                item: out ScriptFields.ScriptType TypeParse))
             {
-                errorMask?.PopIndex();
+                item.Type = TypeParse;
             }
-            try
+            else
             {
-                errorMask?.PushIndex((int)ScriptMetaSummary_FieldIndex.Type);
-                if (EnumBinaryTranslation<ScriptFields.ScriptType>.Instance.Parse(
-                    frame: frame.SpawnWithLength(4),
-                    item: out ScriptFields.ScriptType TypeParse,
-                    errorMask: errorMask))
-                {
-                    item.Type = TypeParse;
-                }
-                else
-                {
-                    item.Type = default(ScriptFields.ScriptType);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
+                item.Type = default(ScriptFields.ScriptType);
             }
         }
 
@@ -1631,14 +1575,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Fluff,
-                fieldIndex: (int)ScriptMetaSummary_FieldIndex.Fluff,
-                errorMask: errorMask);
+                item: item.Fluff);
             Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.RefCount,
-                fieldIndex: (int)ScriptMetaSummary_FieldIndex.RefCount,
-                errorMask: errorMask);
+                item: item.RefCount);
             ScriptMetaSummary.WriteBinary_CompiledSize(
                 writer: writer,
                 item: item,
@@ -1646,15 +1586,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask);
             Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.VariableCount,
-                fieldIndex: (int)ScriptMetaSummary_FieldIndex.VariableCount,
-                errorMask: errorMask);
+                item: item.VariableCount);
             Mutagen.Bethesda.Binary.EnumBinaryTranslation<ScriptFields.ScriptType>.Instance.Write(
                 writer,
                 item.Type,
-                length: 4,
-                fieldIndex: (int)ScriptMetaSummary_FieldIndex.Type,
-                errorMask: errorMask);
+                length: 4);
         }
 
         #endregion

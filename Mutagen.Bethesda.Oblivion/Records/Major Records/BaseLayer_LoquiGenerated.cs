@@ -636,56 +636,26 @@ namespace Mutagen.Bethesda.Oblivion
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
                         frame: dataFrame,
                         masterReferences: masterReferences,
-                        item: item.Texture_Property,
-                        fieldIndex: (int)BaseLayer_FieldIndex.Texture,
-                        errorMask: errorMask);
-                    try
+                        item: item.Texture_Property);
+                    if (EnumBinaryTranslation<AlphaLayer.QuadrantEnum>.Instance.Parse(
+                        frame: dataFrame.SpawnWithLength(2),
+                        item: out AlphaLayer.QuadrantEnum QuadrantParse))
                     {
-                        errorMask?.PushIndex((int)BaseLayer_FieldIndex.Quadrant);
-                        if (EnumBinaryTranslation<AlphaLayer.QuadrantEnum>.Instance.Parse(
-                            frame: dataFrame.SpawnWithLength(2),
-                            item: out AlphaLayer.QuadrantEnum QuadrantParse,
-                            errorMask: errorMask))
-                        {
-                            item.Quadrant = QuadrantParse;
-                        }
-                        else
-                        {
-                            item.Quadrant = default(AlphaLayer.QuadrantEnum);
-                        }
+                        item.Quadrant = QuadrantParse;
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    else
                     {
-                        errorMask.ReportException(ex);
+                        item.Quadrant = default(AlphaLayer.QuadrantEnum);
                     }
-                    finally
+                    if (Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out UInt16 LayerNumberParse))
                     {
-                        errorMask?.PopIndex();
+                        item.LayerNumber = LayerNumberParse;
                     }
-                    try
+                    else
                     {
-                        errorMask?.PushIndex((int)BaseLayer_FieldIndex.LayerNumber);
-                        if (Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
-                            item: out UInt16 LayerNumberParse,
-                            errorMask: errorMask))
-                        {
-                            item.LayerNumber = LayerNumberParse;
-                        }
-                        else
-                        {
-                            item.LayerNumber = default(UInt16);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
+                        item.LayerNumber = default(UInt16);
                     }
                     return TryGet<int?>.Succeed((int)BaseLayer_FieldIndex.LayerNumber);
                 }
@@ -1459,20 +1429,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                         writer: writer,
                         item: item.Texture_Property,
-                        fieldIndex: (int)BaseLayer_FieldIndex.Texture,
-                        errorMask: errorMask,
                         masterReferences: masterReferences);
                     Mutagen.Bethesda.Binary.EnumBinaryTranslation<AlphaLayer.QuadrantEnum>.Instance.Write(
                         writer,
                         item.Quadrant,
-                        length: 2,
-                        fieldIndex: (int)BaseLayer_FieldIndex.Quadrant,
-                        errorMask: errorMask);
+                        length: 2);
                     Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.LayerNumber,
-                        fieldIndex: (int)BaseLayer_FieldIndex.LayerNumber,
-                        errorMask: errorMask);
+                        item: item.LayerNumber);
                 }
             }
         }

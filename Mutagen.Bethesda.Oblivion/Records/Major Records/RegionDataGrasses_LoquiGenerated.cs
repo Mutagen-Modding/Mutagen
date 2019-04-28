@@ -585,9 +585,7 @@ namespace Mutagen.Bethesda.Oblivion
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
                         item: item.Grasses,
-                        fieldIndex: (int)RegionDataGrasses_FieldIndex.Grasses,
                         lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
-                        errorMask: errorMask,
                         transl: FormLinkBinaryTranslation.Instance.Parse);
                     return TryGet<int?>.Succeed((int)RegionDataGrasses_FieldIndex.Grasses);
                 }
@@ -1322,15 +1320,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDLink<Grass>>.Instance.Write(
                     writer: writer,
                     items: item.Grasses,
-                    fieldIndex: (int)RegionDataGrasses_FieldIndex.Grasses,
                     recordType: RegionDataGrasses_Registration.RDGS_HEADER,
-                    errorMask: errorMask,
-                    transl: (MutagenWriter subWriter, FormIDLink<Grass> subItem, ErrorMaskBuilder listErrorMask) =>
+                    transl: (MutagenWriter subWriter, FormIDLink<Grass> subItem) =>
                     {
                         Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                             writer: subWriter,
                             item: subItem,
-                            errorMask: listErrorMask,
                             masterReferences: masterReferences);
                     }
                     );

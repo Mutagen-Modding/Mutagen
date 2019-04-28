@@ -600,54 +600,26 @@ namespace Mutagen.Bethesda.Oblivion
                 item: item,
                 masterReferences: masterReferences,
                 errorMask: errorMask);
-            try
+            if (Mutagen.Bethesda.Binary.Int8BinaryTranslation.Instance.Parse(
+                frame: frame,
+                item: out SByte FrequencyAdjustmentParse))
             {
-                errorMask?.PushIndex((int)SoundData_FieldIndex.FrequencyAdjustment);
-                if (Mutagen.Bethesda.Binary.Int8BinaryTranslation.Instance.Parse(
-                    frame: frame,
-                    item: out SByte FrequencyAdjustmentParse,
-                    errorMask: errorMask))
-                {
-                    item.FrequencyAdjustment = FrequencyAdjustmentParse;
-                }
-                else
-                {
-                    item.FrequencyAdjustment = default(SByte);
-                }
+                item.FrequencyAdjustment = FrequencyAdjustmentParse;
             }
-            catch (Exception ex)
-            when (errorMask != null)
+            else
             {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
+                item.FrequencyAdjustment = default(SByte);
             }
             frame.Position += 1;
-            try
+            if (EnumBinaryTranslation<SoundData.Flag>.Instance.Parse(
+                frame: frame.SpawnWithLength(4),
+                item: out SoundData.Flag FlagsParse))
             {
-                errorMask?.PushIndex((int)SoundData_FieldIndex.Flags);
-                if (EnumBinaryTranslation<SoundData.Flag>.Instance.Parse(
-                    frame: frame.SpawnWithLength(4),
-                    item: out SoundData.Flag FlagsParse,
-                    errorMask: errorMask))
-                {
-                    item.Flags = FlagsParse;
-                }
-                else
-                {
-                    item.Flags = default(SoundData.Flag);
-                }
+                item.Flags = FlagsParse;
             }
-            catch (Exception ex)
-            when (errorMask != null)
+            else
             {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
+                item.Flags = default(SoundData.Flag);
             }
         }
 
@@ -1568,18 +1540,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask);
             Mutagen.Bethesda.Binary.Int8BinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.FrequencyAdjustment,
-                fieldIndex: (int)SoundData_FieldIndex.FrequencyAdjustment,
-                errorMask: errorMask);
+                item: item.FrequencyAdjustment);
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Marker);
             Mutagen.Bethesda.Binary.EnumBinaryTranslation<SoundData.Flag>.Instance.Write(
                 writer,
                 item.Flags,
-                length: 4,
-                fieldIndex: (int)SoundData_FieldIndex.Flags,
-                errorMask: errorMask);
+                length: 4);
         }
 
         #endregion

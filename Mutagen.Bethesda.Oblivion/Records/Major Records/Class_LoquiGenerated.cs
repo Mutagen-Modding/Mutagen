@@ -804,90 +804,48 @@ namespace Mutagen.Bethesda.Oblivion
                 case 0x4C4C5546: // FULL
                 {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    try
+                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        parseWhole: true,
+                        item: out String NameParse))
                     {
-                        errorMask?.PushIndex((int)Class_FieldIndex.Name);
-                        if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
-                            parseWhole: true,
-                            item: out String NameParse,
-                            errorMask: errorMask))
-                        {
-                            item.Name = NameParse;
-                        }
-                        else
-                        {
-                            item.Name = default(String);
-                        }
+                        item.Name = NameParse;
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    else
                     {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
+                        item.Name = default(String);
                     }
                     return TryGet<int?>.Succeed((int)Class_FieldIndex.Name);
                 }
                 case 0x43534544: // DESC
                 {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    try
+                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        parseWhole: true,
+                        item: out String DescriptionParse))
                     {
-                        errorMask?.PushIndex((int)Class_FieldIndex.Description);
-                        if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
-                            parseWhole: true,
-                            item: out String DescriptionParse,
-                            errorMask: errorMask))
-                        {
-                            item.Description = DescriptionParse;
-                        }
-                        else
-                        {
-                            item.Description = default(String);
-                        }
+                        item.Description = DescriptionParse;
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    else
                     {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
+                        item.Description = default(String);
                     }
                     return TryGet<int?>.Succeed((int)Class_FieldIndex.Description);
                 }
                 case 0x4E4F4349: // ICON
                 {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    try
+                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        parseWhole: true,
+                        item: out String IconParse))
                     {
-                        errorMask?.PushIndex((int)Class_FieldIndex.Icon);
-                        if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
-                            parseWhole: true,
-                            item: out String IconParse,
-                            errorMask: errorMask))
-                        {
-                            item.Icon = IconParse;
-                        }
-                        else
-                        {
-                            item.Icon = default(String);
-                        }
+                        item.Icon = IconParse;
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    else
                     {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
+                        item.Icon = default(String);
                     }
                     return TryGet<int?>.Succeed((int)Class_FieldIndex.Icon);
                 }
@@ -903,101 +861,53 @@ namespace Mutagen.Bethesda.Oblivion
                         frame: frame,
                         amount: 2,
                         item: item.PrimaryAttributes,
-                        fieldIndex: (int)Class_FieldIndex.PrimaryAttributes,
-                        errorMask: errorMask,
-                        transl: (MutagenFrame r, out ActorValue listSubItem, ErrorMaskBuilder listErrMask) =>
+                        transl: (MutagenFrame r, out ActorValue listSubItem) =>
                         {
                             return Mutagen.Bethesda.Binary.EnumBinaryTranslation<ActorValue>.Instance.Parse(
                                 frame: r.SpawnWithLength(4),
-                                item: out listSubItem,
-                                errorMask: listErrMask);
+                                item: out listSubItem);
                         }
                         );
-                    try
+                    if (EnumBinaryTranslation<Class.SpecializationFlag>.Instance.Parse(
+                        frame: dataFrame.SpawnWithLength(4),
+                        item: out Class.SpecializationFlag SpecializationParse))
                     {
-                        errorMask?.PushIndex((int)Class_FieldIndex.Specialization);
-                        if (EnumBinaryTranslation<Class.SpecializationFlag>.Instance.Parse(
-                            frame: dataFrame.SpawnWithLength(4),
-                            item: out Class.SpecializationFlag SpecializationParse,
-                            errorMask: errorMask))
-                        {
-                            item.Specialization = SpecializationParse;
-                        }
-                        else
-                        {
-                            item.Specialization = default(Class.SpecializationFlag);
-                        }
+                        item.Specialization = SpecializationParse;
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    else
                     {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
+                        item.Specialization = default(Class.SpecializationFlag);
                     }
                     Mutagen.Bethesda.Binary.ListBinaryTranslation<ActorValue>.Instance.ParseRepeatedItem(
                         frame: frame,
                         amount: 7,
                         item: item.SecondaryAttributes,
-                        fieldIndex: (int)Class_FieldIndex.SecondaryAttributes,
-                        errorMask: errorMask,
-                        transl: (MutagenFrame r, out ActorValue listSubItem, ErrorMaskBuilder listErrMask) =>
+                        transl: (MutagenFrame r, out ActorValue listSubItem) =>
                         {
                             return Mutagen.Bethesda.Binary.EnumBinaryTranslation<ActorValue>.Instance.Parse(
                                 frame: r.SpawnWithLength(4),
-                                item: out listSubItem,
-                                errorMask: listErrMask);
+                                item: out listSubItem);
                         }
                         );
-                    try
+                    if (EnumBinaryTranslation<ClassFlag>.Instance.Parse(
+                        frame: dataFrame.SpawnWithLength(4),
+                        item: out ClassFlag FlagsParse))
                     {
-                        errorMask?.PushIndex((int)Class_FieldIndex.Flags);
-                        if (EnumBinaryTranslation<ClassFlag>.Instance.Parse(
-                            frame: dataFrame.SpawnWithLength(4),
-                            item: out ClassFlag FlagsParse,
-                            errorMask: errorMask))
-                        {
-                            item.Flags = FlagsParse;
-                        }
-                        else
-                        {
-                            item.Flags = default(ClassFlag);
-                        }
+                        item.Flags = FlagsParse;
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    else
                     {
-                        errorMask.ReportException(ex);
+                        item.Flags = default(ClassFlag);
                     }
-                    finally
+                    if (EnumBinaryTranslation<ClassService>.Instance.Parse(
+                        frame: dataFrame.SpawnWithLength(4),
+                        item: out ClassService ClassServicesParse))
                     {
-                        errorMask?.PopIndex();
+                        item.ClassServices = ClassServicesParse;
                     }
-                    try
+                    else
                     {
-                        errorMask?.PushIndex((int)Class_FieldIndex.ClassServices);
-                        if (EnumBinaryTranslation<ClassService>.Instance.Parse(
-                            frame: dataFrame.SpawnWithLength(4),
-                            item: out ClassService ClassServicesParse,
-                            errorMask: errorMask))
-                        {
-                            item.ClassServices = ClassServicesParse;
-                        }
-                        else
-                        {
-                            item.ClassServices = default(ClassService);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
+                        item.ClassServices = default(ClassService);
                     }
                     if (dataFrame.Complete)
                     {
@@ -2599,8 +2509,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.Name,
-                    fieldIndex: (int)Class_FieldIndex.Name,
-                    errorMask: errorMask,
                     header: recordTypeConverter.ConvertToCustom(Class_Registration.FULL_HEADER),
                     nullable: false);
             }
@@ -2609,8 +2517,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.Description,
-                    fieldIndex: (int)Class_FieldIndex.Description,
-                    errorMask: errorMask,
                     header: recordTypeConverter.ConvertToCustom(Class_Registration.DESC_HEADER),
                     nullable: false);
             }
@@ -2619,8 +2525,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.Icon,
-                    fieldIndex: (int)Class_FieldIndex.Icon,
-                    errorMask: errorMask,
                     header: recordTypeConverter.ConvertToCustom(Class_Registration.ICON_HEADER),
                     nullable: false);
             }
@@ -2631,49 +2535,37 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     Mutagen.Bethesda.Binary.ListBinaryTranslation<ActorValue>.Instance.Write(
                         writer: writer,
                         items: item.PrimaryAttributes,
-                        fieldIndex: (int)Class_FieldIndex.PrimaryAttributes,
-                        errorMask: errorMask,
-                        transl: (MutagenWriter subWriter, ActorValue subItem, ErrorMaskBuilder listErrorMask) =>
+                        transl: (MutagenWriter subWriter, ActorValue subItem) =>
                         {
                             Mutagen.Bethesda.Binary.EnumBinaryTranslation<ActorValue>.Instance.Write(
                                 subWriter,
                                 subItem,
-                                length: 4,
-                                errorMask: listErrorMask);
+                                length: 4);
                         }
                         );
                     Mutagen.Bethesda.Binary.EnumBinaryTranslation<Class.SpecializationFlag>.Instance.Write(
                         writer,
                         item.Specialization,
-                        length: 4,
-                        fieldIndex: (int)Class_FieldIndex.Specialization,
-                        errorMask: errorMask);
+                        length: 4);
                     Mutagen.Bethesda.Binary.ListBinaryTranslation<ActorValue>.Instance.Write(
                         writer: writer,
                         items: item.SecondaryAttributes,
-                        fieldIndex: (int)Class_FieldIndex.SecondaryAttributes,
-                        errorMask: errorMask,
-                        transl: (MutagenWriter subWriter, ActorValue subItem, ErrorMaskBuilder listErrorMask) =>
+                        transl: (MutagenWriter subWriter, ActorValue subItem) =>
                         {
                             Mutagen.Bethesda.Binary.EnumBinaryTranslation<ActorValue>.Instance.Write(
                                 subWriter,
                                 subItem,
-                                length: 4,
-                                errorMask: listErrorMask);
+                                length: 4);
                         }
                         );
                     Mutagen.Bethesda.Binary.EnumBinaryTranslation<ClassFlag>.Instance.Write(
                         writer,
                         item.Flags,
-                        length: 4,
-                        fieldIndex: (int)Class_FieldIndex.Flags,
-                        errorMask: errorMask);
+                        length: 4);
                     Mutagen.Bethesda.Binary.EnumBinaryTranslation<ClassService>.Instance.Write(
                         writer,
                         item.ClassServices,
-                        length: 4,
-                        fieldIndex: (int)Class_FieldIndex.ClassServices,
-                        errorMask: errorMask);
+                        length: 4);
                     if (!item.DATADataTypeState.HasFlag(Class.DATADataType.Break0))
                     {
                         LoquiBinaryTranslation<ClassTraining>.Instance.Write(

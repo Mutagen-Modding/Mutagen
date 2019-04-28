@@ -541,32 +541,16 @@ namespace Mutagen.Bethesda.Oblivion
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
                 frame: frame,
                 masterReferences: masterReferences,
-                item: item.Item_Property,
-                fieldIndex: (int)ContainerItem_FieldIndex.Item,
-                errorMask: errorMask);
-            try
+                item: item.Item_Property);
+            if (Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
+                frame: frame,
+                item: out UInt32 CountParse))
             {
-                errorMask?.PushIndex((int)ContainerItem_FieldIndex.Count);
-                if (Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
-                    frame: frame,
-                    item: out UInt32 CountParse,
-                    errorMask: errorMask))
-                {
-                    item.Count = CountParse;
-                }
-                else
-                {
-                    item.Count = default(UInt32);
-                }
+                item.Count = CountParse;
             }
-            catch (Exception ex)
-            when (errorMask != null)
+            else
             {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
+                item.Count = default(UInt32);
             }
         }
 
@@ -1281,14 +1265,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Item_Property,
-                fieldIndex: (int)ContainerItem_FieldIndex.Item,
-                errorMask: errorMask,
                 masterReferences: masterReferences);
             Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Count,
-                fieldIndex: (int)ContainerItem_FieldIndex.Count,
-                errorMask: errorMask);
+                item: item.Count);
         }
 
         #endregion

@@ -537,32 +537,16 @@ namespace Mutagen.Bethesda.Oblivion
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
                 frame: frame,
                 masterReferences: masterReferences,
-                item: item.Weather_Property,
-                fieldIndex: (int)WeatherChance_FieldIndex.Weather,
-                errorMask: errorMask);
-            try
+                item: item.Weather_Property);
+            if (Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
+                frame: frame,
+                item: out Int32 ChanceParse))
             {
-                errorMask?.PushIndex((int)WeatherChance_FieldIndex.Chance);
-                if (Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
-                    frame: frame,
-                    item: out Int32 ChanceParse,
-                    errorMask: errorMask))
-                {
-                    item.Chance = ChanceParse;
-                }
-                else
-                {
-                    item.Chance = default(Int32);
-                }
+                item.Chance = ChanceParse;
             }
-            catch (Exception ex)
-            when (errorMask != null)
+            else
             {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
+                item.Chance = default(Int32);
             }
         }
 
@@ -1269,14 +1253,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Weather_Property,
-                fieldIndex: (int)WeatherChance_FieldIndex.Weather,
-                errorMask: errorMask,
                 masterReferences: masterReferences);
             Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Chance,
-                fieldIndex: (int)WeatherChance_FieldIndex.Chance,
-                errorMask: errorMask);
+                item: item.Chance);
         }
 
         #endregion

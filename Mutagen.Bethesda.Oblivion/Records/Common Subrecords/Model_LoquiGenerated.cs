@@ -578,88 +578,46 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)Model_FieldIndex.File) return TryGet<int?>.Failure;
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    try
+                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        parseWhole: true,
+                        item: out String FileParse))
                     {
-                        errorMask?.PushIndex((int)Model_FieldIndex.File);
-                        if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
-                            parseWhole: true,
-                            item: out String FileParse,
-                            errorMask: errorMask))
-                        {
-                            item.File = FileParse;
-                        }
-                        else
-                        {
-                            item.File = default(String);
-                        }
+                        item.File = FileParse;
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    else
                     {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
+                        item.File = default(String);
                     }
                     return TryGet<int?>.Succeed((int)Model_FieldIndex.File);
                 }
                 case 0x42444F4D: // MODB
                 {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    try
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        item: out Single BoundRadiusParse))
                     {
-                        errorMask?.PushIndex((int)Model_FieldIndex.BoundRadius);
-                        if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
-                            item: out Single BoundRadiusParse,
-                            errorMask: errorMask))
-                        {
-                            item.BoundRadius = BoundRadiusParse;
-                        }
-                        else
-                        {
-                            item.BoundRadius = default(Single);
-                        }
+                        item.BoundRadius = BoundRadiusParse;
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    else
                     {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
+                        item.BoundRadius = default(Single);
                     }
                     return TryGet<int?>.Succeed((int)Model_FieldIndex.BoundRadius);
                 }
                 case 0x54444F4D: // MODT
                 {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    try
+                    if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        item: out Byte[] HashesParse))
                     {
-                        errorMask?.PushIndex((int)Model_FieldIndex.Hashes);
-                        if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
-                            item: out Byte[] HashesParse,
-                            errorMask: errorMask))
-                        {
-                            item.Hashes = HashesParse;
-                        }
-                        else
-                        {
-                            item.Hashes = default(Byte[]);
-                        }
+                        item.Hashes = HashesParse;
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    else
                     {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
+                        item.Hashes = default(Byte[]);
                     }
                     return TryGet<int?>.Succeed((int)Model_FieldIndex.Hashes);
                 }
@@ -1498,15 +1456,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.File,
-                fieldIndex: (int)Model_FieldIndex.File,
-                errorMask: errorMask,
                 header: recordTypeConverter.ConvertToCustom(Model_Registration.MODL_HEADER),
                 nullable: false);
             Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.BoundRadius,
-                fieldIndex: (int)Model_FieldIndex.BoundRadius,
-                errorMask: errorMask,
                 header: recordTypeConverter.ConvertToCustom(Model_Registration.MODB_HEADER),
                 nullable: false);
             if (item.Hashes_IsSet)
@@ -1514,8 +1468,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.Hashes,
-                    fieldIndex: (int)Model_FieldIndex.Hashes,
-                    errorMask: errorMask,
                     header: recordTypeConverter.ConvertToCustom(Model_Registration.MODT_HEADER),
                     nullable: false);
             }

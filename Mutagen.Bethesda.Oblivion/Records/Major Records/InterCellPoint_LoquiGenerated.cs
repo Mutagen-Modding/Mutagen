@@ -515,53 +515,25 @@ namespace Mutagen.Bethesda.Oblivion
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            try
+            if (Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
+                frame: frame,
+                item: out Int32 PointIDParse))
             {
-                errorMask?.PushIndex((int)InterCellPoint_FieldIndex.PointID);
-                if (Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
-                    frame: frame,
-                    item: out Int32 PointIDParse,
-                    errorMask: errorMask))
-                {
-                    item.PointID = PointIDParse;
-                }
-                else
-                {
-                    item.PointID = default(Int32);
-                }
+                item.PointID = PointIDParse;
             }
-            catch (Exception ex)
-            when (errorMask != null)
+            else
             {
-                errorMask.ReportException(ex);
+                item.PointID = default(Int32);
             }
-            finally
+            if (Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(
+                frame: frame,
+                item: out P3Float PointParse))
             {
-                errorMask?.PopIndex();
+                item.Point = PointParse;
             }
-            try
+            else
             {
-                errorMask?.PushIndex((int)InterCellPoint_FieldIndex.Point);
-                if (Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(
-                    frame: frame,
-                    item: out P3Float PointParse,
-                    errorMask: errorMask))
-                {
-                    item.Point = PointParse;
-                }
-                else
-                {
-                    item.Point = default(P3Float);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
+                item.Point = default(P3Float);
             }
         }
 
@@ -1286,14 +1258,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.PointID,
-                fieldIndex: (int)InterCellPoint_FieldIndex.PointID,
-                errorMask: errorMask);
+                item: item.PointID);
             Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Point,
-                fieldIndex: (int)InterCellPoint_FieldIndex.Point,
-                errorMask: errorMask);
+                item: item.Point);
         }
 
         #endregion

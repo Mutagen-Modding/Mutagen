@@ -613,53 +613,25 @@ namespace Mutagen.Bethesda
                 item: item,
                 masterReferences: masterReferences,
                 errorMask: errorMask);
-            try
+            if (EnumBinaryTranslation<GroupTypeEnum>.Instance.Parse(
+                frame: frame.SpawnWithLength(4),
+                item: out GroupTypeEnum GroupTypeParse))
             {
-                errorMask?.PushIndex((int)Group_FieldIndex.GroupType);
-                if (EnumBinaryTranslation<GroupTypeEnum>.Instance.Parse(
-                    frame: frame.SpawnWithLength(4),
-                    item: out GroupTypeEnum GroupTypeParse,
-                    errorMask: errorMask))
-                {
-                    item.GroupType = GroupTypeParse;
-                }
-                else
-                {
-                    item.GroupType = default(GroupTypeEnum);
-                }
+                item.GroupType = GroupTypeParse;
             }
-            catch (Exception ex)
-            when (errorMask != null)
+            else
             {
-                errorMask.ReportException(ex);
+                item.GroupType = default(GroupTypeEnum);
             }
-            finally
+            if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+                frame: frame.SpawnWithLength(4),
+                item: out Byte[] LastModifiedParse))
             {
-                errorMask?.PopIndex();
+                item.LastModified = LastModifiedParse;
             }
-            try
+            else
             {
-                errorMask?.PushIndex((int)Group_FieldIndex.LastModified);
-                if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
-                    frame: frame.SpawnWithLength(4),
-                    item: out Byte[] LastModifiedParse,
-                    errorMask: errorMask))
-                {
-                    item.LastModified = LastModifiedParse;
-                }
-                else
-                {
-                    item.LastModified = default(Byte[]);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
+                item.LastModified = default(Byte[]);
             }
         }
 
@@ -1630,14 +1602,10 @@ namespace Mutagen.Bethesda.Internals
             Mutagen.Bethesda.Binary.EnumBinaryTranslation<GroupTypeEnum>.Instance.Write(
                 writer,
                 item.GroupType,
-                length: 4,
-                fieldIndex: (int)Group_FieldIndex.GroupType,
-                errorMask: errorMask);
+                length: 4);
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.LastModified,
-                fieldIndex: (int)Group_FieldIndex.LastModified,
-                errorMask: errorMask);
+                item: item.LastModified);
         }
 
         public static void Write_Binary_RecordTypes<T>(

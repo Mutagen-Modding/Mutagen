@@ -649,29 +649,15 @@ namespace Mutagen.Bethesda.Oblivion
                 case 0x41544144: // DATA
                 {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    try
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        item: out Single DataParse))
                     {
-                        errorMask?.PushIndex((int)GameSettingFloat_FieldIndex.Data);
-                        if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
-                            item: out Single DataParse,
-                            errorMask: errorMask))
-                        {
-                            item.Data = DataParse;
-                        }
-                        else
-                        {
-                            item.Data = default(Single);
-                        }
+                        item.Data = DataParse;
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    else
                     {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
+                        item.Data = default(Single);
                     }
                     return TryGet<int?>.Succeed((int)GameSettingFloat_FieldIndex.Data);
                 }
@@ -1459,8 +1445,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.Data,
-                    fieldIndex: (int)GameSettingFloat_FieldIndex.Data,
-                    errorMask: errorMask,
                     header: recordTypeConverter.ConvertToCustom(GameSettingFloat_Registration.DATA_HEADER),
                     nullable: false);
             }

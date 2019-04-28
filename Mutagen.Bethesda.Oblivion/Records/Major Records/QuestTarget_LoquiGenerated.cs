@@ -604,32 +604,16 @@ namespace Mutagen.Bethesda.Oblivion
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
                         frame: dataFrame,
                         masterReferences: masterReferences,
-                        item: item.Target_Property,
-                        fieldIndex: (int)QuestTarget_FieldIndex.Target,
-                        errorMask: errorMask);
-                    try
+                        item: item.Target_Property);
+                    if (EnumBinaryTranslation<QuestTarget.Flag>.Instance.Parse(
+                        frame: dataFrame.SpawnWithLength(4),
+                        item: out QuestTarget.Flag FlagsParse))
                     {
-                        errorMask?.PushIndex((int)QuestTarget_FieldIndex.Flags);
-                        if (EnumBinaryTranslation<QuestTarget.Flag>.Instance.Parse(
-                            frame: dataFrame.SpawnWithLength(4),
-                            item: out QuestTarget.Flag FlagsParse,
-                            errorMask: errorMask))
-                        {
-                            item.Flags = FlagsParse;
-                        }
-                        else
-                        {
-                            item.Flags = default(QuestTarget.Flag);
-                        }
+                        item.Flags = FlagsParse;
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    else
                     {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
+                        item.Flags = default(QuestTarget.Flag);
                     }
                     return TryGet<int?>.Succeed((int)QuestTarget_FieldIndex.Flags);
                 }
@@ -1509,15 +1493,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                         writer: writer,
                         item: item.Target_Property,
-                        fieldIndex: (int)QuestTarget_FieldIndex.Target,
-                        errorMask: errorMask,
                         masterReferences: masterReferences);
                     Mutagen.Bethesda.Binary.EnumBinaryTranslation<QuestTarget.Flag>.Instance.Write(
                         writer,
                         item.Flags,
-                        length: 4,
-                        fieldIndex: (int)QuestTarget_FieldIndex.Flags,
-                        errorMask: errorMask);
+                        length: 4);
                 }
             }
             if (item.Conditions.HasBeenSet)

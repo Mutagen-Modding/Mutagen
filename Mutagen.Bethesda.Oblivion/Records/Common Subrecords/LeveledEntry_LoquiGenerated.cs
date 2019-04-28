@@ -674,109 +674,51 @@ namespace Mutagen.Bethesda.Oblivion
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            try
+            if (Mutagen.Bethesda.Binary.Int16BinaryTranslation.Instance.Parse(
+                frame: frame,
+                item: out Int16 LevelParse))
             {
-                errorMask?.PushIndex((int)LeveledEntry_FieldIndex.Level);
-                if (Mutagen.Bethesda.Binary.Int16BinaryTranslation.Instance.Parse(
-                    frame: frame,
-                    item: out Int16 LevelParse,
-                    errorMask: errorMask))
-                {
-                    item.Level = LevelParse;
-                }
-                else
-                {
-                    item.Level = default(Int16);
-                }
+                item.Level = LevelParse;
             }
-            catch (Exception ex)
-            when (errorMask != null)
+            else
             {
-                errorMask.ReportException(ex);
+                item.Level = default(Int16);
             }
-            finally
+            if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+                frame: frame.SpawnWithLength(2),
+                item: out Byte[] FluffParse))
             {
-                errorMask?.PopIndex();
+                item.Fluff = FluffParse;
             }
-            try
+            else
             {
-                errorMask?.PushIndex((int)LeveledEntry_FieldIndex.Fluff);
-                if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
-                    frame: frame.SpawnWithLength(2),
-                    item: out Byte[] FluffParse,
-                    errorMask: errorMask))
-                {
-                    item.Fluff = FluffParse;
-                }
-                else
-                {
-                    item.Fluff = default(Byte[]);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
+                item.Fluff = default(Byte[]);
             }
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
                 frame: frame,
                 masterReferences: masterReferences,
-                item: item.Reference_Property,
-                fieldIndex: (int)LeveledEntry_FieldIndex.Reference,
-                errorMask: errorMask);
+                item: item.Reference_Property);
             if (frame.Complete) return;
-            try
+            if (Mutagen.Bethesda.Binary.Int16BinaryTranslation.Instance.Parse(
+                frame: frame,
+                item: out Int16 CountParse))
             {
-                errorMask?.PushIndex((int)LeveledEntry_FieldIndex.Count);
-                if (Mutagen.Bethesda.Binary.Int16BinaryTranslation.Instance.Parse(
-                    frame: frame,
-                    item: out Int16 CountParse,
-                    errorMask: errorMask))
-                {
-                    item.Count = CountParse;
-                }
-                else
-                {
-                    item.Count = default(Int16);
-                }
+                item.Count = CountParse;
             }
-            catch (Exception ex)
-            when (errorMask != null)
+            else
             {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
+                item.Count = default(Int16);
             }
             if (frame.Complete) return;
-            try
+            if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+                frame: frame.SpawnWithLength(2),
+                item: out Byte[] Fluff2Parse))
             {
-                errorMask?.PushIndex((int)LeveledEntry_FieldIndex.Fluff2);
-                if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
-                    frame: frame.SpawnWithLength(2),
-                    item: out Byte[] Fluff2Parse,
-                    errorMask: errorMask))
-                {
-                    item.Fluff2 = Fluff2Parse;
-                }
-                else
-                {
-                    item.Fluff2 = default(Byte[]);
-                }
+                item.Fluff2 = Fluff2Parse;
             }
-            catch (Exception ex)
-            when (errorMask != null)
+            else
             {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
+                item.Fluff2 = default(Byte[]);
             }
         }
 
@@ -1816,35 +1758,25 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             Mutagen.Bethesda.Binary.Int16BinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Level,
-                fieldIndex: (int)LeveledEntry_FieldIndex.Level,
-                errorMask: errorMask);
+                item: item.Level);
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Fluff,
-                fieldIndex: (int)LeveledEntry_FieldIndex.Fluff,
-                errorMask: errorMask);
+                item: item.Fluff);
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Reference_Property,
-                fieldIndex: (int)LeveledEntry_FieldIndex.Reference,
-                errorMask: errorMask,
                 masterReferences: masterReferences);
             if (item.Count_IsSet)
             {
                 Mutagen.Bethesda.Binary.Int16BinaryTranslation.Instance.Write(
                     writer: writer,
-                    item: item.Count,
-                    fieldIndex: (int)LeveledEntry_FieldIndex.Count,
-                    errorMask: errorMask);
+                    item: item.Count);
             }
             if (item.Fluff2_IsSet)
             {
                 Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                     writer: writer,
-                    item: item.Fluff2,
-                    fieldIndex: (int)LeveledEntry_FieldIndex.Fluff2,
-                    errorMask: errorMask);
+                    item: item.Fluff2);
             }
         }
 

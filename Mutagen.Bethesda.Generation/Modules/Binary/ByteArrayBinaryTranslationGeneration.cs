@@ -31,8 +31,11 @@ namespace Mutagen.Bethesda.Generation
             {
                 args.Add($"writer: {writerAccessor}");
                 args.Add($"item: {itemAccessor.DirectAccess}");
-                args.Add($"fieldIndex: (int){typeGen.IndexEnumName}");
-                args.Add($"errorMask: {errorMaskAccessor}");
+                if (this.DoErrorMasks)
+                {
+                    args.Add($"fieldIndex: (int){typeGen.IndexEnumName}");
+                    args.Add($"errorMask: {errorMaskAccessor}");
+                }
                 if (data.RecordType.HasValue)
                 {
                     args.Add($"header: recordTypeConverter.ConvertToCustom({objGen.RecordTypeHeaderName(data.RecordType.Value)})");
@@ -65,7 +68,8 @@ namespace Mutagen.Bethesda.Generation
                     MaskAccessor = errorMaskAccessor,
                     ItemAccessor = itemAccessor,
                     IndexAccessor = typeGen.IndexEnumInt,
-                    ExtraArgs = $"frame: {frameAccessor}{(data.HasTrigger ? ".SpawnWithLength(contentLength)" : $".SpawnWithLength({data.Length.Value})")}".Single()
+                    ExtraArgs = $"frame: {frameAccessor}{(data.HasTrigger ? ".SpawnWithLength(contentLength)" : $".SpawnWithLength({data.Length.Value})")}".Single(),
+                    SkipErrorMask = !this.DoErrorMasks
                 });
         }
 
@@ -86,7 +90,10 @@ namespace Mutagen.Bethesda.Generation
                 $"{retAccessor}{this.Namespace}ByteArrayBinaryTranslation.Instance.Parse"))
             {
                 args.Add(nodeAccessor.DirectAccess);
-                args.Add($"errorMask: out {errorMaskAccessor}");
+                if (this.DoErrorMasks)
+                {
+                    args.Add($"errorMask: out {errorMaskAccessor}");
+                }
                 args.Add($"item: out {outItemAccessor.DirectAccess}");
                 if (data.HasTrigger)
                 {

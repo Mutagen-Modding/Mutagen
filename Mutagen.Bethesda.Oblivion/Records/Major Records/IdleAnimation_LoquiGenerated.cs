@@ -796,29 +796,15 @@ namespace Mutagen.Bethesda.Oblivion
                 case 0x4D414E41: // ANAM
                 {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    try
+                    if (EnumBinaryTranslation<IdleAnimation.AnimationGroupSectionEnum>.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        item: out IdleAnimation.AnimationGroupSectionEnum AnimationGroupSectionParse))
                     {
-                        errorMask?.PushIndex((int)IdleAnimation_FieldIndex.AnimationGroupSection);
-                        if (EnumBinaryTranslation<IdleAnimation.AnimationGroupSectionEnum>.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
-                            item: out IdleAnimation.AnimationGroupSectionEnum AnimationGroupSectionParse,
-                            errorMask: errorMask))
-                        {
-                            item.AnimationGroupSection = AnimationGroupSectionParse;
-                        }
-                        else
-                        {
-                            item.AnimationGroupSection = default(IdleAnimation.AnimationGroupSectionEnum);
-                        }
+                        item.AnimationGroupSection = AnimationGroupSectionParse;
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    else
                     {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
+                        item.AnimationGroupSection = default(IdleAnimation.AnimationGroupSectionEnum);
                     }
                     return TryGet<int?>.Succeed((int)IdleAnimation_FieldIndex.AnimationGroupSection);
                 }
@@ -829,9 +815,7 @@ namespace Mutagen.Bethesda.Oblivion
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
                         item: item.RelatedIdleAnimations,
-                        fieldIndex: (int)IdleAnimation_FieldIndex.RelatedIdleAnimations,
                         lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
-                        errorMask: errorMask,
                         transl: FormLinkBinaryTranslation.Instance.Parse);
                     return TryGet<int?>.Succeed((int)IdleAnimation_FieldIndex.RelatedIdleAnimations);
                 }
@@ -2006,8 +1990,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     writer,
                     item.AnimationGroupSection,
                     length: 1,
-                    fieldIndex: (int)IdleAnimation_FieldIndex.AnimationGroupSection,
-                    errorMask: errorMask,
                     header: recordTypeConverter.ConvertToCustom(IdleAnimation_Registration.ANAM_HEADER),
                     nullable: false);
             }
@@ -2016,15 +1998,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDLink<IdleAnimation>>.Instance.Write(
                     writer: writer,
                     items: item.RelatedIdleAnimations,
-                    fieldIndex: (int)IdleAnimation_FieldIndex.RelatedIdleAnimations,
                     recordType: IdleAnimation_Registration.DATA_HEADER,
-                    errorMask: errorMask,
-                    transl: (MutagenWriter subWriter, FormIDLink<IdleAnimation> subItem, ErrorMaskBuilder listErrorMask) =>
+                    transl: (MutagenWriter subWriter, FormIDLink<IdleAnimation> subItem) =>
                     {
                         Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                             writer: subWriter,
                             item: subItem,
-                            errorMask: listErrorMask,
                             masterReferences: masterReferences);
                     }
                     );

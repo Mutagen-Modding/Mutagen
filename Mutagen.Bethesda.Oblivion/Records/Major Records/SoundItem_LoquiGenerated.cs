@@ -590,38 +590,22 @@ namespace Mutagen.Bethesda.Oblivion
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
-                        item: item.Sound_Property,
-                        fieldIndex: (int)SoundItem_FieldIndex.Sound,
-                        errorMask: errorMask);
+                        item: item.Sound_Property);
                     return TryGet<int?>.Succeed((int)SoundItem_FieldIndex.Sound);
                 }
                 case 0x43445343: // CSDC
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)SoundItem_FieldIndex.Chance) return TryGet<int?>.Failure;
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    try
+                    if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        item: out Byte ChanceParse))
                     {
-                        errorMask?.PushIndex((int)SoundItem_FieldIndex.Chance);
-                        if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
-                            item: out Byte ChanceParse,
-                            errorMask: errorMask))
-                        {
-                            item.Chance = ChanceParse;
-                        }
-                        else
-                        {
-                            item.Chance = default(Byte);
-                        }
+                        item.Chance = ChanceParse;
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    else
                     {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
+                        item.Chance = default(Byte);
                     }
                     return TryGet<int?>.Succeed((int)SoundItem_FieldIndex.Chance);
                 }
@@ -1374,8 +1358,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.Sound_Property,
-                    fieldIndex: (int)SoundItem_FieldIndex.Sound,
-                    errorMask: errorMask,
                     header: recordTypeConverter.ConvertToCustom(SoundItem_Registration.CSDI_HEADER),
                     nullable: false,
                     masterReferences: masterReferences);
@@ -1385,8 +1367,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.Chance,
-                    fieldIndex: (int)SoundItem_FieldIndex.Chance,
-                    errorMask: errorMask,
                     header: recordTypeConverter.ConvertToCustom(SoundItem_Registration.CSDC_HEADER),
                     nullable: false);
             }

@@ -731,509 +731,215 @@ namespace Mutagen.Bethesda.Oblivion
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            try
+            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                frame: frame,
+                item: out Single DodgeFatigueModMultParse))
             {
-                errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.DodgeFatigueModMult);
-                if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                    frame: frame,
-                    item: out Single DodgeFatigueModMultParse,
-                    errorMask: errorMask))
-                {
-                    item.DodgeFatigueModMult = DodgeFatigueModMultParse;
-                }
-                else
-                {
-                    item.DodgeFatigueModMult = default(Single);
-                }
+                item.DodgeFatigueModMult = DodgeFatigueModMultParse;
             }
-            catch (Exception ex)
-            when (errorMask != null)
+            else
             {
-                errorMask.ReportException(ex);
+                item.DodgeFatigueModMult = default(Single);
             }
-            finally
+            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                frame: frame,
+                item: out Single DodgeFatigueModBaseParse))
             {
-                errorMask?.PopIndex();
+                item.DodgeFatigueModBase = DodgeFatigueModBaseParse;
             }
-            try
+            else
             {
-                errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.DodgeFatigueModBase);
-                if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                    frame: frame,
-                    item: out Single DodgeFatigueModBaseParse,
-                    errorMask: errorMask))
-                {
-                    item.DodgeFatigueModBase = DodgeFatigueModBaseParse;
-                }
-                else
-                {
-                    item.DodgeFatigueModBase = default(Single);
-                }
+                item.DodgeFatigueModBase = default(Single);
             }
-            catch (Exception ex)
-            when (errorMask != null)
+            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                frame: frame,
+                item: out Single EncumbSpeedModBaseParse))
             {
-                errorMask.ReportException(ex);
+                item.EncumbSpeedModBase = EncumbSpeedModBaseParse;
             }
-            finally
+            else
             {
-                errorMask?.PopIndex();
+                item.EncumbSpeedModBase = default(Single);
             }
-            try
+            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                frame: frame,
+                item: out Single EncumbSpeedModMultParse))
             {
-                errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.EncumbSpeedModBase);
-                if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                    frame: frame,
-                    item: out Single EncumbSpeedModBaseParse,
-                    errorMask: errorMask))
-                {
-                    item.EncumbSpeedModBase = EncumbSpeedModBaseParse;
-                }
-                else
-                {
-                    item.EncumbSpeedModBase = default(Single);
-                }
+                item.EncumbSpeedModMult = EncumbSpeedModMultParse;
             }
-            catch (Exception ex)
-            when (errorMask != null)
+            else
             {
-                errorMask.ReportException(ex);
+                item.EncumbSpeedModMult = default(Single);
             }
-            finally
+            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                frame: frame,
+                item: out Single DodgeWhileUnderAttackMultParse))
             {
-                errorMask?.PopIndex();
+                item.DodgeWhileUnderAttackMult = DodgeWhileUnderAttackMultParse;
             }
-            try
+            else
             {
-                errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.EncumbSpeedModMult);
-                if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                    frame: frame,
-                    item: out Single EncumbSpeedModMultParse,
-                    errorMask: errorMask))
-                {
-                    item.EncumbSpeedModMult = EncumbSpeedModMultParse;
-                }
-                else
-                {
-                    item.EncumbSpeedModMult = default(Single);
-                }
+                item.DodgeWhileUnderAttackMult = default(Single);
             }
-            catch (Exception ex)
-            when (errorMask != null)
+            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                frame: frame,
+                item: out Single DodgeNotUnderAttackMultParse))
             {
-                errorMask.ReportException(ex);
+                item.DodgeNotUnderAttackMult = DodgeNotUnderAttackMultParse;
             }
-            finally
+            else
             {
-                errorMask?.PopIndex();
+                item.DodgeNotUnderAttackMult = default(Single);
             }
-            try
+            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                frame: frame,
+                item: out Single DodgeBackWhileUnderAttackMultParse))
             {
-                errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.DodgeWhileUnderAttackMult);
-                if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                    frame: frame,
-                    item: out Single DodgeWhileUnderAttackMultParse,
-                    errorMask: errorMask))
-                {
-                    item.DodgeWhileUnderAttackMult = DodgeWhileUnderAttackMultParse;
-                }
-                else
-                {
-                    item.DodgeWhileUnderAttackMult = default(Single);
-                }
+                item.DodgeBackWhileUnderAttackMult = DodgeBackWhileUnderAttackMultParse;
             }
-            catch (Exception ex)
-            when (errorMask != null)
+            else
             {
-                errorMask.ReportException(ex);
+                item.DodgeBackWhileUnderAttackMult = default(Single);
             }
-            finally
+            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                frame: frame,
+                item: out Single DodgeBackNotUnderAttackMultParse))
             {
-                errorMask?.PopIndex();
+                item.DodgeBackNotUnderAttackMult = DodgeBackNotUnderAttackMultParse;
             }
-            try
+            else
             {
-                errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.DodgeNotUnderAttackMult);
-                if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                    frame: frame,
-                    item: out Single DodgeNotUnderAttackMultParse,
-                    errorMask: errorMask))
-                {
-                    item.DodgeNotUnderAttackMult = DodgeNotUnderAttackMultParse;
-                }
-                else
-                {
-                    item.DodgeNotUnderAttackMult = default(Single);
-                }
+                item.DodgeBackNotUnderAttackMult = default(Single);
             }
-            catch (Exception ex)
-            when (errorMask != null)
+            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                frame: frame,
+                item: out Single DodgeForwardWhileUnderAttackMultParse))
             {
-                errorMask.ReportException(ex);
+                item.DodgeForwardWhileUnderAttackMult = DodgeForwardWhileUnderAttackMultParse;
             }
-            finally
+            else
             {
-                errorMask?.PopIndex();
+                item.DodgeForwardWhileUnderAttackMult = default(Single);
             }
-            try
+            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                frame: frame,
+                item: out Single DodgeForwardNotUnderAttackMultParse))
             {
-                errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.DodgeBackWhileUnderAttackMult);
-                if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                    frame: frame,
-                    item: out Single DodgeBackWhileUnderAttackMultParse,
-                    errorMask: errorMask))
-                {
-                    item.DodgeBackWhileUnderAttackMult = DodgeBackWhileUnderAttackMultParse;
-                }
-                else
-                {
-                    item.DodgeBackWhileUnderAttackMult = default(Single);
-                }
+                item.DodgeForwardNotUnderAttackMult = DodgeForwardNotUnderAttackMultParse;
             }
-            catch (Exception ex)
-            when (errorMask != null)
+            else
             {
-                errorMask.ReportException(ex);
+                item.DodgeForwardNotUnderAttackMult = default(Single);
             }
-            finally
+            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                frame: frame,
+                item: out Single BlockSkillModifierMultParse))
             {
-                errorMask?.PopIndex();
+                item.BlockSkillModifierMult = BlockSkillModifierMultParse;
             }
-            try
+            else
             {
-                errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.DodgeBackNotUnderAttackMult);
-                if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                    frame: frame,
-                    item: out Single DodgeBackNotUnderAttackMultParse,
-                    errorMask: errorMask))
-                {
-                    item.DodgeBackNotUnderAttackMult = DodgeBackNotUnderAttackMultParse;
-                }
-                else
-                {
-                    item.DodgeBackNotUnderAttackMult = default(Single);
-                }
+                item.BlockSkillModifierMult = default(Single);
             }
-            catch (Exception ex)
-            when (errorMask != null)
+            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                frame: frame,
+                item: out Single BlockSkillModifierBaseParse))
             {
-                errorMask.ReportException(ex);
+                item.BlockSkillModifierBase = BlockSkillModifierBaseParse;
             }
-            finally
+            else
             {
-                errorMask?.PopIndex();
+                item.BlockSkillModifierBase = default(Single);
             }
-            try
+            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                frame: frame,
+                item: out Single BlockWhileUnderAttackMultParse))
             {
-                errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.DodgeForwardWhileUnderAttackMult);
-                if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                    frame: frame,
-                    item: out Single DodgeForwardWhileUnderAttackMultParse,
-                    errorMask: errorMask))
-                {
-                    item.DodgeForwardWhileUnderAttackMult = DodgeForwardWhileUnderAttackMultParse;
-                }
-                else
-                {
-                    item.DodgeForwardWhileUnderAttackMult = default(Single);
-                }
+                item.BlockWhileUnderAttackMult = BlockWhileUnderAttackMultParse;
             }
-            catch (Exception ex)
-            when (errorMask != null)
+            else
             {
-                errorMask.ReportException(ex);
+                item.BlockWhileUnderAttackMult = default(Single);
             }
-            finally
+            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                frame: frame,
+                item: out Single BlockNotUnderAttackMultParse))
             {
-                errorMask?.PopIndex();
+                item.BlockNotUnderAttackMult = BlockNotUnderAttackMultParse;
             }
-            try
+            else
             {
-                errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.DodgeForwardNotUnderAttackMult);
-                if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                    frame: frame,
-                    item: out Single DodgeForwardNotUnderAttackMultParse,
-                    errorMask: errorMask))
-                {
-                    item.DodgeForwardNotUnderAttackMult = DodgeForwardNotUnderAttackMultParse;
-                }
-                else
-                {
-                    item.DodgeForwardNotUnderAttackMult = default(Single);
-                }
+                item.BlockNotUnderAttackMult = default(Single);
             }
-            catch (Exception ex)
-            when (errorMask != null)
+            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                frame: frame,
+                item: out Single AttackSkillModifierMultParse))
             {
-                errorMask.ReportException(ex);
+                item.AttackSkillModifierMult = AttackSkillModifierMultParse;
             }
-            finally
+            else
             {
-                errorMask?.PopIndex();
+                item.AttackSkillModifierMult = default(Single);
             }
-            try
+            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                frame: frame,
+                item: out Single AttackSkillModifierBaseParse))
             {
-                errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.BlockSkillModifierMult);
-                if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                    frame: frame,
-                    item: out Single BlockSkillModifierMultParse,
-                    errorMask: errorMask))
-                {
-                    item.BlockSkillModifierMult = BlockSkillModifierMultParse;
-                }
-                else
-                {
-                    item.BlockSkillModifierMult = default(Single);
-                }
+                item.AttackSkillModifierBase = AttackSkillModifierBaseParse;
             }
-            catch (Exception ex)
-            when (errorMask != null)
+            else
             {
-                errorMask.ReportException(ex);
+                item.AttackSkillModifierBase = default(Single);
             }
-            finally
+            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                frame: frame,
+                item: out Single AttackWhileUnderAttackMultParse))
             {
-                errorMask?.PopIndex();
+                item.AttackWhileUnderAttackMult = AttackWhileUnderAttackMultParse;
             }
-            try
+            else
             {
-                errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.BlockSkillModifierBase);
-                if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                    frame: frame,
-                    item: out Single BlockSkillModifierBaseParse,
-                    errorMask: errorMask))
-                {
-                    item.BlockSkillModifierBase = BlockSkillModifierBaseParse;
-                }
-                else
-                {
-                    item.BlockSkillModifierBase = default(Single);
-                }
+                item.AttackWhileUnderAttackMult = default(Single);
             }
-            catch (Exception ex)
-            when (errorMask != null)
+            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                frame: frame,
+                item: out Single AttackNotUnderAttackMultParse))
             {
-                errorMask.ReportException(ex);
+                item.AttackNotUnderAttackMult = AttackNotUnderAttackMultParse;
             }
-            finally
+            else
             {
-                errorMask?.PopIndex();
+                item.AttackNotUnderAttackMult = default(Single);
             }
-            try
+            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                frame: frame,
+                item: out Single AttackDuringBlockMultParse))
             {
-                errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.BlockWhileUnderAttackMult);
-                if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                    frame: frame,
-                    item: out Single BlockWhileUnderAttackMultParse,
-                    errorMask: errorMask))
-                {
-                    item.BlockWhileUnderAttackMult = BlockWhileUnderAttackMultParse;
-                }
-                else
-                {
-                    item.BlockWhileUnderAttackMult = default(Single);
-                }
+                item.AttackDuringBlockMult = AttackDuringBlockMultParse;
             }
-            catch (Exception ex)
-            when (errorMask != null)
+            else
             {
-                errorMask.ReportException(ex);
+                item.AttackDuringBlockMult = default(Single);
             }
-            finally
+            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                frame: frame,
+                item: out Single PowerAttackFatigueModBaseParse))
             {
-                errorMask?.PopIndex();
+                item.PowerAttackFatigueModBase = PowerAttackFatigueModBaseParse;
             }
-            try
+            else
             {
-                errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.BlockNotUnderAttackMult);
-                if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                    frame: frame,
-                    item: out Single BlockNotUnderAttackMultParse,
-                    errorMask: errorMask))
-                {
-                    item.BlockNotUnderAttackMult = BlockNotUnderAttackMultParse;
-                }
-                else
-                {
-                    item.BlockNotUnderAttackMult = default(Single);
-                }
+                item.PowerAttackFatigueModBase = default(Single);
             }
-            catch (Exception ex)
-            when (errorMask != null)
+            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                frame: frame,
+                item: out Single PowerAttackFatigueModMultParse))
             {
-                errorMask.ReportException(ex);
+                item.PowerAttackFatigueModMult = PowerAttackFatigueModMultParse;
             }
-            finally
+            else
             {
-                errorMask?.PopIndex();
-            }
-            try
-            {
-                errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.AttackSkillModifierMult);
-                if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                    frame: frame,
-                    item: out Single AttackSkillModifierMultParse,
-                    errorMask: errorMask))
-                {
-                    item.AttackSkillModifierMult = AttackSkillModifierMultParse;
-                }
-                else
-                {
-                    item.AttackSkillModifierMult = default(Single);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
-            }
-            try
-            {
-                errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.AttackSkillModifierBase);
-                if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                    frame: frame,
-                    item: out Single AttackSkillModifierBaseParse,
-                    errorMask: errorMask))
-                {
-                    item.AttackSkillModifierBase = AttackSkillModifierBaseParse;
-                }
-                else
-                {
-                    item.AttackSkillModifierBase = default(Single);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
-            }
-            try
-            {
-                errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.AttackWhileUnderAttackMult);
-                if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                    frame: frame,
-                    item: out Single AttackWhileUnderAttackMultParse,
-                    errorMask: errorMask))
-                {
-                    item.AttackWhileUnderAttackMult = AttackWhileUnderAttackMultParse;
-                }
-                else
-                {
-                    item.AttackWhileUnderAttackMult = default(Single);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
-            }
-            try
-            {
-                errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.AttackNotUnderAttackMult);
-                if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                    frame: frame,
-                    item: out Single AttackNotUnderAttackMultParse,
-                    errorMask: errorMask))
-                {
-                    item.AttackNotUnderAttackMult = AttackNotUnderAttackMultParse;
-                }
-                else
-                {
-                    item.AttackNotUnderAttackMult = default(Single);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
-            }
-            try
-            {
-                errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.AttackDuringBlockMult);
-                if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                    frame: frame,
-                    item: out Single AttackDuringBlockMultParse,
-                    errorMask: errorMask))
-                {
-                    item.AttackDuringBlockMult = AttackDuringBlockMultParse;
-                }
-                else
-                {
-                    item.AttackDuringBlockMult = default(Single);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
-            }
-            try
-            {
-                errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.PowerAttackFatigueModBase);
-                if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                    frame: frame,
-                    item: out Single PowerAttackFatigueModBaseParse,
-                    errorMask: errorMask))
-                {
-                    item.PowerAttackFatigueModBase = PowerAttackFatigueModBaseParse;
-                }
-                else
-                {
-                    item.PowerAttackFatigueModBase = default(Single);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
-            }
-            try
-            {
-                errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.PowerAttackFatigueModMult);
-                if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                    frame: frame,
-                    item: out Single PowerAttackFatigueModMultParse,
-                    errorMask: errorMask))
-                {
-                    item.PowerAttackFatigueModMult = PowerAttackFatigueModMultParse;
-                }
-                else
-                {
-                    item.PowerAttackFatigueModMult = default(Single);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
+                item.PowerAttackFatigueModMult = default(Single);
             }
         }
 
@@ -3543,109 +3249,67 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.DodgeFatigueModMult,
-                fieldIndex: (int)CombatStyleAdvanced_FieldIndex.DodgeFatigueModMult,
-                errorMask: errorMask);
+                item: item.DodgeFatigueModMult);
             Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.DodgeFatigueModBase,
-                fieldIndex: (int)CombatStyleAdvanced_FieldIndex.DodgeFatigueModBase,
-                errorMask: errorMask);
+                item: item.DodgeFatigueModBase);
             Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.EncumbSpeedModBase,
-                fieldIndex: (int)CombatStyleAdvanced_FieldIndex.EncumbSpeedModBase,
-                errorMask: errorMask);
+                item: item.EncumbSpeedModBase);
             Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.EncumbSpeedModMult,
-                fieldIndex: (int)CombatStyleAdvanced_FieldIndex.EncumbSpeedModMult,
-                errorMask: errorMask);
+                item: item.EncumbSpeedModMult);
             Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.DodgeWhileUnderAttackMult,
-                fieldIndex: (int)CombatStyleAdvanced_FieldIndex.DodgeWhileUnderAttackMult,
-                errorMask: errorMask);
+                item: item.DodgeWhileUnderAttackMult);
             Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.DodgeNotUnderAttackMult,
-                fieldIndex: (int)CombatStyleAdvanced_FieldIndex.DodgeNotUnderAttackMult,
-                errorMask: errorMask);
+                item: item.DodgeNotUnderAttackMult);
             Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.DodgeBackWhileUnderAttackMult,
-                fieldIndex: (int)CombatStyleAdvanced_FieldIndex.DodgeBackWhileUnderAttackMult,
-                errorMask: errorMask);
+                item: item.DodgeBackWhileUnderAttackMult);
             Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.DodgeBackNotUnderAttackMult,
-                fieldIndex: (int)CombatStyleAdvanced_FieldIndex.DodgeBackNotUnderAttackMult,
-                errorMask: errorMask);
+                item: item.DodgeBackNotUnderAttackMult);
             Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.DodgeForwardWhileUnderAttackMult,
-                fieldIndex: (int)CombatStyleAdvanced_FieldIndex.DodgeForwardWhileUnderAttackMult,
-                errorMask: errorMask);
+                item: item.DodgeForwardWhileUnderAttackMult);
             Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.DodgeForwardNotUnderAttackMult,
-                fieldIndex: (int)CombatStyleAdvanced_FieldIndex.DodgeForwardNotUnderAttackMult,
-                errorMask: errorMask);
+                item: item.DodgeForwardNotUnderAttackMult);
             Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.BlockSkillModifierMult,
-                fieldIndex: (int)CombatStyleAdvanced_FieldIndex.BlockSkillModifierMult,
-                errorMask: errorMask);
+                item: item.BlockSkillModifierMult);
             Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.BlockSkillModifierBase,
-                fieldIndex: (int)CombatStyleAdvanced_FieldIndex.BlockSkillModifierBase,
-                errorMask: errorMask);
+                item: item.BlockSkillModifierBase);
             Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.BlockWhileUnderAttackMult,
-                fieldIndex: (int)CombatStyleAdvanced_FieldIndex.BlockWhileUnderAttackMult,
-                errorMask: errorMask);
+                item: item.BlockWhileUnderAttackMult);
             Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.BlockNotUnderAttackMult,
-                fieldIndex: (int)CombatStyleAdvanced_FieldIndex.BlockNotUnderAttackMult,
-                errorMask: errorMask);
+                item: item.BlockNotUnderAttackMult);
             Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.AttackSkillModifierMult,
-                fieldIndex: (int)CombatStyleAdvanced_FieldIndex.AttackSkillModifierMult,
-                errorMask: errorMask);
+                item: item.AttackSkillModifierMult);
             Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.AttackSkillModifierBase,
-                fieldIndex: (int)CombatStyleAdvanced_FieldIndex.AttackSkillModifierBase,
-                errorMask: errorMask);
+                item: item.AttackSkillModifierBase);
             Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.AttackWhileUnderAttackMult,
-                fieldIndex: (int)CombatStyleAdvanced_FieldIndex.AttackWhileUnderAttackMult,
-                errorMask: errorMask);
+                item: item.AttackWhileUnderAttackMult);
             Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.AttackNotUnderAttackMult,
-                fieldIndex: (int)CombatStyleAdvanced_FieldIndex.AttackNotUnderAttackMult,
-                errorMask: errorMask);
+                item: item.AttackNotUnderAttackMult);
             Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.AttackDuringBlockMult,
-                fieldIndex: (int)CombatStyleAdvanced_FieldIndex.AttackDuringBlockMult,
-                errorMask: errorMask);
+                item: item.AttackDuringBlockMult);
             Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.PowerAttackFatigueModBase,
-                fieldIndex: (int)CombatStyleAdvanced_FieldIndex.PowerAttackFatigueModBase,
-                errorMask: errorMask);
+                item: item.PowerAttackFatigueModBase);
             Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.PowerAttackFatigueModMult,
-                fieldIndex: (int)CombatStyleAdvanced_FieldIndex.PowerAttackFatigueModMult,
-                errorMask: errorMask);
+                item: item.PowerAttackFatigueModMult);
         }
 
         #endregion

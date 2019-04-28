@@ -649,29 +649,15 @@ namespace Mutagen.Bethesda.Oblivion
                 case 0x56544C46: // FLTV
                 {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    try
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        item: out Single DataParse))
                     {
-                        errorMask?.PushIndex((int)GlobalFloat_FieldIndex.Data);
-                        if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
-                            item: out Single DataParse,
-                            errorMask: errorMask))
-                        {
-                            item.Data = DataParse;
-                        }
-                        else
-                        {
-                            item.Data = default(Single);
-                        }
+                        item.Data = DataParse;
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    else
                     {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
+                        item.Data = default(Single);
                     }
                     return TryGet<int?>.Succeed((int)GlobalFloat_FieldIndex.Data);
                 }
@@ -1462,8 +1448,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.Data,
-                    fieldIndex: (int)GlobalFloat_FieldIndex.Data,
-                    errorMask: errorMask,
                     header: recordTypeConverter.ConvertToCustom(GlobalFloat_Registration.FLTV_HEADER),
                     nullable: false);
             }

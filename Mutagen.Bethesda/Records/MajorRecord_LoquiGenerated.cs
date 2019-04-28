@@ -605,54 +605,26 @@ namespace Mutagen.Bethesda
                 item: item,
                 masterReferences: masterReferences,
                 errorMask: errorMask);
-            try
+            if (Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.Parse(
+                frame: frame,
+                masterReferences: masterReferences,
+                item: out FormKey FormKeyParse))
             {
-                errorMask?.PushIndex((int)MajorRecord_FieldIndex.FormKey);
-                if (Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.Parse(
-                    frame: frame,
-                    masterReferences: masterReferences,
-                    item: out FormKey FormKeyParse,
-                    errorMask: errorMask))
-                {
-                    item.FormKey = FormKeyParse;
-                }
-                else
-                {
-                    item.FormKey = default(FormKey);
-                }
+                item.FormKey = FormKeyParse;
             }
-            catch (Exception ex)
-            when (errorMask != null)
+            else
             {
-                errorMask.ReportException(ex);
+                item.FormKey = default(FormKey);
             }
-            finally
+            if (Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
+                frame: frame,
+                item: out UInt32 VersionParse))
             {
-                errorMask?.PopIndex();
+                item.Version = VersionParse;
             }
-            try
+            else
             {
-                errorMask?.PushIndex((int)MajorRecord_FieldIndex.Version);
-                if (Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
-                    frame: frame,
-                    item: out UInt32 VersionParse,
-                    errorMask: errorMask))
-                {
-                    item.Version = VersionParse;
-                }
-                else
-                {
-                    item.Version = default(UInt32);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
+                item.Version = default(UInt32);
             }
         }
 
@@ -671,30 +643,16 @@ namespace Mutagen.Bethesda
                 case 0x44494445: // EDID
                 {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    try
+                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        parseWhole: true,
+                        item: out String EditorIDParse))
                     {
-                        errorMask?.PushIndex((int)MajorRecord_FieldIndex.EditorID);
-                        if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
-                            parseWhole: true,
-                            item: out String EditorIDParse,
-                            errorMask: errorMask))
-                        {
-                            item.EditorID = EditorIDParse;
-                        }
-                        else
-                        {
-                            item.EditorID = default(String);
-                        }
+                        item.EditorID = EditorIDParse;
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    else
                     {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
+                        item.EditorID = default(String);
                     }
                     return TryGet<int?>.Succeed((int)MajorRecord_FieldIndex.EditorID);
                 }
@@ -1641,14 +1599,10 @@ namespace Mutagen.Bethesda.Internals
             Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.FormKey,
-                fieldIndex: (int)MajorRecord_FieldIndex.FormKey,
-                errorMask: errorMask,
                 masterReferences: masterReferences);
             Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Version,
-                fieldIndex: (int)MajorRecord_FieldIndex.Version,
-                errorMask: errorMask);
+                item: item.Version);
         }
 
         public static void Write_Binary_RecordTypes(
@@ -1663,8 +1617,6 @@ namespace Mutagen.Bethesda.Internals
                 Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.EditorID,
-                    fieldIndex: (int)MajorRecord_FieldIndex.EditorID,
-                    errorMask: errorMask,
                     header: recordTypeConverter.ConvertToCustom(MajorRecord_Registration.EDID_HEADER),
                     nullable: false);
             }

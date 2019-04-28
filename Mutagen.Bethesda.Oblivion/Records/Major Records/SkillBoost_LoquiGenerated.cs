@@ -515,53 +515,25 @@ namespace Mutagen.Bethesda.Oblivion
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            try
+            if (EnumBinaryTranslation<ActorValue>.Instance.Parse(
+                frame: frame.SpawnWithLength(1),
+                item: out ActorValue SkillParse))
             {
-                errorMask?.PushIndex((int)SkillBoost_FieldIndex.Skill);
-                if (EnumBinaryTranslation<ActorValue>.Instance.Parse(
-                    frame: frame.SpawnWithLength(1),
-                    item: out ActorValue SkillParse,
-                    errorMask: errorMask))
-                {
-                    item.Skill = SkillParse;
-                }
-                else
-                {
-                    item.Skill = default(ActorValue);
-                }
+                item.Skill = SkillParse;
             }
-            catch (Exception ex)
-            when (errorMask != null)
+            else
             {
-                errorMask.ReportException(ex);
+                item.Skill = default(ActorValue);
             }
-            finally
+            if (Mutagen.Bethesda.Binary.Int8BinaryTranslation.Instance.Parse(
+                frame: frame,
+                item: out SByte BoostParse))
             {
-                errorMask?.PopIndex();
+                item.Boost = BoostParse;
             }
-            try
+            else
             {
-                errorMask?.PushIndex((int)SkillBoost_FieldIndex.Boost);
-                if (Mutagen.Bethesda.Binary.Int8BinaryTranslation.Instance.Parse(
-                    frame: frame,
-                    item: out SByte BoostParse,
-                    errorMask: errorMask))
-                {
-                    item.Boost = BoostParse;
-                }
-                else
-                {
-                    item.Boost = default(SByte);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
+                item.Boost = default(SByte);
             }
         }
 
@@ -1287,14 +1259,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Binary.EnumBinaryTranslation<ActorValue>.Instance.Write(
                 writer,
                 item.Skill,
-                length: 1,
-                fieldIndex: (int)SkillBoost_FieldIndex.Skill,
-                errorMask: errorMask);
+                length: 1);
             Mutagen.Bethesda.Binary.Int8BinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Boost,
-                fieldIndex: (int)SkillBoost_FieldIndex.Boost,
-                errorMask: errorMask);
+                item: item.Boost);
         }
 
         #endregion

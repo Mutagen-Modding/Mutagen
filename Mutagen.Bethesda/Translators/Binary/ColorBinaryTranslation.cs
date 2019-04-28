@@ -19,8 +19,7 @@ namespace Mutagen.Bethesda.Binary
         public bool Parse(
             MutagenFrame frame,
             out Color item,
-            bool extraByte,
-            ErrorMaskBuilder errorMask)
+            bool extraByte)
         {
             if (!extraByte)
             {
@@ -28,16 +27,13 @@ namespace Mutagen.Bethesda.Binary
             }
             return this.Parse(
                 frame,
-                out item,
-                errorMask);
+                out item);
         }
 
         public void ParseInto(
             MutagenFrame frame,
             IHasItem<Color> item,
-            int fieldIndex,
-            bool extraByte,
-            ErrorMaskBuilder errorMask)
+            bool extraByte)
         {
             if (!extraByte)
             {
@@ -45,9 +41,7 @@ namespace Mutagen.Bethesda.Binary
             }
             this.ParseInto(
                 frame: frame,
-                fieldIndex: fieldIndex,
-                item: item,
-                errorMask: errorMask);
+                item: item);
         }
 
         public override Color ParseValue(MutagenFrame reader)
@@ -74,19 +68,15 @@ namespace Mutagen.Bethesda.Binary
             MutagenWriter writer,
             IHasBeenSetItemGetter<Color> item,
             RecordType header,
-            int fieldIndex,
             bool nullable,
-            bool extraByte,
-            ErrorMaskBuilder errorMask)
+            bool extraByte)
         {
             if (!item.HasBeenSet) return;
             this.Write(
                 writer,
                 item.Item,
                 header,
-                fieldIndex,
                 nullable,
-                errorMask,
                 write: GetWriter(extraByte));
         }
 
@@ -94,64 +84,48 @@ namespace Mutagen.Bethesda.Binary
             MutagenWriter writer,
             Color item,
             RecordType header,
-            int fieldIndex,
             bool nullable,
-            bool extraByte,
-            ErrorMaskBuilder errorMask)
+            bool extraByte)
         {
             this.Write(
                 writer,
                 item,
                 header,
-                fieldIndex,
                 nullable,
-                errorMask,
                 write: GetWriter(extraByte));
         }
 
         public void Write<M>(
             MutagenWriter writer,
             IHasBeenSetItemGetter<Color> item,
-            int fieldIndex,
-            bool extraByte,
-            ErrorMaskBuilder errorMask)
+            bool extraByte)
         {
             if (!item.HasBeenSet) return;
             this.Write(
                 writer,
                 item.Item,
-                fieldIndex,
-                errorMask,
                 write: GetWriter(extraByte));
         }
 
         public void Write(
             MutagenWriter writer,
             IHasItemGetter<Color> item,
-            int fieldIndex,
-            bool extraByte,
-            ErrorMaskBuilder errorMask)
+            bool extraByte)
         {
             this.Write(
                 writer,
                 item.Item,
-                fieldIndex,
-                errorMask,
                 write: GetWriter(extraByte));
         }
 
         public void Write(
             MutagenWriter writer,
             Color item,
-            int fieldIndex,
-            bool extraByte,
-            ErrorMaskBuilder errorMask)
+            bool extraByte)
         {
             this.Write(
                 writer,
                 item,
-                fieldIndex,
-                errorMask,
                 write: GetWriter(extraByte));
         }
     }

@@ -600,80 +600,42 @@ namespace Mutagen.Bethesda.Oblivion
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
                 frame: frame,
                 masterReferences: masterReferences,
-                item: item.EnchantEffect_Property,
-                fieldIndex: (int)MagicEffectSubData_FieldIndex.EnchantEffect,
-                errorMask: errorMask);
+                item: item.EnchantEffect_Property);
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
                 frame: frame,
                 masterReferences: masterReferences,
-                item: item.CastingSound_Property,
-                fieldIndex: (int)MagicEffectSubData_FieldIndex.CastingSound,
-                errorMask: errorMask);
+                item: item.CastingSound_Property);
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
                 frame: frame,
                 masterReferences: masterReferences,
-                item: item.BoltSound_Property,
-                fieldIndex: (int)MagicEffectSubData_FieldIndex.BoltSound,
-                errorMask: errorMask);
+                item: item.BoltSound_Property);
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
                 frame: frame,
                 masterReferences: masterReferences,
-                item: item.HitSound_Property,
-                fieldIndex: (int)MagicEffectSubData_FieldIndex.HitSound,
-                errorMask: errorMask);
+                item: item.HitSound_Property);
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
                 frame: frame,
                 masterReferences: masterReferences,
-                item: item.AreaSound_Property,
-                fieldIndex: (int)MagicEffectSubData_FieldIndex.AreaSound,
-                errorMask: errorMask);
-            try
+                item: item.AreaSound_Property);
+            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                frame: frame,
+                item: out Single ConstantEffectEnchantmentFactorParse))
             {
-                errorMask?.PushIndex((int)MagicEffectSubData_FieldIndex.ConstantEffectEnchantmentFactor);
-                if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                    frame: frame,
-                    item: out Single ConstantEffectEnchantmentFactorParse,
-                    errorMask: errorMask))
-                {
-                    item.ConstantEffectEnchantmentFactor = ConstantEffectEnchantmentFactorParse;
-                }
-                else
-                {
-                    item.ConstantEffectEnchantmentFactor = default(Single);
-                }
+                item.ConstantEffectEnchantmentFactor = ConstantEffectEnchantmentFactorParse;
             }
-            catch (Exception ex)
-            when (errorMask != null)
+            else
             {
-                errorMask.ReportException(ex);
+                item.ConstantEffectEnchantmentFactor = default(Single);
             }
-            finally
+            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                frame: frame,
+                item: out Single ConstantEffectBarterFactorParse))
             {
-                errorMask?.PopIndex();
+                item.ConstantEffectBarterFactor = ConstantEffectBarterFactorParse;
             }
-            try
+            else
             {
-                errorMask?.PushIndex((int)MagicEffectSubData_FieldIndex.ConstantEffectBarterFactor);
-                if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                    frame: frame,
-                    item: out Single ConstantEffectBarterFactorParse,
-                    errorMask: errorMask))
-                {
-                    item.ConstantEffectBarterFactor = ConstantEffectBarterFactorParse;
-                }
-                else
-                {
-                    item.ConstantEffectBarterFactor = default(Single);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
+                item.ConstantEffectBarterFactor = default(Single);
             }
         }
 
@@ -1719,43 +1681,29 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.EnchantEffect_Property,
-                fieldIndex: (int)MagicEffectSubData_FieldIndex.EnchantEffect,
-                errorMask: errorMask,
                 masterReferences: masterReferences);
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.CastingSound_Property,
-                fieldIndex: (int)MagicEffectSubData_FieldIndex.CastingSound,
-                errorMask: errorMask,
                 masterReferences: masterReferences);
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.BoltSound_Property,
-                fieldIndex: (int)MagicEffectSubData_FieldIndex.BoltSound,
-                errorMask: errorMask,
                 masterReferences: masterReferences);
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.HitSound_Property,
-                fieldIndex: (int)MagicEffectSubData_FieldIndex.HitSound,
-                errorMask: errorMask,
                 masterReferences: masterReferences);
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.AreaSound_Property,
-                fieldIndex: (int)MagicEffectSubData_FieldIndex.AreaSound,
-                errorMask: errorMask,
                 masterReferences: masterReferences);
             Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.ConstantEffectEnchantmentFactor,
-                fieldIndex: (int)MagicEffectSubData_FieldIndex.ConstantEffectEnchantmentFactor,
-                errorMask: errorMask);
+                item: item.ConstantEffectEnchantmentFactor);
             Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.ConstantEffectBarterFactor,
-                fieldIndex: (int)MagicEffectSubData_FieldIndex.ConstantEffectBarterFactor,
-                errorMask: errorMask);
+                item: item.ConstantEffectBarterFactor);
         }
 
         #endregion

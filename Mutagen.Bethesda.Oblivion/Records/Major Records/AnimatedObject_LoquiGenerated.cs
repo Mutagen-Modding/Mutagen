@@ -693,9 +693,7 @@ namespace Mutagen.Bethesda.Oblivion
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
-                        item: item.IdleAnimation_Property,
-                        fieldIndex: (int)AnimatedObject_FieldIndex.IdleAnimation,
-                        errorMask: errorMask);
+                        item: item.IdleAnimation_Property);
                     return TryGet<int?>.Succeed((int)AnimatedObject_FieldIndex.IdleAnimation);
                 }
                 default:
@@ -1568,8 +1566,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.IdleAnimation_Property,
-                    fieldIndex: (int)AnimatedObject_FieldIndex.IdleAnimation,
-                    errorMask: errorMask,
                     header: recordTypeConverter.ConvertToCustom(AnimatedObject_Registration.DATA_HEADER),
                     nullable: false,
                     masterReferences: masterReferences);

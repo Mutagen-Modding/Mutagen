@@ -541,32 +541,16 @@ namespace Mutagen.Bethesda.Oblivion
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
                 frame: frame,
                 masterReferences: masterReferences,
-                item: item.Sound_Property,
-                fieldIndex: (int)WeatherSound_FieldIndex.Sound,
-                errorMask: errorMask);
-            try
+                item: item.Sound_Property);
+            if (EnumBinaryTranslation<WeatherSound.SoundType>.Instance.Parse(
+                frame: frame.SpawnWithLength(4),
+                item: out WeatherSound.SoundType TypeParse))
             {
-                errorMask?.PushIndex((int)WeatherSound_FieldIndex.Type);
-                if (EnumBinaryTranslation<WeatherSound.SoundType>.Instance.Parse(
-                    frame: frame.SpawnWithLength(4),
-                    item: out WeatherSound.SoundType TypeParse,
-                    errorMask: errorMask))
-                {
-                    item.Type = TypeParse;
-                }
-                else
-                {
-                    item.Type = default(WeatherSound.SoundType);
-                }
+                item.Type = TypeParse;
             }
-            catch (Exception ex)
-            when (errorMask != null)
+            else
             {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
+                item.Type = default(WeatherSound.SoundType);
             }
         }
 
@@ -1281,15 +1265,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Sound_Property,
-                fieldIndex: (int)WeatherSound_FieldIndex.Sound,
-                errorMask: errorMask,
                 masterReferences: masterReferences);
             Mutagen.Bethesda.Binary.EnumBinaryTranslation<WeatherSound.SoundType>.Instance.Write(
                 writer,
                 item.Type,
-                length: 4,
-                fieldIndex: (int)WeatherSound_FieldIndex.Type,
-                errorMask: errorMask);
+                length: 4);
         }
 
         #endregion

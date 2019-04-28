@@ -601,224 +601,98 @@ namespace Mutagen.Bethesda.Oblivion
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            try
+            if (Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
+                frame: frame,
+                extraByte: true,
+                item: out Color AmbientColorParse))
             {
-                errorMask?.PushIndex((int)CellLighting_FieldIndex.AmbientColor);
-                if (Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
-                    frame: frame,
-                    extraByte: true,
-                    item: out Color AmbientColorParse,
-                    errorMask: errorMask))
-                {
-                    item.AmbientColor = AmbientColorParse;
-                }
-                else
-                {
-                    item.AmbientColor = default(Color);
-                }
+                item.AmbientColor = AmbientColorParse;
             }
-            catch (Exception ex)
-            when (errorMask != null)
+            else
             {
-                errorMask.ReportException(ex);
+                item.AmbientColor = default(Color);
             }
-            finally
+            if (Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
+                frame: frame,
+                extraByte: true,
+                item: out Color DirectionalColorParse))
             {
-                errorMask?.PopIndex();
+                item.DirectionalColor = DirectionalColorParse;
             }
-            try
+            else
             {
-                errorMask?.PushIndex((int)CellLighting_FieldIndex.DirectionalColor);
-                if (Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
-                    frame: frame,
-                    extraByte: true,
-                    item: out Color DirectionalColorParse,
-                    errorMask: errorMask))
-                {
-                    item.DirectionalColor = DirectionalColorParse;
-                }
-                else
-                {
-                    item.DirectionalColor = default(Color);
-                }
+                item.DirectionalColor = default(Color);
             }
-            catch (Exception ex)
-            when (errorMask != null)
+            if (Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
+                frame: frame,
+                extraByte: true,
+                item: out Color FogColorParse))
             {
-                errorMask.ReportException(ex);
+                item.FogColor = FogColorParse;
             }
-            finally
+            else
             {
-                errorMask?.PopIndex();
+                item.FogColor = default(Color);
             }
-            try
+            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                frame: frame,
+                item: out Single FogNearParse))
             {
-                errorMask?.PushIndex((int)CellLighting_FieldIndex.FogColor);
-                if (Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
-                    frame: frame,
-                    extraByte: true,
-                    item: out Color FogColorParse,
-                    errorMask: errorMask))
-                {
-                    item.FogColor = FogColorParse;
-                }
-                else
-                {
-                    item.FogColor = default(Color);
-                }
+                item.FogNear = FogNearParse;
             }
-            catch (Exception ex)
-            when (errorMask != null)
+            else
             {
-                errorMask.ReportException(ex);
+                item.FogNear = default(Single);
             }
-            finally
+            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                frame: frame,
+                item: out Single FogFarParse))
             {
-                errorMask?.PopIndex();
+                item.FogFar = FogFarParse;
             }
-            try
+            else
             {
-                errorMask?.PushIndex((int)CellLighting_FieldIndex.FogNear);
-                if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                    frame: frame,
-                    item: out Single FogNearParse,
-                    errorMask: errorMask))
-                {
-                    item.FogNear = FogNearParse;
-                }
-                else
-                {
-                    item.FogNear = default(Single);
-                }
+                item.FogFar = default(Single);
             }
-            catch (Exception ex)
-            when (errorMask != null)
+            if (Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
+                frame: frame,
+                item: out Int32 DirectionalRotationXYParse))
             {
-                errorMask.ReportException(ex);
+                item.DirectionalRotationXY = DirectionalRotationXYParse;
             }
-            finally
+            else
             {
-                errorMask?.PopIndex();
+                item.DirectionalRotationXY = default(Int32);
             }
-            try
+            if (Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
+                frame: frame,
+                item: out Int32 DirectionalRotationZParse))
             {
-                errorMask?.PushIndex((int)CellLighting_FieldIndex.FogFar);
-                if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                    frame: frame,
-                    item: out Single FogFarParse,
-                    errorMask: errorMask))
-                {
-                    item.FogFar = FogFarParse;
-                }
-                else
-                {
-                    item.FogFar = default(Single);
-                }
+                item.DirectionalRotationZ = DirectionalRotationZParse;
             }
-            catch (Exception ex)
-            when (errorMask != null)
+            else
             {
-                errorMask.ReportException(ex);
+                item.DirectionalRotationZ = default(Int32);
             }
-            finally
+            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                frame: frame,
+                item: out Single DirectionalFadeParse))
             {
-                errorMask?.PopIndex();
+                item.DirectionalFade = DirectionalFadeParse;
             }
-            try
+            else
             {
-                errorMask?.PushIndex((int)CellLighting_FieldIndex.DirectionalRotationXY);
-                if (Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
-                    frame: frame,
-                    item: out Int32 DirectionalRotationXYParse,
-                    errorMask: errorMask))
-                {
-                    item.DirectionalRotationXY = DirectionalRotationXYParse;
-                }
-                else
-                {
-                    item.DirectionalRotationXY = default(Int32);
-                }
+                item.DirectionalFade = default(Single);
             }
-            catch (Exception ex)
-            when (errorMask != null)
+            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                frame: frame,
+                item: out Single FogClipDistanceParse))
             {
-                errorMask.ReportException(ex);
+                item.FogClipDistance = FogClipDistanceParse;
             }
-            finally
+            else
             {
-                errorMask?.PopIndex();
-            }
-            try
-            {
-                errorMask?.PushIndex((int)CellLighting_FieldIndex.DirectionalRotationZ);
-                if (Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
-                    frame: frame,
-                    item: out Int32 DirectionalRotationZParse,
-                    errorMask: errorMask))
-                {
-                    item.DirectionalRotationZ = DirectionalRotationZParse;
-                }
-                else
-                {
-                    item.DirectionalRotationZ = default(Int32);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
-            }
-            try
-            {
-                errorMask?.PushIndex((int)CellLighting_FieldIndex.DirectionalFade);
-                if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                    frame: frame,
-                    item: out Single DirectionalFadeParse,
-                    errorMask: errorMask))
-                {
-                    item.DirectionalFade = DirectionalFadeParse;
-                }
-                else
-                {
-                    item.DirectionalFade = default(Single);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
-            }
-            try
-            {
-                errorMask?.PushIndex((int)CellLighting_FieldIndex.FogClipDistance);
-                if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                    frame: frame,
-                    item: out Single FogClipDistanceParse,
-                    errorMask: errorMask))
-                {
-                    item.FogClipDistance = FogClipDistanceParse;
-                }
-                else
-                {
-                    item.FogClipDistance = default(Single);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
+                item.FogClipDistance = default(Single);
             }
         }
 
@@ -2133,51 +2007,33 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.AmbientColor,
-                fieldIndex: (int)CellLighting_FieldIndex.AmbientColor,
-                errorMask: errorMask,
                 extraByte: true);
             Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.DirectionalColor,
-                fieldIndex: (int)CellLighting_FieldIndex.DirectionalColor,
-                errorMask: errorMask,
                 extraByte: true);
             Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.FogColor,
-                fieldIndex: (int)CellLighting_FieldIndex.FogColor,
-                errorMask: errorMask,
                 extraByte: true);
             Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.FogNear,
-                fieldIndex: (int)CellLighting_FieldIndex.FogNear,
-                errorMask: errorMask);
+                item: item.FogNear);
             Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.FogFar,
-                fieldIndex: (int)CellLighting_FieldIndex.FogFar,
-                errorMask: errorMask);
+                item: item.FogFar);
             Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.DirectionalRotationXY,
-                fieldIndex: (int)CellLighting_FieldIndex.DirectionalRotationXY,
-                errorMask: errorMask);
+                item: item.DirectionalRotationXY);
             Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.DirectionalRotationZ,
-                fieldIndex: (int)CellLighting_FieldIndex.DirectionalRotationZ,
-                errorMask: errorMask);
+                item: item.DirectionalRotationZ);
             Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.DirectionalFade,
-                fieldIndex: (int)CellLighting_FieldIndex.DirectionalFade,
-                errorMask: errorMask);
+                item: item.DirectionalFade);
             Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.FogClipDistance,
-                fieldIndex: (int)CellLighting_FieldIndex.FogClipDistance,
-                errorMask: errorMask);
+                item: item.FogClipDistance);
         }
 
         #endregion

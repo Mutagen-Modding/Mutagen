@@ -554,38 +554,20 @@ namespace Mutagen.Bethesda.Oblivion
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
                 frame: frame,
                 masterReferences: masterReferences,
-                item: item.Direct_Property,
-                fieldIndex: (int)LoadScreenLocation_FieldIndex.Direct,
-                errorMask: errorMask);
+                item: item.Direct_Property);
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
                 frame: frame,
                 masterReferences: masterReferences,
-                item: item.Indirect_Property,
-                fieldIndex: (int)LoadScreenLocation_FieldIndex.Indirect,
-                errorMask: errorMask);
-            try
+                item: item.Indirect_Property);
+            if (Mutagen.Bethesda.Binary.P2Int16BinaryTranslation.Instance.Parse(
+                frame: frame,
+                item: out P2Int16 GridPointParse))
             {
-                errorMask?.PushIndex((int)LoadScreenLocation_FieldIndex.GridPoint);
-                if (Mutagen.Bethesda.Binary.P2Int16BinaryTranslation.Instance.Parse(
-                    frame: frame,
-                    item: out P2Int16 GridPointParse,
-                    errorMask: errorMask))
-                {
-                    item.GridPoint = GridPointParse;
-                }
-                else
-                {
-                    item.GridPoint = default(P2Int16);
-                }
+                item.GridPoint = GridPointParse;
             }
-            catch (Exception ex)
-            when (errorMask != null)
+            else
             {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
+                item.GridPoint = default(P2Int16);
             }
         }
 
@@ -1364,20 +1346,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Direct_Property,
-                fieldIndex: (int)LoadScreenLocation_FieldIndex.Direct,
-                errorMask: errorMask,
                 masterReferences: masterReferences);
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Indirect_Property,
-                fieldIndex: (int)LoadScreenLocation_FieldIndex.Indirect,
-                errorMask: errorMask,
                 masterReferences: masterReferences);
             Mutagen.Bethesda.Binary.P2Int16BinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.GridPoint,
-                fieldIndex: (int)LoadScreenLocation_FieldIndex.GridPoint,
-                errorMask: errorMask);
+                item: item.GridPoint);
         }
 
         #endregion

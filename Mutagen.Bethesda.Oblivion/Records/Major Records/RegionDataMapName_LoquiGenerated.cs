@@ -567,30 +567,16 @@ namespace Mutagen.Bethesda.Oblivion
                 case 0x504D4452: // RDMP
                 {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    try
+                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        parseWhole: true,
+                        item: out String MapNameParse))
                     {
-                        errorMask?.PushIndex((int)RegionDataMapName_FieldIndex.MapName);
-                        if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
-                            parseWhole: true,
-                            item: out String MapNameParse,
-                            errorMask: errorMask))
-                        {
-                            item.MapName = MapNameParse;
-                        }
-                        else
-                        {
-                            item.MapName = default(String);
-                        }
+                        item.MapName = MapNameParse;
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    else
                     {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
+                        item.MapName = default(String);
                     }
                     return TryGet<int?>.Succeed((int)RegionDataMapName_FieldIndex.MapName);
                 }
@@ -1313,8 +1299,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.MapName,
-                    fieldIndex: (int)RegionDataMapName_FieldIndex.MapName,
-                    errorMask: errorMask,
                     header: recordTypeConverter.ConvertToCustom(RegionDataMapName_Registration.RDMP_HEADER),
                     nullable: false);
             }

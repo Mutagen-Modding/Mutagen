@@ -23,6 +23,7 @@ namespace Mutagen.Bethesda.Generation
             : base(gen)
         {
             this.ExportWithIGetter = false;
+            this.DoErrorMasks = false;
             this.ShouldGenerateCopyIn = false;
             this.TranslationMaskParameter = false;
             this._typeGenerations[typeof(LoquiType)] = new LoquiBinaryTranslationGeneration(ModuleNickname);

@@ -69,7 +69,8 @@ namespace Mutagen.Bethesda.Generation
                     ItemAccessor = itemAccessor,
                     TranslationMaskAccessor = translationMaskAccessor,
                     IndexAccessor = typeGen.HasIndex ? typeGen.IndexEnumInt : null,
-                    ExtraArgs = $"frame: {frameAccessor}{(data.HasTrigger ? ".SpawnWithLength(contentLength)" : "")}".Single()
+                    ExtraArgs = $"frame: {frameAccessor}{(data.HasTrigger ? ".SpawnWithLength(contentLength)" : "")}".Single(),
+                    SkipErrorMask = !this.DoErrorMasks
                 });
         }
 

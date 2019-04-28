@@ -793,68 +793,38 @@ namespace Mutagen.Bethesda.Oblivion
                         triggeringRecord: DialogTopic_Registration.QSTI_HEADER,
                         masterReferences: masterReferences,
                         item: item.Quests,
-                        fieldIndex: (int)DialogTopic_FieldIndex.Quests,
                         lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
-                        errorMask: errorMask,
                         transl: FormLinkBinaryTranslation.Instance.Parse);
                     return TryGet<int?>.Succeed((int)DialogTopic_FieldIndex.Quests);
                 }
                 case 0x4C4C5546: // FULL
                 {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    try
+                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        parseWhole: true,
+                        item: out String NameParse))
                     {
-                        errorMask?.PushIndex((int)DialogTopic_FieldIndex.Name);
-                        if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
-                            parseWhole: true,
-                            item: out String NameParse,
-                            errorMask: errorMask))
-                        {
-                            item.Name = NameParse;
-                        }
-                        else
-                        {
-                            item.Name = default(String);
-                        }
+                        item.Name = NameParse;
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    else
                     {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
+                        item.Name = default(String);
                     }
                     return TryGet<int?>.Succeed((int)DialogTopic_FieldIndex.Name);
                 }
                 case 0x41544144: // DATA
                 {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    try
+                    if (EnumBinaryTranslation<DialogType>.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        item: out DialogType DialogTypeParse))
                     {
-                        errorMask?.PushIndex((int)DialogTopic_FieldIndex.DialogType);
-                        if (EnumBinaryTranslation<DialogType>.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
-                            item: out DialogType DialogTypeParse,
-                            errorMask: errorMask))
-                        {
-                            item.DialogType = DialogTypeParse;
-                        }
-                        else
-                        {
-                            item.DialogType = default(DialogType);
-                        }
+                        item.DialogType = DialogTypeParse;
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    else
                     {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
+                        item.DialogType = default(DialogType);
                     }
                     return TryGet<int?>.Succeed((int)DialogTopic_FieldIndex.DialogType);
                 }
@@ -2092,14 +2062,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDSetLink<Quest>>.Instance.Write(
                     writer: writer,
                     items: item.Quests,
-                    fieldIndex: (int)DialogTopic_FieldIndex.Quests,
-                    errorMask: errorMask,
-                    transl: (MutagenWriter subWriter, FormIDSetLink<Quest> subItem, ErrorMaskBuilder listErrorMask) =>
+                    transl: (MutagenWriter subWriter, FormIDSetLink<Quest> subItem) =>
                     {
                         Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                             writer: subWriter,
                             item: subItem,
-                            errorMask: listErrorMask,
                             header: recordTypeConverter.ConvertToCustom(DialogTopic_Registration.QSTI_HEADER),
                             nullable: false,
                             masterReferences: masterReferences);
@@ -2111,8 +2078,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.Name,
-                    fieldIndex: (int)DialogTopic_FieldIndex.Name,
-                    errorMask: errorMask,
                     header: recordTypeConverter.ConvertToCustom(DialogTopic_Registration.FULL_HEADER),
                     nullable: false);
             }
@@ -2122,8 +2087,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     writer,
                     item.DialogType,
                     length: 1,
-                    fieldIndex: (int)DialogTopic_FieldIndex.DialogType,
-                    errorMask: errorMask,
                     header: recordTypeConverter.ConvertToCustom(DialogTopic_Registration.DATA_HEADER),
                     nullable: false);
             }

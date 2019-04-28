@@ -555,125 +555,55 @@ namespace Mutagen.Bethesda.Oblivion
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            try
+            if (EnumBinaryTranslation<Month>.Instance.Parse(
+                frame: frame.SpawnWithLength(1),
+                item: out Month MonthParse))
             {
-                errorMask?.PushIndex((int)AIPackageSchedule_FieldIndex.Month);
-                if (EnumBinaryTranslation<Month>.Instance.Parse(
-                    frame: frame.SpawnWithLength(1),
-                    item: out Month MonthParse,
-                    errorMask: errorMask))
-                {
-                    item.Month = MonthParse;
-                }
-                else
-                {
-                    item.Month = default(Month);
-                }
+                item.Month = MonthParse;
             }
-            catch (Exception ex)
-            when (errorMask != null)
+            else
             {
-                errorMask.ReportException(ex);
+                item.Month = default(Month);
             }
-            finally
+            if (EnumBinaryTranslation<Weekday>.Instance.Parse(
+                frame: frame.SpawnWithLength(1),
+                item: out Weekday DayOfWeekParse))
             {
-                errorMask?.PopIndex();
+                item.DayOfWeek = DayOfWeekParse;
             }
-            try
+            else
             {
-                errorMask?.PushIndex((int)AIPackageSchedule_FieldIndex.DayOfWeek);
-                if (EnumBinaryTranslation<Weekday>.Instance.Parse(
-                    frame: frame.SpawnWithLength(1),
-                    item: out Weekday DayOfWeekParse,
-                    errorMask: errorMask))
-                {
-                    item.DayOfWeek = DayOfWeekParse;
-                }
-                else
-                {
-                    item.DayOfWeek = default(Weekday);
-                }
+                item.DayOfWeek = default(Weekday);
             }
-            catch (Exception ex)
-            when (errorMask != null)
+            if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                frame: frame,
+                item: out Byte DayParse))
             {
-                errorMask.ReportException(ex);
+                item.Day = DayParse;
             }
-            finally
+            else
             {
-                errorMask?.PopIndex();
+                item.Day = default(Byte);
             }
-            try
+            if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                frame: frame,
+                item: out Byte TimeParse))
             {
-                errorMask?.PushIndex((int)AIPackageSchedule_FieldIndex.Day);
-                if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                    frame: frame,
-                    item: out Byte DayParse,
-                    errorMask: errorMask))
-                {
-                    item.Day = DayParse;
-                }
-                else
-                {
-                    item.Day = default(Byte);
-                }
+                item.Time = TimeParse;
             }
-            catch (Exception ex)
-            when (errorMask != null)
+            else
             {
-                errorMask.ReportException(ex);
+                item.Time = default(Byte);
             }
-            finally
+            if (Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
+                frame: frame,
+                item: out Int32 DurationParse))
             {
-                errorMask?.PopIndex();
+                item.Duration = DurationParse;
             }
-            try
+            else
             {
-                errorMask?.PushIndex((int)AIPackageSchedule_FieldIndex.Time);
-                if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                    frame: frame,
-                    item: out Byte TimeParse,
-                    errorMask: errorMask))
-                {
-                    item.Time = TimeParse;
-                }
-                else
-                {
-                    item.Time = default(Byte);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
-            }
-            try
-            {
-                errorMask?.PushIndex((int)AIPackageSchedule_FieldIndex.Duration);
-                if (Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
-                    frame: frame,
-                    item: out Int32 DurationParse,
-                    errorMask: errorMask))
-                {
-                    item.Duration = DurationParse;
-                }
-                else
-                {
-                    item.Duration = default(Int32);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
+                item.Duration = default(Int32);
             }
         }
 
@@ -1656,30 +1586,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Binary.EnumBinaryTranslation<Month>.Instance.Write(
                 writer,
                 item.Month,
-                length: 1,
-                fieldIndex: (int)AIPackageSchedule_FieldIndex.Month,
-                errorMask: errorMask);
+                length: 1);
             Mutagen.Bethesda.Binary.EnumBinaryTranslation<Weekday>.Instance.Write(
                 writer,
                 item.DayOfWeek,
-                length: 1,
-                fieldIndex: (int)AIPackageSchedule_FieldIndex.DayOfWeek,
-                errorMask: errorMask);
+                length: 1);
             Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Day,
-                fieldIndex: (int)AIPackageSchedule_FieldIndex.Day,
-                errorMask: errorMask);
+                item: item.Day);
             Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Time,
-                fieldIndex: (int)AIPackageSchedule_FieldIndex.Time,
-                errorMask: errorMask);
+                item: item.Time);
             Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Duration,
-                fieldIndex: (int)AIPackageSchedule_FieldIndex.Duration,
-                errorMask: errorMask);
+                item: item.Duration);
         }
 
         #endregion

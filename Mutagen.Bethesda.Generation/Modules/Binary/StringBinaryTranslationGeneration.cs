@@ -39,11 +39,14 @@ namespace Mutagen.Bethesda.Generation
             {
                 args.Add($"writer: {writerAccessor}");
                 args.Add($"item: {itemAccessor.DirectAccess}");
-                if (typeGen.HasIndex)
+                if (this.DoErrorMasks)
                 {
-                    args.Add($"fieldIndex: (int){typeGen.IndexEnumName}");
+                    if (typeGen.HasIndex)
+                    {
+                        args.Add($"fieldIndex: (int){typeGen.IndexEnumName}");
+                    }
+                    args.Add($"errorMask: {errorMaskAccessor}");
                 }
-                args.Add($"errorMask: {errorMaskAccessor}");
                 if (data.RecordType.HasValue)
                 {
                     args.Add($"header: recordTypeConverter.ConvertToCustom({objGen.RecordTypeHeaderName(data.RecordType.Value)})");
@@ -90,6 +93,7 @@ namespace Mutagen.Bethesda.Generation
                     TranslationMaskAccessor = null,
                     IndexAccessor = typeGen.HasIndex ? typeGen.IndexEnumInt : null,
                     ExtraArgs = extraArgs.ToArray(),
+                    SkipErrorMask = !this.DoErrorMasks
                 });
         }
 
@@ -110,7 +114,10 @@ namespace Mutagen.Bethesda.Generation
                 $"{retAccessor}{this.Namespace}StringBinaryTranslation.Instance.Parse"))
             {
                 args.Add(nodeAccessor.DirectAccess);
-                args.Add($"errorMask: {errorMaskAccessor}");
+                if (this.DoErrorMasks)
+                {
+                    args.Add($"errorMask: {errorMaskAccessor}");
+                }
                 args.Add($"item: out {outItemAccessor.DirectAccess}");
                 args.Add($"parseWhole: {(squashedRepeatedList ? "false" : "true")}");
 

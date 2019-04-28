@@ -68,8 +68,7 @@ namespace Mutagen.Bethesda.Oblivion
                 FormKeyBinaryTranslation.Instance.Write(
                     writer,
                     obj.FormKey,
-                    masterReferences,
-                    errorMask);
+                    masterReferences);
                 writer.Write((int)GroupTypeEnum.TopicChildren);
                 writer.Write(obj.Timestamp);
                 Mutagen.Bethesda.Binary.ListBinaryTranslation<DialogItem>.Instance.Write(

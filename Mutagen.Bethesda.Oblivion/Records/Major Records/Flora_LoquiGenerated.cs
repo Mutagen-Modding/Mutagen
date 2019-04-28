@@ -789,30 +789,16 @@ namespace Mutagen.Bethesda.Oblivion
                 case 0x4C4C5546: // FULL
                 {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    try
+                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        parseWhole: true,
+                        item: out String NameParse))
                     {
-                        errorMask?.PushIndex((int)Flora_FieldIndex.Name);
-                        if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
-                            parseWhole: true,
-                            item: out String NameParse,
-                            errorMask: errorMask))
-                        {
-                            item.Name = NameParse;
-                        }
-                        else
-                        {
-                            item.Name = default(String);
-                        }
+                        item.Name = NameParse;
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    else
                     {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
+                        item.Name = default(String);
                     }
                     return TryGet<int?>.Succeed((int)Flora_FieldIndex.Name);
                 }
@@ -851,9 +837,7 @@ namespace Mutagen.Bethesda.Oblivion
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
-                        item: item.Script_Property,
-                        fieldIndex: (int)Flora_FieldIndex.Script,
-                        errorMask: errorMask);
+                        item: item.Script_Property);
                     return TryGet<int?>.Succeed((int)Flora_FieldIndex.Script);
                 }
                 case 0x47494650: // PFIG
@@ -862,9 +846,7 @@ namespace Mutagen.Bethesda.Oblivion
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
-                        item: item.Ingredient_Property,
-                        fieldIndex: (int)Flora_FieldIndex.Ingredient,
-                        errorMask: errorMask);
+                        item: item.Ingredient_Property);
                     return TryGet<int?>.Succeed((int)Flora_FieldIndex.Ingredient);
                 }
                 case 0x43504650: // PFPC
@@ -875,101 +857,45 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.PFPCDataTypeState = PFPCDataType.Has;
                     }
-                    try
+                    if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Byte SpringParse))
                     {
-                        errorMask?.PushIndex((int)Flora_FieldIndex.Spring);
-                        if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
-                            item: out Byte SpringParse,
-                            errorMask: errorMask))
-                        {
-                            item.Spring = SpringParse;
-                        }
-                        else
-                        {
-                            item.Spring = default(Byte);
-                        }
+                        item.Spring = SpringParse;
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    else
                     {
-                        errorMask.ReportException(ex);
+                        item.Spring = default(Byte);
                     }
-                    finally
+                    if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Byte SummerParse))
                     {
-                        errorMask?.PopIndex();
+                        item.Summer = SummerParse;
                     }
-                    try
+                    else
                     {
-                        errorMask?.PushIndex((int)Flora_FieldIndex.Summer);
-                        if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
-                            item: out Byte SummerParse,
-                            errorMask: errorMask))
-                        {
-                            item.Summer = SummerParse;
-                        }
-                        else
-                        {
-                            item.Summer = default(Byte);
-                        }
+                        item.Summer = default(Byte);
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Byte FallParse))
                     {
-                        errorMask.ReportException(ex);
+                        item.Fall = FallParse;
                     }
-                    finally
+                    else
                     {
-                        errorMask?.PopIndex();
+                        item.Fall = default(Byte);
                     }
-                    try
+                    if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Byte WinterParse))
                     {
-                        errorMask?.PushIndex((int)Flora_FieldIndex.Fall);
-                        if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
-                            item: out Byte FallParse,
-                            errorMask: errorMask))
-                        {
-                            item.Fall = FallParse;
-                        }
-                        else
-                        {
-                            item.Fall = default(Byte);
-                        }
+                        item.Winter = WinterParse;
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    else
                     {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    try
-                    {
-                        errorMask?.PushIndex((int)Flora_FieldIndex.Winter);
-                        if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
-                            item: out Byte WinterParse,
-                            errorMask: errorMask))
-                        {
-                            item.Winter = WinterParse;
-                        }
-                        else
-                        {
-                            item.Winter = default(Byte);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
+                        item.Winter = default(Byte);
                     }
                     return TryGet<int?>.Succeed((int)Flora_FieldIndex.Winter);
                 }
@@ -2343,8 +2269,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.Name,
-                    fieldIndex: (int)Flora_FieldIndex.Name,
-                    errorMask: errorMask,
                     header: recordTypeConverter.ConvertToCustom(Flora_Registration.FULL_HEADER),
                     nullable: false);
             }
@@ -2362,8 +2286,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.Script_Property,
-                    fieldIndex: (int)Flora_FieldIndex.Script,
-                    errorMask: errorMask,
                     header: recordTypeConverter.ConvertToCustom(Flora_Registration.SCRI_HEADER),
                     nullable: false,
                     masterReferences: masterReferences);
@@ -2373,8 +2295,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.Ingredient_Property,
-                    fieldIndex: (int)Flora_FieldIndex.Ingredient,
-                    errorMask: errorMask,
                     header: recordTypeConverter.ConvertToCustom(Flora_Registration.PFIG_HEADER),
                     nullable: false,
                     masterReferences: masterReferences);
@@ -2385,24 +2305,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.Spring,
-                        fieldIndex: (int)Flora_FieldIndex.Spring,
-                        errorMask: errorMask);
+                        item: item.Spring);
                     Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.Summer,
-                        fieldIndex: (int)Flora_FieldIndex.Summer,
-                        errorMask: errorMask);
+                        item: item.Summer);
                     Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.Fall,
-                        fieldIndex: (int)Flora_FieldIndex.Fall,
-                        errorMask: errorMask);
+                        item: item.Fall);
                     Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.Winter,
-                        fieldIndex: (int)Flora_FieldIndex.Winter,
-                        errorMask: errorMask);
+                        item: item.Winter);
                 }
             }
         }

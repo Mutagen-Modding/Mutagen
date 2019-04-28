@@ -580,29 +580,15 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)RegionArea_FieldIndex.EdgeFallOff) return TryGet<int?>.Failure;
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    try
+                    if (Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        item: out UInt32 EdgeFallOffParse))
                     {
-                        errorMask?.PushIndex((int)RegionArea_FieldIndex.EdgeFallOff);
-                        if (Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
-                            item: out UInt32 EdgeFallOffParse,
-                            errorMask: errorMask))
-                        {
-                            item.EdgeFallOff = EdgeFallOffParse;
-                        }
-                        else
-                        {
-                            item.EdgeFallOff = default(UInt32);
-                        }
+                        item.EdgeFallOff = EdgeFallOffParse;
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    else
                     {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
+                        item.EdgeFallOff = default(UInt32);
                     }
                     return TryGet<int?>.Succeed((int)RegionArea_FieldIndex.EdgeFallOff);
                 }
@@ -613,9 +599,7 @@ namespace Mutagen.Bethesda.Oblivion
                     Mutagen.Bethesda.Binary.ListBinaryTranslation<P2Float>.Instance.ParseRepeatedItem(
                         frame: frame.SpawnWithLength(contentLength),
                         item: item.RegionPoints,
-                        fieldIndex: (int)RegionArea_FieldIndex.RegionPoints,
                         lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
-                        errorMask: errorMask,
                         transl: P2FloatBinaryTranslation.Instance.Parse);
                     return TryGet<int?>.Succeed((int)RegionArea_FieldIndex.RegionPoints);
                 }
@@ -1415,8 +1399,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.EdgeFallOff,
-                    fieldIndex: (int)RegionArea_FieldIndex.EdgeFallOff,
-                    errorMask: errorMask,
                     header: recordTypeConverter.ConvertToCustom(RegionArea_Registration.RPLI_HEADER),
                     nullable: false);
             }
@@ -1425,9 +1407,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Mutagen.Bethesda.Binary.ListBinaryTranslation<P2Float>.Instance.Write(
                     writer: writer,
                     items: item.RegionPoints,
-                    fieldIndex: (int)RegionArea_FieldIndex.RegionPoints,
                     recordType: RegionArea_Registration.RPLD_HEADER,
-                    errorMask: errorMask,
                     transl: P2FloatBinaryTranslation.Instance.Write);
             }
         }

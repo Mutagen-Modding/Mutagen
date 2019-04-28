@@ -541,32 +541,16 @@ namespace Mutagen.Bethesda.Oblivion
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
                 frame: frame,
                 masterReferences: masterReferences,
-                item: item.Faction_Property,
-                fieldIndex: (int)Relation_FieldIndex.Faction,
-                errorMask: errorMask);
-            try
+                item: item.Faction_Property);
+            if (Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
+                frame: frame,
+                item: out Int32 ModifierParse))
             {
-                errorMask?.PushIndex((int)Relation_FieldIndex.Modifier);
-                if (Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
-                    frame: frame,
-                    item: out Int32 ModifierParse,
-                    errorMask: errorMask))
-                {
-                    item.Modifier = ModifierParse;
-                }
-                else
-                {
-                    item.Modifier = default(Int32);
-                }
+                item.Modifier = ModifierParse;
             }
-            catch (Exception ex)
-            when (errorMask != null)
+            else
             {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
+                item.Modifier = default(Int32);
             }
         }
 
@@ -1281,14 +1265,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Faction_Property,
-                fieldIndex: (int)Relation_FieldIndex.Faction,
-                errorMask: errorMask,
                 masterReferences: masterReferences);
             Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Modifier,
-                fieldIndex: (int)Relation_FieldIndex.Modifier,
-                errorMask: errorMask);
+                item: item.Modifier);
         }
 
         #endregion

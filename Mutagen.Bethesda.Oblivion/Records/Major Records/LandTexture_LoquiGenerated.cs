@@ -753,30 +753,16 @@ namespace Mutagen.Bethesda.Oblivion
                 case 0x4E4F4349: // ICON
                 {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    try
+                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        parseWhole: true,
+                        item: out String IconParse))
                     {
-                        errorMask?.PushIndex((int)LandTexture_FieldIndex.Icon);
-                        if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
-                            parseWhole: true,
-                            item: out String IconParse,
-                            errorMask: errorMask))
-                        {
-                            item.Icon = IconParse;
-                        }
-                        else
-                        {
-                            item.Icon = default(String);
-                        }
+                        item.Icon = IconParse;
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    else
                     {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
+                        item.Icon = default(String);
                     }
                     return TryGet<int?>.Succeed((int)LandTexture_FieldIndex.Icon);
                 }
@@ -812,29 +798,15 @@ namespace Mutagen.Bethesda.Oblivion
                 case 0x4D414E53: // SNAM
                 {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    try
+                    if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        item: out Byte TextureSpecularExponentParse))
                     {
-                        errorMask?.PushIndex((int)LandTexture_FieldIndex.TextureSpecularExponent);
-                        if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
-                            item: out Byte TextureSpecularExponentParse,
-                            errorMask: errorMask))
-                        {
-                            item.TextureSpecularExponent = TextureSpecularExponentParse;
-                        }
-                        else
-                        {
-                            item.TextureSpecularExponent = default(Byte);
-                        }
+                        item.TextureSpecularExponent = TextureSpecularExponentParse;
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    else
                     {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
+                        item.TextureSpecularExponent = default(Byte);
                     }
                     return TryGet<int?>.Succeed((int)LandTexture_FieldIndex.TextureSpecularExponent);
                 }
@@ -845,9 +817,7 @@ namespace Mutagen.Bethesda.Oblivion
                         triggeringRecord: LandTexture_Registration.GNAM_HEADER,
                         masterReferences: masterReferences,
                         item: item.PotentialGrass,
-                        fieldIndex: (int)LandTexture_FieldIndex.PotentialGrass,
                         lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
-                        errorMask: errorMask,
                         transl: FormLinkBinaryTranslation.Instance.Parse);
                     return TryGet<int?>.Succeed((int)LandTexture_FieldIndex.PotentialGrass);
                 }
@@ -1965,8 +1935,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.Icon,
-                    fieldIndex: (int)LandTexture_FieldIndex.Icon,
-                    errorMask: errorMask,
                     header: recordTypeConverter.ConvertToCustom(LandTexture_Registration.ICON_HEADER),
                     nullable: false);
             }
@@ -1984,8 +1952,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.TextureSpecularExponent,
-                    fieldIndex: (int)LandTexture_FieldIndex.TextureSpecularExponent,
-                    errorMask: errorMask,
                     header: recordTypeConverter.ConvertToCustom(LandTexture_Registration.SNAM_HEADER),
                     nullable: false);
             }
@@ -1994,14 +1960,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDSetLink<Grass>>.Instance.Write(
                     writer: writer,
                     items: item.PotentialGrass,
-                    fieldIndex: (int)LandTexture_FieldIndex.PotentialGrass,
-                    errorMask: errorMask,
-                    transl: (MutagenWriter subWriter, FormIDSetLink<Grass> subItem, ErrorMaskBuilder listErrorMask) =>
+                    transl: (MutagenWriter subWriter, FormIDSetLink<Grass> subItem) =>
                     {
                         Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                             writer: subWriter,
                             item: subItem,
-                            errorMask: listErrorMask,
                             header: recordTypeConverter.ConvertToCustom(LandTexture_Registration.GNAM_HEADER),
                             nullable: false,
                             masterReferences: masterReferences);

@@ -581,33 +581,17 @@ namespace Mutagen.Bethesda.Oblivion
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
                 frame: frame,
                 masterReferences: masterReferences,
-                item: item.Item_Property,
-                fieldIndex: (int)ItemEntry_FieldIndex.Item,
-                errorMask: errorMask);
+                item: item.Item_Property);
             if (frame.Complete) return;
-            try
+            if (Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
+                frame: frame,
+                item: out Int32 CountParse))
             {
-                errorMask?.PushIndex((int)ItemEntry_FieldIndex.Count);
-                if (Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
-                    frame: frame,
-                    item: out Int32 CountParse,
-                    errorMask: errorMask))
-                {
-                    item.Count = CountParse;
-                }
-                else
-                {
-                    item.Count = default(Int32);
-                }
+                item.Count = CountParse;
             }
-            catch (Exception ex)
-            when (errorMask != null)
+            else
             {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
+                item.Count = default(Int32);
             }
         }
 
@@ -1341,16 +1325,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Item_Property,
-                fieldIndex: (int)ItemEntry_FieldIndex.Item,
-                errorMask: errorMask,
                 masterReferences: masterReferences);
             if (item.Count_IsSet)
             {
                 Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Write(
                     writer: writer,
-                    item: item.Count,
-                    fieldIndex: (int)ItemEntry_FieldIndex.Count,
-                    errorMask: errorMask);
+                    item: item.Count);
             }
         }
 

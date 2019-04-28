@@ -789,58 +789,30 @@ namespace Mutagen.Bethesda.Oblivion
                 case 0x444C564C: // LVLD
                 {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    try
+                    if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        item: out Byte ChanceNoneParse))
                     {
-                        errorMask?.PushIndex((int)LeveledCreature_FieldIndex.ChanceNone);
-                        if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
-                            item: out Byte ChanceNoneParse,
-                            errorMask: errorMask))
-                        {
-                            item.ChanceNone = ChanceNoneParse;
-                        }
-                        else
-                        {
-                            item.ChanceNone = default(Byte);
-                        }
+                        item.ChanceNone = ChanceNoneParse;
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    else
                     {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
+                        item.ChanceNone = default(Byte);
                     }
                     return TryGet<int?>.Succeed((int)LeveledCreature_FieldIndex.ChanceNone);
                 }
                 case 0x464C564C: // LVLF
                 {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    try
+                    if (EnumBinaryTranslation<LeveledFlag>.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        item: out LeveledFlag FlagsParse))
                     {
-                        errorMask?.PushIndex((int)LeveledCreature_FieldIndex.Flags);
-                        if (EnumBinaryTranslation<LeveledFlag>.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
-                            item: out LeveledFlag FlagsParse,
-                            errorMask: errorMask))
-                        {
-                            item.Flags = FlagsParse;
-                        }
-                        else
-                        {
-                            item.Flags = default(LeveledFlag);
-                        }
+                        item.Flags = FlagsParse;
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    else
                     {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
+                        item.Flags = default(LeveledFlag);
                     }
                     return TryGet<int?>.Succeed((int)LeveledCreature_FieldIndex.Flags);
                 }
@@ -870,9 +842,7 @@ namespace Mutagen.Bethesda.Oblivion
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
-                        item: item.Script_Property,
-                        fieldIndex: (int)LeveledCreature_FieldIndex.Script,
-                        errorMask: errorMask);
+                        item: item.Script_Property);
                     return TryGet<int?>.Succeed((int)LeveledCreature_FieldIndex.Script);
                 }
                 case 0x4D414E54: // TNAM
@@ -881,9 +851,7 @@ namespace Mutagen.Bethesda.Oblivion
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
-                        item: item.Template_Property,
-                        fieldIndex: (int)LeveledCreature_FieldIndex.Template,
-                        errorMask: errorMask);
+                        item: item.Template_Property);
                     return TryGet<int?>.Succeed((int)LeveledCreature_FieldIndex.Template);
                 }
                 default:
@@ -2045,8 +2013,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.ChanceNone,
-                    fieldIndex: (int)LeveledCreature_FieldIndex.ChanceNone,
-                    errorMask: errorMask,
                     header: recordTypeConverter.ConvertToCustom(LeveledCreature_Registration.LVLD_HEADER),
                     nullable: false);
             }
@@ -2056,8 +2022,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     writer,
                     item.Flags,
                     length: 1,
-                    fieldIndex: (int)LeveledCreature_FieldIndex.Flags,
-                    errorMask: errorMask,
                     header: recordTypeConverter.ConvertToCustom(LeveledCreature_Registration.LVLF_HEADER),
                     nullable: false);
             }
@@ -2083,8 +2047,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.Script_Property,
-                    fieldIndex: (int)LeveledCreature_FieldIndex.Script,
-                    errorMask: errorMask,
                     header: recordTypeConverter.ConvertToCustom(LeveledCreature_Registration.SCRI_HEADER),
                     nullable: false,
                     masterReferences: masterReferences);
@@ -2094,8 +2056,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.Template_Property,
-                    fieldIndex: (int)LeveledCreature_FieldIndex.Template,
-                    errorMask: errorMask,
                     header: recordTypeConverter.ConvertToCustom(LeveledCreature_Registration.TNAM_HEADER),
                     nullable: false,
                     masterReferences: masterReferences);

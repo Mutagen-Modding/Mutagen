@@ -1386,118 +1386,62 @@ namespace Mutagen.Bethesda.Oblivion
                 case 0x4D414E54: // TNAM
                 {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    try
+                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        parseWhole: true,
+                        item: out String TextureParse))
                     {
-                        errorMask?.PushIndex((int)Water_FieldIndex.Texture);
-                        if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
-                            parseWhole: true,
-                            item: out String TextureParse,
-                            errorMask: errorMask))
-                        {
-                            item.Texture = TextureParse;
-                        }
-                        else
-                        {
-                            item.Texture = default(String);
-                        }
+                        item.Texture = TextureParse;
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    else
                     {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
+                        item.Texture = default(String);
                     }
                     return TryGet<int?>.Succeed((int)Water_FieldIndex.Texture);
                 }
                 case 0x4D414E41: // ANAM
                 {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    try
+                    if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        item: out Byte OpacityParse))
                     {
-                        errorMask?.PushIndex((int)Water_FieldIndex.Opacity);
-                        if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
-                            item: out Byte OpacityParse,
-                            errorMask: errorMask))
-                        {
-                            item.Opacity = OpacityParse;
-                        }
-                        else
-                        {
-                            item.Opacity = default(Byte);
-                        }
+                        item.Opacity = OpacityParse;
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    else
                     {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
+                        item.Opacity = default(Byte);
                     }
                     return TryGet<int?>.Succeed((int)Water_FieldIndex.Opacity);
                 }
                 case 0x4D414E46: // FNAM
                 {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    try
+                    if (EnumBinaryTranslation<Water.Flag>.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        item: out Water.Flag FlagsParse))
                     {
-                        errorMask?.PushIndex((int)Water_FieldIndex.Flags);
-                        if (EnumBinaryTranslation<Water.Flag>.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
-                            item: out Water.Flag FlagsParse,
-                            errorMask: errorMask))
-                        {
-                            item.Flags = FlagsParse;
-                        }
-                        else
-                        {
-                            item.Flags = default(Water.Flag);
-                        }
+                        item.Flags = FlagsParse;
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    else
                     {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
+                        item.Flags = default(Water.Flag);
                     }
                     return TryGet<int?>.Succeed((int)Water_FieldIndex.Flags);
                 }
                 case 0x4D414E4D: // MNAM
                 {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    try
+                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        parseWhole: true,
+                        item: out String MaterialIDParse))
                     {
-                        errorMask?.PushIndex((int)Water_FieldIndex.MaterialID);
-                        if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
-                            parseWhole: true,
-                            item: out String MaterialIDParse,
-                            errorMask: errorMask))
-                        {
-                            item.MaterialID = MaterialIDParse;
-                        }
-                        else
-                        {
-                            item.MaterialID = default(String);
-                        }
+                        item.MaterialID = MaterialIDParse;
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    else
                     {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
+                        item.MaterialID = default(String);
                     }
                     return TryGet<int?>.Succeed((int)Water_FieldIndex.MaterialID);
                 }
@@ -1507,9 +1451,7 @@ namespace Mutagen.Bethesda.Oblivion
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
-                        item: item.Sound_Property,
-                        fieldIndex: (int)Water_FieldIndex.Sound,
-                        errorMask: errorMask);
+                        item: item.Sound_Property);
                     return TryGet<int?>.Succeed((int)Water_FieldIndex.Sound);
                 }
                 case 0x41544144: // DATA
@@ -1530,245 +1472,105 @@ namespace Mutagen.Bethesda.Oblivion
                         item.DATADataTypeState |= DATADataType.Break0;
                         return TryGet<int?>.Succeed(null);
                     }
-                    try
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single WindVelocityParse))
                     {
-                        errorMask?.PushIndex((int)Water_FieldIndex.WindVelocity);
-                        if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
-                            item: out Single WindVelocityParse,
-                            errorMask: errorMask))
-                        {
-                            item.WindVelocity = WindVelocityParse;
-                        }
-                        else
-                        {
-                            item.WindVelocity = default(Single);
-                        }
+                        item.WindVelocity = WindVelocityParse;
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    else
                     {
-                        errorMask.ReportException(ex);
+                        item.WindVelocity = default(Single);
                     }
-                    finally
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single WindDirectionParse))
                     {
-                        errorMask?.PopIndex();
+                        item.WindDirection = WindDirectionParse;
                     }
-                    try
+                    else
                     {
-                        errorMask?.PushIndex((int)Water_FieldIndex.WindDirection);
-                        if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
-                            item: out Single WindDirectionParse,
-                            errorMask: errorMask))
-                        {
-                            item.WindDirection = WindDirectionParse;
-                        }
-                        else
-                        {
-                            item.WindDirection = default(Single);
-                        }
+                        item.WindDirection = default(Single);
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single WaveAmplitudeParse))
                     {
-                        errorMask.ReportException(ex);
+                        item.WaveAmplitude = WaveAmplitudeParse;
                     }
-                    finally
+                    else
                     {
-                        errorMask?.PopIndex();
+                        item.WaveAmplitude = default(Single);
                     }
-                    try
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single WaveFrequencyParse))
                     {
-                        errorMask?.PushIndex((int)Water_FieldIndex.WaveAmplitude);
-                        if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
-                            item: out Single WaveAmplitudeParse,
-                            errorMask: errorMask))
-                        {
-                            item.WaveAmplitude = WaveAmplitudeParse;
-                        }
-                        else
-                        {
-                            item.WaveAmplitude = default(Single);
-                        }
+                        item.WaveFrequency = WaveFrequencyParse;
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    else
                     {
-                        errorMask.ReportException(ex);
+                        item.WaveFrequency = default(Single);
                     }
-                    finally
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single SunPowerParse))
                     {
-                        errorMask?.PopIndex();
+                        item.SunPower = SunPowerParse;
                     }
-                    try
+                    else
                     {
-                        errorMask?.PushIndex((int)Water_FieldIndex.WaveFrequency);
-                        if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
-                            item: out Single WaveFrequencyParse,
-                            errorMask: errorMask))
-                        {
-                            item.WaveFrequency = WaveFrequencyParse;
-                        }
-                        else
-                        {
-                            item.WaveFrequency = default(Single);
-                        }
+                        item.SunPower = default(Single);
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single ReflectivityAmountParse))
                     {
-                        errorMask.ReportException(ex);
+                        item.ReflectivityAmount = ReflectivityAmountParse;
                     }
-                    finally
+                    else
                     {
-                        errorMask?.PopIndex();
+                        item.ReflectivityAmount = default(Single);
                     }
-                    try
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single FresnelAmountParse))
                     {
-                        errorMask?.PushIndex((int)Water_FieldIndex.SunPower);
-                        if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
-                            item: out Single SunPowerParse,
-                            errorMask: errorMask))
-                        {
-                            item.SunPower = SunPowerParse;
-                        }
-                        else
-                        {
-                            item.SunPower = default(Single);
-                        }
+                        item.FresnelAmount = FresnelAmountParse;
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    else
                     {
-                        errorMask.ReportException(ex);
+                        item.FresnelAmount = default(Single);
                     }
-                    finally
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single ScrollXSpeedParse))
                     {
-                        errorMask?.PopIndex();
+                        item.ScrollXSpeed = ScrollXSpeedParse;
                     }
-                    try
+                    else
                     {
-                        errorMask?.PushIndex((int)Water_FieldIndex.ReflectivityAmount);
-                        if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
-                            item: out Single ReflectivityAmountParse,
-                            errorMask: errorMask))
-                        {
-                            item.ReflectivityAmount = ReflectivityAmountParse;
-                        }
-                        else
-                        {
-                            item.ReflectivityAmount = default(Single);
-                        }
+                        item.ScrollXSpeed = default(Single);
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single ScrollYSpeedParse))
                     {
-                        errorMask.ReportException(ex);
+                        item.ScrollYSpeed = ScrollYSpeedParse;
                     }
-                    finally
+                    else
                     {
-                        errorMask?.PopIndex();
+                        item.ScrollYSpeed = default(Single);
                     }
-                    try
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single FogDistanceNearPlaneParse))
                     {
-                        errorMask?.PushIndex((int)Water_FieldIndex.FresnelAmount);
-                        if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
-                            item: out Single FresnelAmountParse,
-                            errorMask: errorMask))
-                        {
-                            item.FresnelAmount = FresnelAmountParse;
-                        }
-                        else
-                        {
-                            item.FresnelAmount = default(Single);
-                        }
+                        item.FogDistanceNearPlane = FogDistanceNearPlaneParse;
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    else
                     {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    try
-                    {
-                        errorMask?.PushIndex((int)Water_FieldIndex.ScrollXSpeed);
-                        if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
-                            item: out Single ScrollXSpeedParse,
-                            errorMask: errorMask))
-                        {
-                            item.ScrollXSpeed = ScrollXSpeedParse;
-                        }
-                        else
-                        {
-                            item.ScrollXSpeed = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    try
-                    {
-                        errorMask?.PushIndex((int)Water_FieldIndex.ScrollYSpeed);
-                        if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
-                            item: out Single ScrollYSpeedParse,
-                            errorMask: errorMask))
-                        {
-                            item.ScrollYSpeed = ScrollYSpeedParse;
-                        }
-                        else
-                        {
-                            item.ScrollYSpeed = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    try
-                    {
-                        errorMask?.PushIndex((int)Water_FieldIndex.FogDistanceNearPlane);
-                        if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
-                            item: out Single FogDistanceNearPlaneParse,
-                            errorMask: errorMask))
-                        {
-                            item.FogDistanceNearPlane = FogDistanceNearPlaneParse;
-                        }
-                        else
-                        {
-                            item.FogDistanceNearPlane = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
+                        item.FogDistanceNearPlane = default(Single);
                     }
                     FillBinary_BloodCustomLogic_Custom(
                         frame: dataFrame,
@@ -1780,128 +1582,58 @@ namespace Mutagen.Bethesda.Oblivion
                         item.DATADataTypeState |= DATADataType.Break1;
                         return TryGet<int?>.Succeed((int)Water_FieldIndex.FogDistanceNearPlane);
                     }
-                    try
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single FogDistanceFarPlaneParse))
                     {
-                        errorMask?.PushIndex((int)Water_FieldIndex.FogDistanceFarPlane);
-                        if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
-                            item: out Single FogDistanceFarPlaneParse,
-                            errorMask: errorMask))
-                        {
-                            item.FogDistanceFarPlane = FogDistanceFarPlaneParse;
-                        }
-                        else
-                        {
-                            item.FogDistanceFarPlane = default(Single);
-                        }
+                        item.FogDistanceFarPlane = FogDistanceFarPlaneParse;
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    else
                     {
-                        errorMask.ReportException(ex);
+                        item.FogDistanceFarPlane = default(Single);
                     }
-                    finally
+                    if (Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        extraByte: true,
+                        item: out Color ShallowColorParse))
                     {
-                        errorMask?.PopIndex();
+                        item.ShallowColor = ShallowColorParse;
                     }
-                    try
+                    else
                     {
-                        errorMask?.PushIndex((int)Water_FieldIndex.ShallowColor);
-                        if (Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
-                            extraByte: true,
-                            item: out Color ShallowColorParse,
-                            errorMask: errorMask))
-                        {
-                            item.ShallowColor = ShallowColorParse;
-                        }
-                        else
-                        {
-                            item.ShallowColor = default(Color);
-                        }
+                        item.ShallowColor = default(Color);
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    if (Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        extraByte: true,
+                        item: out Color DeepColorParse))
                     {
-                        errorMask.ReportException(ex);
+                        item.DeepColor = DeepColorParse;
                     }
-                    finally
+                    else
                     {
-                        errorMask?.PopIndex();
+                        item.DeepColor = default(Color);
                     }
-                    try
+                    if (Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        extraByte: true,
+                        item: out Color ReflectionColorParse))
                     {
-                        errorMask?.PushIndex((int)Water_FieldIndex.DeepColor);
-                        if (Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
-                            extraByte: true,
-                            item: out Color DeepColorParse,
-                            errorMask: errorMask))
-                        {
-                            item.DeepColor = DeepColorParse;
-                        }
-                        else
-                        {
-                            item.DeepColor = default(Color);
-                        }
+                        item.ReflectionColor = ReflectionColorParse;
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    else
                     {
-                        errorMask.ReportException(ex);
+                        item.ReflectionColor = default(Color);
                     }
-                    finally
+                    if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Byte TextureBlendParse))
                     {
-                        errorMask?.PopIndex();
+                        item.TextureBlend = TextureBlendParse;
                     }
-                    try
+                    else
                     {
-                        errorMask?.PushIndex((int)Water_FieldIndex.ReflectionColor);
-                        if (Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
-                            extraByte: true,
-                            item: out Color ReflectionColorParse,
-                            errorMask: errorMask))
-                        {
-                            item.ReflectionColor = ReflectionColorParse;
-                        }
-                        else
-                        {
-                            item.ReflectionColor = default(Color);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    try
-                    {
-                        errorMask?.PushIndex((int)Water_FieldIndex.TextureBlend);
-                        if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
-                            item: out Byte TextureBlendParse,
-                            errorMask: errorMask))
-                        {
-                            item.TextureBlend = TextureBlendParse;
-                        }
-                        else
-                        {
-                            item.TextureBlend = default(Byte);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
+                        item.TextureBlend = default(Byte);
                     }
                     dataFrame.SetPosition(dataFrame.Position + 3);
                     FillBinary_OilCustomLogic_Custom(
@@ -1914,149 +1646,65 @@ namespace Mutagen.Bethesda.Oblivion
                         item.DATADataTypeState |= DATADataType.Break2;
                         return TryGet<int?>.Succeed((int)Water_FieldIndex.TextureBlend);
                     }
-                    try
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single RainSimulatorForceParse))
                     {
-                        errorMask?.PushIndex((int)Water_FieldIndex.RainSimulatorForce);
-                        if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
-                            item: out Single RainSimulatorForceParse,
-                            errorMask: errorMask))
-                        {
-                            item.RainSimulatorForce = RainSimulatorForceParse;
-                        }
-                        else
-                        {
-                            item.RainSimulatorForce = default(Single);
-                        }
+                        item.RainSimulatorForce = RainSimulatorForceParse;
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    else
                     {
-                        errorMask.ReportException(ex);
+                        item.RainSimulatorForce = default(Single);
                     }
-                    finally
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single RainSimulatorVelocityParse))
                     {
-                        errorMask?.PopIndex();
+                        item.RainSimulatorVelocity = RainSimulatorVelocityParse;
                     }
-                    try
+                    else
                     {
-                        errorMask?.PushIndex((int)Water_FieldIndex.RainSimulatorVelocity);
-                        if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
-                            item: out Single RainSimulatorVelocityParse,
-                            errorMask: errorMask))
-                        {
-                            item.RainSimulatorVelocity = RainSimulatorVelocityParse;
-                        }
-                        else
-                        {
-                            item.RainSimulatorVelocity = default(Single);
-                        }
+                        item.RainSimulatorVelocity = default(Single);
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single RainSimulatorFalloffParse))
                     {
-                        errorMask.ReportException(ex);
+                        item.RainSimulatorFalloff = RainSimulatorFalloffParse;
                     }
-                    finally
+                    else
                     {
-                        errorMask?.PopIndex();
+                        item.RainSimulatorFalloff = default(Single);
                     }
-                    try
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single RainSimulatorDampnerParse))
                     {
-                        errorMask?.PushIndex((int)Water_FieldIndex.RainSimulatorFalloff);
-                        if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
-                            item: out Single RainSimulatorFalloffParse,
-                            errorMask: errorMask))
-                        {
-                            item.RainSimulatorFalloff = RainSimulatorFalloffParse;
-                        }
-                        else
-                        {
-                            item.RainSimulatorFalloff = default(Single);
-                        }
+                        item.RainSimulatorDampner = RainSimulatorDampnerParse;
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    else
                     {
-                        errorMask.ReportException(ex);
+                        item.RainSimulatorDampner = default(Single);
                     }
-                    finally
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single RainSimulatorStartingSizeParse))
                     {
-                        errorMask?.PopIndex();
+                        item.RainSimulatorStartingSize = RainSimulatorStartingSizeParse;
                     }
-                    try
+                    else
                     {
-                        errorMask?.PushIndex((int)Water_FieldIndex.RainSimulatorDampner);
-                        if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
-                            item: out Single RainSimulatorDampnerParse,
-                            errorMask: errorMask))
-                        {
-                            item.RainSimulatorDampner = RainSimulatorDampnerParse;
-                        }
-                        else
-                        {
-                            item.RainSimulatorDampner = default(Single);
-                        }
+                        item.RainSimulatorStartingSize = default(Single);
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single DisplacementSimulatorForceParse))
                     {
-                        errorMask.ReportException(ex);
+                        item.DisplacementSimulatorForce = DisplacementSimulatorForceParse;
                     }
-                    finally
+                    else
                     {
-                        errorMask?.PopIndex();
-                    }
-                    try
-                    {
-                        errorMask?.PushIndex((int)Water_FieldIndex.RainSimulatorStartingSize);
-                        if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
-                            item: out Single RainSimulatorStartingSizeParse,
-                            errorMask: errorMask))
-                        {
-                            item.RainSimulatorStartingSize = RainSimulatorStartingSizeParse;
-                        }
-                        else
-                        {
-                            item.RainSimulatorStartingSize = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    try
-                    {
-                        errorMask?.PushIndex((int)Water_FieldIndex.DisplacementSimulatorForce);
-                        if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
-                            item: out Single DisplacementSimulatorForceParse,
-                            errorMask: errorMask))
-                        {
-                            item.DisplacementSimulatorForce = DisplacementSimulatorForceParse;
-                        }
-                        else
-                        {
-                            item.DisplacementSimulatorForce = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
+                        item.DisplacementSimulatorForce = default(Single);
                     }
                     FillBinary_OddExtraBytes_Custom(
                         frame: dataFrame,
@@ -2068,125 +1716,55 @@ namespace Mutagen.Bethesda.Oblivion
                         item.DATADataTypeState |= DATADataType.Break3;
                         return TryGet<int?>.Succeed((int)Water_FieldIndex.DisplacementSimulatorForce);
                     }
-                    try
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single DisplacementSimulatorVelocityParse))
                     {
-                        errorMask?.PushIndex((int)Water_FieldIndex.DisplacementSimulatorVelocity);
-                        if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
-                            item: out Single DisplacementSimulatorVelocityParse,
-                            errorMask: errorMask))
-                        {
-                            item.DisplacementSimulatorVelocity = DisplacementSimulatorVelocityParse;
-                        }
-                        else
-                        {
-                            item.DisplacementSimulatorVelocity = default(Single);
-                        }
+                        item.DisplacementSimulatorVelocity = DisplacementSimulatorVelocityParse;
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    else
                     {
-                        errorMask.ReportException(ex);
+                        item.DisplacementSimulatorVelocity = default(Single);
                     }
-                    finally
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single DisplacementSimulatorFalloffParse))
                     {
-                        errorMask?.PopIndex();
+                        item.DisplacementSimulatorFalloff = DisplacementSimulatorFalloffParse;
                     }
-                    try
+                    else
                     {
-                        errorMask?.PushIndex((int)Water_FieldIndex.DisplacementSimulatorFalloff);
-                        if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
-                            item: out Single DisplacementSimulatorFalloffParse,
-                            errorMask: errorMask))
-                        {
-                            item.DisplacementSimulatorFalloff = DisplacementSimulatorFalloffParse;
-                        }
-                        else
-                        {
-                            item.DisplacementSimulatorFalloff = default(Single);
-                        }
+                        item.DisplacementSimulatorFalloff = default(Single);
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single DisplacementSimulatorDampnerParse))
                     {
-                        errorMask.ReportException(ex);
+                        item.DisplacementSimulatorDampner = DisplacementSimulatorDampnerParse;
                     }
-                    finally
+                    else
                     {
-                        errorMask?.PopIndex();
+                        item.DisplacementSimulatorDampner = default(Single);
                     }
-                    try
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single DisplacementSimulatorStartingSizeParse))
                     {
-                        errorMask?.PushIndex((int)Water_FieldIndex.DisplacementSimulatorDampner);
-                        if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
-                            item: out Single DisplacementSimulatorDampnerParse,
-                            errorMask: errorMask))
-                        {
-                            item.DisplacementSimulatorDampner = DisplacementSimulatorDampnerParse;
-                        }
-                        else
-                        {
-                            item.DisplacementSimulatorDampner = default(Single);
-                        }
+                        item.DisplacementSimulatorStartingSize = DisplacementSimulatorStartingSizeParse;
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    else
                     {
-                        errorMask.ReportException(ex);
+                        item.DisplacementSimulatorStartingSize = default(Single);
                     }
-                    finally
+                    if (Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out UInt16 DamageParse))
                     {
-                        errorMask?.PopIndex();
+                        item.Damage = DamageParse;
                     }
-                    try
+                    else
                     {
-                        errorMask?.PushIndex((int)Water_FieldIndex.DisplacementSimulatorStartingSize);
-                        if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
-                            item: out Single DisplacementSimulatorStartingSizeParse,
-                            errorMask: errorMask))
-                        {
-                            item.DisplacementSimulatorStartingSize = DisplacementSimulatorStartingSizeParse;
-                        }
-                        else
-                        {
-                            item.DisplacementSimulatorStartingSize = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    try
-                    {
-                        errorMask?.PushIndex((int)Water_FieldIndex.Damage);
-                        if (Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
-                            item: out UInt16 DamageParse,
-                            errorMask: errorMask))
-                        {
-                            item.Damage = DamageParse;
-                        }
-                        else
-                        {
-                            item.Damage = default(UInt16);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
+                        item.Damage = default(UInt16);
                     }
                     return TryGet<int?>.Succeed((int)Water_FieldIndex.Damage);
                 }
@@ -5674,8 +5252,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.Texture,
-                    fieldIndex: (int)Water_FieldIndex.Texture,
-                    errorMask: errorMask,
                     header: recordTypeConverter.ConvertToCustom(Water_Registration.TNAM_HEADER),
                     nullable: false);
             }
@@ -5684,8 +5260,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.Opacity,
-                    fieldIndex: (int)Water_FieldIndex.Opacity,
-                    errorMask: errorMask,
                     header: recordTypeConverter.ConvertToCustom(Water_Registration.ANAM_HEADER),
                     nullable: false);
             }
@@ -5695,8 +5269,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     writer,
                     item.Flags,
                     length: 1,
-                    fieldIndex: (int)Water_FieldIndex.Flags,
-                    errorMask: errorMask,
                     header: recordTypeConverter.ConvertToCustom(Water_Registration.FNAM_HEADER),
                     nullable: false);
             }
@@ -5705,8 +5277,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.MaterialID,
-                    fieldIndex: (int)Water_FieldIndex.MaterialID,
-                    errorMask: errorMask,
                     header: recordTypeConverter.ConvertToCustom(Water_Registration.MNAM_HEADER),
                     nullable: false);
             }
@@ -5715,8 +5285,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.Sound_Property,
-                    fieldIndex: (int)Water_FieldIndex.Sound,
-                    errorMask: errorMask,
                     header: recordTypeConverter.ConvertToCustom(Water_Registration.SNAM_HEADER),
                     nullable: false,
                     masterReferences: masterReferences);
@@ -5734,54 +5302,34 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                             writer: writer,
-                            item: item.WindVelocity,
-                            fieldIndex: (int)Water_FieldIndex.WindVelocity,
-                            errorMask: errorMask);
+                            item: item.WindVelocity);
                         Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                             writer: writer,
-                            item: item.WindDirection,
-                            fieldIndex: (int)Water_FieldIndex.WindDirection,
-                            errorMask: errorMask);
+                            item: item.WindDirection);
                         Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                             writer: writer,
-                            item: item.WaveAmplitude,
-                            fieldIndex: (int)Water_FieldIndex.WaveAmplitude,
-                            errorMask: errorMask);
+                            item: item.WaveAmplitude);
                         Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                             writer: writer,
-                            item: item.WaveFrequency,
-                            fieldIndex: (int)Water_FieldIndex.WaveFrequency,
-                            errorMask: errorMask);
+                            item: item.WaveFrequency);
                         Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                             writer: writer,
-                            item: item.SunPower,
-                            fieldIndex: (int)Water_FieldIndex.SunPower,
-                            errorMask: errorMask);
+                            item: item.SunPower);
                         Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                             writer: writer,
-                            item: item.ReflectivityAmount,
-                            fieldIndex: (int)Water_FieldIndex.ReflectivityAmount,
-                            errorMask: errorMask);
+                            item: item.ReflectivityAmount);
                         Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                             writer: writer,
-                            item: item.FresnelAmount,
-                            fieldIndex: (int)Water_FieldIndex.FresnelAmount,
-                            errorMask: errorMask);
+                            item: item.FresnelAmount);
                         Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                             writer: writer,
-                            item: item.ScrollXSpeed,
-                            fieldIndex: (int)Water_FieldIndex.ScrollXSpeed,
-                            errorMask: errorMask);
+                            item: item.ScrollXSpeed);
                         Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                             writer: writer,
-                            item: item.ScrollYSpeed,
-                            fieldIndex: (int)Water_FieldIndex.ScrollYSpeed,
-                            errorMask: errorMask);
+                            item: item.ScrollYSpeed);
                         Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                             writer: writer,
-                            item: item.FogDistanceNearPlane,
-                            fieldIndex: (int)Water_FieldIndex.FogDistanceNearPlane,
-                            errorMask: errorMask);
+                            item: item.FogDistanceNearPlane);
                         Water.WriteBinary_BloodCustomLogic(
                             writer: writer,
                             item: item,
@@ -5791,32 +5339,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         {
                             Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                                 writer: writer,
-                                item: item.FogDistanceFarPlane,
-                                fieldIndex: (int)Water_FieldIndex.FogDistanceFarPlane,
-                                errorMask: errorMask);
+                                item: item.FogDistanceFarPlane);
                             Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Write(
                                 writer: writer,
                                 item: item.ShallowColor,
-                                fieldIndex: (int)Water_FieldIndex.ShallowColor,
-                                errorMask: errorMask,
                                 extraByte: true);
                             Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Write(
                                 writer: writer,
                                 item: item.DeepColor,
-                                fieldIndex: (int)Water_FieldIndex.DeepColor,
-                                errorMask: errorMask,
                                 extraByte: true);
                             Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Write(
                                 writer: writer,
                                 item: item.ReflectionColor,
-                                fieldIndex: (int)Water_FieldIndex.ReflectionColor,
-                                errorMask: errorMask,
                                 extraByte: true);
                             Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
                                 writer: writer,
-                                item: item.TextureBlend,
-                                fieldIndex: (int)Water_FieldIndex.TextureBlend,
-                                errorMask: errorMask);
+                                item: item.TextureBlend);
                             writer.WriteZeros(3);
                             Water.WriteBinary_OilCustomLogic(
                                 writer: writer,
@@ -5827,34 +5365,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             {
                                 Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                                     writer: writer,
-                                    item: item.RainSimulatorForce,
-                                    fieldIndex: (int)Water_FieldIndex.RainSimulatorForce,
-                                    errorMask: errorMask);
+                                    item: item.RainSimulatorForce);
                                 Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                                     writer: writer,
-                                    item: item.RainSimulatorVelocity,
-                                    fieldIndex: (int)Water_FieldIndex.RainSimulatorVelocity,
-                                    errorMask: errorMask);
+                                    item: item.RainSimulatorVelocity);
                                 Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                                     writer: writer,
-                                    item: item.RainSimulatorFalloff,
-                                    fieldIndex: (int)Water_FieldIndex.RainSimulatorFalloff,
-                                    errorMask: errorMask);
+                                    item: item.RainSimulatorFalloff);
                                 Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                                     writer: writer,
-                                    item: item.RainSimulatorDampner,
-                                    fieldIndex: (int)Water_FieldIndex.RainSimulatorDampner,
-                                    errorMask: errorMask);
+                                    item: item.RainSimulatorDampner);
                                 Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                                     writer: writer,
-                                    item: item.RainSimulatorStartingSize,
-                                    fieldIndex: (int)Water_FieldIndex.RainSimulatorStartingSize,
-                                    errorMask: errorMask);
+                                    item: item.RainSimulatorStartingSize);
                                 Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                                     writer: writer,
-                                    item: item.DisplacementSimulatorForce,
-                                    fieldIndex: (int)Water_FieldIndex.DisplacementSimulatorForce,
-                                    errorMask: errorMask);
+                                    item: item.DisplacementSimulatorForce);
                                 Water.WriteBinary_OddExtraBytes(
                                     writer: writer,
                                     item: item,
@@ -5864,29 +5390,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 {
                                     Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                                         writer: writer,
-                                        item: item.DisplacementSimulatorVelocity,
-                                        fieldIndex: (int)Water_FieldIndex.DisplacementSimulatorVelocity,
-                                        errorMask: errorMask);
+                                        item: item.DisplacementSimulatorVelocity);
                                     Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                                         writer: writer,
-                                        item: item.DisplacementSimulatorFalloff,
-                                        fieldIndex: (int)Water_FieldIndex.DisplacementSimulatorFalloff,
-                                        errorMask: errorMask);
+                                        item: item.DisplacementSimulatorFalloff);
                                     Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                                         writer: writer,
-                                        item: item.DisplacementSimulatorDampner,
-                                        fieldIndex: (int)Water_FieldIndex.DisplacementSimulatorDampner,
-                                        errorMask: errorMask);
+                                        item: item.DisplacementSimulatorDampner);
                                     Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                                         writer: writer,
-                                        item: item.DisplacementSimulatorStartingSize,
-                                        fieldIndex: (int)Water_FieldIndex.DisplacementSimulatorStartingSize,
-                                        errorMask: errorMask);
+                                        item: item.DisplacementSimulatorStartingSize);
                                     Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Write(
                                         writer: writer,
-                                        item: item.Damage,
-                                        fieldIndex: (int)Water_FieldIndex.Damage,
-                                        errorMask: errorMask);
+                                        item: item.Damage);
                                 }
                             }
                         }

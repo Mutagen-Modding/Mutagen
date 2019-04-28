@@ -21,51 +21,34 @@ namespace Mutagen.Bethesda.Binary
 
         public void ParseInto(
             MutagenFrame frame,
-            int fieldIndex,
-            IHasItem<T> item,
-            ErrorMaskBuilder errorMask)
+            IHasItem<T> item)
         {
-            using (errorMask?.PushIndex(fieldIndex))
+            if (Parse(
+                frame,
+                out T subItem))
             {
-                try
-                {
-                    if (Parse(
-                        frame,
-                        out T subItem,
-                        errorMask))
-                    {
-                        item.Item = subItem;
-                    }
-                    else
-                    {
-                        item.Unset();
-                    }
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
+                item.Item = subItem;
+            }
+            else
+            {
+                item.Unset();
             }
         }
 
-        public T Parse(MutagenFrame frame, ErrorMaskBuilder errorMask)
+        public T Parse(MutagenFrame frame)
         {
-            if (Parse(frame, out var item, errorMask))
+            if (Parse(frame, out var item))
             {
                 return item;
             }
             return default(T);
         }
 
-        public bool Parse(MutagenFrame frame, out T item, ErrorMaskBuilder errorMask)
+        public bool Parse(MutagenFrame frame, out T item)
         {
             if (!frame.TryCheckUpcomingRead(this.ExpectedLength, out var ex))
             {
-                frame.Position = frame.FinalLocation;
-                errorMask.ReportExceptionOrThrow(ex);
-                item = default(T);
-                return false;
+                throw ex;
             }
             item = ParseValue(frame);
             return true;
@@ -73,56 +56,39 @@ namespace Mutagen.Bethesda.Binary
 
         public void ParseInto(
             MutagenFrame frame,
-            int fieldIndex,
             long length,
-            IHasItem<T> item,
-            ErrorMaskBuilder errorMask)
+            IHasItem<T> item)
         {
-            using (errorMask?.PushIndex(fieldIndex))
+            if (Parse(
+                frame,
+                length,
+                out T subItem))
             {
-                try
-                {
-                    if (Parse(
-                        frame,
-                        length,
-                        out T subItem,
-                        errorMask))
-                    {
-                        item.Item = subItem;
-                    }
-                    else
-                    {
-                        item.Unset();
-                    }
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
+                item.Item = subItem;
+            }
+            else
+            {
+                item.Unset();
             }
         }
 
-        public bool Parse(MutagenFrame frame, long length, out T item, ErrorMaskBuilder errorMask)
+        public bool Parse(MutagenFrame frame, long length, out T item)
         {
             if (length != this.ExpectedLength)
             {
-                errorMask.ReportExceptionOrThrow(
-                    new ArgumentException($"Expected length was {this.ExpectedLength}, but was passed {length}."));
-                item = default(T);
-                return false;
+                throw new ArgumentException($"Expected length was {this.ExpectedLength}, but was passed {length}.");
             }
-            return Parse(frame, out item, errorMask);
+            return Parse(frame, out item);
         }
 
         public abstract void WriteValue(MutagenWriter writer, T item);
 
-        public void Write(MutagenWriter writer, T? item, ErrorMaskBuilder errorMask)
+        public void Write(MutagenWriter writer, T? item)
         {
             WriteValue(writer, item);
         }
 
-        public void Write(MutagenWriter writer, T item, ErrorMaskBuilder errorMask)
+        public void Write(MutagenWriter writer, T item)
         {
             WriteValue(writer, item);
         }
@@ -140,13 +106,11 @@ namespace Mutagen.Bethesda.Binary
             T? item,
             RecordType header,
             bool nullable,
-            ErrorMaskBuilder errorMask,
             Action<MutagenWriter, T?> write = null)
         {
             if (item == null)
             {
-                errorMask.ReportExceptionOrThrow(
-                    new ArgumentException("Non optional item was null."));
+                throw new ArgumentException("Non optional item was null.");
             }
             write = write ?? this.WriteValue;
             using (HeaderExport.ExportHeader(writer, header, ObjectType.Subrecord))
@@ -158,176 +122,102 @@ namespace Mutagen.Bethesda.Binary
         public void Write(
             MutagenWriter writer,
             T? item,
-            RecordType header,
-            int fieldIndex,
-            bool nullable,
-            ErrorMaskBuilder errorMask,
             Action<MutagenWriter, T?> write = null)
         {
-            using (errorMask?.PushIndex(fieldIndex))
-            {
-                try
-                {
-                    this.Write(
-                        writer,
-                        item,
-                        header,
-                        nullable,
-                        errorMask,
-                        write: write);
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-            }
+            write = write ?? WriteValue;
+            write(writer, item);
         }
 
         public void Write(
             MutagenWriter writer,
-            T? item,
-            int fieldIndex,
-            ErrorMaskBuilder errorMask,
-            Action<MutagenWriter, T?> write = null)
-        {
-            using (errorMask?.PushIndex(fieldIndex))
-            {
-                try
-                {
-                    write = write ?? WriteValue;
-                    write(writer, item);
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-            }
-        }
-
-        public void Write(
-            MutagenWriter writer,
-            IHasBeenSetItemGetter<T> item,
-            int fieldIndex,
-            ErrorMaskBuilder errorMask)
+            IHasBeenSetItemGetter<T> item)
         {
             if (!item.HasBeenSet) return;
             this.Write(
                 writer,
-                item.Item,
-                fieldIndex,
-                errorMask);
+                item.Item);
         }
 
         public void Write(
             MutagenWriter writer,
             IHasBeenSetItemGetter<T> item,
             RecordType header,
-            int fieldIndex,
-            bool nullable,
-            ErrorMaskBuilder errorMask)
+            bool nullable)
         {
             if (!item.HasBeenSet) return;
             this.Write(
                 writer,
                 item.Item,
                 header,
-                fieldIndex,
-                nullable,
-                errorMask);
+                nullable);
         }
 
         public void Write(
             MutagenWriter writer,
             IHasBeenSetItemGetter<T?> item,
             RecordType header,
-            int fieldIndex,
-            bool nullable,
-            ErrorMaskBuilder errorMask)
+            bool nullable)
         {
             if (!item.HasBeenSet) return;
             this.Write(
                 writer,
                 item.Item,
                 header,
-                fieldIndex,
-                nullable,
-                errorMask);
+                nullable);
         }
 
         public void Write(
             MutagenWriter writer,
-            IHasBeenSetItemGetter<T?> item,
-            int fieldIndex,
-            ErrorMaskBuilder errorMask)
+            IHasBeenSetItemGetter<T?> item)
         {
             if (!item.HasBeenSet) return;
             this.Write(
                 writer,
-                item.Item,
-                fieldIndex,
-                errorMask);
+                item.Item);
         }
 
         public void Write(
             MutagenWriter writer,
-            IHasItemGetter<T> item,
-            int fieldIndex,
-            ErrorMaskBuilder errorMask)
+            IHasItemGetter<T> item)
         {
             this.Write(
                 writer,
-                item.Item,
-                fieldIndex,
-                errorMask);
+                item.Item);
         }
 
         public void Write(
             MutagenWriter writer,
             IHasItemGetter<T> item,
             RecordType header,
-            int fieldIndex,
-            bool nullable,
-            ErrorMaskBuilder errorMask)
+            bool nullable)
         {
             this.Write(
                 writer,
                 item.Item,
                 header,
-                fieldIndex,
-                nullable,
-                errorMask);
+                nullable);
         }
 
         public void Write(
             MutagenWriter writer,
             IHasItemGetter<T?> item,
             RecordType header,
-            int fieldIndex,
-            bool nullable,
-            ErrorMaskBuilder errorMask)
+            bool nullable)
         {
             this.Write(
                 writer,
                 item.Item,
                 header,
-                fieldIndex,
-                nullable,
-                errorMask);
+                nullable);
         }
 
         public void Write(
             MutagenWriter writer,
-            IHasItemGetter<T?> item,
-            int fieldIndex,
-            ErrorMaskBuilder errorMask)
+            IHasItemGetter<T?> item)
         {
             this.Write(
                 writer,
-                item.Item,
-                fieldIndex,
-                errorMask);
+                item.Item);
         }
     }
 }

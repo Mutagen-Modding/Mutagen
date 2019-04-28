@@ -16,131 +16,70 @@ namespace Mutagen.Bethesda.Binary
 
         public void ParseInto(
             MutagenFrame frame,
-            int fieldIndex,
-            IHasItem<FilePath> item,
-            ErrorMaskBuilder errorMask)
+            IHasItem<FilePath> item)
         {
-            using (errorMask.PushIndex(fieldIndex))
+            if (Parse(
+                frame,
+                out FilePath subItem))
             {
-                try
-                {
-                    if (Parse(
-                        frame,
-                        out FilePath subItem,
-                        errorMask))
-                    {
-                        item.Item = subItem;
-                    }
-                    else
-                    {
-                        item.Unset();
-                    }
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
+                item.Item = subItem;
+            }
+            else
+            {
+                item.Unset();
             }
         }
 
-        public bool Parse(MutagenFrame frame, out FilePath item, ErrorMaskBuilder errorMask)
+        public bool Parse(MutagenFrame frame, out FilePath item)
         {
-            if (!StringBinaryTranslation.Instance.Parse(frame, out var str, errorMask))
+            if (!StringBinaryTranslation.Instance.Parse(frame, out var str))
             {
                 item = default(FilePath);
                 return false;
             }
-            try
-            {
-                item = new FilePath(str);
-                return true;
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-                item = default(FilePath);
-                return false;
-            }
+            item = new FilePath(str);
+            return true;
         }
 
         public void Write(
             MutagenWriter writer,
             FilePath item,
             RecordType header,
-            bool nullable,
-            ErrorMaskBuilder errorMask)
+            bool nullable)
         {
             StringBinaryTranslation.Instance.Write(
                 writer,
                 item.RelativePath,
                 header,
-                nullable,
-                errorMask);
-        }
-
-        public void Write(
-            MutagenWriter writer,
-            FilePath item,
-            RecordType header,
-            int fieldIndex,
-            bool nullable,
-            ErrorMaskBuilder errorMask)
-        {
-            using (errorMask.PushIndex(fieldIndex))
-            {
-                try
-                {
-                    this.Write(
-                        writer,
-                        item,
-                        header,
-                        nullable,
-                        errorMask);
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-            }
+                nullable);
         }
 
         public void Write(
             MutagenWriter writer,
             IHasBeenSetItemGetter<FilePath> item,
             RecordType header,
-            int fieldIndex,
-            bool nullable,
-            ErrorMaskBuilder errorMask)
+            bool nullable)
         {
             if (!item.HasBeenSet) return;
             this.Write(
                 writer,
                 item.Item,
                 header,
-                fieldIndex,
-                nullable,
-                errorMask);
+                nullable);
         }
 
         public void Write<M>(
             MutagenWriter writer,
             IHasItemGetter<FilePath> item,
             RecordType header,
-            int fieldIndex,
-            bool nullable,
-            ErrorMaskBuilder errorMask)
+            bool nullable)
             where M : IErrorMask
         {
             this.Write(
                 writer,
                 item.Item,
                 header,
-                fieldIndex,
-                nullable,
-                errorMask);
+                nullable);
         }
     }
 }

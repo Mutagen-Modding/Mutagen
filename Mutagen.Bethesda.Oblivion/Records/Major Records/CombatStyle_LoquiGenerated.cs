@@ -1227,657 +1227,279 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.CSTDDataTypeState = CSTDDataType.Has;
                     }
-                    try
+                    if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Byte DodgePercentChanceParse))
                     {
-                        errorMask?.PushIndex((int)CombatStyle_FieldIndex.DodgePercentChance);
-                        if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
-                            item: out Byte DodgePercentChanceParse,
-                            errorMask: errorMask))
-                        {
-                            item.DodgePercentChance = DodgePercentChanceParse;
-                        }
-                        else
-                        {
-                            item.DodgePercentChance = default(Byte);
-                        }
+                        item.DodgePercentChance = DodgePercentChanceParse;
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    else
                     {
-                        errorMask.ReportException(ex);
+                        item.DodgePercentChance = default(Byte);
                     }
-                    finally
+                    if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Byte LeftRightPercentChanceParse))
                     {
-                        errorMask?.PopIndex();
+                        item.LeftRightPercentChance = LeftRightPercentChanceParse;
                     }
-                    try
+                    else
                     {
-                        errorMask?.PushIndex((int)CombatStyle_FieldIndex.LeftRightPercentChance);
-                        if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
-                            item: out Byte LeftRightPercentChanceParse,
-                            errorMask: errorMask))
-                        {
-                            item.LeftRightPercentChance = LeftRightPercentChanceParse;
-                        }
-                        else
-                        {
-                            item.LeftRightPercentChance = default(Byte);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
+                        item.LeftRightPercentChance = default(Byte);
                     }
                     dataFrame.SetPosition(dataFrame.Position + 2);
-                    try
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single DodgeLeftRightTimerMinParse))
                     {
-                        errorMask?.PushIndex((int)CombatStyle_FieldIndex.DodgeLeftRightTimerMin);
-                        if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
-                            item: out Single DodgeLeftRightTimerMinParse,
-                            errorMask: errorMask))
-                        {
-                            item.DodgeLeftRightTimerMin = DodgeLeftRightTimerMinParse;
-                        }
-                        else
-                        {
-                            item.DodgeLeftRightTimerMin = default(Single);
-                        }
+                        item.DodgeLeftRightTimerMin = DodgeLeftRightTimerMinParse;
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    else
                     {
-                        errorMask.ReportException(ex);
+                        item.DodgeLeftRightTimerMin = default(Single);
                     }
-                    finally
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single DodgeLeftRightTimerMaxParse))
                     {
-                        errorMask?.PopIndex();
+                        item.DodgeLeftRightTimerMax = DodgeLeftRightTimerMaxParse;
                     }
-                    try
+                    else
                     {
-                        errorMask?.PushIndex((int)CombatStyle_FieldIndex.DodgeLeftRightTimerMax);
-                        if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
-                            item: out Single DodgeLeftRightTimerMaxParse,
-                            errorMask: errorMask))
-                        {
-                            item.DodgeLeftRightTimerMax = DodgeLeftRightTimerMaxParse;
-                        }
-                        else
-                        {
-                            item.DodgeLeftRightTimerMax = default(Single);
-                        }
+                        item.DodgeLeftRightTimerMax = default(Single);
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single DodgeForwardTimerMinParse))
                     {
-                        errorMask.ReportException(ex);
+                        item.DodgeForwardTimerMin = DodgeForwardTimerMinParse;
                     }
-                    finally
+                    else
                     {
-                        errorMask?.PopIndex();
+                        item.DodgeForwardTimerMin = default(Single);
                     }
-                    try
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single DodgeForwardTimerMaxParse))
                     {
-                        errorMask?.PushIndex((int)CombatStyle_FieldIndex.DodgeForwardTimerMin);
-                        if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
-                            item: out Single DodgeForwardTimerMinParse,
-                            errorMask: errorMask))
-                        {
-                            item.DodgeForwardTimerMin = DodgeForwardTimerMinParse;
-                        }
-                        else
-                        {
-                            item.DodgeForwardTimerMin = default(Single);
-                        }
+                        item.DodgeForwardTimerMax = DodgeForwardTimerMaxParse;
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    else
                     {
-                        errorMask.ReportException(ex);
+                        item.DodgeForwardTimerMax = default(Single);
                     }
-                    finally
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single DodgeBackTimerMinParse))
                     {
-                        errorMask?.PopIndex();
+                        item.DodgeBackTimerMin = DodgeBackTimerMinParse;
                     }
-                    try
+                    else
                     {
-                        errorMask?.PushIndex((int)CombatStyle_FieldIndex.DodgeForwardTimerMax);
-                        if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
-                            item: out Single DodgeForwardTimerMaxParse,
-                            errorMask: errorMask))
-                        {
-                            item.DodgeForwardTimerMax = DodgeForwardTimerMaxParse;
-                        }
-                        else
-                        {
-                            item.DodgeForwardTimerMax = default(Single);
-                        }
+                        item.DodgeBackTimerMin = default(Single);
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single DodgeBackTimerMaxParse))
                     {
-                        errorMask.ReportException(ex);
+                        item.DodgeBackTimerMax = DodgeBackTimerMaxParse;
                     }
-                    finally
+                    else
                     {
-                        errorMask?.PopIndex();
+                        item.DodgeBackTimerMax = default(Single);
                     }
-                    try
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single IdleTimerMinParse))
                     {
-                        errorMask?.PushIndex((int)CombatStyle_FieldIndex.DodgeBackTimerMin);
-                        if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
-                            item: out Single DodgeBackTimerMinParse,
-                            errorMask: errorMask))
-                        {
-                            item.DodgeBackTimerMin = DodgeBackTimerMinParse;
-                        }
-                        else
-                        {
-                            item.DodgeBackTimerMin = default(Single);
-                        }
+                        item.IdleTimerMin = IdleTimerMinParse;
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    else
                     {
-                        errorMask.ReportException(ex);
+                        item.IdleTimerMin = default(Single);
                     }
-                    finally
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single IdleTimerMaxParse))
                     {
-                        errorMask?.PopIndex();
+                        item.IdleTimerMax = IdleTimerMaxParse;
                     }
-                    try
+                    else
                     {
-                        errorMask?.PushIndex((int)CombatStyle_FieldIndex.DodgeBackTimerMax);
-                        if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
-                            item: out Single DodgeBackTimerMaxParse,
-                            errorMask: errorMask))
-                        {
-                            item.DodgeBackTimerMax = DodgeBackTimerMaxParse;
-                        }
-                        else
-                        {
-                            item.DodgeBackTimerMax = default(Single);
-                        }
+                        item.IdleTimerMax = default(Single);
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Byte BlockPercentChanceParse))
                     {
-                        errorMask.ReportException(ex);
+                        item.BlockPercentChance = BlockPercentChanceParse;
                     }
-                    finally
+                    else
                     {
-                        errorMask?.PopIndex();
+                        item.BlockPercentChance = default(Byte);
                     }
-                    try
+                    if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Byte AttackPercentChanceParse))
                     {
-                        errorMask?.PushIndex((int)CombatStyle_FieldIndex.IdleTimerMin);
-                        if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
-                            item: out Single IdleTimerMinParse,
-                            errorMask: errorMask))
-                        {
-                            item.IdleTimerMin = IdleTimerMinParse;
-                        }
-                        else
-                        {
-                            item.IdleTimerMin = default(Single);
-                        }
+                        item.AttackPercentChance = AttackPercentChanceParse;
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    else
                     {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    try
-                    {
-                        errorMask?.PushIndex((int)CombatStyle_FieldIndex.IdleTimerMax);
-                        if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
-                            item: out Single IdleTimerMaxParse,
-                            errorMask: errorMask))
-                        {
-                            item.IdleTimerMax = IdleTimerMaxParse;
-                        }
-                        else
-                        {
-                            item.IdleTimerMax = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    try
-                    {
-                        errorMask?.PushIndex((int)CombatStyle_FieldIndex.BlockPercentChance);
-                        if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
-                            item: out Byte BlockPercentChanceParse,
-                            errorMask: errorMask))
-                        {
-                            item.BlockPercentChance = BlockPercentChanceParse;
-                        }
-                        else
-                        {
-                            item.BlockPercentChance = default(Byte);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    try
-                    {
-                        errorMask?.PushIndex((int)CombatStyle_FieldIndex.AttackPercentChance);
-                        if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
-                            item: out Byte AttackPercentChanceParse,
-                            errorMask: errorMask))
-                        {
-                            item.AttackPercentChance = AttackPercentChanceParse;
-                        }
-                        else
-                        {
-                            item.AttackPercentChance = default(Byte);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
+                        item.AttackPercentChance = default(Byte);
                     }
                     dataFrame.SetPosition(dataFrame.Position + 2);
-                    try
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single RecoilStaggerBonusToAttackParse))
                     {
-                        errorMask?.PushIndex((int)CombatStyle_FieldIndex.RecoilStaggerBonusToAttack);
-                        if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
-                            item: out Single RecoilStaggerBonusToAttackParse,
-                            errorMask: errorMask))
-                        {
-                            item.RecoilStaggerBonusToAttack = RecoilStaggerBonusToAttackParse;
-                        }
-                        else
-                        {
-                            item.RecoilStaggerBonusToAttack = default(Single);
-                        }
+                        item.RecoilStaggerBonusToAttack = RecoilStaggerBonusToAttackParse;
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    else
                     {
-                        errorMask.ReportException(ex);
+                        item.RecoilStaggerBonusToAttack = default(Single);
                     }
-                    finally
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single UnconsciousBonusToAttackParse))
                     {
-                        errorMask?.PopIndex();
+                        item.UnconsciousBonusToAttack = UnconsciousBonusToAttackParse;
                     }
-                    try
+                    else
                     {
-                        errorMask?.PushIndex((int)CombatStyle_FieldIndex.UnconsciousBonusToAttack);
-                        if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
-                            item: out Single UnconsciousBonusToAttackParse,
-                            errorMask: errorMask))
-                        {
-                            item.UnconsciousBonusToAttack = UnconsciousBonusToAttackParse;
-                        }
-                        else
-                        {
-                            item.UnconsciousBonusToAttack = default(Single);
-                        }
+                        item.UnconsciousBonusToAttack = default(Single);
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single HandToHandBonusToAttackParse))
                     {
-                        errorMask.ReportException(ex);
+                        item.HandToHandBonusToAttack = HandToHandBonusToAttackParse;
                     }
-                    finally
+                    else
                     {
-                        errorMask?.PopIndex();
+                        item.HandToHandBonusToAttack = default(Single);
                     }
-                    try
+                    if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Byte PowerAttackPercentChanceParse))
                     {
-                        errorMask?.PushIndex((int)CombatStyle_FieldIndex.HandToHandBonusToAttack);
-                        if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
-                            item: out Single HandToHandBonusToAttackParse,
-                            errorMask: errorMask))
-                        {
-                            item.HandToHandBonusToAttack = HandToHandBonusToAttackParse;
-                        }
-                        else
-                        {
-                            item.HandToHandBonusToAttack = default(Single);
-                        }
+                        item.PowerAttackPercentChance = PowerAttackPercentChanceParse;
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    else
                     {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    try
-                    {
-                        errorMask?.PushIndex((int)CombatStyle_FieldIndex.PowerAttackPercentChance);
-                        if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
-                            item: out Byte PowerAttackPercentChanceParse,
-                            errorMask: errorMask))
-                        {
-                            item.PowerAttackPercentChance = PowerAttackPercentChanceParse;
-                        }
-                        else
-                        {
-                            item.PowerAttackPercentChance = default(Byte);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
+                        item.PowerAttackPercentChance = default(Byte);
                     }
                     dataFrame.SetPosition(dataFrame.Position + 3);
-                    try
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single RecoilStaggerBonusToPowerAttackParse))
                     {
-                        errorMask?.PushIndex((int)CombatStyle_FieldIndex.RecoilStaggerBonusToPowerAttack);
-                        if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
-                            item: out Single RecoilStaggerBonusToPowerAttackParse,
-                            errorMask: errorMask))
-                        {
-                            item.RecoilStaggerBonusToPowerAttack = RecoilStaggerBonusToPowerAttackParse;
-                        }
-                        else
-                        {
-                            item.RecoilStaggerBonusToPowerAttack = default(Single);
-                        }
+                        item.RecoilStaggerBonusToPowerAttack = RecoilStaggerBonusToPowerAttackParse;
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    else
                     {
-                        errorMask.ReportException(ex);
+                        item.RecoilStaggerBonusToPowerAttack = default(Single);
                     }
-                    finally
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single UnconsciousBonusToPowerAttackParse))
                     {
-                        errorMask?.PopIndex();
+                        item.UnconsciousBonusToPowerAttack = UnconsciousBonusToPowerAttackParse;
                     }
-                    try
+                    else
                     {
-                        errorMask?.PushIndex((int)CombatStyle_FieldIndex.UnconsciousBonusToPowerAttack);
-                        if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
-                            item: out Single UnconsciousBonusToPowerAttackParse,
-                            errorMask: errorMask))
-                        {
-                            item.UnconsciousBonusToPowerAttack = UnconsciousBonusToPowerAttackParse;
-                        }
-                        else
-                        {
-                            item.UnconsciousBonusToPowerAttack = default(Single);
-                        }
+                        item.UnconsciousBonusToPowerAttack = default(Single);
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Byte PowerAttackNormalParse))
                     {
-                        errorMask.ReportException(ex);
+                        item.PowerAttackNormal = PowerAttackNormalParse;
                     }
-                    finally
+                    else
                     {
-                        errorMask?.PopIndex();
+                        item.PowerAttackNormal = default(Byte);
                     }
-                    try
+                    if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Byte PowerAttackForwardParse))
                     {
-                        errorMask?.PushIndex((int)CombatStyle_FieldIndex.PowerAttackNormal);
-                        if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
-                            item: out Byte PowerAttackNormalParse,
-                            errorMask: errorMask))
-                        {
-                            item.PowerAttackNormal = PowerAttackNormalParse;
-                        }
-                        else
-                        {
-                            item.PowerAttackNormal = default(Byte);
-                        }
+                        item.PowerAttackForward = PowerAttackForwardParse;
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    else
                     {
-                        errorMask.ReportException(ex);
+                        item.PowerAttackForward = default(Byte);
                     }
-                    finally
+                    if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Byte PowerAttackBackParse))
                     {
-                        errorMask?.PopIndex();
+                        item.PowerAttackBack = PowerAttackBackParse;
                     }
-                    try
+                    else
                     {
-                        errorMask?.PushIndex((int)CombatStyle_FieldIndex.PowerAttackForward);
-                        if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
-                            item: out Byte PowerAttackForwardParse,
-                            errorMask: errorMask))
-                        {
-                            item.PowerAttackForward = PowerAttackForwardParse;
-                        }
-                        else
-                        {
-                            item.PowerAttackForward = default(Byte);
-                        }
+                        item.PowerAttackBack = default(Byte);
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Byte PowerAttackLeftParse))
                     {
-                        errorMask.ReportException(ex);
+                        item.PowerAttackLeft = PowerAttackLeftParse;
                     }
-                    finally
+                    else
                     {
-                        errorMask?.PopIndex();
+                        item.PowerAttackLeft = default(Byte);
                     }
-                    try
+                    if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Byte PowerAttackRightParse))
                     {
-                        errorMask?.PushIndex((int)CombatStyle_FieldIndex.PowerAttackBack);
-                        if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
-                            item: out Byte PowerAttackBackParse,
-                            errorMask: errorMask))
-                        {
-                            item.PowerAttackBack = PowerAttackBackParse;
-                        }
-                        else
-                        {
-                            item.PowerAttackBack = default(Byte);
-                        }
+                        item.PowerAttackRight = PowerAttackRightParse;
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    else
                     {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    try
-                    {
-                        errorMask?.PushIndex((int)CombatStyle_FieldIndex.PowerAttackLeft);
-                        if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
-                            item: out Byte PowerAttackLeftParse,
-                            errorMask: errorMask))
-                        {
-                            item.PowerAttackLeft = PowerAttackLeftParse;
-                        }
-                        else
-                        {
-                            item.PowerAttackLeft = default(Byte);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    try
-                    {
-                        errorMask?.PushIndex((int)CombatStyle_FieldIndex.PowerAttackRight);
-                        if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
-                            item: out Byte PowerAttackRightParse,
-                            errorMask: errorMask))
-                        {
-                            item.PowerAttackRight = PowerAttackRightParse;
-                        }
-                        else
-                        {
-                            item.PowerAttackRight = default(Byte);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
+                        item.PowerAttackRight = default(Byte);
                     }
                     dataFrame.SetPosition(dataFrame.Position + 3);
-                    try
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single HoldTimerMinParse))
                     {
-                        errorMask?.PushIndex((int)CombatStyle_FieldIndex.HoldTimerMin);
-                        if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
-                            item: out Single HoldTimerMinParse,
-                            errorMask: errorMask))
-                        {
-                            item.HoldTimerMin = HoldTimerMinParse;
-                        }
-                        else
-                        {
-                            item.HoldTimerMin = default(Single);
-                        }
+                        item.HoldTimerMin = HoldTimerMinParse;
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    else
                     {
-                        errorMask.ReportException(ex);
+                        item.HoldTimerMin = default(Single);
                     }
-                    finally
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single HoldTimerMaxParse))
                     {
-                        errorMask?.PopIndex();
+                        item.HoldTimerMax = HoldTimerMaxParse;
                     }
-                    try
+                    else
                     {
-                        errorMask?.PushIndex((int)CombatStyle_FieldIndex.HoldTimerMax);
-                        if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
-                            item: out Single HoldTimerMaxParse,
-                            errorMask: errorMask))
-                        {
-                            item.HoldTimerMax = HoldTimerMaxParse;
-                        }
-                        else
-                        {
-                            item.HoldTimerMax = default(Single);
-                        }
+                        item.HoldTimerMax = default(Single);
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    if (EnumBinaryTranslation<CombatStyle.Flag>.Instance.Parse(
+                        frame: dataFrame.SpawnWithLength(1),
+                        item: out CombatStyle.Flag FlagsParse))
                     {
-                        errorMask.ReportException(ex);
+                        item.Flags = FlagsParse;
                     }
-                    finally
+                    else
                     {
-                        errorMask?.PopIndex();
+                        item.Flags = default(CombatStyle.Flag);
                     }
-                    try
+                    if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Byte AcrobaticDodgePercentChanceParse))
                     {
-                        errorMask?.PushIndex((int)CombatStyle_FieldIndex.Flags);
-                        if (EnumBinaryTranslation<CombatStyle.Flag>.Instance.Parse(
-                            frame: dataFrame.SpawnWithLength(1),
-                            item: out CombatStyle.Flag FlagsParse,
-                            errorMask: errorMask))
-                        {
-                            item.Flags = FlagsParse;
-                        }
-                        else
-                        {
-                            item.Flags = default(CombatStyle.Flag);
-                        }
+                        item.AcrobaticDodgePercentChance = AcrobaticDodgePercentChanceParse;
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    else
                     {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    try
-                    {
-                        errorMask?.PushIndex((int)CombatStyle_FieldIndex.AcrobaticDodgePercentChance);
-                        if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
-                            item: out Byte AcrobaticDodgePercentChanceParse,
-                            errorMask: errorMask))
-                        {
-                            item.AcrobaticDodgePercentChance = AcrobaticDodgePercentChanceParse;
-                        }
-                        else
-                        {
-                            item.AcrobaticDodgePercentChance = default(Byte);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
+                        item.AcrobaticDodgePercentChance = default(Byte);
                     }
                     dataFrame.SetPosition(dataFrame.Position + 2);
                     if (dataFrame.Complete)
@@ -1885,237 +1507,111 @@ namespace Mutagen.Bethesda.Oblivion
                         item.CSTDDataTypeState |= CSTDDataType.Break0;
                         return TryGet<int?>.Succeed((int)CombatStyle_FieldIndex.AcrobaticDodgePercentChance);
                     }
-                    try
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single RangeMultOptimalParse))
                     {
-                        errorMask?.PushIndex((int)CombatStyle_FieldIndex.RangeMultOptimal);
-                        if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
-                            item: out Single RangeMultOptimalParse,
-                            errorMask: errorMask))
-                        {
-                            item.RangeMultOptimal = RangeMultOptimalParse;
-                        }
-                        else
-                        {
-                            item.RangeMultOptimal = default(Single);
-                        }
+                        item.RangeMultOptimal = RangeMultOptimalParse;
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    else
                     {
-                        errorMask.ReportException(ex);
+                        item.RangeMultOptimal = default(Single);
                     }
-                    finally
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single RangeMultMaxParse))
                     {
-                        errorMask?.PopIndex();
+                        item.RangeMultMax = RangeMultMaxParse;
                     }
-                    try
+                    else
                     {
-                        errorMask?.PushIndex((int)CombatStyle_FieldIndex.RangeMultMax);
-                        if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
-                            item: out Single RangeMultMaxParse,
-                            errorMask: errorMask))
-                        {
-                            item.RangeMultMax = RangeMultMaxParse;
-                        }
-                        else
-                        {
-                            item.RangeMultMax = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
+                        item.RangeMultMax = default(Single);
                     }
                     if (dataFrame.Complete)
                     {
                         item.CSTDDataTypeState |= CSTDDataType.Break1;
                         return TryGet<int?>.Succeed((int)CombatStyle_FieldIndex.RangeMultMax);
                     }
-                    try
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single SwitchDistanceMeleeParse))
                     {
-                        errorMask?.PushIndex((int)CombatStyle_FieldIndex.SwitchDistanceMelee);
-                        if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
-                            item: out Single SwitchDistanceMeleeParse,
-                            errorMask: errorMask))
-                        {
-                            item.SwitchDistanceMelee = SwitchDistanceMeleeParse;
-                        }
-                        else
-                        {
-                            item.SwitchDistanceMelee = default(Single);
-                        }
+                        item.SwitchDistanceMelee = SwitchDistanceMeleeParse;
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    else
                     {
-                        errorMask.ReportException(ex);
+                        item.SwitchDistanceMelee = default(Single);
                     }
-                    finally
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single SwitchDistanceRangedParse))
                     {
-                        errorMask?.PopIndex();
+                        item.SwitchDistanceRanged = SwitchDistanceRangedParse;
                     }
-                    try
+                    else
                     {
-                        errorMask?.PushIndex((int)CombatStyle_FieldIndex.SwitchDistanceRanged);
-                        if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
-                            item: out Single SwitchDistanceRangedParse,
-                            errorMask: errorMask))
-                        {
-                            item.SwitchDistanceRanged = SwitchDistanceRangedParse;
-                        }
-                        else
-                        {
-                            item.SwitchDistanceRanged = default(Single);
-                        }
+                        item.SwitchDistanceRanged = default(Single);
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single BuffStandoffDistanceParse))
                     {
-                        errorMask.ReportException(ex);
+                        item.BuffStandoffDistance = BuffStandoffDistanceParse;
                     }
-                    finally
+                    else
                     {
-                        errorMask?.PopIndex();
-                    }
-                    try
-                    {
-                        errorMask?.PushIndex((int)CombatStyle_FieldIndex.BuffStandoffDistance);
-                        if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
-                            item: out Single BuffStandoffDistanceParse,
-                            errorMask: errorMask))
-                        {
-                            item.BuffStandoffDistance = BuffStandoffDistanceParse;
-                        }
-                        else
-                        {
-                            item.BuffStandoffDistance = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
+                        item.BuffStandoffDistance = default(Single);
                     }
                     if (dataFrame.Complete)
                     {
                         item.CSTDDataTypeState |= CSTDDataType.Break2;
                         return TryGet<int?>.Succeed((int)CombatStyle_FieldIndex.BuffStandoffDistance);
                     }
-                    try
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single RangedStandoffDistanceParse))
                     {
-                        errorMask?.PushIndex((int)CombatStyle_FieldIndex.RangedStandoffDistance);
-                        if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
-                            item: out Single RangedStandoffDistanceParse,
-                            errorMask: errorMask))
-                        {
-                            item.RangedStandoffDistance = RangedStandoffDistanceParse;
-                        }
-                        else
-                        {
-                            item.RangedStandoffDistance = default(Single);
-                        }
+                        item.RangedStandoffDistance = RangedStandoffDistanceParse;
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    else
                     {
-                        errorMask.ReportException(ex);
+                        item.RangedStandoffDistance = default(Single);
                     }
-                    finally
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single GroupStandoffDistanceParse))
                     {
-                        errorMask?.PopIndex();
+                        item.GroupStandoffDistance = GroupStandoffDistanceParse;
                     }
-                    try
+                    else
                     {
-                        errorMask?.PushIndex((int)CombatStyle_FieldIndex.GroupStandoffDistance);
-                        if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
-                            item: out Single GroupStandoffDistanceParse,
-                            errorMask: errorMask))
-                        {
-                            item.GroupStandoffDistance = GroupStandoffDistanceParse;
-                        }
-                        else
-                        {
-                            item.GroupStandoffDistance = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
+                        item.GroupStandoffDistance = default(Single);
                     }
                     if (dataFrame.Complete)
                     {
                         item.CSTDDataTypeState |= CSTDDataType.Break3;
                         return TryGet<int?>.Succeed((int)CombatStyle_FieldIndex.GroupStandoffDistance);
                     }
-                    try
+                    if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Byte RushingAttackPercentChanceParse))
                     {
-                        errorMask?.PushIndex((int)CombatStyle_FieldIndex.RushingAttackPercentChance);
-                        if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
-                            item: out Byte RushingAttackPercentChanceParse,
-                            errorMask: errorMask))
-                        {
-                            item.RushingAttackPercentChance = RushingAttackPercentChanceParse;
-                        }
-                        else
-                        {
-                            item.RushingAttackPercentChance = default(Byte);
-                        }
+                        item.RushingAttackPercentChance = RushingAttackPercentChanceParse;
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    else
                     {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
+                        item.RushingAttackPercentChance = default(Byte);
                     }
                     dataFrame.SetPosition(dataFrame.Position + 3);
-                    try
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single RushingAttackDistanceMultParse))
                     {
-                        errorMask?.PushIndex((int)CombatStyle_FieldIndex.RushingAttackDistanceMult);
-                        if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
-                            item: out Single RushingAttackDistanceMultParse,
-                            errorMask: errorMask))
-                        {
-                            item.RushingAttackDistanceMult = RushingAttackDistanceMultParse;
-                        }
-                        else
-                        {
-                            item.RushingAttackDistanceMult = default(Single);
-                        }
+                        item.RushingAttackDistanceMult = RushingAttackDistanceMultParse;
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    else
                     {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
+                        item.RushingAttackDistanceMult = default(Single);
                     }
                     if (dataFrame.Complete)
                     {
@@ -5964,199 +5460,127 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.DodgePercentChance,
-                        fieldIndex: (int)CombatStyle_FieldIndex.DodgePercentChance,
-                        errorMask: errorMask);
+                        item: item.DodgePercentChance);
                     Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.LeftRightPercentChance,
-                        fieldIndex: (int)CombatStyle_FieldIndex.LeftRightPercentChance,
-                        errorMask: errorMask);
+                        item: item.LeftRightPercentChance);
                     writer.WriteZeros(2);
                     Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.DodgeLeftRightTimerMin,
-                        fieldIndex: (int)CombatStyle_FieldIndex.DodgeLeftRightTimerMin,
-                        errorMask: errorMask);
+                        item: item.DodgeLeftRightTimerMin);
                     Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.DodgeLeftRightTimerMax,
-                        fieldIndex: (int)CombatStyle_FieldIndex.DodgeLeftRightTimerMax,
-                        errorMask: errorMask);
+                        item: item.DodgeLeftRightTimerMax);
                     Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.DodgeForwardTimerMin,
-                        fieldIndex: (int)CombatStyle_FieldIndex.DodgeForwardTimerMin,
-                        errorMask: errorMask);
+                        item: item.DodgeForwardTimerMin);
                     Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.DodgeForwardTimerMax,
-                        fieldIndex: (int)CombatStyle_FieldIndex.DodgeForwardTimerMax,
-                        errorMask: errorMask);
+                        item: item.DodgeForwardTimerMax);
                     Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.DodgeBackTimerMin,
-                        fieldIndex: (int)CombatStyle_FieldIndex.DodgeBackTimerMin,
-                        errorMask: errorMask);
+                        item: item.DodgeBackTimerMin);
                     Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.DodgeBackTimerMax,
-                        fieldIndex: (int)CombatStyle_FieldIndex.DodgeBackTimerMax,
-                        errorMask: errorMask);
+                        item: item.DodgeBackTimerMax);
                     Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.IdleTimerMin,
-                        fieldIndex: (int)CombatStyle_FieldIndex.IdleTimerMin,
-                        errorMask: errorMask);
+                        item: item.IdleTimerMin);
                     Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.IdleTimerMax,
-                        fieldIndex: (int)CombatStyle_FieldIndex.IdleTimerMax,
-                        errorMask: errorMask);
+                        item: item.IdleTimerMax);
                     Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.BlockPercentChance,
-                        fieldIndex: (int)CombatStyle_FieldIndex.BlockPercentChance,
-                        errorMask: errorMask);
+                        item: item.BlockPercentChance);
                     Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.AttackPercentChance,
-                        fieldIndex: (int)CombatStyle_FieldIndex.AttackPercentChance,
-                        errorMask: errorMask);
+                        item: item.AttackPercentChance);
                     writer.WriteZeros(2);
                     Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.RecoilStaggerBonusToAttack,
-                        fieldIndex: (int)CombatStyle_FieldIndex.RecoilStaggerBonusToAttack,
-                        errorMask: errorMask);
+                        item: item.RecoilStaggerBonusToAttack);
                     Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.UnconsciousBonusToAttack,
-                        fieldIndex: (int)CombatStyle_FieldIndex.UnconsciousBonusToAttack,
-                        errorMask: errorMask);
+                        item: item.UnconsciousBonusToAttack);
                     Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.HandToHandBonusToAttack,
-                        fieldIndex: (int)CombatStyle_FieldIndex.HandToHandBonusToAttack,
-                        errorMask: errorMask);
+                        item: item.HandToHandBonusToAttack);
                     Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.PowerAttackPercentChance,
-                        fieldIndex: (int)CombatStyle_FieldIndex.PowerAttackPercentChance,
-                        errorMask: errorMask);
+                        item: item.PowerAttackPercentChance);
                     writer.WriteZeros(3);
                     Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.RecoilStaggerBonusToPowerAttack,
-                        fieldIndex: (int)CombatStyle_FieldIndex.RecoilStaggerBonusToPowerAttack,
-                        errorMask: errorMask);
+                        item: item.RecoilStaggerBonusToPowerAttack);
                     Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.UnconsciousBonusToPowerAttack,
-                        fieldIndex: (int)CombatStyle_FieldIndex.UnconsciousBonusToPowerAttack,
-                        errorMask: errorMask);
+                        item: item.UnconsciousBonusToPowerAttack);
                     Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.PowerAttackNormal,
-                        fieldIndex: (int)CombatStyle_FieldIndex.PowerAttackNormal,
-                        errorMask: errorMask);
+                        item: item.PowerAttackNormal);
                     Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.PowerAttackForward,
-                        fieldIndex: (int)CombatStyle_FieldIndex.PowerAttackForward,
-                        errorMask: errorMask);
+                        item: item.PowerAttackForward);
                     Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.PowerAttackBack,
-                        fieldIndex: (int)CombatStyle_FieldIndex.PowerAttackBack,
-                        errorMask: errorMask);
+                        item: item.PowerAttackBack);
                     Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.PowerAttackLeft,
-                        fieldIndex: (int)CombatStyle_FieldIndex.PowerAttackLeft,
-                        errorMask: errorMask);
+                        item: item.PowerAttackLeft);
                     Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.PowerAttackRight,
-                        fieldIndex: (int)CombatStyle_FieldIndex.PowerAttackRight,
-                        errorMask: errorMask);
+                        item: item.PowerAttackRight);
                     writer.WriteZeros(3);
                     Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.HoldTimerMin,
-                        fieldIndex: (int)CombatStyle_FieldIndex.HoldTimerMin,
-                        errorMask: errorMask);
+                        item: item.HoldTimerMin);
                     Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.HoldTimerMax,
-                        fieldIndex: (int)CombatStyle_FieldIndex.HoldTimerMax,
-                        errorMask: errorMask);
+                        item: item.HoldTimerMax);
                     Mutagen.Bethesda.Binary.EnumBinaryTranslation<CombatStyle.Flag>.Instance.Write(
                         writer,
                         item.Flags,
-                        length: 1,
-                        fieldIndex: (int)CombatStyle_FieldIndex.Flags,
-                        errorMask: errorMask);
+                        length: 1);
                     Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.AcrobaticDodgePercentChance,
-                        fieldIndex: (int)CombatStyle_FieldIndex.AcrobaticDodgePercentChance,
-                        errorMask: errorMask);
+                        item: item.AcrobaticDodgePercentChance);
                     writer.WriteZeros(2);
                     if (!item.CSTDDataTypeState.HasFlag(CombatStyle.CSTDDataType.Break0))
                     {
                         Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                             writer: writer,
-                            item: item.RangeMultOptimal,
-                            fieldIndex: (int)CombatStyle_FieldIndex.RangeMultOptimal,
-                            errorMask: errorMask);
+                            item: item.RangeMultOptimal);
                         Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                             writer: writer,
-                            item: item.RangeMultMax,
-                            fieldIndex: (int)CombatStyle_FieldIndex.RangeMultMax,
-                            errorMask: errorMask);
+                            item: item.RangeMultMax);
                         if (!item.CSTDDataTypeState.HasFlag(CombatStyle.CSTDDataType.Break1))
                         {
                             Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                                 writer: writer,
-                                item: item.SwitchDistanceMelee,
-                                fieldIndex: (int)CombatStyle_FieldIndex.SwitchDistanceMelee,
-                                errorMask: errorMask);
+                                item: item.SwitchDistanceMelee);
                             Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                                 writer: writer,
-                                item: item.SwitchDistanceRanged,
-                                fieldIndex: (int)CombatStyle_FieldIndex.SwitchDistanceRanged,
-                                errorMask: errorMask);
+                                item: item.SwitchDistanceRanged);
                             Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                                 writer: writer,
-                                item: item.BuffStandoffDistance,
-                                fieldIndex: (int)CombatStyle_FieldIndex.BuffStandoffDistance,
-                                errorMask: errorMask);
+                                item: item.BuffStandoffDistance);
                             if (!item.CSTDDataTypeState.HasFlag(CombatStyle.CSTDDataType.Break2))
                             {
                                 Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                                     writer: writer,
-                                    item: item.RangedStandoffDistance,
-                                    fieldIndex: (int)CombatStyle_FieldIndex.RangedStandoffDistance,
-                                    errorMask: errorMask);
+                                    item: item.RangedStandoffDistance);
                                 Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                                     writer: writer,
-                                    item: item.GroupStandoffDistance,
-                                    fieldIndex: (int)CombatStyle_FieldIndex.GroupStandoffDistance,
-                                    errorMask: errorMask);
+                                    item: item.GroupStandoffDistance);
                                 if (!item.CSTDDataTypeState.HasFlag(CombatStyle.CSTDDataType.Break3))
                                 {
                                     Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
                                         writer: writer,
-                                        item: item.RushingAttackPercentChance,
-                                        fieldIndex: (int)CombatStyle_FieldIndex.RushingAttackPercentChance,
-                                        errorMask: errorMask);
+                                        item: item.RushingAttackPercentChance);
                                     writer.WriteZeros(3);
                                     Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                                         writer: writer,
-                                        item: item.RushingAttackDistanceMult,
-                                        fieldIndex: (int)CombatStyle_FieldIndex.RushingAttackDistanceMult,
-                                        errorMask: errorMask);
+                                        item: item.RushingAttackDistanceMult);
                                     if (!item.CSTDDataTypeState.HasFlag(CombatStyle.CSTDDataType.Break4))
                                     {
                                         CombatStyle.WriteBinary_SecondaryFlags(

@@ -821,30 +821,16 @@ namespace Mutagen.Bethesda.Oblivion
                 case 0x4C4C5546: // FULL
                 {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    try
+                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        parseWhole: true,
+                        item: out String NameParse))
                     {
-                        errorMask?.PushIndex((int)Container_FieldIndex.Name);
-                        if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
-                            parseWhole: true,
-                            item: out String NameParse,
-                            errorMask: errorMask))
-                        {
-                            item.Name = NameParse;
-                        }
-                        else
-                        {
-                            item.Name = default(String);
-                        }
+                        item.Name = NameParse;
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    else
                     {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
+                        item.Name = default(String);
                     }
                     return TryGet<int?>.Succeed((int)Container_FieldIndex.Name);
                 }
@@ -883,9 +869,7 @@ namespace Mutagen.Bethesda.Oblivion
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
-                        item: item.Script_Property,
-                        fieldIndex: (int)Container_FieldIndex.Script,
-                        errorMask: errorMask);
+                        item: item.Script_Property);
                     return TryGet<int?>.Succeed((int)Container_FieldIndex.Script);
                 }
                 case 0x4F544E43: // CNTO
@@ -916,53 +900,25 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.DATADataTypeState = DATADataType.Has;
                     }
-                    try
+                    if (EnumBinaryTranslation<Container.ContainerFlag>.Instance.Parse(
+                        frame: dataFrame.SpawnWithLength(1),
+                        item: out Container.ContainerFlag FlagsParse))
                     {
-                        errorMask?.PushIndex((int)Container_FieldIndex.Flags);
-                        if (EnumBinaryTranslation<Container.ContainerFlag>.Instance.Parse(
-                            frame: dataFrame.SpawnWithLength(1),
-                            item: out Container.ContainerFlag FlagsParse,
-                            errorMask: errorMask))
-                        {
-                            item.Flags = FlagsParse;
-                        }
-                        else
-                        {
-                            item.Flags = default(Container.ContainerFlag);
-                        }
+                        item.Flags = FlagsParse;
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    else
                     {
-                        errorMask.ReportException(ex);
+                        item.Flags = default(Container.ContainerFlag);
                     }
-                    finally
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out Single WeightParse))
                     {
-                        errorMask?.PopIndex();
+                        item.Weight = WeightParse;
                     }
-                    try
+                    else
                     {
-                        errorMask?.PushIndex((int)Container_FieldIndex.Weight);
-                        if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
-                            item: out Single WeightParse,
-                            errorMask: errorMask))
-                        {
-                            item.Weight = WeightParse;
-                        }
-                        else
-                        {
-                            item.Weight = default(Single);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
+                        item.Weight = default(Single);
                     }
                     return TryGet<int?>.Succeed((int)Container_FieldIndex.Weight);
                 }
@@ -972,9 +928,7 @@ namespace Mutagen.Bethesda.Oblivion
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
-                        item: item.OpenSound_Property,
-                        fieldIndex: (int)Container_FieldIndex.OpenSound,
-                        errorMask: errorMask);
+                        item: item.OpenSound_Property);
                     return TryGet<int?>.Succeed((int)Container_FieldIndex.OpenSound);
                 }
                 case 0x4D414E51: // QNAM
@@ -983,9 +937,7 @@ namespace Mutagen.Bethesda.Oblivion
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
-                        item: item.CloseSound_Property,
-                        fieldIndex: (int)Container_FieldIndex.CloseSound,
-                        errorMask: errorMask);
+                        item: item.CloseSound_Property);
                     return TryGet<int?>.Succeed((int)Container_FieldIndex.CloseSound);
                 }
                 default:
@@ -2394,8 +2346,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.Name,
-                    fieldIndex: (int)Container_FieldIndex.Name,
-                    errorMask: errorMask,
                     header: recordTypeConverter.ConvertToCustom(Container_Registration.FULL_HEADER),
                     nullable: false);
             }
@@ -2413,8 +2363,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.Script_Property,
-                    fieldIndex: (int)Container_FieldIndex.Script,
-                    errorMask: errorMask,
                     header: recordTypeConverter.ConvertToCustom(Container_Registration.SCRI_HEADER),
                     nullable: false,
                     masterReferences: masterReferences);
@@ -2443,14 +2391,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     Mutagen.Bethesda.Binary.EnumBinaryTranslation<Container.ContainerFlag>.Instance.Write(
                         writer,
                         item.Flags,
-                        length: 1,
-                        fieldIndex: (int)Container_FieldIndex.Flags,
-                        errorMask: errorMask);
+                        length: 1);
                     Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.Weight,
-                        fieldIndex: (int)Container_FieldIndex.Weight,
-                        errorMask: errorMask);
+                        item: item.Weight);
                 }
             }
             if (item.OpenSound_Property.HasBeenSet)
@@ -2458,8 +2402,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.OpenSound_Property,
-                    fieldIndex: (int)Container_FieldIndex.OpenSound,
-                    errorMask: errorMask,
                     header: recordTypeConverter.ConvertToCustom(Container_Registration.SNAM_HEADER),
                     nullable: false,
                     masterReferences: masterReferences);
@@ -2469,8 +2411,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.CloseSound_Property,
-                    fieldIndex: (int)Container_FieldIndex.CloseSound,
-                    errorMask: errorMask,
                     header: recordTypeConverter.ConvertToCustom(Container_Registration.QNAM_HEADER),
                     nullable: false,
                     masterReferences: masterReferences);

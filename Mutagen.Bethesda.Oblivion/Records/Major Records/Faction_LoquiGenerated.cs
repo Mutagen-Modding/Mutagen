@@ -783,30 +783,16 @@ namespace Mutagen.Bethesda.Oblivion
                 case 0x4C4C5546: // FULL
                 {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    try
+                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        parseWhole: true,
+                        item: out String NameParse))
                     {
-                        errorMask?.PushIndex((int)Faction_FieldIndex.Name);
-                        if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
-                            parseWhole: true,
-                            item: out String NameParse,
-                            errorMask: errorMask))
-                        {
-                            item.Name = NameParse;
-                        }
-                        else
-                        {
-                            item.Name = default(String);
-                        }
+                        item.Name = NameParse;
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    else
                     {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
+                        item.Name = default(String);
                     }
                     return TryGet<int?>.Succeed((int)Faction_FieldIndex.Name);
                 }
@@ -833,58 +819,30 @@ namespace Mutagen.Bethesda.Oblivion
                 case 0x41544144: // DATA
                 {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    try
+                    if (EnumBinaryTranslation<Faction.FactionFlag>.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        item: out Faction.FactionFlag FlagsParse))
                     {
-                        errorMask?.PushIndex((int)Faction_FieldIndex.Flags);
-                        if (EnumBinaryTranslation<Faction.FactionFlag>.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
-                            item: out Faction.FactionFlag FlagsParse,
-                            errorMask: errorMask))
-                        {
-                            item.Flags = FlagsParse;
-                        }
-                        else
-                        {
-                            item.Flags = default(Faction.FactionFlag);
-                        }
+                        item.Flags = FlagsParse;
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    else
                     {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
+                        item.Flags = default(Faction.FactionFlag);
                     }
                     return TryGet<int?>.Succeed((int)Faction_FieldIndex.Flags);
                 }
                 case 0x4D414E43: // CNAM
                 {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    try
+                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        item: out Single CrimeGoldMultiplierParse))
                     {
-                        errorMask?.PushIndex((int)Faction_FieldIndex.CrimeGoldMultiplier);
-                        if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
-                            item: out Single CrimeGoldMultiplierParse,
-                            errorMask: errorMask))
-                        {
-                            item.CrimeGoldMultiplier = CrimeGoldMultiplierParse;
-                        }
-                        else
-                        {
-                            item.CrimeGoldMultiplier = default(Single);
-                        }
+                        item.CrimeGoldMultiplier = CrimeGoldMultiplierParse;
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    else
                     {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
+                        item.CrimeGoldMultiplier = default(Single);
                     }
                     return TryGet<int?>.Succeed((int)Faction_FieldIndex.CrimeGoldMultiplier);
                 }
@@ -2145,8 +2103,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.Name,
-                    fieldIndex: (int)Faction_FieldIndex.Name,
-                    errorMask: errorMask,
                     header: recordTypeConverter.ConvertToCustom(Faction_Registration.FULL_HEADER),
                     nullable: false);
             }
@@ -2173,8 +2129,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     writer,
                     item.Flags,
                     length: 1,
-                    fieldIndex: (int)Faction_FieldIndex.Flags,
-                    errorMask: errorMask,
                     header: recordTypeConverter.ConvertToCustom(Faction_Registration.DATA_HEADER),
                     nullable: false);
             }
@@ -2183,8 +2137,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.CrimeGoldMultiplier,
-                    fieldIndex: (int)Faction_FieldIndex.CrimeGoldMultiplier,
-                    errorMask: errorMask,
                     header: recordTypeConverter.ConvertToCustom(Faction_Registration.CNAM_HEADER),
                     nullable: false);
             }

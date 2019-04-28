@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -25,8 +25,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             Int32BinaryTranslation.Instance.Write(
                 writer,
-                item.CompiledSize,
-                errorMask);
+                item.CompiledSize);
         }
     }
 }

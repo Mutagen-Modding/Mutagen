@@ -627,29 +627,15 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)FaceGenData_FieldIndex.SymmetricGeometry) return TryGet<int?>.Failure;
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    try
+                    if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        item: out Byte[] SymmetricGeometryParse))
                     {
-                        errorMask?.PushIndex((int)FaceGenData_FieldIndex.SymmetricGeometry);
-                        if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
-                            item: out Byte[] SymmetricGeometryParse,
-                            errorMask: errorMask))
-                        {
-                            item.SymmetricGeometry = SymmetricGeometryParse;
-                        }
-                        else
-                        {
-                            item.SymmetricGeometry = default(Byte[]);
-                        }
+                        item.SymmetricGeometry = SymmetricGeometryParse;
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    else
                     {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
+                        item.SymmetricGeometry = default(Byte[]);
                     }
                     return TryGet<int?>.Succeed((int)FaceGenData_FieldIndex.SymmetricGeometry);
                 }
@@ -657,29 +643,15 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)FaceGenData_FieldIndex.AsymmetricGeometry) return TryGet<int?>.Failure;
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    try
+                    if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        item: out Byte[] AsymmetricGeometryParse))
                     {
-                        errorMask?.PushIndex((int)FaceGenData_FieldIndex.AsymmetricGeometry);
-                        if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
-                            item: out Byte[] AsymmetricGeometryParse,
-                            errorMask: errorMask))
-                        {
-                            item.AsymmetricGeometry = AsymmetricGeometryParse;
-                        }
-                        else
-                        {
-                            item.AsymmetricGeometry = default(Byte[]);
-                        }
+                        item.AsymmetricGeometry = AsymmetricGeometryParse;
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    else
                     {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
+                        item.AsymmetricGeometry = default(Byte[]);
                     }
                     return TryGet<int?>.Succeed((int)FaceGenData_FieldIndex.AsymmetricGeometry);
                 }
@@ -687,29 +659,15 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)FaceGenData_FieldIndex.SymmetricTexture) return TryGet<int?>.Failure;
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    try
+                    if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        item: out Byte[] SymmetricTextureParse))
                     {
-                        errorMask?.PushIndex((int)FaceGenData_FieldIndex.SymmetricTexture);
-                        if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
-                            item: out Byte[] SymmetricTextureParse,
-                            errorMask: errorMask))
-                        {
-                            item.SymmetricTexture = SymmetricTextureParse;
-                        }
-                        else
-                        {
-                            item.SymmetricTexture = default(Byte[]);
-                        }
+                        item.SymmetricTexture = SymmetricTextureParse;
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    else
                     {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
+                        item.SymmetricTexture = default(Byte[]);
                     }
                     return TryGet<int?>.Succeed((int)FaceGenData_FieldIndex.SymmetricTexture);
                 }
@@ -1600,8 +1558,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.SymmetricGeometry,
-                    fieldIndex: (int)FaceGenData_FieldIndex.SymmetricGeometry,
-                    errorMask: errorMask,
                     header: recordTypeConverter.ConvertToCustom(FaceGenData_Registration.FGGS_HEADER),
                     nullable: false);
             }
@@ -1610,8 +1566,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.AsymmetricGeometry,
-                    fieldIndex: (int)FaceGenData_FieldIndex.AsymmetricGeometry,
-                    errorMask: errorMask,
                     header: recordTypeConverter.ConvertToCustom(FaceGenData_Registration.FGGA_HEADER),
                     nullable: false);
             }
@@ -1620,8 +1574,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.SymmetricTexture,
-                    fieldIndex: (int)FaceGenData_FieldIndex.SymmetricTexture,
-                    errorMask: errorMask,
                     header: recordTypeConverter.ConvertToCustom(FaceGenData_Registration.FGTS_HEADER),
                     nullable: false);
             }

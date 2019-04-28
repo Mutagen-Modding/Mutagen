@@ -780,101 +780,45 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.SPITDataTypeState = SPITDataType.Has;
                     }
-                    try
+                    if (EnumBinaryTranslation<Spell.SpellType>.Instance.Parse(
+                        frame: dataFrame.SpawnWithLength(4),
+                        item: out Spell.SpellType TypeParse))
                     {
-                        errorMask?.PushIndex((int)SpellUnleveled_FieldIndex.Type);
-                        if (EnumBinaryTranslation<Spell.SpellType>.Instance.Parse(
-                            frame: dataFrame.SpawnWithLength(4),
-                            item: out Spell.SpellType TypeParse,
-                            errorMask: errorMask))
-                        {
-                            item.Type = TypeParse;
-                        }
-                        else
-                        {
-                            item.Type = default(Spell.SpellType);
-                        }
+                        item.Type = TypeParse;
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    else
                     {
-                        errorMask.ReportException(ex);
+                        item.Type = default(Spell.SpellType);
                     }
-                    finally
+                    if (Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        item: out UInt32 CostParse))
                     {
-                        errorMask?.PopIndex();
+                        item.Cost = CostParse;
                     }
-                    try
+                    else
                     {
-                        errorMask?.PushIndex((int)SpellUnleveled_FieldIndex.Cost);
-                        if (Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
-                            item: out UInt32 CostParse,
-                            errorMask: errorMask))
-                        {
-                            item.Cost = CostParse;
-                        }
-                        else
-                        {
-                            item.Cost = default(UInt32);
-                        }
+                        item.Cost = default(UInt32);
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    if (EnumBinaryTranslation<Spell.SpellLevel>.Instance.Parse(
+                        frame: dataFrame.SpawnWithLength(4),
+                        item: out Spell.SpellLevel LevelParse))
                     {
-                        errorMask.ReportException(ex);
+                        item.Level = LevelParse;
                     }
-                    finally
+                    else
                     {
-                        errorMask?.PopIndex();
+                        item.Level = default(Spell.SpellLevel);
                     }
-                    try
+                    if (EnumBinaryTranslation<Spell.SpellFlag>.Instance.Parse(
+                        frame: dataFrame.SpawnWithLength(4),
+                        item: out Spell.SpellFlag FlagParse))
                     {
-                        errorMask?.PushIndex((int)SpellUnleveled_FieldIndex.Level);
-                        if (EnumBinaryTranslation<Spell.SpellLevel>.Instance.Parse(
-                            frame: dataFrame.SpawnWithLength(4),
-                            item: out Spell.SpellLevel LevelParse,
-                            errorMask: errorMask))
-                        {
-                            item.Level = LevelParse;
-                        }
-                        else
-                        {
-                            item.Level = default(Spell.SpellLevel);
-                        }
+                        item.Flag = FlagParse;
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    else
                     {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    try
-                    {
-                        errorMask?.PushIndex((int)SpellUnleveled_FieldIndex.Flag);
-                        if (EnumBinaryTranslation<Spell.SpellFlag>.Instance.Parse(
-                            frame: dataFrame.SpawnWithLength(4),
-                            item: out Spell.SpellFlag FlagParse,
-                            errorMask: errorMask))
-                        {
-                            item.Flag = FlagParse;
-                        }
-                        else
-                        {
-                            item.Flag = default(Spell.SpellFlag);
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
+                        item.Flag = default(Spell.SpellFlag);
                     }
                     return TryGet<int?>.Succeed((int)SpellUnleveled_FieldIndex.Flag);
                 }
@@ -2080,26 +2024,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     Mutagen.Bethesda.Binary.EnumBinaryTranslation<Spell.SpellType>.Instance.Write(
                         writer,
                         item.Type,
-                        length: 4,
-                        fieldIndex: (int)SpellUnleveled_FieldIndex.Type,
-                        errorMask: errorMask);
+                        length: 4);
                     Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.Cost,
-                        fieldIndex: (int)SpellUnleveled_FieldIndex.Cost,
-                        errorMask: errorMask);
+                        item: item.Cost);
                     Mutagen.Bethesda.Binary.EnumBinaryTranslation<Spell.SpellLevel>.Instance.Write(
                         writer,
                         item.Level,
-                        length: 4,
-                        fieldIndex: (int)SpellUnleveled_FieldIndex.Level,
-                        errorMask: errorMask);
+                        length: 4);
                     Mutagen.Bethesda.Binary.EnumBinaryTranslation<Spell.SpellFlag>.Instance.Write(
                         writer,
                         item.Flag,
-                        length: 4,
-                        fieldIndex: (int)SpellUnleveled_FieldIndex.Flag,
-                        errorMask: errorMask);
+                        length: 4);
                 }
             }
             if (item.Effects.HasBeenSet)

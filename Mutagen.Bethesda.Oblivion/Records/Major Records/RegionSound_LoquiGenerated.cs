@@ -552,56 +552,26 @@ namespace Mutagen.Bethesda.Oblivion
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
                 frame: frame,
                 masterReferences: masterReferences,
-                item: item.Sound_Property,
-                fieldIndex: (int)RegionSound_FieldIndex.Sound,
-                errorMask: errorMask);
-            try
+                item: item.Sound_Property);
+            if (EnumBinaryTranslation<RegionSound.Flag>.Instance.Parse(
+                frame: frame.SpawnWithLength(4),
+                item: out RegionSound.Flag FlagsParse))
             {
-                errorMask?.PushIndex((int)RegionSound_FieldIndex.Flags);
-                if (EnumBinaryTranslation<RegionSound.Flag>.Instance.Parse(
-                    frame: frame.SpawnWithLength(4),
-                    item: out RegionSound.Flag FlagsParse,
-                    errorMask: errorMask))
-                {
-                    item.Flags = FlagsParse;
-                }
-                else
-                {
-                    item.Flags = default(RegionSound.Flag);
-                }
+                item.Flags = FlagsParse;
             }
-            catch (Exception ex)
-            when (errorMask != null)
+            else
             {
-                errorMask.ReportException(ex);
+                item.Flags = default(RegionSound.Flag);
             }
-            finally
+            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                frame: frame,
+                item: out Single ChanceParse))
             {
-                errorMask?.PopIndex();
+                item.Chance = ChanceParse;
             }
-            try
+            else
             {
-                errorMask?.PushIndex((int)RegionSound_FieldIndex.Chance);
-                if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                    frame: frame,
-                    item: out Single ChanceParse,
-                    errorMask: errorMask))
-                {
-                    item.Chance = ChanceParse;
-                }
-                else
-                {
-                    item.Chance = default(Single);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
+                item.Chance = default(Single);
             }
         }
 
@@ -1391,20 +1361,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Sound_Property,
-                fieldIndex: (int)RegionSound_FieldIndex.Sound,
-                errorMask: errorMask,
                 masterReferences: masterReferences);
             Mutagen.Bethesda.Binary.EnumBinaryTranslation<RegionSound.Flag>.Instance.Write(
                 writer,
                 item.Flags,
-                length: 4,
-                fieldIndex: (int)RegionSound_FieldIndex.Flags,
-                errorMask: errorMask);
+                length: 4);
             Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Chance,
-                fieldIndex: (int)RegionSound_FieldIndex.Chance,
-                errorMask: errorMask);
+                item: item.Chance);
         }
 
         #endregion

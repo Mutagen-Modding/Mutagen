@@ -567,83 +567,39 @@ namespace Mutagen.Bethesda.Oblivion
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            try
+            if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                frame: frame,
+                item: out Byte LockLevelParse))
             {
-                errorMask?.PushIndex((int)LockInformation_FieldIndex.LockLevel);
-                if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                    frame: frame,
-                    item: out Byte LockLevelParse,
-                    errorMask: errorMask))
-                {
-                    item.LockLevel = LockLevelParse;
-                }
-                else
-                {
-                    item.LockLevel = default(Byte);
-                }
+                item.LockLevel = LockLevelParse;
             }
-            catch (Exception ex)
-            when (errorMask != null)
+            else
             {
-                errorMask.ReportException(ex);
+                item.LockLevel = default(Byte);
             }
-            finally
+            if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+                frame: frame.SpawnWithLength(3),
+                item: out Byte[] FluffParse))
             {
-                errorMask?.PopIndex();
+                item.Fluff = FluffParse;
             }
-            try
+            else
             {
-                errorMask?.PushIndex((int)LockInformation_FieldIndex.Fluff);
-                if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
-                    frame: frame.SpawnWithLength(3),
-                    item: out Byte[] FluffParse,
-                    errorMask: errorMask))
-                {
-                    item.Fluff = FluffParse;
-                }
-                else
-                {
-                    item.Fluff = default(Byte[]);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
+                item.Fluff = default(Byte[]);
             }
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
                 frame: frame,
                 masterReferences: masterReferences,
-                item: item.Key_Property,
-                fieldIndex: (int)LockInformation_FieldIndex.Key,
-                errorMask: errorMask);
-            try
+                item: item.Key_Property);
+            if (EnumBinaryTranslation<LockInformation.Flag>.Instance.Parse(
+                frame: frame.SpawnWithLength(4),
+                item: out LockInformation.Flag FlagsParse))
             {
-                errorMask?.PushIndex((int)LockInformation_FieldIndex.Flags);
-                if (EnumBinaryTranslation<LockInformation.Flag>.Instance.Parse(
-                    frame: frame.SpawnWithLength(4),
-                    item: out LockInformation.Flag FlagsParse,
-                    errorMask: errorMask))
-                {
-                    item.Flags = FlagsParse;
-                }
-                else
-                {
-                    item.Flags = default(LockInformation.Flag);
-                }
+                item.Flags = FlagsParse;
             }
-            catch (Exception ex)
-            when (errorMask != null)
+            else
             {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
+                item.Flags = default(LockInformation.Flag);
             }
         }
 
@@ -1523,26 +1479,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.LockLevel,
-                fieldIndex: (int)LockInformation_FieldIndex.LockLevel,
-                errorMask: errorMask);
+                item: item.LockLevel);
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Fluff,
-                fieldIndex: (int)LockInformation_FieldIndex.Fluff,
-                errorMask: errorMask);
+                item: item.Fluff);
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Key_Property,
-                fieldIndex: (int)LockInformation_FieldIndex.Key,
-                errorMask: errorMask,
                 masterReferences: masterReferences);
             Mutagen.Bethesda.Binary.EnumBinaryTranslation<LockInformation.Flag>.Instance.Write(
                 writer,
                 item.Flags,
-                length: 4,
-                fieldIndex: (int)LockInformation_FieldIndex.Flags,
-                errorMask: errorMask);
+                length: 4);
         }
 
         #endregion

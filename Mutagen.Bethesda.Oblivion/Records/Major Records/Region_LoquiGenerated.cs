@@ -991,60 +991,32 @@ namespace Mutagen.Bethesda.Oblivion
                 case 0x4E4F4349: // ICON
                 {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    try
+                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        parseWhole: true,
+                        item: out String IconParse))
                     {
-                        errorMask?.PushIndex((int)Region_FieldIndex.Icon);
-                        if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
-                            parseWhole: true,
-                            item: out String IconParse,
-                            errorMask: errorMask))
-                        {
-                            item.Icon = IconParse;
-                        }
-                        else
-                        {
-                            item.Icon = default(String);
-                        }
+                        item.Icon = IconParse;
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    else
                     {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
+                        item.Icon = default(String);
                     }
                     return TryGet<int?>.Succeed((int)Region_FieldIndex.Icon);
                 }
                 case 0x524C4352: // RCLR
                 {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    try
+                    if (Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        extraByte: true,
+                        item: out Color MapColorParse))
                     {
-                        errorMask?.PushIndex((int)Region_FieldIndex.MapColor);
-                        if (Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
-                            extraByte: true,
-                            item: out Color MapColorParse,
-                            errorMask: errorMask))
-                        {
-                            item.MapColor = MapColorParse;
-                        }
-                        else
-                        {
-                            item.MapColor = default(Color);
-                        }
+                        item.MapColor = MapColorParse;
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    else
                     {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
+                        item.MapColor = default(Color);
                     }
                     return TryGet<int?>.Succeed((int)Region_FieldIndex.MapColor);
                 }
@@ -1054,9 +1026,7 @@ namespace Mutagen.Bethesda.Oblivion
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
-                        item: item.Worldspace_Property,
-                        fieldIndex: (int)Region_FieldIndex.Worldspace,
-                        errorMask: errorMask);
+                        item: item.Worldspace_Property);
                     return TryGet<int?>.Succeed((int)Region_FieldIndex.Worldspace);
                 }
                 case 0x494C5052: // RPLI
@@ -2826,8 +2796,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.Icon,
-                    fieldIndex: (int)Region_FieldIndex.Icon,
-                    errorMask: errorMask,
                     header: recordTypeConverter.ConvertToCustom(Region_Registration.ICON_HEADER),
                     nullable: false);
             }
@@ -2836,8 +2804,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.MapColor,
-                    fieldIndex: (int)Region_FieldIndex.MapColor,
-                    errorMask: errorMask,
                     header: recordTypeConverter.ConvertToCustom(Region_Registration.RCLR_HEADER),
                     nullable: false,
                     extraByte: true);
@@ -2847,8 +2813,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.Worldspace_Property,
-                    fieldIndex: (int)Region_FieldIndex.Worldspace,
-                    errorMask: errorMask,
                     header: recordTypeConverter.ConvertToCustom(Region_Registration.WNAM_HEADER),
                     nullable: false,
                     masterReferences: masterReferences);

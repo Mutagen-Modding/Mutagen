@@ -549,59 +549,29 @@ namespace Mutagen.Bethesda.Oblivion
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            try
+            if (EnumBinaryTranslation<AIPackageLocation.LocationType>.Instance.Parse(
+                frame: frame.SpawnWithLength(4),
+                item: out AIPackageLocation.LocationType TypeParse))
             {
-                errorMask?.PushIndex((int)AIPackageLocation_FieldIndex.Type);
-                if (EnumBinaryTranslation<AIPackageLocation.LocationType>.Instance.Parse(
-                    frame: frame.SpawnWithLength(4),
-                    item: out AIPackageLocation.LocationType TypeParse,
-                    errorMask: errorMask))
-                {
-                    item.Type = TypeParse;
-                }
-                else
-                {
-                    item.Type = default(AIPackageLocation.LocationType);
-                }
+                item.Type = TypeParse;
             }
-            catch (Exception ex)
-            when (errorMask != null)
+            else
             {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
+                item.Type = default(AIPackageLocation.LocationType);
             }
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
                 frame: frame,
                 masterReferences: masterReferences,
-                item: item.LocationReference_Property,
-                fieldIndex: (int)AIPackageLocation_FieldIndex.LocationReference,
-                errorMask: errorMask);
-            try
+                item: item.LocationReference_Property);
+            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                frame: frame,
+                item: out Single RadiusParse))
             {
-                errorMask?.PushIndex((int)AIPackageLocation_FieldIndex.Radius);
-                if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                    frame: frame,
-                    item: out Single RadiusParse,
-                    errorMask: errorMask))
-                {
-                    item.Radius = RadiusParse;
-                }
-                else
-                {
-                    item.Radius = default(Single);
-                }
+                item.Radius = RadiusParse;
             }
-            catch (Exception ex)
-            when (errorMask != null)
+            else
             {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
+                item.Radius = default(Single);
             }
         }
 
@@ -1399,20 +1369,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Binary.EnumBinaryTranslation<AIPackageLocation.LocationType>.Instance.Write(
                 writer,
                 item.Type,
-                length: 4,
-                fieldIndex: (int)AIPackageLocation_FieldIndex.Type,
-                errorMask: errorMask);
+                length: 4);
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.LocationReference_Property,
-                fieldIndex: (int)AIPackageLocation_FieldIndex.LocationReference,
-                errorMask: errorMask,
                 masterReferences: masterReferences);
             Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Radius,
-                fieldIndex: (int)AIPackageLocation_FieldIndex.Radius,
-                errorMask: errorMask);
+                item: item.Radius);
         }
 
         #endregion

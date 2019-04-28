@@ -12,9 +12,9 @@ namespace Mutagen.Bethesda.Binary
     {
         public readonly static ModKeyBinaryTranslation Instance = new ModKeyBinaryTranslation();
 
-        public bool Parse(MutagenFrame frame, out ModKey item, ErrorMaskBuilder errorMask)
+        public bool Parse(MutagenFrame frame, out ModKey item)
         {
-            if (!StringBinaryTranslation.Instance.Parse(frame, out var str, errorMask))
+            if (!StringBinaryTranslation.Instance.Parse(frame, out var str))
             {
                 item = default;
                 return false;
@@ -23,27 +23,23 @@ namespace Mutagen.Bethesda.Binary
             return ModKey.TryFactory(str, out item);
         }
 
-        public void Write(MutagenWriter writer, ModKey item, long length, ErrorMaskBuilder errorMask)
+        public void Write(MutagenWriter writer, ModKey item, long length)
         {
-            StringBinaryTranslation.Instance.Write(writer, item.ToString(), length, errorMask);
+            StringBinaryTranslation.Instance.Write(writer, item.ToString(), length);
         }
 
         public void Write(
             MutagenWriter writer,
             ModKey item,
             RecordType header,
-            int fieldIndex,
             bool nullable,
-            ErrorMaskBuilder errorMask,
             bool nullTerminate = true)
         {
             StringBinaryTranslation.Instance.Write(
                 writer,
                 item.ToString(),
                 header,
-                fieldIndex,
                 nullable,
-                errorMask,
                 nullTerminate);
         }
 
@@ -51,9 +47,7 @@ namespace Mutagen.Bethesda.Binary
             MutagenWriter writer,
             IHasBeenSetItem<ModKey> item,
             RecordType header,
-            int fieldIndex,
             bool nullable,
-            ErrorMaskBuilder errorMask,
             bool nullTerminate = true)
         {
             if (!item.HasBeenSet) return;
@@ -61,9 +55,7 @@ namespace Mutagen.Bethesda.Binary
                 writer,
                 item.Item.ToString(),
                 header,
-                fieldIndex,
                 nullable,
-                errorMask,
                 nullTerminate);
         }
     }

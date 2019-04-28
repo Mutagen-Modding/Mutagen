@@ -91,7 +91,10 @@ namespace Mutagen.Bethesda.Generation
             {
                 args.Add($"writer: {writerAccessor}");
                 args.Add($"items: {itemAccessor.PropertyOrDirectAccess}");
-                args.Add($"fieldIndex: (int){typeGen.IndexEnumName}");
+                if (subTransl.DoErrorMasks)
+                {
+                    args.Add($"fieldIndex: (int){typeGen.IndexEnumName}");
+                }
                 if (listBinaryType == ListBinaryType.Trigger)
                 {
                     args.Add($"recordType: {objGen.RecordTypeHeaderName(data.RecordType.Value)}");
@@ -100,7 +103,10 @@ namespace Mutagen.Bethesda.Generation
                 {
                     args.Add($"recordType: {subData.TriggeringRecordSetAccessor}");
                 }
-                args.Add($"errorMask: {errorMaskAccessor}");
+                if (subTransl.DoErrorMasks)
+                {
+                    args.Add($"errorMask: {errorMaskAccessor}");
+                }
                 if (this.Module.TranslationMaskParameter)
                 {
                     args.Add($"translationMask: {translationMaskAccessor}");
@@ -114,7 +120,7 @@ namespace Mutagen.Bethesda.Generation
                     args.Add((gen) =>
                     {
                         var listTranslMask = this.MaskModule.GetMaskModule(list.SubTypeGeneration.GetType()).GetTranslationMaskTypeStr(list.SubTypeGeneration);
-                        gen.AppendLine($"transl: (MutagenWriter subWriter, {list.SubTypeGeneration.TypeName} subItem, ErrorMaskBuilder listErrorMask) =>");
+                        gen.AppendLine($"transl: (MutagenWriter subWriter, {list.SubTypeGeneration.TypeName} subItem{(subTransl.DoErrorMasks ? ", ErrorMaskBuilder listErrorMask" : null)}) =>");
                         using (new BraceWrapper(gen))
                         {
                             subTransl.GenerateWrite(
@@ -189,7 +195,10 @@ namespace Mutagen.Bethesda.Generation
                     args.Add($"masterReferences: masterReferences");
                 }
                 args.Add($"item: {itemAccessor.PropertyOrDirectAccess}");
-                args.Add($"fieldIndex: (int){typeGen.IndexEnumName}");
+                if (subTransl.DoErrorMasks)
+                {
+                    args.Add($"fieldIndex: (int){typeGen.IndexEnumName}");
+                }
                 if (list.CustomData.TryGetValue("lengthLength", out object len))
                 {
                     args.Add($"lengthLength: {len}");
@@ -217,7 +226,10 @@ namespace Mutagen.Bethesda.Generation
                         args.Add($"lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH");
                     }
                 }
-                args.Add($"errorMask: {errorMaskAccessor}");
+                if (subTransl.DoErrorMasks)
+                {
+                    args.Add($"errorMask: {errorMaskAccessor}");
+                }
                 var subGenTypes = subData.GenerationTypes.ToList();
                 var subGen = this.Module.GetTypeGeneration(list.SubTypeGeneration.GetType());
                 if (subGenTypes.Count <= 1 && subTransl.AllowDirectParse(
@@ -239,7 +251,7 @@ namespace Mutagen.Bethesda.Generation
                 {
                     args.Add((gen) =>
                     {
-                        gen.AppendLine($"transl: (MutagenFrame r{(subGenTypes.Count <= 1 ? string.Empty : ", RecordType header")}, out {list.SubTypeGeneration.TypeName} listSubItem, ErrorMaskBuilder listErrMask) =>");
+                        gen.AppendLine($"transl: (MutagenFrame r{(subGenTypes.Count <= 1 ? string.Empty : ", RecordType header")}, out {list.SubTypeGeneration.TypeName} listSubItem{(subTransl.DoErrorMasks ? ", ErrorMaskBuilder listErrMask" : null)}) =>");
                         using (new BraceWrapper(gen))
                         {
                             if (subGenTypes.Count <= 1)

@@ -11,8 +11,9 @@ namespace Mutagen.Bethesda.Generation
 {
     public abstract class BinaryTranslationGeneration : TranslationGeneration
     {
-        public TranslationModule<BinaryTranslationGeneration> Module;
+        public BinaryTranslationModule Module;
         public string Namespace => Module.Namespace;
+        public virtual bool DoErrorMasks => this.Module.DoErrorMasks;
 
         public delegate TryGet<string> ParamTest(
             ObjectGeneration objGen,

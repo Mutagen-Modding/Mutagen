@@ -836,116 +836,60 @@ namespace Mutagen.Bethesda.Oblivion
                 case 0x41544144: // DATA
                 {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    try
+                    if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        item: out Byte[] UnknownParse))
                     {
-                        errorMask?.PushIndex((int)Landscape_FieldIndex.Unknown);
-                        if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
-                            item: out Byte[] UnknownParse,
-                            errorMask: errorMask))
-                        {
-                            item.Unknown = UnknownParse;
-                        }
-                        else
-                        {
-                            item.Unknown = default(Byte[]);
-                        }
+                        item.Unknown = UnknownParse;
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    else
                     {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
+                        item.Unknown = default(Byte[]);
                     }
                     return TryGet<int?>.Succeed((int)Landscape_FieldIndex.Unknown);
                 }
                 case 0x4C4D4E56: // VNML
                 {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    try
+                    if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        item: out Byte[] VertexNormalsParse))
                     {
-                        errorMask?.PushIndex((int)Landscape_FieldIndex.VertexNormals);
-                        if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
-                            item: out Byte[] VertexNormalsParse,
-                            errorMask: errorMask))
-                        {
-                            item.VertexNormals = VertexNormalsParse;
-                        }
-                        else
-                        {
-                            item.VertexNormals = default(Byte[]);
-                        }
+                        item.VertexNormals = VertexNormalsParse;
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    else
                     {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
+                        item.VertexNormals = default(Byte[]);
                     }
                     return TryGet<int?>.Succeed((int)Landscape_FieldIndex.VertexNormals);
                 }
                 case 0x54474856: // VHGT
                 {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    try
+                    if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        item: out Byte[] VertexHeightMapParse))
                     {
-                        errorMask?.PushIndex((int)Landscape_FieldIndex.VertexHeightMap);
-                        if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
-                            item: out Byte[] VertexHeightMapParse,
-                            errorMask: errorMask))
-                        {
-                            item.VertexHeightMap = VertexHeightMapParse;
-                        }
-                        else
-                        {
-                            item.VertexHeightMap = default(Byte[]);
-                        }
+                        item.VertexHeightMap = VertexHeightMapParse;
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    else
                     {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
+                        item.VertexHeightMap = default(Byte[]);
                     }
                     return TryGet<int?>.Succeed((int)Landscape_FieldIndex.VertexHeightMap);
                 }
                 case 0x524C4356: // VCLR
                 {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    try
+                    if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        item: out Byte[] VertexColorsParse))
                     {
-                        errorMask?.PushIndex((int)Landscape_FieldIndex.VertexColors);
-                        if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
-                            item: out Byte[] VertexColorsParse,
-                            errorMask: errorMask))
-                        {
-                            item.VertexColors = VertexColorsParse;
-                        }
-                        else
-                        {
-                            item.VertexColors = default(Byte[]);
-                        }
+                        item.VertexColors = VertexColorsParse;
                     }
-                    catch (Exception ex)
-                    when (errorMask != null)
+                    else
                     {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
+                        item.VertexColors = default(Byte[]);
                     }
                     return TryGet<int?>.Succeed((int)Landscape_FieldIndex.VertexColors);
                 }
@@ -989,9 +933,7 @@ namespace Mutagen.Bethesda.Oblivion
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
                         item: item.Textures,
-                        fieldIndex: (int)Landscape_FieldIndex.Textures,
                         lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
-                        errorMask: errorMask,
                         transl: FormLinkBinaryTranslation.Instance.Parse);
                     return TryGet<int?>.Succeed((int)Landscape_FieldIndex.Textures);
                 }
@@ -2313,8 +2255,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.Unknown,
-                    fieldIndex: (int)Landscape_FieldIndex.Unknown,
-                    errorMask: errorMask,
                     header: recordTypeConverter.ConvertToCustom(Landscape_Registration.DATA_HEADER),
                     nullable: false);
             }
@@ -2323,8 +2263,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.VertexNormals,
-                    fieldIndex: (int)Landscape_FieldIndex.VertexNormals,
-                    errorMask: errorMask,
                     header: recordTypeConverter.ConvertToCustom(Landscape_Registration.VNML_HEADER),
                     nullable: false);
             }
@@ -2333,8 +2271,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.VertexHeightMap,
-                    fieldIndex: (int)Landscape_FieldIndex.VertexHeightMap,
-                    errorMask: errorMask,
                     header: recordTypeConverter.ConvertToCustom(Landscape_Registration.VHGT_HEADER),
                     nullable: false);
             }
@@ -2343,8 +2279,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.VertexColors,
-                    fieldIndex: (int)Landscape_FieldIndex.VertexColors,
-                    errorMask: errorMask,
                     header: recordTypeConverter.ConvertToCustom(Landscape_Registration.VCLR_HEADER),
                     nullable: false);
             }
@@ -2370,15 +2304,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDLink<LandTexture>>.Instance.Write(
                     writer: writer,
                     items: item.Textures,
-                    fieldIndex: (int)Landscape_FieldIndex.Textures,
                     recordType: Landscape_Registration.VTEX_HEADER,
-                    errorMask: errorMask,
-                    transl: (MutagenWriter subWriter, FormIDLink<LandTexture> subItem, ErrorMaskBuilder listErrorMask) =>
+                    transl: (MutagenWriter subWriter, FormIDLink<LandTexture> subItem) =>
                     {
                         Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                             writer: subWriter,
                             item: subItem,
-                            errorMask: listErrorMask,
                             masterReferences: masterReferences);
                     }
                     );

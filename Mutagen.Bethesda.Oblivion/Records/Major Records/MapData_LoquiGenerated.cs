@@ -533,77 +533,35 @@ namespace Mutagen.Bethesda.Oblivion
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            try
+            if (Mutagen.Bethesda.Binary.P2IntBinaryTranslation.Instance.Parse(
+                frame: frame,
+                item: out P2Int UsableDimensionsParse))
             {
-                errorMask?.PushIndex((int)MapData_FieldIndex.UsableDimensions);
-                if (Mutagen.Bethesda.Binary.P2IntBinaryTranslation.Instance.Parse(
-                    frame: frame,
-                    item: out P2Int UsableDimensionsParse,
-                    errorMask: errorMask))
-                {
-                    item.UsableDimensions = UsableDimensionsParse;
-                }
-                else
-                {
-                    item.UsableDimensions = default(P2Int);
-                }
+                item.UsableDimensions = UsableDimensionsParse;
             }
-            catch (Exception ex)
-            when (errorMask != null)
+            else
             {
-                errorMask.ReportException(ex);
+                item.UsableDimensions = default(P2Int);
             }
-            finally
+            if (Mutagen.Bethesda.Binary.P2Int16BinaryTranslation.Instance.Parse(
+                frame: frame,
+                item: out P2Int16 CellCoordinatesNWCellParse))
             {
-                errorMask?.PopIndex();
+                item.CellCoordinatesNWCell = CellCoordinatesNWCellParse;
             }
-            try
+            else
             {
-                errorMask?.PushIndex((int)MapData_FieldIndex.CellCoordinatesNWCell);
-                if (Mutagen.Bethesda.Binary.P2Int16BinaryTranslation.Instance.Parse(
-                    frame: frame,
-                    item: out P2Int16 CellCoordinatesNWCellParse,
-                    errorMask: errorMask))
-                {
-                    item.CellCoordinatesNWCell = CellCoordinatesNWCellParse;
-                }
-                else
-                {
-                    item.CellCoordinatesNWCell = default(P2Int16);
-                }
+                item.CellCoordinatesNWCell = default(P2Int16);
             }
-            catch (Exception ex)
-            when (errorMask != null)
+            if (Mutagen.Bethesda.Binary.P2Int16BinaryTranslation.Instance.Parse(
+                frame: frame,
+                item: out P2Int16 CellCoordinatesSECellParse))
             {
-                errorMask.ReportException(ex);
+                item.CellCoordinatesSECell = CellCoordinatesSECellParse;
             }
-            finally
+            else
             {
-                errorMask?.PopIndex();
-            }
-            try
-            {
-                errorMask?.PushIndex((int)MapData_FieldIndex.CellCoordinatesSECell);
-                if (Mutagen.Bethesda.Binary.P2Int16BinaryTranslation.Instance.Parse(
-                    frame: frame,
-                    item: out P2Int16 CellCoordinatesSECellParse,
-                    errorMask: errorMask))
-                {
-                    item.CellCoordinatesSECell = CellCoordinatesSECellParse;
-                }
-                else
-                {
-                    item.CellCoordinatesSECell = default(P2Int16);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
+                item.CellCoordinatesSECell = default(P2Int16);
             }
         }
 
@@ -1419,19 +1377,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             Mutagen.Bethesda.Binary.P2IntBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.UsableDimensions,
-                fieldIndex: (int)MapData_FieldIndex.UsableDimensions,
-                errorMask: errorMask);
+                item: item.UsableDimensions);
             Mutagen.Bethesda.Binary.P2Int16BinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.CellCoordinatesNWCell,
-                fieldIndex: (int)MapData_FieldIndex.CellCoordinatesNWCell,
-                errorMask: errorMask);
+                item: item.CellCoordinatesNWCell);
             Mutagen.Bethesda.Binary.P2Int16BinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.CellCoordinatesSECell,
-                fieldIndex: (int)MapData_FieldIndex.CellCoordinatesSECell,
-                errorMask: errorMask);
+                item: item.CellCoordinatesSECell);
         }
 
         #endregion

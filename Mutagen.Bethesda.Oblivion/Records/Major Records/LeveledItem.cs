@@ -22,8 +22,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
             if (ByteBinaryTranslation.Instance.Parse(
                 frame,
-                out var parseVal,
-                errorMask)
+                out var parseVal)
                 && parseVal > 0)
             {
                 item.Flags |= LeveledFlag.CalculateForEachItemInCount;
