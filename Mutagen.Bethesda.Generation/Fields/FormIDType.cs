@@ -12,6 +12,8 @@ namespace Mutagen.Bethesda.Generation
     {
         public override Type Type => typeof(FormID);
 
+        public override bool HasProperty => true;
+
         public override void GenerateForEquals(FileGeneration fg, Accessor accessor, Accessor rhsAccessor)
         {
             if (!this.IntegrateField) return;

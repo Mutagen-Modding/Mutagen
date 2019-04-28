@@ -837,9 +837,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.Model = (Model)obj;
                     break;
                 case AnimatedObject_FieldIndex.IdleAnimation:
-                    this.IdleAnimation_Property.Set(
-                        (FormIDSetLink<IdleAnimation>)obj,
-                        cmds);
+                    this.IdleAnimation_Property.Set((FormIDSetLink<IdleAnimation>)obj);
                     break;
                 default:
                     base.SetNthObject(index, obj, cmds);
@@ -876,9 +874,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.Model = (Model)pair.Value;
                     break;
                 case AnimatedObject_FieldIndex.IdleAnimation:
-                    obj.IdleAnimation_Property.Set(
-                        (FormIDSetLink<IdleAnimation>)pair.Value,
-                        null);
+                    obj.IdleAnimation_Property.Set((FormIDSetLink<IdleAnimation>)pair.Value);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -1195,8 +1191,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.IdleAnimation_Property.SetLink(
                         rhs: rhs.IdleAnimation_Property,
-                        def: def?.IdleAnimation_Property,
-                        cmds: cmds);
+                        def: def?.IdleAnimation_Property);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1217,7 +1212,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             NotifyingUnsetParameters cmds = null)
         {
             item.Model_Unset();
-            item.IdleAnimation_Property.Unset(cmds.ToUnsetParams());
+            item.IdleAnimation_Property.Unset();
         }
 
         public static AnimatedObject_Mask<bool> GetEqualsMask(

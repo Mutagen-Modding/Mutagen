@@ -894,17 +894,13 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case ScriptEffect_FieldIndex.Script:
-                    this.Script_Property.Set(
-                        (FormIDLink<Script>)obj,
-                        cmds);
+                    this.Script_Property.Set((FormIDLink<Script>)obj);
                     break;
                 case ScriptEffect_FieldIndex.MagicSchool:
                     this.MagicSchool = (MagicSchool)obj;
                     break;
                 case ScriptEffect_FieldIndex.VisualEffect:
-                    this.VisualEffect_Property.Set(
-                        (EDIDLink<MagicEffect>)obj,
-                        cmds);
+                    this.VisualEffect_Property.Set((EDIDLink<MagicEffect>)obj);
                     break;
                 case ScriptEffect_FieldIndex.Flags:
                     this.Flags = (ScriptEffect.Flag)obj;
@@ -950,17 +946,13 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case ScriptEffect_FieldIndex.Script:
-                    obj.Script_Property.Set(
-                        (FormIDLink<Script>)pair.Value,
-                        null);
+                    obj.Script_Property.Set((FormIDLink<Script>)pair.Value);
                     break;
                 case ScriptEffect_FieldIndex.MagicSchool:
                     obj.MagicSchool = (MagicSchool)pair.Value;
                     break;
                 case ScriptEffect_FieldIndex.VisualEffect:
-                    obj.VisualEffect_Property.Set(
-                        (EDIDLink<MagicEffect>)pair.Value,
-                        null);
+                    obj.VisualEffect_Property.Set((EDIDLink<MagicEffect>)pair.Value);
                     break;
                 case ScriptEffect_FieldIndex.Flags:
                     obj.Flags = (ScriptEffect.Flag)pair.Value;
@@ -1267,9 +1259,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)ScriptEffect_FieldIndex.Script);
                 try
                 {
-                    item.Script_Property.SetLink(
-                        value: rhs.Script_Property,
-                        cmds: cmds);
+                    item.Script_Property.SetLink(value: rhs.Script_Property);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1303,9 +1293,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)ScriptEffect_FieldIndex.VisualEffect);
                 try
                 {
-                    item.VisualEffect_Property.SetLink(
-                        value: rhs.VisualEffect_Property,
-                        cmds: cmds);
+                    item.VisualEffect_Property.SetLink(value: rhs.VisualEffect_Property);
                 }
                 catch (Exception ex)
                 when (errorMask != null)

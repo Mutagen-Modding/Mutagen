@@ -818,9 +818,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case BaseLayer_FieldIndex.Texture:
-                    this.Texture_Property.Set(
-                        (FormIDLink<LandTexture>)obj,
-                        cmds);
+                    this.Texture_Property.Set((FormIDLink<LandTexture>)obj);
                     break;
                 case BaseLayer_FieldIndex.Quadrant:
                     this.Quadrant = (AlphaLayer.QuadrantEnum)obj;
@@ -866,9 +864,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case BaseLayer_FieldIndex.Texture:
-                    obj.Texture_Property.Set(
-                        (FormIDLink<LandTexture>)pair.Value,
-                        null);
+                    obj.Texture_Property.Set((FormIDLink<LandTexture>)pair.Value);
                     break;
                 case BaseLayer_FieldIndex.Quadrant:
                     obj.Quadrant = (AlphaLayer.QuadrantEnum)pair.Value;
@@ -1145,9 +1141,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)BaseLayer_FieldIndex.Texture);
                 try
                 {
-                    item.Texture_Property.SetLink(
-                        value: rhs.Texture_Property,
-                        cmds: cmds);
+                    item.Texture_Property.SetLink(value: rhs.Texture_Property);
                 }
                 catch (Exception ex)
                 when (errorMask != null)

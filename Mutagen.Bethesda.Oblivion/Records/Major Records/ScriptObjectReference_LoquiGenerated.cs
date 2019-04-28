@@ -666,9 +666,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case ScriptObjectReference_FieldIndex.Reference:
-                    this.Reference_Property.Set(
-                        (FormIDLink<OblivionMajorRecord>)obj,
-                        cmds);
+                    this.Reference_Property.Set((FormIDLink<OblivionMajorRecord>)obj);
                     break;
                 default:
                     base.SetNthObject(index, obj, cmds);
@@ -702,9 +700,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case ScriptObjectReference_FieldIndex.Reference:
-                    obj.Reference_Property.Set(
-                        (FormIDLink<OblivionMajorRecord>)pair.Value,
-                        null);
+                    obj.Reference_Property.Set((FormIDLink<OblivionMajorRecord>)pair.Value);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -935,9 +931,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)ScriptObjectReference_FieldIndex.Reference);
                 try
                 {
-                    item.Reference_Property.SetLink(
-                        value: rhs.Reference_Property,
-                        cmds: cmds);
+                    item.Reference_Property.SetLink(value: rhs.Reference_Property);
                 }
                 catch (Exception ex)
                 when (errorMask != null)

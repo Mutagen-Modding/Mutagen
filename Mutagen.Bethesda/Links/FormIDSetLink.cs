@@ -10,9 +10,21 @@ using System.Threading.Tasks;
 
 namespace Mutagen.Bethesda
 {
-    public class FormIDSetLink<T> : NotifyingSetItem<T>, IFormIDSetLink<T>, IEquatable<ILink<T>>
+    public class FormIDSetLink<T> : LoquiNotifyingObject, IFormIDSetLink<T>, IEquatable<ILink<T>>
        where T : IMajorRecord
     {
+        private bool _HasBeenSet;
+        public bool HasBeenSet
+        {
+            get => this._HasBeenSet;
+            set => this.RaiseAndSetIfChanged(ref this._HasBeenSet, value, nameof(HasBeenSet));
+        }
+        private T _Item;
+        public T Item
+        {
+            get => this._Item;
+            set => this.Set(value, true);
+        }
         public bool Linked => this.HasBeenSet && this.Item != null;
         public FormKey? UnlinkedForm { get; private set; }
         public FormKey FormKey => LinkExt.GetFormKey(this);
@@ -34,7 +46,6 @@ namespace Mutagen.Bethesda
         }
 
         public FormIDSetLink(FormKey unlinkedForm)
-            : base(markAsSet: true)
         {
             this.UnlinkedForm = unlinkedForm;
             this._HasBeenSet = true;
@@ -55,10 +66,10 @@ namespace Mutagen.Bethesda
             this.Item = default;
         }
 
-        public override void Set(T value, bool hasBeenSet, NotifyingFireParameters cmds = null)
+        public virtual void Set(T value, bool hasBeenSet = true)
         {
             UpdateUnlinkedForm(value);
-            base.Set(value, hasBeenSet, cmds);
+            this.RaiseAndSetIfChanged(ref this._Item, value, ref this._HasBeenSet, hasBeenSet, nameof(Item), nameof(HasBeenSet));
         }
 
         public void SetIfSucceeded(TryGet<FormKey> formKey)
@@ -69,6 +80,11 @@ namespace Mutagen.Bethesda
             }
             this.UnlinkedForm = formKey.Value;
             this.HasBeenSet = true;
+        }
+
+        public void Unset()
+        {
+            this.Set(default(T), hasBeenSet: false);
         }
 
         public void SetIfSucceededOrDefault(TryGet<FormKey> formKey)
@@ -87,17 +103,29 @@ namespace Mutagen.Bethesda
             this.HasBeenSet = true;
         }
 
-        public void SetLink(ISetLink<T> rhs, ISetLink<T> def, NotifyingFireParameters cmds = null)
+        public void SetLink(ISetLink<T> rhs, ISetLink<T> def)
         {
-            this.SetToWithDefault(rhs, def, cmds);
-            this.UnlinkedForm = rhs.FormKey;
+            if (rhs.HasBeenSet)
+            {
+                this.UnlinkedForm = rhs.FormKey;
+                this.RaiseAndSetIfChanged(ref this._Item, rhs.Item, ref this._HasBeenSet, true, nameof(Item), nameof(HasBeenSet));
+            }
+            else if (def.HasBeenSet)
+            {
+                this.UnlinkedForm = def.FormKey;
+                this.RaiseAndSetIfChanged(ref this._Item, def.Item, ref this._HasBeenSet, true, nameof(Item), nameof(HasBeenSet));
+            }
+            else
+            {
+                this.Unset();
+            }
         }
 
-        public void Set(ILink<T> link, NotifyingFireParameters cmds = null)
+        public void Set(ILink<T> link)
         {
             if (link.Linked)
             {
-                this.Set(link.Item, cmds);
+                this.Set(link.Item);
             }
             else
             {
@@ -105,12 +133,12 @@ namespace Mutagen.Bethesda
             }
         }
 
-        public void Set<R>(ILink<R> link, NotifyingFireParameters cmds = null)
+        public void Set<R>(ILink<R> link)
             where R : T
         {
             if (link.Linked)
             {
-                this.Set(link.Item, cmds);
+                this.Set(link.Item);
             }
             else
             {
@@ -120,8 +148,7 @@ namespace Mutagen.Bethesda
 
         public virtual bool Link<M>(
             ModList<M> modList,
-            M sourceMod,
-            NotifyingFireParameters cmds = null)
+            M sourceMod)
             where M : IMod<M>
         {
 #if DEBUG
@@ -137,7 +164,7 @@ namespace Mutagen.Bethesda
                 this.Item = default;
                 return false;
             }
-            this.Set(item, cmds);
+            this.Set(item);
             return true;
         }
 

@@ -1615,19 +1615,13 @@ namespace Mutagen.Bethesda.Oblivion
                     this.Name = (String)obj;
                     break;
                 case Worldspace_FieldIndex.Parent:
-                    this.Parent_Property.Set(
-                        (FormIDSetLink<Worldspace>)obj,
-                        cmds);
+                    this.Parent_Property.Set((FormIDSetLink<Worldspace>)obj);
                     break;
                 case Worldspace_FieldIndex.Climate:
-                    this.Climate_Property.Set(
-                        (FormIDSetLink<Climate>)obj,
-                        cmds);
+                    this.Climate_Property.Set((FormIDSetLink<Climate>)obj);
                     break;
                 case Worldspace_FieldIndex.Water:
-                    this.Water_Property.Set(
-                        (FormIDSetLink<Water>)obj,
-                        cmds);
+                    this.Water_Property.Set((FormIDSetLink<Water>)obj);
                     break;
                 case Worldspace_FieldIndex.Icon:
                     this.Icon = (String)obj;
@@ -1697,19 +1691,13 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.Name = (String)pair.Value;
                     break;
                 case Worldspace_FieldIndex.Parent:
-                    obj.Parent_Property.Set(
-                        (FormIDSetLink<Worldspace>)pair.Value,
-                        null);
+                    obj.Parent_Property.Set((FormIDSetLink<Worldspace>)pair.Value);
                     break;
                 case Worldspace_FieldIndex.Climate:
-                    obj.Climate_Property.Set(
-                        (FormIDSetLink<Climate>)pair.Value,
-                        null);
+                    obj.Climate_Property.Set((FormIDSetLink<Climate>)pair.Value);
                     break;
                 case Worldspace_FieldIndex.Water:
-                    obj.Water_Property.Set(
-                        (FormIDSetLink<Water>)pair.Value,
-                        null);
+                    obj.Water_Property.Set((FormIDSetLink<Water>)pair.Value);
                     break;
                 case Worldspace_FieldIndex.Icon:
                     obj.Icon = (String)pair.Value;
@@ -2317,8 +2305,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Parent_Property.SetLink(
                         rhs: rhs.Parent_Property,
-                        def: def?.Parent_Property,
-                        cmds: cmds);
+                        def: def?.Parent_Property);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2337,8 +2324,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Climate_Property.SetLink(
                         rhs: rhs.Climate_Property,
-                        def: def?.Climate_Property,
-                        cmds: cmds);
+                        def: def?.Climate_Property);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2357,8 +2343,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Water_Property.SetLink(
                         rhs: rhs.Water_Property,
-                        def: def?.Water_Property,
-                        cmds: cmds);
+                        def: def?.Water_Property);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2773,9 +2758,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             NotifyingUnsetParameters cmds = null)
         {
             item.Name_Unset();
-            item.Parent_Property.Unset(cmds.ToUnsetParams());
-            item.Climate_Property.Unset(cmds.ToUnsetParams());
-            item.Water_Property.Unset(cmds.ToUnsetParams());
+            item.Parent_Property.Unset();
+            item.Climate_Property.Unset();
+            item.Water_Property.Unset();
             item.Icon_Unset();
             item.MapData_Unset();
             item.Flags_Unset();

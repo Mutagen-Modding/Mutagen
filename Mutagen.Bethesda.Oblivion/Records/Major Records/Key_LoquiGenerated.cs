@@ -1105,9 +1105,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.Icon = (String)obj;
                     break;
                 case Key_FieldIndex.Script:
-                    this.Script_Property.Set(
-                        (FormIDSetLink<Script>)obj,
-                        cmds);
+                    this.Script_Property.Set((FormIDSetLink<Script>)obj);
                     break;
                 case Key_FieldIndex.Value:
                     this.Value = (UInt32)obj;
@@ -1156,9 +1154,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.Icon = (String)pair.Value;
                     break;
                 case Key_FieldIndex.Script:
-                    obj.Script_Property.Set(
-                        (FormIDSetLink<Script>)pair.Value,
-                        null);
+                    obj.Script_Property.Set((FormIDSetLink<Script>)pair.Value);
                     break;
                 case Key_FieldIndex.Value:
                     obj.Value = (UInt32)pair.Value;
@@ -1624,8 +1620,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Script_Property.SetLink(
                         rhs: rhs.Script_Property,
-                        def: def?.Script_Property,
-                        cmds: cmds);
+                        def: def?.Script_Property);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1682,7 +1677,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Name_Unset();
             item.Model_Unset();
             item.Icon_Unset();
-            item.Script_Property.Unset(cmds.ToUnsetParams());
+            item.Script_Property.Unset();
             item.Value = default(UInt32);
             item.Weight = default(Single);
         }

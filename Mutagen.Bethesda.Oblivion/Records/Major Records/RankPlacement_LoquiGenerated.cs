@@ -736,9 +736,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case RankPlacement_FieldIndex.Faction:
-                    this.Faction_Property.Set(
-                        (FormIDLink<Faction>)obj,
-                        cmds);
+                    this.Faction_Property.Set((FormIDLink<Faction>)obj);
                     break;
                 case RankPlacement_FieldIndex.Rank:
                     this.Rank = (Byte)obj;
@@ -784,9 +782,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case RankPlacement_FieldIndex.Faction:
-                    obj.Faction_Property.Set(
-                        (FormIDLink<Faction>)pair.Value,
-                        null);
+                    obj.Faction_Property.Set((FormIDLink<Faction>)pair.Value);
                     break;
                 case RankPlacement_FieldIndex.Rank:
                     obj.Rank = (Byte)pair.Value;
@@ -1052,9 +1048,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)RankPlacement_FieldIndex.Faction);
                 try
                 {
-                    item.Faction_Property.SetLink(
-                        value: rhs.Faction_Property,
-                        cmds: cmds);
+                    item.Faction_Property.SetLink(value: rhs.Faction_Property);
                 }
                 catch (Exception ex)
                 when (errorMask != null)

@@ -1250,14 +1250,10 @@ namespace Mutagen.Bethesda.Oblivion
                     this.Flags = (DialogItem.Flag)obj;
                     break;
                 case DialogItem_FieldIndex.Quest:
-                    this.Quest_Property.Set(
-                        (FormIDSetLink<Quest>)obj,
-                        cmds);
+                    this.Quest_Property.Set((FormIDSetLink<Quest>)obj);
                     break;
                 case DialogItem_FieldIndex.PreviousTopic:
-                    this.PreviousTopic_Property.Set(
-                        (FormIDSetLink<DialogItem>)obj,
-                        cmds);
+                    this.PreviousTopic_Property.Set((FormIDSetLink<DialogItem>)obj);
                     break;
                 case DialogItem_FieldIndex.Topics:
                     this._Topics.SetTo((IEnumerable<FormIDSetLink<DialogTopic>>)obj);
@@ -1315,14 +1311,10 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.Flags = (DialogItem.Flag)pair.Value;
                     break;
                 case DialogItem_FieldIndex.Quest:
-                    obj.Quest_Property.Set(
-                        (FormIDSetLink<Quest>)pair.Value,
-                        null);
+                    obj.Quest_Property.Set((FormIDSetLink<Quest>)pair.Value);
                     break;
                 case DialogItem_FieldIndex.PreviousTopic:
-                    obj.PreviousTopic_Property.Set(
-                        (FormIDSetLink<DialogItem>)pair.Value,
-                        null);
+                    obj.PreviousTopic_Property.Set((FormIDSetLink<DialogItem>)pair.Value);
                     break;
                 case DialogItem_FieldIndex.Topics:
                     obj._Topics.SetTo((IEnumerable<FormIDSetLink<DialogTopic>>)pair.Value);
@@ -1782,8 +1774,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Quest_Property.SetLink(
                         rhs: rhs.Quest_Property,
-                        def: def?.Quest_Property,
-                        cmds: cmds);
+                        def: def?.Quest_Property);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1802,8 +1793,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.PreviousTopic_Property.SetLink(
                         rhs: rhs.PreviousTopic_Property,
-                        def: def?.PreviousTopic_Property,
-                        cmds: cmds);
+                        def: def?.PreviousTopic_Property);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1975,8 +1965,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             item.DialogType = default(DialogType);
             item.Flags = default(DialogItem.Flag);
-            item.Quest_Property.Unset(cmds.ToUnsetParams());
-            item.PreviousTopic_Property.Unset(cmds.ToUnsetParams());
+            item.Quest_Property.Unset();
+            item.PreviousTopic_Property.Unset();
             item.Topics.Unset();
             item.Responses.Unset();
             item.Conditions.Unset();

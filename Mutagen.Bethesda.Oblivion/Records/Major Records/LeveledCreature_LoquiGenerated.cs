@@ -1031,14 +1031,10 @@ namespace Mutagen.Bethesda.Oblivion
                     this._Entries.SetTo((IEnumerable<LeveledEntry<NPCSpawn>>)obj);
                     break;
                 case LeveledCreature_FieldIndex.Script:
-                    this.Script_Property.Set(
-                        (FormIDSetLink<Script>)obj,
-                        cmds);
+                    this.Script_Property.Set((FormIDSetLink<Script>)obj);
                     break;
                 case LeveledCreature_FieldIndex.Template:
-                    this.Template_Property.Set(
-                        (FormIDSetLink<NPCAbstract>)obj,
-                        cmds);
+                    this.Template_Property.Set((FormIDSetLink<NPCAbstract>)obj);
                     break;
                 default:
                     base.SetNthObject(index, obj, cmds);
@@ -1081,14 +1077,10 @@ namespace Mutagen.Bethesda.Oblivion
                     obj._Entries.SetTo((IEnumerable<LeveledEntry<NPCSpawn>>)pair.Value);
                     break;
                 case LeveledCreature_FieldIndex.Script:
-                    obj.Script_Property.Set(
-                        (FormIDSetLink<Script>)pair.Value,
-                        null);
+                    obj.Script_Property.Set((FormIDSetLink<Script>)pair.Value);
                     break;
                 case LeveledCreature_FieldIndex.Template:
-                    obj.Template_Property.Set(
-                        (FormIDSetLink<NPCAbstract>)pair.Value,
-                        null);
+                    obj.Template_Property.Set((FormIDSetLink<NPCAbstract>)pair.Value);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -1506,8 +1498,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Script_Property.SetLink(
                         rhs: rhs.Script_Property,
-                        def: def?.Script_Property,
-                        cmds: cmds);
+                        def: def?.Script_Property);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1526,8 +1517,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Template_Property.SetLink(
                         rhs: rhs.Template_Property,
-                        def: def?.Template_Property,
-                        cmds: cmds);
+                        def: def?.Template_Property);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1550,8 +1540,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.ChanceNone_Unset();
             item.Flags_Unset();
             item.Entries.Unset();
-            item.Script_Property.Unset(cmds.ToUnsetParams());
-            item.Template_Property.Unset(cmds.ToUnsetParams());
+            item.Script_Property.Unset();
+            item.Template_Property.Unset();
         }
 
         public static LeveledCreature_Mask<bool> GetEqualsMask(

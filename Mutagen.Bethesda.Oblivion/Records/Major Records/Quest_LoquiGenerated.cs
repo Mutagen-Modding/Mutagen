@@ -1170,9 +1170,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case Quest_FieldIndex.Script:
-                    this.Script_Property.Set(
-                        (FormIDSetLink<Script>)obj,
-                        cmds);
+                    this.Script_Property.Set((FormIDSetLink<Script>)obj);
                     break;
                 case Quest_FieldIndex.Name:
                     this.Name = (String)obj;
@@ -1227,9 +1225,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case Quest_FieldIndex.Script:
-                    obj.Script_Property.Set(
-                        (FormIDSetLink<Script>)pair.Value,
-                        null);
+                    obj.Script_Property.Set((FormIDSetLink<Script>)pair.Value);
                     break;
                 case Quest_FieldIndex.Name:
                     obj.Name = (String)pair.Value;
@@ -1626,8 +1622,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Script_Property.SetLink(
                         rhs: rhs.Script_Property,
-                        def: def?.Script_Property,
-                        cmds: cmds);
+                        def: def?.Script_Property);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1846,7 +1841,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IQuest item,
             NotifyingUnsetParameters cmds = null)
         {
-            item.Script_Property.Unset(cmds.ToUnsetParams());
+            item.Script_Property.Unset();
             item.Name_Unset();
             item.Icon_Unset();
             item.Flags = default(Quest.Flag);

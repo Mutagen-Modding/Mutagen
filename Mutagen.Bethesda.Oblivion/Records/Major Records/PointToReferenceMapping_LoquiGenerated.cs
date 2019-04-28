@@ -675,9 +675,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case PointToReferenceMapping_FieldIndex.Reference:
-                    this.Reference_Property.Set(
-                        (FormIDLink<IPlaced>)obj,
-                        cmds);
+                    this.Reference_Property.Set((FormIDLink<IPlaced>)obj);
                     break;
                 case PointToReferenceMapping_FieldIndex.Points:
                     this._Points.SetTo((IEnumerable<Int16>)obj);
@@ -720,9 +718,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case PointToReferenceMapping_FieldIndex.Reference:
-                    obj.Reference_Property.Set(
-                        (FormIDLink<IPlaced>)pair.Value,
-                        null);
+                    obj.Reference_Property.Set((FormIDLink<IPlaced>)pair.Value);
                     break;
                 case PointToReferenceMapping_FieldIndex.Points:
                     obj._Points.SetTo((IEnumerable<Int16>)pair.Value);
@@ -966,9 +962,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)PointToReferenceMapping_FieldIndex.Reference);
                 try
                 {
-                    item.Reference_Property.SetLink(
-                        value: rhs.Reference_Property,
-                        cmds: cmds);
+                    item.Reference_Property.SetLink(value: rhs.Reference_Property);
                 }
                 catch (Exception ex)
                 when (errorMask != null)

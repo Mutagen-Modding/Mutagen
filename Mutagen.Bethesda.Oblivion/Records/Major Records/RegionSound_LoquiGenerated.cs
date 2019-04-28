@@ -729,9 +729,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case RegionSound_FieldIndex.Sound:
-                    this.Sound_Property.Set(
-                        (FormIDLink<Sound>)obj,
-                        cmds);
+                    this.Sound_Property.Set((FormIDLink<Sound>)obj);
                     break;
                 case RegionSound_FieldIndex.Flags:
                     this.Flags = (RegionSound.Flag)obj;
@@ -777,9 +775,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case RegionSound_FieldIndex.Sound:
-                    obj.Sound_Property.Set(
-                        (FormIDLink<Sound>)pair.Value,
-                        null);
+                    obj.Sound_Property.Set((FormIDLink<Sound>)pair.Value);
                     break;
                 case RegionSound_FieldIndex.Flags:
                     obj.Flags = (RegionSound.Flag)pair.Value;
@@ -1043,9 +1039,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)RegionSound_FieldIndex.Sound);
                 try
                 {
-                    item.Sound_Property.SetLink(
-                        value: rhs.Sound_Property,
-                        cmds: cmds);
+                    item.Sound_Property.SetLink(value: rhs.Sound_Property);
                 }
                 catch (Exception ex)
                 when (errorMask != null)

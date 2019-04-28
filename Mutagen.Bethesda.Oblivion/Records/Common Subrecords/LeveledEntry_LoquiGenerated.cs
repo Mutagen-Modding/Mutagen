@@ -918,9 +918,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.Fluff = (Byte[])obj;
                     break;
                 case LeveledEntry_FieldIndex.Reference:
-                    this.Reference_Property.Set(
-                        (FormIDLink<T>)obj,
-                        cmds);
+                    this.Reference_Property.Set((FormIDLink<T>)obj);
                     break;
                 case LeveledEntry_FieldIndex.Count:
                     this.Count = (Int16)obj;
@@ -972,9 +970,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.Fluff = (Byte[])pair.Value;
                     break;
                 case LeveledEntry_FieldIndex.Reference:
-                    obj.Reference_Property.Set(
-                        (FormIDLink<T>)pair.Value,
-                        null);
+                    obj.Reference_Property.Set((FormIDLink<T>)pair.Value);
                     break;
                 case LeveledEntry_FieldIndex.Count:
                     obj.Count = (Int16)pair.Value;
@@ -1331,9 +1327,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)LeveledEntry_FieldIndex.Reference);
                 try
                 {
-                    item.Reference_Property.SetLink(
-                        value: rhs.Reference_Property,
-                        cmds: cmds);
+                    item.Reference_Property.SetLink(value: rhs.Reference_Property);
                 }
                 catch (Exception ex)
                 when (errorMask != null)

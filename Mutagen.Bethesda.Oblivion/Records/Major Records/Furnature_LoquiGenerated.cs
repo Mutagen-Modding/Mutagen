@@ -974,9 +974,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.Model = (Model)obj;
                     break;
                 case Furnature_FieldIndex.Script:
-                    this.Script_Property.Set(
-                        (FormIDSetLink<Script>)obj,
-                        cmds);
+                    this.Script_Property.Set((FormIDSetLink<Script>)obj);
                     break;
                 case Furnature_FieldIndex.MarkerFlags:
                     this.MarkerFlags = (Byte[])obj;
@@ -1019,9 +1017,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.Model = (Model)pair.Value;
                     break;
                 case Furnature_FieldIndex.Script:
-                    obj.Script_Property.Set(
-                        (FormIDSetLink<Script>)pair.Value,
-                        null);
+                    obj.Script_Property.Set((FormIDSetLink<Script>)pair.Value);
                     break;
                 case Furnature_FieldIndex.MarkerFlags:
                     obj.MarkerFlags = (Byte[])pair.Value;
@@ -1417,8 +1413,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Script_Property.SetLink(
                         rhs: rhs.Script_Property,
-                        def: def?.Script_Property,
-                        cmds: cmds);
+                        def: def?.Script_Property);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1470,7 +1465,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             item.Name_Unset();
             item.Model_Unset();
-            item.Script_Property.Unset(cmds.ToUnsetParams());
+            item.Script_Property.Unset();
             item.MarkerFlags_Unset();
         }
 

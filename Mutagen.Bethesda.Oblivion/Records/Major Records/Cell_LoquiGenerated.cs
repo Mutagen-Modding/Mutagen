@@ -1758,27 +1758,19 @@ namespace Mutagen.Bethesda.Oblivion
                     this.WaterHeight = (Single)obj;
                     break;
                 case Cell_FieldIndex.Climate:
-                    this.Climate_Property.Set(
-                        (FormIDSetLink<Climate>)obj,
-                        cmds);
+                    this.Climate_Property.Set((FormIDSetLink<Climate>)obj);
                     break;
                 case Cell_FieldIndex.Water:
-                    this.Water_Property.Set(
-                        (FormIDSetLink<Water>)obj,
-                        cmds);
+                    this.Water_Property.Set((FormIDSetLink<Water>)obj);
                     break;
                 case Cell_FieldIndex.Owner:
-                    this.Owner_Property.Set(
-                        (FormIDSetLink<Faction>)obj,
-                        cmds);
+                    this.Owner_Property.Set((FormIDSetLink<Faction>)obj);
                     break;
                 case Cell_FieldIndex.FactionRank:
                     this.FactionRank = (Int32)obj;
                     break;
                 case Cell_FieldIndex.GlobalVariable:
-                    this.GlobalVariable_Property.Set(
-                        (FormIDSetLink<Global>)obj,
-                        cmds);
+                    this.GlobalVariable_Property.Set((FormIDSetLink<Global>)obj);
                     break;
                 case Cell_FieldIndex.PathGrid:
                     this.PathGrid = (PathGrid)obj;
@@ -1860,27 +1852,19 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.WaterHeight = (Single)pair.Value;
                     break;
                 case Cell_FieldIndex.Climate:
-                    obj.Climate_Property.Set(
-                        (FormIDSetLink<Climate>)pair.Value,
-                        null);
+                    obj.Climate_Property.Set((FormIDSetLink<Climate>)pair.Value);
                     break;
                 case Cell_FieldIndex.Water:
-                    obj.Water_Property.Set(
-                        (FormIDSetLink<Water>)pair.Value,
-                        null);
+                    obj.Water_Property.Set((FormIDSetLink<Water>)pair.Value);
                     break;
                 case Cell_FieldIndex.Owner:
-                    obj.Owner_Property.Set(
-                        (FormIDSetLink<Faction>)pair.Value,
-                        null);
+                    obj.Owner_Property.Set((FormIDSetLink<Faction>)pair.Value);
                     break;
                 case Cell_FieldIndex.FactionRank:
                     obj.FactionRank = (Int32)pair.Value;
                     break;
                 case Cell_FieldIndex.GlobalVariable:
-                    obj.GlobalVariable_Property.Set(
-                        (FormIDSetLink<Global>)pair.Value,
-                        null);
+                    obj.GlobalVariable_Property.Set((FormIDSetLink<Global>)pair.Value);
                     break;
                 case Cell_FieldIndex.PathGrid:
                     obj.PathGrid = (PathGrid)pair.Value;
@@ -2775,8 +2759,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Climate_Property.SetLink(
                         rhs: rhs.Climate_Property,
-                        def: def?.Climate_Property,
-                        cmds: cmds);
+                        def: def?.Climate_Property);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2795,8 +2778,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Water_Property.SetLink(
                         rhs: rhs.Water_Property,
-                        def: def?.Water_Property,
-                        cmds: cmds);
+                        def: def?.Water_Property);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2815,8 +2797,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Owner_Property.SetLink(
                         rhs: rhs.Owner_Property,
-                        def: def?.Owner_Property,
-                        cmds: cmds);
+                        def: def?.Owner_Property);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2865,8 +2846,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.GlobalVariable_Property.SetLink(
                         rhs: rhs.GlobalVariable_Property,
-                        def: def?.GlobalVariable_Property,
-                        cmds: cmds);
+                        def: def?.GlobalVariable_Property);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -3165,11 +3145,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Regions.Unset();
             item.MusicType_Unset();
             item.WaterHeight_Unset();
-            item.Climate_Property.Unset(cmds.ToUnsetParams());
-            item.Water_Property.Unset(cmds.ToUnsetParams());
-            item.Owner_Property.Unset(cmds.ToUnsetParams());
+            item.Climate_Property.Unset();
+            item.Water_Property.Unset();
+            item.Owner_Property.Unset();
             item.FactionRank_Unset();
-            item.GlobalVariable_Property.Unset(cmds.ToUnsetParams());
+            item.GlobalVariable_Property.Unset();
             item.PathGrid_Unset();
             item.Landscape_Unset();
             item.Timestamp = default(Byte[]);

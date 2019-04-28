@@ -1207,22 +1207,16 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case PlacedCreature_FieldIndex.Base:
-                    this.Base_Property.Set(
-                        (FormIDSetLink<Creature>)obj,
-                        cmds);
+                    this.Base_Property.Set((FormIDSetLink<Creature>)obj);
                     break;
                 case PlacedCreature_FieldIndex.Owner:
-                    this.Owner_Property.Set(
-                        (FormIDSetLink<Faction>)obj,
-                        cmds);
+                    this.Owner_Property.Set((FormIDSetLink<Faction>)obj);
                     break;
                 case PlacedCreature_FieldIndex.FactionRank:
                     this.FactionRank = (Int32)obj;
                     break;
                 case PlacedCreature_FieldIndex.GlobalVariable:
-                    this.GlobalVariable_Property.Set(
-                        (FormIDSetLink<Global>)obj,
-                        cmds);
+                    this.GlobalVariable_Property.Set((FormIDSetLink<Global>)obj);
                     break;
                 case PlacedCreature_FieldIndex.EnableParent:
                     this.EnableParent = (EnableParent)obj;
@@ -1271,22 +1265,16 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case PlacedCreature_FieldIndex.Base:
-                    obj.Base_Property.Set(
-                        (FormIDSetLink<Creature>)pair.Value,
-                        null);
+                    obj.Base_Property.Set((FormIDSetLink<Creature>)pair.Value);
                     break;
                 case PlacedCreature_FieldIndex.Owner:
-                    obj.Owner_Property.Set(
-                        (FormIDSetLink<Faction>)pair.Value,
-                        null);
+                    obj.Owner_Property.Set((FormIDSetLink<Faction>)pair.Value);
                     break;
                 case PlacedCreature_FieldIndex.FactionRank:
                     obj.FactionRank = (Int32)pair.Value;
                     break;
                 case PlacedCreature_FieldIndex.GlobalVariable:
-                    obj.GlobalVariable_Property.Set(
-                        (FormIDSetLink<Global>)pair.Value,
-                        null);
+                    obj.GlobalVariable_Property.Set((FormIDSetLink<Global>)pair.Value);
                     break;
                 case PlacedCreature_FieldIndex.EnableParent:
                     obj.EnableParent = (EnableParent)pair.Value;
@@ -1708,8 +1696,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Base_Property.SetLink(
                         rhs: rhs.Base_Property,
-                        def: def?.Base_Property,
-                        cmds: cmds);
+                        def: def?.Base_Property);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1728,8 +1715,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Owner_Property.SetLink(
                         rhs: rhs.Owner_Property,
-                        def: def?.Owner_Property,
-                        cmds: cmds);
+                        def: def?.Owner_Property);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1778,8 +1764,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.GlobalVariable_Property.SetLink(
                         rhs: rhs.GlobalVariable_Property,
-                        def: def?.GlobalVariable_Property,
-                        cmds: cmds);
+                        def: def?.GlobalVariable_Property);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1947,10 +1932,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IPlacedCreature item,
             NotifyingUnsetParameters cmds = null)
         {
-            item.Base_Property.Unset(cmds.ToUnsetParams());
-            item.Owner_Property.Unset(cmds.ToUnsetParams());
+            item.Base_Property.Unset();
+            item.Owner_Property.Unset();
             item.FactionRank_Unset();
-            item.GlobalVariable_Property.Unset(cmds.ToUnsetParams());
+            item.GlobalVariable_Property.Unset();
             item.EnableParent_Unset();
             item.RagdollData_Unset();
             item.Scale_Unset();

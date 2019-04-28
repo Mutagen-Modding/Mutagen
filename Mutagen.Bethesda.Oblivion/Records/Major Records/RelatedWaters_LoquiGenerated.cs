@@ -682,19 +682,13 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case RelatedWaters_FieldIndex.RelatedWaterDaytime:
-                    this.RelatedWaterDaytime_Property.Set(
-                        (FormIDLink<Water>)obj,
-                        cmds);
+                    this.RelatedWaterDaytime_Property.Set((FormIDLink<Water>)obj);
                     break;
                 case RelatedWaters_FieldIndex.RelatedWaterNighttime:
-                    this.RelatedWaterNighttime_Property.Set(
-                        (FormIDLink<Water>)obj,
-                        cmds);
+                    this.RelatedWaterNighttime_Property.Set((FormIDLink<Water>)obj);
                     break;
                 case RelatedWaters_FieldIndex.RelatedWaterUnderwater:
-                    this.RelatedWaterUnderwater_Property.Set(
-                        (FormIDLink<Water>)obj,
-                        cmds);
+                    this.RelatedWaterUnderwater_Property.Set((FormIDLink<Water>)obj);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -734,19 +728,13 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case RelatedWaters_FieldIndex.RelatedWaterDaytime:
-                    obj.RelatedWaterDaytime_Property.Set(
-                        (FormIDLink<Water>)pair.Value,
-                        null);
+                    obj.RelatedWaterDaytime_Property.Set((FormIDLink<Water>)pair.Value);
                     break;
                 case RelatedWaters_FieldIndex.RelatedWaterNighttime:
-                    obj.RelatedWaterNighttime_Property.Set(
-                        (FormIDLink<Water>)pair.Value,
-                        null);
+                    obj.RelatedWaterNighttime_Property.Set((FormIDLink<Water>)pair.Value);
                     break;
                 case RelatedWaters_FieldIndex.RelatedWaterUnderwater:
-                    obj.RelatedWaterUnderwater_Property.Set(
-                        (FormIDLink<Water>)pair.Value,
-                        null);
+                    obj.RelatedWaterUnderwater_Property.Set((FormIDLink<Water>)pair.Value);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -1006,9 +994,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)RelatedWaters_FieldIndex.RelatedWaterDaytime);
                 try
                 {
-                    item.RelatedWaterDaytime_Property.SetLink(
-                        value: rhs.RelatedWaterDaytime_Property,
-                        cmds: cmds);
+                    item.RelatedWaterDaytime_Property.SetLink(value: rhs.RelatedWaterDaytime_Property);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1025,9 +1011,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)RelatedWaters_FieldIndex.RelatedWaterNighttime);
                 try
                 {
-                    item.RelatedWaterNighttime_Property.SetLink(
-                        value: rhs.RelatedWaterNighttime_Property,
-                        cmds: cmds);
+                    item.RelatedWaterNighttime_Property.SetLink(value: rhs.RelatedWaterNighttime_Property);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1044,9 +1028,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)RelatedWaters_FieldIndex.RelatedWaterUnderwater);
                 try
                 {
-                    item.RelatedWaterUnderwater_Property.SetLink(
-                        value: rhs.RelatedWaterUnderwater_Property,
-                        cmds: cmds);
+                    item.RelatedWaterUnderwater_Property.SetLink(value: rhs.RelatedWaterUnderwater_Property);
                 }
                 catch (Exception ex)
                 when (errorMask != null)

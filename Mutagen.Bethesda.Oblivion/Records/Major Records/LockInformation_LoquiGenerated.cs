@@ -777,9 +777,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.Fluff = (Byte[])obj;
                     break;
                 case LockInformation_FieldIndex.Key:
-                    this.Key_Property.Set(
-                        (FormIDLink<Key>)obj,
-                        cmds);
+                    this.Key_Property.Set((FormIDLink<Key>)obj);
                     break;
                 case LockInformation_FieldIndex.Flags:
                     this.Flags = (LockInformation.Flag)obj;
@@ -828,9 +826,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.Fluff = (Byte[])pair.Value;
                     break;
                 case LockInformation_FieldIndex.Key:
-                    obj.Key_Property.Set(
-                        (FormIDLink<Key>)pair.Value,
-                        null);
+                    obj.Key_Property.Set((FormIDLink<Key>)pair.Value);
                     break;
                 case LockInformation_FieldIndex.Flags:
                     obj.Flags = (LockInformation.Flag)pair.Value;
@@ -1145,9 +1141,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)LockInformation_FieldIndex.Key);
                 try
                 {
-                    item.Key_Property.SetLink(
-                        value: rhs.Key_Property,
-                        cmds: cmds);
+                    item.Key_Property.SetLink(value: rhs.Key_Property);
                 }
                 catch (Exception ex)
                 when (errorMask != null)

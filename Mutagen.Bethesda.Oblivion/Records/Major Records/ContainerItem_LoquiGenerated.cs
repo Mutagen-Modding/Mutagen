@@ -694,9 +694,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case ContainerItem_FieldIndex.Item:
-                    this.Item_Property.Set(
-                        (FormIDLink<ItemAbstract>)obj,
-                        cmds);
+                    this.Item_Property.Set((FormIDLink<ItemAbstract>)obj);
                     break;
                 case ContainerItem_FieldIndex.Count:
                     this.Count = (UInt32)obj;
@@ -739,9 +737,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case ContainerItem_FieldIndex.Item:
-                    obj.Item_Property.Set(
-                        (FormIDLink<ItemAbstract>)pair.Value,
-                        null);
+                    obj.Item_Property.Set((FormIDLink<ItemAbstract>)pair.Value);
                     break;
                 case ContainerItem_FieldIndex.Count:
                     obj.Count = (UInt32)pair.Value;
@@ -986,9 +982,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)ContainerItem_FieldIndex.Item);
                 try
                 {
-                    item.Item_Property.SetLink(
-                        value: rhs.Item_Property,
-                        cmds: cmds);
+                    item.Item_Property.SetLink(value: rhs.Item_Property);
                 }
                 catch (Exception ex)
                 when (errorMask != null)

@@ -2367,9 +2367,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.MaterialID = (String)obj;
                     break;
                 case Water_FieldIndex.Sound:
-                    this.Sound_Property.Set(
-                        (FormIDSetLink<Sound>)obj,
-                        cmds);
+                    this.Sound_Property.Set((FormIDSetLink<Sound>)obj);
                     break;
                 case Water_FieldIndex.WindVelocity:
                     this.WindVelocity = (Single)obj;
@@ -2496,9 +2494,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.MaterialID = (String)pair.Value;
                     break;
                 case Water_FieldIndex.Sound:
-                    obj.Sound_Property.Set(
-                        (FormIDSetLink<Sound>)pair.Value,
-                        null);
+                    obj.Sound_Property.Set((FormIDSetLink<Sound>)pair.Value);
                     break;
                 case Water_FieldIndex.WindVelocity:
                     obj.WindVelocity = (Single)pair.Value;
@@ -3523,8 +3519,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Sound_Property.SetLink(
                         rhs: rhs.Sound_Property,
-                        def: def?.Sound_Property,
-                        cmds: cmds);
+                        def: def?.Sound_Property);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -4044,7 +4039,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Opacity_Unset();
             item.Flags_Unset();
             item.MaterialID_Unset();
-            item.Sound_Property.Unset(cmds.ToUnsetParams());
+            item.Sound_Property.Unset();
             item.WindVelocity = default(Single);
             item.WindDirection = default(Single);
             item.WaveAmplitude = default(Single);

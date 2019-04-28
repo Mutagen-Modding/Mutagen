@@ -993,9 +993,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case Effect_FieldIndex.MagicEffect:
-                    this.MagicEffect_Property.Set(
-                        (EDIDLink<MagicEffect>)obj,
-                        cmds);
+                    this.MagicEffect_Property.Set((EDIDLink<MagicEffect>)obj);
                     break;
                 case Effect_FieldIndex.Magnitude:
                     this.Magnitude = (UInt32)obj;
@@ -1053,9 +1051,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case Effect_FieldIndex.MagicEffect:
-                    obj.MagicEffect_Property.Set(
-                        (EDIDLink<MagicEffect>)pair.Value,
-                        null);
+                    obj.MagicEffect_Property.Set((EDIDLink<MagicEffect>)pair.Value);
                     break;
                 case Effect_FieldIndex.Magnitude:
                     obj.Magnitude = (UInt32)pair.Value;
@@ -1412,9 +1408,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Effect_FieldIndex.MagicEffect);
                 try
                 {
-                    item.MagicEffect_Property.SetLink(
-                        value: rhs.MagicEffect_Property,
-                        cmds: cmds);
+                    item.MagicEffect_Property.SetLink(value: rhs.MagicEffect_Property);
                 }
                 catch (Exception ex)
                 when (errorMask != null)

@@ -3133,14 +3133,10 @@ namespace Mutagen.Bethesda.Oblivion
                     this._Factions.SetTo((IEnumerable<RankPlacement>)obj);
                     break;
                 case Creature_FieldIndex.DeathItem:
-                    this.DeathItem_Property.Set(
-                        (FormIDSetLink<ItemAbstract>)obj,
-                        cmds);
+                    this.DeathItem_Property.Set((FormIDSetLink<ItemAbstract>)obj);
                     break;
                 case Creature_FieldIndex.Script:
-                    this.Script_Property.Set(
-                        (FormIDSetLink<Script>)obj,
-                        cmds);
+                    this.Script_Property.Set((FormIDSetLink<Script>)obj);
                     break;
                 case Creature_FieldIndex.Aggression:
                     this.Aggression = (Byte)obj;
@@ -3218,9 +3214,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.AttackReach = (Byte)obj;
                     break;
                 case Creature_FieldIndex.CombatStyle:
-                    this.CombatStyle_Property.Set(
-                        (FormIDSetLink<CombatStyle>)obj,
-                        cmds);
+                    this.CombatStyle_Property.Set((FormIDSetLink<CombatStyle>)obj);
                     break;
                 case Creature_FieldIndex.TurningSpeed:
                     this.TurningSpeed = (Single)obj;
@@ -3238,9 +3232,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.BloodDecal = (String)obj;
                     break;
                 case Creature_FieldIndex.InheritsSoundFrom:
-                    this.InheritsSoundFrom_Property.Set(
-                        (FormIDSetLink<Creature>)obj,
-                        cmds);
+                    this.InheritsSoundFrom_Property.Set((FormIDSetLink<Creature>)obj);
                     break;
                 case Creature_FieldIndex.Sounds:
                     this._Sounds.SetTo((IEnumerable<CreatureSound>)obj);
@@ -3319,14 +3311,10 @@ namespace Mutagen.Bethesda.Oblivion
                     obj._Factions.SetTo((IEnumerable<RankPlacement>)pair.Value);
                     break;
                 case Creature_FieldIndex.DeathItem:
-                    obj.DeathItem_Property.Set(
-                        (FormIDSetLink<ItemAbstract>)pair.Value,
-                        null);
+                    obj.DeathItem_Property.Set((FormIDSetLink<ItemAbstract>)pair.Value);
                     break;
                 case Creature_FieldIndex.Script:
-                    obj.Script_Property.Set(
-                        (FormIDSetLink<Script>)pair.Value,
-                        null);
+                    obj.Script_Property.Set((FormIDSetLink<Script>)pair.Value);
                     break;
                 case Creature_FieldIndex.Aggression:
                     obj.Aggression = (Byte)pair.Value;
@@ -3404,9 +3392,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.AttackReach = (Byte)pair.Value;
                     break;
                 case Creature_FieldIndex.CombatStyle:
-                    obj.CombatStyle_Property.Set(
-                        (FormIDSetLink<CombatStyle>)pair.Value,
-                        null);
+                    obj.CombatStyle_Property.Set((FormIDSetLink<CombatStyle>)pair.Value);
                     break;
                 case Creature_FieldIndex.TurningSpeed:
                     obj.TurningSpeed = (Single)pair.Value;
@@ -3424,9 +3410,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.BloodDecal = (String)pair.Value;
                     break;
                 case Creature_FieldIndex.InheritsSoundFrom:
-                    obj.InheritsSoundFrom_Property.Set(
-                        (FormIDSetLink<Creature>)pair.Value,
-                        null);
+                    obj.InheritsSoundFrom_Property.Set((FormIDSetLink<Creature>)pair.Value);
                     break;
                 case Creature_FieldIndex.Sounds:
                     obj._Sounds.SetTo((IEnumerable<CreatureSound>)pair.Value);
@@ -4921,8 +4905,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.DeathItem_Property.SetLink(
                         rhs: rhs.DeathItem_Property,
-                        def: def?.DeathItem_Property,
-                        cmds: cmds);
+                        def: def?.DeathItem_Property);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -4941,8 +4924,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Script_Property.SetLink(
                         rhs: rhs.Script_Property,
-                        def: def?.Script_Property,
-                        cmds: cmds);
+                        def: def?.Script_Property);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -5403,8 +5385,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.CombatStyle_Property.SetLink(
                         rhs: rhs.CombatStyle_Property,
-                        def: def?.CombatStyle_Property,
-                        cmds: cmds);
+                        def: def?.CombatStyle_Property);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -5573,8 +5554,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.InheritsSoundFrom_Property.SetLink(
                         rhs: rhs.InheritsSoundFrom_Property,
-                        def: def?.InheritsSoundFrom_Property,
-                        cmds: cmds);
+                        def: def?.InheritsSoundFrom_Property);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -5643,8 +5623,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.CalcMin = default(UInt16);
             item.CalcMax = default(UInt16);
             item.Factions.Unset();
-            item.DeathItem_Property.Unset(cmds.ToUnsetParams());
-            item.Script_Property.Unset(cmds.ToUnsetParams());
+            item.DeathItem_Property.Unset();
+            item.Script_Property.Unset();
             item.Aggression = default(Byte);
             item.Confidence = default(Byte);
             item.EnergyLevel = default(Byte);
@@ -5670,13 +5650,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Personality = default(Byte);
             item.Luck = default(Byte);
             item.AttackReach_Unset();
-            item.CombatStyle_Property.Unset(cmds.ToUnsetParams());
+            item.CombatStyle_Property.Unset();
             item.TurningSpeed_Unset();
             item.BaseScale_Unset();
             item.FootWeight_Unset();
             item.BloodSpray_Unset();
             item.BloodDecal_Unset();
-            item.InheritsSoundFrom_Property.Unset(cmds.ToUnsetParams());
+            item.InheritsSoundFrom_Property.Unset();
             item.Sounds.Unset();
         }
 

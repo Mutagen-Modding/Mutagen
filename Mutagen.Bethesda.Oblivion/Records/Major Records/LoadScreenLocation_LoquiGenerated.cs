@@ -713,14 +713,10 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case LoadScreenLocation_FieldIndex.Direct:
-                    this.Direct_Property.Set(
-                        (FormIDLink<Place>)obj,
-                        cmds);
+                    this.Direct_Property.Set((FormIDLink<Place>)obj);
                     break;
                 case LoadScreenLocation_FieldIndex.Indirect:
-                    this.Indirect_Property.Set(
-                        (FormIDLink<Worldspace>)obj,
-                        cmds);
+                    this.Indirect_Property.Set((FormIDLink<Worldspace>)obj);
                     break;
                 case LoadScreenLocation_FieldIndex.GridPoint:
                     this.GridPoint = (P2Int16)obj;
@@ -763,14 +759,10 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case LoadScreenLocation_FieldIndex.Direct:
-                    obj.Direct_Property.Set(
-                        (FormIDLink<Place>)pair.Value,
-                        null);
+                    obj.Direct_Property.Set((FormIDLink<Place>)pair.Value);
                     break;
                 case LoadScreenLocation_FieldIndex.Indirect:
-                    obj.Indirect_Property.Set(
-                        (FormIDLink<Worldspace>)pair.Value,
-                        null);
+                    obj.Indirect_Property.Set((FormIDLink<Worldspace>)pair.Value);
                     break;
                 case LoadScreenLocation_FieldIndex.GridPoint:
                     obj.GridPoint = (P2Int16)pair.Value;
@@ -1033,9 +1025,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)LoadScreenLocation_FieldIndex.Direct);
                 try
                 {
-                    item.Direct_Property.SetLink(
-                        value: rhs.Direct_Property,
-                        cmds: cmds);
+                    item.Direct_Property.SetLink(value: rhs.Direct_Property);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1052,9 +1042,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)LoadScreenLocation_FieldIndex.Indirect);
                 try
                 {
-                    item.Indirect_Property.SetLink(
-                        value: rhs.Indirect_Property,
-                        cmds: cmds);
+                    item.Indirect_Property.SetLink(value: rhs.Indirect_Property);
                 }
                 catch (Exception ex)
                 when (errorMask != null)

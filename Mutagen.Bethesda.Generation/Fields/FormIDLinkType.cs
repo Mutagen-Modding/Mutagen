@@ -23,6 +23,8 @@ namespace Mutagen.Bethesda.Generation
         private LoquiType loquiType;
         public FormIDTypeEnum FormIDType;
 
+        public override bool HasProperty => true;
+
         public override string TypeName => $"{(this.FormIDType == FormIDTypeEnum.Normal ? "FormID" : "EDID")}{(this.HasBeenSet ? "Set" : string.Empty)}Link<{loquiType.TypeName}>";
 
         public override Type Type => typeof(FormID);
@@ -32,7 +34,7 @@ namespace Mutagen.Bethesda.Generation
             await base.Load(node, requireName);
             loquiType =  this.ObjectGen.ProtoGen.Gen.GetTypeGeneration<LoquiType>();
             _rawFormID = this.ObjectGen.ProtoGen.Gen.GetTypeGeneration<FormIDType>();
-            this.NotifyingProperty.Set(NotifyingType.NotifyingItem);
+            this.NotifyingProperty.Set(NotifyingType.ReactiveUI);
             this.ObjectCentralizedProperty.Set(false);
             loquiType.SetObjectGeneration(this.ObjectGen, setDefaults: true);
             await loquiType.Load(node, requireName: false);
@@ -121,7 +123,7 @@ namespace Mutagen.Bethesda.Generation
             fg.AppendLine($"if (!{accessor.PropertyAccess}.Equals({rhsAccessor.PropertyAccess})) return false;");
         }
 
-        public override void GenerateForCopy(FileGeneration fg, Accessor accessor, string rhsAccessorPrefix, string copyMaskAccessor, string defaultFallbackAccessor, string cmdsAccessor, bool protectedMembers)
+        public override void GenerateForCopy(FileGeneration fg, Accessor accessor, string rhsAccessorPrefix, string copyMaskAccessor, string defaultFallbackAccessor, string cmdAccessor, bool protectedMembers)
         {
             if (this.HasBeenSet)
             {
@@ -130,11 +132,6 @@ namespace Mutagen.Bethesda.Generation
                 {
                     args.Add($"rhs: {rhsAccessorPrefix}.{this.GetName(false, property: true)}");
                     args.Add($"def: {defaultFallbackAccessor}?.{this.GetName(false, property: true)}");
-                    if (this.NotifyingType == NotifyingType.NotifyingItem
-                        && !this.ObjectCentralized)
-                    {
-                        args.Add($"cmds: {cmdsAccessor}");
-                    }
                 }
             }
             else
@@ -143,10 +140,6 @@ namespace Mutagen.Bethesda.Generation
                     $"{accessor.PropertyAccess}.SetLink"))
                 {
                     args.Add($"value: {rhsAccessorPrefix}.{this.GetName(false, property: true)}");
-                    if (this.NotifyingType != NotifyingType.None)
-                    {
-                        args.Add($"cmds: {cmdsAccessor}");
-                    }
                 }
             }
         }
@@ -157,7 +150,8 @@ namespace Mutagen.Bethesda.Generation
             fg.AppendLine($"{fgAccessor}.AppendLine($\"{name} => {{{accessor.PropertyOrDirectAccess}}}\");");
         }
 
-        public override void GenerateUnsetNth(FileGeneration fg, Accessor identifier, string cmdsAccessor)
+
+        public override void GenerateUnsetNth(FileGeneration fg, Accessor identifier, string cmdAccessor)
         {
             if (!this.IntegrateField) return;
             if (!this.ReadOnly)
@@ -167,10 +161,6 @@ namespace Mutagen.Bethesda.Generation
                     using (var args = new ArgsWrapper(fg,
                         $"{identifier.PropertyAccess}.Unset"))
                     {
-                        if (this.NotifyingType != NotifyingType.None)
-                        {
-                            args.Add(cmdsAccessor);
-                        }
                     }
                 }
                 else
@@ -188,7 +178,7 @@ namespace Mutagen.Bethesda.Generation
             {
                 if (this.HasBeenSet)
                 {
-                    fg.AppendLine($"{identifier.PropertyAccess}.Unset({cmdAccessor}.ToUnsetParams());");
+                    fg.AppendLine($"{identifier.PropertyAccess}.Unset();");
                 }
                 else
                 {

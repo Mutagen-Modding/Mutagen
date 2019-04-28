@@ -664,14 +664,10 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case RaceVoices_FieldIndex.Male:
-                    this.Male_Property.Set(
-                        (FormIDLink<Race>)obj,
-                        cmds);
+                    this.Male_Property.Set((FormIDLink<Race>)obj);
                     break;
                 case RaceVoices_FieldIndex.Female:
-                    this.Female_Property.Set(
-                        (FormIDLink<Race>)obj,
-                        cmds);
+                    this.Female_Property.Set((FormIDLink<Race>)obj);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -711,14 +707,10 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case RaceVoices_FieldIndex.Male:
-                    obj.Male_Property.Set(
-                        (FormIDLink<Race>)pair.Value,
-                        null);
+                    obj.Male_Property.Set((FormIDLink<Race>)pair.Value);
                     break;
                 case RaceVoices_FieldIndex.Female:
-                    obj.Female_Property.Set(
-                        (FormIDLink<Race>)pair.Value,
-                        null);
+                    obj.Female_Property.Set((FormIDLink<Race>)pair.Value);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -960,9 +952,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)RaceVoices_FieldIndex.Male);
                 try
                 {
-                    item.Male_Property.SetLink(
-                        value: rhs.Male_Property,
-                        cmds: cmds);
+                    item.Male_Property.SetLink(value: rhs.Male_Property);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -979,9 +969,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)RaceVoices_FieldIndex.Female);
                 try
                 {
-                    item.Female_Property.SetLink(
-                        value: rhs.Female_Property,
-                        cmds: cmds);
+                    item.Female_Property.SetLink(value: rhs.Female_Property);
                 }
                 catch (Exception ex)
                 when (errorMask != null)

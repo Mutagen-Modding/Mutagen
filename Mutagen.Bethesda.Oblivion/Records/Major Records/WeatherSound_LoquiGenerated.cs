@@ -694,9 +694,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case WeatherSound_FieldIndex.Sound:
-                    this.Sound_Property.Set(
-                        (FormIDLink<Sound>)obj,
-                        cmds);
+                    this.Sound_Property.Set((FormIDLink<Sound>)obj);
                     break;
                 case WeatherSound_FieldIndex.Type:
                     this.Type = (WeatherSound.SoundType)obj;
@@ -739,9 +737,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case WeatherSound_FieldIndex.Sound:
-                    obj.Sound_Property.Set(
-                        (FormIDLink<Sound>)pair.Value,
-                        null);
+                    obj.Sound_Property.Set((FormIDLink<Sound>)pair.Value);
                     break;
                 case WeatherSound_FieldIndex.Type:
                     obj.Type = (WeatherSound.SoundType)pair.Value;
@@ -986,9 +982,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)WeatherSound_FieldIndex.Sound);
                 try
                 {
-                    item.Sound_Property.SetLink(
-                        value: rhs.Sound_Property,
-                        cmds: cmds);
+                    item.Sound_Property.SetLink(value: rhs.Sound_Property);
                 }
                 catch (Exception ex)
                 when (errorMask != null)

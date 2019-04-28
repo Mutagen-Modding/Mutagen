@@ -1470,17 +1470,13 @@ namespace Mutagen.Bethesda.Oblivion
                     this.CounterEffectCount = (UInt32)obj;
                     break;
                 case MagicEffect_FieldIndex.Light:
-                    this.Light_Property.Set(
-                        (FormIDLink<Light>)obj,
-                        cmds);
+                    this.Light_Property.Set((FormIDLink<Light>)obj);
                     break;
                 case MagicEffect_FieldIndex.ProjectileSpeed:
                     this.ProjectileSpeed = (Single)obj;
                     break;
                 case MagicEffect_FieldIndex.EffectShader:
-                    this.EffectShader_Property.Set(
-                        (FormIDLink<EffectShader>)obj,
-                        cmds);
+                    this.EffectShader_Property.Set((FormIDLink<EffectShader>)obj);
                     break;
                 case MagicEffect_FieldIndex.SubData:
                     this.SubData = (MagicEffectSubData)obj;
@@ -1550,17 +1546,13 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.CounterEffectCount = (UInt32)pair.Value;
                     break;
                 case MagicEffect_FieldIndex.Light:
-                    obj.Light_Property.Set(
-                        (FormIDLink<Light>)pair.Value,
-                        null);
+                    obj.Light_Property.Set((FormIDLink<Light>)pair.Value);
                     break;
                 case MagicEffect_FieldIndex.ProjectileSpeed:
                     obj.ProjectileSpeed = (Single)pair.Value;
                     break;
                 case MagicEffect_FieldIndex.EffectShader:
-                    obj.EffectShader_Property.Set(
-                        (FormIDLink<EffectShader>)pair.Value,
-                        null);
+                    obj.EffectShader_Property.Set((FormIDLink<EffectShader>)pair.Value);
                     break;
                 case MagicEffect_FieldIndex.SubData:
                     obj.SubData = (MagicEffectSubData)pair.Value;
@@ -2322,9 +2314,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)MagicEffect_FieldIndex.Light);
                 try
                 {
-                    item.Light_Property.SetLink(
-                        value: rhs.Light_Property,
-                        cmds: cmds);
+                    item.Light_Property.SetLink(value: rhs.Light_Property);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2358,9 +2348,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)MagicEffect_FieldIndex.EffectShader);
                 try
                 {
-                    item.EffectShader_Property.SetLink(
-                        value: rhs.EffectShader_Property,
-                        cmds: cmds);
+                    item.EffectShader_Property.SetLink(value: rhs.EffectShader_Property);
                 }
                 catch (Exception ex)
                 when (errorMask != null)

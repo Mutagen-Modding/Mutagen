@@ -1287,9 +1287,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.Icon = (String)obj;
                     break;
                 case Ammo_FieldIndex.Enchantment:
-                    this.Enchantment_Property.Set(
-                        (FormIDSetLink<Enchantment>)obj,
-                        cmds);
+                    this.Enchantment_Property.Set((FormIDSetLink<Enchantment>)obj);
                     break;
                 case Ammo_FieldIndex.EnchantmentPoints:
                     this.EnchantmentPoints = (UInt16)obj;
@@ -1350,9 +1348,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.Icon = (String)pair.Value;
                     break;
                 case Ammo_FieldIndex.Enchantment:
-                    obj.Enchantment_Property.Set(
-                        (FormIDSetLink<Enchantment>)pair.Value,
-                        null);
+                    obj.Enchantment_Property.Set((FormIDSetLink<Enchantment>)pair.Value);
                     break;
                 case Ammo_FieldIndex.EnchantmentPoints:
                     obj.EnchantmentPoints = (UInt16)pair.Value;
@@ -1907,8 +1903,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Enchantment_Property.SetLink(
                         rhs: rhs.Enchantment_Property,
-                        def: def?.Enchantment_Property,
-                        cmds: cmds);
+                        def: def?.Enchantment_Property);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2046,7 +2041,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Name_Unset();
             item.Model_Unset();
             item.Icon_Unset();
-            item.Enchantment_Property.Unset(cmds.ToUnsetParams());
+            item.Enchantment_Property.Unset();
             item.EnchantmentPoints_Unset();
             item.Speed = default(Single);
             item.Flags = default(Ammo.AmmoFlag);

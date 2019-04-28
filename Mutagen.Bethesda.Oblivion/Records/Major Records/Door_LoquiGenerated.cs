@@ -1122,24 +1122,16 @@ namespace Mutagen.Bethesda.Oblivion
                     this.Model = (Model)obj;
                     break;
                 case Door_FieldIndex.Script:
-                    this.Script_Property.Set(
-                        (FormIDSetLink<Script>)obj,
-                        cmds);
+                    this.Script_Property.Set((FormIDSetLink<Script>)obj);
                     break;
                 case Door_FieldIndex.OpenSound:
-                    this.OpenSound_Property.Set(
-                        (FormIDSetLink<Sound>)obj,
-                        cmds);
+                    this.OpenSound_Property.Set((FormIDSetLink<Sound>)obj);
                     break;
                 case Door_FieldIndex.CloseSound:
-                    this.CloseSound_Property.Set(
-                        (FormIDSetLink<Sound>)obj,
-                        cmds);
+                    this.CloseSound_Property.Set((FormIDSetLink<Sound>)obj);
                     break;
                 case Door_FieldIndex.LoopSound:
-                    this.LoopSound_Property.Set(
-                        (FormIDSetLink<Sound>)obj,
-                        cmds);
+                    this.LoopSound_Property.Set((FormIDSetLink<Sound>)obj);
                     break;
                 case Door_FieldIndex.Flags:
                     this.Flags = (Door.DoorFlag)obj;
@@ -1185,24 +1177,16 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.Model = (Model)pair.Value;
                     break;
                 case Door_FieldIndex.Script:
-                    obj.Script_Property.Set(
-                        (FormIDSetLink<Script>)pair.Value,
-                        null);
+                    obj.Script_Property.Set((FormIDSetLink<Script>)pair.Value);
                     break;
                 case Door_FieldIndex.OpenSound:
-                    obj.OpenSound_Property.Set(
-                        (FormIDSetLink<Sound>)pair.Value,
-                        null);
+                    obj.OpenSound_Property.Set((FormIDSetLink<Sound>)pair.Value);
                     break;
                 case Door_FieldIndex.CloseSound:
-                    obj.CloseSound_Property.Set(
-                        (FormIDSetLink<Sound>)pair.Value,
-                        null);
+                    obj.CloseSound_Property.Set((FormIDSetLink<Sound>)pair.Value);
                     break;
                 case Door_FieldIndex.LoopSound:
-                    obj.LoopSound_Property.Set(
-                        (FormIDSetLink<Sound>)pair.Value,
-                        null);
+                    obj.LoopSound_Property.Set((FormIDSetLink<Sound>)pair.Value);
                     break;
                 case Door_FieldIndex.Flags:
                     obj.Flags = (Door.DoorFlag)pair.Value;
@@ -1676,8 +1660,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Script_Property.SetLink(
                         rhs: rhs.Script_Property,
-                        def: def?.Script_Property,
-                        cmds: cmds);
+                        def: def?.Script_Property);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1696,8 +1679,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.OpenSound_Property.SetLink(
                         rhs: rhs.OpenSound_Property,
-                        def: def?.OpenSound_Property,
-                        cmds: cmds);
+                        def: def?.OpenSound_Property);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1716,8 +1698,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.CloseSound_Property.SetLink(
                         rhs: rhs.CloseSound_Property,
-                        def: def?.CloseSound_Property,
-                        cmds: cmds);
+                        def: def?.CloseSound_Property);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1736,8 +1717,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.LoopSound_Property.SetLink(
                         rhs: rhs.LoopSound_Property,
-                        def: def?.LoopSound_Property,
-                        cmds: cmds);
+                        def: def?.LoopSound_Property);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1808,10 +1788,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             item.Name_Unset();
             item.Model_Unset();
-            item.Script_Property.Unset(cmds.ToUnsetParams());
-            item.OpenSound_Property.Unset(cmds.ToUnsetParams());
-            item.CloseSound_Property.Unset(cmds.ToUnsetParams());
-            item.LoopSound_Property.Unset(cmds.ToUnsetParams());
+            item.Script_Property.Unset();
+            item.OpenSound_Property.Unset();
+            item.CloseSound_Property.Unset();
+            item.LoopSound_Property.Unset();
             item.Flags_Unset();
             item.RandomTeleportDestinations.Unset();
         }

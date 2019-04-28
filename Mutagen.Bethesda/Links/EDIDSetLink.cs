@@ -44,11 +44,11 @@ namespace Mutagen.Bethesda
             this.EDID = new RecordType(change);
         }
 
-        public void Set(IEDIDLink<T> link, NotifyingFireParameters cmds = null)
+        public void Set(IEDIDLink<T> link)
         {
             if (link.Linked)
             {
-                this.Set(link.Item, cmds);
+                base.Set(link.Item);
             }
             else
             {
@@ -56,10 +56,10 @@ namespace Mutagen.Bethesda
             }
         }
 
-        public override void Set(T value, bool hasBeenSet, NotifyingFireParameters cmds = null)
+        public override void Set(T value, bool hasBeenSet = true)
         {
             HandleItemChange(new Change<T>(this.Item, value));
-            base.Set(value, hasBeenSet, cmds);
+            base.Set(value, hasBeenSet);
         }
 
         public void SetIfSucceeded(TryGet<RecordType> item)
@@ -86,13 +86,13 @@ namespace Mutagen.Bethesda
             this.HasBeenSet = true;
         }
 
-        public override bool Link<M>(ModList<M> modList, M sourceMod, NotifyingFireParameters cmds = null)
+        public override bool Link<M>(ModList<M> modList, M sourceMod)
         {
             if (this.UnlinkedForm.HasValue)
             {
-                return base.Link(modList, sourceMod, cmds);
+                return base.Link(modList, sourceMod);
             }
-            return EDIDLink<T>.TryLink(this, modList, sourceMod, cmds);
+            return EDIDLink<T>.TryLink(this, modList, sourceMod);
         }
     }
 }

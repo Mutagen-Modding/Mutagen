@@ -1229,9 +1229,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case RegionDataObject_FieldIndex.Object:
-                    this.Object_Property.Set(
-                        (FormIDLink<OblivionMajorRecord>)obj,
-                        cmds);
+                    this.Object_Property.Set((FormIDLink<OblivionMajorRecord>)obj);
                     break;
                 case RegionDataObject_FieldIndex.ParentIndex:
                     this.ParentIndex = (UInt16)obj;
@@ -1319,9 +1317,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case RegionDataObject_FieldIndex.Object:
-                    obj.Object_Property.Set(
-                        (FormIDLink<OblivionMajorRecord>)pair.Value,
-                        null);
+                    obj.Object_Property.Set((FormIDLink<OblivionMajorRecord>)pair.Value);
                     break;
                 case RegionDataObject_FieldIndex.ParentIndex:
                     obj.ParentIndex = (UInt16)pair.Value;
@@ -1879,9 +1875,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)RegionDataObject_FieldIndex.Object);
                 try
                 {
-                    item.Object_Property.SetLink(
-                        value: rhs.Object_Property,
-                        cmds: cmds);
+                    item.Object_Property.SetLink(value: rhs.Object_Property);
                 }
                 catch (Exception ex)
                 when (errorMask != null)

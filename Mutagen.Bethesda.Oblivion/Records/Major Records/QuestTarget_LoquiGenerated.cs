@@ -783,9 +783,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case QuestTarget_FieldIndex.Target:
-                    this.Target_Property.Set(
-                        (FormIDLink<IPlaced>)obj,
-                        cmds);
+                    this.Target_Property.Set((FormIDLink<IPlaced>)obj);
                     break;
                 case QuestTarget_FieldIndex.Flags:
                     this.Flags = (QuestTarget.Flag)obj;
@@ -831,9 +829,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case QuestTarget_FieldIndex.Target:
-                    obj.Target_Property.Set(
-                        (FormIDLink<IPlaced>)pair.Value,
-                        null);
+                    obj.Target_Property.Set((FormIDLink<IPlaced>)pair.Value);
                     break;
                 case QuestTarget_FieldIndex.Flags:
                     obj.Flags = (QuestTarget.Flag)pair.Value;
@@ -1101,9 +1097,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)QuestTarget_FieldIndex.Target);
                 try
                 {
-                    item.Target_Property.SetLink(
-                        value: rhs.Target_Property,
-                        cmds: cmds);
+                    item.Target_Property.SetLink(value: rhs.Target_Property);
                 }
                 catch (Exception ex)
                 when (errorMask != null)

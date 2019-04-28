@@ -1443,9 +1443,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.Model = (Model)obj;
                     break;
                 case Light_FieldIndex.Script:
-                    this.Script_Property.Set(
-                        (FormIDSetLink<Script>)obj,
-                        cmds);
+                    this.Script_Property.Set((FormIDSetLink<Script>)obj);
                     break;
                 case Light_FieldIndex.Name:
                     this.Name = (String)obj;
@@ -1481,9 +1479,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.Fade = (Single)obj;
                     break;
                 case Light_FieldIndex.Sound:
-                    this.Sound_Property.Set(
-                        (FormIDSetLink<Sound>)obj,
-                        cmds);
+                    this.Sound_Property.Set((FormIDSetLink<Sound>)obj);
                     break;
                 default:
                     base.SetNthObject(index, obj, cmds);
@@ -1520,9 +1516,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.Model = (Model)pair.Value;
                     break;
                 case Light_FieldIndex.Script:
-                    obj.Script_Property.Set(
-                        (FormIDSetLink<Script>)pair.Value,
-                        null);
+                    obj.Script_Property.Set((FormIDSetLink<Script>)pair.Value);
                     break;
                 case Light_FieldIndex.Name:
                     obj.Name = (String)pair.Value;
@@ -1558,9 +1552,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.Fade = (Single)pair.Value;
                     break;
                 case Light_FieldIndex.Sound:
-                    obj.Sound_Property.Set(
-                        (FormIDSetLink<Sound>)pair.Value,
-                        null);
+                    obj.Sound_Property.Set((FormIDSetLink<Sound>)pair.Value);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -2110,8 +2102,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Script_Property.SetLink(
                         rhs: rhs.Script_Property,
-                        def: def?.Script_Property,
-                        cmds: cmds);
+                        def: def?.Script_Property);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2356,8 +2347,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Sound_Property.SetLink(
                         rhs: rhs.Sound_Property,
-                        def: def?.Sound_Property,
-                        cmds: cmds);
+                        def: def?.Sound_Property);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2378,7 +2368,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             NotifyingUnsetParameters cmds = null)
         {
             item.Model_Unset();
-            item.Script_Property.Unset(cmds.ToUnsetParams());
+            item.Script_Property.Unset();
             item.Name_Unset();
             item.Icon_Unset();
             item.Time = Light._Time_Default;
@@ -2390,7 +2380,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Value = default(UInt32);
             item.Weight = default(Single);
             item.Fade_Unset();
-            item.Sound_Property.Unset(cmds.ToUnsetParams());
+            item.Sound_Property.Unset();
         }
 
         public static Light_Mask<bool> GetEqualsMask(

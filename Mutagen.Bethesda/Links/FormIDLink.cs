@@ -10,9 +10,15 @@ using System.Threading.Tasks;
 
 namespace Mutagen.Bethesda
 {
-    public class FormIDLink<T> : NotifyingItem<T>, IFormIDLink<T>, IEquatable<ILink<T>>
+    public class FormIDLink<T> : LoquiNotifyingObject, IFormIDLink<T>, IEquatable<ILink<T>>
        where T : IMajorRecord
     {
+        private T _Item;
+        public T Item
+        {
+            get => this._Item;
+            set => this.Set(value);
+        }
         public bool Linked => this.Item != null;
         public FormKey? UnlinkedForm { get; private set; }
         public FormKey FormKey => LinkExt.GetFormKey(this);
@@ -52,10 +58,11 @@ namespace Mutagen.Bethesda
             this.Item = default;
         }
 
-        public override void Set(T value, NotifyingFireParameters cmds = null)
+        public virtual void Set(T value)
         {
             UpdateUnlinkedForm(value);
-            base.Set(value, cmds);
+            this._Item = value;
+            this.RaiseAndSetIfChanged(ref this._Item, value, nameof(Item));
         }
 
         public void SetIfSucceeded(TryGet<FormKey> formKey)
@@ -64,10 +71,9 @@ namespace Mutagen.Bethesda
             this.Set(formKey.Value);
         }
 
-        public void SetLink(ILink<T> value, NotifyingFireParameters cmds = null)
+        public void SetLink(ILink<T> value)
         {
-            base.Set(value.Item, cmds);
-            this.UnlinkedForm = value.FormKey;
+            this.Set(value.Item);
         }
 
         public void Set(FormKey id)
@@ -79,17 +85,18 @@ namespace Mutagen.Bethesda
         {
             if (formKey.Failed)
             {
-                this.Unset();
-                return;
+                this.Unset();            }
+            else
+            {
+                this.UnlinkedForm = formKey.Value;
             }
-            this.UnlinkedForm = formKey.Value;
         }
 
-        public void Set(ILink<T> link, NotifyingFireParameters cmds = null)
+        public void Set(ILink<T> link)
         {
             if (link.Linked)
             {
-                this.Set(link.Item, cmds);
+                this.Set(link.Item);
             }
             else
             {
@@ -97,12 +104,12 @@ namespace Mutagen.Bethesda
             }
         }
 
-        public void Set<R>(ILink<R> link, NotifyingFireParameters cmds = null)
+        public void Set<R>(ILink<R> link)
             where R : T
         {
             if (link.Linked)
             {
-                this.Set(link.Item, cmds);
+                this.Set(link.Item);
             }
             else
             {
@@ -158,8 +165,7 @@ namespace Mutagen.Bethesda
 
         public virtual bool Link<M>(
             ModList<M> modList,
-            M sourceMod,
-            NotifyingFireParameters cmds = null)
+            M sourceMod)
             where M : IMod<M>
         {
 #if DEBUG
@@ -174,7 +180,7 @@ namespace Mutagen.Bethesda
                 this.Item = default;
                 return false;
             }
-            this.Set(item, cmds);
+            this.Set(item);
             return true;
         }
 
@@ -199,5 +205,10 @@ namespace Mutagen.Bethesda
         public override int GetHashCode() => LinkExt.HashCode(this);
 
         public override string ToString() => LinkExt.ToString(this);
+
+        public virtual void Unset()
+        {
+            this.Set(default(T));
+        }
     }
 }

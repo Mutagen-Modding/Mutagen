@@ -694,9 +694,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case EnableParent_FieldIndex.Reference:
-                    this.Reference_Property.Set(
-                        (FormIDLink<IPlaced>)obj,
-                        cmds);
+                    this.Reference_Property.Set((FormIDLink<IPlaced>)obj);
                     break;
                 case EnableParent_FieldIndex.Flags:
                     this.Flags = (EnableParent.Flag)obj;
@@ -739,9 +737,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case EnableParent_FieldIndex.Reference:
-                    obj.Reference_Property.Set(
-                        (FormIDLink<IPlaced>)pair.Value,
-                        null);
+                    obj.Reference_Property.Set((FormIDLink<IPlaced>)pair.Value);
                     break;
                 case EnableParent_FieldIndex.Flags:
                     obj.Flags = (EnableParent.Flag)pair.Value;
@@ -986,9 +982,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)EnableParent_FieldIndex.Reference);
                 try
                 {
-                    item.Reference_Property.SetLink(
-                        value: rhs.Reference_Property,
-                        cmds: cmds);
+                    item.Reference_Property.SetLink(value: rhs.Reference_Property);
                 }
                 catch (Exception ex)
                 when (errorMask != null)

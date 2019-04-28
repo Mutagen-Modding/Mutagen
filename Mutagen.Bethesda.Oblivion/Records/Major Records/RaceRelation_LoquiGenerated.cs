@@ -694,9 +694,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case RaceRelation_FieldIndex.Race:
-                    this.Race_Property.Set(
-                        (FormIDLink<Race>)obj,
-                        cmds);
+                    this.Race_Property.Set((FormIDLink<Race>)obj);
                     break;
                 case RaceRelation_FieldIndex.Modifier:
                     this.Modifier = (Int32)obj;
@@ -739,9 +737,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case RaceRelation_FieldIndex.Race:
-                    obj.Race_Property.Set(
-                        (FormIDLink<Race>)pair.Value,
-                        null);
+                    obj.Race_Property.Set((FormIDLink<Race>)pair.Value);
                     break;
                 case RaceRelation_FieldIndex.Modifier:
                     obj.Modifier = (Int32)pair.Value;
@@ -986,9 +982,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)RaceRelation_FieldIndex.Race);
                 try
                 {
-                    item.Race_Property.SetLink(
-                        value: rhs.Race_Property,
-                        cmds: cmds);
+                    item.Race_Property.SetLink(value: rhs.Race_Property);
                 }
                 catch (Exception ex)
                 when (errorMask != null)

@@ -801,29 +801,19 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case MagicEffectSubData_FieldIndex.EnchantEffect:
-                    this.EnchantEffect_Property.Set(
-                        (FormIDLink<EffectShader>)obj,
-                        cmds);
+                    this.EnchantEffect_Property.Set((FormIDLink<EffectShader>)obj);
                     break;
                 case MagicEffectSubData_FieldIndex.CastingSound:
-                    this.CastingSound_Property.Set(
-                        (FormIDLink<Sound>)obj,
-                        cmds);
+                    this.CastingSound_Property.Set((FormIDLink<Sound>)obj);
                     break;
                 case MagicEffectSubData_FieldIndex.BoltSound:
-                    this.BoltSound_Property.Set(
-                        (FormIDLink<Sound>)obj,
-                        cmds);
+                    this.BoltSound_Property.Set((FormIDLink<Sound>)obj);
                     break;
                 case MagicEffectSubData_FieldIndex.HitSound:
-                    this.HitSound_Property.Set(
-                        (FormIDLink<Sound>)obj,
-                        cmds);
+                    this.HitSound_Property.Set((FormIDLink<Sound>)obj);
                     break;
                 case MagicEffectSubData_FieldIndex.AreaSound:
-                    this.AreaSound_Property.Set(
-                        (FormIDLink<Sound>)obj,
-                        cmds);
+                    this.AreaSound_Property.Set((FormIDLink<Sound>)obj);
                     break;
                 case MagicEffectSubData_FieldIndex.ConstantEffectEnchantmentFactor:
                     this.ConstantEffectEnchantmentFactor = (Single)obj;
@@ -869,29 +859,19 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case MagicEffectSubData_FieldIndex.EnchantEffect:
-                    obj.EnchantEffect_Property.Set(
-                        (FormIDLink<EffectShader>)pair.Value,
-                        null);
+                    obj.EnchantEffect_Property.Set((FormIDLink<EffectShader>)pair.Value);
                     break;
                 case MagicEffectSubData_FieldIndex.CastingSound:
-                    obj.CastingSound_Property.Set(
-                        (FormIDLink<Sound>)pair.Value,
-                        null);
+                    obj.CastingSound_Property.Set((FormIDLink<Sound>)pair.Value);
                     break;
                 case MagicEffectSubData_FieldIndex.BoltSound:
-                    obj.BoltSound_Property.Set(
-                        (FormIDLink<Sound>)pair.Value,
-                        null);
+                    obj.BoltSound_Property.Set((FormIDLink<Sound>)pair.Value);
                     break;
                 case MagicEffectSubData_FieldIndex.HitSound:
-                    obj.HitSound_Property.Set(
-                        (FormIDLink<Sound>)pair.Value,
-                        null);
+                    obj.HitSound_Property.Set((FormIDLink<Sound>)pair.Value);
                     break;
                 case MagicEffectSubData_FieldIndex.AreaSound:
-                    obj.AreaSound_Property.Set(
-                        (FormIDLink<Sound>)pair.Value,
-                        null);
+                    obj.AreaSound_Property.Set((FormIDLink<Sound>)pair.Value);
                     break;
                 case MagicEffectSubData_FieldIndex.ConstantEffectEnchantmentFactor:
                     obj.ConstantEffectEnchantmentFactor = (Single)pair.Value;
@@ -1227,9 +1207,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)MagicEffectSubData_FieldIndex.EnchantEffect);
                 try
                 {
-                    item.EnchantEffect_Property.SetLink(
-                        value: rhs.EnchantEffect_Property,
-                        cmds: cmds);
+                    item.EnchantEffect_Property.SetLink(value: rhs.EnchantEffect_Property);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1246,9 +1224,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)MagicEffectSubData_FieldIndex.CastingSound);
                 try
                 {
-                    item.CastingSound_Property.SetLink(
-                        value: rhs.CastingSound_Property,
-                        cmds: cmds);
+                    item.CastingSound_Property.SetLink(value: rhs.CastingSound_Property);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1265,9 +1241,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)MagicEffectSubData_FieldIndex.BoltSound);
                 try
                 {
-                    item.BoltSound_Property.SetLink(
-                        value: rhs.BoltSound_Property,
-                        cmds: cmds);
+                    item.BoltSound_Property.SetLink(value: rhs.BoltSound_Property);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1284,9 +1258,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)MagicEffectSubData_FieldIndex.HitSound);
                 try
                 {
-                    item.HitSound_Property.SetLink(
-                        value: rhs.HitSound_Property,
-                        cmds: cmds);
+                    item.HitSound_Property.SetLink(value: rhs.HitSound_Property);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1303,9 +1275,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)MagicEffectSubData_FieldIndex.AreaSound);
                 try
                 {
-                    item.AreaSound_Property.SetLink(
-                        value: rhs.AreaSound_Property,
-                        cmds: cmds);
+                    item.AreaSound_Property.SetLink(value: rhs.AreaSound_Property);
                 }
                 catch (Exception ex)
                 when (errorMask != null)

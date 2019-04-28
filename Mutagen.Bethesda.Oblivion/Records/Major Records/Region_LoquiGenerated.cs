@@ -1231,9 +1231,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.MapColor = (Color)obj;
                     break;
                 case Region_FieldIndex.Worldspace:
-                    this.Worldspace_Property.Set(
-                        (FormIDSetLink<Worldspace>)obj,
-                        cmds);
+                    this.Worldspace_Property.Set((FormIDSetLink<Worldspace>)obj);
                     break;
                 case Region_FieldIndex.Areas:
                     this._Areas.SetTo((IEnumerable<RegionArea>)obj);
@@ -1291,9 +1289,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.MapColor = (Color)pair.Value;
                     break;
                 case Region_FieldIndex.Worldspace:
-                    obj.Worldspace_Property.Set(
-                        (FormIDSetLink<Worldspace>)pair.Value,
-                        null);
+                    obj.Worldspace_Property.Set((FormIDSetLink<Worldspace>)pair.Value);
                     break;
                 case Region_FieldIndex.Areas:
                     obj._Areas.SetTo((IEnumerable<RegionArea>)pair.Value);
@@ -1787,8 +1783,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Worldspace_Property.SetLink(
                         rhs: rhs.Worldspace_Property,
-                        def: def?.Worldspace_Property,
-                        cmds: cmds);
+                        def: def?.Worldspace_Property);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2115,7 +2110,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             item.Icon_Unset();
             item.MapColor_Unset();
-            item.Worldspace_Property.Unset(cmds.ToUnsetParams());
+            item.Worldspace_Property.Unset();
             item.Areas.Unset();
             item.Objects_Unset();
             item.Weather_Unset();

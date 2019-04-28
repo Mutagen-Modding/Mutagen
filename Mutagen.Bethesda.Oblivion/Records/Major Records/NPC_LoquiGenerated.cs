@@ -3696,22 +3696,16 @@ namespace Mutagen.Bethesda.Oblivion
                     this._Factions.SetTo((IEnumerable<RankPlacement>)obj);
                     break;
                 case NPC_FieldIndex.DeathItem:
-                    this.DeathItem_Property.Set(
-                        (FormIDSetLink<ItemAbstract>)obj,
-                        cmds);
+                    this.DeathItem_Property.Set((FormIDSetLink<ItemAbstract>)obj);
                     break;
                 case NPC_FieldIndex.Race:
-                    this.Race_Property.Set(
-                        (FormIDSetLink<Race>)obj,
-                        cmds);
+                    this.Race_Property.Set((FormIDSetLink<Race>)obj);
                     break;
                 case NPC_FieldIndex.Spells:
                     this._Spells.SetTo((IEnumerable<FormIDSetLink<SpellAbstract>>)obj);
                     break;
                 case NPC_FieldIndex.Script:
-                    this.Script_Property.Set(
-                        (FormIDSetLink<Script>)obj,
-                        cmds);
+                    this.Script_Property.Set((FormIDSetLink<Script>)obj);
                     break;
                 case NPC_FieldIndex.Items:
                     this._Items.SetTo((IEnumerable<ItemEntry>)obj);
@@ -3747,9 +3741,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this._Animations.SetTo((IEnumerable<String>)obj);
                     break;
                 case NPC_FieldIndex.Class:
-                    this.Class_Property.Set(
-                        (FormIDSetLink<Class>)obj,
-                        cmds);
+                    this.Class_Property.Set((FormIDSetLink<Class>)obj);
                     break;
                 case NPC_FieldIndex.Armorer:
                     this.Armorer = (Byte)obj;
@@ -3842,9 +3834,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.Luck = (Byte)obj;
                     break;
                 case NPC_FieldIndex.Hair:
-                    this.Hair_Property.Set(
-                        (FormIDSetLink<Hair>)obj,
-                        cmds);
+                    this.Hair_Property.Set((FormIDSetLink<Hair>)obj);
                     break;
                 case NPC_FieldIndex.HairLength:
                     this.HairLength = (Single)obj;
@@ -3856,9 +3846,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.HairColor = (Color)obj;
                     break;
                 case NPC_FieldIndex.CombatStyle:
-                    this.CombatStyle_Property.Set(
-                        (FormIDSetLink<CombatStyle>)obj,
-                        cmds);
+                    this.CombatStyle_Property.Set((FormIDSetLink<CombatStyle>)obj);
                     break;
                 case NPC_FieldIndex.FaceGenGeometrySymmetric:
                     this.FaceGenGeometrySymmetric = (Byte[])obj;
@@ -3934,22 +3922,16 @@ namespace Mutagen.Bethesda.Oblivion
                     obj._Factions.SetTo((IEnumerable<RankPlacement>)pair.Value);
                     break;
                 case NPC_FieldIndex.DeathItem:
-                    obj.DeathItem_Property.Set(
-                        (FormIDSetLink<ItemAbstract>)pair.Value,
-                        null);
+                    obj.DeathItem_Property.Set((FormIDSetLink<ItemAbstract>)pair.Value);
                     break;
                 case NPC_FieldIndex.Race:
-                    obj.Race_Property.Set(
-                        (FormIDSetLink<Race>)pair.Value,
-                        null);
+                    obj.Race_Property.Set((FormIDSetLink<Race>)pair.Value);
                     break;
                 case NPC_FieldIndex.Spells:
                     obj._Spells.SetTo((IEnumerable<FormIDSetLink<SpellAbstract>>)pair.Value);
                     break;
                 case NPC_FieldIndex.Script:
-                    obj.Script_Property.Set(
-                        (FormIDSetLink<Script>)pair.Value,
-                        null);
+                    obj.Script_Property.Set((FormIDSetLink<Script>)pair.Value);
                     break;
                 case NPC_FieldIndex.Items:
                     obj._Items.SetTo((IEnumerable<ItemEntry>)pair.Value);
@@ -3985,9 +3967,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj._Animations.SetTo((IEnumerable<String>)pair.Value);
                     break;
                 case NPC_FieldIndex.Class:
-                    obj.Class_Property.Set(
-                        (FormIDSetLink<Class>)pair.Value,
-                        null);
+                    obj.Class_Property.Set((FormIDSetLink<Class>)pair.Value);
                     break;
                 case NPC_FieldIndex.Armorer:
                     obj.Armorer = (Byte)pair.Value;
@@ -4080,9 +4060,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.Luck = (Byte)pair.Value;
                     break;
                 case NPC_FieldIndex.Hair:
-                    obj.Hair_Property.Set(
-                        (FormIDSetLink<Hair>)pair.Value,
-                        null);
+                    obj.Hair_Property.Set((FormIDSetLink<Hair>)pair.Value);
                     break;
                 case NPC_FieldIndex.HairLength:
                     obj.HairLength = (Single)pair.Value;
@@ -4094,9 +4072,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.HairColor = (Color)pair.Value;
                     break;
                 case NPC_FieldIndex.CombatStyle:
-                    obj.CombatStyle_Property.Set(
-                        (FormIDSetLink<CombatStyle>)pair.Value,
-                        null);
+                    obj.CombatStyle_Property.Set((FormIDSetLink<CombatStyle>)pair.Value);
                     break;
                 case NPC_FieldIndex.FaceGenGeometrySymmetric:
                     obj.FaceGenGeometrySymmetric = (Byte[])pair.Value;
@@ -5781,8 +5757,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.DeathItem_Property.SetLink(
                         rhs: rhs.DeathItem_Property,
-                        def: def?.DeathItem_Property,
-                        cmds: cmds);
+                        def: def?.DeathItem_Property);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -5801,8 +5776,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Race_Property.SetLink(
                         rhs: rhs.Race_Property,
-                        def: def?.Race_Property,
-                        cmds: cmds);
+                        def: def?.Race_Property);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -5840,8 +5814,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Script_Property.SetLink(
                         rhs: rhs.Script_Property,
-                        def: def?.Script_Property,
-                        cmds: cmds);
+                        def: def?.Script_Property);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -6069,8 +6042,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Class_Property.SetLink(
                         rhs: rhs.Class_Property,
-                        def: def?.Class_Property,
-                        cmds: cmds);
+                        def: def?.Class_Property);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -6599,8 +6571,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Hair_Property.SetLink(
                         rhs: rhs.Hair_Property,
-                        def: def?.Hair_Property,
-                        cmds: cmds);
+                        def: def?.Hair_Property);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -6698,8 +6669,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.CombatStyle_Property.SetLink(
                         rhs: rhs.CombatStyle_Property,
-                        def: def?.CombatStyle_Property,
-                        cmds: cmds);
+                        def: def?.CombatStyle_Property);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -6849,10 +6819,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.CalcMin = default(UInt16);
             item.CalcMax = default(UInt16);
             item.Factions.Unset();
-            item.DeathItem_Property.Unset(cmds.ToUnsetParams());
-            item.Race_Property.Unset(cmds.ToUnsetParams());
+            item.DeathItem_Property.Unset();
+            item.Race_Property.Unset();
             item.Spells.Unset();
-            item.Script_Property.Unset(cmds.ToUnsetParams());
+            item.Script_Property.Unset();
             item.Items.Unset();
             item.Aggression = default(Byte);
             item.Confidence = default(Byte);
@@ -6864,7 +6834,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Fluff = default(Byte[]);
             item.AIPackages.Unset();
             item.Animations.Unset();
-            item.Class_Property.Unset(cmds.ToUnsetParams());
+            item.Class_Property.Unset();
             item.Armorer = default(Byte);
             item.Athletics = default(Byte);
             item.Blade = default(Byte);
@@ -6895,11 +6865,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Endurance = default(Byte);
             item.Personality = default(Byte);
             item.Luck = default(Byte);
-            item.Hair_Property.Unset(cmds.ToUnsetParams());
+            item.Hair_Property.Unset();
             item.HairLength_Unset();
             item.Eyes.Unset();
             item.HairColor_Unset();
-            item.CombatStyle_Property.Unset(cmds.ToUnsetParams());
+            item.CombatStyle_Property.Unset();
             item.FaceGenGeometrySymmetric_Unset();
             item.FaceGenGeometryAsymmetric_Unset();
             item.FaceGenTextureSymmetric_Unset();

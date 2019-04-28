@@ -2163,9 +2163,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case PlacedObject_FieldIndex.Base:
-                    this.Base_Property.Set(
-                        (FormIDSetLink<OblivionMajorRecord>)obj,
-                        cmds);
+                    this.Base_Property.Set((FormIDSetLink<OblivionMajorRecord>)obj);
                     break;
                 case PlacedObject_FieldIndex.XPCIFluff:
                     this.XPCIFluff = (Byte[])obj;
@@ -2180,25 +2178,19 @@ namespace Mutagen.Bethesda.Oblivion
                     this.Lock = (LockInformation)obj;
                     break;
                 case PlacedObject_FieldIndex.Owner:
-                    this.Owner_Property.Set(
-                        (FormIDSetLink<IOwner>)obj,
-                        cmds);
+                    this.Owner_Property.Set((FormIDSetLink<IOwner>)obj);
                     break;
                 case PlacedObject_FieldIndex.FactionRank:
                     this.FactionRank = (Int32)obj;
                     break;
                 case PlacedObject_FieldIndex.GlobalVariable:
-                    this.GlobalVariable_Property.Set(
-                        (FormIDSetLink<Global>)obj,
-                        cmds);
+                    this.GlobalVariable_Property.Set((FormIDSetLink<Global>)obj);
                     break;
                 case PlacedObject_FieldIndex.EnableParent:
                     this.EnableParent = (EnableParent)obj;
                     break;
                 case PlacedObject_FieldIndex.Target:
-                    this.Target_Property.Set(
-                        (FormIDSetLink<IPlaced>)obj,
-                        cmds);
+                    this.Target_Property.Set((FormIDSetLink<IPlaced>)obj);
                     break;
                 case PlacedObject_FieldIndex.SpeedTreeSeed:
                     this.SpeedTreeSeed = (Byte)obj;
@@ -2216,9 +2208,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.LevelModifier = (Int32)obj;
                     break;
                 case PlacedObject_FieldIndex.Unknown:
-                    this.Unknown_Property.Set(
-                        (FormIDSetLink<OblivionMajorRecord>)obj,
-                        cmds);
+                    this.Unknown_Property.Set((FormIDSetLink<OblivionMajorRecord>)obj);
                     break;
                 case PlacedObject_FieldIndex.ActionFlags:
                     this.ActionFlags = (PlacedObject.ActionFlag)obj;
@@ -2239,9 +2229,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.Scale = (Single)obj;
                     break;
                 case PlacedObject_FieldIndex.ContainedSoul:
-                    this.ContainedSoul_Property.Set(
-                        (FormIDSetLink<SoulGem>)obj,
-                        cmds);
+                    this.ContainedSoul_Property.Set((FormIDSetLink<SoulGem>)obj);
                     break;
                 case PlacedObject_FieldIndex.Position:
                     this.Position = (P3Float)obj;
@@ -2281,9 +2269,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case PlacedObject_FieldIndex.Base:
-                    obj.Base_Property.Set(
-                        (FormIDSetLink<OblivionMajorRecord>)pair.Value,
-                        null);
+                    obj.Base_Property.Set((FormIDSetLink<OblivionMajorRecord>)pair.Value);
                     break;
                 case PlacedObject_FieldIndex.XPCIFluff:
                     obj.XPCIFluff = (Byte[])pair.Value;
@@ -2298,25 +2284,19 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.Lock = (LockInformation)pair.Value;
                     break;
                 case PlacedObject_FieldIndex.Owner:
-                    obj.Owner_Property.Set(
-                        (FormIDSetLink<IOwner>)pair.Value,
-                        null);
+                    obj.Owner_Property.Set((FormIDSetLink<IOwner>)pair.Value);
                     break;
                 case PlacedObject_FieldIndex.FactionRank:
                     obj.FactionRank = (Int32)pair.Value;
                     break;
                 case PlacedObject_FieldIndex.GlobalVariable:
-                    obj.GlobalVariable_Property.Set(
-                        (FormIDSetLink<Global>)pair.Value,
-                        null);
+                    obj.GlobalVariable_Property.Set((FormIDSetLink<Global>)pair.Value);
                     break;
                 case PlacedObject_FieldIndex.EnableParent:
                     obj.EnableParent = (EnableParent)pair.Value;
                     break;
                 case PlacedObject_FieldIndex.Target:
-                    obj.Target_Property.Set(
-                        (FormIDSetLink<IPlaced>)pair.Value,
-                        null);
+                    obj.Target_Property.Set((FormIDSetLink<IPlaced>)pair.Value);
                     break;
                 case PlacedObject_FieldIndex.SpeedTreeSeed:
                     obj.SpeedTreeSeed = (Byte)pair.Value;
@@ -2334,9 +2314,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.LevelModifier = (Int32)pair.Value;
                     break;
                 case PlacedObject_FieldIndex.Unknown:
-                    obj.Unknown_Property.Set(
-                        (FormIDSetLink<OblivionMajorRecord>)pair.Value,
-                        null);
+                    obj.Unknown_Property.Set((FormIDSetLink<OblivionMajorRecord>)pair.Value);
                     break;
                 case PlacedObject_FieldIndex.ActionFlags:
                     obj.ActionFlags = (PlacedObject.ActionFlag)pair.Value;
@@ -2357,9 +2335,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.Scale = (Single)pair.Value;
                     break;
                 case PlacedObject_FieldIndex.ContainedSoul:
-                    obj.ContainedSoul_Property.Set(
-                        (FormIDSetLink<SoulGem>)pair.Value,
-                        null);
+                    obj.ContainedSoul_Property.Set((FormIDSetLink<SoulGem>)pair.Value);
                     break;
                 case PlacedObject_FieldIndex.Position:
                     obj.Position = (P3Float)pair.Value;
@@ -3124,8 +3100,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Base_Property.SetLink(
                         rhs: rhs.Base_Property,
-                        def: def?.Base_Property,
-                        cmds: cmds);
+                        def: def?.Base_Property);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -3312,8 +3287,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Owner_Property.SetLink(
                         rhs: rhs.Owner_Property,
-                        def: def?.Owner_Property,
-                        cmds: cmds);
+                        def: def?.Owner_Property);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -3362,8 +3336,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.GlobalVariable_Property.SetLink(
                         rhs: rhs.GlobalVariable_Property,
-                        def: def?.GlobalVariable_Property,
-                        cmds: cmds);
+                        def: def?.GlobalVariable_Property);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -3436,8 +3409,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Target_Property.SetLink(
                         rhs: rhs.Target_Property,
-                        def: def?.Target_Property,
-                        cmds: cmds);
+                        def: def?.Target_Property);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -3630,8 +3602,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Unknown_Property.SetLink(
                         rhs: rhs.Unknown_Property,
-                        def: def?.Unknown_Property,
-                        cmds: cmds);
+                        def: def?.Unknown_Property);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -3841,8 +3812,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.ContainedSoul_Property.SetLink(
                         rhs: rhs.ContainedSoul_Property,
-                        def: def?.ContainedSoul_Property,
-                        cmds: cmds);
+                        def: def?.ContainedSoul_Property);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -3896,29 +3866,29 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IPlacedObject item,
             NotifyingUnsetParameters cmds = null)
         {
-            item.Base_Property.Unset(cmds.ToUnsetParams());
+            item.Base_Property.Unset();
             item.XPCIFluff_Unset();
             item.FULLFluff_Unset();
             item.TeleportDestination_Unset();
             item.Lock_Unset();
-            item.Owner_Property.Unset(cmds.ToUnsetParams());
+            item.Owner_Property.Unset();
             item.FactionRank_Unset();
-            item.GlobalVariable_Property.Unset(cmds.ToUnsetParams());
+            item.GlobalVariable_Property.Unset();
             item.EnableParent_Unset();
-            item.Target_Property.Unset(cmds.ToUnsetParams());
+            item.Target_Property.Unset();
             item.SpeedTreeSeed_Unset();
             item.DistantLODData_Unset();
             item.Charge_Unset();
             item.Health_Unset();
             item.LevelModifier_Unset();
-            item.Unknown_Property.Unset(cmds.ToUnsetParams());
+            item.Unknown_Property.Unset();
             item.ActionFlags_Unset();
             item.Count_Unset();
             item.MapMarker_Unset();
             item.OpenByDefault = default(Boolean);
             item.RagdollData_Unset();
             item.Scale_Unset();
-            item.ContainedSoul_Property.Unset(cmds.ToUnsetParams());
+            item.ContainedSoul_Property.Unset();
             item.Position = default(P3Float);
             item.Rotation = default(P3Float);
         }

@@ -690,9 +690,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case WeatherChance_FieldIndex.Weather:
-                    this.Weather_Property.Set(
-                        (FormIDLink<Weather>)obj,
-                        cmds);
+                    this.Weather_Property.Set((FormIDLink<Weather>)obj);
                     break;
                 case WeatherChance_FieldIndex.Chance:
                     this.Chance = (Int32)obj;
@@ -735,9 +733,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case WeatherChance_FieldIndex.Weather:
-                    obj.Weather_Property.Set(
-                        (FormIDLink<Weather>)pair.Value,
-                        null);
+                    obj.Weather_Property.Set((FormIDLink<Weather>)pair.Value);
                     break;
                 case WeatherChance_FieldIndex.Chance:
                     obj.Chance = (Int32)pair.Value;
@@ -980,9 +976,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)WeatherChance_FieldIndex.Weather);
                 try
                 {
-                    item.Weather_Property.SetLink(
-                        value: rhs.Weather_Property,
-                        cmds: cmds);
+                    item.Weather_Property.SetLink(value: rhs.Weather_Property);
                 }
                 catch (Exception ex)
                 when (errorMask != null)

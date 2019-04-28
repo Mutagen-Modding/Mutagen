@@ -754,9 +754,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case SoundItem_FieldIndex.Sound:
-                    this.Sound_Property.Set(
-                        (FormIDSetLink<Sound>)obj,
-                        cmds);
+                    this.Sound_Property.Set((FormIDSetLink<Sound>)obj);
                     break;
                 case SoundItem_FieldIndex.Chance:
                     this.Chance = (Byte)obj;
@@ -799,9 +797,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case SoundItem_FieldIndex.Sound:
-                    obj.Sound_Property.Set(
-                        (FormIDSetLink<Sound>)pair.Value,
-                        null);
+                    obj.Sound_Property.Set((FormIDSetLink<Sound>)pair.Value);
                     break;
                 case SoundItem_FieldIndex.Chance:
                     obj.Chance = (Byte)pair.Value;
@@ -1064,8 +1060,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Sound_Property.SetLink(
                         rhs: rhs.Sound_Property,
-                        def: def?.Sound_Property,
-                        cmds: cmds);
+                        def: def?.Sound_Property);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1115,7 +1110,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ISoundItem item,
             NotifyingUnsetParameters cmds = null)
         {
-            item.Sound_Property.Unset(cmds.ToUnsetParams());
+            item.Sound_Property.Unset();
             item.Chance_Unset();
         }
 

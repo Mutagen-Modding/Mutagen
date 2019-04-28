@@ -732,9 +732,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.Type = (AIPackageLocation.LocationType)obj;
                     break;
                 case AIPackageLocation_FieldIndex.LocationReference:
-                    this.LocationReference_Property.Set(
-                        (FormIDLink<IPlaced>)obj,
-                        cmds);
+                    this.LocationReference_Property.Set((FormIDLink<IPlaced>)obj);
                     break;
                 case AIPackageLocation_FieldIndex.Radius:
                     this.Radius = (Single)obj;
@@ -780,9 +778,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.Type = (AIPackageLocation.LocationType)pair.Value;
                     break;
                 case AIPackageLocation_FieldIndex.LocationReference:
-                    obj.LocationReference_Property.Set(
-                        (FormIDLink<IPlaced>)pair.Value,
-                        null);
+                    obj.LocationReference_Property.Set((FormIDLink<IPlaced>)pair.Value);
                     break;
                 case AIPackageLocation_FieldIndex.Radius:
                     obj.Radius = (Single)pair.Value;
@@ -1062,9 +1058,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)AIPackageLocation_FieldIndex.LocationReference);
                 try
                 {
-                    item.LocationReference_Property.SetLink(
-                        value: rhs.LocationReference_Property,
-                        cmds: cmds);
+                    item.LocationReference_Property.SetLink(value: rhs.LocationReference_Property);
                 }
                 catch (Exception ex)
                 when (errorMask != null)

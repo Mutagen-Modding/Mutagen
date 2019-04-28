@@ -729,9 +729,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case TeleportDestination_FieldIndex.Destination:
-                    this.Destination_Property.Set(
-                        (FormIDLink<IPlaced>)obj,
-                        cmds);
+                    this.Destination_Property.Set((FormIDLink<IPlaced>)obj);
                     break;
                 case TeleportDestination_FieldIndex.Position:
                     this.Position = (P3Float)obj;
@@ -777,9 +775,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case TeleportDestination_FieldIndex.Destination:
-                    obj.Destination_Property.Set(
-                        (FormIDLink<IPlaced>)pair.Value,
-                        null);
+                    obj.Destination_Property.Set((FormIDLink<IPlaced>)pair.Value);
                     break;
                 case TeleportDestination_FieldIndex.Position:
                     obj.Position = (P3Float)pair.Value;
@@ -1045,9 +1041,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)TeleportDestination_FieldIndex.Destination);
                 try
                 {
-                    item.Destination_Property.SetLink(
-                        value: rhs.Destination_Property,
-                        cmds: cmds);
+                    item.Destination_Property.SetLink(value: rhs.Destination_Property);
                 }
                 catch (Exception ex)
                 when (errorMask != null)

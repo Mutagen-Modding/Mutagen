@@ -1115,14 +1115,10 @@ namespace Mutagen.Bethesda.Oblivion
                     this.Model = (Model)obj;
                     break;
                 case Flora_FieldIndex.Script:
-                    this.Script_Property.Set(
-                        (FormIDSetLink<Script>)obj,
-                        cmds);
+                    this.Script_Property.Set((FormIDSetLink<Script>)obj);
                     break;
                 case Flora_FieldIndex.Ingredient:
-                    this.Ingredient_Property.Set(
-                        (FormIDSetLink<Ingredient>)obj,
-                        cmds);
+                    this.Ingredient_Property.Set((FormIDSetLink<Ingredient>)obj);
                     break;
                 case Flora_FieldIndex.Spring:
                     this.Spring = (Byte)obj;
@@ -1174,14 +1170,10 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.Model = (Model)pair.Value;
                     break;
                 case Flora_FieldIndex.Script:
-                    obj.Script_Property.Set(
-                        (FormIDSetLink<Script>)pair.Value,
-                        null);
+                    obj.Script_Property.Set((FormIDSetLink<Script>)pair.Value);
                     break;
                 case Flora_FieldIndex.Ingredient:
-                    obj.Ingredient_Property.Set(
-                        (FormIDSetLink<Ingredient>)pair.Value,
-                        null);
+                    obj.Ingredient_Property.Set((FormIDSetLink<Ingredient>)pair.Value);
                     break;
                 case Flora_FieldIndex.Spring:
                     obj.Spring = (Byte)pair.Value;
@@ -1655,8 +1647,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Script_Property.SetLink(
                         rhs: rhs.Script_Property,
-                        def: def?.Script_Property,
-                        cmds: cmds);
+                        def: def?.Script_Property);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1675,8 +1666,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Ingredient_Property.SetLink(
                         rhs: rhs.Ingredient_Property,
-                        def: def?.Ingredient_Property,
-                        cmds: cmds);
+                        def: def?.Ingredient_Property);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1766,8 +1756,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             item.Name_Unset();
             item.Model_Unset();
-            item.Script_Property.Unset(cmds.ToUnsetParams());
-            item.Ingredient_Property.Unset(cmds.ToUnsetParams());
+            item.Script_Property.Unset();
+            item.Ingredient_Property.Unset();
             item.Spring = default(Byte);
             item.Summer = default(Byte);
             item.Fall = default(Byte);

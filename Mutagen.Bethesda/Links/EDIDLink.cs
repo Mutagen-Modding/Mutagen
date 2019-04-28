@@ -34,17 +34,17 @@ namespace Mutagen.Bethesda
         {
         }
 
-        public override void Set(T value, NotifyingFireParameters cmds = null)
+        public override void Set(T value)
         {
             HandleItemChange(new Change<T>(this.Item, value));
-            base.Set(value, cmds);
+            base.Set(value);
         }
 
-        public void Set(IEDIDLink<T> link, NotifyingFireParameters cmds = null)
+        public void Set(IEDIDLink<T> link)
         {
             if (link.Linked)
             {
-                this.Set(link.Item, cmds);
+                this.Set(link.Item);
             }
             else
             {
@@ -109,8 +109,7 @@ namespace Mutagen.Bethesda
 
         private static bool TryLinkToMod<M>(
             IEDIDLink<T> link,
-            M mod,
-            NotifyingFireParameters cmds = null)
+            M mod)
             where M : IMod<M>
         {
             if (string.IsNullOrWhiteSpace(link.EDID.Type)) return false;
@@ -119,7 +118,7 @@ namespace Mutagen.Bethesda
             {
                 if (link.EDID.Type.Equals(rec.EditorID))
                 {
-                    link.Set(rec, cmds);
+                    link.Item = rec;
                     return true;
                 }
             }
@@ -129,30 +128,29 @@ namespace Mutagen.Bethesda
         public static bool TryLink<M>(
             IEDIDLink<T> link,
             ModList<M> modList, 
-            M sourceMod,
-            NotifyingFireParameters cmds = null)
+            M sourceMod)
             where M : IMod<M>
         {
 #if DEBUG
             link.AttemptedLink = true;
 #endif
-            if (TryLinkToMod(link, sourceMod, cmds)) return true;
+            if (TryLinkToMod(link, sourceMod)) return true;
             if (modList == null) return false;
             foreach (var listing in modList)
             {
                 if (!listing.Loaded) return false;
-                if (TryLinkToMod(link, listing.Mod, cmds)) return true;
+                if (TryLinkToMod(link, listing.Mod)) return true;
             }
             return false;
         }
 
-        public override bool Link<M>(ModList<M> modList, M sourceMod, NotifyingFireParameters cmds = null)
+        public override bool Link<M>(ModList<M> modList, M sourceMod)
         {
             if (this.UnlinkedForm.HasValue)
             {
-                return base.Link(modList, sourceMod, cmds);
+                return base.Link(modList, sourceMod);
             }
-            return TryLink(this, modList, sourceMod, cmds);
+            return TryLink(this, modList, sourceMod);
         }
     }
 }

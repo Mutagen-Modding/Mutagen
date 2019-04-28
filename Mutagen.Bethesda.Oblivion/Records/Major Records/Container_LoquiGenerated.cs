@@ -1130,9 +1130,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.Model = (Model)obj;
                     break;
                 case Container_FieldIndex.Script:
-                    this.Script_Property.Set(
-                        (FormIDSetLink<Script>)obj,
-                        cmds);
+                    this.Script_Property.Set((FormIDSetLink<Script>)obj);
                     break;
                 case Container_FieldIndex.Items:
                     this._Items.SetTo((IEnumerable<ContainerItem>)obj);
@@ -1144,14 +1142,10 @@ namespace Mutagen.Bethesda.Oblivion
                     this.Weight = (Single)obj;
                     break;
                 case Container_FieldIndex.OpenSound:
-                    this.OpenSound_Property.Set(
-                        (FormIDSetLink<Sound>)obj,
-                        cmds);
+                    this.OpenSound_Property.Set((FormIDSetLink<Sound>)obj);
                     break;
                 case Container_FieldIndex.CloseSound:
-                    this.CloseSound_Property.Set(
-                        (FormIDSetLink<Sound>)obj,
-                        cmds);
+                    this.CloseSound_Property.Set((FormIDSetLink<Sound>)obj);
                     break;
                 default:
                     base.SetNthObject(index, obj, cmds);
@@ -1191,9 +1185,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.Model = (Model)pair.Value;
                     break;
                 case Container_FieldIndex.Script:
-                    obj.Script_Property.Set(
-                        (FormIDSetLink<Script>)pair.Value,
-                        null);
+                    obj.Script_Property.Set((FormIDSetLink<Script>)pair.Value);
                     break;
                 case Container_FieldIndex.Items:
                     obj._Items.SetTo((IEnumerable<ContainerItem>)pair.Value);
@@ -1205,14 +1197,10 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.Weight = (Single)pair.Value;
                     break;
                 case Container_FieldIndex.OpenSound:
-                    obj.OpenSound_Property.Set(
-                        (FormIDSetLink<Sound>)pair.Value,
-                        null);
+                    obj.OpenSound_Property.Set((FormIDSetLink<Sound>)pair.Value);
                     break;
                 case Container_FieldIndex.CloseSound:
-                    obj.CloseSound_Property.Set(
-                        (FormIDSetLink<Sound>)pair.Value,
-                        null);
+                    obj.CloseSound_Property.Set((FormIDSetLink<Sound>)pair.Value);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -1675,8 +1663,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Script_Property.SetLink(
                         rhs: rhs.Script_Property,
-                        def: def?.Script_Property,
-                        cmds: cmds);
+                        def: def?.Script_Property);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1764,8 +1751,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.OpenSound_Property.SetLink(
                         rhs: rhs.OpenSound_Property,
-                        def: def?.OpenSound_Property,
-                        cmds: cmds);
+                        def: def?.OpenSound_Property);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1784,8 +1770,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.CloseSound_Property.SetLink(
                         rhs: rhs.CloseSound_Property,
-                        def: def?.CloseSound_Property,
-                        cmds: cmds);
+                        def: def?.CloseSound_Property);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1807,12 +1792,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             item.Name_Unset();
             item.Model_Unset();
-            item.Script_Property.Unset(cmds.ToUnsetParams());
+            item.Script_Property.Unset();
             item.Items.Unset();
             item.Flags = default(Container.ContainerFlag);
             item.Weight = default(Single);
-            item.OpenSound_Property.Unset(cmds.ToUnsetParams());
-            item.CloseSound_Property.Unset(cmds.ToUnsetParams());
+            item.OpenSound_Property.Unset();
+            item.CloseSound_Property.Unset();
         }
 
         public static Container_Mask<bool> GetEqualsMask(

@@ -1342,9 +1342,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case PlacedNPC_FieldIndex.Base:
-                    this.Base_Property.Set(
-                        (FormIDSetLink<NPC>)obj,
-                        cmds);
+                    this.Base_Property.Set((FormIDSetLink<NPC>)obj);
                     break;
                 case PlacedNPC_FieldIndex.XPCIFluff:
                     this.XPCIFluff = (Byte[])obj;
@@ -1359,14 +1357,10 @@ namespace Mutagen.Bethesda.Oblivion
                     this.EnableParent = (EnableParent)obj;
                     break;
                 case PlacedNPC_FieldIndex.MerchantContainer:
-                    this.MerchantContainer_Property.Set(
-                        (FormIDSetLink<PlacedObject>)obj,
-                        cmds);
+                    this.MerchantContainer_Property.Set((FormIDSetLink<PlacedObject>)obj);
                     break;
                 case PlacedNPC_FieldIndex.Horse:
-                    this.Horse_Property.Set(
-                        (FormIDSetLink<PlacedCreature>)obj,
-                        cmds);
+                    this.Horse_Property.Set((FormIDSetLink<PlacedCreature>)obj);
                     break;
                 case PlacedNPC_FieldIndex.RagdollData:
                     this.RagdollData = (Byte[])obj;
@@ -1412,9 +1406,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case PlacedNPC_FieldIndex.Base:
-                    obj.Base_Property.Set(
-                        (FormIDSetLink<NPC>)pair.Value,
-                        null);
+                    obj.Base_Property.Set((FormIDSetLink<NPC>)pair.Value);
                     break;
                 case PlacedNPC_FieldIndex.XPCIFluff:
                     obj.XPCIFluff = (Byte[])pair.Value;
@@ -1429,14 +1421,10 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.EnableParent = (EnableParent)pair.Value;
                     break;
                 case PlacedNPC_FieldIndex.MerchantContainer:
-                    obj.MerchantContainer_Property.Set(
-                        (FormIDSetLink<PlacedObject>)pair.Value,
-                        null);
+                    obj.MerchantContainer_Property.Set((FormIDSetLink<PlacedObject>)pair.Value);
                     break;
                 case PlacedNPC_FieldIndex.Horse:
-                    obj.Horse_Property.Set(
-                        (FormIDSetLink<PlacedCreature>)pair.Value,
-                        null);
+                    obj.Horse_Property.Set((FormIDSetLink<PlacedCreature>)pair.Value);
                     break;
                 case PlacedNPC_FieldIndex.RagdollData:
                     obj.RagdollData = (Byte[])pair.Value;
@@ -1901,8 +1889,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Base_Property.SetLink(
                         rhs: rhs.Base_Property,
-                        def: def?.Base_Property,
-                        cmds: cmds);
+                        def: def?.Base_Property);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2089,8 +2076,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.MerchantContainer_Property.SetLink(
                         rhs: rhs.MerchantContainer_Property,
-                        def: def?.MerchantContainer_Property,
-                        cmds: cmds);
+                        def: def?.MerchantContainer_Property);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2109,8 +2095,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Horse_Property.SetLink(
                         rhs: rhs.Horse_Property,
-                        def: def?.Horse_Property,
-                        cmds: cmds);
+                        def: def?.Horse_Property);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2224,13 +2209,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IPlacedNPC item,
             NotifyingUnsetParameters cmds = null)
         {
-            item.Base_Property.Unset(cmds.ToUnsetParams());
+            item.Base_Property.Unset();
             item.XPCIFluff_Unset();
             item.FULLFluff_Unset();
             item.DistantLODData_Unset();
             item.EnableParent_Unset();
-            item.MerchantContainer_Property.Unset(cmds.ToUnsetParams());
-            item.Horse_Property.Unset(cmds.ToUnsetParams());
+            item.MerchantContainer_Property.Unset();
+            item.Horse_Property.Unset();
             item.RagdollData_Unset();
             item.Scale_Unset();
             item.Position = default(P3Float);
