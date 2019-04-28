@@ -764,32 +764,27 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public override void CopyFieldsFrom(
-            IMajorRecordGetter rhs,
-            NotifyingFireParameters cmds = null)
+        public override void CopyFieldsFrom(IMajorRecordGetter rhs)
         {
             this.CopyFieldsFrom(
                 rhs: (IAnimatedObjectGetter)rhs,
                 def: null,
                 doMasks: false,
                 errorMask: out var errMask,
-                copyMask: null,
-                cmds: cmds);
+                copyMask: null);
         }
 
         public void CopyFieldsFrom(
             IAnimatedObjectGetter rhs,
             AnimatedObject_CopyMask copyMask,
-            IAnimatedObjectGetter def = null,
-            NotifyingFireParameters cmds = null)
+            IAnimatedObjectGetter def = null)
         {
             this.CopyFieldsFrom(
                 rhs: rhs,
                 def: def,
                 doMasks: false,
                 errorMask: out var errMask,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
         }
 
         public void CopyFieldsFrom(
@@ -797,7 +792,6 @@ namespace Mutagen.Bethesda.Oblivion
             out AnimatedObject_ErrorMask errorMask,
             AnimatedObject_CopyMask copyMask = null,
             IAnimatedObjectGetter def = null,
-            NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
@@ -806,8 +800,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 def: def,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
             errorMask = AnimatedObject_ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -816,7 +809,6 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMask,
             AnimatedObject_CopyMask copyMask = null,
             IAnimatedObjectGetter def = null,
-            NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
             AnimatedObjectCommon.CopyFieldsFrom(
@@ -824,11 +816,10 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 def: def,
                 errorMask: errorMask,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
         }
 
-        protected override void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
+        protected override void SetNthObject(ushort index, object obj)
         {
             AnimatedObject_FieldIndex enu = (AnimatedObject_FieldIndex)index;
             switch (enu)
@@ -840,15 +831,15 @@ namespace Mutagen.Bethesda.Oblivion
                     this.IdleAnimation_Property.Set((FormIDSetLink<IdleAnimation>)obj);
                     break;
                 default:
-                    base.SetNthObject(index, obj, cmds);
+                    base.SetNthObject(index, obj);
                     break;
             }
         }
 
-        public override void Clear(NotifyingUnsetParameters cmds = null)
+        public override void Clear()
         {
-            CallClearPartial_Internal(cmds);
-            AnimatedObjectCommon.Clear(this, cmds);
+            CallClearPartial_Internal();
+            AnimatedObjectCommon.Clear(this);
         }
 
 
@@ -1120,16 +1111,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IAnimatedObjectGetter rhs,
             IAnimatedObjectGetter def,
             ErrorMaskBuilder errorMask,
-            AnimatedObject_CopyMask copyMask,
-            NotifyingFireParameters cmds = null)
+            AnimatedObject_CopyMask copyMask)
         {
             OblivionMajorRecordCommon.CopyFieldsFrom(
                 item,
                 rhs,
                 def,
                 errorMask,
-                copyMask,
-                cmds);
+                copyMask);
             if (copyMask?.Model.Overall != CopyOption.Skip)
             {
                 errorMask?.PushIndex((int)AnimatedObject_FieldIndex.Model);
@@ -1154,8 +1143,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                     rhs: rhs.Model,
                                     def: def?.Model,
                                     errorMask: errorMask,
-                                    copyMask: copyMask?.Model.Specific,
-                                    cmds: cmds);
+                                    copyMask: copyMask?.Model.Specific);
                                 break;
                             case CopyOption.MakeCopy:
                                 item.Model = Model.Copy(
@@ -1207,9 +1195,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void Clear(
-            IAnimatedObject item,
-            NotifyingUnsetParameters cmds = null)
+        public static void Clear(IAnimatedObject item)
         {
             item.Model_Unset();
             item.IdleAnimation_Property.Unset();

@@ -523,32 +523,27 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public override void CopyFieldsFrom(
-            IMajorRecordGetter rhs,
-            NotifyingFireParameters cmds = null)
+        public override void CopyFieldsFrom(IMajorRecordGetter rhs)
         {
             this.CopyFieldsFrom(
                 rhs: (IItemAbstractGetter)rhs,
                 def: null,
                 doMasks: false,
                 errorMask: out var errMask,
-                copyMask: null,
-                cmds: cmds);
+                copyMask: null);
         }
 
         public void CopyFieldsFrom(
             IItemAbstractGetter rhs,
             ItemAbstract_CopyMask copyMask,
-            IItemAbstractGetter def = null,
-            NotifyingFireParameters cmds = null)
+            IItemAbstractGetter def = null)
         {
             this.CopyFieldsFrom(
                 rhs: rhs,
                 def: def,
                 doMasks: false,
                 errorMask: out var errMask,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
         }
 
         public void CopyFieldsFrom(
@@ -556,7 +551,6 @@ namespace Mutagen.Bethesda.Oblivion
             out ItemAbstract_ErrorMask errorMask,
             ItemAbstract_CopyMask copyMask = null,
             IItemAbstractGetter def = null,
-            NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
@@ -565,8 +559,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 def: def,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
             errorMask = ItemAbstract_ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -575,7 +568,6 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMask,
             ItemAbstract_CopyMask copyMask = null,
             IItemAbstractGetter def = null,
-            NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
             ItemAbstractCommon.CopyFieldsFrom(
@@ -583,25 +575,24 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 def: def,
                 errorMask: errorMask,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
         }
 
-        protected override void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
+        protected override void SetNthObject(ushort index, object obj)
         {
             ItemAbstract_FieldIndex enu = (ItemAbstract_FieldIndex)index;
             switch (enu)
             {
                 default:
-                    base.SetNthObject(index, obj, cmds);
+                    base.SetNthObject(index, obj);
                     break;
             }
         }
 
-        public override void Clear(NotifyingUnsetParameters cmds = null)
+        public override void Clear()
         {
-            CallClearPartial_Internal(cmds);
-            ItemAbstractCommon.Clear(this, cmds);
+            CallClearPartial_Internal();
+            ItemAbstractCommon.Clear(this);
         }
 
 
@@ -855,23 +846,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IItemAbstractGetter rhs,
             IItemAbstractGetter def,
             ErrorMaskBuilder errorMask,
-            ItemAbstract_CopyMask copyMask,
-            NotifyingFireParameters cmds = null)
+            ItemAbstract_CopyMask copyMask)
         {
             OblivionMajorRecordCommon.CopyFieldsFrom(
                 item,
                 rhs,
                 def,
                 errorMask,
-                copyMask,
-                cmds);
+                copyMask);
         }
 
         #endregion
 
-        public static void Clear(
-            IItemAbstract item,
-            NotifyingUnsetParameters cmds = null)
+        public static void Clear(IItemAbstract item)
         {
         }
 

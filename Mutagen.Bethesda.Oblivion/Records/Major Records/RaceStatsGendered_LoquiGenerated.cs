@@ -619,32 +619,27 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public void CopyFieldsFrom(
-            IRaceStatsGenderedGetter rhs,
-            NotifyingFireParameters cmds = null)
+        public void CopyFieldsFrom(IRaceStatsGenderedGetter rhs)
         {
             this.CopyFieldsFrom(
                 rhs: (IRaceStatsGenderedGetter)rhs,
                 def: null,
                 doMasks: false,
                 errorMask: out var errMask,
-                copyMask: null,
-                cmds: cmds);
+                copyMask: null);
         }
 
         public void CopyFieldsFrom(
             IRaceStatsGenderedGetter rhs,
             RaceStatsGendered_CopyMask copyMask,
-            IRaceStatsGenderedGetter def = null,
-            NotifyingFireParameters cmds = null)
+            IRaceStatsGenderedGetter def = null)
         {
             this.CopyFieldsFrom(
                 rhs: rhs,
                 def: def,
                 doMasks: false,
                 errorMask: out var errMask,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
         }
 
         public void CopyFieldsFrom(
@@ -652,7 +647,6 @@ namespace Mutagen.Bethesda.Oblivion
             out RaceStatsGendered_ErrorMask errorMask,
             RaceStatsGendered_CopyMask copyMask = null,
             IRaceStatsGenderedGetter def = null,
-            NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
@@ -661,8 +655,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 def: def,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
             errorMask = RaceStatsGendered_ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -671,7 +664,6 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMask,
             RaceStatsGendered_CopyMask copyMask = null,
             IRaceStatsGenderedGetter def = null,
-            NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
             RaceStatsGenderedCommon.CopyFieldsFrom(
@@ -679,11 +671,10 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 def: def,
                 errorMask: errorMask,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
         }
 
-        protected void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
+        protected void SetNthObject(ushort index, object obj)
         {
             RaceStatsGendered_FieldIndex enu = (RaceStatsGendered_FieldIndex)index;
             switch (enu)
@@ -699,17 +690,17 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        partial void ClearPartial(NotifyingUnsetParameters cmds);
+        partial void ClearPartial();
 
-        protected void CallClearPartial_Internal(NotifyingUnsetParameters cmds)
+        protected void CallClearPartial_Internal()
         {
-            ClearPartial(cmds);
+            ClearPartial();
         }
 
-        public void Clear(NotifyingUnsetParameters cmds = null)
+        public void Clear()
         {
-            CallClearPartial_Internal(cmds);
-            RaceStatsGenderedCommon.Clear(this, cmds);
+            CallClearPartial_Internal();
+            RaceStatsGenderedCommon.Clear(this);
         }
 
 
@@ -969,8 +960,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IRaceStatsGenderedGetter rhs,
             IRaceStatsGenderedGetter def,
             ErrorMaskBuilder errorMask,
-            RaceStatsGendered_CopyMask copyMask,
-            NotifyingFireParameters cmds = null)
+            RaceStatsGendered_CopyMask copyMask)
         {
             if (copyMask?.Male.Overall != CopyOption.Skip)
             {
@@ -988,8 +978,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 rhs: rhs.Male,
                                 def: def?.Male,
                                 errorMask: errorMask,
-                                copyMask: copyMask?.Male.Specific,
-                                cmds: cmds);
+                                copyMask: copyMask?.Male.Specific);
                             break;
                         case CopyOption.MakeCopy:
                             if (rhs.Male == null)
@@ -1034,8 +1023,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 rhs: rhs.Female,
                                 def: def?.Female,
                                 errorMask: errorMask,
-                                copyMask: copyMask?.Female.Specific,
-                                cmds: cmds);
+                                copyMask: copyMask?.Female.Specific);
                             break;
                         case CopyOption.MakeCopy:
                             if (rhs.Female == null)
@@ -1068,9 +1056,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void Clear(
-            IRaceStatsGendered item,
-            NotifyingUnsetParameters cmds = null)
+        public static void Clear(IRaceStatsGendered item)
         {
             item.Male = default(RaceStats);
             item.Female = default(RaceStats);

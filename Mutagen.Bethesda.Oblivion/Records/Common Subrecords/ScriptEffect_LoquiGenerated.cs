@@ -824,32 +824,27 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public void CopyFieldsFrom(
-            IScriptEffectGetter rhs,
-            NotifyingFireParameters cmds = null)
+        public void CopyFieldsFrom(IScriptEffectGetter rhs)
         {
             this.CopyFieldsFrom(
                 rhs: (IScriptEffectGetter)rhs,
                 def: null,
                 doMasks: false,
                 errorMask: out var errMask,
-                copyMask: null,
-                cmds: cmds);
+                copyMask: null);
         }
 
         public void CopyFieldsFrom(
             IScriptEffectGetter rhs,
             ScriptEffect_CopyMask copyMask,
-            IScriptEffectGetter def = null,
-            NotifyingFireParameters cmds = null)
+            IScriptEffectGetter def = null)
         {
             this.CopyFieldsFrom(
                 rhs: rhs,
                 def: def,
                 doMasks: false,
                 errorMask: out var errMask,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
         }
 
         public void CopyFieldsFrom(
@@ -857,7 +852,6 @@ namespace Mutagen.Bethesda.Oblivion
             out ScriptEffect_ErrorMask errorMask,
             ScriptEffect_CopyMask copyMask = null,
             IScriptEffectGetter def = null,
-            NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
@@ -866,8 +860,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 def: def,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
             errorMask = ScriptEffect_ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -876,7 +869,6 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMask,
             ScriptEffect_CopyMask copyMask = null,
             IScriptEffectGetter def = null,
-            NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
             ScriptEffectCommon.CopyFieldsFrom(
@@ -884,11 +876,10 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 def: def,
                 errorMask: errorMask,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
         }
 
-        protected void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
+        protected void SetNthObject(ushort index, object obj)
         {
             ScriptEffect_FieldIndex enu = (ScriptEffect_FieldIndex)index;
             switch (enu)
@@ -913,17 +904,17 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        partial void ClearPartial(NotifyingUnsetParameters cmds);
+        partial void ClearPartial();
 
-        protected void CallClearPartial_Internal(NotifyingUnsetParameters cmds)
+        protected void CallClearPartial_Internal()
         {
-            ClearPartial(cmds);
+            ClearPartial();
         }
 
-        public void Clear(NotifyingUnsetParameters cmds = null)
+        public void Clear()
         {
-            CallClearPartial_Internal(cmds);
-            ScriptEffectCommon.Clear(this, cmds);
+            CallClearPartial_Internal();
+            ScriptEffectCommon.Clear(this);
         }
 
 
@@ -1251,8 +1242,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IScriptEffectGetter rhs,
             IScriptEffectGetter def,
             ErrorMaskBuilder errorMask,
-            ScriptEffect_CopyMask copyMask,
-            NotifyingFireParameters cmds = null)
+            ScriptEffect_CopyMask copyMask)
         {
             if (copyMask?.Script ?? true)
             {
@@ -1356,9 +1346,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void Clear(
-            IScriptEffect item,
-            NotifyingUnsetParameters cmds = null)
+        public static void Clear(IScriptEffect item)
         {
             item.Script = default(Script);
             item.MagicSchool = default(MagicSchool);

@@ -748,32 +748,27 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public virtual void CopyFieldsFrom(
-            IBaseLayerGetter rhs,
-            NotifyingFireParameters cmds = null)
+        public virtual void CopyFieldsFrom(IBaseLayerGetter rhs)
         {
             this.CopyFieldsFrom(
                 rhs: (IBaseLayerGetter)rhs,
                 def: null,
                 doMasks: false,
                 errorMask: out var errMask,
-                copyMask: null,
-                cmds: cmds);
+                copyMask: null);
         }
 
         public void CopyFieldsFrom(
             IBaseLayerGetter rhs,
             BaseLayer_CopyMask copyMask,
-            IBaseLayerGetter def = null,
-            NotifyingFireParameters cmds = null)
+            IBaseLayerGetter def = null)
         {
             this.CopyFieldsFrom(
                 rhs: rhs,
                 def: def,
                 doMasks: false,
                 errorMask: out var errMask,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
         }
 
         public void CopyFieldsFrom(
@@ -781,7 +776,6 @@ namespace Mutagen.Bethesda.Oblivion
             out BaseLayer_ErrorMask errorMask,
             BaseLayer_CopyMask copyMask = null,
             IBaseLayerGetter def = null,
-            NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
@@ -790,8 +784,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 def: def,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
             errorMask = BaseLayer_ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -800,7 +793,6 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMask,
             BaseLayer_CopyMask copyMask = null,
             IBaseLayerGetter def = null,
-            NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
             BaseLayerCommon.CopyFieldsFrom(
@@ -808,11 +800,10 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 def: def,
                 errorMask: errorMask,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
         }
 
-        protected virtual void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
+        protected virtual void SetNthObject(ushort index, object obj)
         {
             BaseLayer_FieldIndex enu = (BaseLayer_FieldIndex)index;
             switch (enu)
@@ -831,17 +822,17 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        partial void ClearPartial(NotifyingUnsetParameters cmds);
+        partial void ClearPartial();
 
-        protected void CallClearPartial_Internal(NotifyingUnsetParameters cmds)
+        protected void CallClearPartial_Internal()
         {
-            ClearPartial(cmds);
+            ClearPartial();
         }
 
-        public virtual void Clear(NotifyingUnsetParameters cmds = null)
+        public virtual void Clear()
         {
-            CallClearPartial_Internal(cmds);
-            BaseLayerCommon.Clear(this, cmds);
+            CallClearPartial_Internal();
+            BaseLayerCommon.Clear(this);
         }
 
 
@@ -1133,8 +1124,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IBaseLayerGetter rhs,
             IBaseLayerGetter def,
             ErrorMaskBuilder errorMask,
-            BaseLayer_CopyMask copyMask,
-            NotifyingFireParameters cmds = null)
+            BaseLayer_CopyMask copyMask)
         {
             if (copyMask?.Texture ?? true)
             {
@@ -1174,9 +1164,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void Clear(
-            IBaseLayer item,
-            NotifyingUnsetParameters cmds = null)
+        public static void Clear(IBaseLayer item)
         {
             item.Texture = default(LandTexture);
             item.Quadrant = default(AlphaLayer.QuadrantEnum);

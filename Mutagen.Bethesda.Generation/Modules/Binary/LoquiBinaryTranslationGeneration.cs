@@ -126,7 +126,6 @@ namespace Mutagen.Bethesda.Generation
                         {
                             args.Add($"rhs: tmp{typeGen.Name}");
                             args.Add("def: null");
-                            args.Add("cmds: null");
                             args.Add("copyMask: null");
                             args.Add($"errorMask: {errorMaskAccessor}");
                         }

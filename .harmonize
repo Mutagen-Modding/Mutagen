@@ -10,10 +10,10 @@
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>b57c286e24ff837c5086cb233bab323a80077b73</Sha>
+         <Sha>9c4ce4e4dabad395aa364308f3bdfb946e3fafcc</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>04-27-2019 22:23:44</CommitDate>
-         <Description>LoquiNotifyingObject API change, and internal optimizations</Description>
+         <CommitDate>04-27-2019 23:39:15</CommitDate>
+         <Description>Removed NotifyingItem systems</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>

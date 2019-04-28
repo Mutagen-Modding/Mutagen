@@ -2224,32 +2224,27 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public override void CopyFieldsFrom(
-            IMajorRecordGetter rhs,
-            NotifyingFireParameters cmds = null)
+        public override void CopyFieldsFrom(IMajorRecordGetter rhs)
         {
             this.CopyFieldsFrom(
                 rhs: (ICombatStyleGetter)rhs,
                 def: null,
                 doMasks: false,
                 errorMask: out var errMask,
-                copyMask: null,
-                cmds: cmds);
+                copyMask: null);
         }
 
         public void CopyFieldsFrom(
             ICombatStyleGetter rhs,
             CombatStyle_CopyMask copyMask,
-            ICombatStyleGetter def = null,
-            NotifyingFireParameters cmds = null)
+            ICombatStyleGetter def = null)
         {
             this.CopyFieldsFrom(
                 rhs: rhs,
                 def: def,
                 doMasks: false,
                 errorMask: out var errMask,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
         }
 
         public void CopyFieldsFrom(
@@ -2257,7 +2252,6 @@ namespace Mutagen.Bethesda.Oblivion
             out CombatStyle_ErrorMask errorMask,
             CombatStyle_CopyMask copyMask = null,
             ICombatStyleGetter def = null,
-            NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
@@ -2266,8 +2260,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 def: def,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
             errorMask = CombatStyle_ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -2276,7 +2269,6 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMask,
             CombatStyle_CopyMask copyMask = null,
             ICombatStyleGetter def = null,
-            NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
             CombatStyleCommon.CopyFieldsFrom(
@@ -2284,11 +2276,10 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 def: def,
                 errorMask: errorMask,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
         }
 
-        protected override void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
+        protected override void SetNthObject(ushort index, object obj)
         {
             CombatStyle_FieldIndex enu = (CombatStyle_FieldIndex)index;
             switch (enu)
@@ -2405,15 +2396,15 @@ namespace Mutagen.Bethesda.Oblivion
                     this.Advanced = (CombatStyleAdvanced)obj;
                     break;
                 default:
-                    base.SetNthObject(index, obj, cmds);
+                    base.SetNthObject(index, obj);
                     break;
             }
         }
 
-        public override void Clear(NotifyingUnsetParameters cmds = null)
+        public override void Clear()
         {
-            CallClearPartial_Internal(cmds);
-            CombatStyleCommon.Clear(this, cmds);
+            CallClearPartial_Internal();
+            CombatStyleCommon.Clear(this);
         }
 
 
@@ -3420,16 +3411,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ICombatStyleGetter rhs,
             ICombatStyleGetter def,
             ErrorMaskBuilder errorMask,
-            CombatStyle_CopyMask copyMask,
-            NotifyingFireParameters cmds = null)
+            CombatStyle_CopyMask copyMask)
         {
             OblivionMajorRecordCommon.CopyFieldsFrom(
                 item,
                 rhs,
                 def,
                 errorMask,
-                copyMask,
-                cmds);
+                copyMask);
             if (copyMask?.DodgePercentChance ?? true)
             {
                 errorMask?.PushIndex((int)CombatStyle_FieldIndex.DodgePercentChance);
@@ -4066,8 +4055,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                     rhs: rhs.Advanced,
                                     def: def?.Advanced,
                                     errorMask: errorMask,
-                                    copyMask: copyMask?.Advanced.Specific,
-                                    cmds: cmds);
+                                    copyMask: copyMask?.Advanced.Specific);
                                 break;
                             case CopyOption.MakeCopy:
                                 item.Advanced = CombatStyleAdvanced.Copy(
@@ -4100,9 +4088,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void Clear(
-            ICombatStyle item,
-            NotifyingUnsetParameters cmds = null)
+        public static void Clear(ICombatStyle item)
         {
             item.DodgePercentChance = default(Byte);
             item.LeftRightPercentChance = default(Byte);

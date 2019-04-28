@@ -1254,32 +1254,27 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public override void CopyFieldsFrom(
-            IMajorRecordGetter rhs,
-            NotifyingFireParameters cmds = null)
+        public override void CopyFieldsFrom(IMajorRecordGetter rhs)
         {
             this.CopyFieldsFrom(
                 rhs: (IClimateGetter)rhs,
                 def: null,
                 doMasks: false,
                 errorMask: out var errMask,
-                copyMask: null,
-                cmds: cmds);
+                copyMask: null);
         }
 
         public void CopyFieldsFrom(
             IClimateGetter rhs,
             Climate_CopyMask copyMask,
-            IClimateGetter def = null,
-            NotifyingFireParameters cmds = null)
+            IClimateGetter def = null)
         {
             this.CopyFieldsFrom(
                 rhs: rhs,
                 def: def,
                 doMasks: false,
                 errorMask: out var errMask,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
         }
 
         public void CopyFieldsFrom(
@@ -1287,7 +1282,6 @@ namespace Mutagen.Bethesda.Oblivion
             out Climate_ErrorMask errorMask,
             Climate_CopyMask copyMask = null,
             IClimateGetter def = null,
-            NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
@@ -1296,8 +1290,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 def: def,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
             errorMask = Climate_ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -1306,7 +1299,6 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMask,
             Climate_CopyMask copyMask = null,
             IClimateGetter def = null,
-            NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
             ClimateCommon.CopyFieldsFrom(
@@ -1314,11 +1306,10 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 def: def,
                 errorMask: errorMask,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
         }
 
-        protected override void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
+        protected override void SetNthObject(ushort index, object obj)
         {
             Climate_FieldIndex enu = (Climate_FieldIndex)index;
             switch (enu)
@@ -1357,15 +1348,15 @@ namespace Mutagen.Bethesda.Oblivion
                     this.PhaseLength = (Byte)obj;
                     break;
                 default:
-                    base.SetNthObject(index, obj, cmds);
+                    base.SetNthObject(index, obj);
                     break;
             }
         }
 
-        public override void Clear(NotifyingUnsetParameters cmds = null)
+        public override void Clear()
         {
-            CallClearPartial_Internal(cmds);
-            ClimateCommon.Clear(this, cmds);
+            CallClearPartial_Internal();
+            ClimateCommon.Clear(this);
         }
 
 
@@ -1836,16 +1827,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IClimateGetter rhs,
             IClimateGetter def,
             ErrorMaskBuilder errorMask,
-            Climate_CopyMask copyMask,
-            NotifyingFireParameters cmds = null)
+            Climate_CopyMask copyMask)
         {
             OblivionMajorRecordCommon.CopyFieldsFrom(
                 item,
                 rhs,
                 def,
                 errorMask,
-                copyMask,
-                cmds);
+                copyMask);
             if (copyMask?.Weathers.Overall != CopyOption.Skip)
             {
                 errorMask?.PushIndex((int)Climate_FieldIndex.Weathers);
@@ -1965,8 +1954,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                     rhs: rhs.Model,
                                     def: def?.Model,
                                     errorMask: errorMask,
-                                    copyMask: copyMask?.Model.Specific,
-                                    cmds: cmds);
+                                    copyMask: copyMask?.Model.Specific);
                                 break;
                             case CopyOption.MakeCopy:
                                 item.Model = Model.Copy(
@@ -2118,9 +2106,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void Clear(
-            IClimate item,
-            NotifyingUnsetParameters cmds = null)
+        public static void Clear(IClimate item)
         {
             item.Weathers.Unset();
             item.SunTexture_Unset();

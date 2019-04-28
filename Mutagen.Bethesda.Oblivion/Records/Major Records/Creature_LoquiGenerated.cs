@@ -3021,32 +3021,27 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public override void CopyFieldsFrom(
-            IMajorRecordGetter rhs,
-            NotifyingFireParameters cmds = null)
+        public override void CopyFieldsFrom(IMajorRecordGetter rhs)
         {
             this.CopyFieldsFrom(
                 rhs: (ICreatureGetter)rhs,
                 def: null,
                 doMasks: false,
                 errorMask: out var errMask,
-                copyMask: null,
-                cmds: cmds);
+                copyMask: null);
         }
 
         public void CopyFieldsFrom(
             ICreatureGetter rhs,
             Creature_CopyMask copyMask,
-            ICreatureGetter def = null,
-            NotifyingFireParameters cmds = null)
+            ICreatureGetter def = null)
         {
             this.CopyFieldsFrom(
                 rhs: rhs,
                 def: def,
                 doMasks: false,
                 errorMask: out var errMask,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
         }
 
         public void CopyFieldsFrom(
@@ -3054,7 +3049,6 @@ namespace Mutagen.Bethesda.Oblivion
             out Creature_ErrorMask errorMask,
             Creature_CopyMask copyMask = null,
             ICreatureGetter def = null,
-            NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
@@ -3063,8 +3057,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 def: def,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
             errorMask = Creature_ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -3073,7 +3066,6 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMask,
             Creature_CopyMask copyMask = null,
             ICreatureGetter def = null,
-            NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
             CreatureCommon.CopyFieldsFrom(
@@ -3081,11 +3073,10 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 def: def,
                 errorMask: errorMask,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
         }
 
-        protected override void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
+        protected override void SetNthObject(ushort index, object obj)
         {
             Creature_FieldIndex enu = (Creature_FieldIndex)index;
             switch (enu)
@@ -3238,15 +3229,15 @@ namespace Mutagen.Bethesda.Oblivion
                     this._Sounds.SetTo((IEnumerable<CreatureSound>)obj);
                     break;
                 default:
-                    base.SetNthObject(index, obj, cmds);
+                    base.SetNthObject(index, obj);
                     break;
             }
         }
 
-        public override void Clear(NotifyingUnsetParameters cmds = null)
+        public override void Clear()
         {
-            CallClearPartial_Internal(cmds);
-            CreatureCommon.Clear(this, cmds);
+            CallClearPartial_Internal();
+            CreatureCommon.Clear(this);
         }
 
 
@@ -4547,16 +4538,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ICreatureGetter rhs,
             ICreatureGetter def,
             ErrorMaskBuilder errorMask,
-            Creature_CopyMask copyMask,
-            NotifyingFireParameters cmds = null)
+            Creature_CopyMask copyMask)
         {
             NPCAbstractCommon.CopyFieldsFrom(
                 item,
                 rhs,
                 def,
                 errorMask,
-                copyMask,
-                cmds);
+                copyMask);
             if (copyMask?.Name ?? true)
             {
                 errorMask?.PushIndex((int)Creature_FieldIndex.Name);
@@ -4611,8 +4600,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                     rhs: rhs.Model,
                                     def: def?.Model,
                                     errorMask: errorMask,
-                                    copyMask: copyMask?.Model.Specific,
-                                    cmds: cmds);
+                                    copyMask: copyMask?.Model.Specific);
                                 break;
                             case CopyOption.MakeCopy:
                                 item.Model = Model.Copy(
@@ -5605,9 +5593,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void Clear(
-            ICreature item,
-            NotifyingUnsetParameters cmds = null)
+        public static void Clear(ICreature item)
         {
             item.Name_Unset();
             item.Model_Unset();

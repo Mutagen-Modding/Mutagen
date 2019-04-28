@@ -685,32 +685,27 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public override void CopyFieldsFrom(
-            ISoundDataGetter rhs,
-            NotifyingFireParameters cmds = null)
+        public override void CopyFieldsFrom(ISoundDataGetter rhs)
         {
             this.CopyFieldsFrom(
                 rhs: (ISoundDataExtendedGetter)rhs,
                 def: null,
                 doMasks: false,
                 errorMask: out var errMask,
-                copyMask: null,
-                cmds: cmds);
+                copyMask: null);
         }
 
         public void CopyFieldsFrom(
             ISoundDataExtendedGetter rhs,
             SoundDataExtended_CopyMask copyMask,
-            ISoundDataExtendedGetter def = null,
-            NotifyingFireParameters cmds = null)
+            ISoundDataExtendedGetter def = null)
         {
             this.CopyFieldsFrom(
                 rhs: rhs,
                 def: def,
                 doMasks: false,
                 errorMask: out var errMask,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
         }
 
         public void CopyFieldsFrom(
@@ -718,7 +713,6 @@ namespace Mutagen.Bethesda.Oblivion
             out SoundDataExtended_ErrorMask errorMask,
             SoundDataExtended_CopyMask copyMask = null,
             ISoundDataExtendedGetter def = null,
-            NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
@@ -727,8 +721,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 def: def,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
             errorMask = SoundDataExtended_ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -737,7 +730,6 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMask,
             SoundDataExtended_CopyMask copyMask = null,
             ISoundDataExtendedGetter def = null,
-            NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
             SoundDataExtendedCommon.CopyFieldsFrom(
@@ -745,11 +737,10 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 def: def,
                 errorMask: errorMask,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
         }
 
-        protected override void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
+        protected override void SetNthObject(ushort index, object obj)
         {
             SoundDataExtended_FieldIndex enu = (SoundDataExtended_FieldIndex)index;
             switch (enu)
@@ -764,15 +755,15 @@ namespace Mutagen.Bethesda.Oblivion
                     this.StartTime = (Single)obj;
                     break;
                 default:
-                    base.SetNthObject(index, obj, cmds);
+                    base.SetNthObject(index, obj);
                     break;
             }
         }
 
-        public override void Clear(NotifyingUnsetParameters cmds = null)
+        public override void Clear()
         {
-            CallClearPartial_Internal(cmds);
-            SoundDataExtendedCommon.Clear(this, cmds);
+            CallClearPartial_Internal();
+            SoundDataExtendedCommon.Clear(this);
         }
 
 
@@ -1057,16 +1048,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ISoundDataExtendedGetter rhs,
             ISoundDataExtendedGetter def,
             ErrorMaskBuilder errorMask,
-            SoundDataExtended_CopyMask copyMask,
-            NotifyingFireParameters cmds = null)
+            SoundDataExtended_CopyMask copyMask)
         {
             SoundDataCommon.CopyFieldsFrom(
                 item,
                 rhs,
                 def,
                 errorMask,
-                copyMask,
-                cmds);
+                copyMask);
             if (copyMask?.StaticAttenuation ?? true)
             {
                 errorMask?.PushIndex((int)SoundDataExtended_FieldIndex.StaticAttenuation);
@@ -1122,9 +1111,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void Clear(
-            ISoundDataExtended item,
-            NotifyingUnsetParameters cmds = null)
+        public static void Clear(ISoundDataExtended item)
         {
             item.StaticAttenuation = default(Single);
             item.StopTime = default(Single);

@@ -837,9 +837,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public void CopyFieldsFrom<T_CopyMask>(
-            ILeveledEntryGetter<T> rhs,
-            NotifyingFireParameters cmds = null)
+        public void CopyFieldsFrom<T_CopyMask>(ILeveledEntryGetter<T> rhs)
             where T_CopyMask : OblivionMajorRecord_CopyMask, new()
         {
             this.CopyFieldsFrom<OblivionMajorRecord_ErrorMask, T_CopyMask>(
@@ -847,15 +845,13 @@ namespace Mutagen.Bethesda.Oblivion
                 def: null,
                 doMasks: false,
                 errorMask: out var errMask,
-                copyMask: null,
-                cmds: cmds);
+                copyMask: null);
         }
 
         public void CopyFieldsFrom<T_CopyMask>(
             ILeveledEntryGetter<T> rhs,
             LeveledEntry_CopyMask<T_CopyMask> copyMask,
-            ILeveledEntryGetter<T> def = null,
-            NotifyingFireParameters cmds = null)
+            ILeveledEntryGetter<T> def = null)
             where T_CopyMask : OblivionMajorRecord_CopyMask, new()
         {
             this.CopyFieldsFrom<OblivionMajorRecord_ErrorMask, T_CopyMask>(
@@ -863,8 +859,7 @@ namespace Mutagen.Bethesda.Oblivion
                 def: def,
                 doMasks: false,
                 errorMask: out var errMask,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
         }
 
         public void CopyFieldsFrom<T_ErrMask, T_CopyMask>(
@@ -872,7 +867,6 @@ namespace Mutagen.Bethesda.Oblivion
             out LeveledEntry_ErrorMask<T_ErrMask> errorMask,
             LeveledEntry_CopyMask<T_CopyMask> copyMask = null,
             ILeveledEntryGetter<T> def = null,
-            NotifyingFireParameters cmds = null,
             bool doMasks = true)
             where T_ErrMask : OblivionMajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
             where T_CopyMask : OblivionMajorRecord_CopyMask, new()
@@ -883,8 +877,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 def: def,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
             errorMask = LeveledEntry_ErrorMask<T_ErrMask>.Factory(errorMaskBuilder);
         }
 
@@ -893,7 +886,6 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMask,
             LeveledEntry_CopyMask<T_CopyMask> copyMask = null,
             ILeveledEntryGetter<T> def = null,
-            NotifyingFireParameters cmds = null,
             bool doMasks = true)
             where T_CopyMask : OblivionMajorRecord_CopyMask, new()
         {
@@ -902,11 +894,10 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 def: def,
                 errorMask: errorMask,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
         }
 
-        protected void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
+        protected void SetNthObject(ushort index, object obj)
         {
             LeveledEntry_FieldIndex enu = (LeveledEntry_FieldIndex)index;
             switch (enu)
@@ -931,17 +922,17 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        partial void ClearPartial(NotifyingUnsetParameters cmds);
+        partial void ClearPartial();
 
-        protected void CallClearPartial_Internal(NotifyingUnsetParameters cmds)
+        protected void CallClearPartial_Internal()
         {
-            ClearPartial(cmds);
+            ClearPartial();
         }
 
-        public void Clear(NotifyingUnsetParameters cmds = null)
+        public void Clear()
         {
-            CallClearPartial_Internal(cmds);
-            LeveledEntryCommon.Clear(this, cmds);
+            CallClearPartial_Internal();
+            LeveledEntryCommon.Clear(this);
         }
 
 
@@ -1283,8 +1274,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ILeveledEntryGetter<T> rhs,
             ILeveledEntryGetter<T> def,
             ErrorMaskBuilder errorMask,
-            LeveledEntry_CopyMask<T_CopyMask> copyMask,
-            NotifyingFireParameters cmds = null)
+            LeveledEntry_CopyMask<T_CopyMask> copyMask)
             where T : OblivionMajorRecord, ILoquiObject<T>
             where T_CopyMask : OblivionMajorRecord_CopyMask, new()
         {
@@ -1403,9 +1393,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void Clear<T>(
-            ILeveledEntry<T> item,
-            NotifyingUnsetParameters cmds = null)
+        public static void Clear<T>(ILeveledEntry<T> item)
             where T : OblivionMajorRecord, ILoquiObject<T>
         {
             item.Level = default(Int16);

@@ -1039,32 +1039,27 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public override void CopyFieldsFrom(
-            IMajorRecordGetter rhs,
-            NotifyingFireParameters cmds = null)
+        public override void CopyFieldsFrom(IMajorRecordGetter rhs)
         {
             this.CopyFieldsFrom(
                 rhs: (IAIPackageGetter)rhs,
                 def: null,
                 doMasks: false,
                 errorMask: out var errMask,
-                copyMask: null,
-                cmds: cmds);
+                copyMask: null);
         }
 
         public void CopyFieldsFrom(
             IAIPackageGetter rhs,
             AIPackage_CopyMask copyMask,
-            IAIPackageGetter def = null,
-            NotifyingFireParameters cmds = null)
+            IAIPackageGetter def = null)
         {
             this.CopyFieldsFrom(
                 rhs: rhs,
                 def: def,
                 doMasks: false,
                 errorMask: out var errMask,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
         }
 
         public void CopyFieldsFrom(
@@ -1072,7 +1067,6 @@ namespace Mutagen.Bethesda.Oblivion
             out AIPackage_ErrorMask errorMask,
             AIPackage_CopyMask copyMask = null,
             IAIPackageGetter def = null,
-            NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
@@ -1081,8 +1075,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 def: def,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
             errorMask = AIPackage_ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -1091,7 +1084,6 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMask,
             AIPackage_CopyMask copyMask = null,
             IAIPackageGetter def = null,
-            NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
             AIPackageCommon.CopyFieldsFrom(
@@ -1099,11 +1091,10 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 def: def,
                 errorMask: errorMask,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
         }
 
-        protected override void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
+        protected override void SetNthObject(ushort index, object obj)
         {
             AIPackage_FieldIndex enu = (AIPackage_FieldIndex)index;
             switch (enu)
@@ -1127,15 +1118,15 @@ namespace Mutagen.Bethesda.Oblivion
                     this._Conditions.SetTo((IEnumerable<Condition>)obj);
                     break;
                 default:
-                    base.SetNthObject(index, obj, cmds);
+                    base.SetNthObject(index, obj);
                     break;
             }
         }
 
-        public override void Clear(NotifyingUnsetParameters cmds = null)
+        public override void Clear()
         {
-            CallClearPartial_Internal(cmds);
-            AIPackageCommon.Clear(this, cmds);
+            CallClearPartial_Internal();
+            AIPackageCommon.Clear(this);
         }
 
 
@@ -1502,16 +1493,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IAIPackageGetter rhs,
             IAIPackageGetter def,
             ErrorMaskBuilder errorMask,
-            AIPackage_CopyMask copyMask,
-            NotifyingFireParameters cmds = null)
+            AIPackage_CopyMask copyMask)
         {
             OblivionMajorRecordCommon.CopyFieldsFrom(
                 item,
                 rhs,
                 def,
                 errorMask,
-                copyMask,
-                cmds);
+                copyMask);
             if (copyMask?.Flags ?? true)
             {
                 errorMask?.PushIndex((int)AIPackage_FieldIndex.Flags);
@@ -1570,8 +1559,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                     rhs: rhs.Location,
                                     def: def?.Location,
                                     errorMask: errorMask,
-                                    copyMask: copyMask?.Location.Specific,
-                                    cmds: cmds);
+                                    copyMask: copyMask?.Location.Specific);
                                 break;
                             case CopyOption.MakeCopy:
                                 item.Location = AIPackageLocation.Copy(
@@ -1624,8 +1612,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                     rhs: rhs.Schedule,
                                     def: def?.Schedule,
                                     errorMask: errorMask,
-                                    copyMask: copyMask?.Schedule.Specific,
-                                    cmds: cmds);
+                                    copyMask: copyMask?.Schedule.Specific);
                                 break;
                             case CopyOption.MakeCopy:
                                 item.Schedule = AIPackageSchedule.Copy(
@@ -1678,8 +1665,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                     rhs: rhs.Target,
                                     def: def?.Target,
                                     errorMask: errorMask,
-                                    copyMask: copyMask?.Target.Specific,
-                                    cmds: cmds);
+                                    copyMask: copyMask?.Target.Specific);
                                 break;
                             case CopyOption.MakeCopy:
                                 item.Target = AIPackageTarget.Copy(
@@ -1747,9 +1733,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void Clear(
-            IAIPackage item,
-            NotifyingUnsetParameters cmds = null)
+        public static void Clear(IAIPackage item)
         {
             item.Flags = default(AIPackage.Flag);
             item.GeneralType = default(AIPackage.GeneralTypeEnum);

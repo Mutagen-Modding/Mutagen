@@ -45,7 +45,6 @@ namespace Mutagen.Bethesda.Oblivion
             item.MetadataSummary.CopyFieldsFrom(
                 rhs: tmpMetadataSummary,
                 def: null,
-                cmds: null,
                 copyMask: null,
                 errorMask: errorMask);
         }

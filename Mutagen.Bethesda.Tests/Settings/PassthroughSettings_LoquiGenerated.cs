@@ -284,15 +284,13 @@ namespace Mutagen.Bethesda.Tests
         #region Xml Copy In
         public void CopyIn_Xml(
             XElement node,
-            MissingCreate missing = MissingCreate.New,
-            NotifyingFireParameters cmds = null)
+            MissingCreate missing = MissingCreate.New)
         {
             CopyIn_Xml_Internal(
                 missing: missing,
                 node: node,
                 errorMask: null,
-                translationMask: null,
-                cmds: cmds);
+                translationMask: null);
         }
 
         public virtual void CopyIn_Xml(
@@ -300,16 +298,14 @@ namespace Mutagen.Bethesda.Tests
             out PassthroughSettings_ErrorMask errorMask,
             PassthroughSettings_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New,
-            bool doMasks = true,
-            NotifyingFireParameters cmds = null)
+            bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             CopyIn_Xml_Internal(
                 missing: missing,
                 node: node,
                 errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal(),
-                cmds: cmds);
+                translationMask: translationMask?.GetCrystal());
             errorMask = PassthroughSettings_ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -317,8 +313,7 @@ namespace Mutagen.Bethesda.Tests
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask,
-            MissingCreate missing = MissingCreate.New,
-            NotifyingFireParameters cmds = null)
+            MissingCreate missing = MissingCreate.New)
         {
             LoquiXmlTranslation<PassthroughSettings>.Instance.CopyIn(
                 missing: missing,
@@ -326,20 +321,17 @@ namespace Mutagen.Bethesda.Tests
                 item: this,
                 skipProtected: true,
                 errorMask: errorMask,
-                translationMask: translationMask,
-                cmds: cmds);
+                translationMask: translationMask);
         }
 
         public void CopyIn_Xml(
             string path,
-            MissingCreate missing = MissingCreate.New,
-            NotifyingFireParameters cmds = null)
+            MissingCreate missing = MissingCreate.New)
         {
             var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
             this.CopyIn_Xml(
                 missing: missing,
-                node: node,
-                cmds: cmds);
+                node: node);
         }
 
         public void CopyIn_Xml(
@@ -347,7 +339,6 @@ namespace Mutagen.Bethesda.Tests
             out PassthroughSettings_ErrorMask errorMask,
             PassthroughSettings_TranslationMask translationMask,
             MissingCreate missing = MissingCreate.New,
-            NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
             var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
@@ -356,20 +347,17 @@ namespace Mutagen.Bethesda.Tests
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask,
-                cmds: cmds,
                 doMasks: doMasks);
         }
 
         public void CopyIn_Xml(
             Stream stream,
-            MissingCreate missing = MissingCreate.New,
-            NotifyingFireParameters cmds = null)
+            MissingCreate missing = MissingCreate.New)
         {
             var node = XDocument.Load(stream).Root;
             this.CopyIn_Xml(
                 missing: missing,
-                node: node,
-                cmds: cmds);
+                node: node);
         }
 
         public void CopyIn_Xml(
@@ -377,7 +365,6 @@ namespace Mutagen.Bethesda.Tests
             out PassthroughSettings_ErrorMask errorMask,
             PassthroughSettings_TranslationMask translationMask,
             MissingCreate missing = MissingCreate.New,
-            NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
             var node = XDocument.Load(stream).Root;
@@ -386,7 +373,6 @@ namespace Mutagen.Bethesda.Tests
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask,
-                cmds: cmds,
                 doMasks: doMasks);
         }
 
@@ -578,32 +564,27 @@ namespace Mutagen.Bethesda.Tests
             return ret;
         }
 
-        public void CopyFieldsFrom(
-            IPassthroughSettingsGetter rhs,
-            NotifyingFireParameters cmds = null)
+        public void CopyFieldsFrom(IPassthroughSettingsGetter rhs)
         {
             this.CopyFieldsFrom(
                 rhs: (IPassthroughSettingsGetter)rhs,
                 def: null,
                 doMasks: false,
                 errorMask: out var errMask,
-                copyMask: null,
-                cmds: cmds);
+                copyMask: null);
         }
 
         public void CopyFieldsFrom(
             IPassthroughSettingsGetter rhs,
             PassthroughSettings_CopyMask copyMask,
-            IPassthroughSettingsGetter def = null,
-            NotifyingFireParameters cmds = null)
+            IPassthroughSettingsGetter def = null)
         {
             this.CopyFieldsFrom(
                 rhs: rhs,
                 def: def,
                 doMasks: false,
                 errorMask: out var errMask,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
         }
 
         public void CopyFieldsFrom(
@@ -611,7 +592,6 @@ namespace Mutagen.Bethesda.Tests
             out PassthroughSettings_ErrorMask errorMask,
             PassthroughSettings_CopyMask copyMask = null,
             IPassthroughSettingsGetter def = null,
-            NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
@@ -620,8 +600,7 @@ namespace Mutagen.Bethesda.Tests
                 rhs: rhs,
                 def: def,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
             errorMask = PassthroughSettings_ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -630,7 +609,6 @@ namespace Mutagen.Bethesda.Tests
             ErrorMaskBuilder errorMask,
             PassthroughSettings_CopyMask copyMask = null,
             IPassthroughSettingsGetter def = null,
-            NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
             PassthroughSettingsCommon.CopyFieldsFrom(
@@ -638,11 +616,10 @@ namespace Mutagen.Bethesda.Tests
                 rhs: rhs,
                 def: def,
                 errorMask: errorMask,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
         }
 
-        protected void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
+        protected void SetNthObject(ushort index, object obj)
         {
             PassthroughSettings_FieldIndex enu = (PassthroughSettings_FieldIndex)index;
             switch (enu)
@@ -673,17 +650,17 @@ namespace Mutagen.Bethesda.Tests
             }
         }
 
-        partial void ClearPartial(NotifyingUnsetParameters cmds);
+        partial void ClearPartial();
 
-        protected void CallClearPartial_Internal(NotifyingUnsetParameters cmds)
+        protected void CallClearPartial_Internal()
         {
-            ClearPartial(cmds);
+            ClearPartial();
         }
 
-        public void Clear(NotifyingUnsetParameters cmds = null)
+        public void Clear()
         {
-            CallClearPartial_Internal(cmds);
-            PassthroughSettingsCommon.Clear(this, cmds);
+            CallClearPartial_Internal();
+            PassthroughSettingsCommon.Clear(this);
         }
 
 
@@ -1044,8 +1021,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             IPassthroughSettingsGetter rhs,
             IPassthroughSettingsGetter def,
             ErrorMaskBuilder errorMask,
-            PassthroughSettings_CopyMask copyMask,
-            NotifyingFireParameters cmds = null)
+            PassthroughSettings_CopyMask copyMask)
         {
             if (copyMask?.ReuseCaches ?? true)
             {
@@ -1093,9 +1069,7 @@ namespace Mutagen.Bethesda.Tests.Internals
 
         #endregion
 
-        public static void Clear(
-            IPassthroughSettings item,
-            NotifyingUnsetParameters cmds = null)
+        public static void Clear(IPassthroughSettings item)
         {
             item.ReuseCaches = default(Boolean);
             item.DeleteCachesAfter = PassthroughSettings._DeleteCachesAfter_Default;

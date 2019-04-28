@@ -970,32 +970,27 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public override void CopyFieldsFrom(
-            IMajorRecordGetter rhs,
-            NotifyingFireParameters cmds = null)
+        public override void CopyFieldsFrom(IMajorRecordGetter rhs)
         {
             this.CopyFieldsFrom(
                 rhs: (IEnchantmentGetter)rhs,
                 def: null,
                 doMasks: false,
                 errorMask: out var errMask,
-                copyMask: null,
-                cmds: cmds);
+                copyMask: null);
         }
 
         public void CopyFieldsFrom(
             IEnchantmentGetter rhs,
             Enchantment_CopyMask copyMask,
-            IEnchantmentGetter def = null,
-            NotifyingFireParameters cmds = null)
+            IEnchantmentGetter def = null)
         {
             this.CopyFieldsFrom(
                 rhs: rhs,
                 def: def,
                 doMasks: false,
                 errorMask: out var errMask,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
         }
 
         public void CopyFieldsFrom(
@@ -1003,7 +998,6 @@ namespace Mutagen.Bethesda.Oblivion
             out Enchantment_ErrorMask errorMask,
             Enchantment_CopyMask copyMask = null,
             IEnchantmentGetter def = null,
-            NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
@@ -1012,8 +1006,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 def: def,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
             errorMask = Enchantment_ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -1022,7 +1015,6 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMask,
             Enchantment_CopyMask copyMask = null,
             IEnchantmentGetter def = null,
-            NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
             EnchantmentCommon.CopyFieldsFrom(
@@ -1030,11 +1022,10 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 def: def,
                 errorMask: errorMask,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
         }
 
-        protected override void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
+        protected override void SetNthObject(ushort index, object obj)
         {
             Enchantment_FieldIndex enu = (Enchantment_FieldIndex)index;
             switch (enu)
@@ -1058,15 +1049,15 @@ namespace Mutagen.Bethesda.Oblivion
                     this._Effects.SetTo((IEnumerable<Effect>)obj);
                     break;
                 default:
-                    base.SetNthObject(index, obj, cmds);
+                    base.SetNthObject(index, obj);
                     break;
             }
         }
 
-        public override void Clear(NotifyingUnsetParameters cmds = null)
+        public override void Clear()
         {
-            CallClearPartial_Internal(cmds);
-            EnchantmentCommon.Clear(this, cmds);
+            CallClearPartial_Internal();
+            EnchantmentCommon.Clear(this);
         }
 
 
@@ -1422,16 +1413,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IEnchantmentGetter rhs,
             IEnchantmentGetter def,
             ErrorMaskBuilder errorMask,
-            Enchantment_CopyMask copyMask,
-            NotifyingFireParameters cmds = null)
+            Enchantment_CopyMask copyMask)
         {
             OblivionMajorRecordCommon.CopyFieldsFrom(
                 item,
                 rhs,
                 def,
                 errorMask,
-                copyMask,
-                cmds);
+                copyMask);
             if (copyMask?.Name ?? true)
             {
                 errorMask?.PushIndex((int)Enchantment_FieldIndex.Name);
@@ -1569,9 +1558,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void Clear(
-            IEnchantment item,
-            NotifyingUnsetParameters cmds = null)
+        public static void Clear(IEnchantment item)
         {
             item.Name_Unset();
             item.Type = default(Enchantment.EnchantmentType);

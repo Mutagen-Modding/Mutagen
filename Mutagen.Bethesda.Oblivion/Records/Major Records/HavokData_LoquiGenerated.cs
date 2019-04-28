@@ -661,32 +661,27 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public void CopyFieldsFrom(
-            IHavokDataGetter rhs,
-            NotifyingFireParameters cmds = null)
+        public void CopyFieldsFrom(IHavokDataGetter rhs)
         {
             this.CopyFieldsFrom(
                 rhs: (IHavokDataGetter)rhs,
                 def: null,
                 doMasks: false,
                 errorMask: out var errMask,
-                copyMask: null,
-                cmds: cmds);
+                copyMask: null);
         }
 
         public void CopyFieldsFrom(
             IHavokDataGetter rhs,
             HavokData_CopyMask copyMask,
-            IHavokDataGetter def = null,
-            NotifyingFireParameters cmds = null)
+            IHavokDataGetter def = null)
         {
             this.CopyFieldsFrom(
                 rhs: rhs,
                 def: def,
                 doMasks: false,
                 errorMask: out var errMask,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
         }
 
         public void CopyFieldsFrom(
@@ -694,7 +689,6 @@ namespace Mutagen.Bethesda.Oblivion
             out HavokData_ErrorMask errorMask,
             HavokData_CopyMask copyMask = null,
             IHavokDataGetter def = null,
-            NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
@@ -703,8 +697,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 def: def,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
             errorMask = HavokData_ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -713,7 +706,6 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMask,
             HavokData_CopyMask copyMask = null,
             IHavokDataGetter def = null,
-            NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
             HavokDataCommon.CopyFieldsFrom(
@@ -721,11 +713,10 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 def: def,
                 errorMask: errorMask,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
         }
 
-        protected void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
+        protected void SetNthObject(ushort index, object obj)
         {
             HavokData_FieldIndex enu = (HavokData_FieldIndex)index;
             switch (enu)
@@ -744,17 +735,17 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        partial void ClearPartial(NotifyingUnsetParameters cmds);
+        partial void ClearPartial();
 
-        protected void CallClearPartial_Internal(NotifyingUnsetParameters cmds)
+        protected void CallClearPartial_Internal()
         {
-            ClearPartial(cmds);
+            ClearPartial();
         }
 
-        public void Clear(NotifyingUnsetParameters cmds = null)
+        public void Clear()
         {
-            CallClearPartial_Internal(cmds);
-            HavokDataCommon.Clear(this, cmds);
+            CallClearPartial_Internal();
+            HavokDataCommon.Clear(this);
         }
 
 
@@ -1035,8 +1026,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IHavokDataGetter rhs,
             IHavokDataGetter def,
             ErrorMaskBuilder errorMask,
-            HavokData_CopyMask copyMask,
-            NotifyingFireParameters cmds = null)
+            HavokData_CopyMask copyMask)
         {
             if (copyMask?.Material ?? true)
             {
@@ -1093,9 +1083,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void Clear(
-            IHavokData item,
-            NotifyingUnsetParameters cmds = null)
+        public static void Clear(IHavokData item)
         {
             item.Material = default(HavokData.MaterialType);
             item.Friction = default(Byte);

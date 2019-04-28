@@ -1281,32 +1281,27 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public override void CopyFieldsFrom(
-            IMajorRecordGetter rhs,
-            NotifyingFireParameters cmds = null)
+        public override void CopyFieldsFrom(IMajorRecordGetter rhs)
         {
             this.CopyFieldsFrom(
                 rhs: (IClothingAbstractGetter)rhs,
                 def: null,
                 doMasks: false,
                 errorMask: out var errMask,
-                copyMask: null,
-                cmds: cmds);
+                copyMask: null);
         }
 
         public void CopyFieldsFrom(
             IClothingAbstractGetter rhs,
             ClothingAbstract_CopyMask copyMask,
-            IClothingAbstractGetter def = null,
-            NotifyingFireParameters cmds = null)
+            IClothingAbstractGetter def = null)
         {
             this.CopyFieldsFrom(
                 rhs: rhs,
                 def: def,
                 doMasks: false,
                 errorMask: out var errMask,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
         }
 
         public void CopyFieldsFrom(
@@ -1314,7 +1309,6 @@ namespace Mutagen.Bethesda.Oblivion
             out ClothingAbstract_ErrorMask errorMask,
             ClothingAbstract_CopyMask copyMask = null,
             IClothingAbstractGetter def = null,
-            NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
@@ -1323,8 +1317,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 def: def,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
             errorMask = ClothingAbstract_ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -1333,7 +1326,6 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMask,
             ClothingAbstract_CopyMask copyMask = null,
             IClothingAbstractGetter def = null,
-            NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
             ClothingAbstractCommon.CopyFieldsFrom(
@@ -1341,11 +1333,10 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 def: def,
                 errorMask: errorMask,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
         }
 
-        protected override void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
+        protected override void SetNthObject(ushort index, object obj)
         {
             ClothingAbstract_FieldIndex enu = (ClothingAbstract_FieldIndex)index;
             switch (enu)
@@ -1387,15 +1378,15 @@ namespace Mutagen.Bethesda.Oblivion
                     this.FemaleIcon = (String)obj;
                     break;
                 default:
-                    base.SetNthObject(index, obj, cmds);
+                    base.SetNthObject(index, obj);
                     break;
             }
         }
 
-        public override void Clear(NotifyingUnsetParameters cmds = null)
+        public override void Clear()
         {
-            CallClearPartial_Internal(cmds);
-            ClothingAbstractCommon.Clear(this, cmds);
+            CallClearPartial_Internal();
+            ClothingAbstractCommon.Clear(this);
         }
 
 
@@ -1960,16 +1951,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IClothingAbstractGetter rhs,
             IClothingAbstractGetter def,
             ErrorMaskBuilder errorMask,
-            ClothingAbstract_CopyMask copyMask,
-            NotifyingFireParameters cmds = null)
+            ClothingAbstract_CopyMask copyMask)
         {
             ItemAbstractCommon.CopyFieldsFrom(
                 item,
                 rhs,
                 def,
                 errorMask,
-                copyMask,
-                cmds);
+                copyMask);
             if (copyMask?.Name ?? true)
             {
                 errorMask?.PushIndex((int)ClothingAbstract_FieldIndex.Name);
@@ -2126,8 +2115,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                     rhs: rhs.MaleBipedModel,
                                     def: def?.MaleBipedModel,
                                     errorMask: errorMask,
-                                    copyMask: copyMask?.MaleBipedModel.Specific,
-                                    cmds: cmds);
+                                    copyMask: copyMask?.MaleBipedModel.Specific);
                                 break;
                             case CopyOption.MakeCopy:
                                 item.MaleBipedModel = Model.Copy(
@@ -2180,8 +2168,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                     rhs: rhs.MaleWorldModel,
                                     def: def?.MaleWorldModel,
                                     errorMask: errorMask,
-                                    copyMask: copyMask?.MaleWorldModel.Specific,
-                                    cmds: cmds);
+                                    copyMask: copyMask?.MaleWorldModel.Specific);
                                 break;
                             case CopyOption.MakeCopy:
                                 item.MaleWorldModel = Model.Copy(
@@ -2264,8 +2251,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                     rhs: rhs.FemaleBipedModel,
                                     def: def?.FemaleBipedModel,
                                     errorMask: errorMask,
-                                    copyMask: copyMask?.FemaleBipedModel.Specific,
-                                    cmds: cmds);
+                                    copyMask: copyMask?.FemaleBipedModel.Specific);
                                 break;
                             case CopyOption.MakeCopy:
                                 item.FemaleBipedModel = Model.Copy(
@@ -2318,8 +2304,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                     rhs: rhs.FemaleWorldModel,
                                     def: def?.FemaleWorldModel,
                                     errorMask: errorMask,
-                                    copyMask: copyMask?.FemaleWorldModel.Specific,
-                                    cmds: cmds);
+                                    copyMask: copyMask?.FemaleWorldModel.Specific);
                                 break;
                             case CopyOption.MakeCopy:
                                 item.FemaleWorldModel = Model.Copy(
@@ -2382,9 +2367,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void Clear(
-            IClothingAbstract item,
-            NotifyingUnsetParameters cmds = null)
+        public static void Clear(IClothingAbstract item)
         {
             item.Name_Unset();
             item.Script_Property.Unset();

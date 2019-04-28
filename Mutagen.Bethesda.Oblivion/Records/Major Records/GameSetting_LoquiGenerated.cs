@@ -503,32 +503,27 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public override void CopyFieldsFrom(
-            IMajorRecordGetter rhs,
-            NotifyingFireParameters cmds = null)
+        public override void CopyFieldsFrom(IMajorRecordGetter rhs)
         {
             this.CopyFieldsFrom(
                 rhs: (IGameSettingGetter)rhs,
                 def: null,
                 doMasks: false,
                 errorMask: out var errMask,
-                copyMask: null,
-                cmds: cmds);
+                copyMask: null);
         }
 
         public void CopyFieldsFrom(
             IGameSettingGetter rhs,
             GameSetting_CopyMask copyMask,
-            IGameSettingGetter def = null,
-            NotifyingFireParameters cmds = null)
+            IGameSettingGetter def = null)
         {
             this.CopyFieldsFrom(
                 rhs: rhs,
                 def: def,
                 doMasks: false,
                 errorMask: out var errMask,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
         }
 
         public void CopyFieldsFrom(
@@ -536,7 +531,6 @@ namespace Mutagen.Bethesda.Oblivion
             out GameSetting_ErrorMask errorMask,
             GameSetting_CopyMask copyMask = null,
             IGameSettingGetter def = null,
-            NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
@@ -545,8 +539,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 def: def,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
             errorMask = GameSetting_ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -555,7 +548,6 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMask,
             GameSetting_CopyMask copyMask = null,
             IGameSettingGetter def = null,
-            NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
             GameSettingCommon.CopyFieldsFrom(
@@ -563,25 +555,24 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 def: def,
                 errorMask: errorMask,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
         }
 
-        protected override void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
+        protected override void SetNthObject(ushort index, object obj)
         {
             GameSetting_FieldIndex enu = (GameSetting_FieldIndex)index;
             switch (enu)
             {
                 default:
-                    base.SetNthObject(index, obj, cmds);
+                    base.SetNthObject(index, obj);
                     break;
             }
         }
 
-        public override void Clear(NotifyingUnsetParameters cmds = null)
+        public override void Clear()
         {
-            CallClearPartial_Internal(cmds);
-            GameSettingCommon.Clear(this, cmds);
+            CallClearPartial_Internal();
+            GameSettingCommon.Clear(this);
         }
 
 
@@ -789,23 +780,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IGameSettingGetter rhs,
             IGameSettingGetter def,
             ErrorMaskBuilder errorMask,
-            GameSetting_CopyMask copyMask,
-            NotifyingFireParameters cmds = null)
+            GameSetting_CopyMask copyMask)
         {
             OblivionMajorRecordCommon.CopyFieldsFrom(
                 item,
                 rhs,
                 def,
                 errorMask,
-                copyMask,
-                cmds);
+                copyMask);
         }
 
         #endregion
 
-        public static void Clear(
-            IGameSetting item,
-            NotifyingUnsetParameters cmds = null)
+        public static void Clear(IGameSetting item)
         {
         }
 

@@ -914,32 +914,27 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public override void CopyFieldsFrom(
-            IMajorRecordGetter rhs,
-            NotifyingFireParameters cmds = null)
+        public override void CopyFieldsFrom(IMajorRecordGetter rhs)
         {
             this.CopyFieldsFrom(
                 rhs: (ILeveledItemGetter)rhs,
                 def: null,
                 doMasks: false,
                 errorMask: out var errMask,
-                copyMask: null,
-                cmds: cmds);
+                copyMask: null);
         }
 
         public void CopyFieldsFrom(
             ILeveledItemGetter rhs,
             LeveledItem_CopyMask copyMask,
-            ILeveledItemGetter def = null,
-            NotifyingFireParameters cmds = null)
+            ILeveledItemGetter def = null)
         {
             this.CopyFieldsFrom(
                 rhs: rhs,
                 def: def,
                 doMasks: false,
                 errorMask: out var errMask,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
         }
 
         public void CopyFieldsFrom(
@@ -947,7 +942,6 @@ namespace Mutagen.Bethesda.Oblivion
             out LeveledItem_ErrorMask errorMask,
             LeveledItem_CopyMask copyMask = null,
             ILeveledItemGetter def = null,
-            NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
@@ -956,8 +950,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 def: def,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
             errorMask = LeveledItem_ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -966,7 +959,6 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMask,
             LeveledItem_CopyMask copyMask = null,
             ILeveledItemGetter def = null,
-            NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
             LeveledItemCommon.CopyFieldsFrom(
@@ -974,11 +966,10 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 def: def,
                 errorMask: errorMask,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
         }
 
-        protected override void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
+        protected override void SetNthObject(ushort index, object obj)
         {
             LeveledItem_FieldIndex enu = (LeveledItem_FieldIndex)index;
             switch (enu)
@@ -993,15 +984,15 @@ namespace Mutagen.Bethesda.Oblivion
                     this._Entries.SetTo((IEnumerable<LeveledEntry<ItemAbstract>>)obj);
                     break;
                 default:
-                    base.SetNthObject(index, obj, cmds);
+                    base.SetNthObject(index, obj);
                     break;
             }
         }
 
-        public override void Clear(NotifyingUnsetParameters cmds = null)
+        public override void Clear()
         {
-            CallClearPartial_Internal(cmds);
-            LeveledItemCommon.Clear(this, cmds);
+            CallClearPartial_Internal();
+            LeveledItemCommon.Clear(this);
         }
 
 
@@ -1299,16 +1290,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ILeveledItemGetter rhs,
             ILeveledItemGetter def,
             ErrorMaskBuilder errorMask,
-            LeveledItem_CopyMask copyMask,
-            NotifyingFireParameters cmds = null)
+            LeveledItem_CopyMask copyMask)
         {
             ItemAbstractCommon.CopyFieldsFrom(
                 item,
                 rhs,
                 def,
                 errorMask,
-                copyMask,
-                cmds);
+                copyMask);
             if (copyMask?.ChanceNone ?? true)
             {
                 errorMask?.PushIndex((int)LeveledItem_FieldIndex.ChanceNone);
@@ -1408,9 +1397,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void Clear(
-            ILeveledItem item,
-            NotifyingUnsetParameters cmds = null)
+        public static void Clear(ILeveledItem item)
         {
             item.ChanceNone_Unset();
             item.Flags_Unset();

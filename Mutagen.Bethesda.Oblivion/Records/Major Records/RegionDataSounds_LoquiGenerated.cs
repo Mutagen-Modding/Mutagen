@@ -741,32 +741,27 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public override void CopyFieldsFrom(
-            IRegionDataGetter rhs,
-            NotifyingFireParameters cmds = null)
+        public override void CopyFieldsFrom(IRegionDataGetter rhs)
         {
             this.CopyFieldsFrom(
                 rhs: (IRegionDataSoundsGetter)rhs,
                 def: null,
                 doMasks: false,
                 errorMask: out var errMask,
-                copyMask: null,
-                cmds: cmds);
+                copyMask: null);
         }
 
         public void CopyFieldsFrom(
             IRegionDataSoundsGetter rhs,
             RegionDataSounds_CopyMask copyMask,
-            IRegionDataSoundsGetter def = null,
-            NotifyingFireParameters cmds = null)
+            IRegionDataSoundsGetter def = null)
         {
             this.CopyFieldsFrom(
                 rhs: rhs,
                 def: def,
                 doMasks: false,
                 errorMask: out var errMask,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
         }
 
         public void CopyFieldsFrom(
@@ -774,7 +769,6 @@ namespace Mutagen.Bethesda.Oblivion
             out RegionDataSounds_ErrorMask errorMask,
             RegionDataSounds_CopyMask copyMask = null,
             IRegionDataSoundsGetter def = null,
-            NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
@@ -783,8 +777,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 def: def,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
             errorMask = RegionDataSounds_ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -793,7 +786,6 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMask,
             RegionDataSounds_CopyMask copyMask = null,
             IRegionDataSoundsGetter def = null,
-            NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
             RegionDataSoundsCommon.CopyFieldsFrom(
@@ -801,11 +793,10 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 def: def,
                 errorMask: errorMask,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
         }
 
-        protected override void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
+        protected override void SetNthObject(ushort index, object obj)
         {
             RegionDataSounds_FieldIndex enu = (RegionDataSounds_FieldIndex)index;
             switch (enu)
@@ -817,15 +808,15 @@ namespace Mutagen.Bethesda.Oblivion
                     this._Sounds.SetTo((IEnumerable<RegionSound>)obj);
                     break;
                 default:
-                    base.SetNthObject(index, obj, cmds);
+                    base.SetNthObject(index, obj);
                     break;
             }
         }
 
-        public override void Clear(NotifyingUnsetParameters cmds = null)
+        public override void Clear()
         {
-            CallClearPartial_Internal(cmds);
-            RegionDataSoundsCommon.Clear(this, cmds);
+            CallClearPartial_Internal();
+            RegionDataSoundsCommon.Clear(this);
         }
 
 
@@ -1094,16 +1085,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IRegionDataSoundsGetter rhs,
             IRegionDataSoundsGetter def,
             ErrorMaskBuilder errorMask,
-            RegionDataSounds_CopyMask copyMask,
-            NotifyingFireParameters cmds = null)
+            RegionDataSounds_CopyMask copyMask)
         {
             RegionDataCommon.CopyFieldsFrom(
                 item,
                 rhs,
                 def,
                 errorMask,
-                copyMask,
-                cmds);
+                copyMask);
             if (copyMask?.MusicType ?? true)
             {
                 errorMask?.PushIndex((int)RegionDataSounds_FieldIndex.MusicType);
@@ -1173,9 +1162,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void Clear(
-            IRegionDataSounds item,
-            NotifyingUnsetParameters cmds = null)
+        public static void Clear(IRegionDataSounds item)
         {
             item.MusicType_Unset();
             item.Sounds.Unset();

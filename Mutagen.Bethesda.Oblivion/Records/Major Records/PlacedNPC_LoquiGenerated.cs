@@ -1272,32 +1272,27 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public override void CopyFieldsFrom(
-            IMajorRecordGetter rhs,
-            NotifyingFireParameters cmds = null)
+        public override void CopyFieldsFrom(IMajorRecordGetter rhs)
         {
             this.CopyFieldsFrom(
                 rhs: (IPlacedNPCGetter)rhs,
                 def: null,
                 doMasks: false,
                 errorMask: out var errMask,
-                copyMask: null,
-                cmds: cmds);
+                copyMask: null);
         }
 
         public void CopyFieldsFrom(
             IPlacedNPCGetter rhs,
             PlacedNPC_CopyMask copyMask,
-            IPlacedNPCGetter def = null,
-            NotifyingFireParameters cmds = null)
+            IPlacedNPCGetter def = null)
         {
             this.CopyFieldsFrom(
                 rhs: rhs,
                 def: def,
                 doMasks: false,
                 errorMask: out var errMask,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
         }
 
         public void CopyFieldsFrom(
@@ -1305,7 +1300,6 @@ namespace Mutagen.Bethesda.Oblivion
             out PlacedNPC_ErrorMask errorMask,
             PlacedNPC_CopyMask copyMask = null,
             IPlacedNPCGetter def = null,
-            NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
@@ -1314,8 +1308,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 def: def,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
             errorMask = PlacedNPC_ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -1324,7 +1317,6 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMask,
             PlacedNPC_CopyMask copyMask = null,
             IPlacedNPCGetter def = null,
-            NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
             PlacedNPCCommon.CopyFieldsFrom(
@@ -1332,11 +1324,10 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 def: def,
                 errorMask: errorMask,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
         }
 
-        protected override void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
+        protected override void SetNthObject(ushort index, object obj)
         {
             PlacedNPC_FieldIndex enu = (PlacedNPC_FieldIndex)index;
             switch (enu)
@@ -1375,15 +1366,15 @@ namespace Mutagen.Bethesda.Oblivion
                     this.Rotation = (P3Float)obj;
                     break;
                 default:
-                    base.SetNthObject(index, obj, cmds);
+                    base.SetNthObject(index, obj);
                     break;
             }
         }
 
-        public override void Clear(NotifyingUnsetParameters cmds = null)
+        public override void Clear()
         {
-            CallClearPartial_Internal(cmds);
-            PlacedNPCCommon.Clear(this, cmds);
+            CallClearPartial_Internal();
+            PlacedNPCCommon.Clear(this);
         }
 
 
@@ -1872,16 +1863,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IPlacedNPCGetter rhs,
             IPlacedNPCGetter def,
             ErrorMaskBuilder errorMask,
-            PlacedNPC_CopyMask copyMask,
-            NotifyingFireParameters cmds = null)
+            PlacedNPC_CopyMask copyMask)
         {
             OblivionMajorRecordCommon.CopyFieldsFrom(
                 item,
                 rhs,
                 def,
                 errorMask,
-                copyMask,
-                cmds);
+                copyMask);
             if (copyMask?.Base ?? true)
             {
                 errorMask?.PushIndex((int)PlacedNPC_FieldIndex.Base);
@@ -1985,8 +1974,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                     rhs: rhs.DistantLODData,
                                     def: def?.DistantLODData,
                                     errorMask: errorMask,
-                                    copyMask: copyMask?.DistantLODData.Specific,
-                                    cmds: cmds);
+                                    copyMask: copyMask?.DistantLODData.Specific);
                                 break;
                             case CopyOption.MakeCopy:
                                 item.DistantLODData = DistantLODData.Copy(
@@ -2039,8 +2027,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                     rhs: rhs.EnableParent,
                                     def: def?.EnableParent,
                                     errorMask: errorMask,
-                                    copyMask: copyMask?.EnableParent.Specific,
-                                    cmds: cmds);
+                                    copyMask: copyMask?.EnableParent.Specific);
                                 break;
                             case CopyOption.MakeCopy:
                                 item.EnableParent = EnableParent.Copy(
@@ -2205,9 +2192,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void Clear(
-            IPlacedNPC item,
-            NotifyingUnsetParameters cmds = null)
+        public static void Clear(IPlacedNPC item)
         {
             item.Base_Property.Unset();
             item.XPCIFluff_Unset();

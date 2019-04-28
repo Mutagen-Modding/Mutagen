@@ -835,32 +835,27 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public void CopyFieldsFrom(
-            IRankGetter rhs,
-            NotifyingFireParameters cmds = null)
+        public void CopyFieldsFrom(IRankGetter rhs)
         {
             this.CopyFieldsFrom(
                 rhs: (IRankGetter)rhs,
                 def: null,
                 doMasks: false,
                 errorMask: out var errMask,
-                copyMask: null,
-                cmds: cmds);
+                copyMask: null);
         }
 
         public void CopyFieldsFrom(
             IRankGetter rhs,
             Rank_CopyMask copyMask,
-            IRankGetter def = null,
-            NotifyingFireParameters cmds = null)
+            IRankGetter def = null)
         {
             this.CopyFieldsFrom(
                 rhs: rhs,
                 def: def,
                 doMasks: false,
                 errorMask: out var errMask,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
         }
 
         public void CopyFieldsFrom(
@@ -868,7 +863,6 @@ namespace Mutagen.Bethesda.Oblivion
             out Rank_ErrorMask errorMask,
             Rank_CopyMask copyMask = null,
             IRankGetter def = null,
-            NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
@@ -877,8 +871,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 def: def,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
             errorMask = Rank_ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -887,7 +880,6 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMask,
             Rank_CopyMask copyMask = null,
             IRankGetter def = null,
-            NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
             RankCommon.CopyFieldsFrom(
@@ -895,11 +887,10 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 def: def,
                 errorMask: errorMask,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
         }
 
-        protected void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
+        protected void SetNthObject(ushort index, object obj)
         {
             Rank_FieldIndex enu = (Rank_FieldIndex)index;
             switch (enu)
@@ -921,17 +912,17 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        partial void ClearPartial(NotifyingUnsetParameters cmds);
+        partial void ClearPartial();
 
-        protected void CallClearPartial_Internal(NotifyingUnsetParameters cmds)
+        protected void CallClearPartial_Internal()
         {
-            ClearPartial(cmds);
+            ClearPartial();
         }
 
-        public void Clear(NotifyingUnsetParameters cmds = null)
+        public void Clear()
         {
-            CallClearPartial_Internal(cmds);
-            RankCommon.Clear(this, cmds);
+            CallClearPartial_Internal();
+            RankCommon.Clear(this);
         }
 
 
@@ -1265,8 +1256,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IRankGetter rhs,
             IRankGetter def,
             ErrorMaskBuilder errorMask,
-            Rank_CopyMask copyMask,
-            NotifyingFireParameters cmds = null)
+            Rank_CopyMask copyMask)
         {
             if (copyMask?.RankNumber ?? true)
             {
@@ -1392,9 +1382,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void Clear(
-            IRank item,
-            NotifyingUnsetParameters cmds = null)
+        public static void Clear(IRank item)
         {
             item.RankNumber_Unset();
             item.MaleName_Unset();

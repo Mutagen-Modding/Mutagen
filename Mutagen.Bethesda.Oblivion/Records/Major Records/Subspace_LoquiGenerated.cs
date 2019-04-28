@@ -781,32 +781,27 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public override void CopyFieldsFrom(
-            IMajorRecordGetter rhs,
-            NotifyingFireParameters cmds = null)
+        public override void CopyFieldsFrom(IMajorRecordGetter rhs)
         {
             this.CopyFieldsFrom(
                 rhs: (ISubspaceGetter)rhs,
                 def: null,
                 doMasks: false,
                 errorMask: out var errMask,
-                copyMask: null,
-                cmds: cmds);
+                copyMask: null);
         }
 
         public void CopyFieldsFrom(
             ISubspaceGetter rhs,
             Subspace_CopyMask copyMask,
-            ISubspaceGetter def = null,
-            NotifyingFireParameters cmds = null)
+            ISubspaceGetter def = null)
         {
             this.CopyFieldsFrom(
                 rhs: rhs,
                 def: def,
                 doMasks: false,
                 errorMask: out var errMask,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
         }
 
         public void CopyFieldsFrom(
@@ -814,7 +809,6 @@ namespace Mutagen.Bethesda.Oblivion
             out Subspace_ErrorMask errorMask,
             Subspace_CopyMask copyMask = null,
             ISubspaceGetter def = null,
-            NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
@@ -823,8 +817,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 def: def,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
             errorMask = Subspace_ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -833,7 +826,6 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMask,
             Subspace_CopyMask copyMask = null,
             ISubspaceGetter def = null,
-            NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
             SubspaceCommon.CopyFieldsFrom(
@@ -841,11 +833,10 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 def: def,
                 errorMask: errorMask,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
         }
 
-        protected override void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
+        protected override void SetNthObject(ushort index, object obj)
         {
             Subspace_FieldIndex enu = (Subspace_FieldIndex)index;
             switch (enu)
@@ -860,15 +851,15 @@ namespace Mutagen.Bethesda.Oblivion
                     this.Z = (Single)obj;
                     break;
                 default:
-                    base.SetNthObject(index, obj, cmds);
+                    base.SetNthObject(index, obj);
                     break;
             }
         }
 
-        public override void Clear(NotifyingUnsetParameters cmds = null)
+        public override void Clear()
         {
-            CallClearPartial_Internal(cmds);
-            SubspaceCommon.Clear(this, cmds);
+            CallClearPartial_Internal();
+            SubspaceCommon.Clear(this);
         }
 
 
@@ -1155,16 +1146,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ISubspaceGetter rhs,
             ISubspaceGetter def,
             ErrorMaskBuilder errorMask,
-            Subspace_CopyMask copyMask,
-            NotifyingFireParameters cmds = null)
+            Subspace_CopyMask copyMask)
         {
             OblivionMajorRecordCommon.CopyFieldsFrom(
                 item,
                 rhs,
                 def,
                 errorMask,
-                copyMask,
-                cmds);
+                copyMask);
             if (copyMask?.X ?? true)
             {
                 errorMask?.PushIndex((int)Subspace_FieldIndex.X);
@@ -1220,9 +1209,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void Clear(
-            ISubspace item,
-            NotifyingUnsetParameters cmds = null)
+        public static void Clear(ISubspace item)
         {
             item.X = default(Single);
             item.Y = default(Single);

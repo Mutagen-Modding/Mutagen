@@ -919,32 +919,27 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public override void CopyFieldsFrom(
-            IMajorRecordGetter rhs,
-            NotifyingFireParameters cmds = null)
+        public override void CopyFieldsFrom(IMajorRecordGetter rhs)
         {
             this.CopyFieldsFrom(
                 rhs: (IBirthsignGetter)rhs,
                 def: null,
                 doMasks: false,
                 errorMask: out var errMask,
-                copyMask: null,
-                cmds: cmds);
+                copyMask: null);
         }
 
         public void CopyFieldsFrom(
             IBirthsignGetter rhs,
             Birthsign_CopyMask copyMask,
-            IBirthsignGetter def = null,
-            NotifyingFireParameters cmds = null)
+            IBirthsignGetter def = null)
         {
             this.CopyFieldsFrom(
                 rhs: rhs,
                 def: def,
                 doMasks: false,
                 errorMask: out var errMask,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
         }
 
         public void CopyFieldsFrom(
@@ -952,7 +947,6 @@ namespace Mutagen.Bethesda.Oblivion
             out Birthsign_ErrorMask errorMask,
             Birthsign_CopyMask copyMask = null,
             IBirthsignGetter def = null,
-            NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
@@ -961,8 +955,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 def: def,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
             errorMask = Birthsign_ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -971,7 +964,6 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMask,
             Birthsign_CopyMask copyMask = null,
             IBirthsignGetter def = null,
-            NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
             BirthsignCommon.CopyFieldsFrom(
@@ -979,11 +971,10 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 def: def,
                 errorMask: errorMask,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
         }
 
-        protected override void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
+        protected override void SetNthObject(ushort index, object obj)
         {
             Birthsign_FieldIndex enu = (Birthsign_FieldIndex)index;
             switch (enu)
@@ -1001,15 +992,15 @@ namespace Mutagen.Bethesda.Oblivion
                     this._Spells.SetTo((IEnumerable<FormIDSetLink<Spell>>)obj);
                     break;
                 default:
-                    base.SetNthObject(index, obj, cmds);
+                    base.SetNthObject(index, obj);
                     break;
             }
         }
 
-        public override void Clear(NotifyingUnsetParameters cmds = null)
+        public override void Clear()
         {
-            CallClearPartial_Internal(cmds);
-            BirthsignCommon.Clear(this, cmds);
+            CallClearPartial_Internal();
+            BirthsignCommon.Clear(this);
         }
 
 
@@ -1331,16 +1322,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IBirthsignGetter rhs,
             IBirthsignGetter def,
             ErrorMaskBuilder errorMask,
-            Birthsign_CopyMask copyMask,
-            NotifyingFireParameters cmds = null)
+            Birthsign_CopyMask copyMask)
         {
             OblivionMajorRecordCommon.CopyFieldsFrom(
                 item,
                 rhs,
                 def,
                 errorMask,
-                copyMask,
-                cmds);
+                copyMask);
             if (copyMask?.Name ?? true)
             {
                 errorMask?.PushIndex((int)Birthsign_FieldIndex.Name);
@@ -1454,9 +1443,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void Clear(
-            IBirthsign item,
-            NotifyingUnsetParameters cmds = null)
+        public static void Clear(IBirthsign item)
         {
             item.Name_Unset();
             item.Icon_Unset();

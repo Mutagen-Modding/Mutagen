@@ -977,32 +977,27 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public override void CopyFieldsFrom(
-            IMajorRecordGetter rhs,
-            NotifyingFireParameters cmds = null)
+        public override void CopyFieldsFrom(IMajorRecordGetter rhs)
         {
             this.CopyFieldsFrom(
                 rhs: (IFactionGetter)rhs,
                 def: null,
                 doMasks: false,
                 errorMask: out var errMask,
-                copyMask: null,
-                cmds: cmds);
+                copyMask: null);
         }
 
         public void CopyFieldsFrom(
             IFactionGetter rhs,
             Faction_CopyMask copyMask,
-            IFactionGetter def = null,
-            NotifyingFireParameters cmds = null)
+            IFactionGetter def = null)
         {
             this.CopyFieldsFrom(
                 rhs: rhs,
                 def: def,
                 doMasks: false,
                 errorMask: out var errMask,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
         }
 
         public void CopyFieldsFrom(
@@ -1010,7 +1005,6 @@ namespace Mutagen.Bethesda.Oblivion
             out Faction_ErrorMask errorMask,
             Faction_CopyMask copyMask = null,
             IFactionGetter def = null,
-            NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
@@ -1019,8 +1013,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 def: def,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
             errorMask = Faction_ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -1029,7 +1022,6 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMask,
             Faction_CopyMask copyMask = null,
             IFactionGetter def = null,
-            NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
             FactionCommon.CopyFieldsFrom(
@@ -1037,11 +1029,10 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 def: def,
                 errorMask: errorMask,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
         }
 
-        protected override void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
+        protected override void SetNthObject(ushort index, object obj)
         {
             Faction_FieldIndex enu = (Faction_FieldIndex)index;
             switch (enu)
@@ -1062,15 +1053,15 @@ namespace Mutagen.Bethesda.Oblivion
                     this._Ranks.SetTo((IEnumerable<Rank>)obj);
                     break;
                 default:
-                    base.SetNthObject(index, obj, cmds);
+                    base.SetNthObject(index, obj);
                     break;
             }
         }
 
-        public override void Clear(NotifyingUnsetParameters cmds = null)
+        public override void Clear()
         {
-            CallClearPartial_Internal(cmds);
-            FactionCommon.Clear(this, cmds);
+            CallClearPartial_Internal();
+            FactionCommon.Clear(this);
         }
 
 
@@ -1416,16 +1407,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IFactionGetter rhs,
             IFactionGetter def,
             ErrorMaskBuilder errorMask,
-            Faction_CopyMask copyMask,
-            NotifyingFireParameters cmds = null)
+            Faction_CopyMask copyMask)
         {
             OblivionMajorRecordCommon.CopyFieldsFrom(
                 item,
                 rhs,
                 def,
                 errorMask,
-                copyMask,
-                cmds);
+                copyMask);
             if (copyMask?.Name ?? true)
             {
                 errorMask?.PushIndex((int)Faction_FieldIndex.Name);
@@ -1590,9 +1579,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void Clear(
-            IFaction item,
-            NotifyingUnsetParameters cmds = null)
+        public static void Clear(IFaction item)
         {
             item.Name_Unset();
             item.Relations.Unset();

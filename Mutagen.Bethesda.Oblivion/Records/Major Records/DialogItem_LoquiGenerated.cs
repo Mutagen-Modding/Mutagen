@@ -627,7 +627,6 @@ namespace Mutagen.Bethesda.Oblivion
                                 translationMask: translationMask)
                             ,
                             def: null,
-                            cmds: null,
                             copyMask: null,
                             errorMask: errorMask);
                     }
@@ -1102,7 +1101,6 @@ namespace Mutagen.Bethesda.Oblivion
                         item.Script.CopyFieldsFrom(
                             rhs: tmpScript,
                             def: null,
-                            cmds: null,
                             copyMask: null,
                             errorMask: errorMask);
                     }
@@ -1174,32 +1172,27 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public override void CopyFieldsFrom(
-            IMajorRecordGetter rhs,
-            NotifyingFireParameters cmds = null)
+        public override void CopyFieldsFrom(IMajorRecordGetter rhs)
         {
             this.CopyFieldsFrom(
                 rhs: (IDialogItemGetter)rhs,
                 def: null,
                 doMasks: false,
                 errorMask: out var errMask,
-                copyMask: null,
-                cmds: cmds);
+                copyMask: null);
         }
 
         public void CopyFieldsFrom(
             IDialogItemGetter rhs,
             DialogItem_CopyMask copyMask,
-            IDialogItemGetter def = null,
-            NotifyingFireParameters cmds = null)
+            IDialogItemGetter def = null)
         {
             this.CopyFieldsFrom(
                 rhs: rhs,
                 def: def,
                 doMasks: false,
                 errorMask: out var errMask,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
         }
 
         public void CopyFieldsFrom(
@@ -1207,7 +1200,6 @@ namespace Mutagen.Bethesda.Oblivion
             out DialogItem_ErrorMask errorMask,
             DialogItem_CopyMask copyMask = null,
             IDialogItemGetter def = null,
-            NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
@@ -1216,8 +1208,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 def: def,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
             errorMask = DialogItem_ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -1226,7 +1217,6 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMask,
             DialogItem_CopyMask copyMask = null,
             IDialogItemGetter def = null,
-            NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
             DialogItemCommon.CopyFieldsFrom(
@@ -1234,11 +1224,10 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 def: def,
                 errorMask: errorMask,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
         }
 
-        protected override void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
+        protected override void SetNthObject(ushort index, object obj)
         {
             DialogItem_FieldIndex enu = (DialogItem_FieldIndex)index;
             switch (enu)
@@ -1274,15 +1263,15 @@ namespace Mutagen.Bethesda.Oblivion
                     this.Script.CopyFieldsFrom(rhs: (ScriptFields)obj);
                     break;
                 default:
-                    base.SetNthObject(index, obj, cmds);
+                    base.SetNthObject(index, obj);
                     break;
             }
         }
 
-        public override void Clear(NotifyingUnsetParameters cmds = null)
+        public override void Clear()
         {
-            CallClearPartial_Internal(cmds);
-            DialogItemCommon.Clear(this, cmds);
+            CallClearPartial_Internal();
+            DialogItemCommon.Clear(this);
         }
 
 
@@ -1723,16 +1712,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IDialogItemGetter rhs,
             IDialogItemGetter def,
             ErrorMaskBuilder errorMask,
-            DialogItem_CopyMask copyMask,
-            NotifyingFireParameters cmds = null)
+            DialogItem_CopyMask copyMask)
         {
             OblivionMajorRecordCommon.CopyFieldsFrom(
                 item,
                 rhs,
                 def,
                 errorMask,
-                copyMask,
-                cmds);
+                copyMask);
             if (copyMask?.DialogType ?? true)
             {
                 errorMask?.PushIndex((int)DialogItem_FieldIndex.DialogType);
@@ -1942,8 +1929,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         rhs: rhs.Script,
                         def: def?.Script,
                         errorMask: errorMask,
-                        copyMask: copyMask?.Script.Specific,
-                        cmds: cmds);
+                        copyMask: copyMask?.Script.Specific);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1959,9 +1945,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void Clear(
-            IDialogItem item,
-            NotifyingUnsetParameters cmds = null)
+        public static void Clear(IDialogItem item)
         {
             item.DialogType = default(DialogType);
             item.Flags = default(DialogItem.Flag);

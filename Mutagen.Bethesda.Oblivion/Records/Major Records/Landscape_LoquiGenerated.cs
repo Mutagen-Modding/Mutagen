@@ -1061,32 +1061,27 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public override void CopyFieldsFrom(
-            IMajorRecordGetter rhs,
-            NotifyingFireParameters cmds = null)
+        public override void CopyFieldsFrom(IMajorRecordGetter rhs)
         {
             this.CopyFieldsFrom(
                 rhs: (ILandscapeGetter)rhs,
                 def: null,
                 doMasks: false,
                 errorMask: out var errMask,
-                copyMask: null,
-                cmds: cmds);
+                copyMask: null);
         }
 
         public void CopyFieldsFrom(
             ILandscapeGetter rhs,
             Landscape_CopyMask copyMask,
-            ILandscapeGetter def = null,
-            NotifyingFireParameters cmds = null)
+            ILandscapeGetter def = null)
         {
             this.CopyFieldsFrom(
                 rhs: rhs,
                 def: def,
                 doMasks: false,
                 errorMask: out var errMask,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
         }
 
         public void CopyFieldsFrom(
@@ -1094,7 +1089,6 @@ namespace Mutagen.Bethesda.Oblivion
             out Landscape_ErrorMask errorMask,
             Landscape_CopyMask copyMask = null,
             ILandscapeGetter def = null,
-            NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
@@ -1103,8 +1097,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 def: def,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
             errorMask = Landscape_ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -1113,7 +1106,6 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMask,
             Landscape_CopyMask copyMask = null,
             ILandscapeGetter def = null,
-            NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
             LandscapeCommon.CopyFieldsFrom(
@@ -1121,11 +1113,10 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 def: def,
                 errorMask: errorMask,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
         }
 
-        protected override void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
+        protected override void SetNthObject(ushort index, object obj)
         {
             Landscape_FieldIndex enu = (Landscape_FieldIndex)index;
             switch (enu)
@@ -1149,15 +1140,15 @@ namespace Mutagen.Bethesda.Oblivion
                     this._Textures.SetTo((IEnumerable<FormIDLink<LandTexture>>)obj);
                     break;
                 default:
-                    base.SetNthObject(index, obj, cmds);
+                    base.SetNthObject(index, obj);
                     break;
             }
         }
 
-        public override void Clear(NotifyingUnsetParameters cmds = null)
+        public override void Clear()
         {
-            CallClearPartial_Internal(cmds);
-            LandscapeCommon.Clear(this, cmds);
+            CallClearPartial_Internal();
+            LandscapeCommon.Clear(this);
         }
 
 
@@ -1527,16 +1518,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ILandscapeGetter rhs,
             ILandscapeGetter def,
             ErrorMaskBuilder errorMask,
-            Landscape_CopyMask copyMask,
-            NotifyingFireParameters cmds = null)
+            Landscape_CopyMask copyMask)
         {
             OblivionMajorRecordCommon.CopyFieldsFrom(
                 item,
                 rhs,
                 def,
                 errorMask,
-                copyMask,
-                cmds);
+                copyMask);
             if (copyMask?.Unknown ?? true)
             {
                 errorMask?.PushIndex((int)Landscape_FieldIndex.Unknown);
@@ -1715,9 +1704,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void Clear(
-            ILandscape item,
-            NotifyingUnsetParameters cmds = null)
+        public static void Clear(ILandscape item)
         {
             item.Unknown_Unset();
             item.VertexNormals_Unset();

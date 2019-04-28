@@ -660,32 +660,27 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public override void CopyFieldsFrom(
-            IRegionDataGetter rhs,
-            NotifyingFireParameters cmds = null)
+        public override void CopyFieldsFrom(IRegionDataGetter rhs)
         {
             this.CopyFieldsFrom(
                 rhs: (IRegionDataMapNameGetter)rhs,
                 def: null,
                 doMasks: false,
                 errorMask: out var errMask,
-                copyMask: null,
-                cmds: cmds);
+                copyMask: null);
         }
 
         public void CopyFieldsFrom(
             IRegionDataMapNameGetter rhs,
             RegionDataMapName_CopyMask copyMask,
-            IRegionDataMapNameGetter def = null,
-            NotifyingFireParameters cmds = null)
+            IRegionDataMapNameGetter def = null)
         {
             this.CopyFieldsFrom(
                 rhs: rhs,
                 def: def,
                 doMasks: false,
                 errorMask: out var errMask,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
         }
 
         public void CopyFieldsFrom(
@@ -693,7 +688,6 @@ namespace Mutagen.Bethesda.Oblivion
             out RegionDataMapName_ErrorMask errorMask,
             RegionDataMapName_CopyMask copyMask = null,
             IRegionDataMapNameGetter def = null,
-            NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
@@ -702,8 +696,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 def: def,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
             errorMask = RegionDataMapName_ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -712,7 +705,6 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMask,
             RegionDataMapName_CopyMask copyMask = null,
             IRegionDataMapNameGetter def = null,
-            NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
             RegionDataMapNameCommon.CopyFieldsFrom(
@@ -720,11 +712,10 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 def: def,
                 errorMask: errorMask,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
         }
 
-        protected override void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
+        protected override void SetNthObject(ushort index, object obj)
         {
             RegionDataMapName_FieldIndex enu = (RegionDataMapName_FieldIndex)index;
             switch (enu)
@@ -733,15 +724,15 @@ namespace Mutagen.Bethesda.Oblivion
                     this.MapName = (String)obj;
                     break;
                 default:
-                    base.SetNthObject(index, obj, cmds);
+                    base.SetNthObject(index, obj);
                     break;
             }
         }
 
-        public override void Clear(NotifyingUnsetParameters cmds = null)
+        public override void Clear()
         {
-            CallClearPartial_Internal(cmds);
-            RegionDataMapNameCommon.Clear(this, cmds);
+            CallClearPartial_Internal();
+            RegionDataMapNameCommon.Clear(this);
         }
 
 
@@ -988,16 +979,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IRegionDataMapNameGetter rhs,
             IRegionDataMapNameGetter def,
             ErrorMaskBuilder errorMask,
-            RegionDataMapName_CopyMask copyMask,
-            NotifyingFireParameters cmds = null)
+            RegionDataMapName_CopyMask copyMask)
         {
             RegionDataCommon.CopyFieldsFrom(
                 item,
                 rhs,
                 def,
                 errorMask,
-                copyMask,
-                cmds);
+                copyMask);
             if (copyMask?.MapName ?? true)
             {
                 errorMask?.PushIndex((int)RegionDataMapName_FieldIndex.MapName);
@@ -1032,9 +1021,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void Clear(
-            IRegionDataMapName item,
-            NotifyingUnsetParameters cmds = null)
+        public static void Clear(IRegionDataMapName item)
         {
             item.MapName_Unset();
         }

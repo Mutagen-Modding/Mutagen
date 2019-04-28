@@ -859,32 +859,27 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public override void CopyFieldsFrom(
-            IMajorRecordGetter rhs,
-            NotifyingFireParameters cmds = null)
+        public override void CopyFieldsFrom(IMajorRecordGetter rhs)
         {
             this.CopyFieldsFrom(
                 rhs: (ILoadScreenGetter)rhs,
                 def: null,
                 doMasks: false,
                 errorMask: out var errMask,
-                copyMask: null,
-                cmds: cmds);
+                copyMask: null);
         }
 
         public void CopyFieldsFrom(
             ILoadScreenGetter rhs,
             LoadScreen_CopyMask copyMask,
-            ILoadScreenGetter def = null,
-            NotifyingFireParameters cmds = null)
+            ILoadScreenGetter def = null)
         {
             this.CopyFieldsFrom(
                 rhs: rhs,
                 def: def,
                 doMasks: false,
                 errorMask: out var errMask,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
         }
 
         public void CopyFieldsFrom(
@@ -892,7 +887,6 @@ namespace Mutagen.Bethesda.Oblivion
             out LoadScreen_ErrorMask errorMask,
             LoadScreen_CopyMask copyMask = null,
             ILoadScreenGetter def = null,
-            NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
@@ -901,8 +895,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 def: def,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
             errorMask = LoadScreen_ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -911,7 +904,6 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMask,
             LoadScreen_CopyMask copyMask = null,
             ILoadScreenGetter def = null,
-            NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
             LoadScreenCommon.CopyFieldsFrom(
@@ -919,11 +911,10 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 def: def,
                 errorMask: errorMask,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
         }
 
-        protected override void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
+        protected override void SetNthObject(ushort index, object obj)
         {
             LoadScreen_FieldIndex enu = (LoadScreen_FieldIndex)index;
             switch (enu)
@@ -938,15 +929,15 @@ namespace Mutagen.Bethesda.Oblivion
                     this._Locations.SetTo((IEnumerable<LoadScreenLocation>)obj);
                     break;
                 default:
-                    base.SetNthObject(index, obj, cmds);
+                    base.SetNthObject(index, obj);
                     break;
             }
         }
 
-        public override void Clear(NotifyingUnsetParameters cmds = null)
+        public override void Clear()
         {
-            CallClearPartial_Internal(cmds);
-            LoadScreenCommon.Clear(this, cmds);
+            CallClearPartial_Internal();
+            LoadScreenCommon.Clear(this);
         }
 
 
@@ -1243,16 +1234,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ILoadScreenGetter rhs,
             ILoadScreenGetter def,
             ErrorMaskBuilder errorMask,
-            LoadScreen_CopyMask copyMask,
-            NotifyingFireParameters cmds = null)
+            LoadScreen_CopyMask copyMask)
         {
             OblivionMajorRecordCommon.CopyFieldsFrom(
                 item,
                 rhs,
                 def,
                 errorMask,
-                copyMask,
-                cmds);
+                copyMask);
             if (copyMask?.Icon ?? true)
             {
                 errorMask?.PushIndex((int)LoadScreen_FieldIndex.Icon);
@@ -1352,9 +1341,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void Clear(
-            ILoadScreen item,
-            NotifyingUnsetParameters cmds = null)
+        public static void Clear(ILoadScreen item)
         {
             item.Icon_Unset();
             item.Description_Unset();

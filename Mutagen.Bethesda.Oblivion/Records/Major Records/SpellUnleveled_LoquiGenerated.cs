@@ -964,32 +964,27 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public override void CopyFieldsFrom(
-            IMajorRecordGetter rhs,
-            NotifyingFireParameters cmds = null)
+        public override void CopyFieldsFrom(IMajorRecordGetter rhs)
         {
             this.CopyFieldsFrom(
                 rhs: (ISpellUnleveledGetter)rhs,
                 def: null,
                 doMasks: false,
                 errorMask: out var errMask,
-                copyMask: null,
-                cmds: cmds);
+                copyMask: null);
         }
 
         public void CopyFieldsFrom(
             ISpellUnleveledGetter rhs,
             SpellUnleveled_CopyMask copyMask,
-            ISpellUnleveledGetter def = null,
-            NotifyingFireParameters cmds = null)
+            ISpellUnleveledGetter def = null)
         {
             this.CopyFieldsFrom(
                 rhs: rhs,
                 def: def,
                 doMasks: false,
                 errorMask: out var errMask,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
         }
 
         public void CopyFieldsFrom(
@@ -997,7 +992,6 @@ namespace Mutagen.Bethesda.Oblivion
             out SpellUnleveled_ErrorMask errorMask,
             SpellUnleveled_CopyMask copyMask = null,
             ISpellUnleveledGetter def = null,
-            NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
@@ -1006,8 +1000,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 def: def,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
             errorMask = SpellUnleveled_ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -1016,7 +1009,6 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMask,
             SpellUnleveled_CopyMask copyMask = null,
             ISpellUnleveledGetter def = null,
-            NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
             SpellUnleveledCommon.CopyFieldsFrom(
@@ -1024,11 +1016,10 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 def: def,
                 errorMask: errorMask,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
         }
 
-        protected override void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
+        protected override void SetNthObject(ushort index, object obj)
         {
             SpellUnleveled_FieldIndex enu = (SpellUnleveled_FieldIndex)index;
             switch (enu)
@@ -1049,15 +1040,15 @@ namespace Mutagen.Bethesda.Oblivion
                     this._Effects.SetTo((IEnumerable<Effect>)obj);
                     break;
                 default:
-                    base.SetNthObject(index, obj, cmds);
+                    base.SetNthObject(index, obj);
                     break;
             }
         }
 
-        public override void Clear(NotifyingUnsetParameters cmds = null)
+        public override void Clear()
         {
-            CallClearPartial_Internal(cmds);
-            SpellUnleveledCommon.Clear(this, cmds);
+            CallClearPartial_Internal();
+            SpellUnleveledCommon.Clear(this);
         }
 
 
@@ -1388,16 +1379,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ISpellUnleveledGetter rhs,
             ISpellUnleveledGetter def,
             ErrorMaskBuilder errorMask,
-            SpellUnleveled_CopyMask copyMask,
-            NotifyingFireParameters cmds = null)
+            SpellUnleveled_CopyMask copyMask)
         {
             SpellCommon.CopyFieldsFrom(
                 item,
                 rhs,
                 def,
                 errorMask,
-                copyMask,
-                cmds);
+                copyMask);
             if (copyMask?.Type ?? true)
             {
                 errorMask?.PushIndex((int)SpellUnleveled_FieldIndex.Type);
@@ -1505,9 +1494,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void Clear(
-            ISpellUnleveled item,
-            NotifyingUnsetParameters cmds = null)
+        public static void Clear(ISpellUnleveled item)
         {
             item.Type = default(Spell.SpellType);
             item.Cost = default(UInt32);

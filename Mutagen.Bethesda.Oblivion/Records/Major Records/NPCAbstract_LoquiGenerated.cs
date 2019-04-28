@@ -554,32 +554,27 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public override void CopyFieldsFrom(
-            IMajorRecordGetter rhs,
-            NotifyingFireParameters cmds = null)
+        public override void CopyFieldsFrom(IMajorRecordGetter rhs)
         {
             this.CopyFieldsFrom(
                 rhs: (INPCAbstractGetter)rhs,
                 def: null,
                 doMasks: false,
                 errorMask: out var errMask,
-                copyMask: null,
-                cmds: cmds);
+                copyMask: null);
         }
 
         public void CopyFieldsFrom(
             INPCAbstractGetter rhs,
             NPCAbstract_CopyMask copyMask,
-            INPCAbstractGetter def = null,
-            NotifyingFireParameters cmds = null)
+            INPCAbstractGetter def = null)
         {
             this.CopyFieldsFrom(
                 rhs: rhs,
                 def: def,
                 doMasks: false,
                 errorMask: out var errMask,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
         }
 
         public void CopyFieldsFrom(
@@ -587,7 +582,6 @@ namespace Mutagen.Bethesda.Oblivion
             out NPCAbstract_ErrorMask errorMask,
             NPCAbstract_CopyMask copyMask = null,
             INPCAbstractGetter def = null,
-            NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
@@ -596,8 +590,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 def: def,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
             errorMask = NPCAbstract_ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -606,7 +599,6 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMask,
             NPCAbstract_CopyMask copyMask = null,
             INPCAbstractGetter def = null,
-            NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
             NPCAbstractCommon.CopyFieldsFrom(
@@ -614,25 +606,24 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 def: def,
                 errorMask: errorMask,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
         }
 
-        protected override void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
+        protected override void SetNthObject(ushort index, object obj)
         {
             NPCAbstract_FieldIndex enu = (NPCAbstract_FieldIndex)index;
             switch (enu)
             {
                 default:
-                    base.SetNthObject(index, obj, cmds);
+                    base.SetNthObject(index, obj);
                     break;
             }
         }
 
-        public override void Clear(NotifyingUnsetParameters cmds = null)
+        public override void Clear()
         {
-            CallClearPartial_Internal(cmds);
-            NPCAbstractCommon.Clear(this, cmds);
+            CallClearPartial_Internal();
+            NPCAbstractCommon.Clear(this);
         }
 
 
@@ -852,23 +843,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             INPCAbstractGetter rhs,
             INPCAbstractGetter def,
             ErrorMaskBuilder errorMask,
-            NPCAbstract_CopyMask copyMask,
-            NotifyingFireParameters cmds = null)
+            NPCAbstract_CopyMask copyMask)
         {
             NPCSpawnCommon.CopyFieldsFrom(
                 item,
                 rhs,
                 def,
                 errorMask,
-                copyMask,
-                cmds);
+                copyMask);
         }
 
         #endregion
 
-        public static void Clear(
-            INPCAbstract item,
-            NotifyingUnsetParameters cmds = null)
+        public static void Clear(INPCAbstract item)
         {
         }
 

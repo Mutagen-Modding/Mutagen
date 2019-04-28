@@ -657,32 +657,27 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public override void CopyFieldsFrom(
-            IRegionDataGetter rhs,
-            NotifyingFireParameters cmds = null)
+        public override void CopyFieldsFrom(IRegionDataGetter rhs)
         {
             this.CopyFieldsFrom(
                 rhs: (IRegionDataGrassesGetter)rhs,
                 def: null,
                 doMasks: false,
                 errorMask: out var errMask,
-                copyMask: null,
-                cmds: cmds);
+                copyMask: null);
         }
 
         public void CopyFieldsFrom(
             IRegionDataGrassesGetter rhs,
             RegionDataGrasses_CopyMask copyMask,
-            IRegionDataGrassesGetter def = null,
-            NotifyingFireParameters cmds = null)
+            IRegionDataGrassesGetter def = null)
         {
             this.CopyFieldsFrom(
                 rhs: rhs,
                 def: def,
                 doMasks: false,
                 errorMask: out var errMask,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
         }
 
         public void CopyFieldsFrom(
@@ -690,7 +685,6 @@ namespace Mutagen.Bethesda.Oblivion
             out RegionDataGrasses_ErrorMask errorMask,
             RegionDataGrasses_CopyMask copyMask = null,
             IRegionDataGrassesGetter def = null,
-            NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
@@ -699,8 +693,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 def: def,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
             errorMask = RegionDataGrasses_ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -709,7 +702,6 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMask,
             RegionDataGrasses_CopyMask copyMask = null,
             IRegionDataGrassesGetter def = null,
-            NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
             RegionDataGrassesCommon.CopyFieldsFrom(
@@ -717,11 +709,10 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 def: def,
                 errorMask: errorMask,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
         }
 
-        protected override void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
+        protected override void SetNthObject(ushort index, object obj)
         {
             RegionDataGrasses_FieldIndex enu = (RegionDataGrasses_FieldIndex)index;
             switch (enu)
@@ -730,15 +721,15 @@ namespace Mutagen.Bethesda.Oblivion
                     this._Grasses.SetTo((IEnumerable<FormIDLink<Grass>>)obj);
                     break;
                 default:
-                    base.SetNthObject(index, obj, cmds);
+                    base.SetNthObject(index, obj);
                     break;
             }
         }
 
-        public override void Clear(NotifyingUnsetParameters cmds = null)
+        public override void Clear()
         {
-            CallClearPartial_Internal(cmds);
-            RegionDataGrassesCommon.Clear(this, cmds);
+            CallClearPartial_Internal();
+            RegionDataGrassesCommon.Clear(this);
         }
 
 
@@ -979,16 +970,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IRegionDataGrassesGetter rhs,
             IRegionDataGrassesGetter def,
             ErrorMaskBuilder errorMask,
-            RegionDataGrasses_CopyMask copyMask,
-            NotifyingFireParameters cmds = null)
+            RegionDataGrasses_CopyMask copyMask)
         {
             RegionDataCommon.CopyFieldsFrom(
                 item,
                 rhs,
                 def,
                 errorMask,
-                copyMask,
-                cmds);
+                copyMask);
             if (copyMask?.Grasses != CopyOption.Skip)
             {
                 errorMask?.PushIndex((int)RegionDataGrasses_FieldIndex.Grasses);
@@ -1012,9 +1001,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void Clear(
-            IRegionDataGrasses item,
-            NotifyingUnsetParameters cmds = null)
+        public static void Clear(IRegionDataGrasses item)
         {
             item.Grasses.Unset();
         }

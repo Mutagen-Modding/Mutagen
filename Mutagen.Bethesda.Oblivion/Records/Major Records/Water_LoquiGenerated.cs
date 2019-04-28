@@ -2285,32 +2285,27 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public override void CopyFieldsFrom(
-            IMajorRecordGetter rhs,
-            NotifyingFireParameters cmds = null)
+        public override void CopyFieldsFrom(IMajorRecordGetter rhs)
         {
             this.CopyFieldsFrom(
                 rhs: (IWaterGetter)rhs,
                 def: null,
                 doMasks: false,
                 errorMask: out var errMask,
-                copyMask: null,
-                cmds: cmds);
+                copyMask: null);
         }
 
         public void CopyFieldsFrom(
             IWaterGetter rhs,
             Water_CopyMask copyMask,
-            IWaterGetter def = null,
-            NotifyingFireParameters cmds = null)
+            IWaterGetter def = null)
         {
             this.CopyFieldsFrom(
                 rhs: rhs,
                 def: def,
                 doMasks: false,
                 errorMask: out var errMask,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
         }
 
         public void CopyFieldsFrom(
@@ -2318,7 +2313,6 @@ namespace Mutagen.Bethesda.Oblivion
             out Water_ErrorMask errorMask,
             Water_CopyMask copyMask = null,
             IWaterGetter def = null,
-            NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
@@ -2327,8 +2321,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 def: def,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
             errorMask = Water_ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -2337,7 +2330,6 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMask,
             Water_CopyMask copyMask = null,
             IWaterGetter def = null,
-            NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
             WaterCommon.CopyFieldsFrom(
@@ -2345,11 +2337,10 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 def: def,
                 errorMask: errorMask,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
         }
 
-        protected override void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
+        protected override void SetNthObject(ushort index, object obj)
         {
             Water_FieldIndex enu = (Water_FieldIndex)index;
             switch (enu)
@@ -2451,15 +2442,15 @@ namespace Mutagen.Bethesda.Oblivion
                     this.RelatedWaters = (RelatedWaters)obj;
                     break;
                 default:
-                    base.SetNthObject(index, obj, cmds);
+                    base.SetNthObject(index, obj);
                     break;
             }
         }
 
-        public override void Clear(NotifyingUnsetParameters cmds = null)
+        public override void Clear()
         {
-            CallClearPartial_Internal(cmds);
-            WaterCommon.Clear(this, cmds);
+            CallClearPartial_Internal();
+            WaterCommon.Clear(this);
         }
 
 
@@ -3382,16 +3373,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IWaterGetter rhs,
             IWaterGetter def,
             ErrorMaskBuilder errorMask,
-            Water_CopyMask copyMask,
-            NotifyingFireParameters cmds = null)
+            Water_CopyMask copyMask)
         {
             OblivionMajorRecordCommon.CopyFieldsFrom(
                 item,
                 rhs,
                 def,
                 errorMask,
-                copyMask,
-                cmds);
+                copyMask);
             if (copyMask?.Texture ?? true)
             {
                 errorMask?.PushIndex((int)Water_FieldIndex.Texture);
@@ -3997,8 +3986,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                     rhs: rhs.RelatedWaters,
                                     def: def?.RelatedWaters,
                                     errorMask: errorMask,
-                                    copyMask: copyMask?.RelatedWaters.Specific,
-                                    cmds: cmds);
+                                    copyMask: copyMask?.RelatedWaters.Specific);
                                 break;
                             case CopyOption.MakeCopy:
                                 item.RelatedWaters = RelatedWaters.Copy(
@@ -4031,9 +4019,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void Clear(
-            IWater item,
-            NotifyingUnsetParameters cmds = null)
+        public static void Clear(IWater item)
         {
             item.Texture_Unset();
             item.Opacity_Unset();

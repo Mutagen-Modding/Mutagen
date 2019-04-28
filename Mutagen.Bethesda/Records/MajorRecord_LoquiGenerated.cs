@@ -743,32 +743,27 @@ namespace Mutagen.Bethesda
             return ret;
         }
 
-        public virtual void CopyFieldsFrom(
-            IMajorRecordGetter rhs,
-            NotifyingFireParameters cmds = null)
+        public virtual void CopyFieldsFrom(IMajorRecordGetter rhs)
         {
             this.CopyFieldsFrom(
                 rhs: (IMajorRecordGetter)rhs,
                 def: null,
                 doMasks: false,
                 errorMask: out var errMask,
-                copyMask: null,
-                cmds: cmds);
+                copyMask: null);
         }
 
         public void CopyFieldsFrom(
             IMajorRecordGetter rhs,
             MajorRecord_CopyMask copyMask,
-            IMajorRecordGetter def = null,
-            NotifyingFireParameters cmds = null)
+            IMajorRecordGetter def = null)
         {
             this.CopyFieldsFrom(
                 rhs: rhs,
                 def: def,
                 doMasks: false,
                 errorMask: out var errMask,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
         }
 
         public void CopyFieldsFrom(
@@ -776,7 +771,6 @@ namespace Mutagen.Bethesda
             out MajorRecord_ErrorMask errorMask,
             MajorRecord_CopyMask copyMask = null,
             IMajorRecordGetter def = null,
-            NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
@@ -785,8 +779,7 @@ namespace Mutagen.Bethesda
                 rhs: rhs,
                 def: def,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
             errorMask = MajorRecord_ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -795,7 +788,6 @@ namespace Mutagen.Bethesda
             ErrorMaskBuilder errorMask,
             MajorRecord_CopyMask copyMask = null,
             IMajorRecordGetter def = null,
-            NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
             MajorRecordCommon.CopyFieldsFrom(
@@ -803,11 +795,10 @@ namespace Mutagen.Bethesda
                 rhs: rhs,
                 def: def,
                 errorMask: errorMask,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
         }
 
-        protected virtual void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
+        protected virtual void SetNthObject(ushort index, object obj)
         {
             MajorRecord_FieldIndex enu = (MajorRecord_FieldIndex)index;
             switch (enu)
@@ -828,17 +819,17 @@ namespace Mutagen.Bethesda
             }
         }
 
-        partial void ClearPartial(NotifyingUnsetParameters cmds);
+        partial void ClearPartial();
 
-        protected void CallClearPartial_Internal(NotifyingUnsetParameters cmds)
+        protected void CallClearPartial_Internal()
         {
-            ClearPartial(cmds);
+            ClearPartial();
         }
 
-        public virtual void Clear(NotifyingUnsetParameters cmds = null)
+        public virtual void Clear()
         {
-            CallClearPartial_Internal(cmds);
-            MajorRecordCommon.Clear(this, cmds);
+            CallClearPartial_Internal();
+            MajorRecordCommon.Clear(this);
         }
 
 
@@ -1274,8 +1265,7 @@ namespace Mutagen.Bethesda.Internals
             IMajorRecordGetter rhs,
             IMajorRecordGetter def,
             ErrorMaskBuilder errorMask,
-            MajorRecord_CopyMask copyMask,
-            NotifyingFireParameters cmds = null)
+            MajorRecord_CopyMask copyMask)
         {
             if (copyMask?.Version ?? true)
             {
@@ -1328,9 +1318,7 @@ namespace Mutagen.Bethesda.Internals
 
         #endregion
 
-        public static void Clear(
-            IMajorRecord item,
-            NotifyingUnsetParameters cmds = null)
+        public static void Clear(IMajorRecord item)
         {
             item.Version = default(UInt32);
             item.EditorID_Unset();

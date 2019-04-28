@@ -1100,32 +1100,27 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public override void CopyFieldsFrom(
-            IMajorRecordGetter rhs,
-            NotifyingFireParameters cmds = null)
+        public override void CopyFieldsFrom(IMajorRecordGetter rhs)
         {
             this.CopyFieldsFrom(
                 rhs: (IQuestGetter)rhs,
                 def: null,
                 doMasks: false,
                 errorMask: out var errMask,
-                copyMask: null,
-                cmds: cmds);
+                copyMask: null);
         }
 
         public void CopyFieldsFrom(
             IQuestGetter rhs,
             Quest_CopyMask copyMask,
-            IQuestGetter def = null,
-            NotifyingFireParameters cmds = null)
+            IQuestGetter def = null)
         {
             this.CopyFieldsFrom(
                 rhs: rhs,
                 def: def,
                 doMasks: false,
                 errorMask: out var errMask,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
         }
 
         public void CopyFieldsFrom(
@@ -1133,7 +1128,6 @@ namespace Mutagen.Bethesda.Oblivion
             out Quest_ErrorMask errorMask,
             Quest_CopyMask copyMask = null,
             IQuestGetter def = null,
-            NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
@@ -1142,8 +1136,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 def: def,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
             errorMask = Quest_ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -1152,7 +1145,6 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMask,
             Quest_CopyMask copyMask = null,
             IQuestGetter def = null,
-            NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
             QuestCommon.CopyFieldsFrom(
@@ -1160,11 +1152,10 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 def: def,
                 errorMask: errorMask,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
         }
 
-        protected override void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
+        protected override void SetNthObject(ushort index, object obj)
         {
             Quest_FieldIndex enu = (Quest_FieldIndex)index;
             switch (enu)
@@ -1194,15 +1185,15 @@ namespace Mutagen.Bethesda.Oblivion
                     this._Targets.SetTo((IEnumerable<QuestTarget>)obj);
                     break;
                 default:
-                    base.SetNthObject(index, obj, cmds);
+                    base.SetNthObject(index, obj);
                     break;
             }
         }
 
-        public override void Clear(NotifyingUnsetParameters cmds = null)
+        public override void Clear()
         {
-            CallClearPartial_Internal(cmds);
-            QuestCommon.Clear(this, cmds);
+            CallClearPartial_Internal();
+            QuestCommon.Clear(this);
         }
 
 
@@ -1605,16 +1596,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IQuestGetter rhs,
             IQuestGetter def,
             ErrorMaskBuilder errorMask,
-            Quest_CopyMask copyMask,
-            NotifyingFireParameters cmds = null)
+            Quest_CopyMask copyMask)
         {
             OblivionMajorRecordCommon.CopyFieldsFrom(
                 item,
                 rhs,
                 def,
                 errorMask,
-                copyMask,
-                cmds);
+                copyMask);
             if (copyMask?.Script ?? true)
             {
                 errorMask?.PushIndex((int)Quest_FieldIndex.Script);
@@ -1837,9 +1826,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void Clear(
-            IQuest item,
-            NotifyingUnsetParameters cmds = null)
+        public static void Clear(IQuest item)
         {
             item.Script_Property.Unset();
             item.Name_Unset();

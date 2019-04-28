@@ -612,32 +612,27 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public void CopyFieldsFrom(
-            IRelatedWatersGetter rhs,
-            NotifyingFireParameters cmds = null)
+        public void CopyFieldsFrom(IRelatedWatersGetter rhs)
         {
             this.CopyFieldsFrom(
                 rhs: (IRelatedWatersGetter)rhs,
                 def: null,
                 doMasks: false,
                 errorMask: out var errMask,
-                copyMask: null,
-                cmds: cmds);
+                copyMask: null);
         }
 
         public void CopyFieldsFrom(
             IRelatedWatersGetter rhs,
             RelatedWaters_CopyMask copyMask,
-            IRelatedWatersGetter def = null,
-            NotifyingFireParameters cmds = null)
+            IRelatedWatersGetter def = null)
         {
             this.CopyFieldsFrom(
                 rhs: rhs,
                 def: def,
                 doMasks: false,
                 errorMask: out var errMask,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
         }
 
         public void CopyFieldsFrom(
@@ -645,7 +640,6 @@ namespace Mutagen.Bethesda.Oblivion
             out RelatedWaters_ErrorMask errorMask,
             RelatedWaters_CopyMask copyMask = null,
             IRelatedWatersGetter def = null,
-            NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
@@ -654,8 +648,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 def: def,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
             errorMask = RelatedWaters_ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -664,7 +657,6 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMask,
             RelatedWaters_CopyMask copyMask = null,
             IRelatedWatersGetter def = null,
-            NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
             RelatedWatersCommon.CopyFieldsFrom(
@@ -672,11 +664,10 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 def: def,
                 errorMask: errorMask,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
         }
 
-        protected void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
+        protected void SetNthObject(ushort index, object obj)
         {
             RelatedWaters_FieldIndex enu = (RelatedWaters_FieldIndex)index;
             switch (enu)
@@ -695,17 +686,17 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        partial void ClearPartial(NotifyingUnsetParameters cmds);
+        partial void ClearPartial();
 
-        protected void CallClearPartial_Internal(NotifyingUnsetParameters cmds)
+        protected void CallClearPartial_Internal()
         {
-            ClearPartial(cmds);
+            ClearPartial();
         }
 
-        public void Clear(NotifyingUnsetParameters cmds = null)
+        public void Clear()
         {
-            CallClearPartial_Internal(cmds);
-            RelatedWatersCommon.Clear(this, cmds);
+            CallClearPartial_Internal();
+            RelatedWatersCommon.Clear(this);
         }
 
 
@@ -986,8 +977,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IRelatedWatersGetter rhs,
             IRelatedWatersGetter def,
             ErrorMaskBuilder errorMask,
-            RelatedWaters_CopyMask copyMask,
-            NotifyingFireParameters cmds = null)
+            RelatedWaters_CopyMask copyMask)
         {
             if (copyMask?.RelatedWaterDaytime ?? true)
             {
@@ -1044,9 +1034,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void Clear(
-            IRelatedWaters item,
-            NotifyingUnsetParameters cmds = null)
+        public static void Clear(IRelatedWaters item)
         {
             item.RelatedWaterDaytime = default(Water);
             item.RelatedWaterNighttime = default(Water);

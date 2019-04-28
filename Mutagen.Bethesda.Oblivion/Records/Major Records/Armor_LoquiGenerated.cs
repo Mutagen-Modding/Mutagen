@@ -888,32 +888,27 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public override void CopyFieldsFrom(
-            IMajorRecordGetter rhs,
-            NotifyingFireParameters cmds = null)
+        public override void CopyFieldsFrom(IMajorRecordGetter rhs)
         {
             this.CopyFieldsFrom(
                 rhs: (IArmorGetter)rhs,
                 def: null,
                 doMasks: false,
                 errorMask: out var errMask,
-                copyMask: null,
-                cmds: cmds);
+                copyMask: null);
         }
 
         public void CopyFieldsFrom(
             IArmorGetter rhs,
             Armor_CopyMask copyMask,
-            IArmorGetter def = null,
-            NotifyingFireParameters cmds = null)
+            IArmorGetter def = null)
         {
             this.CopyFieldsFrom(
                 rhs: rhs,
                 def: def,
                 doMasks: false,
                 errorMask: out var errMask,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
         }
 
         public void CopyFieldsFrom(
@@ -921,7 +916,6 @@ namespace Mutagen.Bethesda.Oblivion
             out Armor_ErrorMask errorMask,
             Armor_CopyMask copyMask = null,
             IArmorGetter def = null,
-            NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
@@ -930,8 +924,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 def: def,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
             errorMask = Armor_ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -940,7 +933,6 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMask,
             Armor_CopyMask copyMask = null,
             IArmorGetter def = null,
-            NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
             ArmorCommon.CopyFieldsFrom(
@@ -948,11 +940,10 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 def: def,
                 errorMask: errorMask,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
         }
 
-        protected override void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
+        protected override void SetNthObject(ushort index, object obj)
         {
             Armor_FieldIndex enu = (Armor_FieldIndex)index;
             switch (enu)
@@ -970,15 +961,15 @@ namespace Mutagen.Bethesda.Oblivion
                     this.Weight = (Single)obj;
                     break;
                 default:
-                    base.SetNthObject(index, obj, cmds);
+                    base.SetNthObject(index, obj);
                     break;
             }
         }
 
-        public override void Clear(NotifyingUnsetParameters cmds = null)
+        public override void Clear()
         {
-            CallClearPartial_Internal(cmds);
-            ArmorCommon.Clear(this, cmds);
+            CallClearPartial_Internal();
+            ArmorCommon.Clear(this);
         }
 
 
@@ -1298,16 +1289,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IArmorGetter rhs,
             IArmorGetter def,
             ErrorMaskBuilder errorMask,
-            Armor_CopyMask copyMask,
-            NotifyingFireParameters cmds = null)
+            Armor_CopyMask copyMask)
         {
             ClothingAbstractCommon.CopyFieldsFrom(
                 item,
                 rhs,
                 def,
                 errorMask,
-                copyMask,
-                cmds);
+                copyMask);
             if (copyMask?.ArmorValue ?? true)
             {
                 errorMask?.PushIndex((int)Armor_FieldIndex.ArmorValue);
@@ -1380,9 +1369,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void Clear(
-            IArmor item,
-            NotifyingUnsetParameters cmds = null)
+        public static void Clear(IArmor item)
         {
             item.ArmorValue = default(Single);
             item.Value = default(UInt32);

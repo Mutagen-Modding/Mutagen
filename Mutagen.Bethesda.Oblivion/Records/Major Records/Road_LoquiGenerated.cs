@@ -698,32 +698,27 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public override void CopyFieldsFrom(
-            IMajorRecordGetter rhs,
-            NotifyingFireParameters cmds = null)
+        public override void CopyFieldsFrom(IMajorRecordGetter rhs)
         {
             this.CopyFieldsFrom(
                 rhs: (IRoadGetter)rhs,
                 def: null,
                 doMasks: false,
                 errorMask: out var errMask,
-                copyMask: null,
-                cmds: cmds);
+                copyMask: null);
         }
 
         public void CopyFieldsFrom(
             IRoadGetter rhs,
             Road_CopyMask copyMask,
-            IRoadGetter def = null,
-            NotifyingFireParameters cmds = null)
+            IRoadGetter def = null)
         {
             this.CopyFieldsFrom(
                 rhs: rhs,
                 def: def,
                 doMasks: false,
                 errorMask: out var errMask,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
         }
 
         public void CopyFieldsFrom(
@@ -731,7 +726,6 @@ namespace Mutagen.Bethesda.Oblivion
             out Road_ErrorMask errorMask,
             Road_CopyMask copyMask = null,
             IRoadGetter def = null,
-            NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
@@ -740,8 +734,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 def: def,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
             errorMask = Road_ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -750,7 +743,6 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMask,
             Road_CopyMask copyMask = null,
             IRoadGetter def = null,
-            NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
             RoadCommon.CopyFieldsFrom(
@@ -758,11 +750,10 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 def: def,
                 errorMask: errorMask,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
         }
 
-        protected override void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
+        protected override void SetNthObject(ushort index, object obj)
         {
             Road_FieldIndex enu = (Road_FieldIndex)index;
             switch (enu)
@@ -771,15 +762,15 @@ namespace Mutagen.Bethesda.Oblivion
                     this._Points.SetTo((IEnumerable<RoadPoint>)obj);
                     break;
                 default:
-                    base.SetNthObject(index, obj, cmds);
+                    base.SetNthObject(index, obj);
                     break;
             }
         }
 
-        public override void Clear(NotifyingUnsetParameters cmds = null)
+        public override void Clear()
         {
-            CallClearPartial_Internal(cmds);
-            RoadCommon.Clear(this, cmds);
+            CallClearPartial_Internal();
+            RoadCommon.Clear(this);
         }
 
 
@@ -1022,16 +1013,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IRoadGetter rhs,
             IRoadGetter def,
             ErrorMaskBuilder errorMask,
-            Road_CopyMask copyMask,
-            NotifyingFireParameters cmds = null)
+            Road_CopyMask copyMask)
         {
             OblivionMajorRecordCommon.CopyFieldsFrom(
                 item,
                 rhs,
                 def,
                 errorMask,
-                copyMask,
-                cmds);
+                copyMask);
             if (copyMask?.Points.Overall != CopyOption.Skip)
             {
                 errorMask?.PushIndex((int)Road_FieldIndex.Points);
@@ -1071,9 +1060,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void Clear(
-            IRoad item,
-            NotifyingUnsetParameters cmds = null)
+        public static void Clear(IRoad item)
         {
             item.Points.Unset();
         }

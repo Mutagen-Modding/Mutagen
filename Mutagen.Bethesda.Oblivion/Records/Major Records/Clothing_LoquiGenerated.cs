@@ -804,32 +804,27 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public override void CopyFieldsFrom(
-            IMajorRecordGetter rhs,
-            NotifyingFireParameters cmds = null)
+        public override void CopyFieldsFrom(IMajorRecordGetter rhs)
         {
             this.CopyFieldsFrom(
                 rhs: (IClothingGetter)rhs,
                 def: null,
                 doMasks: false,
                 errorMask: out var errMask,
-                copyMask: null,
-                cmds: cmds);
+                copyMask: null);
         }
 
         public void CopyFieldsFrom(
             IClothingGetter rhs,
             Clothing_CopyMask copyMask,
-            IClothingGetter def = null,
-            NotifyingFireParameters cmds = null)
+            IClothingGetter def = null)
         {
             this.CopyFieldsFrom(
                 rhs: rhs,
                 def: def,
                 doMasks: false,
                 errorMask: out var errMask,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
         }
 
         public void CopyFieldsFrom(
@@ -837,7 +832,6 @@ namespace Mutagen.Bethesda.Oblivion
             out Clothing_ErrorMask errorMask,
             Clothing_CopyMask copyMask = null,
             IClothingGetter def = null,
-            NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
@@ -846,8 +840,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 def: def,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
             errorMask = Clothing_ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -856,7 +849,6 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMask,
             Clothing_CopyMask copyMask = null,
             IClothingGetter def = null,
-            NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
             ClothingCommon.CopyFieldsFrom(
@@ -864,11 +856,10 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 def: def,
                 errorMask: errorMask,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
         }
 
-        protected override void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
+        protected override void SetNthObject(ushort index, object obj)
         {
             Clothing_FieldIndex enu = (Clothing_FieldIndex)index;
             switch (enu)
@@ -880,15 +871,15 @@ namespace Mutagen.Bethesda.Oblivion
                     this.Weight = (Single)obj;
                     break;
                 default:
-                    base.SetNthObject(index, obj, cmds);
+                    base.SetNthObject(index, obj);
                     break;
             }
         }
 
-        public override void Clear(NotifyingUnsetParameters cmds = null)
+        public override void Clear()
         {
-            CallClearPartial_Internal(cmds);
-            ClothingCommon.Clear(this, cmds);
+            CallClearPartial_Internal();
+            ClothingCommon.Clear(this);
         }
 
 
@@ -1166,16 +1157,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IClothingGetter rhs,
             IClothingGetter def,
             ErrorMaskBuilder errorMask,
-            Clothing_CopyMask copyMask,
-            NotifyingFireParameters cmds = null)
+            Clothing_CopyMask copyMask)
         {
             ClothingAbstractCommon.CopyFieldsFrom(
                 item,
                 rhs,
                 def,
                 errorMask,
-                copyMask,
-                cmds);
+                copyMask);
             if (copyMask?.Value ?? true)
             {
                 errorMask?.PushIndex((int)Clothing_FieldIndex.Value);
@@ -1214,9 +1203,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void Clear(
-            IClothing item,
-            NotifyingUnsetParameters cmds = null)
+        public static void Clear(IClothing item)
         {
             item.Value = default(UInt32);
             item.Weight = default(Single);

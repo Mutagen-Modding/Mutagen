@@ -594,32 +594,27 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public void CopyFieldsFrom(
-            IRaceVoicesGetter rhs,
-            NotifyingFireParameters cmds = null)
+        public void CopyFieldsFrom(IRaceVoicesGetter rhs)
         {
             this.CopyFieldsFrom(
                 rhs: (IRaceVoicesGetter)rhs,
                 def: null,
                 doMasks: false,
                 errorMask: out var errMask,
-                copyMask: null,
-                cmds: cmds);
+                copyMask: null);
         }
 
         public void CopyFieldsFrom(
             IRaceVoicesGetter rhs,
             RaceVoices_CopyMask copyMask,
-            IRaceVoicesGetter def = null,
-            NotifyingFireParameters cmds = null)
+            IRaceVoicesGetter def = null)
         {
             this.CopyFieldsFrom(
                 rhs: rhs,
                 def: def,
                 doMasks: false,
                 errorMask: out var errMask,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
         }
 
         public void CopyFieldsFrom(
@@ -627,7 +622,6 @@ namespace Mutagen.Bethesda.Oblivion
             out RaceVoices_ErrorMask errorMask,
             RaceVoices_CopyMask copyMask = null,
             IRaceVoicesGetter def = null,
-            NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
@@ -636,8 +630,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 def: def,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
             errorMask = RaceVoices_ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -646,7 +639,6 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMask,
             RaceVoices_CopyMask copyMask = null,
             IRaceVoicesGetter def = null,
-            NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
             RaceVoicesCommon.CopyFieldsFrom(
@@ -654,11 +646,10 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 def: def,
                 errorMask: errorMask,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
         }
 
-        protected void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
+        protected void SetNthObject(ushort index, object obj)
         {
             RaceVoices_FieldIndex enu = (RaceVoices_FieldIndex)index;
             switch (enu)
@@ -674,17 +665,17 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        partial void ClearPartial(NotifyingUnsetParameters cmds);
+        partial void ClearPartial();
 
-        protected void CallClearPartial_Internal(NotifyingUnsetParameters cmds)
+        protected void CallClearPartial_Internal()
         {
-            ClearPartial(cmds);
+            ClearPartial();
         }
 
-        public void Clear(NotifyingUnsetParameters cmds = null)
+        public void Clear()
         {
-            CallClearPartial_Internal(cmds);
-            RaceVoicesCommon.Clear(this, cmds);
+            CallClearPartial_Internal();
+            RaceVoicesCommon.Clear(this);
         }
 
 
@@ -944,8 +935,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IRaceVoicesGetter rhs,
             IRaceVoicesGetter def,
             ErrorMaskBuilder errorMask,
-            RaceVoices_CopyMask copyMask,
-            NotifyingFireParameters cmds = null)
+            RaceVoices_CopyMask copyMask)
         {
             if (copyMask?.Male ?? true)
             {
@@ -985,9 +975,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void Clear(
-            IRaceVoices item,
-            NotifyingUnsetParameters cmds = null)
+        public static void Clear(IRaceVoices item)
         {
             item.Male = default(Race);
             item.Female = default(Race);

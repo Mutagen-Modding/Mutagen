@@ -1156,32 +1156,27 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public override void CopyFieldsFrom(
-            IMajorRecordGetter rhs,
-            NotifyingFireParameters cmds = null)
+        public override void CopyFieldsFrom(IMajorRecordGetter rhs)
         {
             this.CopyFieldsFrom(
                 rhs: (ISoulGemGetter)rhs,
                 def: null,
                 doMasks: false,
                 errorMask: out var errMask,
-                copyMask: null,
-                cmds: cmds);
+                copyMask: null);
         }
 
         public void CopyFieldsFrom(
             ISoulGemGetter rhs,
             SoulGem_CopyMask copyMask,
-            ISoulGemGetter def = null,
-            NotifyingFireParameters cmds = null)
+            ISoulGemGetter def = null)
         {
             this.CopyFieldsFrom(
                 rhs: rhs,
                 def: def,
                 doMasks: false,
                 errorMask: out var errMask,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
         }
 
         public void CopyFieldsFrom(
@@ -1189,7 +1184,6 @@ namespace Mutagen.Bethesda.Oblivion
             out SoulGem_ErrorMask errorMask,
             SoulGem_CopyMask copyMask = null,
             ISoulGemGetter def = null,
-            NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
@@ -1198,8 +1192,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 def: def,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
             errorMask = SoulGem_ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -1208,7 +1201,6 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMask,
             SoulGem_CopyMask copyMask = null,
             ISoulGemGetter def = null,
-            NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
             SoulGemCommon.CopyFieldsFrom(
@@ -1216,11 +1208,10 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 def: def,
                 errorMask: errorMask,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
         }
 
-        protected override void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
+        protected override void SetNthObject(ushort index, object obj)
         {
             SoulGem_FieldIndex enu = (SoulGem_FieldIndex)index;
             switch (enu)
@@ -1250,15 +1241,15 @@ namespace Mutagen.Bethesda.Oblivion
                     this.MaximumCapacity = (SoulLevel)obj;
                     break;
                 default:
-                    base.SetNthObject(index, obj, cmds);
+                    base.SetNthObject(index, obj);
                     break;
             }
         }
 
-        public override void Clear(NotifyingUnsetParameters cmds = null)
+        public override void Clear()
         {
-            CallClearPartial_Internal(cmds);
-            SoulGemCommon.Clear(this, cmds);
+            CallClearPartial_Internal();
+            SoulGemCommon.Clear(this);
         }
 
 
@@ -1677,16 +1668,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ISoulGemGetter rhs,
             ISoulGemGetter def,
             ErrorMaskBuilder errorMask,
-            SoulGem_CopyMask copyMask,
-            NotifyingFireParameters cmds = null)
+            SoulGem_CopyMask copyMask)
         {
             ItemAbstractCommon.CopyFieldsFrom(
                 item,
                 rhs,
                 def,
                 errorMask,
-                copyMask,
-                cmds);
+                copyMask);
             if (copyMask?.Name ?? true)
             {
                 errorMask?.PushIndex((int)SoulGem_FieldIndex.Name);
@@ -1741,8 +1730,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                     rhs: rhs.Model,
                                     def: def?.Model,
                                     errorMask: errorMask,
-                                    copyMask: copyMask?.Model.Specific,
-                                    cmds: cmds);
+                                    copyMask: copyMask?.Model.Specific);
                                 break;
                             case CopyOption.MakeCopy:
                                 item.Model = Model.Copy(
@@ -1918,9 +1906,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void Clear(
-            ISoulGem item,
-            NotifyingUnsetParameters cmds = null)
+        public static void Clear(ISoulGem item)
         {
             item.Name_Unset();
             item.Model_Unset();

@@ -654,32 +654,27 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public override void CopyFieldsFrom(
-            IBaseLayerGetter rhs,
-            NotifyingFireParameters cmds = null)
+        public override void CopyFieldsFrom(IBaseLayerGetter rhs)
         {
             this.CopyFieldsFrom(
                 rhs: (IAlphaLayerGetter)rhs,
                 def: null,
                 doMasks: false,
                 errorMask: out var errMask,
-                copyMask: null,
-                cmds: cmds);
+                copyMask: null);
         }
 
         public void CopyFieldsFrom(
             IAlphaLayerGetter rhs,
             AlphaLayer_CopyMask copyMask,
-            IAlphaLayerGetter def = null,
-            NotifyingFireParameters cmds = null)
+            IAlphaLayerGetter def = null)
         {
             this.CopyFieldsFrom(
                 rhs: rhs,
                 def: def,
                 doMasks: false,
                 errorMask: out var errMask,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
         }
 
         public void CopyFieldsFrom(
@@ -687,7 +682,6 @@ namespace Mutagen.Bethesda.Oblivion
             out AlphaLayer_ErrorMask errorMask,
             AlphaLayer_CopyMask copyMask = null,
             IAlphaLayerGetter def = null,
-            NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
@@ -696,8 +690,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 def: def,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
             errorMask = AlphaLayer_ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -706,7 +699,6 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMask,
             AlphaLayer_CopyMask copyMask = null,
             IAlphaLayerGetter def = null,
-            NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
             AlphaLayerCommon.CopyFieldsFrom(
@@ -714,11 +706,10 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 def: def,
                 errorMask: errorMask,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
         }
 
-        protected override void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
+        protected override void SetNthObject(ushort index, object obj)
         {
             AlphaLayer_FieldIndex enu = (AlphaLayer_FieldIndex)index;
             switch (enu)
@@ -727,15 +718,15 @@ namespace Mutagen.Bethesda.Oblivion
                     this.AlphaLayerData = (Byte[])obj;
                     break;
                 default:
-                    base.SetNthObject(index, obj, cmds);
+                    base.SetNthObject(index, obj);
                     break;
             }
         }
 
-        public override void Clear(NotifyingUnsetParameters cmds = null)
+        public override void Clear()
         {
-            CallClearPartial_Internal(cmds);
-            AlphaLayerCommon.Clear(this, cmds);
+            CallClearPartial_Internal();
+            AlphaLayerCommon.Clear(this);
         }
 
 
@@ -987,16 +978,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IAlphaLayerGetter rhs,
             IAlphaLayerGetter def,
             ErrorMaskBuilder errorMask,
-            AlphaLayer_CopyMask copyMask,
-            NotifyingFireParameters cmds = null)
+            AlphaLayer_CopyMask copyMask)
         {
             BaseLayerCommon.CopyFieldsFrom(
                 item,
                 rhs,
                 def,
                 errorMask,
-                copyMask,
-                cmds);
+                copyMask);
             if (copyMask?.AlphaLayerData ?? true)
             {
                 errorMask?.PushIndex((int)AlphaLayer_FieldIndex.AlphaLayerData);
@@ -1031,9 +1020,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void Clear(
-            IAlphaLayer item,
-            NotifyingUnsetParameters cmds = null)
+        public static void Clear(IAlphaLayer item)
         {
             item.AlphaLayerData_Unset();
         }

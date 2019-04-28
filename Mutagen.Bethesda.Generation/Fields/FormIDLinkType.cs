@@ -123,7 +123,7 @@ namespace Mutagen.Bethesda.Generation
             fg.AppendLine($"if (!{accessor.PropertyAccess}.Equals({rhsAccessor.PropertyAccess})) return false;");
         }
 
-        public override void GenerateForCopy(FileGeneration fg, Accessor accessor, string rhsAccessorPrefix, string copyMaskAccessor, string defaultFallbackAccessor, string cmdAccessor, bool protectedMembers)
+        public override void GenerateForCopy(FileGeneration fg, Accessor accessor, string rhsAccessorPrefix, string copyMaskAccessor, string defaultFallbackAccessor, bool protectedMembers)
         {
             if (this.HasBeenSet)
             {
@@ -150,8 +150,7 @@ namespace Mutagen.Bethesda.Generation
             fg.AppendLine($"{fgAccessor}.AppendLine($\"{name} => {{{accessor.PropertyOrDirectAccess}}}\");");
         }
 
-
-        public override void GenerateUnsetNth(FileGeneration fg, Accessor identifier, string cmdAccessor)
+        public override void GenerateUnsetNth(FileGeneration fg, Accessor identifier)
         {
             if (!this.IntegrateField) return;
             if (!this.ReadOnly)
@@ -171,7 +170,7 @@ namespace Mutagen.Bethesda.Generation
             fg.AppendLine("break;");
         }
 
-        public override void GenerateClear(FileGeneration fg, Accessor identifier, string cmdAccessor)
+        public override void GenerateClear(FileGeneration fg, Accessor identifier)
         {
             if (this.ReadOnly || !this.IntegrateField) return;
             if (this.NotifyingType != NotifyingType.None)

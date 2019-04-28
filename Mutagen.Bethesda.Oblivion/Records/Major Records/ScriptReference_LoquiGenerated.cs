@@ -467,32 +467,27 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public virtual void CopyFieldsFrom(
-            IScriptReferenceGetter rhs,
-            NotifyingFireParameters cmds = null)
+        public virtual void CopyFieldsFrom(IScriptReferenceGetter rhs)
         {
             this.CopyFieldsFrom(
                 rhs: (IScriptReferenceGetter)rhs,
                 def: null,
                 doMasks: false,
                 errorMask: out var errMask,
-                copyMask: null,
-                cmds: cmds);
+                copyMask: null);
         }
 
         public void CopyFieldsFrom(
             IScriptReferenceGetter rhs,
             ScriptReference_CopyMask copyMask,
-            IScriptReferenceGetter def = null,
-            NotifyingFireParameters cmds = null)
+            IScriptReferenceGetter def = null)
         {
             this.CopyFieldsFrom(
                 rhs: rhs,
                 def: def,
                 doMasks: false,
                 errorMask: out var errMask,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
         }
 
         public void CopyFieldsFrom(
@@ -500,7 +495,6 @@ namespace Mutagen.Bethesda.Oblivion
             out ScriptReference_ErrorMask errorMask,
             ScriptReference_CopyMask copyMask = null,
             IScriptReferenceGetter def = null,
-            NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
@@ -509,8 +503,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 def: def,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
             errorMask = ScriptReference_ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -519,7 +512,6 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMask,
             ScriptReference_CopyMask copyMask = null,
             IScriptReferenceGetter def = null,
-            NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
             ScriptReferenceCommon.CopyFieldsFrom(
@@ -527,11 +519,10 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 def: def,
                 errorMask: errorMask,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
         }
 
-        protected virtual void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
+        protected virtual void SetNthObject(ushort index, object obj)
         {
             ScriptReference_FieldIndex enu = (ScriptReference_FieldIndex)index;
             switch (enu)
@@ -541,17 +532,17 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        partial void ClearPartial(NotifyingUnsetParameters cmds);
+        partial void ClearPartial();
 
-        protected void CallClearPartial_Internal(NotifyingUnsetParameters cmds)
+        protected void CallClearPartial_Internal()
         {
-            ClearPartial(cmds);
+            ClearPartial();
         }
 
-        public virtual void Clear(NotifyingUnsetParameters cmds = null)
+        public virtual void Clear()
         {
-            CallClearPartial_Internal(cmds);
-            ScriptReferenceCommon.Clear(this, cmds);
+            CallClearPartial_Internal();
+            ScriptReferenceCommon.Clear(this);
         }
 
 
@@ -766,16 +757,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IScriptReferenceGetter rhs,
             IScriptReferenceGetter def,
             ErrorMaskBuilder errorMask,
-            ScriptReference_CopyMask copyMask,
-            NotifyingFireParameters cmds = null)
+            ScriptReference_CopyMask copyMask)
         {
         }
 
         #endregion
 
-        public static void Clear(
-            IScriptReference item,
-            NotifyingUnsetParameters cmds = null)
+        public static void Clear(IScriptReference item)
         {
         }
 

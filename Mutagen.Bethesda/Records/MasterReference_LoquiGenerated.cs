@@ -678,32 +678,27 @@ namespace Mutagen.Bethesda
             return ret;
         }
 
-        public void CopyFieldsFrom(
-            IMasterReferenceGetter rhs,
-            NotifyingFireParameters cmds = null)
+        public void CopyFieldsFrom(IMasterReferenceGetter rhs)
         {
             this.CopyFieldsFrom(
                 rhs: (IMasterReferenceGetter)rhs,
                 def: null,
                 doMasks: false,
                 errorMask: out var errMask,
-                copyMask: null,
-                cmds: cmds);
+                copyMask: null);
         }
 
         public void CopyFieldsFrom(
             IMasterReferenceGetter rhs,
             MasterReference_CopyMask copyMask,
-            IMasterReferenceGetter def = null,
-            NotifyingFireParameters cmds = null)
+            IMasterReferenceGetter def = null)
         {
             this.CopyFieldsFrom(
                 rhs: rhs,
                 def: def,
                 doMasks: false,
                 errorMask: out var errMask,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
         }
 
         public void CopyFieldsFrom(
@@ -711,7 +706,6 @@ namespace Mutagen.Bethesda
             out MasterReference_ErrorMask errorMask,
             MasterReference_CopyMask copyMask = null,
             IMasterReferenceGetter def = null,
-            NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
@@ -720,8 +714,7 @@ namespace Mutagen.Bethesda
                 rhs: rhs,
                 def: def,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
             errorMask = MasterReference_ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -730,7 +723,6 @@ namespace Mutagen.Bethesda
             ErrorMaskBuilder errorMask,
             MasterReference_CopyMask copyMask = null,
             IMasterReferenceGetter def = null,
-            NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
             MasterReferenceCommon.CopyFieldsFrom(
@@ -738,11 +730,10 @@ namespace Mutagen.Bethesda
                 rhs: rhs,
                 def: def,
                 errorMask: errorMask,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
         }
 
-        protected void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
+        protected void SetNthObject(ushort index, object obj)
         {
             MasterReference_FieldIndex enu = (MasterReference_FieldIndex)index;
             switch (enu)
@@ -758,17 +749,17 @@ namespace Mutagen.Bethesda
             }
         }
 
-        partial void ClearPartial(NotifyingUnsetParameters cmds);
+        partial void ClearPartial();
 
-        protected void CallClearPartial_Internal(NotifyingUnsetParameters cmds)
+        protected void CallClearPartial_Internal()
         {
-            ClearPartial(cmds);
+            ClearPartial();
         }
 
-        public void Clear(NotifyingUnsetParameters cmds = null)
+        public void Clear()
         {
-            CallClearPartial_Internal(cmds);
-            MasterReferenceCommon.Clear(this, cmds);
+            CallClearPartial_Internal();
+            MasterReferenceCommon.Clear(this);
         }
 
 
@@ -1033,8 +1024,7 @@ namespace Mutagen.Bethesda.Internals
             IMasterReferenceGetter rhs,
             IMasterReferenceGetter def,
             ErrorMaskBuilder errorMask,
-            MasterReference_CopyMask copyMask,
-            NotifyingFireParameters cmds = null)
+            MasterReference_CopyMask copyMask)
         {
             if (copyMask?.Master ?? true)
             {
@@ -1087,9 +1077,7 @@ namespace Mutagen.Bethesda.Internals
 
         #endregion
 
-        public static void Clear(
-            IMasterReference item,
-            NotifyingUnsetParameters cmds = null)
+        public static void Clear(IMasterReference item)
         {
             item.Master = default(ModKey);
             item.FileSize_Unset();

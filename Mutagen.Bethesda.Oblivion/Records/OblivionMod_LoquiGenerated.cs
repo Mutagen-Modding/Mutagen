@@ -885,7 +885,6 @@ namespace Mutagen.Bethesda.Oblivion
                                 translationMask: translationMask)
                             ,
                             def: null,
-                            cmds: null,
                             copyMask: null,
                             errorMask: errorMask);
                     }
@@ -910,7 +909,6 @@ namespace Mutagen.Bethesda.Oblivion
                                 translationMask: translationMask)
                             ,
                             def: null,
-                            cmds: null,
                             copyMask: null,
                             errorMask: errorMask);
                     }
@@ -3445,7 +3443,6 @@ namespace Mutagen.Bethesda.Oblivion
                         item.TES4.CopyFieldsFrom(
                             rhs: tmpTES4,
                             def: null,
-                            cmds: null,
                             copyMask: null,
                             errorMask: errorMask);
                     }
@@ -3465,7 +3462,6 @@ namespace Mutagen.Bethesda.Oblivion
                             item.GameSettings.CopyFieldsFrom<GameSetting_CopyMask>(
                                 rhs: tmpGameSettings,
                                 def: null,
-                                cmds: null,
                                 copyMask: null,
                                 errorMask: errorMask);
                         }
@@ -3490,7 +3486,6 @@ namespace Mutagen.Bethesda.Oblivion
                             item.Globals.CopyFieldsFrom<Global_CopyMask>(
                                 rhs: tmpGlobals,
                                 def: null,
-                                cmds: null,
                                 copyMask: null,
                                 errorMask: errorMask);
                         }
@@ -3515,7 +3510,6 @@ namespace Mutagen.Bethesda.Oblivion
                             item.Classes.CopyFieldsFrom<Class_CopyMask>(
                                 rhs: tmpClasses,
                                 def: null,
-                                cmds: null,
                                 copyMask: null,
                                 errorMask: errorMask);
                         }
@@ -3540,7 +3534,6 @@ namespace Mutagen.Bethesda.Oblivion
                             item.Factions.CopyFieldsFrom<Faction_CopyMask>(
                                 rhs: tmpFactions,
                                 def: null,
-                                cmds: null,
                                 copyMask: null,
                                 errorMask: errorMask);
                         }
@@ -3565,7 +3558,6 @@ namespace Mutagen.Bethesda.Oblivion
                             item.Hairs.CopyFieldsFrom<Hair_CopyMask>(
                                 rhs: tmpHairs,
                                 def: null,
-                                cmds: null,
                                 copyMask: null,
                                 errorMask: errorMask);
                         }
@@ -3590,7 +3582,6 @@ namespace Mutagen.Bethesda.Oblivion
                             item.Eyes.CopyFieldsFrom<Eye_CopyMask>(
                                 rhs: tmpEyes,
                                 def: null,
-                                cmds: null,
                                 copyMask: null,
                                 errorMask: errorMask);
                         }
@@ -3615,7 +3606,6 @@ namespace Mutagen.Bethesda.Oblivion
                             item.Races.CopyFieldsFrom<Race_CopyMask>(
                                 rhs: tmpRaces,
                                 def: null,
-                                cmds: null,
                                 copyMask: null,
                                 errorMask: errorMask);
                         }
@@ -3640,7 +3630,6 @@ namespace Mutagen.Bethesda.Oblivion
                             item.Sounds.CopyFieldsFrom<Sound_CopyMask>(
                                 rhs: tmpSounds,
                                 def: null,
-                                cmds: null,
                                 copyMask: null,
                                 errorMask: errorMask);
                         }
@@ -3665,7 +3654,6 @@ namespace Mutagen.Bethesda.Oblivion
                             item.Skills.CopyFieldsFrom<SkillRecord_CopyMask>(
                                 rhs: tmpSkills,
                                 def: null,
-                                cmds: null,
                                 copyMask: null,
                                 errorMask: errorMask);
                         }
@@ -3690,7 +3678,6 @@ namespace Mutagen.Bethesda.Oblivion
                             item.MagicEffects.CopyFieldsFrom<MagicEffect_CopyMask>(
                                 rhs: tmpMagicEffects,
                                 def: null,
-                                cmds: null,
                                 copyMask: null,
                                 errorMask: errorMask);
                         }
@@ -3715,7 +3702,6 @@ namespace Mutagen.Bethesda.Oblivion
                             item.Scripts.CopyFieldsFrom<Script_CopyMask>(
                                 rhs: tmpScripts,
                                 def: null,
-                                cmds: null,
                                 copyMask: null,
                                 errorMask: errorMask);
                         }
@@ -3740,7 +3726,6 @@ namespace Mutagen.Bethesda.Oblivion
                             item.LandTextures.CopyFieldsFrom<LandTexture_CopyMask>(
                                 rhs: tmpLandTextures,
                                 def: null,
-                                cmds: null,
                                 copyMask: null,
                                 errorMask: errorMask);
                         }
@@ -3765,7 +3750,6 @@ namespace Mutagen.Bethesda.Oblivion
                             item.Enchantments.CopyFieldsFrom<Enchantment_CopyMask>(
                                 rhs: tmpEnchantments,
                                 def: null,
-                                cmds: null,
                                 copyMask: null,
                                 errorMask: errorMask);
                         }
@@ -3790,7 +3774,6 @@ namespace Mutagen.Bethesda.Oblivion
                             item.Spells.CopyFieldsFrom<SpellUnleveled_CopyMask>(
                                 rhs: tmpSpells,
                                 def: null,
-                                cmds: null,
                                 copyMask: null,
                                 errorMask: errorMask);
                         }
@@ -3815,7 +3798,6 @@ namespace Mutagen.Bethesda.Oblivion
                             item.Birthsigns.CopyFieldsFrom<Birthsign_CopyMask>(
                                 rhs: tmpBirthsigns,
                                 def: null,
-                                cmds: null,
                                 copyMask: null,
                                 errorMask: errorMask);
                         }
@@ -3840,7 +3822,6 @@ namespace Mutagen.Bethesda.Oblivion
                             item.Activators.CopyFieldsFrom<Activator_CopyMask>(
                                 rhs: tmpActivators,
                                 def: null,
-                                cmds: null,
                                 copyMask: null,
                                 errorMask: errorMask);
                         }
@@ -3865,7 +3846,6 @@ namespace Mutagen.Bethesda.Oblivion
                             item.AlchemicalApparatus.CopyFieldsFrom<AlchemicalApparatus_CopyMask>(
                                 rhs: tmpAlchemicalApparatus,
                                 def: null,
-                                cmds: null,
                                 copyMask: null,
                                 errorMask: errorMask);
                         }
@@ -3890,7 +3870,6 @@ namespace Mutagen.Bethesda.Oblivion
                             item.Armors.CopyFieldsFrom<Armor_CopyMask>(
                                 rhs: tmpArmors,
                                 def: null,
-                                cmds: null,
                                 copyMask: null,
                                 errorMask: errorMask);
                         }
@@ -3915,7 +3894,6 @@ namespace Mutagen.Bethesda.Oblivion
                             item.Books.CopyFieldsFrom<Book_CopyMask>(
                                 rhs: tmpBooks,
                                 def: null,
-                                cmds: null,
                                 copyMask: null,
                                 errorMask: errorMask);
                         }
@@ -3940,7 +3918,6 @@ namespace Mutagen.Bethesda.Oblivion
                             item.Clothes.CopyFieldsFrom<Clothing_CopyMask>(
                                 rhs: tmpClothes,
                                 def: null,
-                                cmds: null,
                                 copyMask: null,
                                 errorMask: errorMask);
                         }
@@ -3965,7 +3942,6 @@ namespace Mutagen.Bethesda.Oblivion
                             item.Containers.CopyFieldsFrom<Container_CopyMask>(
                                 rhs: tmpContainers,
                                 def: null,
-                                cmds: null,
                                 copyMask: null,
                                 errorMask: errorMask);
                         }
@@ -3990,7 +3966,6 @@ namespace Mutagen.Bethesda.Oblivion
                             item.Doors.CopyFieldsFrom<Door_CopyMask>(
                                 rhs: tmpDoors,
                                 def: null,
-                                cmds: null,
                                 copyMask: null,
                                 errorMask: errorMask);
                         }
@@ -4015,7 +3990,6 @@ namespace Mutagen.Bethesda.Oblivion
                             item.Ingredients.CopyFieldsFrom<Ingredient_CopyMask>(
                                 rhs: tmpIngredients,
                                 def: null,
-                                cmds: null,
                                 copyMask: null,
                                 errorMask: errorMask);
                         }
@@ -4040,7 +4014,6 @@ namespace Mutagen.Bethesda.Oblivion
                             item.Lights.CopyFieldsFrom<Light_CopyMask>(
                                 rhs: tmpLights,
                                 def: null,
-                                cmds: null,
                                 copyMask: null,
                                 errorMask: errorMask);
                         }
@@ -4065,7 +4038,6 @@ namespace Mutagen.Bethesda.Oblivion
                             item.Miscellaneous.CopyFieldsFrom<Miscellaneous_CopyMask>(
                                 rhs: tmpMiscellaneous,
                                 def: null,
-                                cmds: null,
                                 copyMask: null,
                                 errorMask: errorMask);
                         }
@@ -4090,7 +4062,6 @@ namespace Mutagen.Bethesda.Oblivion
                             item.Statics.CopyFieldsFrom<Static_CopyMask>(
                                 rhs: tmpStatics,
                                 def: null,
-                                cmds: null,
                                 copyMask: null,
                                 errorMask: errorMask);
                         }
@@ -4115,7 +4086,6 @@ namespace Mutagen.Bethesda.Oblivion
                             item.Grasses.CopyFieldsFrom<Grass_CopyMask>(
                                 rhs: tmpGrasses,
                                 def: null,
-                                cmds: null,
                                 copyMask: null,
                                 errorMask: errorMask);
                         }
@@ -4140,7 +4110,6 @@ namespace Mutagen.Bethesda.Oblivion
                             item.Trees.CopyFieldsFrom<Tree_CopyMask>(
                                 rhs: tmpTrees,
                                 def: null,
-                                cmds: null,
                                 copyMask: null,
                                 errorMask: errorMask);
                         }
@@ -4165,7 +4134,6 @@ namespace Mutagen.Bethesda.Oblivion
                             item.Flora.CopyFieldsFrom<Flora_CopyMask>(
                                 rhs: tmpFlora,
                                 def: null,
-                                cmds: null,
                                 copyMask: null,
                                 errorMask: errorMask);
                         }
@@ -4190,7 +4158,6 @@ namespace Mutagen.Bethesda.Oblivion
                             item.Furnature.CopyFieldsFrom<Furnature_CopyMask>(
                                 rhs: tmpFurnature,
                                 def: null,
-                                cmds: null,
                                 copyMask: null,
                                 errorMask: errorMask);
                         }
@@ -4215,7 +4182,6 @@ namespace Mutagen.Bethesda.Oblivion
                             item.Weapons.CopyFieldsFrom<Weapon_CopyMask>(
                                 rhs: tmpWeapons,
                                 def: null,
-                                cmds: null,
                                 copyMask: null,
                                 errorMask: errorMask);
                         }
@@ -4240,7 +4206,6 @@ namespace Mutagen.Bethesda.Oblivion
                             item.Ammo.CopyFieldsFrom<Ammo_CopyMask>(
                                 rhs: tmpAmmo,
                                 def: null,
-                                cmds: null,
                                 copyMask: null,
                                 errorMask: errorMask);
                         }
@@ -4265,7 +4230,6 @@ namespace Mutagen.Bethesda.Oblivion
                             item.NPCs.CopyFieldsFrom<NPC_CopyMask>(
                                 rhs: tmpNPCs,
                                 def: null,
-                                cmds: null,
                                 copyMask: null,
                                 errorMask: errorMask);
                         }
@@ -4290,7 +4254,6 @@ namespace Mutagen.Bethesda.Oblivion
                             item.Creatures.CopyFieldsFrom<Creature_CopyMask>(
                                 rhs: tmpCreatures,
                                 def: null,
-                                cmds: null,
                                 copyMask: null,
                                 errorMask: errorMask);
                         }
@@ -4315,7 +4278,6 @@ namespace Mutagen.Bethesda.Oblivion
                             item.LeveledCreatures.CopyFieldsFrom<LeveledCreature_CopyMask>(
                                 rhs: tmpLeveledCreatures,
                                 def: null,
-                                cmds: null,
                                 copyMask: null,
                                 errorMask: errorMask);
                         }
@@ -4340,7 +4302,6 @@ namespace Mutagen.Bethesda.Oblivion
                             item.SoulGems.CopyFieldsFrom<SoulGem_CopyMask>(
                                 rhs: tmpSoulGems,
                                 def: null,
-                                cmds: null,
                                 copyMask: null,
                                 errorMask: errorMask);
                         }
@@ -4365,7 +4326,6 @@ namespace Mutagen.Bethesda.Oblivion
                             item.Keys.CopyFieldsFrom<Key_CopyMask>(
                                 rhs: tmpKeys,
                                 def: null,
-                                cmds: null,
                                 copyMask: null,
                                 errorMask: errorMask);
                         }
@@ -4390,7 +4350,6 @@ namespace Mutagen.Bethesda.Oblivion
                             item.Potions.CopyFieldsFrom<Potion_CopyMask>(
                                 rhs: tmpPotions,
                                 def: null,
-                                cmds: null,
                                 copyMask: null,
                                 errorMask: errorMask);
                         }
@@ -4415,7 +4374,6 @@ namespace Mutagen.Bethesda.Oblivion
                             item.Subspaces.CopyFieldsFrom<Subspace_CopyMask>(
                                 rhs: tmpSubspaces,
                                 def: null,
-                                cmds: null,
                                 copyMask: null,
                                 errorMask: errorMask);
                         }
@@ -4440,7 +4398,6 @@ namespace Mutagen.Bethesda.Oblivion
                             item.SigilStones.CopyFieldsFrom<SigilStone_CopyMask>(
                                 rhs: tmpSigilStones,
                                 def: null,
-                                cmds: null,
                                 copyMask: null,
                                 errorMask: errorMask);
                         }
@@ -4465,7 +4422,6 @@ namespace Mutagen.Bethesda.Oblivion
                             item.LeveledItems.CopyFieldsFrom<LeveledItem_CopyMask>(
                                 rhs: tmpLeveledItems,
                                 def: null,
-                                cmds: null,
                                 copyMask: null,
                                 errorMask: errorMask);
                         }
@@ -4490,7 +4446,6 @@ namespace Mutagen.Bethesda.Oblivion
                             item.Weathers.CopyFieldsFrom<Weather_CopyMask>(
                                 rhs: tmpWeathers,
                                 def: null,
-                                cmds: null,
                                 copyMask: null,
                                 errorMask: errorMask);
                         }
@@ -4515,7 +4470,6 @@ namespace Mutagen.Bethesda.Oblivion
                             item.Climates.CopyFieldsFrom<Climate_CopyMask>(
                                 rhs: tmpClimates,
                                 def: null,
-                                cmds: null,
                                 copyMask: null,
                                 errorMask: errorMask);
                         }
@@ -4540,7 +4494,6 @@ namespace Mutagen.Bethesda.Oblivion
                             item.Regions.CopyFieldsFrom<Region_CopyMask>(
                                 rhs: tmpRegions,
                                 def: null,
-                                cmds: null,
                                 copyMask: null,
                                 errorMask: errorMask);
                         }
@@ -4565,7 +4518,6 @@ namespace Mutagen.Bethesda.Oblivion
                             item.Cells.CopyFieldsFrom<CellBlock_CopyMask>(
                                 rhs: tmpCells,
                                 def: null,
-                                cmds: null,
                                 copyMask: null,
                                 errorMask: errorMask);
                         }
@@ -4590,7 +4542,6 @@ namespace Mutagen.Bethesda.Oblivion
                             item.Worldspaces.CopyFieldsFrom<Worldspace_CopyMask>(
                                 rhs: tmpWorldspaces,
                                 def: null,
-                                cmds: null,
                                 copyMask: null,
                                 errorMask: errorMask);
                         }
@@ -4615,7 +4566,6 @@ namespace Mutagen.Bethesda.Oblivion
                             item.DialogTopics.CopyFieldsFrom<DialogTopic_CopyMask>(
                                 rhs: tmpDialogTopics,
                                 def: null,
-                                cmds: null,
                                 copyMask: null,
                                 errorMask: errorMask);
                         }
@@ -4640,7 +4590,6 @@ namespace Mutagen.Bethesda.Oblivion
                             item.Quests.CopyFieldsFrom<Quest_CopyMask>(
                                 rhs: tmpQuests,
                                 def: null,
-                                cmds: null,
                                 copyMask: null,
                                 errorMask: errorMask);
                         }
@@ -4665,7 +4614,6 @@ namespace Mutagen.Bethesda.Oblivion
                             item.IdleAnimations.CopyFieldsFrom<IdleAnimation_CopyMask>(
                                 rhs: tmpIdleAnimations,
                                 def: null,
-                                cmds: null,
                                 copyMask: null,
                                 errorMask: errorMask);
                         }
@@ -4690,7 +4638,6 @@ namespace Mutagen.Bethesda.Oblivion
                             item.AIPackages.CopyFieldsFrom<AIPackage_CopyMask>(
                                 rhs: tmpAIPackages,
                                 def: null,
-                                cmds: null,
                                 copyMask: null,
                                 errorMask: errorMask);
                         }
@@ -4715,7 +4662,6 @@ namespace Mutagen.Bethesda.Oblivion
                             item.CombatStyles.CopyFieldsFrom<CombatStyle_CopyMask>(
                                 rhs: tmpCombatStyles,
                                 def: null,
-                                cmds: null,
                                 copyMask: null,
                                 errorMask: errorMask);
                         }
@@ -4740,7 +4686,6 @@ namespace Mutagen.Bethesda.Oblivion
                             item.LoadScreens.CopyFieldsFrom<LoadScreen_CopyMask>(
                                 rhs: tmpLoadScreens,
                                 def: null,
-                                cmds: null,
                                 copyMask: null,
                                 errorMask: errorMask);
                         }
@@ -4765,7 +4710,6 @@ namespace Mutagen.Bethesda.Oblivion
                             item.LeveledSpells.CopyFieldsFrom<LeveledSpell_CopyMask>(
                                 rhs: tmpLeveledSpells,
                                 def: null,
-                                cmds: null,
                                 copyMask: null,
                                 errorMask: errorMask);
                         }
@@ -4790,7 +4734,6 @@ namespace Mutagen.Bethesda.Oblivion
                             item.AnimatedObjects.CopyFieldsFrom<AnimatedObject_CopyMask>(
                                 rhs: tmpAnimatedObjects,
                                 def: null,
-                                cmds: null,
                                 copyMask: null,
                                 errorMask: errorMask);
                         }
@@ -4815,7 +4758,6 @@ namespace Mutagen.Bethesda.Oblivion
                             item.Waters.CopyFieldsFrom<Water_CopyMask>(
                                 rhs: tmpWaters,
                                 def: null,
-                                cmds: null,
                                 copyMask: null,
                                 errorMask: errorMask);
                         }
@@ -4840,7 +4782,6 @@ namespace Mutagen.Bethesda.Oblivion
                             item.EffectShaders.CopyFieldsFrom<EffectShader_CopyMask>(
                                 rhs: tmpEffectShaders,
                                 def: null,
-                                cmds: null,
                                 copyMask: null,
                                 errorMask: errorMask);
                         }
@@ -4912,32 +4853,27 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public void CopyFieldsFrom(
-            IOblivionModGetter rhs,
-            NotifyingFireParameters cmds = null)
+        public void CopyFieldsFrom(IOblivionModGetter rhs)
         {
             this.CopyFieldsFrom(
                 rhs: (IOblivionModGetter)rhs,
                 def: null,
                 doMasks: false,
                 errorMask: out var errMask,
-                copyMask: null,
-                cmds: cmds);
+                copyMask: null);
         }
 
         public void CopyFieldsFrom(
             IOblivionModGetter rhs,
             OblivionMod_CopyMask copyMask,
-            IOblivionModGetter def = null,
-            NotifyingFireParameters cmds = null)
+            IOblivionModGetter def = null)
         {
             this.CopyFieldsFrom(
                 rhs: rhs,
                 def: def,
                 doMasks: false,
                 errorMask: out var errMask,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
         }
 
         public void CopyFieldsFrom(
@@ -4945,7 +4881,6 @@ namespace Mutagen.Bethesda.Oblivion
             out OblivionMod_ErrorMask errorMask,
             OblivionMod_CopyMask copyMask = null,
             IOblivionModGetter def = null,
-            NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
@@ -4954,8 +4889,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 def: def,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
             errorMask = OblivionMod_ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -4964,7 +4898,6 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMask,
             OblivionMod_CopyMask copyMask = null,
             IOblivionModGetter def = null,
-            NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
             OblivionModCommon.CopyFieldsFrom(
@@ -4972,11 +4905,10 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 def: def,
                 errorMask: errorMask,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
         }
 
-        protected void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
+        protected void SetNthObject(ushort index, object obj)
         {
             OblivionMod_FieldIndex enu = (OblivionMod_FieldIndex)index;
             switch (enu)
@@ -5157,17 +5089,17 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        partial void ClearPartial(NotifyingUnsetParameters cmds);
+        partial void ClearPartial();
 
-        protected void CallClearPartial_Internal(NotifyingUnsetParameters cmds)
+        protected void CallClearPartial_Internal()
         {
-            ClearPartial(cmds);
+            ClearPartial();
         }
 
-        public void Clear(NotifyingUnsetParameters cmds = null)
+        public void Clear()
         {
-            CallClearPartial_Internal(cmds);
-            OblivionModCommon.Clear(this, cmds);
+            CallClearPartial_Internal();
+            OblivionModCommon.Clear(this);
         }
 
 
@@ -6481,8 +6413,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IOblivionModGetter rhs,
             IOblivionModGetter def,
             ErrorMaskBuilder errorMask,
-            OblivionMod_CopyMask copyMask,
-            NotifyingFireParameters cmds = null)
+            OblivionMod_CopyMask copyMask)
         {
             if (copyMask?.TES4.Overall ?? true)
             {
@@ -6494,8 +6425,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         rhs: rhs.TES4,
                         def: def?.TES4,
                         errorMask: errorMask,
-                        copyMask: copyMask?.TES4.Specific,
-                        cmds: cmds);
+                        copyMask: copyMask?.TES4.Specific);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -6517,8 +6447,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         rhs: rhs.GameSettings,
                         def: def?.GameSettings,
                         errorMask: errorMask,
-                        copyMask: copyMask?.GameSettings.Specific,
-                        cmds: cmds);
+                        copyMask: copyMask?.GameSettings.Specific);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -6540,8 +6469,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         rhs: rhs.Globals,
                         def: def?.Globals,
                         errorMask: errorMask,
-                        copyMask: copyMask?.Globals.Specific,
-                        cmds: cmds);
+                        copyMask: copyMask?.Globals.Specific);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -6563,8 +6491,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         rhs: rhs.Classes,
                         def: def?.Classes,
                         errorMask: errorMask,
-                        copyMask: copyMask?.Classes.Specific,
-                        cmds: cmds);
+                        copyMask: copyMask?.Classes.Specific);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -6586,8 +6513,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         rhs: rhs.Factions,
                         def: def?.Factions,
                         errorMask: errorMask,
-                        copyMask: copyMask?.Factions.Specific,
-                        cmds: cmds);
+                        copyMask: copyMask?.Factions.Specific);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -6609,8 +6535,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         rhs: rhs.Hairs,
                         def: def?.Hairs,
                         errorMask: errorMask,
-                        copyMask: copyMask?.Hairs.Specific,
-                        cmds: cmds);
+                        copyMask: copyMask?.Hairs.Specific);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -6632,8 +6557,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         rhs: rhs.Eyes,
                         def: def?.Eyes,
                         errorMask: errorMask,
-                        copyMask: copyMask?.Eyes.Specific,
-                        cmds: cmds);
+                        copyMask: copyMask?.Eyes.Specific);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -6655,8 +6579,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         rhs: rhs.Races,
                         def: def?.Races,
                         errorMask: errorMask,
-                        copyMask: copyMask?.Races.Specific,
-                        cmds: cmds);
+                        copyMask: copyMask?.Races.Specific);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -6678,8 +6601,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         rhs: rhs.Sounds,
                         def: def?.Sounds,
                         errorMask: errorMask,
-                        copyMask: copyMask?.Sounds.Specific,
-                        cmds: cmds);
+                        copyMask: copyMask?.Sounds.Specific);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -6701,8 +6623,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         rhs: rhs.Skills,
                         def: def?.Skills,
                         errorMask: errorMask,
-                        copyMask: copyMask?.Skills.Specific,
-                        cmds: cmds);
+                        copyMask: copyMask?.Skills.Specific);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -6724,8 +6645,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         rhs: rhs.MagicEffects,
                         def: def?.MagicEffects,
                         errorMask: errorMask,
-                        copyMask: copyMask?.MagicEffects.Specific,
-                        cmds: cmds);
+                        copyMask: copyMask?.MagicEffects.Specific);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -6747,8 +6667,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         rhs: rhs.Scripts,
                         def: def?.Scripts,
                         errorMask: errorMask,
-                        copyMask: copyMask?.Scripts.Specific,
-                        cmds: cmds);
+                        copyMask: copyMask?.Scripts.Specific);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -6770,8 +6689,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         rhs: rhs.LandTextures,
                         def: def?.LandTextures,
                         errorMask: errorMask,
-                        copyMask: copyMask?.LandTextures.Specific,
-                        cmds: cmds);
+                        copyMask: copyMask?.LandTextures.Specific);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -6793,8 +6711,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         rhs: rhs.Enchantments,
                         def: def?.Enchantments,
                         errorMask: errorMask,
-                        copyMask: copyMask?.Enchantments.Specific,
-                        cmds: cmds);
+                        copyMask: copyMask?.Enchantments.Specific);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -6816,8 +6733,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         rhs: rhs.Spells,
                         def: def?.Spells,
                         errorMask: errorMask,
-                        copyMask: copyMask?.Spells.Specific,
-                        cmds: cmds);
+                        copyMask: copyMask?.Spells.Specific);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -6839,8 +6755,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         rhs: rhs.Birthsigns,
                         def: def?.Birthsigns,
                         errorMask: errorMask,
-                        copyMask: copyMask?.Birthsigns.Specific,
-                        cmds: cmds);
+                        copyMask: copyMask?.Birthsigns.Specific);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -6862,8 +6777,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         rhs: rhs.Activators,
                         def: def?.Activators,
                         errorMask: errorMask,
-                        copyMask: copyMask?.Activators.Specific,
-                        cmds: cmds);
+                        copyMask: copyMask?.Activators.Specific);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -6885,8 +6799,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         rhs: rhs.AlchemicalApparatus,
                         def: def?.AlchemicalApparatus,
                         errorMask: errorMask,
-                        copyMask: copyMask?.AlchemicalApparatus.Specific,
-                        cmds: cmds);
+                        copyMask: copyMask?.AlchemicalApparatus.Specific);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -6908,8 +6821,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         rhs: rhs.Armors,
                         def: def?.Armors,
                         errorMask: errorMask,
-                        copyMask: copyMask?.Armors.Specific,
-                        cmds: cmds);
+                        copyMask: copyMask?.Armors.Specific);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -6931,8 +6843,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         rhs: rhs.Books,
                         def: def?.Books,
                         errorMask: errorMask,
-                        copyMask: copyMask?.Books.Specific,
-                        cmds: cmds);
+                        copyMask: copyMask?.Books.Specific);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -6954,8 +6865,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         rhs: rhs.Clothes,
                         def: def?.Clothes,
                         errorMask: errorMask,
-                        copyMask: copyMask?.Clothes.Specific,
-                        cmds: cmds);
+                        copyMask: copyMask?.Clothes.Specific);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -6977,8 +6887,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         rhs: rhs.Containers,
                         def: def?.Containers,
                         errorMask: errorMask,
-                        copyMask: copyMask?.Containers.Specific,
-                        cmds: cmds);
+                        copyMask: copyMask?.Containers.Specific);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -7000,8 +6909,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         rhs: rhs.Doors,
                         def: def?.Doors,
                         errorMask: errorMask,
-                        copyMask: copyMask?.Doors.Specific,
-                        cmds: cmds);
+                        copyMask: copyMask?.Doors.Specific);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -7023,8 +6931,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         rhs: rhs.Ingredients,
                         def: def?.Ingredients,
                         errorMask: errorMask,
-                        copyMask: copyMask?.Ingredients.Specific,
-                        cmds: cmds);
+                        copyMask: copyMask?.Ingredients.Specific);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -7046,8 +6953,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         rhs: rhs.Lights,
                         def: def?.Lights,
                         errorMask: errorMask,
-                        copyMask: copyMask?.Lights.Specific,
-                        cmds: cmds);
+                        copyMask: copyMask?.Lights.Specific);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -7069,8 +6975,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         rhs: rhs.Miscellaneous,
                         def: def?.Miscellaneous,
                         errorMask: errorMask,
-                        copyMask: copyMask?.Miscellaneous.Specific,
-                        cmds: cmds);
+                        copyMask: copyMask?.Miscellaneous.Specific);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -7092,8 +6997,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         rhs: rhs.Statics,
                         def: def?.Statics,
                         errorMask: errorMask,
-                        copyMask: copyMask?.Statics.Specific,
-                        cmds: cmds);
+                        copyMask: copyMask?.Statics.Specific);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -7115,8 +7019,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         rhs: rhs.Grasses,
                         def: def?.Grasses,
                         errorMask: errorMask,
-                        copyMask: copyMask?.Grasses.Specific,
-                        cmds: cmds);
+                        copyMask: copyMask?.Grasses.Specific);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -7138,8 +7041,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         rhs: rhs.Trees,
                         def: def?.Trees,
                         errorMask: errorMask,
-                        copyMask: copyMask?.Trees.Specific,
-                        cmds: cmds);
+                        copyMask: copyMask?.Trees.Specific);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -7161,8 +7063,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         rhs: rhs.Flora,
                         def: def?.Flora,
                         errorMask: errorMask,
-                        copyMask: copyMask?.Flora.Specific,
-                        cmds: cmds);
+                        copyMask: copyMask?.Flora.Specific);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -7184,8 +7085,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         rhs: rhs.Furnature,
                         def: def?.Furnature,
                         errorMask: errorMask,
-                        copyMask: copyMask?.Furnature.Specific,
-                        cmds: cmds);
+                        copyMask: copyMask?.Furnature.Specific);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -7207,8 +7107,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         rhs: rhs.Weapons,
                         def: def?.Weapons,
                         errorMask: errorMask,
-                        copyMask: copyMask?.Weapons.Specific,
-                        cmds: cmds);
+                        copyMask: copyMask?.Weapons.Specific);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -7230,8 +7129,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         rhs: rhs.Ammo,
                         def: def?.Ammo,
                         errorMask: errorMask,
-                        copyMask: copyMask?.Ammo.Specific,
-                        cmds: cmds);
+                        copyMask: copyMask?.Ammo.Specific);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -7253,8 +7151,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         rhs: rhs.NPCs,
                         def: def?.NPCs,
                         errorMask: errorMask,
-                        copyMask: copyMask?.NPCs.Specific,
-                        cmds: cmds);
+                        copyMask: copyMask?.NPCs.Specific);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -7276,8 +7173,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         rhs: rhs.Creatures,
                         def: def?.Creatures,
                         errorMask: errorMask,
-                        copyMask: copyMask?.Creatures.Specific,
-                        cmds: cmds);
+                        copyMask: copyMask?.Creatures.Specific);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -7299,8 +7195,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         rhs: rhs.LeveledCreatures,
                         def: def?.LeveledCreatures,
                         errorMask: errorMask,
-                        copyMask: copyMask?.LeveledCreatures.Specific,
-                        cmds: cmds);
+                        copyMask: copyMask?.LeveledCreatures.Specific);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -7322,8 +7217,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         rhs: rhs.SoulGems,
                         def: def?.SoulGems,
                         errorMask: errorMask,
-                        copyMask: copyMask?.SoulGems.Specific,
-                        cmds: cmds);
+                        copyMask: copyMask?.SoulGems.Specific);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -7345,8 +7239,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         rhs: rhs.Keys,
                         def: def?.Keys,
                         errorMask: errorMask,
-                        copyMask: copyMask?.Keys.Specific,
-                        cmds: cmds);
+                        copyMask: copyMask?.Keys.Specific);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -7368,8 +7261,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         rhs: rhs.Potions,
                         def: def?.Potions,
                         errorMask: errorMask,
-                        copyMask: copyMask?.Potions.Specific,
-                        cmds: cmds);
+                        copyMask: copyMask?.Potions.Specific);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -7391,8 +7283,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         rhs: rhs.Subspaces,
                         def: def?.Subspaces,
                         errorMask: errorMask,
-                        copyMask: copyMask?.Subspaces.Specific,
-                        cmds: cmds);
+                        copyMask: copyMask?.Subspaces.Specific);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -7414,8 +7305,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         rhs: rhs.SigilStones,
                         def: def?.SigilStones,
                         errorMask: errorMask,
-                        copyMask: copyMask?.SigilStones.Specific,
-                        cmds: cmds);
+                        copyMask: copyMask?.SigilStones.Specific);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -7437,8 +7327,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         rhs: rhs.LeveledItems,
                         def: def?.LeveledItems,
                         errorMask: errorMask,
-                        copyMask: copyMask?.LeveledItems.Specific,
-                        cmds: cmds);
+                        copyMask: copyMask?.LeveledItems.Specific);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -7460,8 +7349,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         rhs: rhs.Weathers,
                         def: def?.Weathers,
                         errorMask: errorMask,
-                        copyMask: copyMask?.Weathers.Specific,
-                        cmds: cmds);
+                        copyMask: copyMask?.Weathers.Specific);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -7483,8 +7371,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         rhs: rhs.Climates,
                         def: def?.Climates,
                         errorMask: errorMask,
-                        copyMask: copyMask?.Climates.Specific,
-                        cmds: cmds);
+                        copyMask: copyMask?.Climates.Specific);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -7506,8 +7393,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         rhs: rhs.Regions,
                         def: def?.Regions,
                         errorMask: errorMask,
-                        copyMask: copyMask?.Regions.Specific,
-                        cmds: cmds);
+                        copyMask: copyMask?.Regions.Specific);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -7529,8 +7415,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         rhs: rhs.Cells,
                         def: def?.Cells,
                         errorMask: errorMask,
-                        copyMask: copyMask?.Cells.Specific,
-                        cmds: cmds);
+                        copyMask: copyMask?.Cells.Specific);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -7552,8 +7437,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         rhs: rhs.Worldspaces,
                         def: def?.Worldspaces,
                         errorMask: errorMask,
-                        copyMask: copyMask?.Worldspaces.Specific,
-                        cmds: cmds);
+                        copyMask: copyMask?.Worldspaces.Specific);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -7575,8 +7459,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         rhs: rhs.DialogTopics,
                         def: def?.DialogTopics,
                         errorMask: errorMask,
-                        copyMask: copyMask?.DialogTopics.Specific,
-                        cmds: cmds);
+                        copyMask: copyMask?.DialogTopics.Specific);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -7598,8 +7481,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         rhs: rhs.Quests,
                         def: def?.Quests,
                         errorMask: errorMask,
-                        copyMask: copyMask?.Quests.Specific,
-                        cmds: cmds);
+                        copyMask: copyMask?.Quests.Specific);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -7621,8 +7503,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         rhs: rhs.IdleAnimations,
                         def: def?.IdleAnimations,
                         errorMask: errorMask,
-                        copyMask: copyMask?.IdleAnimations.Specific,
-                        cmds: cmds);
+                        copyMask: copyMask?.IdleAnimations.Specific);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -7644,8 +7525,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         rhs: rhs.AIPackages,
                         def: def?.AIPackages,
                         errorMask: errorMask,
-                        copyMask: copyMask?.AIPackages.Specific,
-                        cmds: cmds);
+                        copyMask: copyMask?.AIPackages.Specific);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -7667,8 +7547,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         rhs: rhs.CombatStyles,
                         def: def?.CombatStyles,
                         errorMask: errorMask,
-                        copyMask: copyMask?.CombatStyles.Specific,
-                        cmds: cmds);
+                        copyMask: copyMask?.CombatStyles.Specific);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -7690,8 +7569,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         rhs: rhs.LoadScreens,
                         def: def?.LoadScreens,
                         errorMask: errorMask,
-                        copyMask: copyMask?.LoadScreens.Specific,
-                        cmds: cmds);
+                        copyMask: copyMask?.LoadScreens.Specific);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -7713,8 +7591,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         rhs: rhs.LeveledSpells,
                         def: def?.LeveledSpells,
                         errorMask: errorMask,
-                        copyMask: copyMask?.LeveledSpells.Specific,
-                        cmds: cmds);
+                        copyMask: copyMask?.LeveledSpells.Specific);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -7736,8 +7613,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         rhs: rhs.AnimatedObjects,
                         def: def?.AnimatedObjects,
                         errorMask: errorMask,
-                        copyMask: copyMask?.AnimatedObjects.Specific,
-                        cmds: cmds);
+                        copyMask: copyMask?.AnimatedObjects.Specific);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -7759,8 +7635,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         rhs: rhs.Waters,
                         def: def?.Waters,
                         errorMask: errorMask,
-                        copyMask: copyMask?.Waters.Specific,
-                        cmds: cmds);
+                        copyMask: copyMask?.Waters.Specific);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -7782,8 +7657,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         rhs: rhs.EffectShaders,
                         def: def?.EffectShaders,
                         errorMask: errorMask,
-                        copyMask: copyMask?.EffectShaders.Specific,
-                        cmds: cmds);
+                        copyMask: copyMask?.EffectShaders.Specific);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -7799,9 +7673,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void Clear(
-            IOblivionMod item,
-            NotifyingUnsetParameters cmds = null)
+        public static void Clear(IOblivionMod item)
         {
         }
 
@@ -8887,7 +8759,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 translationMask: translationMask)
                             ,
                             def: null,
-                            cmds: null,
                             copyMask: null,
                             errorMask: errorMask);
                     }
@@ -8912,7 +8783,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 translationMask: translationMask)
                             ,
                             def: null,
-                            cmds: null,
                             copyMask: null,
                             errorMask: errorMask);
                     }
@@ -8937,7 +8807,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 translationMask: translationMask)
                             ,
                             def: null,
-                            cmds: null,
                             copyMask: null,
                             errorMask: errorMask);
                     }
@@ -8962,7 +8831,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 translationMask: translationMask)
                             ,
                             def: null,
-                            cmds: null,
                             copyMask: null,
                             errorMask: errorMask);
                     }
@@ -8987,7 +8855,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 translationMask: translationMask)
                             ,
                             def: null,
-                            cmds: null,
                             copyMask: null,
                             errorMask: errorMask);
                     }
@@ -9012,7 +8879,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 translationMask: translationMask)
                             ,
                             def: null,
-                            cmds: null,
                             copyMask: null,
                             errorMask: errorMask);
                     }
@@ -9037,7 +8903,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 translationMask: translationMask)
                             ,
                             def: null,
-                            cmds: null,
                             copyMask: null,
                             errorMask: errorMask);
                     }
@@ -9062,7 +8927,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 translationMask: translationMask)
                             ,
                             def: null,
-                            cmds: null,
                             copyMask: null,
                             errorMask: errorMask);
                     }
@@ -9087,7 +8951,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 translationMask: translationMask)
                             ,
                             def: null,
-                            cmds: null,
                             copyMask: null,
                             errorMask: errorMask);
                     }
@@ -9112,7 +8975,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 translationMask: translationMask)
                             ,
                             def: null,
-                            cmds: null,
                             copyMask: null,
                             errorMask: errorMask);
                     }
@@ -9137,7 +8999,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 translationMask: translationMask)
                             ,
                             def: null,
-                            cmds: null,
                             copyMask: null,
                             errorMask: errorMask);
                     }
@@ -9162,7 +9023,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 translationMask: translationMask)
                             ,
                             def: null,
-                            cmds: null,
                             copyMask: null,
                             errorMask: errorMask);
                     }
@@ -9187,7 +9047,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 translationMask: translationMask)
                             ,
                             def: null,
-                            cmds: null,
                             copyMask: null,
                             errorMask: errorMask);
                     }
@@ -9212,7 +9071,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 translationMask: translationMask)
                             ,
                             def: null,
-                            cmds: null,
                             copyMask: null,
                             errorMask: errorMask);
                     }
@@ -9237,7 +9095,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 translationMask: translationMask)
                             ,
                             def: null,
-                            cmds: null,
                             copyMask: null,
                             errorMask: errorMask);
                     }
@@ -9262,7 +9119,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 translationMask: translationMask)
                             ,
                             def: null,
-                            cmds: null,
                             copyMask: null,
                             errorMask: errorMask);
                     }
@@ -9287,7 +9143,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 translationMask: translationMask)
                             ,
                             def: null,
-                            cmds: null,
                             copyMask: null,
                             errorMask: errorMask);
                     }
@@ -9312,7 +9167,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 translationMask: translationMask)
                             ,
                             def: null,
-                            cmds: null,
                             copyMask: null,
                             errorMask: errorMask);
                     }
@@ -9337,7 +9191,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 translationMask: translationMask)
                             ,
                             def: null,
-                            cmds: null,
                             copyMask: null,
                             errorMask: errorMask);
                     }
@@ -9362,7 +9215,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 translationMask: translationMask)
                             ,
                             def: null,
-                            cmds: null,
                             copyMask: null,
                             errorMask: errorMask);
                     }
@@ -9387,7 +9239,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 translationMask: translationMask)
                             ,
                             def: null,
-                            cmds: null,
                             copyMask: null,
                             errorMask: errorMask);
                     }
@@ -9412,7 +9263,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 translationMask: translationMask)
                             ,
                             def: null,
-                            cmds: null,
                             copyMask: null,
                             errorMask: errorMask);
                     }
@@ -9437,7 +9287,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 translationMask: translationMask)
                             ,
                             def: null,
-                            cmds: null,
                             copyMask: null,
                             errorMask: errorMask);
                     }
@@ -9462,7 +9311,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 translationMask: translationMask)
                             ,
                             def: null,
-                            cmds: null,
                             copyMask: null,
                             errorMask: errorMask);
                     }
@@ -9487,7 +9335,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 translationMask: translationMask)
                             ,
                             def: null,
-                            cmds: null,
                             copyMask: null,
                             errorMask: errorMask);
                     }
@@ -9512,7 +9359,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 translationMask: translationMask)
                             ,
                             def: null,
-                            cmds: null,
                             copyMask: null,
                             errorMask: errorMask);
                     }
@@ -9537,7 +9383,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 translationMask: translationMask)
                             ,
                             def: null,
-                            cmds: null,
                             copyMask: null,
                             errorMask: errorMask);
                     }
@@ -9562,7 +9407,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 translationMask: translationMask)
                             ,
                             def: null,
-                            cmds: null,
                             copyMask: null,
                             errorMask: errorMask);
                     }
@@ -9587,7 +9431,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 translationMask: translationMask)
                             ,
                             def: null,
-                            cmds: null,
                             copyMask: null,
                             errorMask: errorMask);
                     }
@@ -9612,7 +9455,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 translationMask: translationMask)
                             ,
                             def: null,
-                            cmds: null,
                             copyMask: null,
                             errorMask: errorMask);
                     }
@@ -9637,7 +9479,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 translationMask: translationMask)
                             ,
                             def: null,
-                            cmds: null,
                             copyMask: null,
                             errorMask: errorMask);
                     }
@@ -9662,7 +9503,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 translationMask: translationMask)
                             ,
                             def: null,
-                            cmds: null,
                             copyMask: null,
                             errorMask: errorMask);
                     }
@@ -9687,7 +9527,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 translationMask: translationMask)
                             ,
                             def: null,
-                            cmds: null,
                             copyMask: null,
                             errorMask: errorMask);
                     }
@@ -9712,7 +9551,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 translationMask: translationMask)
                             ,
                             def: null,
-                            cmds: null,
                             copyMask: null,
                             errorMask: errorMask);
                     }
@@ -9737,7 +9575,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 translationMask: translationMask)
                             ,
                             def: null,
-                            cmds: null,
                             copyMask: null,
                             errorMask: errorMask);
                     }
@@ -9762,7 +9599,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 translationMask: translationMask)
                             ,
                             def: null,
-                            cmds: null,
                             copyMask: null,
                             errorMask: errorMask);
                     }
@@ -9787,7 +9623,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 translationMask: translationMask)
                             ,
                             def: null,
-                            cmds: null,
                             copyMask: null,
                             errorMask: errorMask);
                     }
@@ -9812,7 +9647,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 translationMask: translationMask)
                             ,
                             def: null,
-                            cmds: null,
                             copyMask: null,
                             errorMask: errorMask);
                     }
@@ -9837,7 +9671,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 translationMask: translationMask)
                             ,
                             def: null,
-                            cmds: null,
                             copyMask: null,
                             errorMask: errorMask);
                     }
@@ -9862,7 +9695,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 translationMask: translationMask)
                             ,
                             def: null,
-                            cmds: null,
                             copyMask: null,
                             errorMask: errorMask);
                     }
@@ -9887,7 +9719,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 translationMask: translationMask)
                             ,
                             def: null,
-                            cmds: null,
                             copyMask: null,
                             errorMask: errorMask);
                     }
@@ -9912,7 +9743,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 translationMask: translationMask)
                             ,
                             def: null,
-                            cmds: null,
                             copyMask: null,
                             errorMask: errorMask);
                     }
@@ -9937,7 +9767,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 translationMask: translationMask)
                             ,
                             def: null,
-                            cmds: null,
                             copyMask: null,
                             errorMask: errorMask);
                     }
@@ -9962,7 +9791,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 translationMask: translationMask)
                             ,
                             def: null,
-                            cmds: null,
                             copyMask: null,
                             errorMask: errorMask);
                     }
@@ -9987,7 +9815,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 translationMask: translationMask)
                             ,
                             def: null,
-                            cmds: null,
                             copyMask: null,
                             errorMask: errorMask);
                     }
@@ -10012,7 +9839,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 translationMask: translationMask)
                             ,
                             def: null,
-                            cmds: null,
                             copyMask: null,
                             errorMask: errorMask);
                     }
@@ -10037,7 +9863,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 translationMask: translationMask)
                             ,
                             def: null,
-                            cmds: null,
                             copyMask: null,
                             errorMask: errorMask);
                     }
@@ -10062,7 +9887,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 translationMask: translationMask)
                             ,
                             def: null,
-                            cmds: null,
                             copyMask: null,
                             errorMask: errorMask);
                     }
@@ -10087,7 +9911,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 translationMask: translationMask)
                             ,
                             def: null,
-                            cmds: null,
                             copyMask: null,
                             errorMask: errorMask);
                     }
@@ -10112,7 +9935,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 translationMask: translationMask)
                             ,
                             def: null,
-                            cmds: null,
                             copyMask: null,
                             errorMask: errorMask);
                     }
@@ -10137,7 +9959,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 translationMask: translationMask)
                             ,
                             def: null,
-                            cmds: null,
                             copyMask: null,
                             errorMask: errorMask);
                     }
@@ -10162,7 +9983,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 translationMask: translationMask)
                             ,
                             def: null,
-                            cmds: null,
                             copyMask: null,
                             errorMask: errorMask);
                     }
@@ -10187,7 +10007,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 translationMask: translationMask)
                             ,
                             def: null,
-                            cmds: null,
                             copyMask: null,
                             errorMask: errorMask);
                     }
@@ -10212,7 +10031,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 translationMask: translationMask)
                             ,
                             def: null,
-                            cmds: null,
                             copyMask: null,
                             errorMask: errorMask);
                     }
@@ -10237,7 +10055,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 translationMask: translationMask)
                             ,
                             def: null,
-                            cmds: null,
                             copyMask: null,
                             errorMask: errorMask);
                     }

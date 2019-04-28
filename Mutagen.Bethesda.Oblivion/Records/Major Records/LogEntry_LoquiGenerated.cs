@@ -857,32 +857,27 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public void CopyFieldsFrom(
-            ILogEntryGetter rhs,
-            NotifyingFireParameters cmds = null)
+        public void CopyFieldsFrom(ILogEntryGetter rhs)
         {
             this.CopyFieldsFrom(
                 rhs: (ILogEntryGetter)rhs,
                 def: null,
                 doMasks: false,
                 errorMask: out var errMask,
-                copyMask: null,
-                cmds: cmds);
+                copyMask: null);
         }
 
         public void CopyFieldsFrom(
             ILogEntryGetter rhs,
             LogEntry_CopyMask copyMask,
-            ILogEntryGetter def = null,
-            NotifyingFireParameters cmds = null)
+            ILogEntryGetter def = null)
         {
             this.CopyFieldsFrom(
                 rhs: rhs,
                 def: def,
                 doMasks: false,
                 errorMask: out var errMask,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
         }
 
         public void CopyFieldsFrom(
@@ -890,7 +885,6 @@ namespace Mutagen.Bethesda.Oblivion
             out LogEntry_ErrorMask errorMask,
             LogEntry_CopyMask copyMask = null,
             ILogEntryGetter def = null,
-            NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
@@ -899,8 +893,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 def: def,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
             errorMask = LogEntry_ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -909,7 +902,6 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMask,
             LogEntry_CopyMask copyMask = null,
             ILogEntryGetter def = null,
-            NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
             LogEntryCommon.CopyFieldsFrom(
@@ -917,11 +909,10 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 def: def,
                 errorMask: errorMask,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
         }
 
-        protected void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
+        protected void SetNthObject(ushort index, object obj)
         {
             LogEntry_FieldIndex enu = (LogEntry_FieldIndex)index;
             switch (enu)
@@ -943,17 +934,17 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        partial void ClearPartial(NotifyingUnsetParameters cmds);
+        partial void ClearPartial();
 
-        protected void CallClearPartial_Internal(NotifyingUnsetParameters cmds)
+        protected void CallClearPartial_Internal()
         {
-            ClearPartial(cmds);
+            ClearPartial();
         }
 
-        public void Clear(NotifyingUnsetParameters cmds = null)
+        public void Clear()
         {
-            CallClearPartial_Internal(cmds);
-            LogEntryCommon.Clear(this, cmds);
+            CallClearPartial_Internal();
+            LogEntryCommon.Clear(this);
         }
 
 
@@ -1295,8 +1286,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ILogEntryGetter rhs,
             ILogEntryGetter def,
             ErrorMaskBuilder errorMask,
-            LogEntry_CopyMask copyMask,
-            NotifyingFireParameters cmds = null)
+            LogEntry_CopyMask copyMask)
         {
             if (copyMask?.Flags ?? true)
             {
@@ -1417,8 +1407,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                     rhs: rhs.ResultScript,
                                     def: def?.ResultScript,
                                     errorMask: errorMask,
-                                    copyMask: copyMask?.ResultScript.Specific,
-                                    cmds: cmds);
+                                    copyMask: copyMask?.ResultScript.Specific);
                                 break;
                             case CopyOption.MakeCopy:
                                 item.ResultScript = ScriptFields.Copy(
@@ -1451,9 +1440,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void Clear(
-            ILogEntry item,
-            NotifyingUnsetParameters cmds = null)
+        public static void Clear(ILogEntry item)
         {
             item.Flags_Unset();
             item.Conditions.Unset();

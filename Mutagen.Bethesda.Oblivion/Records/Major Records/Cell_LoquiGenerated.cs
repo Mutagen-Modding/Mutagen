@@ -1667,32 +1667,27 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public override void CopyFieldsFrom(
-            IMajorRecordGetter rhs,
-            NotifyingFireParameters cmds = null)
+        public override void CopyFieldsFrom(IMajorRecordGetter rhs)
         {
             this.CopyFieldsFrom(
                 rhs: (ICellGetter)rhs,
                 def: null,
                 doMasks: false,
                 errorMask: out var errMask,
-                copyMask: null,
-                cmds: cmds);
+                copyMask: null);
         }
 
         public void CopyFieldsFrom(
             ICellGetter rhs,
             Cell_CopyMask copyMask,
-            ICellGetter def = null,
-            NotifyingFireParameters cmds = null)
+            ICellGetter def = null)
         {
             this.CopyFieldsFrom(
                 rhs: rhs,
                 def: def,
                 doMasks: false,
                 errorMask: out var errMask,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
         }
 
         public void CopyFieldsFrom(
@@ -1700,7 +1695,6 @@ namespace Mutagen.Bethesda.Oblivion
             out Cell_ErrorMask errorMask,
             Cell_CopyMask copyMask = null,
             ICellGetter def = null,
-            NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
@@ -1709,8 +1703,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 def: def,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
             errorMask = Cell_ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -1719,7 +1712,6 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMask,
             Cell_CopyMask copyMask = null,
             ICellGetter def = null,
-            NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
             CellCommon.CopyFieldsFrom(
@@ -1727,11 +1719,10 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 def: def,
                 errorMask: errorMask,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
         }
 
-        protected override void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
+        protected override void SetNthObject(ushort index, object obj)
         {
             Cell_FieldIndex enu = (Cell_FieldIndex)index;
             switch (enu)
@@ -1800,15 +1791,15 @@ namespace Mutagen.Bethesda.Oblivion
                     this._VisibleWhenDistant.SetTo((IEnumerable<IPlaced>)obj);
                     break;
                 default:
-                    base.SetNthObject(index, obj, cmds);
+                    base.SetNthObject(index, obj);
                     break;
             }
         }
 
-        public override void Clear(NotifyingUnsetParameters cmds = null)
+        public override void Clear()
         {
-            CallClearPartial_Internal(cmds);
-            CellCommon.Clear(this, cmds);
+            CallClearPartial_Internal();
+            CellCommon.Clear(this);
         }
 
 
@@ -2519,16 +2510,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ICellGetter rhs,
             ICellGetter def,
             ErrorMaskBuilder errorMask,
-            Cell_CopyMask copyMask,
-            NotifyingFireParameters cmds = null)
+            Cell_CopyMask copyMask)
         {
             PlaceCommon.CopyFieldsFrom(
                 item,
                 rhs,
                 def,
                 errorMask,
-                copyMask,
-                cmds);
+                copyMask);
             if (copyMask?.Name ?? true)
             {
                 errorMask?.PushIndex((int)Cell_FieldIndex.Name);
@@ -2643,8 +2632,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                     rhs: rhs.Lighting,
                                     def: def?.Lighting,
                                     errorMask: errorMask,
-                                    copyMask: copyMask?.Lighting.Specific,
-                                    cmds: cmds);
+                                    copyMask: copyMask?.Lighting.Specific);
                                 break;
                             case CopyOption.MakeCopy:
                                 item.Lighting = CellLighting.Copy(
@@ -2882,8 +2870,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                     rhs: rhs.PathGrid,
                                     def: def?.PathGrid,
                                     errorMask: errorMask,
-                                    copyMask: copyMask?.PathGrid.Specific,
-                                    cmds: cmds);
+                                    copyMask: copyMask?.PathGrid.Specific);
                                 break;
                             case CopyOption.MakeCopy:
                                 item.PathGrid = PathGrid.Copy(
@@ -2936,8 +2923,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                     rhs: rhs.Landscape,
                                     def: def?.Landscape,
                                     errorMask: errorMask,
-                                    copyMask: copyMask?.Landscape.Specific,
-                                    cmds: cmds);
+                                    copyMask: copyMask?.Landscape.Specific);
                                 break;
                             case CopyOption.MakeCopy:
                                 item.Landscape = Landscape.Copy(
@@ -3134,9 +3120,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void Clear(
-            ICell item,
-            NotifyingUnsetParameters cmds = null)
+        public static void Clear(ICell item)
         {
             item.Name_Unset();
             item.Flags_Unset();

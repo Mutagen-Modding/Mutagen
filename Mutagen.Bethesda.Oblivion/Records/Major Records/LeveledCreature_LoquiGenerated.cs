@@ -952,32 +952,27 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public override void CopyFieldsFrom(
-            IMajorRecordGetter rhs,
-            NotifyingFireParameters cmds = null)
+        public override void CopyFieldsFrom(IMajorRecordGetter rhs)
         {
             this.CopyFieldsFrom(
                 rhs: (ILeveledCreatureGetter)rhs,
                 def: null,
                 doMasks: false,
                 errorMask: out var errMask,
-                copyMask: null,
-                cmds: cmds);
+                copyMask: null);
         }
 
         public void CopyFieldsFrom(
             ILeveledCreatureGetter rhs,
             LeveledCreature_CopyMask copyMask,
-            ILeveledCreatureGetter def = null,
-            NotifyingFireParameters cmds = null)
+            ILeveledCreatureGetter def = null)
         {
             this.CopyFieldsFrom(
                 rhs: rhs,
                 def: def,
                 doMasks: false,
                 errorMask: out var errMask,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
         }
 
         public void CopyFieldsFrom(
@@ -985,7 +980,6 @@ namespace Mutagen.Bethesda.Oblivion
             out LeveledCreature_ErrorMask errorMask,
             LeveledCreature_CopyMask copyMask = null,
             ILeveledCreatureGetter def = null,
-            NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
@@ -994,8 +988,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 def: def,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
             errorMask = LeveledCreature_ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -1004,7 +997,6 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMask,
             LeveledCreature_CopyMask copyMask = null,
             ILeveledCreatureGetter def = null,
-            NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
             LeveledCreatureCommon.CopyFieldsFrom(
@@ -1012,11 +1004,10 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 def: def,
                 errorMask: errorMask,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
         }
 
-        protected override void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
+        protected override void SetNthObject(ushort index, object obj)
         {
             LeveledCreature_FieldIndex enu = (LeveledCreature_FieldIndex)index;
             switch (enu)
@@ -1037,15 +1028,15 @@ namespace Mutagen.Bethesda.Oblivion
                     this.Template_Property.Set((FormIDSetLink<NPCAbstract>)obj);
                     break;
                 default:
-                    base.SetNthObject(index, obj, cmds);
+                    base.SetNthObject(index, obj);
                     break;
             }
         }
 
-        public override void Clear(NotifyingUnsetParameters cmds = null)
+        public override void Clear()
         {
-            CallClearPartial_Internal(cmds);
-            LeveledCreatureCommon.Clear(this, cmds);
+            CallClearPartial_Internal();
+            LeveledCreatureCommon.Clear(this);
         }
 
 
@@ -1386,16 +1377,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ILeveledCreatureGetter rhs,
             ILeveledCreatureGetter def,
             ErrorMaskBuilder errorMask,
-            LeveledCreature_CopyMask copyMask,
-            NotifyingFireParameters cmds = null)
+            LeveledCreature_CopyMask copyMask)
         {
             NPCSpawnCommon.CopyFieldsFrom(
                 item,
                 rhs,
                 def,
                 errorMask,
-                copyMask,
-                cmds);
+                copyMask);
             if (copyMask?.ChanceNone ?? true)
             {
                 errorMask?.PushIndex((int)LeveledCreature_FieldIndex.ChanceNone);
@@ -1533,9 +1522,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void Clear(
-            ILeveledCreature item,
-            NotifyingUnsetParameters cmds = null)
+        public static void Clear(ILeveledCreature item)
         {
             item.ChanceNone_Unset();
             item.Flags_Unset();

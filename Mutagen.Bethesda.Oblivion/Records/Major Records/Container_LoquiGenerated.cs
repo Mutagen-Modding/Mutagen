@@ -1054,32 +1054,27 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public override void CopyFieldsFrom(
-            IMajorRecordGetter rhs,
-            NotifyingFireParameters cmds = null)
+        public override void CopyFieldsFrom(IMajorRecordGetter rhs)
         {
             this.CopyFieldsFrom(
                 rhs: (IContainerGetter)rhs,
                 def: null,
                 doMasks: false,
                 errorMask: out var errMask,
-                copyMask: null,
-                cmds: cmds);
+                copyMask: null);
         }
 
         public void CopyFieldsFrom(
             IContainerGetter rhs,
             Container_CopyMask copyMask,
-            IContainerGetter def = null,
-            NotifyingFireParameters cmds = null)
+            IContainerGetter def = null)
         {
             this.CopyFieldsFrom(
                 rhs: rhs,
                 def: def,
                 doMasks: false,
                 errorMask: out var errMask,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
         }
 
         public void CopyFieldsFrom(
@@ -1087,7 +1082,6 @@ namespace Mutagen.Bethesda.Oblivion
             out Container_ErrorMask errorMask,
             Container_CopyMask copyMask = null,
             IContainerGetter def = null,
-            NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
@@ -1096,8 +1090,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 def: def,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
             errorMask = Container_ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -1106,7 +1099,6 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMask,
             Container_CopyMask copyMask = null,
             IContainerGetter def = null,
-            NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
             ContainerCommon.CopyFieldsFrom(
@@ -1114,11 +1106,10 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 def: def,
                 errorMask: errorMask,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
         }
 
-        protected override void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
+        protected override void SetNthObject(ushort index, object obj)
         {
             Container_FieldIndex enu = (Container_FieldIndex)index;
             switch (enu)
@@ -1148,15 +1139,15 @@ namespace Mutagen.Bethesda.Oblivion
                     this.CloseSound_Property.Set((FormIDSetLink<Sound>)obj);
                     break;
                 default:
-                    base.SetNthObject(index, obj, cmds);
+                    base.SetNthObject(index, obj);
                     break;
             }
         }
 
-        public override void Clear(NotifyingUnsetParameters cmds = null)
+        public override void Clear()
         {
-            CallClearPartial_Internal(cmds);
-            ContainerCommon.Clear(this, cmds);
+            CallClearPartial_Internal();
+            ContainerCommon.Clear(this);
         }
 
 
@@ -1562,16 +1553,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IContainerGetter rhs,
             IContainerGetter def,
             ErrorMaskBuilder errorMask,
-            Container_CopyMask copyMask,
-            NotifyingFireParameters cmds = null)
+            Container_CopyMask copyMask)
         {
             OblivionMajorRecordCommon.CopyFieldsFrom(
                 item,
                 rhs,
                 def,
                 errorMask,
-                copyMask,
-                cmds);
+                copyMask);
             if (copyMask?.Name ?? true)
             {
                 errorMask?.PushIndex((int)Container_FieldIndex.Name);
@@ -1626,8 +1615,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                     rhs: rhs.Model,
                                     def: def?.Model,
                                     errorMask: errorMask,
-                                    copyMask: copyMask?.Model.Specific,
-                                    cmds: cmds);
+                                    copyMask: copyMask?.Model.Specific);
                                 break;
                             case CopyOption.MakeCopy:
                                 item.Model = Model.Copy(
@@ -1786,9 +1774,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void Clear(
-            IContainer item,
-            NotifyingUnsetParameters cmds = null)
+        public static void Clear(IContainer item)
         {
             item.Name_Unset();
             item.Model_Unset();

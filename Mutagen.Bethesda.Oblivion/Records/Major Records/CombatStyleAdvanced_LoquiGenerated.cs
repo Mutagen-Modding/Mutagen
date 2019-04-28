@@ -1291,32 +1291,27 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public void CopyFieldsFrom(
-            ICombatStyleAdvancedGetter rhs,
-            NotifyingFireParameters cmds = null)
+        public void CopyFieldsFrom(ICombatStyleAdvancedGetter rhs)
         {
             this.CopyFieldsFrom(
                 rhs: (ICombatStyleAdvancedGetter)rhs,
                 def: null,
                 doMasks: false,
                 errorMask: out var errMask,
-                copyMask: null,
-                cmds: cmds);
+                copyMask: null);
         }
 
         public void CopyFieldsFrom(
             ICombatStyleAdvancedGetter rhs,
             CombatStyleAdvanced_CopyMask copyMask,
-            ICombatStyleAdvancedGetter def = null,
-            NotifyingFireParameters cmds = null)
+            ICombatStyleAdvancedGetter def = null)
         {
             this.CopyFieldsFrom(
                 rhs: rhs,
                 def: def,
                 doMasks: false,
                 errorMask: out var errMask,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
         }
 
         public void CopyFieldsFrom(
@@ -1324,7 +1319,6 @@ namespace Mutagen.Bethesda.Oblivion
             out CombatStyleAdvanced_ErrorMask errorMask,
             CombatStyleAdvanced_CopyMask copyMask = null,
             ICombatStyleAdvancedGetter def = null,
-            NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
@@ -1333,8 +1327,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 def: def,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
             errorMask = CombatStyleAdvanced_ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -1343,7 +1336,6 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMask,
             CombatStyleAdvanced_CopyMask copyMask = null,
             ICombatStyleAdvancedGetter def = null,
-            NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
             CombatStyleAdvancedCommon.CopyFieldsFrom(
@@ -1351,11 +1343,10 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 def: def,
                 errorMask: errorMask,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
         }
 
-        protected void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
+        protected void SetNthObject(ushort index, object obj)
         {
             CombatStyleAdvanced_FieldIndex enu = (CombatStyleAdvanced_FieldIndex)index;
             switch (enu)
@@ -1428,17 +1419,17 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        partial void ClearPartial(NotifyingUnsetParameters cmds);
+        partial void ClearPartial();
 
-        protected void CallClearPartial_Internal(NotifyingUnsetParameters cmds)
+        protected void CallClearPartial_Internal()
         {
-            ClearPartial(cmds);
+            ClearPartial();
         }
 
-        public void Clear(NotifyingUnsetParameters cmds = null)
+        public void Clear()
         {
-            CallClearPartial_Internal(cmds);
-            CombatStyleAdvancedCommon.Clear(this, cmds);
+            CallClearPartial_Internal();
+            CombatStyleAdvancedCommon.Clear(this);
         }
 
 
@@ -2097,8 +2088,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ICombatStyleAdvancedGetter rhs,
             ICombatStyleAdvancedGetter def,
             ErrorMaskBuilder errorMask,
-            CombatStyleAdvanced_CopyMask copyMask,
-            NotifyingFireParameters cmds = null)
+            CombatStyleAdvanced_CopyMask copyMask)
         {
             if (copyMask?.DodgeFatigueModMult ?? true)
             {
@@ -2461,9 +2451,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void Clear(
-            ICombatStyleAdvanced item,
-            NotifyingUnsetParameters cmds = null)
+        public static void Clear(ICombatStyleAdvanced item)
         {
             item.DodgeFatigueModMult = default(Single);
             item.DodgeFatigueModBase = default(Single);

@@ -619,32 +619,27 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public void CopyFieldsFrom(
-            IInterCellPointGetter rhs,
-            NotifyingFireParameters cmds = null)
+        public void CopyFieldsFrom(IInterCellPointGetter rhs)
         {
             this.CopyFieldsFrom(
                 rhs: (IInterCellPointGetter)rhs,
                 def: null,
                 doMasks: false,
                 errorMask: out var errMask,
-                copyMask: null,
-                cmds: cmds);
+                copyMask: null);
         }
 
         public void CopyFieldsFrom(
             IInterCellPointGetter rhs,
             InterCellPoint_CopyMask copyMask,
-            IInterCellPointGetter def = null,
-            NotifyingFireParameters cmds = null)
+            IInterCellPointGetter def = null)
         {
             this.CopyFieldsFrom(
                 rhs: rhs,
                 def: def,
                 doMasks: false,
                 errorMask: out var errMask,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
         }
 
         public void CopyFieldsFrom(
@@ -652,7 +647,6 @@ namespace Mutagen.Bethesda.Oblivion
             out InterCellPoint_ErrorMask errorMask,
             InterCellPoint_CopyMask copyMask = null,
             IInterCellPointGetter def = null,
-            NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
@@ -661,8 +655,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 def: def,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
             errorMask = InterCellPoint_ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -671,7 +664,6 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMask,
             InterCellPoint_CopyMask copyMask = null,
             IInterCellPointGetter def = null,
-            NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
             InterCellPointCommon.CopyFieldsFrom(
@@ -679,11 +671,10 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 def: def,
                 errorMask: errorMask,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
         }
 
-        protected void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
+        protected void SetNthObject(ushort index, object obj)
         {
             InterCellPoint_FieldIndex enu = (InterCellPoint_FieldIndex)index;
             switch (enu)
@@ -699,17 +690,17 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        partial void ClearPartial(NotifyingUnsetParameters cmds);
+        partial void ClearPartial();
 
-        protected void CallClearPartial_Internal(NotifyingUnsetParameters cmds)
+        protected void CallClearPartial_Internal()
         {
-            ClearPartial(cmds);
+            ClearPartial();
         }
 
-        public void Clear(NotifyingUnsetParameters cmds = null)
+        public void Clear()
         {
-            CallClearPartial_Internal(cmds);
-            InterCellPointCommon.Clear(this, cmds);
+            CallClearPartial_Internal();
+            InterCellPointCommon.Clear(this);
         }
 
 
@@ -967,8 +958,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IInterCellPointGetter rhs,
             IInterCellPointGetter def,
             ErrorMaskBuilder errorMask,
-            InterCellPoint_CopyMask copyMask,
-            NotifyingFireParameters cmds = null)
+            InterCellPoint_CopyMask copyMask)
         {
             if (copyMask?.PointID ?? true)
             {
@@ -1008,9 +998,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void Clear(
-            IInterCellPoint item,
-            NotifyingUnsetParameters cmds = null)
+        public static void Clear(IInterCellPoint item)
         {
             item.PointID = default(Int32);
             item.Point = default(P3Float);

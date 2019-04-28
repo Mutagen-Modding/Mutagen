@@ -843,32 +843,27 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public override void CopyFieldsFrom(
-            IMajorRecordGetter rhs,
-            NotifyingFireParameters cmds = null)
+        public override void CopyFieldsFrom(IMajorRecordGetter rhs)
         {
             this.CopyFieldsFrom(
                 rhs: (IEyeGetter)rhs,
                 def: null,
                 doMasks: false,
                 errorMask: out var errMask,
-                copyMask: null,
-                cmds: cmds);
+                copyMask: null);
         }
 
         public void CopyFieldsFrom(
             IEyeGetter rhs,
             Eye_CopyMask copyMask,
-            IEyeGetter def = null,
-            NotifyingFireParameters cmds = null)
+            IEyeGetter def = null)
         {
             this.CopyFieldsFrom(
                 rhs: rhs,
                 def: def,
                 doMasks: false,
                 errorMask: out var errMask,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
         }
 
         public void CopyFieldsFrom(
@@ -876,7 +871,6 @@ namespace Mutagen.Bethesda.Oblivion
             out Eye_ErrorMask errorMask,
             Eye_CopyMask copyMask = null,
             IEyeGetter def = null,
-            NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
@@ -885,8 +879,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 def: def,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
             errorMask = Eye_ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -895,7 +888,6 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMask,
             Eye_CopyMask copyMask = null,
             IEyeGetter def = null,
-            NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
             EyeCommon.CopyFieldsFrom(
@@ -903,11 +895,10 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 def: def,
                 errorMask: errorMask,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
         }
 
-        protected override void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
+        protected override void SetNthObject(ushort index, object obj)
         {
             Eye_FieldIndex enu = (Eye_FieldIndex)index;
             switch (enu)
@@ -922,15 +913,15 @@ namespace Mutagen.Bethesda.Oblivion
                     this.Flags = (Eye.Flag)obj;
                     break;
                 default:
-                    base.SetNthObject(index, obj, cmds);
+                    base.SetNthObject(index, obj);
                     break;
             }
         }
 
-        public override void Clear(NotifyingUnsetParameters cmds = null)
+        public override void Clear()
         {
-            CallClearPartial_Internal(cmds);
-            EyeCommon.Clear(this, cmds);
+            CallClearPartial_Internal();
+            EyeCommon.Clear(this);
         }
 
 
@@ -1231,16 +1222,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IEyeGetter rhs,
             IEyeGetter def,
             ErrorMaskBuilder errorMask,
-            Eye_CopyMask copyMask,
-            NotifyingFireParameters cmds = null)
+            Eye_CopyMask copyMask)
         {
             OblivionMajorRecordCommon.CopyFieldsFrom(
                 item,
                 rhs,
                 def,
                 errorMask,
-                copyMask,
-                cmds);
+                copyMask);
             if (copyMask?.Name ?? true)
             {
                 errorMask?.PushIndex((int)Eye_FieldIndex.Name);
@@ -1335,9 +1324,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void Clear(
-            IEye item,
-            NotifyingUnsetParameters cmds = null)
+        public static void Clear(IEye item)
         {
             item.Name_Unset();
             item.Icon_Unset();

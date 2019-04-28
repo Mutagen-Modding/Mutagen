@@ -1152,32 +1152,27 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public override void CopyFieldsFrom(
-            IMajorRecordGetter rhs,
-            NotifyingFireParameters cmds = null)
+        public override void CopyFieldsFrom(IMajorRecordGetter rhs)
         {
             this.CopyFieldsFrom(
                 rhs: (IIngredientGetter)rhs,
                 def: null,
                 doMasks: false,
                 errorMask: out var errMask,
-                copyMask: null,
-                cmds: cmds);
+                copyMask: null);
         }
 
         public void CopyFieldsFrom(
             IIngredientGetter rhs,
             Ingredient_CopyMask copyMask,
-            IIngredientGetter def = null,
-            NotifyingFireParameters cmds = null)
+            IIngredientGetter def = null)
         {
             this.CopyFieldsFrom(
                 rhs: rhs,
                 def: def,
                 doMasks: false,
                 errorMask: out var errMask,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
         }
 
         public void CopyFieldsFrom(
@@ -1185,7 +1180,6 @@ namespace Mutagen.Bethesda.Oblivion
             out Ingredient_ErrorMask errorMask,
             Ingredient_CopyMask copyMask = null,
             IIngredientGetter def = null,
-            NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
@@ -1194,8 +1188,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 def: def,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
             errorMask = Ingredient_ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -1204,7 +1197,6 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMask,
             Ingredient_CopyMask copyMask = null,
             IIngredientGetter def = null,
-            NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
             IngredientCommon.CopyFieldsFrom(
@@ -1212,11 +1204,10 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 def: def,
                 errorMask: errorMask,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
         }
 
-        protected override void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
+        protected override void SetNthObject(ushort index, object obj)
         {
             Ingredient_FieldIndex enu = (Ingredient_FieldIndex)index;
             switch (enu)
@@ -1246,15 +1237,15 @@ namespace Mutagen.Bethesda.Oblivion
                     this._Effects.SetTo((IEnumerable<Effect>)obj);
                     break;
                 default:
-                    base.SetNthObject(index, obj, cmds);
+                    base.SetNthObject(index, obj);
                     break;
             }
         }
 
-        public override void Clear(NotifyingUnsetParameters cmds = null)
+        public override void Clear()
         {
-            CallClearPartial_Internal(cmds);
-            IngredientCommon.Clear(this, cmds);
+            CallClearPartial_Internal();
+            IngredientCommon.Clear(this);
         }
 
 
@@ -1668,16 +1659,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IIngredientGetter rhs,
             IIngredientGetter def,
             ErrorMaskBuilder errorMask,
-            Ingredient_CopyMask copyMask,
-            NotifyingFireParameters cmds = null)
+            Ingredient_CopyMask copyMask)
         {
             ItemAbstractCommon.CopyFieldsFrom(
                 item,
                 rhs,
                 def,
                 errorMask,
-                copyMask,
-                cmds);
+                copyMask);
             if (copyMask?.Name ?? true)
             {
                 errorMask?.PushIndex((int)Ingredient_FieldIndex.Name);
@@ -1732,8 +1721,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                     rhs: rhs.Model,
                                     def: def?.Model,
                                     errorMask: errorMask,
-                                    copyMask: copyMask?.Model.Specific,
-                                    cmds: cmds);
+                                    copyMask: copyMask?.Model.Specific);
                                 break;
                             case CopyOption.MakeCopy:
                                 item.Model = Model.Copy(
@@ -1914,9 +1902,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void Clear(
-            IIngredient item,
-            NotifyingUnsetParameters cmds = null)
+        public static void Clear(IIngredient item)
         {
             item.Name_Unset();
             item.Model_Unset();

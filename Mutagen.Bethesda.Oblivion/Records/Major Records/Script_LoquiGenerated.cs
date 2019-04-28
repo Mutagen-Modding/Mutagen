@@ -427,7 +427,6 @@ namespace Mutagen.Bethesda.Oblivion
                                 translationMask: translationMask)
                             ,
                             def: null,
-                            cmds: null,
                             copyMask: null,
                             errorMask: errorMask);
                     }
@@ -675,7 +674,6 @@ namespace Mutagen.Bethesda.Oblivion
                         item.Fields.CopyFieldsFrom(
                             rhs: tmpFields,
                             def: null,
-                            cmds: null,
                             copyMask: null,
                             errorMask: errorMask);
                     }
@@ -747,32 +745,27 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public override void CopyFieldsFrom(
-            IMajorRecordGetter rhs,
-            NotifyingFireParameters cmds = null)
+        public override void CopyFieldsFrom(IMajorRecordGetter rhs)
         {
             this.CopyFieldsFrom(
                 rhs: (IScriptGetter)rhs,
                 def: null,
                 doMasks: false,
                 errorMask: out var errMask,
-                copyMask: null,
-                cmds: cmds);
+                copyMask: null);
         }
 
         public void CopyFieldsFrom(
             IScriptGetter rhs,
             Script_CopyMask copyMask,
-            IScriptGetter def = null,
-            NotifyingFireParameters cmds = null)
+            IScriptGetter def = null)
         {
             this.CopyFieldsFrom(
                 rhs: rhs,
                 def: def,
                 doMasks: false,
                 errorMask: out var errMask,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
         }
 
         public void CopyFieldsFrom(
@@ -780,7 +773,6 @@ namespace Mutagen.Bethesda.Oblivion
             out Script_ErrorMask errorMask,
             Script_CopyMask copyMask = null,
             IScriptGetter def = null,
-            NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
@@ -789,8 +781,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 def: def,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
             errorMask = Script_ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -799,7 +790,6 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMask,
             Script_CopyMask copyMask = null,
             IScriptGetter def = null,
-            NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
             ScriptCommon.CopyFieldsFrom(
@@ -807,11 +797,10 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 def: def,
                 errorMask: errorMask,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
         }
 
-        protected override void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
+        protected override void SetNthObject(ushort index, object obj)
         {
             Script_FieldIndex enu = (Script_FieldIndex)index;
             switch (enu)
@@ -820,15 +809,15 @@ namespace Mutagen.Bethesda.Oblivion
                     this.Fields.CopyFieldsFrom(rhs: (ScriptFields)obj);
                     break;
                 default:
-                    base.SetNthObject(index, obj, cmds);
+                    base.SetNthObject(index, obj);
                     break;
             }
         }
 
-        public override void Clear(NotifyingUnsetParameters cmds = null)
+        public override void Clear()
         {
-            CallClearPartial_Internal(cmds);
-            ScriptCommon.Clear(this, cmds);
+            CallClearPartial_Internal();
+            ScriptCommon.Clear(this);
         }
 
 
@@ -1077,16 +1066,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IScriptGetter rhs,
             IScriptGetter def,
             ErrorMaskBuilder errorMask,
-            Script_CopyMask copyMask,
-            NotifyingFireParameters cmds = null)
+            Script_CopyMask copyMask)
         {
             OblivionMajorRecordCommon.CopyFieldsFrom(
                 item,
                 rhs,
                 def,
                 errorMask,
-                copyMask,
-                cmds);
+                copyMask);
             if (copyMask?.Fields.Overall ?? true)
             {
                 errorMask?.PushIndex((int)Script_FieldIndex.Fields);
@@ -1097,8 +1084,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         rhs: rhs.Fields,
                         def: def?.Fields,
                         errorMask: errorMask,
-                        copyMask: copyMask?.Fields.Specific,
-                        cmds: cmds);
+                        copyMask: copyMask?.Fields.Specific);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1114,9 +1100,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void Clear(
-            IScript item,
-            NotifyingUnsetParameters cmds = null)
+        public static void Clear(IScript item)
         {
         }
 

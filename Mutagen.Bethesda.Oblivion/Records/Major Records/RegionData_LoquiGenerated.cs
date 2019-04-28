@@ -675,32 +675,27 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public virtual void CopyFieldsFrom(
-            IRegionDataGetter rhs,
-            NotifyingFireParameters cmds = null)
+        public virtual void CopyFieldsFrom(IRegionDataGetter rhs)
         {
             this.CopyFieldsFrom(
                 rhs: (IRegionDataGetter)rhs,
                 def: null,
                 doMasks: false,
                 errorMask: out var errMask,
-                copyMask: null,
-                cmds: cmds);
+                copyMask: null);
         }
 
         public void CopyFieldsFrom(
             IRegionDataGetter rhs,
             RegionData_CopyMask copyMask,
-            IRegionDataGetter def = null,
-            NotifyingFireParameters cmds = null)
+            IRegionDataGetter def = null)
         {
             this.CopyFieldsFrom(
                 rhs: rhs,
                 def: def,
                 doMasks: false,
                 errorMask: out var errMask,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
         }
 
         public void CopyFieldsFrom(
@@ -708,7 +703,6 @@ namespace Mutagen.Bethesda.Oblivion
             out RegionData_ErrorMask errorMask,
             RegionData_CopyMask copyMask = null,
             IRegionDataGetter def = null,
-            NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
@@ -717,8 +711,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 def: def,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
             errorMask = RegionData_ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -727,7 +720,6 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMask,
             RegionData_CopyMask copyMask = null,
             IRegionDataGetter def = null,
-            NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
             RegionDataCommon.CopyFieldsFrom(
@@ -735,11 +727,10 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 def: def,
                 errorMask: errorMask,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
         }
 
-        protected virtual void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
+        protected virtual void SetNthObject(ushort index, object obj)
         {
             RegionData_FieldIndex enu = (RegionData_FieldIndex)index;
             switch (enu)
@@ -758,17 +749,17 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        partial void ClearPartial(NotifyingUnsetParameters cmds);
+        partial void ClearPartial();
 
-        protected void CallClearPartial_Internal(NotifyingUnsetParameters cmds)
+        protected void CallClearPartial_Internal()
         {
-            ClearPartial(cmds);
+            ClearPartial();
         }
 
-        public virtual void Clear(NotifyingUnsetParameters cmds = null)
+        public virtual void Clear()
         {
-            CallClearPartial_Internal(cmds);
-            RegionDataCommon.Clear(this, cmds);
+            CallClearPartial_Internal();
+            RegionDataCommon.Clear(this);
         }
 
 
@@ -1038,8 +1029,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IRegionDataGetter rhs,
             IRegionDataGetter def,
             ErrorMaskBuilder errorMask,
-            RegionData_CopyMask copyMask,
-            NotifyingFireParameters cmds = null)
+            RegionData_CopyMask copyMask)
         {
             if (copyMask?.Flags ?? true)
             {
@@ -1079,9 +1069,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void Clear(
-            IRegionData item,
-            NotifyingUnsetParameters cmds = null)
+        public static void Clear(IRegionData item)
         {
             item.Flags = default(RegionData.RegionDataFlag);
             item.Priority = default(Byte);

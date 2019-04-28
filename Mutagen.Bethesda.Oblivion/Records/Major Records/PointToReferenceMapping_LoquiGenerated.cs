@@ -605,32 +605,27 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public void CopyFieldsFrom(
-            IPointToReferenceMappingGetter rhs,
-            NotifyingFireParameters cmds = null)
+        public void CopyFieldsFrom(IPointToReferenceMappingGetter rhs)
         {
             this.CopyFieldsFrom(
                 rhs: (IPointToReferenceMappingGetter)rhs,
                 def: null,
                 doMasks: false,
                 errorMask: out var errMask,
-                copyMask: null,
-                cmds: cmds);
+                copyMask: null);
         }
 
         public void CopyFieldsFrom(
             IPointToReferenceMappingGetter rhs,
             PointToReferenceMapping_CopyMask copyMask,
-            IPointToReferenceMappingGetter def = null,
-            NotifyingFireParameters cmds = null)
+            IPointToReferenceMappingGetter def = null)
         {
             this.CopyFieldsFrom(
                 rhs: rhs,
                 def: def,
                 doMasks: false,
                 errorMask: out var errMask,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
         }
 
         public void CopyFieldsFrom(
@@ -638,7 +633,6 @@ namespace Mutagen.Bethesda.Oblivion
             out PointToReferenceMapping_ErrorMask errorMask,
             PointToReferenceMapping_CopyMask copyMask = null,
             IPointToReferenceMappingGetter def = null,
-            NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
@@ -647,8 +641,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 def: def,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
             errorMask = PointToReferenceMapping_ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -657,7 +650,6 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMask,
             PointToReferenceMapping_CopyMask copyMask = null,
             IPointToReferenceMappingGetter def = null,
-            NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
             PointToReferenceMappingCommon.CopyFieldsFrom(
@@ -665,11 +657,10 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 def: def,
                 errorMask: errorMask,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
         }
 
-        protected void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
+        protected void SetNthObject(ushort index, object obj)
         {
             PointToReferenceMapping_FieldIndex enu = (PointToReferenceMapping_FieldIndex)index;
             switch (enu)
@@ -685,17 +676,17 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        partial void ClearPartial(NotifyingUnsetParameters cmds);
+        partial void ClearPartial();
 
-        protected void CallClearPartial_Internal(NotifyingUnsetParameters cmds)
+        protected void CallClearPartial_Internal()
         {
-            ClearPartial(cmds);
+            ClearPartial();
         }
 
-        public void Clear(NotifyingUnsetParameters cmds = null)
+        public void Clear()
         {
-            CallClearPartial_Internal(cmds);
-            PointToReferenceMappingCommon.Clear(this, cmds);
+            CallClearPartial_Internal();
+            PointToReferenceMappingCommon.Clear(this);
         }
 
 
@@ -954,8 +945,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IPointToReferenceMappingGetter rhs,
             IPointToReferenceMappingGetter def,
             ErrorMaskBuilder errorMask,
-            PointToReferenceMapping_CopyMask copyMask,
-            NotifyingFireParameters cmds = null)
+            PointToReferenceMapping_CopyMask copyMask)
         {
             if (copyMask?.Reference ?? true)
             {
@@ -997,9 +987,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void Clear(
-            IPointToReferenceMapping item,
-            NotifyingUnsetParameters cmds = null)
+        public static void Clear(IPointToReferenceMapping item)
         {
             item.Reference = default(IPlaced);
             item.Points.Unset();

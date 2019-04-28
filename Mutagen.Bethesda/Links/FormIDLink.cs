@@ -2,6 +2,7 @@
 using Mutagen.Bethesda.Tests;
 using Noggog;
 using Noggog.Notifying;
+using ReactiveUI;
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -1542,32 +1542,27 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public override void CopyFieldsFrom(
-            IMajorRecordGetter rhs,
-            NotifyingFireParameters cmds = null)
+        public override void CopyFieldsFrom(IMajorRecordGetter rhs)
         {
             this.CopyFieldsFrom(
                 rhs: (IWorldspaceGetter)rhs,
                 def: null,
                 doMasks: false,
                 errorMask: out var errMask,
-                copyMask: null,
-                cmds: cmds);
+                copyMask: null);
         }
 
         public void CopyFieldsFrom(
             IWorldspaceGetter rhs,
             Worldspace_CopyMask copyMask,
-            IWorldspaceGetter def = null,
-            NotifyingFireParameters cmds = null)
+            IWorldspaceGetter def = null)
         {
             this.CopyFieldsFrom(
                 rhs: rhs,
                 def: def,
                 doMasks: false,
                 errorMask: out var errMask,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
         }
 
         public void CopyFieldsFrom(
@@ -1575,7 +1570,6 @@ namespace Mutagen.Bethesda.Oblivion
             out Worldspace_ErrorMask errorMask,
             Worldspace_CopyMask copyMask = null,
             IWorldspaceGetter def = null,
-            NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
@@ -1584,8 +1578,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 def: def,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
             errorMask = Worldspace_ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -1594,7 +1587,6 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMask,
             Worldspace_CopyMask copyMask = null,
             IWorldspaceGetter def = null,
-            NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
             WorldspaceCommon.CopyFieldsFrom(
@@ -1602,11 +1594,10 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 def: def,
                 errorMask: errorMask,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
         }
 
-        protected override void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
+        protected override void SetNthObject(ushort index, object obj)
         {
             Worldspace_FieldIndex enu = (Worldspace_FieldIndex)index;
             switch (enu)
@@ -1657,15 +1648,15 @@ namespace Mutagen.Bethesda.Oblivion
                     this._SubCells.SetTo((IEnumerable<WorldspaceBlock>)obj);
                     break;
                 default:
-                    base.SetNthObject(index, obj, cmds);
+                    base.SetNthObject(index, obj);
                     break;
             }
         }
 
-        public override void Clear(NotifyingUnsetParameters cmds = null)
+        public override void Clear()
         {
-            CallClearPartial_Internal(cmds);
-            WorldspaceCommon.Clear(this, cmds);
+            CallClearPartial_Internal();
+            WorldspaceCommon.Clear(this);
         }
 
 
@@ -2258,16 +2249,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IWorldspaceGetter rhs,
             IWorldspaceGetter def,
             ErrorMaskBuilder errorMask,
-            Worldspace_CopyMask copyMask,
-            NotifyingFireParameters cmds = null)
+            Worldspace_CopyMask copyMask)
         {
             PlaceCommon.CopyFieldsFrom(
                 item,
                 rhs,
                 def,
                 errorMask,
-                copyMask,
-                cmds);
+                copyMask);
             if (copyMask?.Name ?? true)
             {
                 errorMask?.PushIndex((int)Worldspace_FieldIndex.Name);
@@ -2409,8 +2398,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                     rhs: rhs.MapData,
                                     def: def?.MapData,
                                     errorMask: errorMask,
-                                    copyMask: copyMask?.MapData.Specific,
-                                    cmds: cmds);
+                                    copyMask: copyMask?.MapData.Specific);
                                 break;
                             case CopyOption.MakeCopy:
                                 item.MapData = MapData.Copy(
@@ -2613,8 +2601,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                     rhs: rhs.Road,
                                     def: def?.Road,
                                     errorMask: errorMask,
-                                    copyMask: copyMask?.Road.Specific,
-                                    cmds: cmds);
+                                    copyMask: copyMask?.Road.Specific);
                                 break;
                             case CopyOption.MakeCopy:
                                 item.Road = Road.Copy(
@@ -2667,8 +2654,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                     rhs: rhs.TopCell,
                                     def: def?.TopCell,
                                     errorMask: errorMask,
-                                    copyMask: copyMask?.TopCell.Specific,
-                                    cmds: cmds);
+                                    copyMask: copyMask?.TopCell.Specific);
                                 break;
                             case CopyOption.MakeCopy:
                                 item.TopCell = Cell.Copy(
@@ -2753,9 +2739,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void Clear(
-            IWorldspace item,
-            NotifyingUnsetParameters cmds = null)
+        public static void Clear(IWorldspace item)
         {
             item.Name_Unset();
             item.Parent_Property.Unset();

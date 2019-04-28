@@ -795,32 +795,27 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public void CopyFieldsFrom(
-            IWorldspaceSubBlockGetter rhs,
-            NotifyingFireParameters cmds = null)
+        public void CopyFieldsFrom(IWorldspaceSubBlockGetter rhs)
         {
             this.CopyFieldsFrom(
                 rhs: (IWorldspaceSubBlockGetter)rhs,
                 def: null,
                 doMasks: false,
                 errorMask: out var errMask,
-                copyMask: null,
-                cmds: cmds);
+                copyMask: null);
         }
 
         public void CopyFieldsFrom(
             IWorldspaceSubBlockGetter rhs,
             WorldspaceSubBlock_CopyMask copyMask,
-            IWorldspaceSubBlockGetter def = null,
-            NotifyingFireParameters cmds = null)
+            IWorldspaceSubBlockGetter def = null)
         {
             this.CopyFieldsFrom(
                 rhs: rhs,
                 def: def,
                 doMasks: false,
                 errorMask: out var errMask,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
         }
 
         public void CopyFieldsFrom(
@@ -828,7 +823,6 @@ namespace Mutagen.Bethesda.Oblivion
             out WorldspaceSubBlock_ErrorMask errorMask,
             WorldspaceSubBlock_CopyMask copyMask = null,
             IWorldspaceSubBlockGetter def = null,
-            NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
@@ -837,8 +831,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 def: def,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
             errorMask = WorldspaceSubBlock_ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -847,7 +840,6 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMask,
             WorldspaceSubBlock_CopyMask copyMask = null,
             IWorldspaceSubBlockGetter def = null,
-            NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
             WorldspaceSubBlockCommon.CopyFieldsFrom(
@@ -855,11 +847,10 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 def: def,
                 errorMask: errorMask,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
         }
 
-        protected void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
+        protected void SetNthObject(ushort index, object obj)
         {
             WorldspaceSubBlock_FieldIndex enu = (WorldspaceSubBlock_FieldIndex)index;
             switch (enu)
@@ -884,17 +875,17 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        partial void ClearPartial(NotifyingUnsetParameters cmds);
+        partial void ClearPartial();
 
-        protected void CallClearPartial_Internal(NotifyingUnsetParameters cmds)
+        protected void CallClearPartial_Internal()
         {
-            ClearPartial(cmds);
+            ClearPartial();
         }
 
-        public void Clear(NotifyingUnsetParameters cmds = null)
+        public void Clear()
         {
-            CallClearPartial_Internal(cmds);
-            WorldspaceSubBlockCommon.Clear(this, cmds);
+            CallClearPartial_Internal();
+            WorldspaceSubBlockCommon.Clear(this);
         }
 
 
@@ -1218,8 +1209,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IWorldspaceSubBlockGetter rhs,
             IWorldspaceSubBlockGetter def,
             ErrorMaskBuilder errorMask,
-            WorldspaceSubBlock_CopyMask copyMask,
-            NotifyingFireParameters cmds = null)
+            WorldspaceSubBlock_CopyMask copyMask)
         {
             if (copyMask?.BlockNumberY ?? true)
             {
@@ -1328,9 +1318,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void Clear(
-            IWorldspaceSubBlock item,
-            NotifyingUnsetParameters cmds = null)
+        public static void Clear(IWorldspaceSubBlock item)
         {
             item.BlockNumberY = default(Int16);
             item.BlockNumberX = default(Int16);

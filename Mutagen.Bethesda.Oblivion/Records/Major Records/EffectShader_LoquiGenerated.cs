@@ -3027,32 +3027,27 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public override void CopyFieldsFrom(
-            IMajorRecordGetter rhs,
-            NotifyingFireParameters cmds = null)
+        public override void CopyFieldsFrom(IMajorRecordGetter rhs)
         {
             this.CopyFieldsFrom(
                 rhs: (IEffectShaderGetter)rhs,
                 def: null,
                 doMasks: false,
                 errorMask: out var errMask,
-                copyMask: null,
-                cmds: cmds);
+                copyMask: null);
         }
 
         public void CopyFieldsFrom(
             IEffectShaderGetter rhs,
             EffectShader_CopyMask copyMask,
-            IEffectShaderGetter def = null,
-            NotifyingFireParameters cmds = null)
+            IEffectShaderGetter def = null)
         {
             this.CopyFieldsFrom(
                 rhs: rhs,
                 def: def,
                 doMasks: false,
                 errorMask: out var errMask,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
         }
 
         public void CopyFieldsFrom(
@@ -3060,7 +3055,6 @@ namespace Mutagen.Bethesda.Oblivion
             out EffectShader_ErrorMask errorMask,
             EffectShader_CopyMask copyMask = null,
             IEffectShaderGetter def = null,
-            NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
@@ -3069,8 +3063,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 def: def,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
             errorMask = EffectShader_ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -3079,7 +3072,6 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMask,
             EffectShader_CopyMask copyMask = null,
             IEffectShaderGetter def = null,
-            NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
             EffectShaderCommon.CopyFieldsFrom(
@@ -3087,11 +3079,10 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 def: def,
                 errorMask: errorMask,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
         }
 
-        protected override void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
+        protected override void SetNthObject(ushort index, object obj)
         {
             EffectShader_FieldIndex enu = (EffectShader_FieldIndex)index;
             switch (enu)
@@ -3271,15 +3262,15 @@ namespace Mutagen.Bethesda.Oblivion
                     this.ColorKey3ColorKeyTime = (Single)obj;
                     break;
                 default:
-                    base.SetNthObject(index, obj, cmds);
+                    base.SetNthObject(index, obj);
                     break;
             }
         }
 
-        public override void Clear(NotifyingUnsetParameters cmds = null)
+        public override void Clear()
         {
-            CallClearPartial_Internal(cmds);
-            EffectShaderCommon.Clear(this, cmds);
+            CallClearPartial_Internal();
+            EffectShaderCommon.Clear(this);
         }
 
 
@@ -4731,16 +4722,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IEffectShaderGetter rhs,
             IEffectShaderGetter def,
             ErrorMaskBuilder errorMask,
-            EffectShader_CopyMask copyMask,
-            NotifyingFireParameters cmds = null)
+            EffectShader_CopyMask copyMask)
         {
             OblivionMajorRecordCommon.CopyFieldsFrom(
                 item,
                 rhs,
                 def,
                 errorMask,
-                copyMask,
-                cmds);
+                copyMask);
             if (copyMask?.FillTexture ?? true)
             {
                 errorMask?.PushIndex((int)EffectShader_FieldIndex.FillTexture);
@@ -5757,9 +5746,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void Clear(
-            IEffectShader item,
-            NotifyingUnsetParameters cmds = null)
+        public static void Clear(IEffectShader item)
         {
             item.FillTexture_Unset();
             item.ParticleShaderTexture_Unset();

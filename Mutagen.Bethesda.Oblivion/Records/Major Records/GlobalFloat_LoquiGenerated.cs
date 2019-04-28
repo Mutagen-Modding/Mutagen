@@ -741,32 +741,27 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public override void CopyFieldsFrom(
-            IMajorRecordGetter rhs,
-            NotifyingFireParameters cmds = null)
+        public override void CopyFieldsFrom(IMajorRecordGetter rhs)
         {
             this.CopyFieldsFrom(
                 rhs: (IGlobalFloatGetter)rhs,
                 def: null,
                 doMasks: false,
                 errorMask: out var errMask,
-                copyMask: null,
-                cmds: cmds);
+                copyMask: null);
         }
 
         public void CopyFieldsFrom(
             IGlobalFloatGetter rhs,
             GlobalFloat_CopyMask copyMask,
-            IGlobalFloatGetter def = null,
-            NotifyingFireParameters cmds = null)
+            IGlobalFloatGetter def = null)
         {
             this.CopyFieldsFrom(
                 rhs: rhs,
                 def: def,
                 doMasks: false,
                 errorMask: out var errMask,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
         }
 
         public void CopyFieldsFrom(
@@ -774,7 +769,6 @@ namespace Mutagen.Bethesda.Oblivion
             out GlobalFloat_ErrorMask errorMask,
             GlobalFloat_CopyMask copyMask = null,
             IGlobalFloatGetter def = null,
-            NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
@@ -783,8 +777,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 def: def,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
             errorMask = GlobalFloat_ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -793,7 +786,6 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMask,
             GlobalFloat_CopyMask copyMask = null,
             IGlobalFloatGetter def = null,
-            NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
             GlobalFloatCommon.CopyFieldsFrom(
@@ -801,11 +793,10 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 def: def,
                 errorMask: errorMask,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
         }
 
-        protected override void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
+        protected override void SetNthObject(ushort index, object obj)
         {
             GlobalFloat_FieldIndex enu = (GlobalFloat_FieldIndex)index;
             switch (enu)
@@ -814,15 +805,15 @@ namespace Mutagen.Bethesda.Oblivion
                     this.Data = (Single)obj;
                     break;
                 default:
-                    base.SetNthObject(index, obj, cmds);
+                    base.SetNthObject(index, obj);
                     break;
             }
         }
 
-        public override void Clear(NotifyingUnsetParameters cmds = null)
+        public override void Clear()
         {
-            CallClearPartial_Internal(cmds);
-            GlobalFloatCommon.Clear(this, cmds);
+            CallClearPartial_Internal();
+            GlobalFloatCommon.Clear(this);
         }
 
 
@@ -1072,16 +1063,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IGlobalFloatGetter rhs,
             IGlobalFloatGetter def,
             ErrorMaskBuilder errorMask,
-            GlobalFloat_CopyMask copyMask,
-            NotifyingFireParameters cmds = null)
+            GlobalFloat_CopyMask copyMask)
         {
             GlobalCommon.CopyFieldsFrom(
                 item,
                 rhs,
                 def,
                 errorMask,
-                copyMask,
-                cmds);
+                copyMask);
             if (copyMask?.Data ?? true)
             {
                 errorMask?.PushIndex((int)GlobalFloat_FieldIndex.Data);
@@ -1116,9 +1105,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void Clear(
-            IGlobalFloat item,
-            NotifyingUnsetParameters cmds = null)
+        public static void Clear(IGlobalFloat item)
         {
             item.Data_Unset();
         }

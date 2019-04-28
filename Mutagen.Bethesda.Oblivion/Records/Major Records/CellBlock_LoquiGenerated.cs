@@ -760,32 +760,27 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public void CopyFieldsFrom(
-            ICellBlockGetter rhs,
-            NotifyingFireParameters cmds = null)
+        public void CopyFieldsFrom(ICellBlockGetter rhs)
         {
             this.CopyFieldsFrom(
                 rhs: (ICellBlockGetter)rhs,
                 def: null,
                 doMasks: false,
                 errorMask: out var errMask,
-                copyMask: null,
-                cmds: cmds);
+                copyMask: null);
         }
 
         public void CopyFieldsFrom(
             ICellBlockGetter rhs,
             CellBlock_CopyMask copyMask,
-            ICellBlockGetter def = null,
-            NotifyingFireParameters cmds = null)
+            ICellBlockGetter def = null)
         {
             this.CopyFieldsFrom(
                 rhs: rhs,
                 def: def,
                 doMasks: false,
                 errorMask: out var errMask,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
         }
 
         public void CopyFieldsFrom(
@@ -793,7 +788,6 @@ namespace Mutagen.Bethesda.Oblivion
             out CellBlock_ErrorMask errorMask,
             CellBlock_CopyMask copyMask = null,
             ICellBlockGetter def = null,
-            NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
@@ -802,8 +796,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 def: def,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
             errorMask = CellBlock_ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -812,7 +805,6 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMask,
             CellBlock_CopyMask copyMask = null,
             ICellBlockGetter def = null,
-            NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
             CellBlockCommon.CopyFieldsFrom(
@@ -820,11 +812,10 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 def: def,
                 errorMask: errorMask,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
         }
 
-        protected void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
+        protected void SetNthObject(ushort index, object obj)
         {
             CellBlock_FieldIndex enu = (CellBlock_FieldIndex)index;
             switch (enu)
@@ -846,17 +837,17 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        partial void ClearPartial(NotifyingUnsetParameters cmds);
+        partial void ClearPartial();
 
-        protected void CallClearPartial_Internal(NotifyingUnsetParameters cmds)
+        protected void CallClearPartial_Internal()
         {
-            ClearPartial(cmds);
+            ClearPartial();
         }
 
-        public void Clear(NotifyingUnsetParameters cmds = null)
+        public void Clear()
         {
-            CallClearPartial_Internal(cmds);
-            CellBlockCommon.Clear(this, cmds);
+            CallClearPartial_Internal();
+            CellBlockCommon.Clear(this);
         }
 
 
@@ -1158,8 +1149,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ICellBlockGetter rhs,
             ICellBlockGetter def,
             ErrorMaskBuilder errorMask,
-            CellBlock_CopyMask copyMask,
-            NotifyingFireParameters cmds = null)
+            CellBlock_CopyMask copyMask)
         {
             if (copyMask?.BlockNumber ?? true)
             {
@@ -1251,9 +1241,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void Clear(
-            ICellBlock item,
-            NotifyingUnsetParameters cmds = null)
+        public static void Clear(ICellBlock item)
         {
             item.BlockNumber = default(Int32);
             item.GroupType = default(GroupTypeEnum);

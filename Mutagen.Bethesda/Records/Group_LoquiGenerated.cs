@@ -759,9 +759,7 @@ namespace Mutagen.Bethesda
             return ret;
         }
 
-        public void CopyFieldsFrom<T_CopyMask>(
-            IGroupGetter<T> rhs,
-            NotifyingFireParameters cmds = null)
+        public void CopyFieldsFrom<T_CopyMask>(IGroupGetter<T> rhs)
             where T_CopyMask : class, new()
         {
             this.CopyFieldsFrom<ErrorMaskPlaceholder, T_CopyMask>(
@@ -769,15 +767,13 @@ namespace Mutagen.Bethesda
                 def: null,
                 doMasks: false,
                 errorMask: out var errMask,
-                copyMask: null,
-                cmds: cmds);
+                copyMask: null);
         }
 
         public void CopyFieldsFrom<T_CopyMask>(
             IGroupGetter<T> rhs,
             Group_CopyMask<T_CopyMask> copyMask,
-            IGroupGetter<T> def = null,
-            NotifyingFireParameters cmds = null)
+            IGroupGetter<T> def = null)
             where T_CopyMask : class, new()
         {
             this.CopyFieldsFrom<ErrorMaskPlaceholder, T_CopyMask>(
@@ -785,8 +781,7 @@ namespace Mutagen.Bethesda
                 def: def,
                 doMasks: false,
                 errorMask: out var errMask,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
         }
 
         public void CopyFieldsFrom<T_ErrMask, T_CopyMask>(
@@ -794,7 +789,6 @@ namespace Mutagen.Bethesda
             out Group_ErrorMask<T_ErrMask> errorMask,
             Group_CopyMask<T_CopyMask> copyMask = null,
             IGroupGetter<T> def = null,
-            NotifyingFireParameters cmds = null,
             bool doMasks = true)
             where T_ErrMask : class, IErrorMask<T_ErrMask>, new()
             where T_CopyMask : class, new()
@@ -805,8 +799,7 @@ namespace Mutagen.Bethesda
                 rhs: rhs,
                 def: def,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
             errorMask = Group_ErrorMask<T_ErrMask>.Factory(errorMaskBuilder);
         }
 
@@ -815,7 +808,6 @@ namespace Mutagen.Bethesda
             ErrorMaskBuilder errorMask,
             Group_CopyMask<T_CopyMask> copyMask = null,
             IGroupGetter<T> def = null,
-            NotifyingFireParameters cmds = null,
             bool doMasks = true)
             where T_CopyMask : class, new()
         {
@@ -824,11 +816,10 @@ namespace Mutagen.Bethesda
                 rhs: rhs,
                 def: def,
                 errorMask: errorMask,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
         }
 
-        protected void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
+        protected void SetNthObject(ushort index, object obj)
         {
             Group_FieldIndex enu = (Group_FieldIndex)index;
             switch (enu)
@@ -849,17 +840,17 @@ namespace Mutagen.Bethesda
             }
         }
 
-        partial void ClearPartial(NotifyingUnsetParameters cmds);
+        partial void ClearPartial();
 
-        protected void CallClearPartial_Internal(NotifyingUnsetParameters cmds)
+        protected void CallClearPartial_Internal()
         {
-            ClearPartial(cmds);
+            ClearPartial();
         }
 
-        public void Clear(NotifyingUnsetParameters cmds = null)
+        public void Clear()
         {
-            CallClearPartial_Internal(cmds);
-            GroupCommon.Clear(this, cmds);
+            CallClearPartial_Internal();
+            GroupCommon.Clear(this);
         }
 
 
@@ -1167,8 +1158,7 @@ namespace Mutagen.Bethesda.Internals
             IGroupGetter<T> rhs,
             IGroupGetter<T> def,
             ErrorMaskBuilder errorMask,
-            Group_CopyMask<T_CopyMask> copyMask,
-            NotifyingFireParameters cmds = null)
+            Group_CopyMask<T_CopyMask> copyMask)
             where T : IMajorRecord, ILoquiObject<T>
             where T_CopyMask : class, new()
         {
@@ -1242,9 +1232,7 @@ namespace Mutagen.Bethesda.Internals
 
         #endregion
 
-        public static void Clear<T>(
-            IGroup<T> item,
-            NotifyingUnsetParameters cmds = null)
+        public static void Clear<T>(IGroup<T> item)
             where T : IMajorRecord, ILoquiObject<T>
         {
             item.GroupType = default(GroupTypeEnum);

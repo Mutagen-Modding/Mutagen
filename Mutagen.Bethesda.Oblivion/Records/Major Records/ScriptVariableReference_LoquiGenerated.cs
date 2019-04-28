@@ -604,32 +604,27 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public override void CopyFieldsFrom(
-            IScriptReferenceGetter rhs,
-            NotifyingFireParameters cmds = null)
+        public override void CopyFieldsFrom(IScriptReferenceGetter rhs)
         {
             this.CopyFieldsFrom(
                 rhs: (IScriptVariableReferenceGetter)rhs,
                 def: null,
                 doMasks: false,
                 errorMask: out var errMask,
-                copyMask: null,
-                cmds: cmds);
+                copyMask: null);
         }
 
         public void CopyFieldsFrom(
             IScriptVariableReferenceGetter rhs,
             ScriptVariableReference_CopyMask copyMask,
-            IScriptVariableReferenceGetter def = null,
-            NotifyingFireParameters cmds = null)
+            IScriptVariableReferenceGetter def = null)
         {
             this.CopyFieldsFrom(
                 rhs: rhs,
                 def: def,
                 doMasks: false,
                 errorMask: out var errMask,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
         }
 
         public void CopyFieldsFrom(
@@ -637,7 +632,6 @@ namespace Mutagen.Bethesda.Oblivion
             out ScriptVariableReference_ErrorMask errorMask,
             ScriptVariableReference_CopyMask copyMask = null,
             IScriptVariableReferenceGetter def = null,
-            NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
@@ -646,8 +640,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 def: def,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
             errorMask = ScriptVariableReference_ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -656,7 +649,6 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMask,
             ScriptVariableReference_CopyMask copyMask = null,
             IScriptVariableReferenceGetter def = null,
-            NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
             ScriptVariableReferenceCommon.CopyFieldsFrom(
@@ -664,11 +656,10 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 def: def,
                 errorMask: errorMask,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
         }
 
-        protected override void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
+        protected override void SetNthObject(ushort index, object obj)
         {
             ScriptVariableReference_FieldIndex enu = (ScriptVariableReference_FieldIndex)index;
             switch (enu)
@@ -677,15 +668,15 @@ namespace Mutagen.Bethesda.Oblivion
                     this.VariableIndex = (Int32)obj;
                     break;
                 default:
-                    base.SetNthObject(index, obj, cmds);
+                    base.SetNthObject(index, obj);
                     break;
             }
         }
 
-        public override void Clear(NotifyingUnsetParameters cmds = null)
+        public override void Clear()
         {
-            CallClearPartial_Internal(cmds);
-            ScriptVariableReferenceCommon.Clear(this, cmds);
+            CallClearPartial_Internal();
+            ScriptVariableReferenceCommon.Clear(this);
         }
 
 
@@ -924,16 +915,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IScriptVariableReferenceGetter rhs,
             IScriptVariableReferenceGetter def,
             ErrorMaskBuilder errorMask,
-            ScriptVariableReference_CopyMask copyMask,
-            NotifyingFireParameters cmds = null)
+            ScriptVariableReference_CopyMask copyMask)
         {
             ScriptReferenceCommon.CopyFieldsFrom(
                 item,
                 rhs,
                 def,
                 errorMask,
-                copyMask,
-                cmds);
+                copyMask);
             if (copyMask?.VariableIndex ?? true)
             {
                 errorMask?.PushIndex((int)ScriptVariableReference_FieldIndex.VariableIndex);
@@ -955,9 +944,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void Clear(
-            IScriptVariableReference item,
-            NotifyingUnsetParameters cmds = null)
+        public static void Clear(IScriptVariableReference item)
         {
             item.VariableIndex = default(Int32);
         }

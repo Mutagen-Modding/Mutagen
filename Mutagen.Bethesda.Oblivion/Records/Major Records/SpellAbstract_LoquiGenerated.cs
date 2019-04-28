@@ -523,32 +523,27 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public override void CopyFieldsFrom(
-            IMajorRecordGetter rhs,
-            NotifyingFireParameters cmds = null)
+        public override void CopyFieldsFrom(IMajorRecordGetter rhs)
         {
             this.CopyFieldsFrom(
                 rhs: (ISpellAbstractGetter)rhs,
                 def: null,
                 doMasks: false,
                 errorMask: out var errMask,
-                copyMask: null,
-                cmds: cmds);
+                copyMask: null);
         }
 
         public void CopyFieldsFrom(
             ISpellAbstractGetter rhs,
             SpellAbstract_CopyMask copyMask,
-            ISpellAbstractGetter def = null,
-            NotifyingFireParameters cmds = null)
+            ISpellAbstractGetter def = null)
         {
             this.CopyFieldsFrom(
                 rhs: rhs,
                 def: def,
                 doMasks: false,
                 errorMask: out var errMask,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
         }
 
         public void CopyFieldsFrom(
@@ -556,7 +551,6 @@ namespace Mutagen.Bethesda.Oblivion
             out SpellAbstract_ErrorMask errorMask,
             SpellAbstract_CopyMask copyMask = null,
             ISpellAbstractGetter def = null,
-            NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
@@ -565,8 +559,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 def: def,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
             errorMask = SpellAbstract_ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -575,7 +568,6 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMask,
             SpellAbstract_CopyMask copyMask = null,
             ISpellAbstractGetter def = null,
-            NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
             SpellAbstractCommon.CopyFieldsFrom(
@@ -583,25 +575,24 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 def: def,
                 errorMask: errorMask,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
         }
 
-        protected override void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
+        protected override void SetNthObject(ushort index, object obj)
         {
             SpellAbstract_FieldIndex enu = (SpellAbstract_FieldIndex)index;
             switch (enu)
             {
                 default:
-                    base.SetNthObject(index, obj, cmds);
+                    base.SetNthObject(index, obj);
                     break;
             }
         }
 
-        public override void Clear(NotifyingUnsetParameters cmds = null)
+        public override void Clear()
         {
-            CallClearPartial_Internal(cmds);
-            SpellAbstractCommon.Clear(this, cmds);
+            CallClearPartial_Internal();
+            SpellAbstractCommon.Clear(this);
         }
 
 
@@ -823,23 +814,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ISpellAbstractGetter rhs,
             ISpellAbstractGetter def,
             ErrorMaskBuilder errorMask,
-            SpellAbstract_CopyMask copyMask,
-            NotifyingFireParameters cmds = null)
+            SpellAbstract_CopyMask copyMask)
         {
             OblivionMajorRecordCommon.CopyFieldsFrom(
                 item,
                 rhs,
                 def,
                 errorMask,
-                copyMask,
-                cmds);
+                copyMask);
         }
 
         #endregion
 
-        public static void Clear(
-            ISpellAbstract item,
-            NotifyingUnsetParameters cmds = null)
+        public static void Clear(ISpellAbstract item)
         {
         }
 

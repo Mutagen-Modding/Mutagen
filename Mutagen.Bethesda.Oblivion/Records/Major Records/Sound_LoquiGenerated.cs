@@ -806,32 +806,27 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public override void CopyFieldsFrom(
-            IMajorRecordGetter rhs,
-            NotifyingFireParameters cmds = null)
+        public override void CopyFieldsFrom(IMajorRecordGetter rhs)
         {
             this.CopyFieldsFrom(
                 rhs: (ISoundGetter)rhs,
                 def: null,
                 doMasks: false,
                 errorMask: out var errMask,
-                copyMask: null,
-                cmds: cmds);
+                copyMask: null);
         }
 
         public void CopyFieldsFrom(
             ISoundGetter rhs,
             Sound_CopyMask copyMask,
-            ISoundGetter def = null,
-            NotifyingFireParameters cmds = null)
+            ISoundGetter def = null)
         {
             this.CopyFieldsFrom(
                 rhs: rhs,
                 def: def,
                 doMasks: false,
                 errorMask: out var errMask,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
         }
 
         public void CopyFieldsFrom(
@@ -839,7 +834,6 @@ namespace Mutagen.Bethesda.Oblivion
             out Sound_ErrorMask errorMask,
             Sound_CopyMask copyMask = null,
             ISoundGetter def = null,
-            NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
@@ -848,8 +842,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 def: def,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
             errorMask = Sound_ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -858,7 +851,6 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMask,
             Sound_CopyMask copyMask = null,
             ISoundGetter def = null,
-            NotifyingFireParameters cmds = null,
             bool doMasks = true)
         {
             SoundCommon.CopyFieldsFrom(
@@ -866,11 +858,10 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 def: def,
                 errorMask: errorMask,
-                copyMask: copyMask,
-                cmds: cmds);
+                copyMask: copyMask);
         }
 
-        protected override void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
+        protected override void SetNthObject(ushort index, object obj)
         {
             Sound_FieldIndex enu = (Sound_FieldIndex)index;
             switch (enu)
@@ -882,15 +873,15 @@ namespace Mutagen.Bethesda.Oblivion
                     this.Data = (SoundData)obj;
                     break;
                 default:
-                    base.SetNthObject(index, obj, cmds);
+                    base.SetNthObject(index, obj);
                     break;
             }
         }
 
-        public override void Clear(NotifyingUnsetParameters cmds = null)
+        public override void Clear()
         {
-            CallClearPartial_Internal(cmds);
-            SoundCommon.Clear(this, cmds);
+            CallClearPartial_Internal();
+            SoundCommon.Clear(this);
         }
 
 
@@ -1167,16 +1158,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ISoundGetter rhs,
             ISoundGetter def,
             ErrorMaskBuilder errorMask,
-            Sound_CopyMask copyMask,
-            NotifyingFireParameters cmds = null)
+            Sound_CopyMask copyMask)
         {
             OblivionMajorRecordCommon.CopyFieldsFrom(
                 item,
                 rhs,
                 def,
                 errorMask,
-                copyMask,
-                cmds);
+                copyMask);
             if (copyMask?.File ?? true)
             {
                 errorMask?.PushIndex((int)Sound_FieldIndex.File);
@@ -1231,8 +1220,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                     rhs: rhs.Data,
                                     def: def?.Data,
                                     errorMask: errorMask,
-                                    copyMask: copyMask?.Data.Specific,
-                                    cmds: cmds);
+                                    copyMask: copyMask?.Data.Specific);
                                 break;
                             case CopyOption.MakeCopy:
                                 item.Data = SoundData.Copy(
@@ -1265,9 +1253,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        public static void Clear(
-            ISound item,
-            NotifyingUnsetParameters cmds = null)
+        public static void Clear(ISound item)
         {
             item.File_Unset();
             item.Data_Unset();
