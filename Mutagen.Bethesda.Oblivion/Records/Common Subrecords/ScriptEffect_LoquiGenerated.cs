@@ -664,7 +664,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.SCITDataTypeState = SCITDataType.Has;
                     }
-                    Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.ParseInto(
+                    Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
                         frame: dataFrame,
                         masterReferences: masterReferences,
                         item: item.Script_Property,
@@ -1744,7 +1744,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(ScriptEffect_Registration.SCIT_HEADER)))
                 {
-                    Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.Write(
+                    Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                         writer: writer,
                         item: item.Script_Property,
                         fieldIndex: (int)ScriptEffect_FieldIndex.Script,

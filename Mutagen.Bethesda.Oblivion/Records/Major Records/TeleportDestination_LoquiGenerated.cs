@@ -549,7 +549,7 @@ namespace Mutagen.Bethesda.Oblivion
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.ParseInto(
+            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
                 frame: frame,
                 masterReferences: masterReferences,
                 item: item.Destination_Property,
@@ -1396,7 +1396,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             MasterReferences masterReferences)
         {
-            Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Destination_Property,
                 fieldIndex: (int)TeleportDestination_FieldIndex.Destination,

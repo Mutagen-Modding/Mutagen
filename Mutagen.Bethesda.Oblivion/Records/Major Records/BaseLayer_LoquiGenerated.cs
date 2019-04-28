@@ -633,7 +633,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.BTXTDataTypeState = BTXTDataType.Has;
                     }
-                    Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.ParseInto(
+                    Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
                         frame: dataFrame,
                         masterReferences: masterReferences,
                         item: item.Texture_Property,
@@ -1456,7 +1456,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(BaseLayer_Registration.BTXT_HEADER)))
                 {
-                    Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.Write(
+                    Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                         writer: writer,
                         item: item.Texture_Property,
                         fieldIndex: (int)BaseLayer_FieldIndex.Texture,

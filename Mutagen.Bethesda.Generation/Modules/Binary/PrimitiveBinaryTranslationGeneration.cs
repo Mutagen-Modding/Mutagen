@@ -17,7 +17,7 @@ namespace Mutagen.Bethesda.Generation
 
         public override string GetTranslatorInstance(TypeGeneration typeGen)
         {
-            return $"{typeName}BinaryTranslation.Instance";
+            return $"{Typename(typeGen)}BinaryTranslation.Instance";
         }
 
         public PrimitiveBinaryTranslationGeneration(string typeName = null, bool? nullable = null)

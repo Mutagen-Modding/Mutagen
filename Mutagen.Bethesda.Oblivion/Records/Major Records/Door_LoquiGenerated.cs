@@ -897,7 +897,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case 0x49524353: // SCRI
                 {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.ParseInto(
+                    Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
                         item: item.Script_Property,
@@ -908,7 +908,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case 0x4D414E53: // SNAM
                 {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.ParseInto(
+                    Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
                         item: item.OpenSound_Property,
@@ -919,7 +919,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case 0x4D414E41: // ANAM
                 {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.ParseInto(
+                    Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
                         item: item.CloseSound_Property,
@@ -930,7 +930,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case 0x4D414E42: // BNAM
                 {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.ParseInto(
+                    Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
                         item: item.LoopSound_Property,
@@ -977,7 +977,7 @@ namespace Mutagen.Bethesda.Oblivion
                         fieldIndex: (int)Door_FieldIndex.RandomTeleportDestinations,
                         lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
                         errorMask: errorMask,
-                        transl: FormKeyBinaryTranslation.Instance.Parse);
+                        transl: FormLinkBinaryTranslation.Instance.Parse);
                     return TryGet<int?>.Succeed((int)Door_FieldIndex.RandomTeleportDestinations);
                 }
                 default:
@@ -2386,7 +2386,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (item.Script_Property.HasBeenSet)
             {
-                Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.Write(
+                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.Script_Property,
                     fieldIndex: (int)Door_FieldIndex.Script,
@@ -2397,7 +2397,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (item.OpenSound_Property.HasBeenSet)
             {
-                Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.Write(
+                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.OpenSound_Property,
                     fieldIndex: (int)Door_FieldIndex.OpenSound,
@@ -2408,7 +2408,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (item.CloseSound_Property.HasBeenSet)
             {
-                Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.Write(
+                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.CloseSound_Property,
                     fieldIndex: (int)Door_FieldIndex.CloseSound,
@@ -2419,7 +2419,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (item.LoopSound_Property.HasBeenSet)
             {
-                Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.Write(
+                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.LoopSound_Property,
                     fieldIndex: (int)Door_FieldIndex.LoopSound,
@@ -2448,7 +2448,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask: errorMask,
                     transl: (MutagenWriter subWriter, FormIDSetLink<Place> subItem, ErrorMaskBuilder listErrorMask) =>
                     {
-                        Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.Write(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                             writer: subWriter,
                             item: subItem,
                             errorMask: listErrorMask,

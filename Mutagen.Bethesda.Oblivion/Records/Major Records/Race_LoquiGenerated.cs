@@ -1411,7 +1411,7 @@ namespace Mutagen.Bethesda.Oblivion
                         fieldIndex: (int)Race_FieldIndex.Spells,
                         lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
                         errorMask: errorMask,
-                        transl: FormKeyBinaryTranslation.Instance.Parse);
+                        transl: FormLinkBinaryTranslation.Instance.Parse);
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.Spells);
                 }
                 case 0x4D414E58: // XNAM
@@ -1838,7 +1838,7 @@ namespace Mutagen.Bethesda.Oblivion
                         fieldIndex: (int)Race_FieldIndex.Hairs,
                         lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
                         errorMask: errorMask,
-                        transl: FormKeyBinaryTranslation.Instance.Parse);
+                        transl: FormLinkBinaryTranslation.Instance.Parse);
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.Hairs);
                 }
                 case 0x4D414E45: // ENAM
@@ -1851,7 +1851,7 @@ namespace Mutagen.Bethesda.Oblivion
                         fieldIndex: (int)Race_FieldIndex.Eyes,
                         lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
                         errorMask: errorMask,
-                        transl: FormKeyBinaryTranslation.Instance.Parse);
+                        transl: FormLinkBinaryTranslation.Instance.Parse);
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.Eyes);
                 }
                 case 0x53474746: // FGGS
@@ -5136,7 +5136,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask: errorMask,
                     transl: (MutagenWriter subWriter, FormIDSetLink<Spell> subItem, ErrorMaskBuilder listErrorMask) =>
                     {
-                        Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.Write(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                             writer: subWriter,
                             item: subItem,
                             errorMask: listErrorMask,
@@ -5309,7 +5309,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask: errorMask,
                     transl: (MutagenWriter subWriter, FormIDLink<Hair> subItem, ErrorMaskBuilder listErrorMask) =>
                     {
-                        Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.Write(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                             writer: subWriter,
                             item: subItem,
                             errorMask: listErrorMask,
@@ -5327,7 +5327,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask: errorMask,
                     transl: (MutagenWriter subWriter, FormIDLink<Eye> subItem, ErrorMaskBuilder listErrorMask) =>
                     {
-                        Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.Write(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                             writer: subWriter,
                             item: subItem,
                             errorMask: listErrorMask,

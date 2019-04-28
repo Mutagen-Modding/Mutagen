@@ -64,6 +64,44 @@ namespace Mutagen.Bethesda.Binary
             return HeaderTranslation.ReadNextRecordType(reader.Reader);
         }
 
+        public bool Parse<T>(
+            MutagenFrame frame,
+            out EDIDLink<T> item,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask)
+            where T : class, IMajorRecord
+        {
+            if (!frame.TryCheckUpcomingRead(4, out var ex))
+            {
+                frame.Position = frame.FinalLocation;
+                errorMask.ReportExceptionOrThrow(ex);
+                item = new EDIDLink<T>();
+                return false;
+            }
+
+            item = new EDIDLink<T>(HeaderTranslation.ReadNextRecordType(frame));
+            return true;
+        }
+
+        public bool Parse<T>(
+            MutagenFrame frame,
+            out EDIDSetLink<T> item,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask)
+            where T : class, IMajorRecord
+        {
+            if (!frame.TryCheckUpcomingRead(4, out var ex))
+            {
+                frame.Position = frame.FinalLocation;
+                errorMask.ReportExceptionOrThrow(ex);
+                item = new EDIDSetLink<T>();
+                return false;
+            }
+
+            item = new EDIDSetLink<T>(HeaderTranslation.ReadNextRecordType(frame));
+            return true;
+        }
+
         public override void WriteValue(MutagenWriter writer, RecordType item)
         {
             writer.Write(item.TypeInt);
@@ -217,6 +255,61 @@ namespace Mutagen.Bethesda.Binary
                 header,
                 nullable,
                 errorMask);
+        }
+
+        public void Write<T>(
+            MutagenWriter writer,
+            EDIDLink<T> item,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask,
+            bool nullable = false)
+            where T : class, IMajorRecord
+        {
+            Int32BinaryTranslation.Instance.Write(
+                writer,
+                item.EDID.TypeInt,
+                errorMask: errorMask);
+        }
+
+        public void Write<T>(
+            MutagenWriter writer,
+            EDIDSetLink<T> item,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask,
+            bool nullable = false)
+            where T : class, IMajorRecord
+        {
+            Int32BinaryTranslation.Instance.Write(
+                writer,
+                item.EDID.TypeInt,
+                errorMask: errorMask);
+        }
+
+        public void Write<T>(
+            MutagenWriter writer,
+            EDIDSetLink<T> item,
+            MasterReferences masterReferences,
+            int fieldIndex,
+            ErrorMaskBuilder errorMask,
+            bool nullable = false)
+            where T : class, IMajorRecord
+        {
+            using (errorMask.PushIndex(fieldIndex))
+            {
+                try
+                {
+                    this.Write(
+                        writer,
+                        item,
+                        masterReferences,
+                        errorMask);
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+            }
         }
     }
 }

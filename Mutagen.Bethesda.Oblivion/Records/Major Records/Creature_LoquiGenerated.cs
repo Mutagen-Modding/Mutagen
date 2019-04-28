@@ -1881,7 +1881,7 @@ namespace Mutagen.Bethesda.Oblivion
                         fieldIndex: (int)Creature_FieldIndex.Spells,
                         lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
                         errorMask: errorMask,
-                        transl: FormKeyBinaryTranslation.Instance.Parse);
+                        transl: FormLinkBinaryTranslation.Instance.Parse);
                     return TryGet<int?>.Succeed((int)Creature_FieldIndex.Spells);
                 }
                 case 0x5A46494E: // NIFZ
@@ -2134,7 +2134,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case 0x4D414E49: // INAM
                 {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.ParseInto(
+                    Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
                         item: item.DeathItem_Property,
@@ -2145,7 +2145,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case 0x49524353: // SCRI
                 {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.ParseInto(
+                    Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
                         item: item.Script_Property,
@@ -2342,7 +2342,7 @@ namespace Mutagen.Bethesda.Oblivion
                         fieldIndex: (int)Creature_FieldIndex.AIPackages,
                         lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
                         errorMask: errorMask,
-                        transl: FormKeyBinaryTranslation.Instance.Parse);
+                        transl: FormLinkBinaryTranslation.Instance.Parse);
                     return TryGet<int?>.Succeed((int)Creature_FieldIndex.AIPackages);
                 }
                 case 0x5A46464B: // KFFZ
@@ -2767,7 +2767,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case 0x4D414E5A: // ZNAM
                 {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.ParseInto(
+                    Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
                         item: item.CombatStyle_Property,
@@ -2925,7 +2925,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case 0x52435343: // CSCR
                 {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.ParseInto(
+                    Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
                         item: item.InheritsSoundFrom_Property,
@@ -8218,7 +8218,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask: errorMask,
                     transl: (MutagenWriter subWriter, FormIDSetLink<SpellAbstract> subItem, ErrorMaskBuilder listErrorMask) =>
                     {
-                        Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.Write(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                             writer: subWriter,
                             item: subItem,
                             errorMask: listErrorMask,
@@ -8309,7 +8309,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (item.DeathItem_Property.HasBeenSet)
             {
-                Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.Write(
+                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.DeathItem_Property,
                     fieldIndex: (int)Creature_FieldIndex.DeathItem,
@@ -8320,7 +8320,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (item.Script_Property.HasBeenSet)
             {
-                Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.Write(
+                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.Script_Property,
                     fieldIndex: (int)Creature_FieldIndex.Script,
@@ -8382,7 +8382,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask: errorMask,
                     transl: (MutagenWriter subWriter, FormIDSetLink<AIPackage> subItem, ErrorMaskBuilder listErrorMask) =>
                     {
-                        Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.Write(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                             writer: subWriter,
                             item: subItem,
                             errorMask: listErrorMask,
@@ -8497,7 +8497,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (item.CombatStyle_Property.HasBeenSet)
             {
-                Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.Write(
+                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.CombatStyle_Property,
                     fieldIndex: (int)Creature_FieldIndex.CombatStyle,
@@ -8558,7 +8558,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (item.InheritsSoundFrom_Property.HasBeenSet)
             {
-                Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.Write(
+                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.InheritsSoundFrom_Property,
                     fieldIndex: (int)Creature_FieldIndex.InheritsSoundFrom,

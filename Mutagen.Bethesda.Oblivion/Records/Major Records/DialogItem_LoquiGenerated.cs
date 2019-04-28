@@ -985,7 +985,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case 0x49545351: // QSTI
                 {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.ParseInto(
+                    Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
                         item: item.Quest_Property,
@@ -996,7 +996,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case 0x4D414E50: // PNAM
                 {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.ParseInto(
+                    Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
                         item: item.PreviousTopic_Property,
@@ -1014,7 +1014,7 @@ namespace Mutagen.Bethesda.Oblivion
                         fieldIndex: (int)DialogItem_FieldIndex.Topics,
                         lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
                         errorMask: errorMask,
-                        transl: FormKeyBinaryTranslation.Instance.Parse);
+                        transl: FormLinkBinaryTranslation.Instance.Parse);
                     return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.Topics);
                 }
                 case 0x54445254: // TRDT
@@ -1068,7 +1068,7 @@ namespace Mutagen.Bethesda.Oblivion
                         fieldIndex: (int)DialogItem_FieldIndex.Choices,
                         lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
                         errorMask: errorMask,
-                        transl: FormKeyBinaryTranslation.Instance.Parse);
+                        transl: FormLinkBinaryTranslation.Instance.Parse);
                     return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.Choices);
                 }
                 case 0x464C4354: // TCLF
@@ -1081,7 +1081,7 @@ namespace Mutagen.Bethesda.Oblivion
                         fieldIndex: (int)DialogItem_FieldIndex.LinkFrom,
                         lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
                         errorMask: errorMask,
-                        transl: FormKeyBinaryTranslation.Instance.Parse);
+                        transl: FormLinkBinaryTranslation.Instance.Parse);
                     return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.LinkFrom);
                 }
                 case 0x52484353: // SCHR
@@ -2787,7 +2787,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (item.Quest_Property.HasBeenSet)
             {
-                Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.Write(
+                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.Quest_Property,
                     fieldIndex: (int)DialogItem_FieldIndex.Quest,
@@ -2798,7 +2798,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (item.PreviousTopic_Property.HasBeenSet)
             {
-                Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.Write(
+                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.PreviousTopic_Property,
                     fieldIndex: (int)DialogItem_FieldIndex.PreviousTopic,
@@ -2816,7 +2816,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask: errorMask,
                     transl: (MutagenWriter subWriter, FormIDSetLink<DialogTopic> subItem, ErrorMaskBuilder listErrorMask) =>
                     {
-                        Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.Write(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                             writer: subWriter,
                             item: subItem,
                             errorMask: listErrorMask,
@@ -2869,7 +2869,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask: errorMask,
                     transl: (MutagenWriter subWriter, FormIDSetLink<DialogTopic> subItem, ErrorMaskBuilder listErrorMask) =>
                     {
-                        Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.Write(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                             writer: subWriter,
                             item: subItem,
                             errorMask: listErrorMask,
@@ -2888,7 +2888,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask: errorMask,
                     transl: (MutagenWriter subWriter, FormIDSetLink<DialogTopic> subItem, ErrorMaskBuilder listErrorMask) =>
                     {
-                        Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.Write(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                             writer: subWriter,
                             item: subItem,
                             errorMask: listErrorMask,

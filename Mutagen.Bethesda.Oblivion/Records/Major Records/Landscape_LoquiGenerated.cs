@@ -992,7 +992,7 @@ namespace Mutagen.Bethesda.Oblivion
                         fieldIndex: (int)Landscape_FieldIndex.Textures,
                         lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
                         errorMask: errorMask,
-                        transl: FormKeyBinaryTranslation.Instance.Parse);
+                        transl: FormLinkBinaryTranslation.Instance.Parse);
                     return TryGet<int?>.Succeed((int)Landscape_FieldIndex.Textures);
                 }
                 default:
@@ -2375,7 +2375,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask: errorMask,
                     transl: (MutagenWriter subWriter, FormIDLink<LandTexture> subItem, ErrorMaskBuilder listErrorMask) =>
                     {
-                        Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.Write(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                             writer: subWriter,
                             item: subItem,
                             errorMask: listErrorMask,

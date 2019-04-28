@@ -34,7 +34,7 @@ namespace Mutagen.Bethesda.Generation
             switch (linkType.FormIDType)
             {
                 case FormIDLinkType.FormIDTypeEnum.Normal:
-                    return base.Typename(typeGen);
+                    return "FormLink";
                 case FormIDLinkType.FormIDTypeEnum.EDIDChars:
                     return "RecordType";
                 default:
@@ -112,7 +112,7 @@ namespace Mutagen.Bethesda.Generation
                 fg.AppendLine($"{frameAccessor}.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;");
             }
 
-            TranslationGeneration.WrapParseCall(
+             TranslationGeneration.WrapParseCall(
                 new TranslationWrapParseArgs()
                 {
                     FG = fg,

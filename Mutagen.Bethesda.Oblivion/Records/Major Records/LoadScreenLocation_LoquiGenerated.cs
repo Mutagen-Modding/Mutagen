@@ -551,13 +551,13 @@ namespace Mutagen.Bethesda.Oblivion
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.ParseInto(
+            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
                 frame: frame,
                 masterReferences: masterReferences,
                 item: item.Direct_Property,
                 fieldIndex: (int)LoadScreenLocation_FieldIndex.Direct,
                 errorMask: errorMask);
-            Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.ParseInto(
+            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
                 frame: frame,
                 masterReferences: masterReferences,
                 item: item.Indirect_Property,
@@ -1361,13 +1361,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             MasterReferences masterReferences)
         {
-            Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Direct_Property,
                 fieldIndex: (int)LoadScreenLocation_FieldIndex.Direct,
                 errorMask: errorMask,
                 masterReferences: masterReferences);
-            Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Indirect_Property,
                 fieldIndex: (int)LoadScreenLocation_FieldIndex.Indirect,

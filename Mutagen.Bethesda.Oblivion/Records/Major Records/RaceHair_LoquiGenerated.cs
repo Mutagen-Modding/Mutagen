@@ -526,13 +526,13 @@ namespace Mutagen.Bethesda.Oblivion
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.ParseInto(
+            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
                 frame: frame,
                 masterReferences: masterReferences,
                 item: item.Male_Property,
                 fieldIndex: (int)RaceHair_FieldIndex.Male,
                 errorMask: errorMask);
-            Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.ParseInto(
+            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
                 frame: frame,
                 masterReferences: masterReferences,
                 item: item.Female_Property,
@@ -1229,13 +1229,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             MasterReferences masterReferences)
         {
-            Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Male_Property,
                 fieldIndex: (int)RaceHair_FieldIndex.Male,
                 errorMask: errorMask,
                 masterReferences: masterReferences);
-            Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Female_Property,
                 fieldIndex: (int)RaceHair_FieldIndex.Female,

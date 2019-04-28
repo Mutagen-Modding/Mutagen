@@ -1231,7 +1231,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case 0x4D414E57: // WNAM
                 {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.ParseInto(
+                    Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
                         item: item.Parent_Property,
@@ -1242,7 +1242,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case 0x4D414E43: // CNAM
                 {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.ParseInto(
+                    Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
                         item: item.Climate_Property,
@@ -1253,7 +1253,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case 0x324D414E: // NAM2
                 {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.ParseInto(
+                    Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
                         item: item.Water_Property,
@@ -3733,7 +3733,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (item.Parent_Property.HasBeenSet)
             {
-                Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.Write(
+                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.Parent_Property,
                     fieldIndex: (int)Worldspace_FieldIndex.Parent,
@@ -3744,7 +3744,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (item.Climate_Property.HasBeenSet)
             {
-                Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.Write(
+                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.Climate_Property,
                     fieldIndex: (int)Worldspace_FieldIndex.Climate,
@@ -3755,7 +3755,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (item.Water_Property.HasBeenSet)
             {
-                Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.Write(
+                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.Water_Property,
                     fieldIndex: (int)Worldspace_FieldIndex.Water,

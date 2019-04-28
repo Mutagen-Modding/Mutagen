@@ -1051,7 +1051,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case 0x4D414E57: // WNAM
                 {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.ParseInto(
+                    Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
                         item: item.Worldspace_Property,
@@ -2844,7 +2844,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (item.Worldspace_Property.HasBeenSet)
             {
-                Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.Write(
+                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.Worldspace_Property,
                     fieldIndex: (int)Region_FieldIndex.Worldspace,

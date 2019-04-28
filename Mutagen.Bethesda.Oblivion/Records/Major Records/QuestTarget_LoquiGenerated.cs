@@ -601,7 +601,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.QSTADataTypeState = QSTADataType.Has;
                     }
-                    Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.ParseInto(
+                    Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
                         frame: dataFrame,
                         masterReferences: masterReferences,
                         item: item.Target_Property,
@@ -1506,7 +1506,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(QuestTarget_Registration.QSTA_HEADER)))
                 {
-                    Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.Write(
+                    Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                         writer: writer,
                         item: item.Target_Property,
                         fieldIndex: (int)QuestTarget_FieldIndex.Target,

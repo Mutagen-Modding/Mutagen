@@ -615,7 +615,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 errorMask?.PopIndex();
             }
-            Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.ParseInto(
+            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
                 frame: frame,
                 masterReferences: masterReferences,
                 item: item.Key_Property,
@@ -1531,7 +1531,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item.Fluff,
                 fieldIndex: (int)LockInformation_FieldIndex.Fluff,
                 errorMask: errorMask);
-            Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Key_Property,
                 fieldIndex: (int)LockInformation_FieldIndex.Key,

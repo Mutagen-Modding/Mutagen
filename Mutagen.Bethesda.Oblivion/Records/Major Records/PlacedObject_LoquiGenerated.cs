@@ -1432,7 +1432,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case 0x454D414E: // NAME
                 {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.ParseInto(
+                    Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
                         item: item.Base_Property,
@@ -1559,7 +1559,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case 0x4E574F58: // XOWN
                 {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.ParseInto(
+                    Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
                         item: item.Owner_Property,
@@ -1599,7 +1599,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case 0x424C4758: // XGLB
                 {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.ParseInto(
+                    Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
                         item: item.GlobalVariable_Property,
@@ -1639,7 +1639,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case 0x47525458: // XTRG
                 {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.ParseInto(
+                    Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
                         item: item.Target_Property,
@@ -1795,7 +1795,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case 0x4D545258: // XRTM
                 {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.ParseInto(
+                    Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
                         item: item.Unknown_Property,
@@ -1961,7 +1961,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case 0x4C4F5358: // XSOL
                 {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.ParseInto(
+                    Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
                         item: item.ContainedSoul_Property,
@@ -5158,7 +5158,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 masterReferences: masterReferences);
             if (item.Base_Property.HasBeenSet)
             {
-                Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.Write(
+                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.Base_Property,
                     fieldIndex: (int)PlacedObject_FieldIndex.Base,
@@ -5207,7 +5207,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (item.Owner_Property.HasBeenSet)
             {
-                Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.Write(
+                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.Owner_Property,
                     fieldIndex: (int)PlacedObject_FieldIndex.Owner,
@@ -5228,7 +5228,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (item.GlobalVariable_Property.HasBeenSet)
             {
-                Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.Write(
+                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.GlobalVariable_Property,
                     fieldIndex: (int)PlacedObject_FieldIndex.GlobalVariable,
@@ -5248,7 +5248,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (item.Target_Property.HasBeenSet)
             {
-                Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.Write(
+                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.Target_Property,
                     fieldIndex: (int)PlacedObject_FieldIndex.Target,
@@ -5308,7 +5308,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (item.Unknown_Property.HasBeenSet)
             {
-                Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.Write(
+                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.Unknown_Property,
                     fieldIndex: (int)PlacedObject_FieldIndex.Unknown,
@@ -5375,7 +5375,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (item.ContainedSoul_Property.HasBeenSet)
             {
-                Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.Write(
+                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.ContainedSoul_Property,
                     fieldIndex: (int)PlacedObject_FieldIndex.ContainedSoul,

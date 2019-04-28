@@ -94,6 +94,7 @@
     <Compile Include="Translators\Binary\FilePathBinaryTranslation.cs" />
     <Compile Include="Translators\Binary\FloatBinaryTranslation.cs" />
     <Compile Include="Translators\Binary\FormKeyBinaryTranslation.cs" />
+    <Compile Include="Translators\Binary\FormLinkBinaryTranslation.cs" />
     <Compile Include="Translators\Binary\HeaderExport.cs" />
     <Compile Include="Translators\Binary\HeaderTranslation.cs" />
     <Compile Include="Translators\Binary\Int16BinaryTranslation.cs" />

@@ -1223,7 +1223,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PopIndex();
                     }
-                    Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.ParseInto(
+                    Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
                         frame: dataFrame,
                         masterReferences: masterReferences,
                         item: item.Light_Property,
@@ -1253,7 +1253,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PopIndex();
                     }
-                    Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.ParseInto(
+                    Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
                         frame: dataFrame,
                         masterReferences: masterReferences,
                         item: item.EffectShader_Property,
@@ -1301,7 +1301,7 @@ namespace Mutagen.Bethesda.Oblivion
                         fieldIndex: (int)MagicEffect_FieldIndex.CounterEffects,
                         lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
                         errorMask: errorMask,
-                        transl: FormKeyBinaryTranslation.Instance.Parse);
+                        transl: RecordTypeBinaryTranslation.Instance.Parse);
                     return TryGet<int?>.Succeed((int)MagicEffect_FieldIndex.CounterEffects);
                 }
                 default:
@@ -3427,7 +3427,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         item: item.CounterEffectCount,
                         fieldIndex: (int)MagicEffect_FieldIndex.CounterEffectCount,
                         errorMask: errorMask);
-                    Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.Write(
+                    Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                         writer: writer,
                         item: item.Light_Property,
                         fieldIndex: (int)MagicEffect_FieldIndex.Light,
@@ -3438,7 +3438,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         item: item.ProjectileSpeed,
                         fieldIndex: (int)MagicEffect_FieldIndex.ProjectileSpeed,
                         errorMask: errorMask);
-                    Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.Write(
+                    Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                         writer: writer,
                         item: item.EffectShader_Property,
                         fieldIndex: (int)MagicEffect_FieldIndex.EffectShader,
