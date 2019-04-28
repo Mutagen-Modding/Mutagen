@@ -280,12 +280,12 @@ namespace Mutagen.Bethesda.Oblivion
             if (SunTexture_IsSet != rhs.SunTexture_IsSet) return false;
             if (SunTexture_IsSet)
             {
-                if (!object.Equals(this.SunTexture, rhs.SunTexture)) return false;
+                if (!string.Equals(this.SunTexture, rhs.SunTexture)) return false;
             }
             if (SunGlareTexture_IsSet != rhs.SunGlareTexture_IsSet) return false;
             if (SunGlareTexture_IsSet)
             {
-                if (!object.Equals(this.SunGlareTexture, rhs.SunGlareTexture)) return false;
+                if (!string.Equals(this.SunGlareTexture, rhs.SunGlareTexture)) return false;
             }
             if (Model_IsSet != rhs.Model_IsSet) return false;
             if (Model_IsSet)
@@ -2160,8 +2160,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 rhs.Weathers,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
-            ret.SunTexture = item.SunTexture_IsSet == rhs.SunTexture_IsSet && object.Equals(item.SunTexture, rhs.SunTexture);
-            ret.SunGlareTexture = item.SunGlareTexture_IsSet == rhs.SunGlareTexture_IsSet && object.Equals(item.SunGlareTexture, rhs.SunGlareTexture);
+            ret.SunTexture = item.SunTexture_IsSet == rhs.SunTexture_IsSet && string.Equals(item.SunTexture, rhs.SunTexture);
+            ret.SunGlareTexture = item.SunGlareTexture_IsSet == rhs.SunGlareTexture_IsSet && string.Equals(item.SunGlareTexture, rhs.SunGlareTexture);
             ret.Model = EqualsMaskHelper.EqualsHelper(
                 item.Model_IsSet,
                 rhs.Model_IsSet,

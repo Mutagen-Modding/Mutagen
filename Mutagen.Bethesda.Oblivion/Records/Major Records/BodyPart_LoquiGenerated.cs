@@ -146,7 +146,7 @@ namespace Mutagen.Bethesda.Oblivion
             if (Icon_IsSet != rhs.Icon_IsSet) return false;
             if (Icon_IsSet)
             {
-                if (!object.Equals(this.Icon, rhs.Icon)) return false;
+                if (!string.Equals(this.Icon, rhs.Icon)) return false;
             }
             return true;
         }
@@ -1168,7 +1168,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (rhs == null) return;
             ret.Index = item.Index_IsSet == rhs.Index_IsSet && item.Index == rhs.Index;
-            ret.Icon = item.Icon_IsSet == rhs.Icon_IsSet && object.Equals(item.Icon, rhs.Icon);
+            ret.Icon = item.Icon_IsSet == rhs.Icon_IsSet && string.Equals(item.Icon, rhs.Icon);
         }
 
         public static string ToString(

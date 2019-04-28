@@ -267,7 +267,7 @@ namespace Mutagen.Bethesda.Oblivion
             if (RagdollData_IsSet != rhs.RagdollData_IsSet) return false;
             if (RagdollData_IsSet)
             {
-                if (!this.RagdollData.EqualsFast(rhs.RagdollData)) return false;
+                if (!ByteExt.EqualsFast(this.RagdollData, rhs.RagdollData)) return false;
             }
             if (Scale_IsSet != rhs.Scale_IsSet) return false;
             if (Scale_IsSet)
@@ -1975,10 +1975,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 rhs.EnableParent,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
                 include);
-            ret.RagdollData = item.RagdollData_IsSet == rhs.RagdollData_IsSet && item.RagdollData.EqualsFast(rhs.RagdollData);
+            ret.RagdollData = item.RagdollData_IsSet == rhs.RagdollData_IsSet && ByteExt.EqualsFast(item.RagdollData, rhs.RagdollData);
             ret.Scale = item.Scale_IsSet == rhs.Scale_IsSet && item.Scale.EqualsWithin(rhs.Scale);
-            ret.Position = item.Position == rhs.Position;
-            ret.Rotation = item.Rotation == rhs.Rotation;
+            ret.Position = item.Position.Equals(rhs.Position);
+            ret.Rotation = item.Rotation.Equals(rhs.Rotation);
             OblivionMajorRecordCommon.FillEqualsMask(item, rhs, ret);
         }
 

@@ -583,12 +583,12 @@ namespace Mutagen.Bethesda.Oblivion
             if (TextureLowerLayer_IsSet != rhs.TextureLowerLayer_IsSet) return false;
             if (TextureLowerLayer_IsSet)
             {
-                if (!object.Equals(this.TextureLowerLayer, rhs.TextureLowerLayer)) return false;
+                if (!string.Equals(this.TextureLowerLayer, rhs.TextureLowerLayer)) return false;
             }
             if (TextureUpperLayer_IsSet != rhs.TextureUpperLayer_IsSet) return false;
             if (TextureUpperLayer_IsSet)
             {
-                if (!object.Equals(this.TextureUpperLayer, rhs.TextureUpperLayer)) return false;
+                if (!string.Equals(this.TextureUpperLayer, rhs.TextureUpperLayer)) return false;
             }
             if (Model_IsSet != rhs.Model_IsSet) return false;
             if (Model_IsSet)
@@ -4214,8 +4214,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.TextureLowerLayer = item.TextureLowerLayer_IsSet == rhs.TextureLowerLayer_IsSet && object.Equals(item.TextureLowerLayer, rhs.TextureLowerLayer);
-            ret.TextureUpperLayer = item.TextureUpperLayer_IsSet == rhs.TextureUpperLayer_IsSet && object.Equals(item.TextureUpperLayer, rhs.TextureUpperLayer);
+            ret.TextureLowerLayer = item.TextureLowerLayer_IsSet == rhs.TextureLowerLayer_IsSet && string.Equals(item.TextureLowerLayer, rhs.TextureLowerLayer);
+            ret.TextureUpperLayer = item.TextureUpperLayer_IsSet == rhs.TextureUpperLayer_IsSet && string.Equals(item.TextureUpperLayer, rhs.TextureUpperLayer);
             ret.Model = EqualsMaskHelper.EqualsHelper(
                 item.Model_IsSet,
                 rhs.Model_IsSet,

@@ -206,18 +206,18 @@ namespace Mutagen.Bethesda.Oblivion
             if (rhs == null) return false;
             if (this.Emotion != rhs.Emotion) return false;
             if (this.EmotionValue != rhs.EmotionValue) return false;
-            if (!this.Fluff1.EqualsFast(rhs.Fluff1)) return false;
+            if (!ByteExt.EqualsFast(this.Fluff1, rhs.Fluff1)) return false;
             if (this.ResponseNumber != rhs.ResponseNumber) return false;
-            if (!this.Fluff2.EqualsFast(rhs.Fluff2)) return false;
+            if (!ByteExt.EqualsFast(this.Fluff2, rhs.Fluff2)) return false;
             if (ResponseText_IsSet != rhs.ResponseText_IsSet) return false;
             if (ResponseText_IsSet)
             {
-                if (!object.Equals(this.ResponseText, rhs.ResponseText)) return false;
+                if (!string.Equals(this.ResponseText, rhs.ResponseText)) return false;
             }
             if (ActorNotes_IsSet != rhs.ActorNotes_IsSet) return false;
             if (ActorNotes_IsSet)
             {
-                if (!object.Equals(this.ActorNotes, rhs.ActorNotes)) return false;
+                if (!string.Equals(this.ActorNotes, rhs.ActorNotes)) return false;
             }
             return true;
         }
@@ -1591,11 +1591,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (rhs == null) return;
             ret.Emotion = item.Emotion == rhs.Emotion;
             ret.EmotionValue = item.EmotionValue == rhs.EmotionValue;
-            ret.Fluff1 = item.Fluff1.EqualsFast(rhs.Fluff1);
+            ret.Fluff1 = ByteExt.EqualsFast(item.Fluff1, rhs.Fluff1);
             ret.ResponseNumber = item.ResponseNumber == rhs.ResponseNumber;
-            ret.Fluff2 = item.Fluff2.EqualsFast(rhs.Fluff2);
-            ret.ResponseText = item.ResponseText_IsSet == rhs.ResponseText_IsSet && object.Equals(item.ResponseText, rhs.ResponseText);
-            ret.ActorNotes = item.ActorNotes_IsSet == rhs.ActorNotes_IsSet && object.Equals(item.ActorNotes, rhs.ActorNotes);
+            ret.Fluff2 = ByteExt.EqualsFast(item.Fluff2, rhs.Fluff2);
+            ret.ResponseText = item.ResponseText_IsSet == rhs.ResponseText_IsSet && string.Equals(item.ResponseText, rhs.ResponseText);
+            ret.ActorNotes = item.ActorNotes_IsSet == rhs.ActorNotes_IsSet && string.Equals(item.ActorNotes, rhs.ActorNotes);
         }
 
         public static string ToString(

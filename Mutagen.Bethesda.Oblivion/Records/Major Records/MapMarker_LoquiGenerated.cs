@@ -167,7 +167,7 @@ namespace Mutagen.Bethesda.Oblivion
             if (Name_IsSet != rhs.Name_IsSet) return false;
             if (Name_IsSet)
             {
-                if (!object.Equals(this.Name, rhs.Name)) return false;
+                if (!string.Equals(this.Name, rhs.Name)) return false;
             }
             if (Types.HasBeenSet != rhs.Types.HasBeenSet) return false;
             if (Types.HasBeenSet)
@@ -1265,7 +1265,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (rhs == null) return;
             ret.Flags = item.Flags_IsSet == rhs.Flags_IsSet && item.Flags == rhs.Flags;
-            ret.Name = item.Name_IsSet == rhs.Name_IsSet && object.Equals(item.Name, rhs.Name);
+            ret.Name = item.Name_IsSet == rhs.Name_IsSet && string.Equals(item.Name, rhs.Name);
             ret.Types = item.Types.CollectionEqualsHelper(
                 rhs.Types,
                 (l, r) => l == r,

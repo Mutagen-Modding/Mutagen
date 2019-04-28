@@ -144,9 +144,9 @@ namespace Mutagen.Bethesda
         public bool Equals(ListGroup<T> rhs)
         {
             if (rhs == null) return false;
-            if (!object.Equals(this.ContainedRecordType, rhs.ContainedRecordType)) return false;
+            if (!string.Equals(this.ContainedRecordType, rhs.ContainedRecordType)) return false;
             if (this.GroupType != rhs.GroupType) return false;
-            if (!this.LastModified.EqualsFast(rhs.LastModified)) return false;
+            if (!ByteExt.EqualsFast(this.LastModified, rhs.LastModified)) return false;
             if (!this.Items.SequenceEqual(rhs.Items)) return false;
             return true;
         }
@@ -1279,9 +1279,9 @@ namespace Mutagen.Bethesda.Internals
             where T : ILoquiObject<T>
         {
             if (rhs == null) return;
-            ret.ContainedRecordType = object.Equals(item.ContainedRecordType, rhs.ContainedRecordType);
+            ret.ContainedRecordType = string.Equals(item.ContainedRecordType, rhs.ContainedRecordType);
             ret.GroupType = item.GroupType == rhs.GroupType;
-            ret.LastModified = item.LastModified.EqualsFast(rhs.LastModified);
+            ret.LastModified = ByteExt.EqualsFast(item.LastModified, rhs.LastModified);
             ret.Items = item.Items.CollectionEqualsHelper(
                 rhs.Items,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),

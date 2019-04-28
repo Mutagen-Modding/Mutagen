@@ -208,7 +208,7 @@ namespace Mutagen.Bethesda.Oblivion
             if (Name_IsSet != rhs.Name_IsSet) return false;
             if (Name_IsSet)
             {
-                if (!object.Equals(this.Name, rhs.Name)) return false;
+                if (!string.Equals(this.Name, rhs.Name)) return false;
             }
             if (Model_IsSet != rhs.Model_IsSet) return false;
             if (Model_IsSet)
@@ -1821,7 +1821,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Name = item.Name_IsSet == rhs.Name_IsSet && object.Equals(item.Name, rhs.Name);
+            ret.Name = item.Name_IsSet == rhs.Name_IsSet && string.Equals(item.Name, rhs.Name);
             ret.Model = EqualsMaskHelper.EqualsHelper(
                 item.Model_IsSet,
                 rhs.Model_IsSet,

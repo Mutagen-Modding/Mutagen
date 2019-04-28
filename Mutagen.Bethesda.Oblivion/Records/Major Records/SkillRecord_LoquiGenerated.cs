@@ -338,12 +338,12 @@ namespace Mutagen.Bethesda.Oblivion
             if (Description_IsSet != rhs.Description_IsSet) return false;
             if (Description_IsSet)
             {
-                if (!object.Equals(this.Description, rhs.Description)) return false;
+                if (!string.Equals(this.Description, rhs.Description)) return false;
             }
             if (Icon_IsSet != rhs.Icon_IsSet) return false;
             if (Icon_IsSet)
             {
-                if (!object.Equals(this.Icon, rhs.Icon)) return false;
+                if (!string.Equals(this.Icon, rhs.Icon)) return false;
             }
             if (this.Action != rhs.Action) return false;
             if (this.Attribute != rhs.Attribute) return false;
@@ -353,22 +353,22 @@ namespace Mutagen.Bethesda.Oblivion
             if (ApprenticeText_IsSet != rhs.ApprenticeText_IsSet) return false;
             if (ApprenticeText_IsSet)
             {
-                if (!object.Equals(this.ApprenticeText, rhs.ApprenticeText)) return false;
+                if (!string.Equals(this.ApprenticeText, rhs.ApprenticeText)) return false;
             }
             if (JourneymanText_IsSet != rhs.JourneymanText_IsSet) return false;
             if (JourneymanText_IsSet)
             {
-                if (!object.Equals(this.JourneymanText, rhs.JourneymanText)) return false;
+                if (!string.Equals(this.JourneymanText, rhs.JourneymanText)) return false;
             }
             if (ExpertText_IsSet != rhs.ExpertText_IsSet) return false;
             if (ExpertText_IsSet)
             {
-                if (!object.Equals(this.ExpertText, rhs.ExpertText)) return false;
+                if (!string.Equals(this.ExpertText, rhs.ExpertText)) return false;
             }
             if (MasterText_IsSet != rhs.MasterText_IsSet) return false;
             if (MasterText_IsSet)
             {
-                if (!object.Equals(this.MasterText, rhs.MasterText)) return false;
+                if (!string.Equals(this.MasterText, rhs.MasterText)) return false;
             }
             return true;
         }
@@ -2295,17 +2295,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (rhs == null) return;
             ret.Skill = item.Skill_IsSet == rhs.Skill_IsSet && item.Skill == rhs.Skill;
-            ret.Description = item.Description_IsSet == rhs.Description_IsSet && object.Equals(item.Description, rhs.Description);
-            ret.Icon = item.Icon_IsSet == rhs.Icon_IsSet && object.Equals(item.Icon, rhs.Icon);
+            ret.Description = item.Description_IsSet == rhs.Description_IsSet && string.Equals(item.Description, rhs.Description);
+            ret.Icon = item.Icon_IsSet == rhs.Icon_IsSet && string.Equals(item.Icon, rhs.Icon);
             ret.Action = item.Action == rhs.Action;
             ret.Attribute = item.Attribute == rhs.Attribute;
             ret.Specialization = item.Specialization == rhs.Specialization;
             ret.UseValueFirst = item.UseValueFirst.EqualsWithin(rhs.UseValueFirst);
             ret.UseValueSecond = item.UseValueSecond.EqualsWithin(rhs.UseValueSecond);
-            ret.ApprenticeText = item.ApprenticeText_IsSet == rhs.ApprenticeText_IsSet && object.Equals(item.ApprenticeText, rhs.ApprenticeText);
-            ret.JourneymanText = item.JourneymanText_IsSet == rhs.JourneymanText_IsSet && object.Equals(item.JourneymanText, rhs.JourneymanText);
-            ret.ExpertText = item.ExpertText_IsSet == rhs.ExpertText_IsSet && object.Equals(item.ExpertText, rhs.ExpertText);
-            ret.MasterText = item.MasterText_IsSet == rhs.MasterText_IsSet && object.Equals(item.MasterText, rhs.MasterText);
+            ret.ApprenticeText = item.ApprenticeText_IsSet == rhs.ApprenticeText_IsSet && string.Equals(item.ApprenticeText, rhs.ApprenticeText);
+            ret.JourneymanText = item.JourneymanText_IsSet == rhs.JourneymanText_IsSet && string.Equals(item.JourneymanText, rhs.JourneymanText);
+            ret.ExpertText = item.ExpertText_IsSet == rhs.ExpertText_IsSet && string.Equals(item.ExpertText, rhs.ExpertText);
+            ret.MasterText = item.MasterText_IsSet == rhs.MasterText_IsSet && string.Equals(item.MasterText, rhs.MasterText);
             OblivionMajorRecordCommon.FillEqualsMask(item, rhs, ret);
         }
 

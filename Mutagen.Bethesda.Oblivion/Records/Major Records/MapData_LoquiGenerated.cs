@@ -1123,9 +1123,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.UsableDimensions = item.UsableDimensions == rhs.UsableDimensions;
-            ret.CellCoordinatesNWCell = item.CellCoordinatesNWCell == rhs.CellCoordinatesNWCell;
-            ret.CellCoordinatesSECell = item.CellCoordinatesSECell == rhs.CellCoordinatesSECell;
+            ret.UsableDimensions = item.UsableDimensions.Equals(rhs.UsableDimensions);
+            ret.CellCoordinatesNWCell = item.CellCoordinatesNWCell.Equals(rhs.CellCoordinatesNWCell);
+            ret.CellCoordinatesSECell = item.CellCoordinatesSECell.Equals(rhs.CellCoordinatesSECell);
         }
 
         public static string ToString(

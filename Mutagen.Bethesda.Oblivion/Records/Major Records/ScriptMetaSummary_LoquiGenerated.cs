@@ -133,7 +133,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Equals(ScriptMetaSummary rhs)
         {
             if (rhs == null) return false;
-            if (!this.Fluff.EqualsFast(rhs.Fluff)) return false;
+            if (!ByteExt.EqualsFast(this.Fluff, rhs.Fluff)) return false;
             if (this.RefCount != rhs.RefCount) return false;
             if (this.CompiledSize != rhs.CompiledSize) return false;
             if (this.VariableCount != rhs.VariableCount) return false;
@@ -1288,7 +1288,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Fluff = item.Fluff.EqualsFast(rhs.Fluff);
+            ret.Fluff = ByteExt.EqualsFast(item.Fluff, rhs.Fluff);
             ret.RefCount = item.RefCount == rhs.RefCount;
             ret.CompiledSize = item.CompiledSize == rhs.CompiledSize;
             ret.VariableCount = item.VariableCount == rhs.VariableCount;

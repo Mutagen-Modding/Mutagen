@@ -10,10 +10,10 @@
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>5a5dc76b4bdf7748d8e02d86bf494640099bcbb6</Sha>
+         <Sha>1dc6bd630b4ec6a21c3fa12397b27c1c22668299</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>04-27-2019 19:28:37</CommitDate>
-         <Description>asfas</Description>
+         <CommitDate>04-27-2019 22:01:07</CommitDate>
+         <Description>Better use of GenerateEqualsSnippet</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>

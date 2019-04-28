@@ -170,12 +170,12 @@ namespace Mutagen.Bethesda.Oblivion
             if (Name_IsSet != rhs.Name_IsSet) return false;
             if (Name_IsSet)
             {
-                if (!object.Equals(this.Name, rhs.Name)) return false;
+                if (!string.Equals(this.Name, rhs.Name)) return false;
             }
             if (Icon_IsSet != rhs.Icon_IsSet) return false;
             if (Icon_IsSet)
             {
-                if (!object.Equals(this.Icon, rhs.Icon)) return false;
+                if (!string.Equals(this.Icon, rhs.Icon)) return false;
             }
             if (Flags_IsSet != rhs.Flags_IsSet) return false;
             if (Flags_IsSet)
@@ -1365,8 +1365,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Name = item.Name_IsSet == rhs.Name_IsSet && object.Equals(item.Name, rhs.Name);
-            ret.Icon = item.Icon_IsSet == rhs.Icon_IsSet && object.Equals(item.Icon, rhs.Icon);
+            ret.Name = item.Name_IsSet == rhs.Name_IsSet && string.Equals(item.Name, rhs.Name);
+            ret.Icon = item.Icon_IsSet == rhs.Icon_IsSet && string.Equals(item.Icon, rhs.Icon);
             ret.Flags = item.Flags_IsSet == rhs.Flags_IsSet && item.Flags == rhs.Flags;
             OblivionMajorRecordCommon.FillEqualsMask(item, rhs, ret);
         }

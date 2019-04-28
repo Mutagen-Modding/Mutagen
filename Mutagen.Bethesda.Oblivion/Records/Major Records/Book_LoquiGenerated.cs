@@ -284,7 +284,7 @@ namespace Mutagen.Bethesda.Oblivion
             if (Name_IsSet != rhs.Name_IsSet) return false;
             if (Name_IsSet)
             {
-                if (!object.Equals(this.Name, rhs.Name)) return false;
+                if (!string.Equals(this.Name, rhs.Name)) return false;
             }
             if (Model_IsSet != rhs.Model_IsSet) return false;
             if (Model_IsSet)
@@ -294,7 +294,7 @@ namespace Mutagen.Bethesda.Oblivion
             if (Icon_IsSet != rhs.Icon_IsSet) return false;
             if (Icon_IsSet)
             {
-                if (!object.Equals(this.Icon, rhs.Icon)) return false;
+                if (!string.Equals(this.Icon, rhs.Icon)) return false;
             }
             if (Script_Property.HasBeenSet != rhs.Script_Property.HasBeenSet) return false;
             if (Script_Property.HasBeenSet)
@@ -314,7 +314,7 @@ namespace Mutagen.Bethesda.Oblivion
             if (Description_IsSet != rhs.Description_IsSet) return false;
             if (Description_IsSet)
             {
-                if (!object.Equals(this.Description, rhs.Description)) return false;
+                if (!string.Equals(this.Description, rhs.Description)) return false;
             }
             if (this.Flags != rhs.Flags) return false;
             if (this.Teaches != rhs.Teaches) return false;
@@ -2193,7 +2193,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Name = item.Name_IsSet == rhs.Name_IsSet && object.Equals(item.Name, rhs.Name);
+            ret.Name = item.Name_IsSet == rhs.Name_IsSet && string.Equals(item.Name, rhs.Name);
             ret.Model = EqualsMaskHelper.EqualsHelper(
                 item.Model_IsSet,
                 rhs.Model_IsSet,
@@ -2201,11 +2201,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 rhs.Model,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
                 include);
-            ret.Icon = item.Icon_IsSet == rhs.Icon_IsSet && object.Equals(item.Icon, rhs.Icon);
+            ret.Icon = item.Icon_IsSet == rhs.Icon_IsSet && string.Equals(item.Icon, rhs.Icon);
             ret.Script = item.Script_Property.FormKey == rhs.Script_Property.FormKey;
             ret.Enchantment = item.Enchantment_Property.FormKey == rhs.Enchantment_Property.FormKey;
             ret.EnchantmentPoints = item.EnchantmentPoints_IsSet == rhs.EnchantmentPoints_IsSet && item.EnchantmentPoints == rhs.EnchantmentPoints;
-            ret.Description = item.Description_IsSet == rhs.Description_IsSet && object.Equals(item.Description, rhs.Description);
+            ret.Description = item.Description_IsSet == rhs.Description_IsSet && string.Equals(item.Description, rhs.Description);
             ret.Flags = item.Flags == rhs.Flags;
             ret.Teaches = item.Teaches == rhs.Teaches;
             ret.Value = item.Value.EqualsWithin(rhs.Value);

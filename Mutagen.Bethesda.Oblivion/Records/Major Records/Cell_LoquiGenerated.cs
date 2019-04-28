@@ -489,7 +489,7 @@ namespace Mutagen.Bethesda.Oblivion
             if (Name_IsSet != rhs.Name_IsSet) return false;
             if (Name_IsSet)
             {
-                if (!object.Equals(this.Name, rhs.Name)) return false;
+                if (!string.Equals(this.Name, rhs.Name)) return false;
             }
             if (Flags_IsSet != rhs.Flags_IsSet) return false;
             if (Flags_IsSet)
@@ -556,20 +556,20 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 if (!object.Equals(this.Landscape, rhs.Landscape)) return false;
             }
-            if (!this.Timestamp.EqualsFast(rhs.Timestamp)) return false;
-            if (!this.PersistentTimestamp.EqualsFast(rhs.PersistentTimestamp)) return false;
+            if (!ByteExt.EqualsFast(this.Timestamp, rhs.Timestamp)) return false;
+            if (!ByteExt.EqualsFast(this.PersistentTimestamp, rhs.PersistentTimestamp)) return false;
             if (Persistent.HasBeenSet != rhs.Persistent.HasBeenSet) return false;
             if (Persistent.HasBeenSet)
             {
                 if (!this.Persistent.SequenceEqual(rhs.Persistent)) return false;
             }
-            if (!this.TemporaryTimestamp.EqualsFast(rhs.TemporaryTimestamp)) return false;
+            if (!ByteExt.EqualsFast(this.TemporaryTimestamp, rhs.TemporaryTimestamp)) return false;
             if (Temporary.HasBeenSet != rhs.Temporary.HasBeenSet) return false;
             if (Temporary.HasBeenSet)
             {
                 if (!this.Temporary.SequenceEqual(rhs.Temporary)) return false;
             }
-            if (!this.VisibleWhenDistantTimestamp.EqualsFast(rhs.VisibleWhenDistantTimestamp)) return false;
+            if (!ByteExt.EqualsFast(this.VisibleWhenDistantTimestamp, rhs.VisibleWhenDistantTimestamp)) return false;
             if (VisibleWhenDistant.HasBeenSet != rhs.VisibleWhenDistant.HasBeenSet) return false;
             if (VisibleWhenDistant.HasBeenSet)
             {
@@ -3182,9 +3182,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Name = item.Name_IsSet == rhs.Name_IsSet && object.Equals(item.Name, rhs.Name);
+            ret.Name = item.Name_IsSet == rhs.Name_IsSet && string.Equals(item.Name, rhs.Name);
             ret.Flags = item.Flags_IsSet == rhs.Flags_IsSet && item.Flags == rhs.Flags;
-            ret.Grid = item.Grid_IsSet == rhs.Grid_IsSet && item.Grid == rhs.Grid;
+            ret.Grid = item.Grid_IsSet == rhs.Grid_IsSet && item.Grid.Equals(rhs.Grid);
             ret.Lighting = EqualsMaskHelper.EqualsHelper(
                 item.Lighting_IsSet,
                 rhs.Lighting_IsSet,
@@ -3217,18 +3217,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 rhs.Landscape,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
                 include);
-            ret.Timestamp = item.Timestamp.EqualsFast(rhs.Timestamp);
-            ret.PersistentTimestamp = item.PersistentTimestamp.EqualsFast(rhs.PersistentTimestamp);
+            ret.Timestamp = ByteExt.EqualsFast(item.Timestamp, rhs.Timestamp);
+            ret.PersistentTimestamp = ByteExt.EqualsFast(item.PersistentTimestamp, rhs.PersistentTimestamp);
             ret.Persistent = item.Persistent.CollectionEqualsHelper(
                 rhs.Persistent,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
-            ret.TemporaryTimestamp = item.TemporaryTimestamp.EqualsFast(rhs.TemporaryTimestamp);
+            ret.TemporaryTimestamp = ByteExt.EqualsFast(item.TemporaryTimestamp, rhs.TemporaryTimestamp);
             ret.Temporary = item.Temporary.CollectionEqualsHelper(
                 rhs.Temporary,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
-            ret.VisibleWhenDistantTimestamp = item.VisibleWhenDistantTimestamp.EqualsFast(rhs.VisibleWhenDistantTimestamp);
+            ret.VisibleWhenDistantTimestamp = ByteExt.EqualsFast(item.VisibleWhenDistantTimestamp, rhs.VisibleWhenDistantTimestamp);
             ret.VisibleWhenDistant = item.VisibleWhenDistant.CollectionEqualsHelper(
                 rhs.VisibleWhenDistant,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),

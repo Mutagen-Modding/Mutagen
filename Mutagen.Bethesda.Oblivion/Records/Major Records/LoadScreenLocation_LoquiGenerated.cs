@@ -1107,7 +1107,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (rhs == null) return;
             ret.Direct = item.Direct_Property.FormKey == rhs.Direct_Property.FormKey;
             ret.Indirect = item.Indirect_Property.FormKey == rhs.Indirect_Property.FormKey;
-            ret.GridPoint = item.GridPoint == rhs.GridPoint;
+            ret.GridPoint = item.GridPoint.Equals(rhs.GridPoint);
         }
 
         public static string ToString(

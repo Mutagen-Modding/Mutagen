@@ -110,7 +110,7 @@ namespace Mutagen.Bethesda.Tests
             if (this.TestImport != rhs.TestImport) return false;
             if (this.TestObservable != rhs.TestObservable) return false;
             if (this.TestFolder != rhs.TestFolder) return false;
-            if (!object.Equals(this.DataFolder, rhs.DataFolder)) return false;
+            if (!string.Equals(this.DataFolder, rhs.DataFolder)) return false;
             return true;
         }
 
@@ -1133,7 +1133,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             ret.TestImport = item.TestImport == rhs.TestImport;
             ret.TestObservable = item.TestObservable == rhs.TestObservable;
             ret.TestFolder = item.TestFolder == rhs.TestFolder;
-            ret.DataFolder = object.Equals(item.DataFolder, rhs.DataFolder);
+            ret.DataFolder = string.Equals(item.DataFolder, rhs.DataFolder);
         }
 
         public static string ToString(

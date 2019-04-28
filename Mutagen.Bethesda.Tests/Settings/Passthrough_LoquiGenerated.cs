@@ -92,7 +92,7 @@ namespace Mutagen.Bethesda.Tests
         {
             if (rhs == null) return false;
             if (this.Do != rhs.Do) return false;
-            if (!object.Equals(this.Path, rhs.Path)) return false;
+            if (!string.Equals(this.Path, rhs.Path)) return false;
             if (this.NumMasters != rhs.NumMasters) return false;
             return true;
         }
@@ -983,7 +983,7 @@ namespace Mutagen.Bethesda.Tests.Internals
         {
             if (rhs == null) return;
             ret.Do = item.Do == rhs.Do;
-            ret.Path = object.Equals(item.Path, rhs.Path);
+            ret.Path = string.Equals(item.Path, rhs.Path);
             ret.NumMasters = item.NumMasters == rhs.NumMasters;
         }
 

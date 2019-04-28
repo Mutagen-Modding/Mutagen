@@ -203,14 +203,14 @@ namespace Mutagen.Bethesda.Oblivion
             if (Name_IsSet != rhs.Name_IsSet) return false;
             if (Name_IsSet)
             {
-                if (!object.Equals(this.Name, rhs.Name)) return false;
+                if (!string.Equals(this.Name, rhs.Name)) return false;
             }
             if (DialogType_IsSet != rhs.DialogType_IsSet) return false;
             if (DialogType_IsSet)
             {
                 if (this.DialogType != rhs.DialogType) return false;
             }
-            if (!this.Timestamp.EqualsFast(rhs.Timestamp)) return false;
+            if (!ByteExt.EqualsFast(this.Timestamp, rhs.Timestamp)) return false;
             if (Items.HasBeenSet != rhs.Items.HasBeenSet) return false;
             if (Items.HasBeenSet)
             {
@@ -1558,9 +1558,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 rhs.Quests,
                 (l, r) => object.Equals(l, r),
                 include);
-            ret.Name = item.Name_IsSet == rhs.Name_IsSet && object.Equals(item.Name, rhs.Name);
+            ret.Name = item.Name_IsSet == rhs.Name_IsSet && string.Equals(item.Name, rhs.Name);
             ret.DialogType = item.DialogType_IsSet == rhs.DialogType_IsSet && item.DialogType == rhs.DialogType;
-            ret.Timestamp = item.Timestamp.EqualsFast(rhs.Timestamp);
+            ret.Timestamp = ByteExt.EqualsFast(item.Timestamp, rhs.Timestamp);
             ret.Items = item.Items.CollectionEqualsHelper(
                 rhs.Items,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),

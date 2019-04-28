@@ -159,7 +159,7 @@ namespace Mutagen.Bethesda.Oblivion
             if (rhs == null) return false;
             if (this.CompareOperator != rhs.CompareOperator) return false;
             if (this.Flags != rhs.Flags) return false;
-            if (!this.Fluff.EqualsFast(rhs.Fluff)) return false;
+            if (!ByteExt.EqualsFast(this.Fluff, rhs.Fluff)) return false;
             if (!this.ComparisonValue.EqualsWithin(rhs.ComparisonValue)) return false;
             if (this.Function != rhs.Function) return false;
             if (this.FirstParameter != rhs.FirstParameter) return false;
@@ -1553,7 +1553,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (rhs == null) return;
             ret.CompareOperator = item.CompareOperator == rhs.CompareOperator;
             ret.Flags = item.Flags == rhs.Flags;
-            ret.Fluff = item.Fluff.EqualsFast(rhs.Fluff);
+            ret.Fluff = ByteExt.EqualsFast(item.Fluff, rhs.Fluff);
             ret.ComparisonValue = item.ComparisonValue.EqualsWithin(rhs.ComparisonValue);
             ret.Function = item.Function == rhs.Function;
             ret.FirstParameter = item.FirstParameter == rhs.FirstParameter;

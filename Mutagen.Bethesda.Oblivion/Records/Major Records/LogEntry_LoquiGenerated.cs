@@ -200,7 +200,7 @@ namespace Mutagen.Bethesda.Oblivion
             if (Entry_IsSet != rhs.Entry_IsSet) return false;
             if (Entry_IsSet)
             {
-                if (!object.Equals(this.Entry, rhs.Entry)) return false;
+                if (!string.Equals(this.Entry, rhs.Entry)) return false;
             }
             if (ResultScript_IsSet != rhs.ResultScript_IsSet) return false;
             if (ResultScript_IsSet)
@@ -1487,7 +1487,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 rhs.Conditions,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
-            ret.Entry = item.Entry_IsSet == rhs.Entry_IsSet && object.Equals(item.Entry, rhs.Entry);
+            ret.Entry = item.Entry_IsSet == rhs.Entry_IsSet && string.Equals(item.Entry, rhs.Entry);
             ret.ResultScript = EqualsMaskHelper.EqualsHelper(
                 item.ResultScript_IsSet,
                 rhs.ResultScript_IsSet,

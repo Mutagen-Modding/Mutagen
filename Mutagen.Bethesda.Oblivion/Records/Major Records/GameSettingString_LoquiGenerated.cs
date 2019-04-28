@@ -117,7 +117,7 @@ namespace Mutagen.Bethesda.Oblivion
             if (Data_IsSet != rhs.Data_IsSet) return false;
             if (Data_IsSet)
             {
-                if (!object.Equals(this.Data, rhs.Data)) return false;
+                if (!string.Equals(this.Data, rhs.Data)) return false;
             }
             return true;
         }
@@ -1144,7 +1144,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Data = item.Data_IsSet == rhs.Data_IsSet && object.Equals(item.Data, rhs.Data);
+            ret.Data = item.Data_IsSet == rhs.Data_IsSet && string.Equals(item.Data, rhs.Data);
             GameSettingCommon.FillEqualsMask(item, rhs, ret);
         }
 

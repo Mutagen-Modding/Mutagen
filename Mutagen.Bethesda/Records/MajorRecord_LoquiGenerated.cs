@@ -141,7 +141,7 @@ namespace Mutagen.Bethesda
             if (EditorID_IsSet != rhs.EditorID_IsSet) return false;
             if (EditorID_IsSet)
             {
-                if (!object.Equals(this.EditorID, rhs.EditorID)) return false;
+                if (!string.Equals(this.EditorID, rhs.EditorID)) return false;
             }
             if (!object.Equals(this.RecordType, rhs.RecordType)) return false;
             return true;
@@ -1359,7 +1359,7 @@ namespace Mutagen.Bethesda.Internals
             if (rhs == null) return;
             ret.FormKey = item.FormKey == rhs.FormKey;
             ret.Version = item.Version == rhs.Version;
-            ret.EditorID = item.EditorID_IsSet == rhs.EditorID_IsSet && object.Equals(item.EditorID, rhs.EditorID);
+            ret.EditorID = item.EditorID_IsSet == rhs.EditorID_IsSet && string.Equals(item.EditorID, rhs.EditorID);
             ret.RecordType = object.Equals(item.RecordType, rhs.RecordType);
         }
 

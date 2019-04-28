@@ -116,7 +116,7 @@ namespace Mutagen.Bethesda.Oblivion
             if (MapName_IsSet != rhs.MapName_IsSet) return false;
             if (MapName_IsSet)
             {
-                if (!object.Equals(this.MapName, rhs.MapName)) return false;
+                if (!string.Equals(this.MapName, rhs.MapName)) return false;
             }
             return true;
         }
@@ -1060,7 +1060,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.MapName = item.MapName_IsSet == rhs.MapName_IsSet && object.Equals(item.MapName, rhs.MapName);
+            ret.MapName = item.MapName_IsSet == rhs.MapName_IsSet && string.Equals(item.MapName, rhs.MapName);
             RegionDataCommon.FillEqualsMask(item, rhs, ret);
         }
 

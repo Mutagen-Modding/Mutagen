@@ -265,27 +265,27 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Equals(TES4 rhs)
         {
             if (rhs == null) return false;
-            if (!this.Fluff.EqualsFast(rhs.Fluff)) return false;
+            if (!ByteExt.EqualsFast(this.Fluff, rhs.Fluff)) return false;
             if (!object.Equals(this.Header, rhs.Header)) return false;
             if (TypeOffsets_IsSet != rhs.TypeOffsets_IsSet) return false;
             if (TypeOffsets_IsSet)
             {
-                if (!this.TypeOffsets.EqualsFast(rhs.TypeOffsets)) return false;
+                if (!ByteExt.EqualsFast(this.TypeOffsets, rhs.TypeOffsets)) return false;
             }
             if (Deleted_IsSet != rhs.Deleted_IsSet) return false;
             if (Deleted_IsSet)
             {
-                if (!this.Deleted.EqualsFast(rhs.Deleted)) return false;
+                if (!ByteExt.EqualsFast(this.Deleted, rhs.Deleted)) return false;
             }
             if (Author_IsSet != rhs.Author_IsSet) return false;
             if (Author_IsSet)
             {
-                if (!object.Equals(this.Author, rhs.Author)) return false;
+                if (!string.Equals(this.Author, rhs.Author)) return false;
             }
             if (Description_IsSet != rhs.Description_IsSet) return false;
             if (Description_IsSet)
             {
-                if (!object.Equals(this.Description, rhs.Description)) return false;
+                if (!string.Equals(this.Description, rhs.Description)) return false;
             }
             if (MasterReferences.HasBeenSet != rhs.MasterReferences.HasBeenSet) return false;
             if (MasterReferences.HasBeenSet)
@@ -1866,12 +1866,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Fluff = item.Fluff.EqualsFast(rhs.Fluff);
+            ret.Fluff = ByteExt.EqualsFast(item.Fluff, rhs.Fluff);
             ret.Header = MaskItemExt.Factory(HeaderCommon.GetEqualsMask(item.Header, rhs.Header, include), include);
-            ret.TypeOffsets = item.TypeOffsets_IsSet == rhs.TypeOffsets_IsSet && item.TypeOffsets.EqualsFast(rhs.TypeOffsets);
-            ret.Deleted = item.Deleted_IsSet == rhs.Deleted_IsSet && item.Deleted.EqualsFast(rhs.Deleted);
-            ret.Author = item.Author_IsSet == rhs.Author_IsSet && object.Equals(item.Author, rhs.Author);
-            ret.Description = item.Description_IsSet == rhs.Description_IsSet && object.Equals(item.Description, rhs.Description);
+            ret.TypeOffsets = item.TypeOffsets_IsSet == rhs.TypeOffsets_IsSet && ByteExt.EqualsFast(item.TypeOffsets, rhs.TypeOffsets);
+            ret.Deleted = item.Deleted_IsSet == rhs.Deleted_IsSet && ByteExt.EqualsFast(item.Deleted, rhs.Deleted);
+            ret.Author = item.Author_IsSet == rhs.Author_IsSet && string.Equals(item.Author, rhs.Author);
+            ret.Description = item.Description_IsSet == rhs.Description_IsSet && string.Equals(item.Description, rhs.Description);
             ret.MasterReferences = item.MasterReferences.CollectionEqualsHelper(
                 rhs.MasterReferences,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),

@@ -243,22 +243,22 @@ namespace Mutagen.Bethesda.Oblivion
             if (Unknown_IsSet != rhs.Unknown_IsSet) return false;
             if (Unknown_IsSet)
             {
-                if (!this.Unknown.EqualsFast(rhs.Unknown)) return false;
+                if (!ByteExt.EqualsFast(this.Unknown, rhs.Unknown)) return false;
             }
             if (VertexNormals_IsSet != rhs.VertexNormals_IsSet) return false;
             if (VertexNormals_IsSet)
             {
-                if (!this.VertexNormals.EqualsFast(rhs.VertexNormals)) return false;
+                if (!ByteExt.EqualsFast(this.VertexNormals, rhs.VertexNormals)) return false;
             }
             if (VertexHeightMap_IsSet != rhs.VertexHeightMap_IsSet) return false;
             if (VertexHeightMap_IsSet)
             {
-                if (!this.VertexHeightMap.EqualsFast(rhs.VertexHeightMap)) return false;
+                if (!ByteExt.EqualsFast(this.VertexHeightMap, rhs.VertexHeightMap)) return false;
             }
             if (VertexColors_IsSet != rhs.VertexColors_IsSet) return false;
             if (VertexColors_IsSet)
             {
-                if (!this.VertexColors.EqualsFast(rhs.VertexColors)) return false;
+                if (!ByteExt.EqualsFast(this.VertexColors, rhs.VertexColors)) return false;
             }
             if (Layers.HasBeenSet != rhs.Layers.HasBeenSet) return false;
             if (Layers.HasBeenSet)
@@ -1748,10 +1748,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Unknown = item.Unknown_IsSet == rhs.Unknown_IsSet && item.Unknown.EqualsFast(rhs.Unknown);
-            ret.VertexNormals = item.VertexNormals_IsSet == rhs.VertexNormals_IsSet && item.VertexNormals.EqualsFast(rhs.VertexNormals);
-            ret.VertexHeightMap = item.VertexHeightMap_IsSet == rhs.VertexHeightMap_IsSet && item.VertexHeightMap.EqualsFast(rhs.VertexHeightMap);
-            ret.VertexColors = item.VertexColors_IsSet == rhs.VertexColors_IsSet && item.VertexColors.EqualsFast(rhs.VertexColors);
+            ret.Unknown = item.Unknown_IsSet == rhs.Unknown_IsSet && ByteExt.EqualsFast(item.Unknown, rhs.Unknown);
+            ret.VertexNormals = item.VertexNormals_IsSet == rhs.VertexNormals_IsSet && ByteExt.EqualsFast(item.VertexNormals, rhs.VertexNormals);
+            ret.VertexHeightMap = item.VertexHeightMap_IsSet == rhs.VertexHeightMap_IsSet && ByteExt.EqualsFast(item.VertexHeightMap, rhs.VertexHeightMap);
+            ret.VertexColors = item.VertexColors_IsSet == rhs.VertexColors_IsSet && ByteExt.EqualsFast(item.VertexColors, rhs.VertexColors);
             ret.Layers = item.Layers.CollectionEqualsHelper(
                 rhs.Layers,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),

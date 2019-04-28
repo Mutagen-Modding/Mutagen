@@ -130,7 +130,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             if (rhs == null) return false;
             if (!this.Point.Equals(rhs.Point)) return false;
-            if (!this.NumConnectionsFluffBytes.EqualsFast(rhs.NumConnectionsFluffBytes)) return false;
+            if (!ByteExt.EqualsFast(this.NumConnectionsFluffBytes, rhs.NumConnectionsFluffBytes)) return false;
             if (!this.Connections.SequenceEqual(rhs.Connections)) return false;
             return true;
         }
@@ -1117,8 +1117,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Point = item.Point == rhs.Point;
-            ret.NumConnectionsFluffBytes = item.NumConnectionsFluffBytes.EqualsFast(rhs.NumConnectionsFluffBytes);
+            ret.Point = item.Point.Equals(rhs.Point);
+            ret.NumConnectionsFluffBytes = ByteExt.EqualsFast(item.NumConnectionsFluffBytes, rhs.NumConnectionsFluffBytes);
             ret.Connections = item.Connections.CollectionEqualsHelper(
                 rhs.Connections,
                 (l, r) => l.Equals(r),

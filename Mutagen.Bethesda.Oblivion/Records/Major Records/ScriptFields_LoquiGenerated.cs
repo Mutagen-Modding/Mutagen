@@ -198,12 +198,12 @@ namespace Mutagen.Bethesda.Oblivion
             if (CompiledScript_IsSet != rhs.CompiledScript_IsSet) return false;
             if (CompiledScript_IsSet)
             {
-                if (!this.CompiledScript.EqualsFast(rhs.CompiledScript)) return false;
+                if (!ByteExt.EqualsFast(this.CompiledScript, rhs.CompiledScript)) return false;
             }
             if (SourceCode_IsSet != rhs.SourceCode_IsSet) return false;
             if (SourceCode_IsSet)
             {
-                if (!object.Equals(this.SourceCode, rhs.SourceCode)) return false;
+                if (!string.Equals(this.SourceCode, rhs.SourceCode)) return false;
             }
             if (LocalVariables.HasBeenSet != rhs.LocalVariables.HasBeenSet) return false;
             if (LocalVariables.HasBeenSet)
@@ -1613,8 +1613,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 rhs.MetadataSummary,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
                 include);
-            ret.CompiledScript = item.CompiledScript_IsSet == rhs.CompiledScript_IsSet && item.CompiledScript.EqualsFast(rhs.CompiledScript);
-            ret.SourceCode = item.SourceCode_IsSet == rhs.SourceCode_IsSet && object.Equals(item.SourceCode, rhs.SourceCode);
+            ret.CompiledScript = item.CompiledScript_IsSet == rhs.CompiledScript_IsSet && ByteExt.EqualsFast(item.CompiledScript, rhs.CompiledScript);
+            ret.SourceCode = item.SourceCode_IsSet == rhs.SourceCode_IsSet && string.Equals(item.SourceCode, rhs.SourceCode);
             ret.LocalVariables = item.LocalVariables.CollectionEqualsHelper(
                 rhs.LocalVariables,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),

@@ -123,7 +123,7 @@ namespace Mutagen.Bethesda.Oblivion
             if (rhs == null) return false;
             if (this.TrainedSkill != rhs.TrainedSkill) return false;
             if (this.MaximumTrainingLevel != rhs.MaximumTrainingLevel) return false;
-            if (!this.Fluff.EqualsFast(rhs.Fluff)) return false;
+            if (!ByteExt.EqualsFast(this.Fluff, rhs.Fluff)) return false;
             return true;
         }
 
@@ -1127,7 +1127,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (rhs == null) return;
             ret.TrainedSkill = item.TrainedSkill == rhs.TrainedSkill;
             ret.MaximumTrainingLevel = item.MaximumTrainingLevel == rhs.MaximumTrainingLevel;
-            ret.Fluff = item.Fluff.EqualsFast(rhs.Fluff);
+            ret.Fluff = ByteExt.EqualsFast(item.Fluff, rhs.Fluff);
         }
 
         public static string ToString(

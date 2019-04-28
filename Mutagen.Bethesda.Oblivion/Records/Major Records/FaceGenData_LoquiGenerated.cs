@@ -173,17 +173,17 @@ namespace Mutagen.Bethesda.Oblivion
             if (SymmetricGeometry_IsSet != rhs.SymmetricGeometry_IsSet) return false;
             if (SymmetricGeometry_IsSet)
             {
-                if (!this.SymmetricGeometry.EqualsFast(rhs.SymmetricGeometry)) return false;
+                if (!ByteExt.EqualsFast(this.SymmetricGeometry, rhs.SymmetricGeometry)) return false;
             }
             if (AsymmetricGeometry_IsSet != rhs.AsymmetricGeometry_IsSet) return false;
             if (AsymmetricGeometry_IsSet)
             {
-                if (!this.AsymmetricGeometry.EqualsFast(rhs.AsymmetricGeometry)) return false;
+                if (!ByteExt.EqualsFast(this.AsymmetricGeometry, rhs.AsymmetricGeometry)) return false;
             }
             if (SymmetricTexture_IsSet != rhs.SymmetricTexture_IsSet) return false;
             if (SymmetricTexture_IsSet)
             {
-                if (!this.SymmetricTexture.EqualsFast(rhs.SymmetricTexture)) return false;
+                if (!ByteExt.EqualsFast(this.SymmetricTexture, rhs.SymmetricTexture)) return false;
             }
             return true;
         }
@@ -1299,9 +1299,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.SymmetricGeometry = item.SymmetricGeometry_IsSet == rhs.SymmetricGeometry_IsSet && item.SymmetricGeometry.EqualsFast(rhs.SymmetricGeometry);
-            ret.AsymmetricGeometry = item.AsymmetricGeometry_IsSet == rhs.AsymmetricGeometry_IsSet && item.AsymmetricGeometry.EqualsFast(rhs.AsymmetricGeometry);
-            ret.SymmetricTexture = item.SymmetricTexture_IsSet == rhs.SymmetricTexture_IsSet && item.SymmetricTexture.EqualsFast(rhs.SymmetricTexture);
+            ret.SymmetricGeometry = item.SymmetricGeometry_IsSet == rhs.SymmetricGeometry_IsSet && ByteExt.EqualsFast(item.SymmetricGeometry, rhs.SymmetricGeometry);
+            ret.AsymmetricGeometry = item.AsymmetricGeometry_IsSet == rhs.AsymmetricGeometry_IsSet && ByteExt.EqualsFast(item.AsymmetricGeometry, rhs.AsymmetricGeometry);
+            ret.SymmetricTexture = item.SymmetricTexture_IsSet == rhs.SymmetricTexture_IsSet && ByteExt.EqualsFast(item.SymmetricTexture, rhs.SymmetricTexture);
         }
 
         public static string ToString(

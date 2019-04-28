@@ -830,7 +830,7 @@ namespace Mutagen.Bethesda.Oblivion
             if (Name_IsSet != rhs.Name_IsSet) return false;
             if (Name_IsSet)
             {
-                if (!object.Equals(this.Name, rhs.Name)) return false;
+                if (!string.Equals(this.Name, rhs.Name)) return false;
             }
             if (Model_IsSet != rhs.Model_IsSet) return false;
             if (Model_IsSet)
@@ -855,7 +855,7 @@ namespace Mutagen.Bethesda.Oblivion
             if (NIFT_IsSet != rhs.NIFT_IsSet) return false;
             if (NIFT_IsSet)
             {
-                if (!this.NIFT.EqualsFast(rhs.NIFT)) return false;
+                if (!ByteExt.EqualsFast(this.NIFT, rhs.NIFT)) return false;
             }
             if (this.Flags != rhs.Flags) return false;
             if (this.BaseSpellPoints != rhs.BaseSpellPoints) return false;
@@ -939,12 +939,12 @@ namespace Mutagen.Bethesda.Oblivion
             if (BloodSpray_IsSet != rhs.BloodSpray_IsSet) return false;
             if (BloodSpray_IsSet)
             {
-                if (!object.Equals(this.BloodSpray, rhs.BloodSpray)) return false;
+                if (!string.Equals(this.BloodSpray, rhs.BloodSpray)) return false;
             }
             if (BloodDecal_IsSet != rhs.BloodDecal_IsSet) return false;
             if (BloodDecal_IsSet)
             {
-                if (!object.Equals(this.BloodDecal, rhs.BloodDecal)) return false;
+                if (!string.Equals(this.BloodDecal, rhs.BloodDecal)) return false;
             }
             if (InheritsSoundFrom_Property.HasBeenSet != rhs.InheritsSoundFrom_Property.HasBeenSet) return false;
             if (InheritsSoundFrom_Property.HasBeenSet)
@@ -5681,7 +5681,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Name = item.Name_IsSet == rhs.Name_IsSet && object.Equals(item.Name, rhs.Name);
+            ret.Name = item.Name_IsSet == rhs.Name_IsSet && string.Equals(item.Name, rhs.Name);
             ret.Model = EqualsMaskHelper.EqualsHelper(
                 item.Model_IsSet,
                 rhs.Model_IsSet,
@@ -5699,9 +5699,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 include);
             ret.Models = item.Models.CollectionEqualsHelper(
                 rhs.Models,
-                (l, r) => l == r,
+                (l, r) => string.Equals(l, r),
                 include);
-            ret.NIFT = item.NIFT_IsSet == rhs.NIFT_IsSet && item.NIFT.EqualsFast(rhs.NIFT);
+            ret.NIFT = item.NIFT_IsSet == rhs.NIFT_IsSet && ByteExt.EqualsFast(item.NIFT, rhs.NIFT);
             ret.Flags = item.Flags == rhs.Flags;
             ret.BaseSpellPoints = item.BaseSpellPoints == rhs.BaseSpellPoints;
             ret.Fatigue = item.Fatigue == rhs.Fatigue;
@@ -5728,7 +5728,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 include);
             ret.Animations = item.Animations.CollectionEqualsHelper(
                 rhs.Animations,
-                (l, r) => l == r,
+                (l, r) => string.Equals(l, r),
                 include);
             ret.CreatureType = item.CreatureType == rhs.CreatureType;
             ret.CombatSkill = item.CombatSkill == rhs.CombatSkill;
@@ -5750,8 +5750,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.TurningSpeed = item.TurningSpeed_IsSet == rhs.TurningSpeed_IsSet && item.TurningSpeed.EqualsWithin(rhs.TurningSpeed);
             ret.BaseScale = item.BaseScale_IsSet == rhs.BaseScale_IsSet && item.BaseScale.EqualsWithin(rhs.BaseScale);
             ret.FootWeight = item.FootWeight_IsSet == rhs.FootWeight_IsSet && item.FootWeight.EqualsWithin(rhs.FootWeight);
-            ret.BloodSpray = item.BloodSpray_IsSet == rhs.BloodSpray_IsSet && object.Equals(item.BloodSpray, rhs.BloodSpray);
-            ret.BloodDecal = item.BloodDecal_IsSet == rhs.BloodDecal_IsSet && object.Equals(item.BloodDecal, rhs.BloodDecal);
+            ret.BloodSpray = item.BloodSpray_IsSet == rhs.BloodSpray_IsSet && string.Equals(item.BloodSpray, rhs.BloodSpray);
+            ret.BloodDecal = item.BloodDecal_IsSet == rhs.BloodDecal_IsSet && string.Equals(item.BloodDecal, rhs.BloodDecal);
             ret.InheritsSoundFrom = item.InheritsSoundFrom_Property.FormKey == rhs.InheritsSoundFrom_Property.FormKey;
             ret.Sounds = item.Sounds.CollectionEqualsHelper(
                 rhs.Sounds,

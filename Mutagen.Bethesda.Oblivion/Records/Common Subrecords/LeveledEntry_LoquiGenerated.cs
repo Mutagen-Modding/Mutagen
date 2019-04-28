@@ -172,7 +172,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             if (rhs == null) return false;
             if (this.Level != rhs.Level) return false;
-            if (!this.Fluff.EqualsFast(rhs.Fluff)) return false;
+            if (!ByteExt.EqualsFast(this.Fluff, rhs.Fluff)) return false;
             if (!this.Reference_Property.Equals(rhs.Reference_Property)) return false;
             if (Count_IsSet != rhs.Count_IsSet) return false;
             if (Count_IsSet)
@@ -182,7 +182,7 @@ namespace Mutagen.Bethesda.Oblivion
             if (Fluff2_IsSet != rhs.Fluff2_IsSet) return false;
             if (Fluff2_IsSet)
             {
-                if (!this.Fluff2.EqualsFast(rhs.Fluff2)) return false;
+                if (!ByteExt.EqualsFast(this.Fluff2, rhs.Fluff2)) return false;
             }
             return true;
         }
@@ -1439,10 +1439,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (rhs == null) return;
             ret.Level = item.Level == rhs.Level;
-            ret.Fluff = item.Fluff.EqualsFast(rhs.Fluff);
+            ret.Fluff = ByteExt.EqualsFast(item.Fluff, rhs.Fluff);
             ret.Reference = item.Reference_Property.FormKey == rhs.Reference_Property.FormKey;
             ret.Count = item.Count_IsSet == rhs.Count_IsSet && item.Count == rhs.Count;
-            ret.Fluff2 = item.Fluff2_IsSet == rhs.Fluff2_IsSet && item.Fluff2.EqualsFast(rhs.Fluff2);
+            ret.Fluff2 = item.Fluff2_IsSet == rhs.Fluff2_IsSet && ByteExt.EqualsFast(item.Fluff2, rhs.Fluff2);
         }
 
         public static string ToString<T>(

@@ -167,13 +167,13 @@ namespace Mutagen.Bethesda.Oblivion
         {
             if (rhs == null) return false;
             if (this.Index != rhs.Index) return false;
-            if (!this.Fluff.EqualsFast(rhs.Fluff)) return false;
+            if (!ByteExt.EqualsFast(this.Fluff, rhs.Fluff)) return false;
             if (this.Flags != rhs.Flags) return false;
-            if (!this.Fluff2.EqualsFast(rhs.Fluff2)) return false;
+            if (!ByteExt.EqualsFast(this.Fluff2, rhs.Fluff2)) return false;
             if (Name_IsSet != rhs.Name_IsSet) return false;
             if (Name_IsSet)
             {
-                if (!object.Equals(this.Name, rhs.Name)) return false;
+                if (!string.Equals(this.Name, rhs.Name)) return false;
             }
             return true;
         }
@@ -1383,10 +1383,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (rhs == null) return;
             ret.Index = item.Index == rhs.Index;
-            ret.Fluff = item.Fluff.EqualsFast(rhs.Fluff);
+            ret.Fluff = ByteExt.EqualsFast(item.Fluff, rhs.Fluff);
             ret.Flags = item.Flags == rhs.Flags;
-            ret.Fluff2 = item.Fluff2.EqualsFast(rhs.Fluff2);
-            ret.Name = item.Name_IsSet == rhs.Name_IsSet && object.Equals(item.Name, rhs.Name);
+            ret.Fluff2 = ByteExt.EqualsFast(item.Fluff2, rhs.Fluff2);
+            ret.Name = item.Name_IsSet == rhs.Name_IsSet && string.Equals(item.Name, rhs.Name);
         }
 
         public static string ToString(

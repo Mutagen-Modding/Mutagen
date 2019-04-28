@@ -341,7 +341,7 @@ namespace Mutagen.Bethesda.Oblivion
             if (Name_IsSet != rhs.Name_IsSet) return false;
             if (Name_IsSet)
             {
-                if (!object.Equals(this.Name, rhs.Name)) return false;
+                if (!string.Equals(this.Name, rhs.Name)) return false;
             }
             if (Script_Property.HasBeenSet != rhs.Script_Property.HasBeenSet) return false;
             if (Script_Property.HasBeenSet)
@@ -373,7 +373,7 @@ namespace Mutagen.Bethesda.Oblivion
             if (MaleIcon_IsSet != rhs.MaleIcon_IsSet) return false;
             if (MaleIcon_IsSet)
             {
-                if (!object.Equals(this.MaleIcon, rhs.MaleIcon)) return false;
+                if (!string.Equals(this.MaleIcon, rhs.MaleIcon)) return false;
             }
             if (FemaleBipedModel_IsSet != rhs.FemaleBipedModel_IsSet) return false;
             if (FemaleBipedModel_IsSet)
@@ -388,7 +388,7 @@ namespace Mutagen.Bethesda.Oblivion
             if (FemaleIcon_IsSet != rhs.FemaleIcon_IsSet) return false;
             if (FemaleIcon_IsSet)
             {
-                if (!object.Equals(this.FemaleIcon, rhs.FemaleIcon)) return false;
+                if (!string.Equals(this.FemaleIcon, rhs.FemaleIcon)) return false;
             }
             return true;
         }
@@ -2421,7 +2421,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Name = item.Name_IsSet == rhs.Name_IsSet && object.Equals(item.Name, rhs.Name);
+            ret.Name = item.Name_IsSet == rhs.Name_IsSet && string.Equals(item.Name, rhs.Name);
             ret.Script = item.Script_Property.FormKey == rhs.Script_Property.FormKey;
             ret.Enchantment = item.Enchantment_Property.FormKey == rhs.Enchantment_Property.FormKey;
             ret.EnchantmentPoints = item.EnchantmentPoints_IsSet == rhs.EnchantmentPoints_IsSet && item.EnchantmentPoints == rhs.EnchantmentPoints;
@@ -2441,7 +2441,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 rhs.MaleWorldModel,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
                 include);
-            ret.MaleIcon = item.MaleIcon_IsSet == rhs.MaleIcon_IsSet && object.Equals(item.MaleIcon, rhs.MaleIcon);
+            ret.MaleIcon = item.MaleIcon_IsSet == rhs.MaleIcon_IsSet && string.Equals(item.MaleIcon, rhs.MaleIcon);
             ret.FemaleBipedModel = EqualsMaskHelper.EqualsHelper(
                 item.FemaleBipedModel_IsSet,
                 rhs.FemaleBipedModel_IsSet,
@@ -2456,7 +2456,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 rhs.FemaleWorldModel,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
                 include);
-            ret.FemaleIcon = item.FemaleIcon_IsSet == rhs.FemaleIcon_IsSet && object.Equals(item.FemaleIcon, rhs.FemaleIcon);
+            ret.FemaleIcon = item.FemaleIcon_IsSet == rhs.FemaleIcon_IsSet && string.Equals(item.FemaleIcon, rhs.FemaleIcon);
             ItemAbstractCommon.FillEqualsMask(item, rhs, ret);
         }
 

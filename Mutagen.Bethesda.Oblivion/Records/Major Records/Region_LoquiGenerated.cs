@@ -307,7 +307,7 @@ namespace Mutagen.Bethesda.Oblivion
             if (Icon_IsSet != rhs.Icon_IsSet) return false;
             if (Icon_IsSet)
             {
-                if (!object.Equals(this.Icon, rhs.Icon)) return false;
+                if (!string.Equals(this.Icon, rhs.Icon)) return false;
             }
             if (MapColor_IsSet != rhs.MapColor_IsSet) return false;
             if (MapColor_IsSet)
@@ -2140,7 +2140,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Icon = item.Icon_IsSet == rhs.Icon_IsSet && object.Equals(item.Icon, rhs.Icon);
+            ret.Icon = item.Icon_IsSet == rhs.Icon_IsSet && string.Equals(item.Icon, rhs.Icon);
             ret.MapColor = item.MapColor_IsSet == rhs.MapColor_IsSet && item.MapColor.ColorOnlyEquals(rhs.MapColor);
             ret.Worldspace = item.Worldspace_Property.FormKey == rhs.Worldspace_Property.FormKey;
             ret.Areas = item.Areas.CollectionEqualsHelper(

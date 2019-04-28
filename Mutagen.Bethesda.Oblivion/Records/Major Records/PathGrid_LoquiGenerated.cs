@@ -181,7 +181,7 @@ namespace Mutagen.Bethesda.Oblivion
             if (Unknown_IsSet != rhs.Unknown_IsSet) return false;
             if (Unknown_IsSet)
             {
-                if (!this.Unknown.EqualsFast(rhs.Unknown)) return false;
+                if (!ByteExt.EqualsFast(this.Unknown, rhs.Unknown)) return false;
             }
             if (InterCellConnections.HasBeenSet != rhs.InterCellConnections.HasBeenSet) return false;
             if (InterCellConnections.HasBeenSet)
@@ -1496,7 +1496,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 rhs.PointToPointConnections,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
-            ret.Unknown = item.Unknown_IsSet == rhs.Unknown_IsSet && item.Unknown.EqualsFast(rhs.Unknown);
+            ret.Unknown = item.Unknown_IsSet == rhs.Unknown_IsSet && ByteExt.EqualsFast(item.Unknown, rhs.Unknown);
             ret.InterCellConnections = item.InterCellConnections.CollectionEqualsHelper(
                 rhs.InterCellConnections,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),

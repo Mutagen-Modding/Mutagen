@@ -601,7 +601,7 @@ namespace Mutagen.Bethesda.Oblivion
             if (Texture_IsSet != rhs.Texture_IsSet) return false;
             if (Texture_IsSet)
             {
-                if (!object.Equals(this.Texture, rhs.Texture)) return false;
+                if (!string.Equals(this.Texture, rhs.Texture)) return false;
             }
             if (Opacity_IsSet != rhs.Opacity_IsSet) return false;
             if (Opacity_IsSet)
@@ -616,7 +616,7 @@ namespace Mutagen.Bethesda.Oblivion
             if (MaterialID_IsSet != rhs.MaterialID_IsSet) return false;
             if (MaterialID_IsSet)
             {
-                if (!object.Equals(this.MaterialID, rhs.MaterialID)) return false;
+                if (!string.Equals(this.MaterialID, rhs.MaterialID)) return false;
             }
             if (Sound_Property.HasBeenSet != rhs.Sound_Property.HasBeenSet) return false;
             if (Sound_Property.HasBeenSet)
@@ -4090,10 +4090,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Texture = item.Texture_IsSet == rhs.Texture_IsSet && object.Equals(item.Texture, rhs.Texture);
+            ret.Texture = item.Texture_IsSet == rhs.Texture_IsSet && string.Equals(item.Texture, rhs.Texture);
             ret.Opacity = item.Opacity_IsSet == rhs.Opacity_IsSet && item.Opacity == rhs.Opacity;
             ret.Flags = item.Flags_IsSet == rhs.Flags_IsSet && item.Flags == rhs.Flags;
-            ret.MaterialID = item.MaterialID_IsSet == rhs.MaterialID_IsSet && object.Equals(item.MaterialID, rhs.MaterialID);
+            ret.MaterialID = item.MaterialID_IsSet == rhs.MaterialID_IsSet && string.Equals(item.MaterialID, rhs.MaterialID);
             ret.Sound = item.Sound_Property.FormKey == rhs.Sound_Property.FormKey;
             ret.WindVelocity = item.WindVelocity.EqualsWithin(rhs.WindVelocity);
             ret.WindDirection = item.WindDirection.EqualsWithin(rhs.WindDirection);

@@ -571,12 +571,12 @@ namespace Mutagen.Bethesda.Oblivion
             if (Name_IsSet != rhs.Name_IsSet) return false;
             if (Name_IsSet)
             {
-                if (!object.Equals(this.Name, rhs.Name)) return false;
+                if (!string.Equals(this.Name, rhs.Name)) return false;
             }
             if (Description_IsSet != rhs.Description_IsSet) return false;
             if (Description_IsSet)
             {
-                if (!object.Equals(this.Description, rhs.Description)) return false;
+                if (!string.Equals(this.Description, rhs.Description)) return false;
             }
             if (Spells.HasBeenSet != rhs.Spells.HasBeenSet) return false;
             if (Spells.HasBeenSet)
@@ -589,7 +589,7 @@ namespace Mutagen.Bethesda.Oblivion
                 if (!this.Relations.SequenceEqual(rhs.Relations)) return false;
             }
             if (!this.SkillBoosts.SequenceEqual(rhs.SkillBoosts)) return false;
-            if (!this.Fluff.EqualsFast(rhs.Fluff)) return false;
+            if (!ByteExt.EqualsFast(this.Fluff, rhs.Fluff)) return false;
             if (!this.MaleHeight.EqualsWithin(rhs.MaleHeight)) return false;
             if (!this.FemaleHeight.EqualsWithin(rhs.FemaleHeight)) return false;
             if (!this.MaleWeight.EqualsWithin(rhs.MaleWeight)) return false;
@@ -653,7 +653,7 @@ namespace Mutagen.Bethesda.Oblivion
             if (Unknown_IsSet != rhs.Unknown_IsSet) return false;
             if (Unknown_IsSet)
             {
-                if (!this.Unknown.EqualsFast(rhs.Unknown)) return false;
+                if (!ByteExt.EqualsFast(this.Unknown, rhs.Unknown)) return false;
             }
             return true;
         }
@@ -3667,8 +3667,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Name = item.Name_IsSet == rhs.Name_IsSet && object.Equals(item.Name, rhs.Name);
-            ret.Description = item.Description_IsSet == rhs.Description_IsSet && object.Equals(item.Description, rhs.Description);
+            ret.Name = item.Name_IsSet == rhs.Name_IsSet && string.Equals(item.Name, rhs.Name);
+            ret.Description = item.Description_IsSet == rhs.Description_IsSet && string.Equals(item.Description, rhs.Description);
             ret.Spells = item.Spells.CollectionEqualsHelper(
                 rhs.Spells,
                 (l, r) => object.Equals(l, r),
@@ -3681,7 +3681,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 rhs.SkillBoosts,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
-            ret.Fluff = item.Fluff.EqualsFast(rhs.Fluff);
+            ret.Fluff = ByteExt.EqualsFast(item.Fluff, rhs.Fluff);
             ret.MaleHeight = item.MaleHeight.EqualsWithin(rhs.MaleHeight);
             ret.FemaleHeight = item.FemaleHeight.EqualsWithin(rhs.FemaleHeight);
             ret.MaleWeight = item.MaleWeight.EqualsWithin(rhs.MaleWeight);
@@ -3737,7 +3737,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 rhs.FaceGenData,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
                 include);
-            ret.Unknown = item.Unknown_IsSet == rhs.Unknown_IsSet && item.Unknown.EqualsFast(rhs.Unknown);
+            ret.Unknown = item.Unknown_IsSet == rhs.Unknown_IsSet && ByteExt.EqualsFast(item.Unknown, rhs.Unknown);
             OblivionMajorRecordCommon.FillEqualsMask(item, rhs, ret);
         }
 

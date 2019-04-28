@@ -1038,7 +1038,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (rhs == null) return;
             ret.PointID = item.PointID == rhs.PointID;
-            ret.Point = item.Point == rhs.Point;
+            ret.Point = item.Point.Equals(rhs.Point);
         }
 
         public static string ToString(

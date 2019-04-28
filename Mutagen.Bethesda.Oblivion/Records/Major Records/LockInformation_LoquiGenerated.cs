@@ -125,7 +125,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             if (rhs == null) return false;
             if (this.LockLevel != rhs.LockLevel) return false;
-            if (!this.Fluff.EqualsFast(rhs.Fluff)) return false;
+            if (!ByteExt.EqualsFast(this.Fluff, rhs.Fluff)) return false;
             if (!this.Key_Property.Equals(rhs.Key_Property)) return false;
             if (this.Flags != rhs.Flags) return false;
             return true;
@@ -1206,7 +1206,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (rhs == null) return;
             ret.LockLevel = item.LockLevel == rhs.LockLevel;
-            ret.Fluff = item.Fluff.EqualsFast(rhs.Fluff);
+            ret.Fluff = ByteExt.EqualsFast(item.Fluff, rhs.Fluff);
             ret.Key = item.Key_Property.FormKey == rhs.Key_Property.FormKey;
             ret.Flags = item.Flags == rhs.Flags;
         }

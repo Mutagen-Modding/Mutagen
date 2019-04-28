@@ -412,7 +412,7 @@ namespace Mutagen.Bethesda.Oblivion
             if (Name_IsSet != rhs.Name_IsSet) return false;
             if (Name_IsSet)
             {
-                if (!object.Equals(this.Name, rhs.Name)) return false;
+                if (!string.Equals(this.Name, rhs.Name)) return false;
             }
             if (Parent_Property.HasBeenSet != rhs.Parent_Property.HasBeenSet) return false;
             if (Parent_Property.HasBeenSet)
@@ -432,7 +432,7 @@ namespace Mutagen.Bethesda.Oblivion
             if (Icon_IsSet != rhs.Icon_IsSet) return false;
             if (Icon_IsSet)
             {
-                if (!object.Equals(this.Icon, rhs.Icon)) return false;
+                if (!string.Equals(this.Icon, rhs.Icon)) return false;
             }
             if (MapData_IsSet != rhs.MapData_IsSet) return false;
             if (MapData_IsSet)
@@ -462,7 +462,7 @@ namespace Mutagen.Bethesda.Oblivion
             if (OffsetData_IsSet != rhs.OffsetData_IsSet) return false;
             if (OffsetData_IsSet)
             {
-                if (!this.OffsetData.EqualsFast(rhs.OffsetData)) return false;
+                if (!ByteExt.EqualsFast(this.OffsetData, rhs.OffsetData)) return false;
             }
             if (Road_IsSet != rhs.Road_IsSet) return false;
             if (Road_IsSet)
@@ -474,7 +474,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 if (!object.Equals(this.TopCell, rhs.TopCell)) return false;
             }
-            if (!this.SubCellsTimestamp.EqualsFast(rhs.SubCellsTimestamp)) return false;
+            if (!ByteExt.EqualsFast(this.SubCellsTimestamp, rhs.SubCellsTimestamp)) return false;
             if (SubCells.HasBeenSet != rhs.SubCells.HasBeenSet) return false;
             if (SubCells.HasBeenSet)
             {
@@ -2795,11 +2795,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Name = item.Name_IsSet == rhs.Name_IsSet && object.Equals(item.Name, rhs.Name);
+            ret.Name = item.Name_IsSet == rhs.Name_IsSet && string.Equals(item.Name, rhs.Name);
             ret.Parent = item.Parent_Property.FormKey == rhs.Parent_Property.FormKey;
             ret.Climate = item.Climate_Property.FormKey == rhs.Climate_Property.FormKey;
             ret.Water = item.Water_Property.FormKey == rhs.Water_Property.FormKey;
-            ret.Icon = item.Icon_IsSet == rhs.Icon_IsSet && object.Equals(item.Icon, rhs.Icon);
+            ret.Icon = item.Icon_IsSet == rhs.Icon_IsSet && string.Equals(item.Icon, rhs.Icon);
             ret.MapData = EqualsMaskHelper.EqualsHelper(
                 item.MapData_IsSet,
                 rhs.MapData_IsSet,
@@ -2808,10 +2808,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
                 include);
             ret.Flags = item.Flags_IsSet == rhs.Flags_IsSet && item.Flags == rhs.Flags;
-            ret.ObjectBoundsMin = item.ObjectBoundsMin_IsSet == rhs.ObjectBoundsMin_IsSet && item.ObjectBoundsMin == rhs.ObjectBoundsMin;
-            ret.ObjectBoundsMax = item.ObjectBoundsMax_IsSet == rhs.ObjectBoundsMax_IsSet && item.ObjectBoundsMax == rhs.ObjectBoundsMax;
+            ret.ObjectBoundsMin = item.ObjectBoundsMin_IsSet == rhs.ObjectBoundsMin_IsSet && item.ObjectBoundsMin.Equals(rhs.ObjectBoundsMin);
+            ret.ObjectBoundsMax = item.ObjectBoundsMax_IsSet == rhs.ObjectBoundsMax_IsSet && item.ObjectBoundsMax.Equals(rhs.ObjectBoundsMax);
             ret.Music = item.Music_IsSet == rhs.Music_IsSet && item.Music == rhs.Music;
-            ret.OffsetData = item.OffsetData_IsSet == rhs.OffsetData_IsSet && item.OffsetData.EqualsFast(rhs.OffsetData);
+            ret.OffsetData = item.OffsetData_IsSet == rhs.OffsetData_IsSet && ByteExt.EqualsFast(item.OffsetData, rhs.OffsetData);
             ret.Road = EqualsMaskHelper.EqualsHelper(
                 item.Road_IsSet,
                 rhs.Road_IsSet,
@@ -2826,7 +2826,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 rhs.TopCell,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
                 include);
-            ret.SubCellsTimestamp = item.SubCellsTimestamp.EqualsFast(rhs.SubCellsTimestamp);
+            ret.SubCellsTimestamp = ByteExt.EqualsFast(item.SubCellsTimestamp, rhs.SubCellsTimestamp);
             ret.SubCells = item.SubCells.CollectionEqualsHelper(
                 rhs.SubCells,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),

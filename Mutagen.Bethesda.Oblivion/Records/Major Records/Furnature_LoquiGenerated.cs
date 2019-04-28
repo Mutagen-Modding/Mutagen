@@ -180,7 +180,7 @@ namespace Mutagen.Bethesda.Oblivion
             if (Name_IsSet != rhs.Name_IsSet) return false;
             if (Name_IsSet)
             {
-                if (!object.Equals(this.Name, rhs.Name)) return false;
+                if (!string.Equals(this.Name, rhs.Name)) return false;
             }
             if (Model_IsSet != rhs.Model_IsSet) return false;
             if (Model_IsSet)
@@ -195,7 +195,7 @@ namespace Mutagen.Bethesda.Oblivion
             if (MarkerFlags_IsSet != rhs.MarkerFlags_IsSet) return false;
             if (MarkerFlags_IsSet)
             {
-                if (!this.MarkerFlags.EqualsFast(rhs.MarkerFlags)) return false;
+                if (!ByteExt.EqualsFast(this.MarkerFlags, rhs.MarkerFlags)) return false;
             }
             return true;
         }
@@ -1490,7 +1490,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Name = item.Name_IsSet == rhs.Name_IsSet && object.Equals(item.Name, rhs.Name);
+            ret.Name = item.Name_IsSet == rhs.Name_IsSet && string.Equals(item.Name, rhs.Name);
             ret.Model = EqualsMaskHelper.EqualsHelper(
                 item.Model_IsSet,
                 rhs.Model_IsSet,
@@ -1499,7 +1499,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
                 include);
             ret.Script = item.Script_Property.FormKey == rhs.Script_Property.FormKey;
-            ret.MarkerFlags = item.MarkerFlags_IsSet == rhs.MarkerFlags_IsSet && item.MarkerFlags.EqualsFast(rhs.MarkerFlags);
+            ret.MarkerFlags = item.MarkerFlags_IsSet == rhs.MarkerFlags_IsSet && ByteExt.EqualsFast(item.MarkerFlags, rhs.MarkerFlags);
             OblivionMajorRecordCommon.FillEqualsMask(item, rhs, ret);
         }
 

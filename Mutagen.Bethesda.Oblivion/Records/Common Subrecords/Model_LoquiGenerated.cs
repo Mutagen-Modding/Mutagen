@@ -130,12 +130,12 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Equals(Model rhs)
         {
             if (rhs == null) return false;
-            if (!object.Equals(this.File, rhs.File)) return false;
+            if (!string.Equals(this.File, rhs.File)) return false;
             if (!this.BoundRadius.EqualsWithin(rhs.BoundRadius)) return false;
             if (Hashes_IsSet != rhs.Hashes_IsSet) return false;
             if (Hashes_IsSet)
             {
-                if (!this.Hashes.EqualsFast(rhs.Hashes)) return false;
+                if (!ByteExt.EqualsFast(this.Hashes, rhs.Hashes)) return false;
             }
             return true;
         }
@@ -1203,9 +1203,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.File = object.Equals(item.File, rhs.File);
+            ret.File = string.Equals(item.File, rhs.File);
             ret.BoundRadius = item.BoundRadius.EqualsWithin(rhs.BoundRadius);
-            ret.Hashes = item.Hashes_IsSet == rhs.Hashes_IsSet && item.Hashes.EqualsFast(rhs.Hashes);
+            ret.Hashes = item.Hashes_IsSet == rhs.Hashes_IsSet && ByteExt.EqualsFast(item.Hashes, rhs.Hashes);
         }
 
         public static string ToString(

@@ -1122,8 +1122,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (rhs == null) return;
             ret.Destination = item.Destination_Property.FormKey == rhs.Destination_Property.FormKey;
-            ret.Position = item.Position == rhs.Position;
-            ret.Rotation = item.Rotation == rhs.Rotation;
+            ret.Position = item.Position.Equals(rhs.Position);
+            ret.Rotation = item.Rotation.Equals(rhs.Rotation);
         }
 
         public static string ToString(

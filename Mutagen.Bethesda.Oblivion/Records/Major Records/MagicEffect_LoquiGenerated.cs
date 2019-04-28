@@ -326,17 +326,17 @@ namespace Mutagen.Bethesda.Oblivion
             if (Name_IsSet != rhs.Name_IsSet) return false;
             if (Name_IsSet)
             {
-                if (!object.Equals(this.Name, rhs.Name)) return false;
+                if (!string.Equals(this.Name, rhs.Name)) return false;
             }
             if (Description_IsSet != rhs.Description_IsSet) return false;
             if (Description_IsSet)
             {
-                if (!object.Equals(this.Description, rhs.Description)) return false;
+                if (!string.Equals(this.Description, rhs.Description)) return false;
             }
             if (Icon_IsSet != rhs.Icon_IsSet) return false;
             if (Icon_IsSet)
             {
-                if (!object.Equals(this.Icon, rhs.Icon)) return false;
+                if (!string.Equals(this.Icon, rhs.Icon)) return false;
             }
             if (Model_IsSet != rhs.Model_IsSet) return false;
             if (Model_IsSet)
@@ -345,7 +345,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
             if (this.Flags != rhs.Flags) return false;
             if (!this.BaseCost.EqualsWithin(rhs.BaseCost)) return false;
-            if (!this.Unused.EqualsFast(rhs.Unused)) return false;
+            if (!ByteExt.EqualsFast(this.Unused, rhs.Unused)) return false;
             if (this.MagicSchool != rhs.MagicSchool) return false;
             if (this.Resistance != rhs.Resistance) return false;
             if (this.CounterEffectCount != rhs.CounterEffectCount) return false;
@@ -2471,9 +2471,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Name = item.Name_IsSet == rhs.Name_IsSet && object.Equals(item.Name, rhs.Name);
-            ret.Description = item.Description_IsSet == rhs.Description_IsSet && object.Equals(item.Description, rhs.Description);
-            ret.Icon = item.Icon_IsSet == rhs.Icon_IsSet && object.Equals(item.Icon, rhs.Icon);
+            ret.Name = item.Name_IsSet == rhs.Name_IsSet && string.Equals(item.Name, rhs.Name);
+            ret.Description = item.Description_IsSet == rhs.Description_IsSet && string.Equals(item.Description, rhs.Description);
+            ret.Icon = item.Icon_IsSet == rhs.Icon_IsSet && string.Equals(item.Icon, rhs.Icon);
             ret.Model = EqualsMaskHelper.EqualsHelper(
                 item.Model_IsSet,
                 rhs.Model_IsSet,
@@ -2483,7 +2483,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 include);
             ret.Flags = item.Flags == rhs.Flags;
             ret.BaseCost = item.BaseCost.EqualsWithin(rhs.BaseCost);
-            ret.Unused = item.Unused.EqualsFast(rhs.Unused);
+            ret.Unused = ByteExt.EqualsFast(item.Unused, rhs.Unused);
             ret.MagicSchool = item.MagicSchool == rhs.MagicSchool;
             ret.Resistance = item.Resistance == rhs.Resistance;
             ret.CounterEffectCount = item.CounterEffectCount == rhs.CounterEffectCount;

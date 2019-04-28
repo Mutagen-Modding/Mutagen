@@ -118,7 +118,7 @@ namespace Mutagen.Bethesda.Oblivion
             if (AlphaLayerData_IsSet != rhs.AlphaLayerData_IsSet) return false;
             if (AlphaLayerData_IsSet)
             {
-                if (!this.AlphaLayerData.EqualsFast(rhs.AlphaLayerData)) return false;
+                if (!ByteExt.EqualsFast(this.AlphaLayerData, rhs.AlphaLayerData)) return false;
             }
             return true;
         }
@@ -1059,7 +1059,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.AlphaLayerData = item.AlphaLayerData_IsSet == rhs.AlphaLayerData_IsSet && item.AlphaLayerData.EqualsFast(rhs.AlphaLayerData);
+            ret.AlphaLayerData = item.AlphaLayerData_IsSet == rhs.AlphaLayerData_IsSet && ByteExt.EqualsFast(item.AlphaLayerData, rhs.AlphaLayerData);
             BaseLayerCommon.FillEqualsMask(item, rhs, ret);
         }
 

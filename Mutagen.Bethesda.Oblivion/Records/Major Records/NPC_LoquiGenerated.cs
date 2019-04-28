@@ -1002,7 +1002,7 @@ namespace Mutagen.Bethesda.Oblivion
             if (Name_IsSet != rhs.Name_IsSet) return false;
             if (Name_IsSet)
             {
-                if (!object.Equals(this.Name, rhs.Name)) return false;
+                if (!string.Equals(this.Name, rhs.Name)) return false;
             }
             if (Model_IsSet != rhs.Model_IsSet) return false;
             if (Model_IsSet)
@@ -1053,7 +1053,7 @@ namespace Mutagen.Bethesda.Oblivion
             if (this.BuySellServices != rhs.BuySellServices) return false;
             if (this.Teaches != rhs.Teaches) return false;
             if (this.MaximumTrainingLevel != rhs.MaximumTrainingLevel) return false;
-            if (!this.Fluff.EqualsFast(rhs.Fluff)) return false;
+            if (!ByteExt.EqualsFast(this.Fluff, rhs.Fluff)) return false;
             if (AIPackages.HasBeenSet != rhs.AIPackages.HasBeenSet) return false;
             if (AIPackages.HasBeenSet)
             {
@@ -1127,22 +1127,22 @@ namespace Mutagen.Bethesda.Oblivion
             if (FaceGenGeometrySymmetric_IsSet != rhs.FaceGenGeometrySymmetric_IsSet) return false;
             if (FaceGenGeometrySymmetric_IsSet)
             {
-                if (!this.FaceGenGeometrySymmetric.EqualsFast(rhs.FaceGenGeometrySymmetric)) return false;
+                if (!ByteExt.EqualsFast(this.FaceGenGeometrySymmetric, rhs.FaceGenGeometrySymmetric)) return false;
             }
             if (FaceGenGeometryAsymmetric_IsSet != rhs.FaceGenGeometryAsymmetric_IsSet) return false;
             if (FaceGenGeometryAsymmetric_IsSet)
             {
-                if (!this.FaceGenGeometryAsymmetric.EqualsFast(rhs.FaceGenGeometryAsymmetric)) return false;
+                if (!ByteExt.EqualsFast(this.FaceGenGeometryAsymmetric, rhs.FaceGenGeometryAsymmetric)) return false;
             }
             if (FaceGenTextureSymmetric_IsSet != rhs.FaceGenTextureSymmetric_IsSet) return false;
             if (FaceGenTextureSymmetric_IsSet)
             {
-                if (!this.FaceGenTextureSymmetric.EqualsFast(rhs.FaceGenTextureSymmetric)) return false;
+                if (!ByteExt.EqualsFast(this.FaceGenTextureSymmetric, rhs.FaceGenTextureSymmetric)) return false;
             }
             if (Unknown_IsSet != rhs.Unknown_IsSet) return false;
             if (Unknown_IsSet)
             {
-                if (!this.Unknown.EqualsFast(rhs.Unknown)) return false;
+                if (!ByteExt.EqualsFast(this.Unknown, rhs.Unknown)) return false;
             }
             return true;
         }
@@ -6897,7 +6897,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Name = item.Name_IsSet == rhs.Name_IsSet && object.Equals(item.Name, rhs.Name);
+            ret.Name = item.Name_IsSet == rhs.Name_IsSet && string.Equals(item.Name, rhs.Name);
             ret.Model = EqualsMaskHelper.EqualsHelper(
                 item.Model_IsSet,
                 rhs.Model_IsSet,
@@ -6934,14 +6934,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.BuySellServices = item.BuySellServices == rhs.BuySellServices;
             ret.Teaches = item.Teaches == rhs.Teaches;
             ret.MaximumTrainingLevel = item.MaximumTrainingLevel == rhs.MaximumTrainingLevel;
-            ret.Fluff = item.Fluff.EqualsFast(rhs.Fluff);
+            ret.Fluff = ByteExt.EqualsFast(item.Fluff, rhs.Fluff);
             ret.AIPackages = item.AIPackages.CollectionEqualsHelper(
                 rhs.AIPackages,
                 (l, r) => object.Equals(l, r),
                 include);
             ret.Animations = item.Animations.CollectionEqualsHelper(
                 rhs.Animations,
-                (l, r) => l == r,
+                (l, r) => string.Equals(l, r),
                 include);
             ret.Class = item.Class_Property.FormKey == rhs.Class_Property.FormKey;
             ret.Armorer = item.Armorer == rhs.Armorer;
@@ -6982,10 +6982,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 include);
             ret.HairColor = item.HairColor_IsSet == rhs.HairColor_IsSet && item.HairColor.ColorOnlyEquals(rhs.HairColor);
             ret.CombatStyle = item.CombatStyle_Property.FormKey == rhs.CombatStyle_Property.FormKey;
-            ret.FaceGenGeometrySymmetric = item.FaceGenGeometrySymmetric_IsSet == rhs.FaceGenGeometrySymmetric_IsSet && item.FaceGenGeometrySymmetric.EqualsFast(rhs.FaceGenGeometrySymmetric);
-            ret.FaceGenGeometryAsymmetric = item.FaceGenGeometryAsymmetric_IsSet == rhs.FaceGenGeometryAsymmetric_IsSet && item.FaceGenGeometryAsymmetric.EqualsFast(rhs.FaceGenGeometryAsymmetric);
-            ret.FaceGenTextureSymmetric = item.FaceGenTextureSymmetric_IsSet == rhs.FaceGenTextureSymmetric_IsSet && item.FaceGenTextureSymmetric.EqualsFast(rhs.FaceGenTextureSymmetric);
-            ret.Unknown = item.Unknown_IsSet == rhs.Unknown_IsSet && item.Unknown.EqualsFast(rhs.Unknown);
+            ret.FaceGenGeometrySymmetric = item.FaceGenGeometrySymmetric_IsSet == rhs.FaceGenGeometrySymmetric_IsSet && ByteExt.EqualsFast(item.FaceGenGeometrySymmetric, rhs.FaceGenGeometrySymmetric);
+            ret.FaceGenGeometryAsymmetric = item.FaceGenGeometryAsymmetric_IsSet == rhs.FaceGenGeometryAsymmetric_IsSet && ByteExt.EqualsFast(item.FaceGenGeometryAsymmetric, rhs.FaceGenGeometryAsymmetric);
+            ret.FaceGenTextureSymmetric = item.FaceGenTextureSymmetric_IsSet == rhs.FaceGenTextureSymmetric_IsSet && ByteExt.EqualsFast(item.FaceGenTextureSymmetric, rhs.FaceGenTextureSymmetric);
+            ret.Unknown = item.Unknown_IsSet == rhs.Unknown_IsSet && ByteExt.EqualsFast(item.Unknown, rhs.Unknown);
             NPCAbstractCommon.FillEqualsMask(item, rhs, ret);
         }
 

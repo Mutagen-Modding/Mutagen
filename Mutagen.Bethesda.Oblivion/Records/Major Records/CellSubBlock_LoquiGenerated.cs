@@ -140,7 +140,7 @@ namespace Mutagen.Bethesda.Oblivion
             if (rhs == null) return false;
             if (this.BlockNumber != rhs.BlockNumber) return false;
             if (this.GroupType != rhs.GroupType) return false;
-            if (!this.LastModified.EqualsFast(rhs.LastModified)) return false;
+            if (!ByteExt.EqualsFast(this.LastModified, rhs.LastModified)) return false;
             if (Items.HasBeenSet != rhs.Items.HasBeenSet) return false;
             if (Items.HasBeenSet)
             {
@@ -1285,7 +1285,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (rhs == null) return;
             ret.BlockNumber = item.BlockNumber == rhs.BlockNumber;
             ret.GroupType = item.GroupType == rhs.GroupType;
-            ret.LastModified = item.LastModified.EqualsFast(rhs.LastModified);
+            ret.LastModified = ByteExt.EqualsFast(item.LastModified, rhs.LastModified);
             ret.Items = item.Items.CollectionEqualsHelper(
                 rhs.Items,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),

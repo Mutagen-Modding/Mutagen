@@ -237,7 +237,7 @@ namespace Mutagen.Bethesda.Oblivion
             if (rhs == null) return false;
             if (!this.Object_Property.Equals(rhs.Object_Property)) return false;
             if (this.ParentIndex != rhs.ParentIndex) return false;
-            if (!this.Unknown1.EqualsFast(rhs.Unknown1)) return false;
+            if (!ByteExt.EqualsFast(this.Unknown1, rhs.Unknown1)) return false;
             if (!this.Density.EqualsWithin(rhs.Density)) return false;
             if (this.Clustering != rhs.Clustering) return false;
             if (this.MinSlope != rhs.MinSlope) return false;
@@ -251,7 +251,7 @@ namespace Mutagen.Bethesda.Oblivion
             if (!this.SinkVariance.EqualsWithin(rhs.SinkVariance)) return false;
             if (!this.SizeVariance.EqualsWithin(rhs.SizeVariance)) return false;
             if (!this.AngleVariance.Equals(rhs.AngleVariance)) return false;
-            if (!this.Unknow2n.EqualsFast(rhs.Unknow2n)) return false;
+            if (!ByteExt.EqualsFast(this.Unknow2n, rhs.Unknow2n)) return false;
             return true;
         }
 
@@ -2209,7 +2209,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (rhs == null) return;
             ret.Object = item.Object_Property.FormKey == rhs.Object_Property.FormKey;
             ret.ParentIndex = item.ParentIndex == rhs.ParentIndex;
-            ret.Unknown1 = item.Unknown1.EqualsFast(rhs.Unknown1);
+            ret.Unknown1 = ByteExt.EqualsFast(item.Unknown1, rhs.Unknown1);
             ret.Density = item.Density.EqualsWithin(rhs.Density);
             ret.Clustering = item.Clustering == rhs.Clustering;
             ret.MinSlope = item.MinSlope == rhs.MinSlope;
@@ -2222,8 +2222,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Sink = item.Sink.EqualsWithin(rhs.Sink);
             ret.SinkVariance = item.SinkVariance.EqualsWithin(rhs.SinkVariance);
             ret.SizeVariance = item.SizeVariance.EqualsWithin(rhs.SizeVariance);
-            ret.AngleVariance = item.AngleVariance == rhs.AngleVariance;
-            ret.Unknow2n = item.Unknow2n.EqualsFast(rhs.Unknow2n);
+            ret.AngleVariance = item.AngleVariance.Equals(rhs.AngleVariance);
+            ret.Unknow2n = ByteExt.EqualsFast(item.Unknow2n, rhs.Unknow2n);
         }
 
         public static string ToString(

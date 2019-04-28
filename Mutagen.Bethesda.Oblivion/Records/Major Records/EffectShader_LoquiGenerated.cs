@@ -849,12 +849,12 @@ namespace Mutagen.Bethesda.Oblivion
             if (FillTexture_IsSet != rhs.FillTexture_IsSet) return false;
             if (FillTexture_IsSet)
             {
-                if (!object.Equals(this.FillTexture, rhs.FillTexture)) return false;
+                if (!string.Equals(this.FillTexture, rhs.FillTexture)) return false;
             }
             if (ParticleShaderTexture_IsSet != rhs.ParticleShaderTexture_IsSet) return false;
             if (ParticleShaderTexture_IsSet)
             {
-                if (!object.Equals(this.ParticleShaderTexture, rhs.ParticleShaderTexture)) return false;
+                if (!string.Equals(this.ParticleShaderTexture, rhs.ParticleShaderTexture)) return false;
             }
             if (this.Flags != rhs.Flags) return false;
             if (this.MembraneShaderSourceBlendMode != rhs.MembraneShaderSourceBlendMode) return false;
@@ -5842,8 +5842,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.FillTexture = item.FillTexture_IsSet == rhs.FillTexture_IsSet && object.Equals(item.FillTexture, rhs.FillTexture);
-            ret.ParticleShaderTexture = item.ParticleShaderTexture_IsSet == rhs.ParticleShaderTexture_IsSet && object.Equals(item.ParticleShaderTexture, rhs.ParticleShaderTexture);
+            ret.FillTexture = item.FillTexture_IsSet == rhs.FillTexture_IsSet && string.Equals(item.FillTexture, rhs.FillTexture);
+            ret.ParticleShaderTexture = item.ParticleShaderTexture_IsSet == rhs.ParticleShaderTexture_IsSet && string.Equals(item.ParticleShaderTexture, rhs.ParticleShaderTexture);
             ret.Flags = item.Flags == rhs.Flags;
             ret.MembraneShaderSourceBlendMode = item.MembraneShaderSourceBlendMode == rhs.MembraneShaderSourceBlendMode;
             ret.MembraneShaderBlendOperation = item.MembraneShaderBlendOperation == rhs.MembraneShaderBlendOperation;

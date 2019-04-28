@@ -144,7 +144,7 @@ namespace Mutagen.Bethesda.Oblivion
             if (File_IsSet != rhs.File_IsSet) return false;
             if (File_IsSet)
             {
-                if (!object.Equals(this.File, rhs.File)) return false;
+                if (!string.Equals(this.File, rhs.File)) return false;
             }
             if (Data_IsSet != rhs.Data_IsSet) return false;
             if (Data_IsSet)
@@ -1294,7 +1294,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.File = item.File_IsSet == rhs.File_IsSet && object.Equals(item.File, rhs.File);
+            ret.File = item.File_IsSet == rhs.File_IsSet && string.Equals(item.File, rhs.File);
             ret.Data = EqualsMaskHelper.EqualsHelper(
                 item.Data_IsSet,
                 rhs.Data_IsSet,

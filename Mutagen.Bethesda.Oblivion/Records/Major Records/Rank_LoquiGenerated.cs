@@ -198,17 +198,17 @@ namespace Mutagen.Bethesda.Oblivion
             if (MaleName_IsSet != rhs.MaleName_IsSet) return false;
             if (MaleName_IsSet)
             {
-                if (!object.Equals(this.MaleName, rhs.MaleName)) return false;
+                if (!string.Equals(this.MaleName, rhs.MaleName)) return false;
             }
             if (FemaleName_IsSet != rhs.FemaleName_IsSet) return false;
             if (FemaleName_IsSet)
             {
-                if (!object.Equals(this.FemaleName, rhs.FemaleName)) return false;
+                if (!string.Equals(this.FemaleName, rhs.FemaleName)) return false;
             }
             if (Insignia_IsSet != rhs.Insignia_IsSet) return false;
             if (Insignia_IsSet)
             {
-                if (!object.Equals(this.Insignia, rhs.Insignia)) return false;
+                if (!string.Equals(this.Insignia, rhs.Insignia)) return false;
             }
             return true;
         }
@@ -1424,9 +1424,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (rhs == null) return;
             ret.RankNumber = item.RankNumber_IsSet == rhs.RankNumber_IsSet && item.RankNumber == rhs.RankNumber;
-            ret.MaleName = item.MaleName_IsSet == rhs.MaleName_IsSet && object.Equals(item.MaleName, rhs.MaleName);
-            ret.FemaleName = item.FemaleName_IsSet == rhs.FemaleName_IsSet && object.Equals(item.FemaleName, rhs.FemaleName);
-            ret.Insignia = item.Insignia_IsSet == rhs.Insignia_IsSet && object.Equals(item.Insignia, rhs.Insignia);
+            ret.MaleName = item.MaleName_IsSet == rhs.MaleName_IsSet && string.Equals(item.MaleName, rhs.MaleName);
+            ret.FemaleName = item.FemaleName_IsSet == rhs.FemaleName_IsSet && string.Equals(item.FemaleName, rhs.FemaleName);
+            ret.Insignia = item.Insignia_IsSet == rhs.Insignia_IsSet && string.Equals(item.Insignia, rhs.Insignia);
         }
 
         public static string ToString(

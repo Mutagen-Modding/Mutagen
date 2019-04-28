@@ -304,12 +304,12 @@ namespace Mutagen.Bethesda.Oblivion
             if (XPCIFluff_IsSet != rhs.XPCIFluff_IsSet) return false;
             if (XPCIFluff_IsSet)
             {
-                if (!this.XPCIFluff.EqualsFast(rhs.XPCIFluff)) return false;
+                if (!ByteExt.EqualsFast(this.XPCIFluff, rhs.XPCIFluff)) return false;
             }
             if (FULLFluff_IsSet != rhs.FULLFluff_IsSet) return false;
             if (FULLFluff_IsSet)
             {
-                if (!this.FULLFluff.EqualsFast(rhs.FULLFluff)) return false;
+                if (!ByteExt.EqualsFast(this.FULLFluff, rhs.FULLFluff)) return false;
             }
             if (DistantLODData_IsSet != rhs.DistantLODData_IsSet) return false;
             if (DistantLODData_IsSet)
@@ -334,7 +334,7 @@ namespace Mutagen.Bethesda.Oblivion
             if (RagdollData_IsSet != rhs.RagdollData_IsSet) return false;
             if (RagdollData_IsSet)
             {
-                if (!this.RagdollData.EqualsFast(rhs.RagdollData)) return false;
+                if (!ByteExt.EqualsFast(this.RagdollData, rhs.RagdollData)) return false;
             }
             if (Scale_IsSet != rhs.Scale_IsSet) return false;
             if (Scale_IsSet)
@@ -2244,8 +2244,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (rhs == null) return;
             ret.Base = item.Base_Property.FormKey == rhs.Base_Property.FormKey;
-            ret.XPCIFluff = item.XPCIFluff_IsSet == rhs.XPCIFluff_IsSet && item.XPCIFluff.EqualsFast(rhs.XPCIFluff);
-            ret.FULLFluff = item.FULLFluff_IsSet == rhs.FULLFluff_IsSet && item.FULLFluff.EqualsFast(rhs.FULLFluff);
+            ret.XPCIFluff = item.XPCIFluff_IsSet == rhs.XPCIFluff_IsSet && ByteExt.EqualsFast(item.XPCIFluff, rhs.XPCIFluff);
+            ret.FULLFluff = item.FULLFluff_IsSet == rhs.FULLFluff_IsSet && ByteExt.EqualsFast(item.FULLFluff, rhs.FULLFluff);
             ret.DistantLODData = EqualsMaskHelper.EqualsHelper(
                 item.DistantLODData_IsSet,
                 rhs.DistantLODData_IsSet,
@@ -2262,10 +2262,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 include);
             ret.MerchantContainer = item.MerchantContainer_Property.FormKey == rhs.MerchantContainer_Property.FormKey;
             ret.Horse = item.Horse_Property.FormKey == rhs.Horse_Property.FormKey;
-            ret.RagdollData = item.RagdollData_IsSet == rhs.RagdollData_IsSet && item.RagdollData.EqualsFast(rhs.RagdollData);
+            ret.RagdollData = item.RagdollData_IsSet == rhs.RagdollData_IsSet && ByteExt.EqualsFast(item.RagdollData, rhs.RagdollData);
             ret.Scale = item.Scale_IsSet == rhs.Scale_IsSet && item.Scale.EqualsWithin(rhs.Scale);
-            ret.Position = item.Position == rhs.Position;
-            ret.Rotation = item.Rotation == rhs.Rotation;
+            ret.Position = item.Position.Equals(rhs.Position);
+            ret.Rotation = item.Rotation.Equals(rhs.Rotation);
             OblivionMajorRecordCommon.FillEqualsMask(item, rhs, ret);
         }
 
