@@ -848,7 +848,7 @@ namespace Mutagen.Bethesda.Generation
             bool typelessStruct = obj.IsTypelessStruct();
             ObjectType objType = obj.GetObjectType();
 
-            if (obj.BaseClassTrail().Any((b) => b.Name == "MajorRecord"))
+            if (await obj.IsMajorRecord())
             {
                 bool async = this.HasAsync(obj, self: true);
                 string ret;

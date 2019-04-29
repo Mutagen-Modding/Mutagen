@@ -51,7 +51,7 @@ namespace Mutagen.Bethesda.Generation
                         {
                             throw new ArgumentException();
                         }
-                        if (!subObj.BaseClassTrail().Any((b) => b.Name.Equals("MajorRecord"))) continue;
+                        if (!await subObj.IsMajorRecord()) continue;
                         fg.AppendLine($"case {subObj.Name} {field.Name.ToLower()}:");
                         using (new DepthWrapper(fg))
                         {
@@ -237,7 +237,7 @@ namespace Mutagen.Bethesda.Generation
                     {
                         throw new ArgumentException();
                     }
-                    if (subObj.BaseClassTrail().Any((b) => b.Name.Equals("MajorRecord")))
+                    if (await subObj.IsMajorRecord())
                     {
                         args.Add($"{field.ProtectedName}.Items.Connect().Transform<IMajorRecord, {subObj.Name}, FormKey>((i) => i)");
                     }
