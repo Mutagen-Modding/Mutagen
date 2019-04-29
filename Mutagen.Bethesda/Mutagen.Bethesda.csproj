@@ -37,6 +37,7 @@
     <Compile Include="Interfaces\IFormKey.cs" />
     <Compile Include="Interfaces\IMajorRecordCommon.cs" />
     <Compile Include="Interfaces\IMod.cs" />
+    <Compile Include="Interfaces\IMutagenReadStream.cs" />
     <Compile Include="Interfaces\INamed.cs" />
     <Compile Include="Links\EDIDLink.cs" />
     <Compile Include="Links\EDIDSetLink.cs" />
@@ -82,6 +83,8 @@
     <Compile Include="ProtocolDefinition_Bethesda.cs" />
     <Compile Include="RecordType.cs" />
     <Compile Include="RecordTypeConverter.cs" />
+    <Compile Include="Stream\MutagenBinaryReadStream.cs" />
+    <Compile Include="Stream\MutagenMemoryReadStream.cs" />
     <Compile Include="Translators\Binary\BooleanBinaryTranslation.cs" />
     <Compile Include="Translators\Binary\ByteArrayBinaryTranslation.cs" />
     <Compile Include="Translators\Binary\ByteBinaryTranslation.cs" />

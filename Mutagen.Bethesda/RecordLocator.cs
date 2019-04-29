@@ -145,14 +145,14 @@ namespace Mutagen.Bethesda
             string filePath,
             RecordInterest interest = null)
         {
-            using (var stream = new BinaryReadStream(filePath))
+            using (var stream = new MutagenBinaryReadStream(filePath))
             {
                 return GetFileLocations(stream, interest);
             }
         }
 
         private static void SkipHeader(
-            IBinaryReadStream reader)
+            IMutagenReadStream reader)
         {
             reader.Position += 4;
             var headerLen = reader.ReadUInt32();
@@ -161,9 +161,9 @@ namespace Mutagen.Bethesda
         }
 
         public static FileLocations GetFileLocations(
-            BinaryReadStream reader,
+            MutagenBinaryReadStream reader,
             RecordInterest interest = null,
-            Func<IBinaryReadStream, RecordType, uint, bool> additionalCriteria = null)
+            Func<IMutagenReadStream, RecordType, uint, bool> additionalCriteria = null)
         {
             FileLocationConstructor ret = new FileLocationConstructor();
             SkipHeader(reader);
@@ -190,13 +190,13 @@ namespace Mutagen.Bethesda
         }
 
         private static RecordType? ParseTopLevelGRUP(
-            IBinaryReadStream reader,
+            IMutagenReadStream reader,
             FileLocationConstructor fileLocs,
             RecordInterest interest,
             Stack<long> parentGroupLocations,
             RecordType? grupRecOverride,
             bool checkOverallGrupType,
-            Func<IBinaryReadStream, RecordType, uint, bool> additionalCriteria)
+            Func<IMutagenReadStream, RecordType, uint, bool> additionalCriteria)
         {
             var grupLoc = reader.Position;
             var grup = HeaderTranslation.ReadNextRecordType(reader);
@@ -286,7 +286,7 @@ namespace Mutagen.Bethesda
         }
 
         private static bool IsSubLevelGRUP(
-            IBinaryReadStream reader)
+            IMutagenReadStream reader)
         {
             var targetRec = HeaderTranslation.ReadNextRecordType(reader);
             if (!targetRec.Equals(Group_Registration.GRUP_HEADER))
@@ -316,7 +316,7 @@ namespace Mutagen.Bethesda
             RecordType recordType,
             RecordInterest interest,
             Stack<long> parentGroupLocations,
-            Func<IBinaryReadStream, RecordType, uint, bool> additionalCriteria)
+            Func<IMutagenReadStream, RecordType, uint, bool> additionalCriteria)
         {
             var grupLoc = frame.Position;
             var targetRec = HeaderTranslation.ReadNextRecordType(frame.Reader);
@@ -373,7 +373,7 @@ namespace Mutagen.Bethesda
             FileLocationConstructor fileLocs,
             RecordInterest interest,
             Stack<long> parentGroupLocations,
-            Func<IBinaryReadStream, RecordType, uint, bool> additionalCriteria)
+            Func<IMutagenReadStream, RecordType, uint, bool> additionalCriteria)
         {
             frame.Reader.Position += Constants.GRUP_LENGTH;
             while (!frame.Complete)
@@ -413,7 +413,7 @@ namespace Mutagen.Bethesda
             FileLocationConstructor fileLocs,
             RecordInterest interest,
             Stack<long> parentGroupLocations,
-            Func<IBinaryReadStream, RecordType, uint, bool> additionalCriteria)
+            Func<IMutagenReadStream, RecordType, uint, bool> additionalCriteria)
         {
             frame.Reader.Position += Constants.GRUP_LENGTH;
             while (!frame.Complete)
@@ -452,7 +452,7 @@ namespace Mutagen.Bethesda
 
         #region Base GRUP Iterator
         public static IEnumerable<KeyValuePair<RecordType, long>> IterateBaseGroupLocations(
-            IBinaryReadStream reader)
+            IMutagenReadStream reader)
         {
             SkipHeader(reader);
             while (!reader.Complete)
@@ -467,7 +467,7 @@ namespace Mutagen.Bethesda
         }
 
         public static IEnumerable<(FormID FormID, long Position)> ParseTopLevelGRUP(
-            IBinaryReadStream reader,
+            IMutagenReadStream reader,
             bool checkOverallGrupType = true)
         {
             var grupLoc = reader.Position;

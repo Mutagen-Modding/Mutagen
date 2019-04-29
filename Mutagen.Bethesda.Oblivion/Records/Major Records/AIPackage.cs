@@ -77,7 +77,7 @@ namespace Mutagen.Bethesda.Oblivion
                 byte[] buff = new byte[4];
                 frame.Reader.Read(buff, 0, 2);
                 var subFrame = new MutagenFrame(
-                    new BinaryMemoryReadStream(buff));
+                    new MutagenMemoryReadStream(buff, offsetReference: frame.FinalWithOffset - 2));
                 if (EnumBinaryTranslation<AIPackage.Flag>.Instance.Parse(
                     frame: subFrame,
                     item: out AIPackage.Flag FlagsParse))

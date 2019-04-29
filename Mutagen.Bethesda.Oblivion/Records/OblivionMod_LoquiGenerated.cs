@@ -3141,7 +3141,7 @@ namespace Mutagen.Bethesda.Oblivion
             ModKey modKey,
             GroupMask importMask = null)
         {
-            using (var reader = new BinaryReadStream(path))
+            using (var reader = new MutagenBinaryReadStream(path))
             {
                 var frame = new MutagenFrame(reader);
                 return Create_Binary(
@@ -3157,7 +3157,7 @@ namespace Mutagen.Bethesda.Oblivion
             out OblivionMod_ErrorMask errorMask,
             GroupMask importMask = null)
         {
-            using (var reader = new BinaryReadStream(path))
+            using (var reader = new MutagenBinaryReadStream(path))
             {
                 var frame = new MutagenFrame(reader);
                 return Create_Binary(
@@ -3174,7 +3174,7 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMask,
             GroupMask importMask = null)
         {
-            using (var reader = new BinaryReadStream(path))
+            using (var reader = new MutagenBinaryReadStream(path))
             {
                 var frame = new MutagenFrame(reader);
                 return Create_Binary(
@@ -3191,7 +3191,7 @@ namespace Mutagen.Bethesda.Oblivion
             ModKey modKey,
             GroupMask importMask = null)
         {
-            using (var reader = new BinaryReadStream(stream))
+            using (var reader = new MutagenBinaryReadStream(stream))
             {
                 var frame = new MutagenFrame(reader);
                 return Create_Binary(
@@ -3207,7 +3207,7 @@ namespace Mutagen.Bethesda.Oblivion
             out OblivionMod_ErrorMask errorMask,
             GroupMask importMask = null)
         {
-            using (var reader = new BinaryReadStream(stream))
+            using (var reader = new MutagenBinaryReadStream(stream))
             {
                 var frame = new MutagenFrame(reader);
                 return Create_Binary(
@@ -3224,7 +3224,7 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMask,
             GroupMask importMask = null)
         {
-            using (var reader = new BinaryReadStream(stream))
+            using (var reader = new MutagenBinaryReadStream(stream))
             {
                 var frame = new MutagenFrame(reader);
                 return Create_Binary(

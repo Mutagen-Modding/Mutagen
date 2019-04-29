@@ -17,9 +17,9 @@ namespace Mutagen.Bethesda
             Stream outputStream,
             RecordInterest interest = null)
         {
-            using (var inputStream = new BinaryReadStream(streamCreator()))
+            using (var inputStream = new MutagenBinaryReadStream(streamCreator()))
             {
-                using (var inputStreamJumpback = new BinaryReadStream(streamCreator()))
+                using (var inputStreamJumpback = new MutagenBinaryReadStream(streamCreator()))
                 {
                     using (var writer = new System.IO.BinaryWriter(outputStream, Encoding.Default, leaveOpen: true))
                     {

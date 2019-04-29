@@ -521,7 +521,6 @@ namespace Mutagen.Bethesda
             ErrorMaskBuilder errorMask)
         {
             var ret = new ListGroup<T>();
-            frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseGroup(frame.Reader));
             UtilityTranslation.GroupParse(
                 record: ret,
                 frame: frame,

@@ -188,7 +188,7 @@ namespace Mutagen.Bethesda.Generation
 
         private void ConvertFromStreamIn(ObjectGeneration obj, FileGeneration fg, InternalTranslation internalToDo)
         {
-            fg.AppendLine($"using (var reader = new {nameof(BinaryReadStream)}(stream))");
+            fg.AppendLine($"using (var reader = new {nameof(MutagenBinaryReadStream)}(stream))");
             using (new BraceWrapper(fg))
             {
                 fg.AppendLine("var frame = new MutagenFrame(reader);");
@@ -745,7 +745,7 @@ namespace Mutagen.Bethesda.Generation
 
         private void ConvertFromPathIn(ObjectGeneration obj, FileGeneration fg, InternalTranslation internalToDo)
         {
-            fg.AppendLine($"using (var reader = new {nameof(BinaryReadStream)}(path))");
+            fg.AppendLine($"using (var reader = new {nameof(MutagenBinaryReadStream)}(path))");
             using (new BraceWrapper(fg))
             {
                 fg.AppendLine("var frame = new MutagenFrame(reader);");
@@ -896,12 +896,6 @@ namespace Mutagen.Bethesda.Generation
                             }
                             break;
                         case ObjectType.Group:
-                            using (var args = new ArgsWrapper(fg,
-                                $"frame = frame.SpawnWithFinalPosition({nameof(HeaderTranslation)}.ParseGroup",
-                                suffixLine: ")"))
-                            {
-                                args.Add("frame.Reader");
-                            }
                             break;
                         case ObjectType.Mod:
                         default:

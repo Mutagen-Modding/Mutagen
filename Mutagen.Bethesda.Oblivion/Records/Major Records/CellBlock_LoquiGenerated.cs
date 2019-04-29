@@ -531,7 +531,6 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMask)
         {
             var ret = new CellBlock();
-            frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseGroup(frame.Reader));
             UtilityTranslation.GroupParse(
                 record: ret,
                 frame: frame,

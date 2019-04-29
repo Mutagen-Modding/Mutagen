@@ -153,7 +153,7 @@ namespace Mutagen.Bethesda
                 }
 
                 var alignedGroupsFile = Path.Combine(temp.Dir.Path, "alignedGroups");
-                using (var inputStream = new BinaryReadStream(alignedMajorRecordsFile))
+                using (var inputStream = new MutagenBinaryReadStream(alignedMajorRecordsFile))
                 {
                     using (var writer = new MutagenWriter(new FileStream(alignedGroupsFile, FileMode.Create)))
                     {
@@ -307,7 +307,7 @@ namespace Mutagen.Bethesda
         }
 
         private static void AlignGroupsByRules(
-            BinaryReadStream inputStream,
+            MutagenBinaryReadStream inputStream,
             MutagenWriter writer,
             AlignmentRules alignmentRules,
             RecordLocator.FileLocations fileLocs)

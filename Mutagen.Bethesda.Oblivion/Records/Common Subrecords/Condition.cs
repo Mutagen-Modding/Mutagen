@@ -26,13 +26,14 @@ namespace Mutagen.Bethesda.Oblivion
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
+            var pos = frame.PositionWithOffset;
             byte[] bytes = frame.ReadBytes(0x1A);
             bytes[4] = 0x18;
             byte[] newBytes = new byte[bytes.Length + 4];
             bytes[3] = (byte)'A';
             Array.Copy(bytes, newBytes, bytes.Length);
             LoquiBinaryTranslation<Condition>.Instance.Parse(
-                frame: new MutagenFrame(new BinaryMemoryReadStream(newBytes)),
+                frame: new MutagenFrame(new MutagenMemoryReadStream(newBytes, offsetReference: pos)),
                 item: out var item,
                 errorMask: errorMask,
                 masterReferences: masterReferences,

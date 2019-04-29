@@ -17,9 +17,9 @@ namespace Mutagen.Bethesda
             Func<Stream> streamCreator,
             Stream outputStream)
         {
-            using (var inputStream = new BinaryReadStream(streamCreator()))
+            using (var inputStream = new MutagenBinaryReadStream(streamCreator()))
             {
-                using (var locatorStream = new BinaryReadStream(streamCreator()))
+                using (var locatorStream = new MutagenBinaryReadStream(streamCreator()))
                 {
                     using (var writer = new MutagenWriter(outputStream, dispose: false))
                     {

@@ -13,7 +13,7 @@ namespace Mutagen.Bethesda.Binary
 {
     public struct MutagenFrame : IBinaryReadStream
     {
-        public readonly IBinaryReadStream Reader;
+        public readonly IMutagenReadStream Reader;
         public readonly long InitialPosition;
         public readonly long FinalLocation;
 
@@ -23,13 +23,15 @@ namespace Mutagen.Bethesda.Binary
             get => this.Reader.Position;
             set => this.Reader.Position = value;
         }
+        public long PositionWithOffset => this.Position + this.Reader.OffsetReference;
+        public long FinalWithOffset => this.FinalLocation + this.Reader.OffsetReference;
         public long TotalLength => this.FinalLocation - this.InitialPosition;
         public long Remaining => this.FinalLocation - this.Position;
 
         public long Length => Reader.Length;
 
         [DebuggerStepThrough]
-        public MutagenFrame(IBinaryReadStream reader)
+        public MutagenFrame(IMutagenReadStream reader)
         {
             this.Reader = reader;
             this.InitialPosition = reader.Position;
@@ -38,7 +40,7 @@ namespace Mutagen.Bethesda.Binary
 
         [DebuggerStepThrough]
         private MutagenFrame(
-            IBinaryReadStream reader,
+            IMutagenReadStream reader,
             long finalPosition)
         {
             this.Reader = reader;
@@ -65,12 +67,12 @@ namespace Mutagen.Bethesda.Binary
             {
                 if (Complete)
                 {
-                    ex = new ArgumentException($"Frame was complete, so did not have any remaining bytes to parse. At {this.Position}. Desired {length} more bytes. {this.Remaining} past the final position {this.FinalLocation}.");
+                    ex = new ArgumentException($"Frame was complete, so did not have any remaining bytes to parse. At {this.PositionWithOffset}. Desired {length} more bytes. {this.Remaining} past the final position {this.FinalWithOffset}.");
                     return false;
                 }
                 else
                 {
-                    ex = new ArgumentException($"Frame did not have enough remaining bytes to parse. At {this.Position}. Desired {length} more bytes.  Only {this.Remaining} left before final position {this.FinalLocation}.");
+                    ex = new ArgumentException($"Frame did not have enough remaining bytes to parse. At {this.PositionWithOffset}. Desired {length} more bytes.  Only {this.Remaining} left before final position {this.FinalWithOffset}.");
                     return false;
                 }
             }
@@ -104,12 +106,12 @@ namespace Mutagen.Bethesda.Binary
 
         public override string ToString()
         {
-            return $"0x{this.Position.ToString("X")} - 0x{(this.FinalLocation - 1).ToString("X")} (0x{this.Remaining.ToString("X")})";
+            return $"0x{this.PositionWithOffset.ToString("X")} - 0x{(this.FinalWithOffset - 1).ToString("X")} (0x{this.Remaining.ToString("X")})";
         }
 
         [DebuggerStepThrough]
         public static MutagenFrame ByFinalPosition(
-            IBinaryReadStream reader,
+            IMutagenReadStream reader,
             long finalPosition)
         {
             return new MutagenFrame(
@@ -119,7 +121,7 @@ namespace Mutagen.Bethesda.Binary
 
         [DebuggerStepThrough]
         public static MutagenFrame ByLength(
-            IBinaryReadStream reader,
+            IMutagenReadStream reader,
             long length)
         {
             return new MutagenFrame(
@@ -140,7 +142,7 @@ namespace Mutagen.Bethesda.Binary
             if (checkFraming 
                 && this.Remaining < length)
             {
-                throw new ArgumentException($"Frame did not have enough remaining to allocate for desired length at {this.Position}. Desired {length} more bytes, but only had {this.Remaining}.");
+                throw new ArgumentException($"Frame did not have enough remaining to allocate for desired length at {this.PositionWithOffset}. Desired {length} more bytes, but only had {this.Remaining}.");
             }
             return new MutagenFrame(
                 this.Reader,
@@ -159,7 +161,7 @@ namespace Mutagen.Bethesda.Binary
             {
                 var res = ZlibStream.UncompressBuffer(bytes);
                 return new MutagenFrame(
-                    new BinaryMemoryReadStream(res));
+                    new MutagenMemoryReadStream(res));
             }
             catch (Exception)
             {

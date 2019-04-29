@@ -1,6 +1,7 @@
 ﻿using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda.Internals;
 using Noggog;
 using System;
 using System.Collections.Generic;
@@ -268,6 +269,18 @@ namespace Mutagen.Bethesda
         {
             try
             {
+                if (!HeaderTranslation.TryParse(
+                    frame,
+                    Group_Registration.GRUP_HEADER,
+                    out var grupLen,
+                    Constants.RECORD_LENGTHLENGTH))
+                {
+                    throw new ArgumentException($"Expected header was not read in: {Group_Registration.GRUP_HEADER}");
+                }
+                var groupLen = checked((int)(grupLen - Constants.HEADER_LENGTH - Constants.RECORD_LENGTHLENGTH));
+                var offset = frame.PositionWithOffset;
+                frame = new MutagenFrame(new MutagenMemoryReadStream(frame.ReadBytes(groupLen), offsetReference: offset));
+
                 fillStructs?.Invoke(
                     record: record,
                     frame: frame,
