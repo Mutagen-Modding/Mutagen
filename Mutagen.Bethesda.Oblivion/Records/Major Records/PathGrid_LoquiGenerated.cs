@@ -737,31 +737,6 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask);
         }
 
-        static partial void FillBinary_Unknown_Custom(
-            MutagenFrame frame,
-            PathGrid item,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask);
-
-        static partial void WriteBinary_Unknown_Custom(
-            MutagenWriter writer,
-            PathGrid item,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask);
-
-        public static void WriteBinary_Unknown(
-            MutagenWriter writer,
-            PathGrid item,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask)
-        {
-            WriteBinary_Unknown_Custom(
-                writer: writer,
-                item: item,
-                masterReferences: masterReferences,
-                errorMask: errorMask);
-        }
-
         protected static void Fill_Binary_Structs(
             PathGrid item,
             MutagenFrame frame,
@@ -798,11 +773,6 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 case 0x47414750: // PGAG
                 {
-                    FillBinary_Unknown_Custom(
-                        frame: frame.SpawnWithLength(Mutagen.Bethesda.Constants.SUBRECORD_LENGTH + contentLength),
-                        item: item,
-                        masterReferences: masterReferences,
-                        errorMask: errorMask);
                     return TryGet<int?>.Succeed((int)PathGrid_FieldIndex.Unknown);
                 }
                 case 0x49524750: // PGRI
@@ -1998,11 +1968,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 masterReferences: masterReferences);
             PathGrid.WriteBinary_PointToPointConnections(
-                writer: writer,
-                item: item,
-                masterReferences: masterReferences,
-                errorMask: errorMask);
-            PathGrid.WriteBinary_Unknown(
                 writer: writer,
                 item: item,
                 masterReferences: masterReferences,

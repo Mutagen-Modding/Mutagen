@@ -2,7 +2,7 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="Road" baseClass="OblivionMajorRecord" recordType="ROAD" objType="Record" GUID="ef98a18a-0da0-4e1e-a4ef-f09c465848a9" ID="139">
     <Fields>
-      <RefList name="Points" refName="RoadPoint" recordType="PGRP" customBinary="true" />
+      <RefList name="Points" refName="RoadPoint" recordType="PGRP" binary="Custom" />
     </Fields>
   </Object>
   <Object name="RoadPoint" objType="Subrecord" GUID="40edd2d1-a707-454b-93c4-d833df08a2dd" ID="142">

@@ -7,11 +7,11 @@
       <FormIDLink name="Worldspace" refName="Worldspace" recordType="WNAM" />
       <RefList name="Areas" refName="RegionArea" />
       <CustomLogic name="RegionAreaLogic" recordType="RDAT" />
-      <RefDirect name="Objects" refName="RegionDataObjects" noBinary="true" />
-      <RefDirect name="Weather" refName="RegionDataWeather" noBinary="true" />
-      <RefDirect name="MapName" refName="RegionDataMapName" noBinary="true" />
-      <RefDirect name="Grasses" refName="RegionDataGrasses" noBinary="true" />
-      <RefDirect name="Sounds" refName="RegionDataSounds" noBinary="true" />
+      <RefDirect name="Objects" refName="RegionDataObjects" binary="NoGeneration" />
+      <RefDirect name="Weather" refName="RegionDataWeather" binary="NoGeneration" />
+      <RefDirect name="MapName" refName="RegionDataMapName" binary="NoGeneration" />
+      <RefDirect name="Grasses" refName="RegionDataGrasses" binary="NoGeneration" />
+      <RefDirect name="Sounds" refName="RegionDataSounds" binary="NoGeneration" />
     </Fields>
   </Object>
   <Object name="RegionArea" objType="Subrecord" GUID="9cbce207-fe81-4953-a29f-9010447d54ff" ID="108">

@@ -10,13 +10,13 @@
       <RefDirect name="Model" refName="Model" />
       <Data recordType="TNAM">
         <Fields>
-          <DateTime name="SunriseBegin" customBinary="true" objectCentralized="false" />
-          <DateTime name="SunriseEnd" customBinary="true" objectCentralized="false" />
-          <DateTime name="SunsetBegin" customBinary="true" objectCentralized="false" />
-          <DateTime name="SunsetEnd" customBinary="true" objectCentralized="false" />
+          <DateTime name="SunriseBegin" binary="Custom" objectCentralized="false" />
+          <DateTime name="SunriseEnd" binary="Custom" objectCentralized="false" />
+          <DateTime name="SunsetBegin" binary="Custom" objectCentralized="false" />
+          <DateTime name="SunsetEnd" binary="Custom" objectCentralized="false" />
           <UInt8 name="Volatility" />
-          <Enum name="Phase" enumName="Climate.MoonPhase" customBinary="true" />
-          <UInt8 name="PhaseLength" customBinary="true" min="0" max="63" />
+          <Enum name="Phase" enumName="Climate.MoonPhase" binary="Custom" />
+          <UInt8 name="PhaseLength" binary="Custom" min="0" max="63" />
         </Fields>
       </Data>
     </Fields>

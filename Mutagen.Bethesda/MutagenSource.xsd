@@ -76,17 +76,10 @@
               </xs:documentation>
             </xs:annotation>
           </xs:attribute>
-          <xs:attribute name="customBinary" type="xs:boolean" >
+          <xs:attribute name="binary" type="MutagenBinaryType" use="optional" >
             <xs:annotation>
               <xs:documentation>
-                Whether to expose a custom import/export snippet for binary translation
-              </xs:documentation>
-            </xs:annotation>
-          </xs:attribute>
-          <xs:attribute name="noBinary" type="xs:boolean" >
-            <xs:annotation>
-              <xs:documentation>
-                Whether to consider in binary translations
+                How to generate binary translations
               </xs:documentation>
             </xs:annotation>
           </xs:attribute>
@@ -114,17 +107,10 @@
               </xs:documentation>
             </xs:annotation>
           </xs:attribute>
-          <xs:attribute name="customBinary" type="xs:boolean" >
+          <xs:attribute name="binary" type="MutagenBinaryType" use="optional" >
             <xs:annotation>
               <xs:documentation>
-                Whether to expose a custom import/export snippet for binary translation
-              </xs:documentation>
-            </xs:annotation>
-          </xs:attribute>
-          <xs:attribute name="noBinary" type="xs:boolean" >
-            <xs:annotation>
-              <xs:documentation>
-                Whether to consider in binary translations
+                How to generate binary translations
               </xs:documentation>
             </xs:annotation>
           </xs:attribute>
@@ -225,6 +211,15 @@
       <xs:enumeration value="Subrecord" />
       <xs:enumeration value="Group" />
       <xs:enumeration value="Mod" />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="MutagenBinaryType" final="restriction" >
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Normal" />
+      <xs:enumeration value="DoNothing" />
+      <xs:enumeration value="NoGeneration" />
+      <xs:enumeration value="Custom" />
     </xs:restriction>
   </xs:simpleType>
 

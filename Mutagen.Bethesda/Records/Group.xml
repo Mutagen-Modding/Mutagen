@@ -5,7 +5,7 @@
       <Where>IMajorRecord</Where>
     </Generic>
     <Fields>
-      <String name="ContainedRecordType" derivative="true" customBinary="true" />
+      <String name="ContainedRecordType" derivative="true" binary="Custom" />
       <Enum name="GroupType" enumName="GroupTypeEnum" byteLength="4" />
       <ByteArray name="LastModified" length="4" nullable="NotNull" />
       <Dict name="Items" lengthLength="4">
@@ -20,7 +20,7 @@
   <Object name="ListGroup" objType="Group" recordType="GRUP" GUID="e0e6ef16-9b52-4726-ba0d-7e7c9b0277cb" ID="12">
     <Generic name="T" isLoqui="true" />
     <Fields>
-      <String name="ContainedRecordType" derivative="true" customBinary="true" />
+      <String name="ContainedRecordType" derivative="true" binary="Custom" />
       <Enum name="GroupType" enumName="GroupTypeEnum" byteLength="4" />
       <ByteArray name="LastModified" length="4" nullable="NotNull" />
       <List name="Items" lengthLength="4" hasBeenSet="False">

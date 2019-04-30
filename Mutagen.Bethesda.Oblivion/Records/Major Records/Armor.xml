@@ -4,7 +4,7 @@
     <Fields>
       <Data recordType="DATA">
         <Fields>
-          <Float name="ArmorValue" customBinary="true" />
+          <Float name="ArmorValue" binary="Custom" />
           <UInt32 name="Value" />
           <UInt32 name="Health" />
           <Float name="Weight" />

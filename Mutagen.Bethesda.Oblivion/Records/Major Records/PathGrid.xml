@@ -2,8 +2,8 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="PathGrid" objType="Record" baseClass="OblivionMajorRecord" recordType="PGRD" GUID="9fc6e922-dfb7-4ad4-81d3-bea823f22198" ID="129">
     <Fields>
-      <RefList name="PointToPointConnections" refName="PathGridPoint" recordType="DATA" customBinary="true" />
-      <ByteArray name="Unknown" recordType="PGAG" customBinary="true" />
+      <RefList name="PointToPointConnections" refName="PathGridPoint" recordType="DATA" binary="Custom" />
+      <ByteArray name="Unknown" recordType="PGAG" binary="DoNothing" />
       <RefList name="InterCellConnections" recordType="PGRI" refName="InterCellPoint" />
       <RefList name="PointToReferenceMappings" refName="PointToReferenceMapping" />
     </Fields>

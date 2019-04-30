@@ -19,7 +19,7 @@
     <Fields>
       <ByteArray name="Fluff" length="4" nullable="NotNull" />
       <UInt32 name="RefCount" />
-      <Int32 name="CompiledSize" derivative="true" customBinary="true" />
+      <Int32 name="CompiledSize" derivative="true" binary="Custom" />
       <UInt32 name="VariableCount" />
       <Enum name="Type" enumName="ScriptFields.ScriptType" byteLength="4" />
     </Fields>

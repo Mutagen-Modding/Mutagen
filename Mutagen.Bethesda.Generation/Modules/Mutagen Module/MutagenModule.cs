@@ -60,8 +60,7 @@ namespace Mutagen.Bethesda.Generation
             }
             data.IncludeInLength = node.GetAttribute<bool>("includeInLength", true);
             data.Vestigial = node.GetAttribute<bool>("vestigial", false);
-            data.CustomBinary = node.GetAttribute<bool>("customBinary", false);
-            data.NoBinary = node.GetAttribute<bool>("noBinary", false);
+            data.Binary = node.GetAttribute<BinaryGenerationType>("binary", BinaryGenerationType.Normal);
             ModifyGRUPAttributes(field);
             await base.PostFieldLoad(obj, field, node);
         }

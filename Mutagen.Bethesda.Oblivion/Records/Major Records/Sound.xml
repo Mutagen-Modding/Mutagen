@@ -8,8 +8,8 @@
   </Object>
   <Object name="SoundData" objType="Subrecord" recordType="SNDD" GUID="4849cf00-7d46-4b82-bec2-e7eb7f54e563" ID="40">
     <Fields>
-      <UInt16 name="MinimumAttenuationDistance" customBinary="true" objectCentralized="false" />
-      <UInt16 name="MaximumAttenuationDistance" customBinary="true" objectCentralized="false" />
+      <UInt16 name="MinimumAttenuationDistance" binary="Custom" objectCentralized="false" />
+      <UInt16 name="MaximumAttenuationDistance" binary="Custom" objectCentralized="false" />
       <Int8 name="FrequencyAdjustment" />
       <Buffer name="Marker" length="1" static="false" />
       <Enum name="Flags" enumName="SoundData.Flag" byteLength="4" />
@@ -17,9 +17,9 @@
   </Object>
   <Object name="SoundDataExtended" baseClass="SoundData" objType="Subrecord" recordType="SNDX" GUID="3af22aab-9cdf-4fac-a210-9c06331d2180" ID="41">
     <Fields>
-      <Float name="StaticAttenuation" customBinary="true" min="0" max="655.35" />
-      <Float name="StopTime" customBinary="true" min="0" max="1434.375" />
-      <Float name="StartTime" customBinary="true" min="0" max="1434.375" />
+      <Float name="StaticAttenuation" binary="Custom" min="0" max="655.35" />
+      <Float name="StopTime" binary="Custom" min="0" max="1434.375" />
+      <Float name="StartTime" binary="Custom" min="0" max="1434.375" />
     </Fields>
   </Object>
 </Loqui>

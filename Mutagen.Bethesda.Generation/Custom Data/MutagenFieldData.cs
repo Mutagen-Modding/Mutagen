@@ -20,8 +20,7 @@ namespace Mutagen.Bethesda.Generation
         public long? Length;
         public bool IncludeInLength;
         public bool Vestigial;
-        public bool CustomBinary;
-        public bool NoBinary;
+        public BinaryGenerationType Binary;
         public bool CustomFolder;
         public Dictionary<RecordType, ObjectGeneration> SubLoquiTypes = new Dictionary<RecordType, ObjectGeneration>();
         public IEnumerable<KeyValuePair<IEnumerable<RecordType>, TypeGeneration>> GenerationTypes => GetGenerationTypes();

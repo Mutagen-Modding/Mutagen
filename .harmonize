@@ -2,18 +2,18 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>725f6fd8f0010bd0450601a01d72576a2ab7627a</Sha>
+         <Sha>3a85f5f76645f38b6ec647d8c8308a7b59be9c67</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>04-28-2019 18:47:44</CommitDate>
-         <Description>Removed unnecessary exception for BinaryReadStream when position was set to == length</Description>
+         <CommitDate>04-29-2019 18:40:22</CommitDate>
+         <Description>Readded XmlExt.SaveIfChanged</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>f15bbac57385c61210ce66d560b97186936c12ae</Sha>
+         <Sha>e2af9170350ee655b61beba7f53ab3a851b7960c</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>04-28-2019 18:07:00</CommitDate>
-         <Description>TranslationModule global DoErrorMasks</Description>
+         <CommitDate>04-29-2019 18:46:29</CommitDate>
+         <Description>Fixes for File/Dir path generation</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>

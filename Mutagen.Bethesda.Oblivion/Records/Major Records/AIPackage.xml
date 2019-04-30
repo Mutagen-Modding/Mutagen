@@ -4,8 +4,8 @@
     <Fields>
       <Data recordType="PKDT">
         <Fields>
-          <Enum name="Flags" enumName="AIPackage.Flag" byteLength="4" customBinary="true" />
-          <Enum name="GeneralType" enumName="AIPackage.GeneralTypeEnum" byteLength="4" customBinary="true" />
+          <Enum name="Flags" enumName="AIPackage.Flag" byteLength="4" binary="Custom" />
+          <Enum name="GeneralType" enumName="AIPackage.GeneralTypeEnum" byteLength="4" binary="Custom" />
         </Fields>
       </Data>
       <RefDirect name="Location" refName="AIPackageLocation" />

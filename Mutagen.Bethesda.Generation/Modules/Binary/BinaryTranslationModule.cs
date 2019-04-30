@@ -13,6 +13,14 @@ using Loqui.Internal;
 
 namespace Mutagen.Bethesda.Generation
 {
+    public enum BinaryGenerationType
+    {
+        Normal,
+        DoNothing,
+        NoGeneration,
+        Custom,
+    }
+
     public class BinaryTranslationModule : TranslationModule<BinaryTranslationGeneration>
     {
         public override string Namespace => "Mutagen.Bethesda.Binary.";
@@ -209,7 +217,7 @@ namespace Mutagen.Bethesda.Generation
             foreach (var field in obj.IterateFields(nonIntegrated: true))
             {
                 if (!field.TryGetFieldData(out var mutaData)) continue;
-                if (!mutaData.CustomBinary && !(field is CustomLogic)) continue;
+                if (mutaData.Binary != BinaryGenerationType.Custom && !(field is CustomLogic)) continue;
                 CustomLogicTranslationGeneration.GeneratePartialMethods(
                     fg: fg,
                     obj: obj,
@@ -279,8 +287,9 @@ namespace Mutagen.Bethesda.Generation
                         if (field is SetMarkerType) continue;
                         if (field.TryGetFieldData(out var fieldData)
                             && fieldData.HasTrigger) continue;
-                        if (fieldData.NoBinary) continue;
-                        if (field.Derivative && !fieldData.CustomBinary) continue;
+                        if (fieldData.Binary == BinaryGenerationType.NoGeneration) continue;
+                        if (fieldData.Binary == BinaryGenerationType.DoNothing) continue;
+                        if (field.Derivative && fieldData.Binary != BinaryGenerationType.Custom) continue;
                         if (!this.TryGetTypeGeneration(field.GetType(), out var generator))
                         {
                             throw new ArgumentException("Unsupported type generator: " + field);
@@ -330,8 +339,8 @@ namespace Mutagen.Bethesda.Generation
                             if (!field.Field.TryGetFieldData(out var fieldData)
                                 || !fieldData.HasTrigger
                                 || fieldData.TriggeringRecordTypes.Count == 0) continue;
-                            if (fieldData.NoBinary) continue;
-                            if (field.Field.Derivative && !fieldData.CustomBinary) continue;
+                            if (fieldData.Binary == BinaryGenerationType.NoGeneration) continue;
+                            if (field.Field.Derivative && fieldData.Binary != BinaryGenerationType.Custom) continue;
                             if (!this.TryGetTypeGeneration(field.Field.GetType(), out var generator))
                             {
                                 throw new ArgumentException("Unsupported type generator: " + field.Field);
@@ -375,21 +384,24 @@ namespace Mutagen.Bethesda.Generation
                                         }
                                     }
 
-                                    var groupMask = data.ObjectType == ObjectType.Mod && (loqui?.TargetObjectGeneration?.GetObjectType() == ObjectType.Group);
-                                    if (groupMask)
+                                    if (fieldData.Binary != BinaryGenerationType.DoNothing)
                                     {
-                                        fg.AppendLine($"if (importMask?.{field.Field.Name} ?? true)");
-                                    }
-                                    using (new BraceWrapper(fg, doIt: groupMask))
-                                    {
-                                        GenerateFillSnippet(obj, fg, gen.Value, generator, "frame");
-                                    }
-                                    if (groupMask)
-                                    {
-                                        fg.AppendLine("else");
-                                        using (new BraceWrapper(fg))
+                                        var groupMask = data.ObjectType == ObjectType.Mod && (loqui?.TargetObjectGeneration?.GetObjectType() == ObjectType.Group);
+                                        if (groupMask)
                                         {
-                                            fg.AppendLine("frame.Position += contentLength;");
+                                            fg.AppendLine($"if (importMask?.{field.Field.Name} ?? true)");
+                                        }
+                                        using (new BraceWrapper(fg, doIt: groupMask))
+                                        {
+                                            GenerateFillSnippet(obj, fg, gen.Value, generator, "frame");
+                                        }
+                                        if (groupMask)
+                                        {
+                                            fg.AppendLine("else");
+                                            using (new BraceWrapper(fg))
+                                            {
+                                                fg.AppendLine("frame.Position += contentLength;");
+                                            }
                                         }
                                     }
                                     if (dataSet != null)
@@ -418,7 +430,7 @@ namespace Mutagen.Bethesda.Generation
                                 if (!field.Field.TryGetFieldData(out var fieldData)
                                     || !fieldData.HasTrigger
                                     || fieldData.TriggeringRecordTypes.Count > 0) continue;
-                                if (field.Field.Derivative && !fieldData.CustomBinary) continue;
+                                if (field.Field.Derivative && fieldData.Binary != BinaryGenerationType.Custom) continue;
                                 if (!this.TryGetTypeGeneration(field.Field.GetType(), out var generator))
                                 {
                                     throw new ArgumentException("Unsupported type generator: " + field.Field);
@@ -706,7 +718,7 @@ namespace Mutagen.Bethesda.Generation
             }
 
             var data = field.GetFieldData();
-            if (data.CustomBinary)
+            if (data.Binary == BinaryGenerationType.Custom)
             {
                 CustomLogicTranslationGeneration.GenerateFill(
                     fg,
@@ -1105,8 +1117,9 @@ namespace Mutagen.Bethesda.Generation
                     {
                         if (field.TryGetFieldData(out var fieldData)
                             && fieldData.HasTrigger) continue;
-                        if (fieldData.NoBinary) continue;
-                        if (field.Derivative && !fieldData.CustomBinary) continue;
+                        if (fieldData.Binary == BinaryGenerationType.NoGeneration) continue;
+                        if (fieldData.Binary == BinaryGenerationType.DoNothing) continue;
+                        if (field.Derivative && fieldData.Binary != BinaryGenerationType.Custom) continue;
                         List<string> conditions = new List<string>();
                         if (field.HasBeenSet)
                         {
@@ -1125,7 +1138,7 @@ namespace Mutagen.Bethesda.Generation
                         using (new BraceWrapper(fg, doIt: conditions.Count > 0))
                         {
                             var maskType = this.Gen.MaskModule.GetMaskModule(field.GetType()).GetErrorMaskTypeStr(field);
-                            if (fieldData.CustomBinary)
+                            if (fieldData.Binary == BinaryGenerationType.Custom)
                             {
                                 CustomLogicTranslationGeneration.GenerateWrite(
                                     fg: fg,
@@ -1205,8 +1218,8 @@ namespace Mutagen.Bethesda.Generation
                     {
                         if (!field.TryGetFieldData(out var fieldData)
                             || !fieldData.HasTrigger) continue;
-                        if (field.Derivative && !fieldData.CustomBinary) continue;
-                        if (fieldData.CustomBinary)
+                        if (field.Derivative && fieldData.Binary != BinaryGenerationType.Custom) continue;
+                        if (fieldData.Binary == BinaryGenerationType.Custom)
                         {
                             CustomLogicTranslationGeneration.GenerateWrite(
                                 fg: fg,
@@ -1239,7 +1252,7 @@ namespace Mutagen.Bethesda.Generation
 
                                         var subData = subField.Field.GetFieldData();
                                         if (!subGenerator.ShouldGenerateCopyIn(subField.Field)) continue;
-                                        if (subData.CustomBinary)
+                                        if (subData.Binary == BinaryGenerationType.Custom)
                                         {
                                             using (var args = new ArgsWrapper(fg,
                                                 $"{obj.ObjectName}.WriteBinary_{subField.Field.Name}"))
@@ -1290,7 +1303,8 @@ namespace Mutagen.Bethesda.Generation
                         else
                         {
                             if (!generator.ShouldGenerateWrite(field)) continue;
-                            if (fieldData.NoBinary) continue;
+                            if (fieldData.Binary == BinaryGenerationType.NoGeneration) continue;
+                            if (fieldData.Binary == BinaryGenerationType.DoNothing) continue;
                             bool doIf = true;
                             if (field is LoquiType loqui
                                 && loqui.TargetObjectGeneration?.GetObjectType() == ObjectType.Group

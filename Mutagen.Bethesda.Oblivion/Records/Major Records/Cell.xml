@@ -33,15 +33,15 @@
       <FormIDLink name="Owner" recordType="XOWN" refName="Faction" />
       <Int32 name="FactionRank" recordType="XRNK" />
       <FormIDLink name="GlobalVariable" recordType="XGLB" refName="Global" />
-      <RefDirect name="PathGrid" noBinary="true" refName="PathGrid" />
-      <RefDirect name="Landscape" noBinary="true" refName="Landscape" />
-      <ByteArray name="Timestamp" noBinary="true" length="4" nullable="NotNull" />
-      <ByteArray name="PersistentTimestamp" noBinary="true" length="4" nullable="NotNull" />
-      <RefList name="Persistent" noBinary="true" interfaceName="IPlaced" objType="Record" />
-      <ByteArray name="TemporaryTimestamp" noBinary="true" length="4" nullable="NotNull" />
-      <RefList name="Temporary" noBinary="true" interfaceName="IPlaced" objType="Record" />
-      <ByteArray name="VisibleWhenDistantTimestamp" noBinary="true" length="4" nullable="NotNull" />
-      <RefList name="VisibleWhenDistant" noBinary="true" interfaceName="IPlaced" objType="Record" />
+      <RefDirect name="PathGrid" binary="NoGeneration" refName="PathGrid" />
+      <RefDirect name="Landscape" binary="NoGeneration" refName="Landscape" />
+      <ByteArray name="Timestamp" binary="NoGeneration" length="4" nullable="NotNull" />
+      <ByteArray name="PersistentTimestamp" binary="NoGeneration" length="4" nullable="NotNull" />
+      <RefList name="Persistent" binary="NoGeneration" interfaceName="IPlaced" objType="Record" />
+      <ByteArray name="TemporaryTimestamp" binary="NoGeneration" length="4" nullable="NotNull" />
+      <RefList name="Temporary" binary="NoGeneration" interfaceName="IPlaced" objType="Record" />
+      <ByteArray name="VisibleWhenDistantTimestamp" binary="NoGeneration" length="4" nullable="NotNull" />
+      <RefList name="VisibleWhenDistant" binary="NoGeneration" interfaceName="IPlaced" objType="Record" />
     </Fields>
   </Object>
   <Object name="CellLighting" recordType="XCLL" objType="Subrecord" GUID="31acbf65-e6be-4373-9fb4-d0f1ab97c089" ID="138">

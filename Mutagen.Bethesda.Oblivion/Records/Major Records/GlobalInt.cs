@@ -53,6 +53,10 @@ namespace Mutagen.Bethesda.Oblivion
                 .BindTo(this, x => x.RawFloat);
         }
 
+        static partial void FillBinary_Data_Custom(MutagenFrame frame, GlobalInt item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
+        {
+        }
+
         static partial void WriteBinary_Data_Custom(MutagenWriter writer, GlobalInt item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
         {
             using (HeaderExport.ExportSubRecordHeader(writer, GlobalInt_Registration.FLTV_HEADER))

@@ -22,7 +22,7 @@ namespace Mutagen.Bethesda.Generation
             {
                 if (!field.TryGetFieldData(out var mutaData)) continue;
                 if (!mutaData.HasTrigger) continue;
-                if (mutaData.NoBinary) continue;
+                if (mutaData.Binary == BinaryGenerationType.NoGeneration) continue;
                 foreach (var trigger in mutaData.TriggeringRecordAccessors)
                 {
                     if (triggerMapping.TryGetValue(trigger, out var existingField))
@@ -50,7 +50,7 @@ namespace Mutagen.Bethesda.Generation
                 if (field.Derivative || !field.IntegrateField) continue;
                 var hasTrigger = field.TryGetFieldData(out var fieldData)
                     && fieldData.HasTrigger;
-                if (field.GetFieldData()?.NoBinary ?? false) continue;
+                if (field.GetFieldData()?.Binary == BinaryGenerationType.NoGeneration) continue;
                 if (hasTrigger)
                 {
                     triggerEncountered = true;
