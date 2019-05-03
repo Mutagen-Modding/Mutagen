@@ -497,38 +497,36 @@ namespace Mutagen.Bethesda
         #region Binary Translation
         #region Binary Create
         [DebuggerStepThrough]
-        public static ListGroup<T> Create_Binary<T_ErrMask>(
+        public static async Task<(ListGroup<T> Object, ListGroup_ErrorMask<T_ErrMask> ErrorMask)> Create_Binary_Error<T_ErrMask>(
             MutagenFrame frame,
             MasterReferences masterReferences,
-            out ListGroup_ErrorMask<T_ErrMask> errorMask,
             bool doMasks = true)
             where T_ErrMask : class, IErrorMask<T_ErrMask>, new()
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            var ret = Create_Binary(
+            var ret = await Create_Binary(
                 masterReferences: masterReferences,
                 frame: frame,
                 recordTypeConverter: null,
                 errorMask: errorMaskBuilder);
-            errorMask = ListGroup_ErrorMask<T_ErrMask>.Factory(errorMaskBuilder);
-            return ret;
+            return (ret, ListGroup_ErrorMask<T_ErrMask>.Factory(errorMaskBuilder));
         }
 
-        public static ListGroup<T> Create_Binary(
+        public static async Task<ListGroup<T>> Create_Binary(
             MutagenFrame frame,
             MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
             var ret = new ListGroup<T>();
-            UtilityTranslation.GroupParse(
+            await UtilityAsyncTranslation.GroupParse(
                 record: ret,
                 frame: frame,
                 masterReferences: masterReferences,
                 errorMask: errorMask,
                 recordTypeConverter: recordTypeConverter,
                 fillStructs: Fill_Binary_Structs,
-                fillTyped: Fill_Binary_RecordTypes);
+                fillTyped: Fill_Binary_RecordTypes).ConfigureAwait(false);
             return ret;
         }
 
@@ -636,7 +634,7 @@ namespace Mutagen.Bethesda
             }
         }
 
-        protected static TryGet<int?> Fill_Binary_RecordTypes(
+        protected static async Task<TryGet<int?>> Fill_Binary_RecordTypes(
             ListGroup<T> item,
             MutagenFrame frame,
             RecordType nextRecordType,
@@ -651,22 +649,21 @@ namespace Mutagen.Bethesda
                 default:
                     if (nextRecordType.Equals(T_RecordType))
                     {
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<T>.Instance.ParseRepeatedItem(
+                        await Mutagen.Bethesda.Binary.ListAsyncBinaryTranslation<T>.Instance.ParseRepeatedItem(
                             frame: frame,
                             triggeringRecord: T_RecordType,
                             item: item.Items,
                             fieldIndex: (int)ListGroup_FieldIndex.Items,
                             lengthLength: 4,
                             errorMask: errorMask,
-                            transl: (MutagenFrame r, out T listSubItem, ErrorMaskBuilder listErrMask) =>
+                            transl: async (MutagenFrame r, ErrorMaskBuilder listErrMask) =>
                             {
-                                return LoquiBinaryTranslation<T>.Instance.Parse(
+                                return await LoquiBinaryAsyncTranslation<T>.Instance.Parse(
                                     frame: r,
-                                    item: out listSubItem,
                                     errorMask: listErrMask,
-                                    masterReferences: masterReferences);
+                                    masterReferences: masterReferences).ConfigureAwait(false);
                             }
-                            );
+                            ).ConfigureAwait(false);
                         return TryGet<int?>.Failure;
                     }
                     errorMask?.ReportWarning($"Unexpected header {nextRecordType.Type} at position {frame.Position}");

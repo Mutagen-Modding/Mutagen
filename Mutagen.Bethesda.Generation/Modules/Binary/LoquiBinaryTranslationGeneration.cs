@@ -1,4 +1,4 @@
-﻿using Loqui;
+using Loqui;
 using Loqui.Generation;
 using System;
 using System.Collections.Generic;
@@ -10,8 +10,25 @@ namespace Mutagen.Bethesda.Generation
 {
     public class LoquiBinaryTranslationGeneration : BinaryTranslationGeneration
     {
+        public const string AsyncOverrideKey = "AsyncOverride";
+
         public string ModNickname;
         public override bool DoErrorMasks => true;
+        public override bool IsAsync(TypeGeneration gen, bool read)
+        {
+            if (!read) return false;
+            LoquiType loqui = gen as LoquiType;
+            if (loqui.CustomData.TryGetValue(AsyncOverrideKey, out var asyncOverride))
+            {
+                return (bool)asyncOverride;
+            }
+            if (loqui.TargetObjectGeneration != null)
+            {
+                if (loqui.TargetObjectGeneration.GetObjectData().CustomBinaryEnd == CustomEnd.Async) return true;
+                return this.Module.HasAsync(loqui.TargetObjectGeneration, self: true);
+            }
+            return false;
+        }
 
         public override bool AllowDirectParse(ObjectGeneration objGen, TypeGeneration typeGen, bool squashedRepeatedList)
         {
@@ -115,7 +132,7 @@ namespace Mutagen.Bethesda.Generation
                     using (new BraceWrapper(fg))
                     {
                         using (var args = new ArgsWrapper(fg,
-                            $"var tmp{typeGen.Name} = {loquiGen.TypeName}.Create_{ModNickname}"))
+                            $"var tmp{typeGen.Name} = {Loqui.Generation.Utility.Await(this.IsAsync(typeGen, read: true))}{loquiGen.TypeName}.Create_{ModNickname}"))
                         {
                             args.Add($"frame: {frameAccessor}");
                             args.Add($"errorMask: {errorMaskAccessor}");
@@ -170,23 +187,29 @@ namespace Mutagen.Bethesda.Generation
             TypeGeneration typeGen,
             Accessor readerAccessor,
             bool squashedRepeatedList,
+            AsyncMode asyncMode,
             Accessor retAccessor,
             Accessor outItemAccessor,
             Accessor errorMaskAccessor,
-            Accessor translationMaskAccessor)
+            Accessor translationAccessor)
         {
             var targetLoquiGen = targetGen as LoquiType;
             var loquiGen = typeGen as LoquiType;
             var data = loquiGen.GetFieldData();
+            asyncMode = this.IsAsync(typeGen, read: true) ? asyncMode : AsyncMode.Off;
             using (var args = new ArgsWrapper(fg,
-                $"{retAccessor}LoquiBinaryTranslation<{loquiGen.ObjectTypeName}{loquiGen.GenericTypes}>.Instance.Parse"))
+                $"{retAccessor}{Loqui.Generation.Utility.Await(asyncMode)}LoquiBinary{(asyncMode == AsyncMode.Off ? null : "Async")}Translation<{loquiGen.ObjectTypeName}{loquiGen.GenericTypes}>.Instance.Parse",
+                suffixLine: Loqui.Generation.Utility.ConfigAwait(asyncMode)))
             {
                 args.Add($"frame: {readerAccessor}");
                 if (loquiGen.HasIndex)
                 {
                     args.Add($"fieldIndex: (int){typeGen.IndexEnumName}");
                 }
-                args.Add($"item: out {outItemAccessor.DirectAccess}");
+                if (asyncMode == AsyncMode.Off)
+                {
+                    args.Add($"item: out {outItemAccessor.DirectAccess}");
+                }
                 args.Add($"errorMask: {errorMaskAccessor}");
                 if (objGen.GetObjectType() == ObjectType.Mod)
                 {

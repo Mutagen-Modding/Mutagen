@@ -1,4 +1,4 @@
-﻿using Loqui;
+using Loqui;
 using Loqui.Generation;
 using Noggog;
 using System;
@@ -108,6 +108,7 @@ namespace Mutagen.Bethesda.Generation
                     MaskAccessor = errorMaskAccessor,
                     ItemAccessor = itemAccessor,
                     TranslationMaskAccessor = null,
+                    AsyncMode = AsyncMode.Off,
                     IndexAccessor = typeGen.HasIndex ? typeGen.IndexEnumInt : null,
                     ExtraArgs = extraArgs.ToArray(),
                     SkipErrorMask = !this.DoErrorMasks
@@ -121,11 +122,13 @@ namespace Mutagen.Bethesda.Generation
             TypeGeneration typeGen,
             Accessor nodeAccessor,
             bool squashedRepeatedList,
+            AsyncMode asyncMode,
             Accessor retAccessor,
             Accessor outItemAccessor,
             Accessor errorMaskAccessor,
             Accessor translationMaskAccessor)
         {
+            if (asyncMode != AsyncMode.Off) throw new NotImplementedException();
             if (typeGen.TryGetFieldData(out var data)
                 && data.RecordType.HasValue)
             {

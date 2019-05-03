@@ -309,7 +309,7 @@ namespace Mutagen.Bethesda.Binary
             }
             else
             {
-                finalPos = reader.Position + Constants.RECORD_META_SKIP + contentLength;
+                finalPos = reader.Position + Constants.RECORD_META_LENGTH + Constants.HEADER_LENGTH + contentLength;
             }
             return ret;
         }

@@ -496,11 +496,11 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Translation
         #region Binary Create
         [DebuggerStepThrough]
-        public static CellSubBlock Create_Binary(
+        public static async Task<CellSubBlock> Create_Binary(
             MutagenFrame frame,
             MasterReferences masterReferences)
         {
-            return Create_Binary(
+            return await Create_Binary(
                 masterReferences: masterReferences,
                 frame: frame,
                 recordTypeConverter: null,
@@ -508,37 +508,35 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         [DebuggerStepThrough]
-        public static CellSubBlock Create_Binary(
+        public static async Task<(CellSubBlock Object, CellSubBlock_ErrorMask ErrorMask)> Create_Binary_Error(
             MutagenFrame frame,
             MasterReferences masterReferences,
-            out CellSubBlock_ErrorMask errorMask,
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            var ret = Create_Binary(
+            var ret = await Create_Binary(
                 masterReferences: masterReferences,
                 frame: frame,
                 recordTypeConverter: null,
                 errorMask: errorMaskBuilder);
-            errorMask = CellSubBlock_ErrorMask.Factory(errorMaskBuilder);
-            return ret;
+            return (ret, CellSubBlock_ErrorMask.Factory(errorMaskBuilder));
         }
 
-        public static CellSubBlock Create_Binary(
+        public static async Task<CellSubBlock> Create_Binary(
             MutagenFrame frame,
             MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
             var ret = new CellSubBlock();
-            UtilityTranslation.GroupParse(
+            await UtilityAsyncTranslation.GroupParse(
                 record: ret,
                 frame: frame,
                 masterReferences: masterReferences,
                 errorMask: errorMask,
                 recordTypeConverter: recordTypeConverter,
                 fillStructs: Fill_Binary_Structs,
-                fillTyped: Fill_Binary_RecordTypes);
+                fillTyped: Fill_Binary_RecordTypes).ConfigureAwait(false);
             return ret;
         }
 
@@ -624,7 +622,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        protected static TryGet<int?> Fill_Binary_RecordTypes(
+        protected static async Task<TryGet<int?>> Fill_Binary_RecordTypes(
             CellSubBlock item,
             MutagenFrame frame,
             RecordType nextRecordType,
@@ -638,22 +636,21 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case 0x4C4C4543: // CELL
                 {
-                    Mutagen.Bethesda.Binary.ListBinaryTranslation<Cell>.Instance.ParseRepeatedItem(
+                    await Mutagen.Bethesda.Binary.ListAsyncBinaryTranslation<Cell>.Instance.ParseRepeatedItem(
                         frame: frame,
                         triggeringRecord: CellSubBlock_Registration.CELL_HEADER,
                         item: item.Items,
                         fieldIndex: (int)CellSubBlock_FieldIndex.Items,
                         lengthLength: Mutagen.Bethesda.Constants.RECORD_LENGTHLENGTH,
                         errorMask: errorMask,
-                        transl: (MutagenFrame r, out Cell listSubItem, ErrorMaskBuilder listErrMask) =>
+                        transl: async (MutagenFrame r, ErrorMaskBuilder listErrMask) =>
                         {
-                            return LoquiBinaryTranslation<Cell>.Instance.Parse(
+                            return await LoquiBinaryAsyncTranslation<Cell>.Instance.Parse(
                                 frame: r,
-                                item: out listSubItem,
                                 errorMask: listErrMask,
-                                masterReferences: masterReferences);
+                                masterReferences: masterReferences).ConfigureAwait(false);
                         }
-                        );
+                        ).ConfigureAwait(false);
                     return TryGet<int?>.Succeed((int)CellSubBlock_FieldIndex.Items);
                 }
                 default:

@@ -39,10 +39,11 @@ namespace Mutagen.Bethesda.Generation
             TypeGeneration targetGen,
             Accessor readerAccessor,
             bool squashedRepeatedList,
+            AsyncMode asyncMode,
             Accessor retAccessor,
             Accessor outItemAccessor,
             Accessor errorMaskAccessor,
-            Accessor translationMaskAccessor)
+            Accessor translationAccessor)
         {
             throw new NotImplementedException();
         }

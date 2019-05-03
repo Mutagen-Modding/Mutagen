@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace Mutagen.Bethesda.Generation
 {
@@ -20,6 +21,9 @@ namespace Mutagen.Bethesda.Generation
     {
         public virtual string TranslatorName => $"ListBinaryTranslation";
 
+        const string AsyncItemKey = "ListAsyncItem";
+        const string ThreadKey = "ListThread";
+
         public override string GetTranslatorInstance(TypeGeneration typeGen)
         {
             var list = typeGen as ListType;
@@ -30,6 +34,27 @@ namespace Mutagen.Bethesda.Generation
 
             var subMaskStr = subTransl.MaskModule.GetMaskModule(list.SubTypeGeneration.GetType()).GetErrorMaskTypeStr(list.SubTypeGeneration);
             return $"{TranslatorName}<{list.SubTypeGeneration.TypeName}, {subMaskStr}>.Instance";
+        }
+
+        public override bool IsAsync(TypeGeneration gen, bool read)
+        {
+            var listType = gen as ListType;
+            if (listType.CustomData.TryGetValue(ThreadKey, out var val) && ((bool)val)) return true;
+            if (this.Module.TryGetTypeGeneration(listType.SubTypeGeneration.GetType(), out var keyGen)
+                && keyGen.IsAsync(listType.SubTypeGeneration, read)) return true;
+            return false;
+        }
+
+        public override void Load(ObjectGeneration obj, TypeGeneration field, XElement node)
+        {
+            var asyncItem = node.GetAttribute<bool>("asyncItems", false);
+            var thread = node.GetAttribute<bool>("thread", false);
+            var listType = field as ListType;
+            listType.CustomData[ThreadKey] = thread;
+            if (asyncItem && listType.SubTypeGeneration is LoquiType loqui)
+            {
+                loqui.CustomData[LoquiBinaryTranslationGeneration.AsyncOverrideKey] = asyncItem;
+            }
         }
 
         private ListBinaryType GetListType(
@@ -154,6 +179,7 @@ namespace Mutagen.Bethesda.Generation
                 throw new ArgumentException("Unsupported type generator: " + list.SubTypeGeneration);
             }
 
+            var isAsync = subTransl.IsAsync(list.SubTypeGeneration, read: true);
             ListBinaryType listBinaryType = GetListType(list, data, subData);
 
             if (data.MarkerType.HasValue)
@@ -166,7 +192,8 @@ namespace Mutagen.Bethesda.Generation
             }
 
             using (var args = new ArgsWrapper(fg,
-                $"{this.Namespace}ListBinaryTranslation<{list.SubTypeGeneration.TypeName}>.Instance.ParseRepeatedItem"))
+                $"{Loqui.Generation.Utility.Await(isAsync)}{this.Namespace}List{(isAsync ? "Async" : null)}BinaryTranslation<{list.SubTypeGeneration.TypeName}>.Instance.ParseRepeatedItem",
+                suffixLine: Loqui.Generation.Utility.ConfigAwait(isAsync)))
             {
                 if (listBinaryType == ListBinaryType.Amount)
                 {
@@ -251,7 +278,7 @@ namespace Mutagen.Bethesda.Generation
                 {
                     args.Add((gen) =>
                     {
-                        gen.AppendLine($"transl: (MutagenFrame r{(subGenTypes.Count <= 1 ? string.Empty : ", RecordType header")}, out {list.SubTypeGeneration.TypeName} listSubItem{(subTransl.DoErrorMasks ? ", ErrorMaskBuilder listErrMask" : null)}) =>");
+                        gen.AppendLine($"transl: {Loqui.Generation.Utility.Async(isAsync)}(MutagenFrame r{(subGenTypes.Count <= 1 ? string.Empty : ", RecordType header")}{(isAsync ? null : $", out {list.SubTypeGeneration.TypeName} listSubItem")}{(subTransl.DoErrorMasks ? ", ErrorMaskBuilder listErrMask" : null)}) =>");
                         using (new BraceWrapper(gen))
                         {
                             if (subGenTypes.Count <= 1)
@@ -266,6 +293,7 @@ namespace Mutagen.Bethesda.Generation
                                     squashedRepeatedList: listBinaryType == ListBinaryType.Trigger,
                                     retAccessor: "return ",
                                     outItemAccessor: new Accessor("listSubItem"),
+                                    asyncMode: isAsync ? AsyncMode.Async : AsyncMode.Off,
                                     errorMaskAccessor: "listErrMask");
                             }
                             else
@@ -293,6 +321,7 @@ namespace Mutagen.Bethesda.Generation
                                                 squashedRepeatedList: listBinaryType == ListBinaryType.Trigger,
                                                 retAccessor: "return ",
                                                 outItemAccessor: new Accessor("listSubItem"),
+                                                asyncMode: AsyncMode.Async,
                                                 errorMaskAccessor: $"listErrMask");
                                         }
                                     }
@@ -316,10 +345,11 @@ namespace Mutagen.Bethesda.Generation
             TypeGeneration typeGen,
             Accessor nodeAccessor,
             bool squashedRepeatedList,
+            AsyncMode asyncMode,
             Accessor retAccessor,
             Accessor outItemAccessor,
             Accessor errorMaskAccessor,
-            Accessor translationMaskAccessor)
+            Accessor translationAccessor)
         {
             throw new NotImplementedException();
         }

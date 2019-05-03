@@ -1,4 +1,4 @@
-﻿using Loqui;
+using Loqui;
 using Loqui.Generation;
 using System;
 using System.Collections.Generic;
@@ -95,17 +95,21 @@ namespace Mutagen.Bethesda.Generation
             TypeGeneration typeGen,
             Accessor nodeAccessor,
             bool squashedRepeatedList,
+            AsyncMode asyncMode,
             Accessor retAccessor,
             Accessor outItemAccessor,
             Accessor errorMaskAccessor,
-            Accessor translationMaskAccessor)
+            Accessor translationAccessor)
         {
             var eType = typeGen as EnumType;
             using (var args = new ArgsWrapper(fg,
                 $"{retAccessor}{this.Namespace}EnumBinaryTranslation<{eType.NoNullTypeName}>.Instance.Parse"))
             {
                 args.Add($"frame: {nodeAccessor}.SpawnWithLength({eType.ByteLength})");
-                args.Add($"item: out {outItemAccessor.DirectAccess}");
+                if (asyncMode == AsyncMode.Off)
+                {
+                    args.Add($"item: out {outItemAccessor.DirectAccess}");
+                }
                 if (this.DoErrorMasks)
                 {
                     args.Add($"errorMask: {errorMaskAccessor}");

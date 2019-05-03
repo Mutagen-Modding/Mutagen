@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -41,7 +41,8 @@ namespace Mutagen.Bethesda.Generation
             CustomLogicTranslationGeneration.GenerateFill(
                 fg: fg,
                 field: typeGen,
-                frameAccessor: readerAccessor);
+                frameAccessor: readerAccessor,
+                isAsync: false);
         }
 
         public override void GenerateCopyInRet(
@@ -51,10 +52,11 @@ namespace Mutagen.Bethesda.Generation
             TypeGeneration typeGen,
             Accessor readerAccessor,
             bool squashedRepeatedList,
+            AsyncMode asyncMode,
             Accessor retAccessor,
             Accessor outItemAccessor,
             Accessor errorMaskAccessor,
-            Accessor translationMaskAccessor)
+            Accessor translationAccessor)
         {
             throw new NotImplementedException();
         }
@@ -78,23 +80,27 @@ namespace Mutagen.Bethesda.Generation
         public static void GeneratePartialMethods(
             FileGeneration fg,
             ObjectGeneration obj,
-            TypeGeneration field)
+            TypeGeneration field,
+            bool isAsync)
         {
-            using (var args = new FunctionWrapper(fg,
-                $"static partial void FillBinary_{field.Name}_Custom")
+            if (!isAsync)
             {
-                SemiColon = true
-            })
-            {
-                args.Add($"{nameof(MutagenFrame)} frame");
-                args.Add($"{obj.ObjectName} item");
-                args.Add($"MasterReferences masterReferences");
-                if (DoErrorMasksStatic)
+                using (var args = new FunctionWrapper(fg,
+                    $"static partial void FillBinary_{field.Name}_Custom")
                 {
-                    args.Add($"ErrorMaskBuilder errorMask");
+                    SemiColon = true
+                })
+                {
+                    args.Add($"{nameof(MutagenFrame)} frame");
+                    args.Add($"{obj.ObjectName} item");
+                    args.Add($"MasterReferences masterReferences");
+                    if (DoErrorMasksStatic)
+                    {
+                        args.Add($"ErrorMaskBuilder errorMask");
+                    }
                 }
+                fg.AppendLine();
             }
-            fg.AppendLine();
             using (var args = new FunctionWrapper(fg,
                 $"static partial void WriteBinary_{field.Name}_Custom")
             {
@@ -160,11 +166,12 @@ namespace Mutagen.Bethesda.Generation
         public static void GenerateFill(
             FileGeneration fg,
             TypeGeneration field,
-            Accessor frameAccessor)
+            Accessor frameAccessor,
+            bool isAsync)
         {
             var data = field.GetFieldData();
             using (var args = new ArgsWrapper(fg,
-                $"FillBinary_{field.Name}_Custom"))
+                $"{Loqui.Generation.Utility.Await(isAsync)}FillBinary_{field.Name}_Custom"))
             {
                 args.Add($"frame: {(data.HasTrigger ? $"{frameAccessor}.SpawnWithLength(Mutagen.Bethesda.Constants.SUBRECORD_LENGTH + contentLength)" : frameAccessor)}");
                 args.Add("item: item");

@@ -1,4 +1,4 @@
-﻿using Loqui;
+using Loqui;
 using Loqui.Generation;
 using System;
 using System.Collections.Generic;
@@ -80,21 +80,26 @@ namespace Mutagen.Bethesda.Generation
             TypeGeneration typeGen,
             Accessor nodeAccessor,
             bool squashedRepeatedList,
+            AsyncMode asyncMode,
             Accessor retAccessor,
             Accessor outItemAccessor,
             Accessor errorMaskAccessor,
-            Accessor translationMaskAccessor)
+            Accessor translationAccessor)
         {
             var data = typeGen.CustomData[Constants.DATA_KEY] as MutagenFieldData;
             using (var args = new ArgsWrapper(fg,
-                $"{retAccessor}{this.Namespace}ByteArrayBinaryTranslation.Instance.Parse"))
+                $"{retAccessor}{Loqui.Generation.Utility.Await(asyncMode)}{this.Namespace}ByteArrayBinaryTranslation.Instance.Parse",
+                suffixLine: Loqui.Generation.Utility.ConfigAwait(asyncMode)))
             {
                 args.Add(nodeAccessor.DirectAccess);
                 if (this.DoErrorMasks)
                 {
                     args.Add($"errorMask: out {errorMaskAccessor}");
                 }
-                args.Add($"item: out {outItemAccessor.DirectAccess}");
+                if (asyncMode == AsyncMode.Off)
+                {
+                    args.Add($"item: out {outItemAccessor.DirectAccess}");
+                }
                 if (data.HasTrigger)
                 {
                     args.Add($"length: subLength");

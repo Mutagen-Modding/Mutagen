@@ -19,7 +19,7 @@ namespace Mutagen.Bethesda.Generation
         public HashSet<RecordType> CustomRecordTypeTriggers = new HashSet<RecordType>();
         public string TriggeringSource;
         public bool CustomBinary;
-        public bool CustomBinaryEnd;
+        public CustomEnd CustomBinaryEnd;
         public Task<IEnumerable<KeyValuePair<IEnumerable<RecordType>, ObjectGeneration>>> GenerationTypes => GetGenerationTypes();
         public TaskCompletionSource WiringComplete = new TaskCompletionSource();
         public RecordTypeConverter BaseRecordTypeConverter;

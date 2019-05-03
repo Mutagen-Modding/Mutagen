@@ -105,7 +105,7 @@ namespace Mutagen.Bethesda.Binary
                 masterReferences: masterReferences,
                 recordTypeConverter: null);
         }
-        
+
         public bool Parse(
             MutagenFrame frame,
             out T item,
@@ -312,7 +312,308 @@ namespace Mutagen.Bethesda.Binary
         }
         #endregion
     }
-    
+
+    public class LoquiBinaryAsyncTranslation<T>
+        where T : ILoquiObjectGetter
+    {
+        public static readonly LoquiBinaryAsyncTranslation<T> Instance = new LoquiBinaryAsyncTranslation<T>();
+        public delegate Task<T> CREATE_FUNC(
+            MutagenFrame reader,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask);
+        public static readonly Lazy<CREATE_FUNC> CREATE = new Lazy<CREATE_FUNC>(GetCreateFunc);
+        public delegate void WRITE_FUNC(
+            MutagenWriter writer,
+            T item,
+            RecordTypeConverter recordTypeConverter,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask);
+        public static readonly Lazy<WRITE_FUNC> WRITE = new Lazy<WRITE_FUNC>(GetWriteFunc);
+
+        #region Parse
+        private static CREATE_FUNC GetCreateFunc()
+        {
+            var tType = typeof(T);
+            var options = tType.GetMethods()
+                .Where((methodInfo) => methodInfo.Name.Equals("Create_Binary"))
+                .Where((methodInfo) => methodInfo.IsStatic
+                    && methodInfo.IsPublic)
+                .Where((methodInfo) => methodInfo.GetParameters().Length == 4)
+                .Where((methodInfo) => methodInfo.GetParameters()[0].ParameterType.Equals(typeof(MutagenFrame)))
+                .Where((methodInfo) => methodInfo.GetParameters()[1].ParameterType.Equals(typeof(MasterReferences)))
+                .Where((methodInfo) => methodInfo.GetParameters()[2].ParameterType.Equals(typeof(RecordTypeConverter)))
+                .Where((methodInfo) => methodInfo.GetParameters()[3].ParameterType.Equals(typeof(ErrorMaskBuilder)))
+                .ToArray();
+            var method = options
+                .FirstOrDefault();
+            if (method == null)
+            {
+                throw new NotImplementedException();
+            }
+            if (method.ReturnType.Equals(tType))
+            {
+                var wrap = LoquiBinaryTranslation<T>.CREATE.Value;
+                return async (MutagenFrame frame, MasterReferences master, RecordTypeConverter recConv, ErrorMaskBuilder errMask) =>
+                {
+                    return wrap(frame, master, recConv, errMask);
+                };
+            }
+            else
+            {
+                return DelegateBuilder.BuildDelegate<CREATE_FUNC>(method);
+            }
+        }
+
+        public async Task ParseInto(
+            MutagenFrame frame,
+            int fieldIndex,
+            IHasItem<T> item,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask)
+        {
+            using (errorMask.PushIndex(fieldIndex))
+            {
+                try
+                {
+                    var result = await Parse(
+                        frame,
+                        masterReferences: masterReferences,
+                        errorMask: errorMask).ConfigureAwait(false);
+                    if (result.Succeeded)
+                    {
+                        item.Item = result.Value;
+                    }
+                    else
+                    {
+                        item.Unset();
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+            }
+        }
+
+        [DebuggerStepThrough]
+        public Task<TryGet<T>> Parse(
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask)
+        {
+            return Parse(
+                frame: frame,
+                errorMask: errorMask,
+                masterReferences: masterReferences,
+                recordTypeConverter: null);
+        }
+
+        public async Task<TryGet<T>> Parse(
+            MutagenFrame frame,
+            int fieldIndex,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask)
+        {
+            using (errorMask.PushIndex(fieldIndex))
+            {
+                try
+                {
+                    return await Parse(
+                        frame: frame,
+                        errorMask: errorMask,
+                        masterReferences: masterReferences,
+                        recordTypeConverter: null).ConfigureAwait(false);
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                    return TryGet<T>.Failure;
+                }
+            }
+        }
+
+        public async Task ParseInto(
+            MutagenFrame frame,
+            int fieldIndex,
+            IHasItem<T> item,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask,
+            RecordTypeConverter recordTypeConverter)
+        {
+            using (errorMask.PushIndex(fieldIndex))
+            {
+                try
+                {
+                    var result = await Parse(
+                        frame,
+                        errorMask: errorMask,
+                        masterReferences: masterReferences,
+                        recordTypeConverter: recordTypeConverter).ConfigureAwait(false);
+                    if (result.Succeeded)
+                    {
+                        item.Item = result.Value;
+                    }
+                    else
+                    {
+                        item.Unset();
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+            }
+        }
+
+        [DebuggerStepThrough]
+        public async Task<TryGet<T>> Parse(
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask,
+            RecordTypeConverter recordTypeConverter)
+        {
+            var item = await CREATE.Value(
+                reader: frame,
+                recordTypeConverter: recordTypeConverter,
+                masterReferences: masterReferences,
+                errorMask: errorMask);
+            return TryGet<T>.Succeed(item);
+        }
+        #endregion
+
+        #region Write
+        private static WRITE_FUNC GetWriteFunc()
+        {
+            var method = typeof(T).GetMethods(BindingFlags.Instance | BindingFlags.Public)
+                .Where((methodInfo) => methodInfo.Name.Equals("Write_Binary"))
+                .Where(methodInfo =>
+                {
+                    var param = methodInfo.GetParameters();
+                    if (param.Length != 4) return false;
+                    if (!param[0].ParameterType.Equals(typeof(MutagenWriter))) return false;
+                    if (!param[1].ParameterType.Equals(typeof(MasterReferences))) return false;
+                    if (!param[2].ParameterType.Equals(typeof(RecordTypeConverter))) return false;
+                    if (!param[3].ParameterType.Equals(typeof(ErrorMaskBuilder))) return false;
+                    return true;
+                })
+                .First();
+            if (!method.IsGenericMethod)
+            {
+                var f = DelegateBuilder.BuildDelegate<Action<T, MutagenWriter, MasterReferences, RecordTypeConverter, ErrorMaskBuilder>>(method);
+                return (MutagenWriter writer, T item, RecordTypeConverter recordTypeConverter, MasterReferences masterReferences, ErrorMaskBuilder errorMask) =>
+                {
+                    if (item == null)
+                    {
+                        errorMask.ReportExceptionOrThrow(
+                            new NullReferenceException("Cannot write for a null item."));
+                    }
+                    f(item, writer, masterReferences, recordTypeConverter, errorMask);
+                };
+            }
+            else
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        public void Write(
+            MutagenWriter writer,
+            T item,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask,
+            RecordTypeConverter recordTypeConverter)
+        {
+            WRITE.Value(
+                writer: writer,
+                item: item,
+                masterReferences: masterReferences,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask);
+        }
+
+        public void Write(
+            MutagenWriter writer,
+            T item,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask)
+        {
+            WRITE.Value(
+                writer: writer,
+                item: item,
+                masterReferences: masterReferences,
+                recordTypeConverter: null,
+                errorMask: errorMask);
+        }
+
+        public void Write(
+            MutagenWriter writer,
+            T item,
+            int fieldIndex,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask,
+            RecordTypeConverter recordTypeConverter = null)
+        {
+            using (errorMask.PushIndex(fieldIndex))
+            {
+                try
+                {
+                    WRITE.Value(
+                        writer: writer,
+                        item: item,
+                        masterReferences: masterReferences,
+                        recordTypeConverter: recordTypeConverter,
+                        errorMask: errorMask);
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+            }
+        }
+
+        public void Write(
+            MutagenWriter writer,
+            IHasBeenSetItemGetter<T> item,
+            int fieldIndex,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask,
+            RecordTypeConverter recordTypeConverter = null)
+        {
+            if (!item.HasBeenSet) return;
+            this.Write(
+                writer: writer,
+                item: item.Item,
+                fieldIndex: fieldIndex,
+                masterReferences: masterReferences,
+                errorMask: errorMask,
+                recordTypeConverter: recordTypeConverter);
+        }
+
+        public void Write(
+            MutagenWriter writer,
+            IHasItemGetter<T> item,
+            int fieldIndex,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask,
+            RecordTypeConverter recordTypeConverter = null)
+        {
+            this.Write(
+                writer,
+                item.Item,
+                fieldIndex,
+                masterReferences: masterReferences,
+                errorMask: errorMask,
+                recordTypeConverter: recordTypeConverter);
+        }
+        #endregion
+    }
+
+
     public class LoquiBinaryTranslation
     {
         public static readonly LoquiBinaryTranslation Instance = new LoquiBinaryTranslation();

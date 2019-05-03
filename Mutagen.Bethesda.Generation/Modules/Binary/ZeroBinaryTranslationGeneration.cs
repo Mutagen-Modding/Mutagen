@@ -35,11 +35,13 @@ namespace Mutagen.Bethesda.Generation
             TypeGeneration typeGen,
             Accessor readerAccessor,
             bool squashedRepeatedList,
+            AsyncMode asyncMode,
             Accessor retAccessor,
             Accessor outItemAccessor,
             Accessor errorMaskAccessor,
-            Accessor translationMaskAccessor)
+            Accessor translationAccessor)
         {
+            if (asyncMode == AsyncMode.Direct) throw new NotImplementedException();
             ZeroType zero = typeGen as ZeroType;
             fg.AppendLine($"{readerAccessor}.SetPosition({readerAccessor}.Position + {zero.Length});");
         }

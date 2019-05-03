@@ -1,4 +1,4 @@
-﻿using Mutagen.Bethesda.Oblivion.Internals;
+using Mutagen.Bethesda.Oblivion.Internals;
 using Noggog;
 using System;
 using System.Collections.Generic;
@@ -40,7 +40,7 @@ namespace Mutagen.Bethesda.Oblivion
                 processor: processor,
                 importer: async (p, mk) =>
                 {
-                    var mod = OblivionMod.Create_Binary(
+                    var mod = await OblivionMod.Create_Binary(
                         p.Path,
                         mk,
                         importMask: importMask);
@@ -67,7 +67,7 @@ namespace Mutagen.Bethesda.Oblivion
                 loadOrder,
                 importer: async (path, modKey) =>
                 {
-                    var mod = OblivionMod.Create_Binary(
+                    var mod = await OblivionMod.Create_Binary(
                         path.Path,
                         modKey,
                         importMask: importMask);

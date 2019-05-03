@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Worldspace" objType="Record" baseClass="Place" recordType="WRLD" customBinaryEnd="true" GUID="d95e86a2-5fdd-4bb1-a2b9-c16161ef2f62" ID="75">
+  <Object name="Worldspace" objType="Record" baseClass="Place" recordType="WRLD" customBinaryEnd="Async" GUID="d95e86a2-5fdd-4bb1-a2b9-c16161ef2f62" ID="75">
     <Interface>INamed, IPlace</Interface>
     <Fields>
       <String name="Name" recordType="FULL" />
@@ -18,7 +18,7 @@
       <RefDirect name="Road" refName="Road" binary="NoGeneration" />
       <RefDirect name="TopCell" refName="Cell" binary="NoGeneration" />
       <ByteArray name="SubCellsTimestamp" binary="NoGeneration" length="4" nullable="NotNull" />
-      <RefList name="SubCells" refName="WorldspaceBlock" binary="NoGeneration" />
+      <RefList name="SubCells" refName="WorldspaceBlock" binary="NoGeneration" thread="true" />
     </Fields>
   </Object>
   <Object name="WorldspaceBlock" objType="Group" GUID="ffc71d01-f9a7-406b-9c9f-a5760acd87ea" ID="140">
@@ -27,7 +27,7 @@
       <Int16 name="BlockNumberX" />
       <Enum name="GroupType" enumName="GroupTypeEnum" byteLength="4" />
       <ByteArray name="LastModified" length="4" nullable="NotNull" />
-      <RefList name="Items" refName="WorldspaceSubBlock" />
+      <RefList name="Items" refName="WorldspaceSubBlock" thread="true" />
     </Fields>
   </Object>
   <Object name="WorldspaceSubBlock" objType="Group" GUID="33d37c53-7561-4ea0-aef8-a9b9475eb68f" ID="141">

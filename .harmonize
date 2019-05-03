@@ -2,18 +2,18 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>3a85f5f76645f38b6ec647d8c8308a7b59be9c67</Sha>
+         <Sha>2a7d7f5ccc16c3b16339108c91cfe43c5f268bca</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>04-29-2019 18:40:22</CommitDate>
-         <Description>Readded XmlExt.SaveIfChanged</Description>
+         <CommitDate>05-02-2019 00:08:53</CommitDate>
+         <Description>TryGet parameter name tweak</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>e2af9170350ee655b61beba7f53ab3a851b7960c</Sha>
+         <Sha>b1e37036b80309f20fc5fe403a15ad0cae23828e</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>04-29-2019 18:46:29</CommitDate>
-         <Description>Fixes for File/Dir path generation</Description>
+         <CommitDate>05-04-2019 20:34:43</CommitDate>
+         <Description>Some prep for async translations</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>

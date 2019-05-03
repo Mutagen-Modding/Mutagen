@@ -507,11 +507,11 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Translation
         #region Binary Create
         [DebuggerStepThrough]
-        public static WorldspaceBlock Create_Binary(
+        public static async Task<WorldspaceBlock> Create_Binary(
             MutagenFrame frame,
             MasterReferences masterReferences)
         {
-            return Create_Binary(
+            return await Create_Binary(
                 masterReferences: masterReferences,
                 frame: frame,
                 recordTypeConverter: null,
@@ -519,37 +519,35 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         [DebuggerStepThrough]
-        public static WorldspaceBlock Create_Binary(
+        public static async Task<(WorldspaceBlock Object, WorldspaceBlock_ErrorMask ErrorMask)> Create_Binary_Error(
             MutagenFrame frame,
             MasterReferences masterReferences,
-            out WorldspaceBlock_ErrorMask errorMask,
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            var ret = Create_Binary(
+            var ret = await Create_Binary(
                 masterReferences: masterReferences,
                 frame: frame,
                 recordTypeConverter: null,
                 errorMask: errorMaskBuilder);
-            errorMask = WorldspaceBlock_ErrorMask.Factory(errorMaskBuilder);
-            return ret;
+            return (ret, WorldspaceBlock_ErrorMask.Factory(errorMaskBuilder));
         }
 
-        public static WorldspaceBlock Create_Binary(
+        public static async Task<WorldspaceBlock> Create_Binary(
             MutagenFrame frame,
             MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
             var ret = new WorldspaceBlock();
-            UtilityTranslation.GroupParse(
+            await UtilityAsyncTranslation.GroupParse(
                 record: ret,
                 frame: frame,
                 masterReferences: masterReferences,
                 errorMask: errorMask,
                 recordTypeConverter: recordTypeConverter,
                 fillStructs: Fill_Binary_Structs,
-                fillTyped: Fill_Binary_RecordTypes);
+                fillTyped: Fill_Binary_RecordTypes).ConfigureAwait(false);
             return ret;
         }
 
@@ -645,7 +643,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        protected static TryGet<int?> Fill_Binary_RecordTypes(
+        protected static async Task<TryGet<int?>> Fill_Binary_RecordTypes(
             WorldspaceBlock item,
             MutagenFrame frame,
             RecordType nextRecordType,
@@ -659,22 +657,21 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case 0x50555247: // GRUP
                 {
-                    Mutagen.Bethesda.Binary.ListBinaryTranslation<WorldspaceSubBlock>.Instance.ParseRepeatedItem(
+                    await Mutagen.Bethesda.Binary.ListAsyncBinaryTranslation<WorldspaceSubBlock>.Instance.ParseRepeatedItem(
                         frame: frame,
                         triggeringRecord: WorldspaceBlock_Registration.GRUP_HEADER,
                         item: item.Items,
                         fieldIndex: (int)WorldspaceBlock_FieldIndex.Items,
                         lengthLength: Mutagen.Bethesda.Constants.RECORD_LENGTHLENGTH,
                         errorMask: errorMask,
-                        transl: (MutagenFrame r, out WorldspaceSubBlock listSubItem, ErrorMaskBuilder listErrMask) =>
+                        transl: async (MutagenFrame r, ErrorMaskBuilder listErrMask) =>
                         {
-                            return LoquiBinaryTranslation<WorldspaceSubBlock>.Instance.Parse(
+                            return await LoquiBinaryAsyncTranslation<WorldspaceSubBlock>.Instance.Parse(
                                 frame: r,
-                                item: out listSubItem,
                                 errorMask: listErrMask,
-                                masterReferences: masterReferences);
+                                masterReferences: masterReferences).ConfigureAwait(false);
                         }
-                        );
+                        ).ConfigureAwait(false);
                     return TryGet<int?>.Succeed((int)WorldspaceBlock_FieldIndex.Items);
                 }
                 default:

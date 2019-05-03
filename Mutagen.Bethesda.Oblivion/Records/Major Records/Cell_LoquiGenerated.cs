@@ -1153,11 +1153,11 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Translation
         #region Binary Create
         [DebuggerStepThrough]
-        public static Cell Create_Binary(
+        public static async Task<Cell> Create_Binary(
             MutagenFrame frame,
             MasterReferences masterReferences)
         {
-            return Create_Binary(
+            return await Create_Binary(
                 masterReferences: masterReferences,
                 frame: frame,
                 recordTypeConverter: null,
@@ -1165,23 +1165,21 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         [DebuggerStepThrough]
-        public static Cell Create_Binary(
+        public static async Task<(Cell Object, Cell_ErrorMask ErrorMask)> Create_Binary_Error(
             MutagenFrame frame,
             MasterReferences masterReferences,
-            out Cell_ErrorMask errorMask,
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            var ret = Create_Binary(
+            var ret = await Create_Binary(
                 masterReferences: masterReferences,
                 frame: frame,
                 recordTypeConverter: null,
                 errorMask: errorMaskBuilder);
-            errorMask = Cell_ErrorMask.Factory(errorMaskBuilder);
-            return ret;
+            return (ret, Cell_ErrorMask.Factory(errorMaskBuilder));
         }
 
-        public new static Cell Create_Binary(
+        public new static async Task<Cell> Create_Binary(
             MutagenFrame frame,
             MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
@@ -1198,7 +1196,7 @@ namespace Mutagen.Bethesda.Oblivion
                 fillTyped: Fill_Binary_RecordTypes);
             try
             {
-                CustomBinaryEnd_Import(
+                await CustomBinaryEnd_Import(
                     frame: frame,
                     obj: ret,
                     masterReferences: masterReferences,
@@ -1497,11 +1495,6 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        static partial void CustomBinaryEnd_Import(
-            MutagenFrame frame,
-            Cell obj,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask);
         static partial void CustomBinaryEnd_Export(
             MutagenWriter writer,
             Cell obj,

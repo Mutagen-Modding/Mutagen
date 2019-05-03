@@ -5,12 +5,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace Mutagen.Bethesda.Generation
 {
     public class DictBinaryTranslationGeneration : BinaryTranslationGeneration
     {
         public virtual string TranslatorName => "DictBinaryTranslation";
+        
+        const string ThreadKey = "DictThread";
 
         public override string GetTranslatorInstance(TypeGeneration typeGen)
         {
@@ -18,6 +21,29 @@ namespace Mutagen.Bethesda.Generation
             var keyMask = this.MaskModule.GetMaskModule(dictType.KeyTypeGen.GetType()).GetErrorMaskTypeStr(dictType.KeyTypeGen);
             var valMask = this.MaskModule.GetMaskModule(dictType.ValueTypeGen.GetType()).GetErrorMaskTypeStr(dictType.ValueTypeGen);
             return $"{TranslatorName}<{dictType.KeyTypeGen.TypeName}, {dictType.ValueTypeGen.TypeName}, {keyMask}, {valMask}>.Instance";
+        }
+
+        public override bool IsAsync(TypeGeneration gen, bool read)
+        {
+            var dictType = gen as DictType;
+            if (dictType.CustomData.TryGetValue(ThreadKey, out var val) && ((bool)val)) return true;
+            if (this.Module.TryGetTypeGeneration(dictType.KeyTypeGen.GetType(), out var keyGen)
+                && keyGen.IsAsync(dictType.KeyTypeGen, read)) return true;
+            if (this.Module.TryGetTypeGeneration(dictType.ValueTypeGen.GetType(), out var valGen)
+                && valGen.IsAsync(dictType.ValueTypeGen, read)) return true;
+            return false;
+        }
+
+        public override void Load(ObjectGeneration obj, TypeGeneration field, XElement node)
+        {
+            var asyncItem = node.GetAttribute<bool>("asyncItems", false);
+            var thread = node.GetAttribute<bool>("thread", false);
+            var dictType = field as DictType;
+            dictType.CustomData[ThreadKey] = thread;
+            if (asyncItem && dictType.ValueTypeGen is LoquiType loqui)
+            {
+                loqui.CustomData[LoquiBinaryTranslationGeneration.AsyncOverrideKey] = asyncItem;
+            }
         }
 
         private ListBinaryType GetDictType(
@@ -121,6 +147,7 @@ namespace Mutagen.Bethesda.Generation
             {
                 throw new ArgumentException("Unsupported type generator: " + dict.ValueTypeGen);
             }
+            var isAsync = subTransl.IsAsync(dict.ValueTypeGen, read: true);
 
             ListBinaryType listBinaryType = GetDictType(dict, data, subData);
 
@@ -134,7 +161,8 @@ namespace Mutagen.Bethesda.Generation
             }
 
             using (var args = new ArgsWrapper(fg,
-                $"{this.Namespace}ListBinaryTranslation<{dict.ValueTypeGen.TypeName}>.Instance.ParseRepeatedItem"))
+                $"{Loqui.Generation.Utility.Await(isAsync)}{this.Namespace}List{(isAsync ? "Async" : null)}BinaryTranslation<{dict.ValueTypeGen.TypeName}>.Instance.ParseRepeatedItem",
+                suffixLine: Loqui.Generation.Utility.ConfigAwait(isAsync)))
             {
                 if (listBinaryType == ListBinaryType.SubTrigger)
                 {
@@ -187,7 +215,7 @@ namespace Mutagen.Bethesda.Generation
                 {
                     args.Add((gen) =>
                     {
-                        gen.AppendLine($"transl: (MutagenFrame r, RecordType header, out {dict.ValueTypeGen.TypeName} dictSubItem, ErrorMaskBuilder dictSubMask) =>");
+                        gen.AppendLine($"transl: (MutagenFrame r, RecordType header, {(isAsync ? null : $"out {dict.ValueTypeGen.TypeName} dictSubItem, ")}ErrorMaskBuilder dictSubMask) =>");
                         using (new BraceWrapper(gen))
                         {
                             gen.AppendLine("switch (header.Type)");
@@ -211,8 +239,9 @@ namespace Mutagen.Bethesda.Generation
                                             readerAccessor: "r",
                                             squashedRepeatedList: false,
                                             retAccessor: "return ",
-                                            translationAccessor: "dictTranslMask",
                                             outItemAccessor: new Accessor("dictSubItem"),
+                                            translationAccessor: "dictTranslMask",
+                                            asyncMode: AsyncMode.Direct,
                                             errorMaskAccessor: "dictSubMask");
                                     }
                                 }
@@ -229,7 +258,7 @@ namespace Mutagen.Bethesda.Generation
                 {
                     args.Add((gen) =>
                     {
-                        gen.AppendLine($"transl: (MutagenFrame r, out {dict.ValueTypeGen.TypeName} dictSubItem, ErrorMaskBuilder dictSubMask) =>");
+                        gen.AppendLine($"transl: (MutagenFrame r, {(isAsync ? null : $"out {dict.ValueTypeGen.TypeName} dictSubItem, ")}ErrorMaskBuilder dictSubMask) =>");
                         using (new BraceWrapper(gen))
                         {
                             LoquiType targetLoqui = dict.ValueTypeGen as LoquiType;
@@ -241,8 +270,9 @@ namespace Mutagen.Bethesda.Generation
                                 readerAccessor: "r",
                                 squashedRepeatedList: false,
                                 retAccessor: "return ",
-                                translationAccessor: "dictTranslMask",
                                 outItemAccessor: new Accessor("dictSubItem"),
+                                translationAccessor: "dictTranslMask",
+                                asyncMode: AsyncMode.Direct,
                                 errorMaskAccessor: "dictSubMask");
                         }
                     });
@@ -257,10 +287,11 @@ namespace Mutagen.Bethesda.Generation
             TypeGeneration typeGen,
             Accessor nodeAccessor,
             bool squashedRepeatedList,
+            AsyncMode asyncMode,
             Accessor retAccessor,
             Accessor outItemAccessor,
             Accessor errorMaskAccessor,
-            Accessor translationMaskAccessor)
+            Accessor translationAccessor)
         {
             throw new NotImplementedException();
         }

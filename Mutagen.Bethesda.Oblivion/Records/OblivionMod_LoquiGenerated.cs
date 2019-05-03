@@ -3078,12 +3078,12 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Translation
         #region Binary Create
         [DebuggerStepThrough]
-        public static OblivionMod Create_Binary(
+        public static async Task<OblivionMod> Create_Binary(
             MutagenFrame frame,
             ModKey modKey,
             GroupMask importMask = null)
         {
-            return Create_Binary(
+            return await Create_Binary(
                 importMask: importMask,
                 modKey: modKey,
                 frame: frame,
@@ -3092,25 +3092,23 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         [DebuggerStepThrough]
-        public static OblivionMod Create_Binary(
+        public static async Task<(OblivionMod Object, OblivionMod_ErrorMask ErrorMask)> Create_Binary_Error(
             MutagenFrame frame,
             ModKey modKey,
-            out OblivionMod_ErrorMask errorMask,
             bool doMasks = true,
             GroupMask importMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            var ret = Create_Binary(
+            var ret = await Create_Binary(
                 importMask: importMask,
                 modKey: modKey,
                 frame: frame,
                 recordTypeConverter: null,
                 errorMask: errorMaskBuilder);
-            errorMask = OblivionMod_ErrorMask.Factory(errorMaskBuilder);
-            return ret;
+            return (ret, OblivionMod_ErrorMask.Factory(errorMaskBuilder));
         }
 
-        public static OblivionMod Create_Binary(
+        public static async Task<OblivionMod> Create_Binary(
             MutagenFrame frame,
             ModKey modKey,
             RecordTypeConverter recordTypeConverter,
@@ -3119,7 +3117,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             var ret = new OblivionMod(modKey);
             var masterReferences = new MasterReferences(ret.TES4.MasterReferences, modKey);
-            UtilityTranslation.ModParse(
+            await UtilityAsyncTranslation.ModParse(
                 record: ret,
                 frame: frame,
                 importMask: importMask,
@@ -3127,7 +3125,7 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask,
                 recordTypeConverter: recordTypeConverter,
                 fillStructs: Fill_Binary_Structs,
-                fillTyped: Fill_Binary_RecordTypes);
+                fillTyped: Fill_Binary_RecordTypes).ConfigureAwait(false);
             foreach (var link in ret.Links)
             {
                 if (link.Linked) continue;
@@ -3136,7 +3134,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static OblivionMod Create_Binary(
+        public static async Task<OblivionMod> Create_Binary(
             string path,
             ModKey modKey,
             GroupMask importMask = null)
@@ -3144,31 +3142,29 @@ namespace Mutagen.Bethesda.Oblivion
             using (var reader = new MutagenBinaryReadStream(path))
             {
                 var frame = new MutagenFrame(reader);
-                return Create_Binary(
+                return await Create_Binary(
                     importMask: importMask,
                     modKey: modKey,
                     frame: frame);
             }
         }
 
-        public static OblivionMod Create_Binary(
+        public static async Task<(OblivionMod Object, OblivionMod_ErrorMask ErrorMask)> Create_Binary_Error(
             string path,
             ModKey modKey,
-            out OblivionMod_ErrorMask errorMask,
             GroupMask importMask = null)
         {
             using (var reader = new MutagenBinaryReadStream(path))
             {
                 var frame = new MutagenFrame(reader);
-                return Create_Binary(
+                return await Create_Binary_Error(
                     importMask: importMask,
                     modKey: modKey,
-                    frame: frame,
-                    errorMask: out errorMask);
+                    frame: frame);
             }
         }
 
-        public static OblivionMod Create_Binary(
+        public static async Task<OblivionMod> Create_Binary(
             string path,
             ModKey modKey,
             ErrorMaskBuilder errorMask,
@@ -3177,7 +3173,7 @@ namespace Mutagen.Bethesda.Oblivion
             using (var reader = new MutagenBinaryReadStream(path))
             {
                 var frame = new MutagenFrame(reader);
-                return Create_Binary(
+                return await Create_Binary(
                     importMask: importMask,
                     modKey: modKey,
                     frame: frame,
@@ -3186,7 +3182,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        public static OblivionMod Create_Binary(
+        public static async Task<OblivionMod> Create_Binary(
             Stream stream,
             ModKey modKey,
             GroupMask importMask = null)
@@ -3194,31 +3190,29 @@ namespace Mutagen.Bethesda.Oblivion
             using (var reader = new MutagenBinaryReadStream(stream))
             {
                 var frame = new MutagenFrame(reader);
-                return Create_Binary(
+                return await Create_Binary(
                     importMask: importMask,
                     modKey: modKey,
                     frame: frame);
             }
         }
 
-        public static OblivionMod Create_Binary(
+        public static async Task<(OblivionMod Object, OblivionMod_ErrorMask ErrorMask)> Create_Binary_Error(
             Stream stream,
             ModKey modKey,
-            out OblivionMod_ErrorMask errorMask,
             GroupMask importMask = null)
         {
             using (var reader = new MutagenBinaryReadStream(stream))
             {
                 var frame = new MutagenFrame(reader);
-                return Create_Binary(
+                return await Create_Binary_Error(
                     importMask: importMask,
                     modKey: modKey,
-                    frame: frame,
-                    errorMask: out errorMask);
+                    frame: frame);
             }
         }
 
-        public static OblivionMod Create_Binary(
+        public static async Task<OblivionMod> Create_Binary(
             Stream stream,
             ModKey modKey,
             ErrorMaskBuilder errorMask,
@@ -3227,7 +3221,7 @@ namespace Mutagen.Bethesda.Oblivion
             using (var reader = new MutagenBinaryReadStream(stream))
             {
                 var frame = new MutagenFrame(reader);
-                return Create_Binary(
+                return await Create_Binary(
                     importMask: importMask,
                     modKey: modKey,
                     frame: frame,
@@ -3418,7 +3412,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
         }
 
-        protected static TryGet<int?> Fill_Binary_RecordTypes(
+        protected static async Task<TryGet<int?>> Fill_Binary_RecordTypes(
             OblivionMod item,
             MutagenFrame frame,
             RecordType nextRecordType,
@@ -3454,7 +3448,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         using (errorMask.PushIndex((int)OblivionMod_FieldIndex.GameSettings))
                         {
-                            var tmpGameSettings = Group<GameSetting>.Create_Binary(
+                            var tmpGameSettings = await Group<GameSetting>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
                                 recordTypeConverter: null,
@@ -3478,7 +3472,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         using (errorMask.PushIndex((int)OblivionMod_FieldIndex.Globals))
                         {
-                            var tmpGlobals = Group<Global>.Create_Binary(
+                            var tmpGlobals = await Group<Global>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
                                 recordTypeConverter: null,
@@ -3502,7 +3496,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         using (errorMask.PushIndex((int)OblivionMod_FieldIndex.Classes))
                         {
-                            var tmpClasses = Group<Class>.Create_Binary(
+                            var tmpClasses = await Group<Class>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
                                 recordTypeConverter: null,
@@ -3526,7 +3520,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         using (errorMask.PushIndex((int)OblivionMod_FieldIndex.Factions))
                         {
-                            var tmpFactions = Group<Faction>.Create_Binary(
+                            var tmpFactions = await Group<Faction>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
                                 recordTypeConverter: null,
@@ -3550,7 +3544,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         using (errorMask.PushIndex((int)OblivionMod_FieldIndex.Hairs))
                         {
-                            var tmpHairs = Group<Hair>.Create_Binary(
+                            var tmpHairs = await Group<Hair>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
                                 recordTypeConverter: null,
@@ -3574,7 +3568,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         using (errorMask.PushIndex((int)OblivionMod_FieldIndex.Eyes))
                         {
-                            var tmpEyes = Group<Eye>.Create_Binary(
+                            var tmpEyes = await Group<Eye>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
                                 recordTypeConverter: null,
@@ -3598,7 +3592,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         using (errorMask.PushIndex((int)OblivionMod_FieldIndex.Races))
                         {
-                            var tmpRaces = Group<Race>.Create_Binary(
+                            var tmpRaces = await Group<Race>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
                                 recordTypeConverter: null,
@@ -3622,7 +3616,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         using (errorMask.PushIndex((int)OblivionMod_FieldIndex.Sounds))
                         {
-                            var tmpSounds = Group<Sound>.Create_Binary(
+                            var tmpSounds = await Group<Sound>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
                                 recordTypeConverter: null,
@@ -3646,7 +3640,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         using (errorMask.PushIndex((int)OblivionMod_FieldIndex.Skills))
                         {
-                            var tmpSkills = Group<SkillRecord>.Create_Binary(
+                            var tmpSkills = await Group<SkillRecord>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
                                 recordTypeConverter: null,
@@ -3670,7 +3664,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         using (errorMask.PushIndex((int)OblivionMod_FieldIndex.MagicEffects))
                         {
-                            var tmpMagicEffects = Group<MagicEffect>.Create_Binary(
+                            var tmpMagicEffects = await Group<MagicEffect>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
                                 recordTypeConverter: null,
@@ -3694,7 +3688,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         using (errorMask.PushIndex((int)OblivionMod_FieldIndex.Scripts))
                         {
-                            var tmpScripts = Group<Script>.Create_Binary(
+                            var tmpScripts = await Group<Script>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
                                 recordTypeConverter: null,
@@ -3718,7 +3712,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         using (errorMask.PushIndex((int)OblivionMod_FieldIndex.LandTextures))
                         {
-                            var tmpLandTextures = Group<LandTexture>.Create_Binary(
+                            var tmpLandTextures = await Group<LandTexture>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
                                 recordTypeConverter: null,
@@ -3742,7 +3736,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         using (errorMask.PushIndex((int)OblivionMod_FieldIndex.Enchantments))
                         {
-                            var tmpEnchantments = Group<Enchantment>.Create_Binary(
+                            var tmpEnchantments = await Group<Enchantment>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
                                 recordTypeConverter: null,
@@ -3766,7 +3760,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         using (errorMask.PushIndex((int)OblivionMod_FieldIndex.Spells))
                         {
-                            var tmpSpells = Group<SpellUnleveled>.Create_Binary(
+                            var tmpSpells = await Group<SpellUnleveled>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
                                 recordTypeConverter: null,
@@ -3790,7 +3784,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         using (errorMask.PushIndex((int)OblivionMod_FieldIndex.Birthsigns))
                         {
-                            var tmpBirthsigns = Group<Birthsign>.Create_Binary(
+                            var tmpBirthsigns = await Group<Birthsign>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
                                 recordTypeConverter: null,
@@ -3814,7 +3808,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         using (errorMask.PushIndex((int)OblivionMod_FieldIndex.Activators))
                         {
-                            var tmpActivators = Group<Activator>.Create_Binary(
+                            var tmpActivators = await Group<Activator>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
                                 recordTypeConverter: null,
@@ -3838,7 +3832,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         using (errorMask.PushIndex((int)OblivionMod_FieldIndex.AlchemicalApparatus))
                         {
-                            var tmpAlchemicalApparatus = Group<AlchemicalApparatus>.Create_Binary(
+                            var tmpAlchemicalApparatus = await Group<AlchemicalApparatus>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
                                 recordTypeConverter: null,
@@ -3862,7 +3856,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         using (errorMask.PushIndex((int)OblivionMod_FieldIndex.Armors))
                         {
-                            var tmpArmors = Group<Armor>.Create_Binary(
+                            var tmpArmors = await Group<Armor>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
                                 recordTypeConverter: null,
@@ -3886,7 +3880,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         using (errorMask.PushIndex((int)OblivionMod_FieldIndex.Books))
                         {
-                            var tmpBooks = Group<Book>.Create_Binary(
+                            var tmpBooks = await Group<Book>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
                                 recordTypeConverter: null,
@@ -3910,7 +3904,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         using (errorMask.PushIndex((int)OblivionMod_FieldIndex.Clothes))
                         {
-                            var tmpClothes = Group<Clothing>.Create_Binary(
+                            var tmpClothes = await Group<Clothing>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
                                 recordTypeConverter: null,
@@ -3934,7 +3928,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         using (errorMask.PushIndex((int)OblivionMod_FieldIndex.Containers))
                         {
-                            var tmpContainers = Group<Container>.Create_Binary(
+                            var tmpContainers = await Group<Container>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
                                 recordTypeConverter: null,
@@ -3958,7 +3952,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         using (errorMask.PushIndex((int)OblivionMod_FieldIndex.Doors))
                         {
-                            var tmpDoors = Group<Door>.Create_Binary(
+                            var tmpDoors = await Group<Door>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
                                 recordTypeConverter: null,
@@ -3982,7 +3976,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         using (errorMask.PushIndex((int)OblivionMod_FieldIndex.Ingredients))
                         {
-                            var tmpIngredients = Group<Ingredient>.Create_Binary(
+                            var tmpIngredients = await Group<Ingredient>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
                                 recordTypeConverter: null,
@@ -4006,7 +4000,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         using (errorMask.PushIndex((int)OblivionMod_FieldIndex.Lights))
                         {
-                            var tmpLights = Group<Light>.Create_Binary(
+                            var tmpLights = await Group<Light>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
                                 recordTypeConverter: null,
@@ -4030,7 +4024,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         using (errorMask.PushIndex((int)OblivionMod_FieldIndex.Miscellaneous))
                         {
-                            var tmpMiscellaneous = Group<Miscellaneous>.Create_Binary(
+                            var tmpMiscellaneous = await Group<Miscellaneous>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
                                 recordTypeConverter: null,
@@ -4054,7 +4048,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         using (errorMask.PushIndex((int)OblivionMod_FieldIndex.Statics))
                         {
-                            var tmpStatics = Group<Static>.Create_Binary(
+                            var tmpStatics = await Group<Static>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
                                 recordTypeConverter: null,
@@ -4078,7 +4072,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         using (errorMask.PushIndex((int)OblivionMod_FieldIndex.Grasses))
                         {
-                            var tmpGrasses = Group<Grass>.Create_Binary(
+                            var tmpGrasses = await Group<Grass>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
                                 recordTypeConverter: null,
@@ -4102,7 +4096,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         using (errorMask.PushIndex((int)OblivionMod_FieldIndex.Trees))
                         {
-                            var tmpTrees = Group<Tree>.Create_Binary(
+                            var tmpTrees = await Group<Tree>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
                                 recordTypeConverter: null,
@@ -4126,7 +4120,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         using (errorMask.PushIndex((int)OblivionMod_FieldIndex.Flora))
                         {
-                            var tmpFlora = Group<Flora>.Create_Binary(
+                            var tmpFlora = await Group<Flora>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
                                 recordTypeConverter: null,
@@ -4150,7 +4144,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         using (errorMask.PushIndex((int)OblivionMod_FieldIndex.Furnature))
                         {
-                            var tmpFurnature = Group<Furnature>.Create_Binary(
+                            var tmpFurnature = await Group<Furnature>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
                                 recordTypeConverter: null,
@@ -4174,7 +4168,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         using (errorMask.PushIndex((int)OblivionMod_FieldIndex.Weapons))
                         {
-                            var tmpWeapons = Group<Weapon>.Create_Binary(
+                            var tmpWeapons = await Group<Weapon>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
                                 recordTypeConverter: null,
@@ -4198,7 +4192,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         using (errorMask.PushIndex((int)OblivionMod_FieldIndex.Ammo))
                         {
-                            var tmpAmmo = Group<Ammo>.Create_Binary(
+                            var tmpAmmo = await Group<Ammo>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
                                 recordTypeConverter: null,
@@ -4222,7 +4216,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         using (errorMask.PushIndex((int)OblivionMod_FieldIndex.NPCs))
                         {
-                            var tmpNPCs = Group<NPC>.Create_Binary(
+                            var tmpNPCs = await Group<NPC>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
                                 recordTypeConverter: null,
@@ -4246,7 +4240,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         using (errorMask.PushIndex((int)OblivionMod_FieldIndex.Creatures))
                         {
-                            var tmpCreatures = Group<Creature>.Create_Binary(
+                            var tmpCreatures = await Group<Creature>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
                                 recordTypeConverter: null,
@@ -4270,7 +4264,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         using (errorMask.PushIndex((int)OblivionMod_FieldIndex.LeveledCreatures))
                         {
-                            var tmpLeveledCreatures = Group<LeveledCreature>.Create_Binary(
+                            var tmpLeveledCreatures = await Group<LeveledCreature>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
                                 recordTypeConverter: null,
@@ -4294,7 +4288,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         using (errorMask.PushIndex((int)OblivionMod_FieldIndex.SoulGems))
                         {
-                            var tmpSoulGems = Group<SoulGem>.Create_Binary(
+                            var tmpSoulGems = await Group<SoulGem>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
                                 recordTypeConverter: null,
@@ -4318,7 +4312,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         using (errorMask.PushIndex((int)OblivionMod_FieldIndex.Keys))
                         {
-                            var tmpKeys = Group<Key>.Create_Binary(
+                            var tmpKeys = await Group<Key>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
                                 recordTypeConverter: null,
@@ -4342,7 +4336,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         using (errorMask.PushIndex((int)OblivionMod_FieldIndex.Potions))
                         {
-                            var tmpPotions = Group<Potion>.Create_Binary(
+                            var tmpPotions = await Group<Potion>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
                                 recordTypeConverter: null,
@@ -4366,7 +4360,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         using (errorMask.PushIndex((int)OblivionMod_FieldIndex.Subspaces))
                         {
-                            var tmpSubspaces = Group<Subspace>.Create_Binary(
+                            var tmpSubspaces = await Group<Subspace>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
                                 recordTypeConverter: null,
@@ -4390,7 +4384,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         using (errorMask.PushIndex((int)OblivionMod_FieldIndex.SigilStones))
                         {
-                            var tmpSigilStones = Group<SigilStone>.Create_Binary(
+                            var tmpSigilStones = await Group<SigilStone>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
                                 recordTypeConverter: null,
@@ -4414,7 +4408,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         using (errorMask.PushIndex((int)OblivionMod_FieldIndex.LeveledItems))
                         {
-                            var tmpLeveledItems = Group<LeveledItem>.Create_Binary(
+                            var tmpLeveledItems = await Group<LeveledItem>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
                                 recordTypeConverter: null,
@@ -4438,7 +4432,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         using (errorMask.PushIndex((int)OblivionMod_FieldIndex.Weathers))
                         {
-                            var tmpWeathers = Group<Weather>.Create_Binary(
+                            var tmpWeathers = await Group<Weather>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
                                 recordTypeConverter: null,
@@ -4462,7 +4456,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         using (errorMask.PushIndex((int)OblivionMod_FieldIndex.Climates))
                         {
-                            var tmpClimates = Group<Climate>.Create_Binary(
+                            var tmpClimates = await Group<Climate>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
                                 recordTypeConverter: null,
@@ -4486,7 +4480,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         using (errorMask.PushIndex((int)OblivionMod_FieldIndex.Regions))
                         {
-                            var tmpRegions = Group<Region>.Create_Binary(
+                            var tmpRegions = await Group<Region>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
                                 recordTypeConverter: null,
@@ -4510,7 +4504,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         using (errorMask.PushIndex((int)OblivionMod_FieldIndex.Cells))
                         {
-                            var tmpCells = ListGroup<CellBlock>.Create_Binary(
+                            var tmpCells = await ListGroup<CellBlock>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
                                 recordTypeConverter: null,
@@ -4534,7 +4528,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         using (errorMask.PushIndex((int)OblivionMod_FieldIndex.Worldspaces))
                         {
-                            var tmpWorldspaces = Group<Worldspace>.Create_Binary(
+                            var tmpWorldspaces = await Group<Worldspace>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
                                 recordTypeConverter: null,
@@ -4558,7 +4552,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         using (errorMask.PushIndex((int)OblivionMod_FieldIndex.DialogTopics))
                         {
-                            var tmpDialogTopics = Group<DialogTopic>.Create_Binary(
+                            var tmpDialogTopics = await Group<DialogTopic>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
                                 recordTypeConverter: null,
@@ -4582,7 +4576,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         using (errorMask.PushIndex((int)OblivionMod_FieldIndex.Quests))
                         {
-                            var tmpQuests = Group<Quest>.Create_Binary(
+                            var tmpQuests = await Group<Quest>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
                                 recordTypeConverter: null,
@@ -4606,7 +4600,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         using (errorMask.PushIndex((int)OblivionMod_FieldIndex.IdleAnimations))
                         {
-                            var tmpIdleAnimations = Group<IdleAnimation>.Create_Binary(
+                            var tmpIdleAnimations = await Group<IdleAnimation>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
                                 recordTypeConverter: null,
@@ -4630,7 +4624,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         using (errorMask.PushIndex((int)OblivionMod_FieldIndex.AIPackages))
                         {
-                            var tmpAIPackages = Group<AIPackage>.Create_Binary(
+                            var tmpAIPackages = await Group<AIPackage>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
                                 recordTypeConverter: null,
@@ -4654,7 +4648,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         using (errorMask.PushIndex((int)OblivionMod_FieldIndex.CombatStyles))
                         {
-                            var tmpCombatStyles = Group<CombatStyle>.Create_Binary(
+                            var tmpCombatStyles = await Group<CombatStyle>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
                                 recordTypeConverter: null,
@@ -4678,7 +4672,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         using (errorMask.PushIndex((int)OblivionMod_FieldIndex.LoadScreens))
                         {
-                            var tmpLoadScreens = Group<LoadScreen>.Create_Binary(
+                            var tmpLoadScreens = await Group<LoadScreen>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
                                 recordTypeConverter: null,
@@ -4702,7 +4696,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         using (errorMask.PushIndex((int)OblivionMod_FieldIndex.LeveledSpells))
                         {
-                            var tmpLeveledSpells = Group<LeveledSpell>.Create_Binary(
+                            var tmpLeveledSpells = await Group<LeveledSpell>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
                                 recordTypeConverter: null,
@@ -4726,7 +4720,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         using (errorMask.PushIndex((int)OblivionMod_FieldIndex.AnimatedObjects))
                         {
-                            var tmpAnimatedObjects = Group<AnimatedObject>.Create_Binary(
+                            var tmpAnimatedObjects = await Group<AnimatedObject>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
                                 recordTypeConverter: null,
@@ -4750,7 +4744,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         using (errorMask.PushIndex((int)OblivionMod_FieldIndex.Waters))
                         {
-                            var tmpWaters = Group<Water>.Create_Binary(
+                            var tmpWaters = await Group<Water>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
                                 recordTypeConverter: null,
@@ -4774,7 +4768,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         using (errorMask.PushIndex((int)OblivionMod_FieldIndex.EffectShaders))
                         {
-                            var tmpEffectShaders = Group<EffectShader>.Create_Binary(
+                            var tmpEffectShaders = await Group<EffectShader>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
                                 recordTypeConverter: null,

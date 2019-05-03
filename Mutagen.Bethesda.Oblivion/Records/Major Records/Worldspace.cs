@@ -140,7 +140,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        static partial void CustomBinaryEnd_Import(MutagenFrame frame, Worldspace obj, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
+        static async Task CustomBinaryEnd_Import(MutagenFrame frame, Worldspace obj, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
         {
             if (frame.Reader.Complete) return;
             var next = HeaderTranslation.GetNextType(
@@ -190,14 +190,14 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         break;
                     case 0x4C4C4543: // "CELL":
-                        if (LoquiBinaryTranslation<Cell>.Instance.Parse(
+                        var topCell = await LoquiBinaryAsyncTranslation<Cell>.Instance.Parse(
                             frame: subFrame,
-                            item: out var topCell,
                             fieldIndex: (int)Worldspace_FieldIndex.TopCell,
                             masterReferences: masterReferences,
-                            errorMask: errorMask))
+                            errorMask: errorMask);
+                        if (topCell.Succeeded)
                         {
-                            obj.TopCell = topCell;
+                            obj.TopCell = topCell.Value;
                         }
                         else
                         {
@@ -205,18 +205,17 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         break;
                     case 0x50555247: // "GRUP":
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<WorldspaceBlock>.Instance.ParseRepeatedItem(
+                        await Mutagen.Bethesda.Binary.ListAsyncBinaryTranslation<WorldspaceBlock>.Instance.ParseRepeatedItem(
                             frame: frame,
                             item: obj._SubCells,
                             triggeringRecord: Worldspace_Registration.GRUP_HEADER,
                             fieldIndex: (int)Worldspace_FieldIndex.SubCells,
                             lengthLength: Mutagen.Bethesda.Constants.RECORD_LENGTHLENGTH,
                             errorMask: errorMask,
-                            transl: (MutagenFrame r, out WorldspaceBlock block, ErrorMaskBuilder subErrorMask) =>
+                            transl: (MutagenFrame r, ErrorMaskBuilder subErrorMask) =>
                             {
-                                return LoquiBinaryTranslation<WorldspaceBlock>.Instance.Parse(
+                                return LoquiBinaryAsyncTranslation<WorldspaceBlock>.Instance.Parse(
                                     frame: r,
-                                    item: out block,
                                     masterReferences: masterReferences,
                                     errorMask: errorMask);
                             });

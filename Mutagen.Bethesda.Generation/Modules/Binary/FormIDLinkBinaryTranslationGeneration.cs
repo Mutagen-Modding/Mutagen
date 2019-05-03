@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -56,15 +56,18 @@ namespace Mutagen.Bethesda.Generation
             TypeGeneration typeGen,
             Accessor nodeAccessor,
             bool squashedRepeatedList,
+            AsyncMode asyncMode,
             Accessor retAccessor,
             Accessor outItemAccessor,
             Accessor errorMaskAccessor,
-            Accessor translationMaskAccessor)
+            Accessor translationAccessor)
         {
+            if (asyncMode != AsyncMode.Off) throw new NotImplementedException();
             FormIDLinkType linkType = typeGen as FormIDLinkType;
             if (typeGen.TryGetFieldData(out var data)
                 && data.RecordType.HasValue)
             {
+                if (asyncMode == AsyncMode.Direct) throw new NotImplementedException();
                 fg.AppendLine("r.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;");
             }
             switch (linkType.FormIDType)

@@ -19,15 +19,13 @@ namespace Mutagen.Bethesda.Tests
     {
         public static async Task OblivionESM_GroupMask_Import(PassthroughSettings settings, Passthrough passthrough)
         {
-            var mod = OblivionMod.Create_Binary(
+            var mod = await OblivionMod.Create_Binary(
                 Path.Combine(settings.DataFolder, passthrough.Path),
                 modKey: Mutagen.Bethesda.Oblivion.Constants.Oblivion,
-                errorMask: out var inputErrMask,
                 importMask: new GroupMask()
                 {
                     NPCs = true
                 });
-            Assert.False(inputErrMask?.IsInError() ?? false);
 
             using (var tmp = new TempFolder("Mutagen_Oblivion_Binary_GroupMask_Import"))
             {
@@ -55,11 +53,9 @@ namespace Mutagen.Bethesda.Tests
 
         public static async Task OblivionESM_GroupMask_Export(PassthroughSettings settings, Passthrough passthrough)
         {
-            var mod = OblivionMod.Create_Binary(
+            var mod = await OblivionMod.Create_Binary(
                 Path.Combine(settings.DataFolder, passthrough.Path),
-                modKey: Mutagen.Bethesda.Oblivion.Constants.Oblivion,
-                errorMask: out var inputErrMask);
-            Assert.False(inputErrMask?.IsInError() ?? false);
+                modKey: Mutagen.Bethesda.Oblivion.Constants.Oblivion);
 
             using (var tmp = new TempFolder("Mutagen_Oblivion_Binary_GroupMask_Export"))
             {
@@ -91,14 +87,11 @@ namespace Mutagen.Bethesda.Tests
 
         public static async Task OblivionESM_Folder_Reimport(PassthroughSettings settings, Passthrough passthrough, Oblivion_Passthrough_Test oblivPassthrough)
         {
-            OblivionMod ImportModBinary(string sourcePath)
+            Task<OblivionMod> ImportModBinary(string sourcePath)
             {
-                var mod = OblivionMod.Create_Binary(
+                return OblivionMod.Create_Binary(
                     sourcePath,
-                    modKey: Mutagen.Bethesda.Oblivion.Constants.Oblivion,
-                    errorMask: out var inputErrMask);
-                Assert.False(inputErrMask?.IsInError() ?? false);
-                return mod;
+                    modKey: Mutagen.Bethesda.Oblivion.Constants.Oblivion);
             }
 
             async Task WriteMod(OblivionMod mod, DirectoryPath dir)
@@ -109,7 +102,7 @@ namespace Mutagen.Bethesda.Tests
 
             async Task CreateXmlFolder(string sourcePath, DirectoryPath dir)
             {
-                var mod = ImportModBinary(sourcePath);
+                var mod = await ImportModBinary(sourcePath);
                 await WriteMod(mod, dir);
             }
 

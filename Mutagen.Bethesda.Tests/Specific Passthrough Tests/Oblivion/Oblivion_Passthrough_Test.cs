@@ -1549,12 +1549,9 @@ namespace Mutagen.Bethesda.Tests
                 if (settings.TestNormal)
                 {
                     ModKey modKey = ModKey.Factory(this.FilePath.Name);
-                    var mod = OblivionMod.Create_Binary(
+                    var mod = await OblivionMod.Create_Binary(
                         orderedPath,
-                        modKey: modKey,
-                        errorMask: out var importMask);
-
-                    Assert.False(importMask?.IsInError() ?? false);
+                        modKey: modKey);
 
                     foreach (var record in mod.MajorRecords.Items)
                     {
@@ -1601,12 +1598,11 @@ namespace Mutagen.Bethesda.Tests
         public async Task TestImport()
         {
             ModKey modKey = ModKey.Factory(this.FilePath.Name);
-            var mod = OblivionMod.Create_Binary(
+            var mod = await OblivionMod.Create_Binary_Error(
                 this.FilePath.Path,
-                modKey: modKey,
-                errorMask: out var importMask);
+                modKey: modKey);
 
-            Assert.False(importMask?.IsInError() ?? false);
+            Assert.False(mod.ErrorMask?.IsInError() ?? false);
         }
     }
 }

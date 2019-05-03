@@ -34,7 +34,7 @@
               </xs:documentation>
             </xs:annotation>
           </xs:attribute>
-          <xs:attribute name="customBinaryEnd" type="xs:boolean" >
+          <xs:attribute name="customBinaryEnd" type="CustomEndType" >
             <xs:annotation>
               <xs:documentation>
                 Whether to add custom logic after typical binary parsing.
@@ -153,6 +153,8 @@
       <xs:complexContent>
         <xs:extension base="Dict">
           <xs:attribute name="lengthLength" type="xs:byte" />
+          <xs:attribute name="thread" type="xs:boolean" />
+          <xs:attribute name="asyncItems" type="xs:boolean" />
         </xs:extension>
       </xs:complexContent>
     </xs:complexType>
@@ -161,6 +163,17 @@
       <xs:complexContent>
         <xs:extension base="List">
           <xs:attribute name="lengthLength" type="xs:byte" />
+          <xs:attribute name="thread" type="xs:boolean" />
+          <xs:attribute name="asyncItems" type="xs:boolean" />
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="RefListField">
+      <xs:complexContent>
+        <xs:extension base="RefListField">
+          <xs:attribute name="thread" type="xs:boolean" />
+          <xs:attribute name="asyncItems" type="xs:boolean" />
         </xs:extension>
       </xs:complexContent>
     </xs:complexType>
@@ -211,6 +224,14 @@
       <xs:enumeration value="Subrecord" />
       <xs:enumeration value="Group" />
       <xs:enumeration value="Mod" />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="CustomEndType" final="restriction" >
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Off" />
+      <xs:enumeration value="Normal" />
+      <xs:enumeration value="Async" />
     </xs:restriction>
   </xs:simpleType>
 

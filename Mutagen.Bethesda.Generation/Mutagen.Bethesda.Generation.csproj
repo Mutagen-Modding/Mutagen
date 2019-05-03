@@ -53,6 +53,7 @@
   <ItemGroup>
     <Compile Include="Constants.cs" />
     <Compile Include="Custom Data\MutagenObjData.cs" />
+    <Compile Include="Enums\CustomEnd.cs" />
     <Compile Include="Extensions\LoquiTypeExt.cs" />
     <Compile Include="Extensions\ObjectGenerationExt.cs" />
     <Compile Include="Extensions\TypeGenerationExt.cs" />
