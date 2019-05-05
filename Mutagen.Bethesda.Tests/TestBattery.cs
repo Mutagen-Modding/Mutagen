@@ -12,7 +12,7 @@ namespace Mutagen.Bethesda.Tests
         {
             foreach (var t in GetTests(settings: settings))
             {
-                await t;
+                t.Wait();
                 GC.Collect();
             }
         }
