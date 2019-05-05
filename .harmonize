@@ -2,10 +2,10 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>2a7d7f5ccc16c3b16339108c91cfe43c5f268bca</Sha>
+         <Sha>28e2e56b5c4ace17fe04975e6cfe32c80e84d1a5</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>05-02-2019 00:08:53</CommitDate>
-         <Description>TryGet parameter name tweak</Description>
+         <CommitDate>05-05-2019 02:01:41</CommitDate>
+         <Description>Protected data accessor for BinaryMemoryReadStream</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>

@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Mutagen.Bethesda.Binary
 {
-    public struct MutagenFrame : IBinaryReadStream
+    public struct MutagenFrame : IMutagenReadStream
     {
         public readonly IMutagenReadStream Reader;
         public readonly long InitialPosition;
@@ -29,6 +29,8 @@ namespace Mutagen.Bethesda.Binary
         public long Remaining => this.FinalLocation - this.Position;
 
         public long Length => Reader.Length;
+
+        public long OffsetReference => this.Reader.OffsetReference;
 
         [DebuggerStepThrough]
         public MutagenFrame(IMutagenReadStream reader)
@@ -323,5 +325,13 @@ namespace Mutagen.Bethesda.Binary
         {
             return Reader.GetString(amount, offset);
         }
+
+        public MutagenFrame ReadAndReframe(int length)
+        {
+            var offset = this.PositionWithOffset;
+            return new MutagenFrame(new MutagenMemoryReadStream(this.ReadBytes(length), offsetReference: offset));
+        }
+
+        IMutagenReadStream IMutagenReadStream.ReadAndReframe(int length) => this.ReadAndReframe(length);
     }
 }

@@ -8,5 +8,6 @@ namespace Mutagen.Bethesda.Binary
     public interface IMutagenReadStream : IBinaryReadStream
     {
         long OffsetReference { get; }
+        IMutagenReadStream ReadAndReframe(int length);
     }
 }

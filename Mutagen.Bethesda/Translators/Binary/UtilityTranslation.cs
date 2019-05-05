@@ -278,8 +278,7 @@ namespace Mutagen.Bethesda
                     throw new ArgumentException($"Expected header was not read in: {Group_Registration.GRUP_HEADER}");
                 }
                 var groupLen = checked((int)(grupLen - Constants.HEADER_LENGTH - Constants.RECORD_LENGTHLENGTH));
-                var offset = frame.PositionWithOffset;
-                frame = new MutagenFrame(new MutagenMemoryReadStream(frame.ReadBytes(groupLen), offsetReference: offset));
+                frame = frame.ReadAndReframe(groupLen);
 
                 fillStructs?.Invoke(
                     record: record,
@@ -632,31 +631,30 @@ namespace Mutagen.Bethesda
                     throw new ArgumentException($"Expected header was not read in: {Group_Registration.GRUP_HEADER}");
                 }
                 var groupLen = checked((int)(grupLen - Constants.HEADER_LENGTH - Constants.RECORD_LENGTHLENGTH));
-                var offset = frame.PositionWithOffset;
-                frame = new MutagenFrame(new MutagenMemoryReadStream(frame.ReadBytes(groupLen), offsetReference: offset));
+                frame = frame.ReadAndReframe(groupLen);
 
                 fillStructs?.Invoke(
                     record: record,
                     frame: frame,
-                    masterReferences: masterReferences,
-                    errorMask: errorMask);
-                while (!frame.Complete)
-                {
-                    var nextRecordType = HeaderTranslation.GetNextSubRecordType(
-                        reader: frame.Reader,
-                        contentLength: out var contentLength);
-                    var finalPos = frame.Position + contentLength;
-                    var parsed = await fillTyped(
-                        record: record,
-                        frame: frame,
-                        nextRecordType: nextRecordType,
-                        contentLength: contentLength,
                         masterReferences: masterReferences,
-                        errorMask: errorMask,
-                        recordTypeConverter: recordTypeConverter).ConfigureAwait(false);
-                    if (parsed.Failed) break;
-                    if (frame.Position < finalPos)
+                        errorMask: errorMask);
+                    while (!frame.Complete)
                     {
+                        var nextRecordType = HeaderTranslation.GetNextSubRecordType(
+                            reader: frame.Reader,
+                            contentLength: out var contentLength);
+                        var finalPos = frame.Position + contentLength;
+                        var parsed = await fillTyped(
+                            record: record,
+                            frame: frame,
+                            nextRecordType: nextRecordType,
+                            contentLength: contentLength,
+                            masterReferences: masterReferences,
+                            errorMask: errorMask,
+                            recordTypeConverter: recordTypeConverter).ConfigureAwait(false);
+                        if (parsed.Failed) break;
+                        if (frame.Position < finalPos)
+                        {
                         frame.Position = finalPos;
                     }
                 }

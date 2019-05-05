@@ -14,5 +14,10 @@ namespace Mutagen.Bethesda.Binary
         {
             this.OffsetReference = offsetReference;
         }
+
+        public IMutagenReadStream ReadAndReframe(int length)
+        {
+            return new MutagenMemoryReadStream(this.Data, this.OffsetReference + this.Position);
+        }
     }
 }
