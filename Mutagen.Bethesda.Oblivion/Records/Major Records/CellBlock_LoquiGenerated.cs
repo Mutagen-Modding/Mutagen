@@ -639,6 +639,7 @@ namespace Mutagen.Bethesda.Oblivion
                     await Mutagen.Bethesda.Binary.ListAsyncBinaryTranslation<CellSubBlock>.Instance.ParseRepeatedItem(
                         frame: frame,
                         triggeringRecord: CellBlock_Registration.GRUP_HEADER,
+                        thread: true,
                         item: item.Items,
                         fieldIndex: (int)CellBlock_FieldIndex.Items,
                         lengthLength: Mutagen.Bethesda.Constants.RECORD_LENGTHLENGTH,

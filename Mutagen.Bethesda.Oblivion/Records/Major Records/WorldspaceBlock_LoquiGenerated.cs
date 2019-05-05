@@ -660,6 +660,7 @@ namespace Mutagen.Bethesda.Oblivion
                     await Mutagen.Bethesda.Binary.ListAsyncBinaryTranslation<WorldspaceSubBlock>.Instance.ParseRepeatedItem(
                         frame: frame,
                         triggeringRecord: WorldspaceBlock_Registration.GRUP_HEADER,
+                        thread: true,
                         item: item.Items,
                         fieldIndex: (int)WorldspaceBlock_FieldIndex.Items,
                         lengthLength: Mutagen.Bethesda.Constants.RECORD_LENGTHLENGTH,

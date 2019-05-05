@@ -620,6 +620,10 @@ namespace Mutagen.Bethesda
             RecordStructFill<G> fillStructs,
             RecordTypeFill<G> fillTyped)
         {
+            if (errorMask != null)
+            {
+                throw new NotImplementedException();
+            }
             try
             {
                 if (!HeaderTranslation.TryParse(
@@ -633,9 +637,11 @@ namespace Mutagen.Bethesda
                 var groupLen = checked((int)(grupLen - Constants.HEADER_LENGTH - Constants.RECORD_LENGTHLENGTH));
                 frame = frame.ReadAndReframe(groupLen);
 
-                fillStructs?.Invoke(
-                    record: record,
-                    frame: frame,
+                return await Task.Run(async () =>
+                {
+                    fillStructs?.Invoke(
+                        record: record,
+                        frame: frame,
                         masterReferences: masterReferences,
                         errorMask: errorMask);
                     while (!frame.Complete)
@@ -655,9 +661,11 @@ namespace Mutagen.Bethesda
                         if (parsed.Failed) break;
                         if (frame.Position < finalPos)
                         {
-                        frame.Position = finalPos;
+                            frame.Position = finalPos;
+                        }
                     }
-                }
+                    return record;
+                });
             }
             catch (Exception ex)
             when (errorMask != null)

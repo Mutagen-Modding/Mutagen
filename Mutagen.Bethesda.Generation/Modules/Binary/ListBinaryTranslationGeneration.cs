@@ -191,6 +191,9 @@ namespace Mutagen.Bethesda.Generation
                 fg.AppendLine("frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;");
             }
 
+            bool threading = list.CustomData.TryGetValue(ThreadKey, out var t)
+                && (bool)t;
+
             using (var args = new ArgsWrapper(fg,
                 $"{Loqui.Generation.Utility.Await(isAsync)}{this.Namespace}List{(isAsync ? "Async" : null)}BinaryTranslation<{list.SubTypeGeneration.TypeName}>.Instance.ParseRepeatedItem",
                 suffixLine: Loqui.Generation.Utility.ConfigAwait(isAsync)))
@@ -216,6 +219,10 @@ namespace Mutagen.Bethesda.Generation
                 else
                 {
                     throw new NotImplementedException();
+                }
+                if (threading)
+                {
+                    args.Add($"thread: true");
                 }
                 if (list.SubTypeGeneration is FormIDLinkType)
                 {

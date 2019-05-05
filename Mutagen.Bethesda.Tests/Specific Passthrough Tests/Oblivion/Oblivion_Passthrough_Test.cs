@@ -1598,11 +1598,9 @@ namespace Mutagen.Bethesda.Tests
         public async Task TestImport()
         {
             ModKey modKey = ModKey.Factory(this.FilePath.Name);
-            var mod = await OblivionMod.Create_Binary_Error(
+            var mod = await OblivionMod.Create_Binary(
                 this.FilePath.Path,
                 modKey: modKey);
-
-            Assert.False(mod.ErrorMask?.IsInError() ?? false);
         }
     }
 }

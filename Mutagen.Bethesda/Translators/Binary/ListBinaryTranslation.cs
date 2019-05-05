@@ -1176,6 +1176,41 @@ namespace Mutagen.Bethesda.Binary
             return TryGet<IEnumerable<T>>.Succeed(ret);
         }
 
+        public async Task<TryGet<IEnumerable<T>>> ParseRepeatedItemThreaded(
+            MutagenFrame frame,
+            RecordType triggeringRecord,
+            int lengthLength,
+            ErrorMaskBuilder errorMask,
+            BinarySubParseErrDelegate transl)
+        {
+            if (errorMask != null)
+            {
+                throw new NotImplementedException();
+            }
+            var tasks = new List<Task<TryGet<T>>>();
+            while (!frame.Complete && !frame.Reader.Complete)
+            {
+                var nextRec = HeaderTranslation.GetNextType(
+                    reader: frame.Reader,
+                    contentLength: out var contentLen,
+                    finalPos: out var finalPos,
+                    hopGroup: false);
+                if (nextRec != triggeringRecord) break;
+                if (!IsLoqui)
+                {
+                    frame.Position += Constants.SUBRECORD_LENGTH;
+                }
+
+                var toDo = transl(frame, errorMask);
+
+                tasks.Add(Task.Run(() => toDo));
+            }
+            var ret = await Task.WhenAll(tasks).ConfigureAwait(false);
+            return TryGet<IEnumerable<T>>.Succeed(
+                ret.Where(i => i.Succeeded)
+                    .Select(i => i.Value));
+        }
+
         public async Task<TryGet<IEnumerable<T>>> ParseRepeatedItem(
             MutagenFrame frame,
             long lengthLength,
@@ -1279,18 +1314,32 @@ namespace Mutagen.Bethesda.Binary
             RecordType triggeringRecord,
             int lengthLength,
             ErrorMaskBuilder errorMask,
-            BinarySubParseErrDelegate transl)
+            BinarySubParseErrDelegate transl,
+            bool thread = false)
         {
             using (errorMask.PushIndex(fieldIndex))
             {
                 try
                 {
-                    var items = await ParseRepeatedItem(
-                        frame,
-                        triggeringRecord,
-                        lengthLength,
-                        errorMask: errorMask,
-                        transl: transl).ConfigureAwait(false);
+                    TryGet<IEnumerable<T>> items;
+                    if (thread)
+                    {
+                        items = await ParseRepeatedItemThreaded(
+                            frame,
+                            triggeringRecord,
+                            lengthLength,
+                            errorMask: errorMask,
+                            transl: transl).ConfigureAwait(false);
+                    }
+                    else
+                    {
+                        items = await ParseRepeatedItem(
+                            frame,
+                            triggeringRecord,
+                            lengthLength,
+                            errorMask: errorMask,
+                            transl: transl).ConfigureAwait(false);
+                    }
                     if (items.Succeeded)
                     {
                         item.SetTo(items.Value);

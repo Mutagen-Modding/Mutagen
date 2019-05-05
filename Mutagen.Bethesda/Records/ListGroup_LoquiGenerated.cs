@@ -652,6 +652,7 @@ namespace Mutagen.Bethesda
                         await Mutagen.Bethesda.Binary.ListAsyncBinaryTranslation<T>.Instance.ParseRepeatedItem(
                             frame: frame,
                             triggeringRecord: T_RecordType,
+                            thread: true,
                             item: item.Items,
                             fieldIndex: (int)ListGroup_FieldIndex.Items,
                             lengthLength: 4,
