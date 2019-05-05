@@ -46,10 +46,6 @@ namespace Mutagen.Bethesda.Binary
 
         public bool Parse(MutagenFrame frame, out T item)
         {
-            if (!frame.TryCheckUpcomingRead(this.ExpectedLength, out var ex))
-            {
-                throw ex;
-            }
             item = ParseValue(frame);
             return true;
         }

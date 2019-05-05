@@ -38,7 +38,7 @@ namespace Mutagen.Bethesda
 
         public bool Equals(RecordType other)
         {
-            return object.Equals(this.TypeInt, other.TypeInt);
+            return this.TypeInt == other.TypeInt;
         }
 
         public bool Equals(string other)
@@ -60,7 +60,7 @@ namespace Mutagen.Bethesda
 
         public override int GetHashCode()
         {
-            return HashHelper.GetHashCode(this.TypeInt);
+            return this.TypeInt.GetHashCode();
         }
 
         public override string ToString()

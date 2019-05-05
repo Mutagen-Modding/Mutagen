@@ -18,10 +18,10 @@ namespace Mutagen.Bethesda.Binary
         {
             var id = frame.ReadUInt32();
             var formID = new FormID(id);
-            if (masterReferences.Masters.TryGet(formID.ModID.ID, out var master))
+            if (formID.ModID.ID < masterReferences.Masters.Count)
             {
                 item = new FormKey(
-                    master.Master,
+                    masterReferences.Masters[formID.ModID.ID].Master,
                     id);
                 return true;
             }

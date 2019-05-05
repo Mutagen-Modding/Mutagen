@@ -9,7 +9,7 @@
     <Fields>
       <RefDirect name="MetadataSummary" recordType="SCHR" refName="ScriptMetaSummary" nullable="Singleton" />
       <CustomLogic name="MetadataSummaryOld" recordType="SCHD" />
-      <ByteArray name="CompiledScript" recordType="SCDA" />
+      <ByteArray name="CompiledScript" recordType="SCDA" generateClassMembers="false" />
       <String name="SourceCode" recordType="SCTX" nullTerminate="false" />
       <RefList name="LocalVariables" refName="LocalVariable" />
       <RefList name="References" refName="ScriptReference" />

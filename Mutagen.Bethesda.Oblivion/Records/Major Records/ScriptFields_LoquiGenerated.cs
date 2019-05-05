@@ -65,34 +65,6 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ScriptMetaSummary IScriptFieldsGetter.MetadataSummary => this.MetadataSummary;
         #endregion
-        #region CompiledScript
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public bool CompiledScript_IsSet
-        {
-            get => _hasBeenSetTracker[(int)ScriptFields_FieldIndex.CompiledScript];
-            set => this.RaiseAndSetIfChanged(_hasBeenSetTracker, value, (int)ScriptFields_FieldIndex.CompiledScript, nameof(CompiledScript_IsSet));
-        }
-        bool IScriptFieldsGetter.CompiledScript_IsSet => CompiledScript_IsSet;
-        protected Byte[] _CompiledScript;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public Byte[] CompiledScript
-        {
-            get => this._CompiledScript;
-            set => CompiledScript_Set(value);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Byte[] IScriptFieldsGetter.CompiledScript => this.CompiledScript;
-        public void CompiledScript_Set(
-            Byte[] value,
-            bool markSet = true)
-        {
-            this.RaiseAndSetIfReferenceChanged(ref _CompiledScript, value, _hasBeenSetTracker, markSet, (int)ScriptFields_FieldIndex.CompiledScript, nameof(CompiledScript), nameof(CompiledScript_IsSet));
-        }
-        public void CompiledScript_Unset()
-        {
-            this.CompiledScript_Set(default(Byte[]), false);
-        }
-        #endregion
         #region SourceCode
         public bool SourceCode_IsSet
         {
