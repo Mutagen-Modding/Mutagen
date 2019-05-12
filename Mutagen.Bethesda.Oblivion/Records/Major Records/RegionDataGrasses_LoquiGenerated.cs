@@ -815,7 +815,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type GetterType = typeof(IRegionDataGrassesGetter);
 
+        public static readonly Type InternalGetterType = null;
+
         public static readonly Type SetterType = typeof(IRegionDataGrasses);
+
+        public static readonly Type InternalSetterType = null;
 
         public static readonly Type CommonType = typeof(RegionDataGrassesCommon);
 

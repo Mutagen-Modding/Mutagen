@@ -2018,7 +2018,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type GetterType = typeof(ICellGetter);
 
+        public static readonly Type InternalGetterType = null;
+
         public static readonly Type SetterType = typeof(ICell);
+
+        public static readonly Type InternalSetterType = null;
 
         public static readonly Type CommonType = typeof(CellCommon);
 
@@ -2368,7 +2372,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType ACHR_HEADER = new RecordType("ACHR");
         public static readonly RecordType REFR_HEADER = new RecordType("REFR");
         public static readonly RecordType TRIGGERING_RECORD_TYPE = CELL_HEADER;
-        public const int NumStructFields = 4;
+        public const int NumStructFields = 0;
         public const int NumTypedFields = 17;
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

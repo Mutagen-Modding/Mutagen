@@ -915,7 +915,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type GetterType = typeof(IGlobalShortGetter);
 
+        public static readonly Type InternalGetterType = null;
+
         public static readonly Type SetterType = typeof(IGlobalShort);
+
+        public static readonly Type InternalSetterType = null;
 
         public static readonly Type CommonType = typeof(GlobalShortCommon);
 

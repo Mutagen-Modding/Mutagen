@@ -1244,7 +1244,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type GetterType = typeof(ILandscapeGetter);
 
+        public static readonly Type InternalGetterType = null;
+
         public static readonly Type SetterType = typeof(ILandscape);
+
+        public static readonly Type InternalSetterType = null;
 
         public static readonly Type CommonType = typeof(LandscapeCommon);
 

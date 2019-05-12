@@ -886,7 +886,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type GetterType = typeof(IQuestTargetGetter);
 
+        public static readonly Type InternalGetterType = null;
+
         public static readonly Type SetterType = typeof(IQuestTarget);
+
+        public static readonly Type InternalSetterType = null;
 
         public static readonly Type CommonType = typeof(QuestTargetCommon);
 

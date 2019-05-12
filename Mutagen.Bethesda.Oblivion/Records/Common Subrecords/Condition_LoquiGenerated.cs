@@ -979,7 +979,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type GetterType = typeof(IConditionGetter);
 
+        public static readonly Type InternalGetterType = null;
+
         public static readonly Type SetterType = typeof(ICondition);
+
+        public static readonly Type InternalSetterType = null;
 
         public static readonly Type CommonType = typeof(ConditionCommon);
 

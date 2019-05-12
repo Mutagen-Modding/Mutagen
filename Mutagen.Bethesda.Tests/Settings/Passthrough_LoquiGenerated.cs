@@ -734,7 +734,11 @@ namespace Mutagen.Bethesda.Tests.Internals
 
         public static readonly Type GetterType = typeof(IPassthroughGetter);
 
+        public static readonly Type InternalGetterType = null;
+
         public static readonly Type SetterType = typeof(IPassthrough);
+
+        public static readonly Type InternalSetterType = null;
 
         public static readonly Type CommonType = typeof(PassthroughCommon);
 

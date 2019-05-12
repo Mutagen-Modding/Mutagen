@@ -832,7 +832,11 @@ namespace Mutagen.Bethesda.Internals
 
         public static readonly Type GetterType = typeof(IMasterReferenceGetter);
 
+        public static readonly Type InternalGetterType = null;
+
         public static readonly Type SetterType = typeof(IMasterReference);
+
+        public static readonly Type InternalSetterType = null;
 
         public static readonly Type CommonType = typeof(MasterReferenceCommon);
 

@@ -1228,7 +1228,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type GetterType = typeof(IFloraGetter);
 
+        public static readonly Type InternalGetterType = null;
+
         public static readonly Type SetterType = typeof(IFlora);
+
+        public static readonly Type InternalSetterType = null;
 
         public static readonly Type CommonType = typeof(FloraCommon);
 

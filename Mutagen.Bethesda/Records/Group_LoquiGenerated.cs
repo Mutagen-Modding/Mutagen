@@ -930,7 +930,11 @@ namespace Mutagen.Bethesda.Internals
 
         public static readonly Type GetterType = typeof(IGroupGetter<>);
 
+        public static readonly Type InternalGetterType = null;
+
         public static readonly Type SetterType = typeof(IGroup<>);
+
+        public static readonly Type InternalSetterType = null;
 
         public static readonly Type CommonType = typeof(GroupCommon);
 

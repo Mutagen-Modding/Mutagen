@@ -19,7 +19,7 @@
         <Fields>
           <FormIDLink name="Texture" refName="LandTexture" />
           <Enum name="Quadrant" enumName="AlphaLayer.QuadrantEnum" byteLength="2" />
-          <UInt16 name="LayerNumber" protected="true" />
+          <UInt16 name="LayerNumber" protectedSet="true" />
         </Fields>
       </Data>
     </Fields>

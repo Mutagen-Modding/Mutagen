@@ -670,7 +670,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type GetterType = typeof(IOblivionMajorRecordGetter);
 
+        public static readonly Type InternalGetterType = null;
+
         public static readonly Type SetterType = typeof(IOblivionMajorRecord);
+
+        public static readonly Type InternalSetterType = null;
 
         public static readonly Type CommonType = typeof(OblivionMajorRecordCommon);
 
@@ -925,7 +929,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     })
             );
         });
-        public const int NumStructFields = 1;
+        public const int NumStructFields = 0;
         public const int NumTypedFields = 0;
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

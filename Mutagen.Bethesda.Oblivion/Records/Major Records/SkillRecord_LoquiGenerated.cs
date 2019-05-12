@@ -1488,7 +1488,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type GetterType = typeof(ISkillRecordGetter);
 
+        public static readonly Type InternalGetterType = null;
+
         public static readonly Type SetterType = typeof(ISkillRecord);
+
+        public static readonly Type InternalSetterType = null;
 
         public static readonly Type CommonType = typeof(SkillRecordCommon);
 

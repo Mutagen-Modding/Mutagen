@@ -769,7 +769,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type GetterType = typeof(IInterCellPointGetter);
 
+        public static readonly Type InternalGetterType = null;
+
         public static readonly Type SetterType = typeof(IInterCellPoint);
+
+        public static readonly Type InternalSetterType = null;
 
         public static readonly Type CommonType = typeof(InterCellPointCommon);
 

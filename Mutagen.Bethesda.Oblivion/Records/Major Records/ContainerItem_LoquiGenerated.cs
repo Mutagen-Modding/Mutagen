@@ -786,7 +786,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type GetterType = typeof(IContainerItemGetter);
 
+        public static readonly Type InternalGetterType = null;
+
         public static readonly Type SetterType = typeof(IContainerItem);
+
+        public static readonly Type InternalSetterType = null;
 
         public static readonly Type CommonType = typeof(ContainerItemCommon);
 

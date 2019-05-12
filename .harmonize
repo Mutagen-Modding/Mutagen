@@ -2,18 +2,18 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>28e2e56b5c4ace17fe04975e6cfe32c80e84d1a5</Sha>
+         <Sha>8fa46655f51f0016e3ad3ca608bbf849ea8ea3a0</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>05-05-2019 02:01:41</CommitDate>
-         <Description>Protected data accessor for BinaryMemoryReadStream</Description>
+         <CommitDate>05-09-2019 22:13:28</CommitDate>
+         <Description>ObservableExt.Unit and NotNull.  Made some parameters optional on keybinds</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>b1e37036b80309f20fc5fe403a15ad0cae23828e</Sha>
+         <Sha>c9b11e95dba9407c30d2dbea8a954cb14791c7ac</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>05-04-2019 20:34:43</CommitDate>
-         <Description>Some prep for async translations</Description>
+         <CommitDate>05-11-2019 22:59:38</CommitDate>
+         <Description>Internal interface generation</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>

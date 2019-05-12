@@ -904,7 +904,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type GetterType = typeof(IRegionDataSoundsGetter);
 
+        public static readonly Type InternalGetterType = null;
+
         public static readonly Type SetterType = typeof(IRegionDataSounds);
+
+        public static readonly Type InternalSetterType = null;
 
         public static readonly Type CommonType = typeof(RegionDataSoundsCommon);
 

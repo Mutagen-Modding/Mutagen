@@ -664,7 +664,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type GetterType = typeof(INPCSpawnGetter);
 
+        public static readonly Type InternalGetterType = null;
+
         public static readonly Type SetterType = typeof(INPCSpawn);
+
+        public static readonly Type InternalSetterType = null;
 
         public static readonly Type CommonType = typeof(NPCSpawnCommon);
 

@@ -802,7 +802,11 @@ namespace Mutagen.Bethesda.Tests.Internals
 
         public static readonly Type GetterType = typeof(ITestingSettingsGetter);
 
+        public static readonly Type InternalGetterType = null;
+
         public static readonly Type SetterType = typeof(ITestingSettings);
+
+        public static readonly Type InternalSetterType = null;
 
         public static readonly Type CommonType = typeof(TestingSettingsCommon);
 

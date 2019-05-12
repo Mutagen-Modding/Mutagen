@@ -1209,7 +1209,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type GetterType = typeof(IMiscellaneousGetter);
 
+        public static readonly Type InternalGetterType = null;
+
         public static readonly Type SetterType = typeof(IMiscellaneous);
+
+        public static readonly Type InternalSetterType = null;
 
         public static readonly Type CommonType = typeof(MiscellaneousCommon);
 

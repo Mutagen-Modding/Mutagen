@@ -1136,7 +1136,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type GetterType = typeof(IDialogTopicGetter);
 
+        public static readonly Type InternalGetterType = null;
+
         public static readonly Type SetterType = typeof(IDialogTopic);
+
+        public static readonly Type InternalSetterType = null;
 
         public static readonly Type CommonType = typeof(DialogTopicCommon);
 
@@ -1297,7 +1301,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType DATA_HEADER = new RecordType("DATA");
         public static readonly RecordType INFO_HEADER = new RecordType("INFO");
         public static readonly RecordType TRIGGERING_RECORD_TYPE = DIAL_HEADER;
-        public const int NumStructFields = 1;
+        public const int NumStructFields = 0;
         public const int NumTypedFields = 4;
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

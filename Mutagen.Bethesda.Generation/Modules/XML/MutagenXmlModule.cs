@@ -23,7 +23,7 @@ namespace Mutagen.Bethesda.Generation
                 $"public static void WriteToNode_{ModuleNickname}{obj.GetGenericTypes(MaskType.Normal)}",
                 obj.GenericTypeMaskWheres(MaskType.Normal)))
             {
-                args.Add($"this {(this.ExportWithIGetter ? obj.Getter_InterfaceStr : obj.ObjectName)} item");
+                args.Add($"this {(this.ExportWithIGetter ? obj.Interface(getter: true) : obj.ObjectName)} item");
                 args.Add($"XElement {XmlTranslationModule.XElementLine.GetParameterName(obj)}");
                 args.Add($"ErrorMaskBuilder errorMask");
                 args.Add($"{nameof(TranslationCrystal)} translationMask");

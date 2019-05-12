@@ -3295,7 +3295,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type GetterType = typeof(ICreatureGetter);
 
+        public static readonly Type InternalGetterType = null;
+
         public static readonly Type SetterType = typeof(ICreature);
+
+        public static readonly Type InternalSetterType = null;
 
         public static readonly Type CommonType = typeof(CreatureCommon);
 

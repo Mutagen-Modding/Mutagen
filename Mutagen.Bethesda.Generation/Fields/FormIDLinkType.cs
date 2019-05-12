@@ -71,7 +71,7 @@ namespace Mutagen.Bethesda.Generation
             fg.AppendLine($"public {TypeName} {this.Property} {{ get; }} = new {linkString}{(this.HasBeenSet ? "Set" : string.Empty)}Link<{loquiType.TypeName}>();");
             fg.AppendLine($"public {loquiType.TypeName} {this.Name} {{ get => {this.Property}.Item; {(this.ReadOnly ? string.Empty : $"set => {this.Property}.Item = value; ")}}}");
             fg.AppendLine($"[DebuggerBrowsable(DebuggerBrowsableState.Never)]");
-            fg.AppendLine($"{this.TypeName} {this.ObjectGen.Getter_InterfaceStr}.{this.Property} => this.{this.Property};");
+            fg.AppendLine($"{this.TypeName} {this.ObjectGen.Interface(getter: true)}.{this.Property} => this.{this.Property};");
         }
 
         public override void GenerateForGetterInterface(FileGeneration fg)

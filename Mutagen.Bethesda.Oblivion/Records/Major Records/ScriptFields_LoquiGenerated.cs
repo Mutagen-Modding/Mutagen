@@ -1127,7 +1127,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type GetterType = typeof(IScriptFieldsGetter);
 
+        public static readonly Type InternalGetterType = null;
+
         public static readonly Type SetterType = typeof(IScriptFields);
+
+        public static readonly Type InternalSetterType = null;
 
         public static readonly Type CommonType = typeof(ScriptFieldsCommon);
 

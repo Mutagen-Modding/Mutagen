@@ -1829,7 +1829,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type GetterType = typeof(IWorldspaceGetter);
 
+        public static readonly Type InternalGetterType = null;
+
         public static readonly Type SetterType = typeof(IWorldspace);
+
+        public static readonly Type InternalSetterType = null;
 
         public static readonly Type CommonType = typeof(WorldspaceCommon);
 
@@ -2111,7 +2115,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType CELL_HEADER = new RecordType("CELL");
         public static readonly RecordType GRUP_HEADER = new RecordType("GRUP");
         public static readonly RecordType TRIGGERING_RECORD_TYPE = WRLD_HEADER;
-        public const int NumStructFields = 1;
+        public const int NumStructFields = 0;
         public const int NumTypedFields = 14;
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;

@@ -1548,7 +1548,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type GetterType = typeof(IWeaponGetter);
 
+        public static readonly Type InternalGetterType = null;
+
         public static readonly Type SetterType = typeof(IWeapon);
+
+        public static readonly Type InternalSetterType = null;
 
         public static readonly Type CommonType = typeof(WeaponCommon);
 
