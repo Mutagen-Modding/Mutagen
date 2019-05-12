@@ -3,7 +3,7 @@
   <Object name="MajorRecord" objType="Record" abstract="true" GUID="1382b2d8-9016-424e-923f-502a4417cbc7" ID="1">
     <Fields>
       <CustomLogic name="MajorRecordFlagsRaw" />
-      <FormKey name="FormKey" protectedSet="true" hasBeenSet="False" notifying="None" />
+      <FormKey name="FormKey" setPermission="protected" hasBeenSet="False" notifying="None" />
       <UInt32 name="Version" />
       <String name="EditorID" recordType="EDID" />
       <UnsafeObject name="RecordType" derivative="true" hasBeenSet="False" notifying="None">

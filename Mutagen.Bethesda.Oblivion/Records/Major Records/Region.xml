@@ -26,7 +26,7 @@
     <Fields>
       <Data recordType="RDAT">
         <Fields>
-          <Enum name="DataType" enumName="RegionData.RegionDataType" byteLength="4" protectedSet="true" />
+          <Enum name="DataType" enumName="RegionData.RegionDataType" byteLength="4" setPermission="protected" />
           <Enum name="Flags" enumName="RegionData.RegionDataFlag" byteLength="1" />
           <UInt8 name="Priority" />
           <Zero byteLength="2" />
