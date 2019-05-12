@@ -90,7 +90,6 @@
     <Compile Include="Modules\Binary\SpecialParseTranslationGeneration.cs" />
     <Compile Include="Modules\Binary\StringBinaryTranslationGeneration.cs" />
     <Compile Include="Modules\Binary\ZeroBinaryTranslationGeneration.cs" />
-    <Compile Include="Modules\Mutagen Module\BinaryStructModule.cs" />
     <Compile Include="Modules\Mutagen Module\ColorTypeModule.cs" />
     <Compile Include="Modules\Mutagen Module\CorrectnessModule.cs" />
     <Compile Include="Modules\Mutagen Module\DataTypeModule.cs" />

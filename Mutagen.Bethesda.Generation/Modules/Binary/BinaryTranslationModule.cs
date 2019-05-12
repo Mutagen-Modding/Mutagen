@@ -698,28 +698,6 @@ namespace Mutagen.Bethesda.Generation
                     continue;
                 }
             }
-            if (affectedFields.Count == 0) return;
-            fg.AppendLine($"if (ret.StructCustom)");
-            using (new BraceWrapper(fg))
-            {
-                fg.AppendLine("CompositeDisposable structUnsubber = new CompositeDisposable();");
-                fg.AppendLine("Action unsubAction = () =>");
-                using (new BraceWrapper(fg) { AppendSemicolon = true })
-                {
-                    fg.AppendLine("structUnsubber.Dispose();");
-                    fg.AppendLine($"ret.StructCustom = false;");
-                }
-                foreach (var subField in affectedFields)
-                {
-                    fg.AppendLine($"structUnsubber.Add(");
-                    using (new DepthWrapper(fg))
-                    {
-                        fg.AppendLine($"ret.WhenAny(x => x.{subField.Name})");
-                        fg.AppendLine($".Skip(1)");
-                        fg.AppendLine($".Subscribe(unsubAction));");
-                    }
-                }
-            }
         }
 
         private void GenerateFillSnippet(ObjectGeneration obj, FileGeneration fg, TypeGeneration field, BinaryTranslationGeneration generator, string frameAccessor)

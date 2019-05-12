@@ -443,7 +443,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = ItemEntry_Registration.TRIGGERING_RECORD_TYPE;
-        public bool StructCustom;
         public IEnumerable<ILink> Links => GetLinks();
         private IEnumerable<ILink> GetLinks()
         {
@@ -512,19 +511,6 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask,
                 recordTypeConverter: recordTypeConverter,
                 fillStructs: Fill_Binary_Structs);
-            if (ret.StructCustom)
-            {
-                CompositeDisposable structUnsubber = new CompositeDisposable();
-                Action unsubAction = () =>
-                {
-                    structUnsubber.Dispose();
-                    ret.StructCustom = false;
-                };
-                structUnsubber.Add(
-                    ret.WhenAny(x => x.Count)
-                    .Skip(1)
-                    .Subscribe(unsubAction));
-            }
             return ret;
         }
 
