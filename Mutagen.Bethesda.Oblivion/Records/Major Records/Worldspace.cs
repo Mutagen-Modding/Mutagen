@@ -17,8 +17,6 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public partial class Worldspace
     {
-        private bool usingOffsetLength;
-
         [Flags]
         public enum Flag
         {
@@ -90,7 +88,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         static partial void FillBinary_OffsetLength_Custom(MutagenFrame frame, Worldspace item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
         {
-            item.usingOffsetLength = true;
+            item.UsingOffsetLength = true;
             if (!HeaderTranslation.ReadNextSubRecordType(frame.Reader, out var xLen).Equals(Worldspace_Registration.XXXX_HEADER)
                 || xLen != 4)
             {
@@ -110,7 +108,7 @@ namespace Mutagen.Bethesda.Oblivion
         static partial void WriteBinary_OffsetLength_Custom(MutagenWriter writer, Worldspace item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
         {
             if (!item.OffsetData_IsSet) return;
-            if (!item.usingOffsetLength) return;
+            if (!item.UsingOffsetLength) return;
             using (HeaderExport.ExportSubRecordHeader(writer, Worldspace_Registration.XXXX_HEADER))
             {
                 writer.Write(item.OffsetData.Length);
@@ -122,7 +120,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         static partial void FillBinary_OffsetData_Custom(MutagenFrame frame, Worldspace item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
         {
-            if (item.usingOffsetLength) return;
+            if (item.UsingOffsetLength) return;
             if (!HeaderTranslation.ReadNextSubRecordType(frame.Reader, out var len).Equals(Worldspace_Registration.OFST_HEADER))
             {
                 throw new ArgumentException();
@@ -132,7 +130,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         static partial void WriteBinary_OffsetData_Custom(MutagenWriter writer, Worldspace item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
         {
-            if (item.usingOffsetLength) return;
+            if (item.UsingOffsetLength) return;
             if (!item.OffsetData_IsSet) return;
             using (HeaderExport.ExportSubRecordHeader(writer, Worldspace_Registration.OFST_HEADER))
             {
@@ -291,7 +289,7 @@ namespace Mutagen.Bethesda.Oblivion
             var usingOffsetLenNode = worldspaceNode.Element("UsingOffsetLength");
             if (usingOffsetLenNode != null && usingOffsetLenNode.TryGetAttribute("value", out bool val))
             {
-                ret.usingOffsetLength = val;
+                ret.UsingOffsetLength = val;
             }
             var roadPath = Path.Combine(dir.Path, $"{nameof(Road)}.xml");
             if (File.Exists(roadPath))
@@ -404,10 +402,6 @@ namespace Mutagen.Bethesda.Oblivion
                 node: worldspaceNode,
                 errorMask: errorMask,
                 translationMask: XmlFolderTranslationCrystal);
-            if (usingOffsetLength)
-            {
-                worldspaceNode.Elements().First().Add(new XElement("UsingOffsetLength", new XAttribute("value", "true")));
-            }
             worldspaceNode.Elements().First().SaveIfChanged(Path.Combine(dir.Value.Path, $"{nameof(Worldspace)}.xml"));
             if (this.Road_IsSet
                 && this.Road != null)

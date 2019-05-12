@@ -19,6 +19,7 @@
       <RefDirect name="TopCell" refName="Cell" binary="NoGeneration" />
       <ByteArray name="SubCellsTimestamp" binary="NoGeneration" length="4" nullable="NotNull" />
       <RefList name="SubCells" refName="WorldspaceBlock" binary="NoGeneration" thread="true" />
+      <Bool name="UsingOffsetLength" binary="NoGeneration" />
     </Fields>
   </Object>
   <Object name="WorldspaceBlock" objType="Group" GUID="ffc71d01-f9a7-406b-9c9f-a5760acd87ea" ID="140">

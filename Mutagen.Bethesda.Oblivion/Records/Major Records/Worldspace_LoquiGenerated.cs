@@ -373,6 +373,14 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #endregion
+        #region UsingOffsetLength
+        private Boolean _UsingOffsetLength;
+        public Boolean UsingOffsetLength
+        {
+            get => this._UsingOffsetLength;
+            set => this.RaiseAndSetIfChanged(ref this._UsingOffsetLength, value, nameof(UsingOffsetLength));
+        }
+        #endregion
 
         IMask<bool> IEqualsMask<Worldspace>.GetEqualsMask(Worldspace rhs, EqualsMaskHelper.Include include) => WorldspaceCommon.GetEqualsMask(this, rhs, include);
         IMask<bool> IEqualsMask<IWorldspaceGetter>.GetEqualsMask(IWorldspaceGetter rhs, EqualsMaskHelper.Include include) => WorldspaceCommon.GetEqualsMask(this, rhs, include);
@@ -480,6 +488,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 if (!this.SubCells.SequenceEqual(rhs.SubCells)) return false;
             }
+            if (this.UsingOffsetLength != rhs.UsingOffsetLength) return false;
             return true;
         }
 
@@ -543,6 +552,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 ret = HashHelper.GetHashCode(SubCells).CombineHashCode(ret);
             }
+            ret = HashHelper.GetHashCode(UsingOffsetLength).CombineHashCode(ret);
             ret = ret.CombineHashCode(base.GetHashCode());
             return ret;
         }
@@ -898,6 +908,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case Worldspace_FieldIndex.SubCells:
                     return SubCells.HasBeenSet;
                 case Worldspace_FieldIndex.SubCellsTimestamp:
+                case Worldspace_FieldIndex.UsingOffsetLength:
                     return true;
                 default:
                     return base.GetHasBeenSet(index);
@@ -1550,6 +1561,9 @@ namespace Mutagen.Bethesda.Oblivion
                 case Worldspace_FieldIndex.SubCells:
                     this._SubCells.SetTo((IEnumerable<WorldspaceBlock>)obj);
                     break;
+                case Worldspace_FieldIndex.UsingOffsetLength:
+                    this.UsingOffsetLength = (Boolean)obj;
+                    break;
                 default:
                     base.SetNthObject(index, obj);
                     break;
@@ -1626,6 +1640,9 @@ namespace Mutagen.Bethesda.Oblivion
                 case Worldspace_FieldIndex.SubCells:
                     obj._SubCells.SetTo((IEnumerable<WorldspaceBlock>)pair.Value);
                     break;
+                case Worldspace_FieldIndex.UsingOffsetLength:
+                    obj.UsingOffsetLength = (Boolean)pair.Value;
+                    break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
@@ -1692,6 +1709,8 @@ namespace Mutagen.Bethesda.Oblivion
         new Byte[] SubCellsTimestamp { get; set; }
 
         new ISourceSetList<WorldspaceBlock> SubCells { get; }
+        new Boolean UsingOffsetLength { get; set; }
+
     }
 
     public partial interface IWorldspaceGetter : IPlaceGetter
@@ -1768,6 +1787,10 @@ namespace Mutagen.Bethesda.Oblivion
         #region SubCells
         IObservableSetList<WorldspaceBlock> SubCells { get; }
         #endregion
+        #region UsingOffsetLength
+        Boolean UsingOffsetLength { get; }
+
+        #endregion
 
     }
 
@@ -1800,6 +1823,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         TopCell = 17,
         SubCellsTimestamp = 18,
         SubCells = 19,
+        UsingOffsetLength = 20,
     }
     #endregion
 
@@ -1817,9 +1841,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const string GUID = "d95e86a2-5fdd-4bb1-a2b9-c16161ef2f62";
 
-        public const ushort AdditionalFieldCount = 15;
+        public const ushort AdditionalFieldCount = 16;
 
-        public const ushort FieldCount = 20;
+        public const ushort FieldCount = 21;
 
         public static readonly Type MaskType = typeof(Worldspace_Mask<>);
 
@@ -1881,6 +1905,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (ushort)Worldspace_FieldIndex.SubCellsTimestamp;
                 case "SUBCELLS":
                     return (ushort)Worldspace_FieldIndex.SubCells;
+                case "USINGOFFSETLENGTH":
+                    return (ushort)Worldspace_FieldIndex.UsingOffsetLength;
                 default:
                     return null;
             }
@@ -1907,6 +1933,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Worldspace_FieldIndex.Road:
                 case Worldspace_FieldIndex.TopCell:
                 case Worldspace_FieldIndex.SubCellsTimestamp:
+                case Worldspace_FieldIndex.UsingOffsetLength:
                     return false;
                 default:
                     return Place_Registration.GetNthIsEnumerable(index);
@@ -1934,6 +1961,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Worldspace_FieldIndex.Music:
                 case Worldspace_FieldIndex.OffsetData:
                 case Worldspace_FieldIndex.SubCellsTimestamp:
+                case Worldspace_FieldIndex.UsingOffsetLength:
                     return false;
                 default:
                     return Place_Registration.GetNthIsLoqui(index);
@@ -1960,6 +1988,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Worldspace_FieldIndex.TopCell:
                 case Worldspace_FieldIndex.SubCellsTimestamp:
                 case Worldspace_FieldIndex.SubCells:
+                case Worldspace_FieldIndex.UsingOffsetLength:
                     return false;
                 default:
                     return Place_Registration.GetNthIsSingleton(index);
@@ -2001,6 +2030,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return "SubCellsTimestamp";
                 case Worldspace_FieldIndex.SubCells:
                     return "SubCells";
+                case Worldspace_FieldIndex.UsingOffsetLength:
+                    return "UsingOffsetLength";
                 default:
                     return Place_Registration.GetNthName(index);
             }
@@ -2026,6 +2057,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Worldspace_FieldIndex.TopCell:
                 case Worldspace_FieldIndex.SubCellsTimestamp:
                 case Worldspace_FieldIndex.SubCells:
+                case Worldspace_FieldIndex.UsingOffsetLength:
                     return false;
                 default:
                     return Place_Registration.IsNthDerivative(index);
@@ -2052,6 +2084,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Worldspace_FieldIndex.TopCell:
                 case Worldspace_FieldIndex.SubCellsTimestamp:
                 case Worldspace_FieldIndex.SubCells:
+                case Worldspace_FieldIndex.UsingOffsetLength:
                     return false;
                 default:
                     return Place_Registration.IsProtected(index);
@@ -2093,6 +2126,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return typeof(Byte[]);
                 case Worldspace_FieldIndex.SubCells:
                     return typeof(SourceSetList<WorldspaceBlock>);
+                case Worldspace_FieldIndex.UsingOffsetLength:
+                    return typeof(Boolean);
                 default:
                     return Place_Registration.GetNthType(index);
             }
@@ -2642,6 +2677,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
+            if (copyMask?.UsingOffsetLength ?? true)
+            {
+                errorMask?.PushIndex((int)Worldspace_FieldIndex.UsingOffsetLength);
+                try
+                {
+                    item.UsingOffsetLength = rhs.UsingOffsetLength;
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
 
         #endregion
@@ -2663,6 +2715,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.TopCell_Unset();
             item.SubCellsTimestamp = default(Byte[]);
             item.SubCells.Unset();
+            item.UsingOffsetLength = default(Boolean);
         }
 
         public static Worldspace_Mask<bool> GetEqualsMask(
@@ -2722,6 +2775,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 rhs.SubCells,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
+            ret.UsingOffsetLength = item.UsingOffsetLength == rhs.UsingOffsetLength;
             PlaceCommon.FillEqualsMask(item, rhs, ret);
         }
 
@@ -2826,6 +2880,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     fg.AppendLine("]");
                 }
+                if (printMask?.UsingOffsetLength ?? true)
+                {
+                    fg.AppendLine($"UsingOffsetLength => {item.UsingOffsetLength}");
+                }
             }
             fg.AppendLine("]");
         }
@@ -2872,6 +2930,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.TopCell = new MaskItem<bool, Cell_Mask<bool>>(item.TopCell_IsSet, CellCommon.GetHasBeenSetMask(item.TopCell));
             ret.SubCellsTimestamp = true;
             ret.SubCells = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, WorldspaceBlock_Mask<bool>>>>(item.SubCells.HasBeenSet, item.SubCells.WithIndex().Select((i) => new MaskItemIndexed<bool, WorldspaceBlock_Mask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            ret.UsingOffsetLength = true;
             return ret;
         }
 
@@ -3162,6 +3221,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             translationMask: listTranslMask);
                     }
                     );
+            }
+            if ((translationMask?.GetShouldTranslate((int)Worldspace_FieldIndex.UsingOffsetLength) ?? true))
+            {
+                BooleanXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.UsingOffsetLength),
+                    item: item.UsingOffsetLength,
+                    fieldIndex: (int)Worldspace_FieldIndex.UsingOffsetLength,
+                    errorMask: errorMask);
             }
         }
 
@@ -3537,6 +3605,32 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask?.PopIndex();
                     }
                     break;
+                case "UsingOffsetLength":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Worldspace_FieldIndex.UsingOffsetLength);
+                        if (BooleanXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Boolean UsingOffsetLengthParse,
+                            errorMask: errorMask))
+                        {
+                            item.UsingOffsetLength = UsingOffsetLengthParse;
+                        }
+                        else
+                        {
+                            item.UsingOffsetLength = default(Boolean);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
                 default:
                     PlaceCommon.FillPublicElement_Xml(
                         item: item,
@@ -3757,6 +3851,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.TopCell = new MaskItem<T, Cell_Mask<T>>(initialValue, new Cell_Mask<T>(initialValue));
             this.SubCellsTimestamp = initialValue;
             this.SubCells = new MaskItem<T, IEnumerable<MaskItemIndexed<T, WorldspaceBlock_Mask<T>>>>(initialValue, null);
+            this.UsingOffsetLength = initialValue;
         }
         #endregion
 
@@ -3776,6 +3871,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public MaskItem<T, Cell_Mask<T>> TopCell { get; set; }
         public T SubCellsTimestamp;
         public MaskItem<T, IEnumerable<MaskItemIndexed<T, WorldspaceBlock_Mask<T>>>> SubCells;
+        public T UsingOffsetLength;
         #endregion
 
         #region Equals
@@ -3804,6 +3900,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (!object.Equals(this.TopCell, rhs.TopCell)) return false;
             if (!object.Equals(this.SubCellsTimestamp, rhs.SubCellsTimestamp)) return false;
             if (!object.Equals(this.SubCells, rhs.SubCells)) return false;
+            if (!object.Equals(this.UsingOffsetLength, rhs.UsingOffsetLength)) return false;
             return true;
         }
         public override int GetHashCode()
@@ -3824,6 +3921,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret = ret.CombineHashCode(this.TopCell?.GetHashCode());
             ret = ret.CombineHashCode(this.SubCellsTimestamp?.GetHashCode());
             ret = ret.CombineHashCode(this.SubCells?.GetHashCode());
+            ret = ret.CombineHashCode(this.UsingOffsetLength?.GetHashCode());
             ret = ret.CombineHashCode(base.GetHashCode());
             return ret;
         }
@@ -3872,6 +3970,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                 }
             }
+            if (!eval(this.UsingOffsetLength)) return false;
             return true;
         }
         #endregion
@@ -3950,6 +4049,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                 }
             }
+            obj.UsingOffsetLength = eval(this.UsingOffsetLength);
         }
         #endregion
 
@@ -4061,6 +4161,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     fg.AppendLine("]");
                 }
+                if (printMask?.UsingOffsetLength ?? true)
+                {
+                    fg.AppendLine($"UsingOffsetLength => {UsingOffsetLength}");
+                }
             }
             fg.AppendLine("]");
         }
@@ -4086,6 +4190,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public MaskItem<Exception, Cell_ErrorMask> TopCell;
         public Exception SubCellsTimestamp;
         public MaskItem<Exception, IEnumerable<MaskItem<Exception, WorldspaceBlock_ErrorMask>>> SubCells;
+        public Exception UsingOffsetLength;
         #endregion
 
         #region IErrorMask
@@ -4124,6 +4229,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return SubCellsTimestamp;
                 case Worldspace_FieldIndex.SubCells:
                     return SubCells;
+                case Worldspace_FieldIndex.UsingOffsetLength:
+                    return UsingOffsetLength;
                 default:
                     return base.GetNthMask(index);
             }
@@ -4178,6 +4285,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     break;
                 case Worldspace_FieldIndex.SubCells:
                     this.SubCells = new MaskItem<Exception, IEnumerable<MaskItem<Exception, WorldspaceBlock_ErrorMask>>>(ex, null);
+                    break;
+                case Worldspace_FieldIndex.UsingOffsetLength:
+                    this.UsingOffsetLength = ex;
                     break;
                 default:
                     base.SetNthException(index, ex);
@@ -4235,6 +4345,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Worldspace_FieldIndex.SubCells:
                     this.SubCells = (MaskItem<Exception, IEnumerable<MaskItem<Exception, WorldspaceBlock_ErrorMask>>>)obj;
                     break;
+                case Worldspace_FieldIndex.UsingOffsetLength:
+                    this.UsingOffsetLength = (Exception)obj;
+                    break;
                 default:
                     base.SetNthMask(index, obj);
                     break;
@@ -4259,6 +4372,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (TopCell != null) return true;
             if (SubCellsTimestamp != null) return true;
             if (SubCells != null) return true;
+            if (UsingOffsetLength != null) return true;
             return false;
         }
         #endregion
@@ -4330,6 +4444,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
             }
             fg.AppendLine("]");
+            fg.AppendLine($"UsingOffsetLength => {UsingOffsetLength}");
         }
         #endregion
 
@@ -4352,6 +4467,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.TopCell = new MaskItem<Exception, Cell_ErrorMask>(this.TopCell.Overall.Combine(rhs.TopCell.Overall), ((IErrorMask<Cell_ErrorMask>)this.TopCell.Specific).Combine(rhs.TopCell.Specific));
             ret.SubCellsTimestamp = this.SubCellsTimestamp.Combine(rhs.SubCellsTimestamp);
             ret.SubCells = new MaskItem<Exception, IEnumerable<MaskItem<Exception, WorldspaceBlock_ErrorMask>>>(this.SubCells.Overall.Combine(rhs.SubCells.Overall), new List<MaskItem<Exception, WorldspaceBlock_ErrorMask>>(this.SubCells.Specific.And(rhs.SubCells.Specific)));
+            ret.UsingOffsetLength = this.UsingOffsetLength.Combine(rhs.UsingOffsetLength);
             return ret;
         }
         public static Worldspace_ErrorMask Combine(Worldspace_ErrorMask lhs, Worldspace_ErrorMask rhs)
@@ -4393,6 +4509,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.TopCell = new MaskItem<CopyOption, Cell_CopyMask>(deepCopyOption, default);
             this.SubCellsTimestamp = defaultOn;
             this.SubCells = new MaskItem<CopyOption, WorldspaceBlock_CopyMask>(deepCopyOption, default);
+            this.UsingOffsetLength = defaultOn;
         }
 
         #region Members
@@ -4411,6 +4528,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public MaskItem<CopyOption, Cell_CopyMask> TopCell;
         public bool SubCellsTimestamp;
         public MaskItem<CopyOption, WorldspaceBlock_CopyMask> SubCells;
+        public bool UsingOffsetLength;
         #endregion
 
     }
@@ -4433,6 +4551,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public MaskItem<bool, Cell_TranslationMask> TopCell;
         public bool SubCellsTimestamp;
         public MaskItem<bool, WorldspaceBlock_TranslationMask> SubCells;
+        public bool UsingOffsetLength;
         #endregion
 
         #region Ctors
@@ -4459,6 +4578,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.TopCell = new MaskItem<bool, Cell_TranslationMask>(defaultOn, null);
             this.SubCellsTimestamp = defaultOn;
             this.SubCells = new MaskItem<bool, WorldspaceBlock_TranslationMask>(defaultOn, null);
+            this.UsingOffsetLength = defaultOn;
         }
 
         #endregion
@@ -4481,6 +4601,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Add((TopCell?.Overall ?? true, TopCell?.Specific?.GetCrystal()));
             ret.Add((SubCellsTimestamp, null));
             ret.Add((SubCells?.Overall ?? true, SubCells?.Specific?.GetCrystal()));
+            ret.Add((UsingOffsetLength, null));
         }
     }
     #endregion
