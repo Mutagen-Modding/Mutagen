@@ -2,10 +2,10 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>28e2e56b5c4ace17fe04975e6cfe32c80e84d1a5</Sha>
+         <Sha>d5fd07fc55ad8d6aea11025bdb83c9cb84e66a51</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>05-05-2019 02:01:41</CommitDate>
-         <Description>Protected data accessor for BinaryMemoryReadStream</Description>
+         <CommitDate>05-13-2019 17:34:52</CommitDate>
+         <Description>Nuget Update</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>
