@@ -23,20 +23,20 @@ namespace Mutagen.Bethesda.Binary
             MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask);
-        public static readonly Lazy<CREATE_FUNC> CREATE = new Lazy<CREATE_FUNC>(GetCreateFunc);
+        public static readonly CREATE_FUNC CREATE = GetCreateFunc();
         public delegate void WRITE_FUNC(
             MutagenWriter writer,
             T item,
             RecordTypeConverter recordTypeConverter,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask);
-        public static readonly Lazy<WRITE_FUNC> WRITE = new Lazy<WRITE_FUNC>(GetWriteFunc);
+        public static readonly WRITE_FUNC WRITE = GetWriteFunc();
 
         #region Parse
         private static CREATE_FUNC GetCreateFunc()
         {
             var tType = typeof(T);
-            var options = tType.GetMethods()
+            var method = tType.GetMethods()
                 .Where((methodInfo) => methodInfo.Name.Equals("Create_Binary"))
                 .Where((methodInfo) => methodInfo.IsStatic
                     && methodInfo.IsPublic)
@@ -46,8 +46,6 @@ namespace Mutagen.Bethesda.Binary
                 .Where((methodInfo) => methodInfo.GetParameters()[1].ParameterType.Equals(typeof(MasterReferences)))
                 .Where((methodInfo) => methodInfo.GetParameters()[2].ParameterType.Equals(typeof(RecordTypeConverter)))
                 .Where((methodInfo) => methodInfo.GetParameters()[3].ParameterType.Equals(typeof(ErrorMaskBuilder)))
-                .ToArray();
-            var method = options
                 .FirstOrDefault();
             if (method != null)
             {
@@ -55,7 +53,7 @@ namespace Mutagen.Bethesda.Binary
             }
             else
             {
-                throw new NotImplementedException();
+                return null;
             }
         }
 
@@ -176,7 +174,7 @@ namespace Mutagen.Bethesda.Binary
             ErrorMaskBuilder errorMask,
             RecordTypeConverter recordTypeConverter)
         {
-            item = CREATE.Value(
+            item = CREATE(
                 reader: frame,
                 recordTypeConverter: recordTypeConverter,
                 masterReferences: masterReferences,
@@ -227,7 +225,7 @@ namespace Mutagen.Bethesda.Binary
             ErrorMaskBuilder errorMask,
             RecordTypeConverter recordTypeConverter)
         {
-            WRITE.Value(
+            WRITE(
                 writer: writer,
                 item: item,
                 masterReferences: masterReferences,
@@ -241,7 +239,7 @@ namespace Mutagen.Bethesda.Binary
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            WRITE.Value(
+            WRITE(
                 writer: writer,
                 item: item,
                 masterReferences: masterReferences,
@@ -261,7 +259,7 @@ namespace Mutagen.Bethesda.Binary
             {
                 try
                 {
-                    WRITE.Value(
+                    WRITE(
                         writer: writer,
                         item: item,
                         masterReferences: masterReferences,
@@ -322,20 +320,20 @@ namespace Mutagen.Bethesda.Binary
             MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask);
-        public static readonly Lazy<CREATE_FUNC> CREATE = new Lazy<CREATE_FUNC>(GetCreateFunc);
+        public static readonly CREATE_FUNC CREATE = GetCreateFunc();
         public delegate void WRITE_FUNC(
             MutagenWriter writer,
             T item,
             RecordTypeConverter recordTypeConverter,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask);
-        public static readonly Lazy<WRITE_FUNC> WRITE = new Lazy<WRITE_FUNC>(GetWriteFunc);
+        public static readonly WRITE_FUNC WRITE = GetWriteFunc();
 
         #region Parse
         private static CREATE_FUNC GetCreateFunc()
         {
             var tType = typeof(T);
-            var options = tType.GetMethods()
+            var method = tType.GetMethods()
                 .Where((methodInfo) => methodInfo.Name.Equals("Create_Binary"))
                 .Where((methodInfo) => methodInfo.IsStatic
                     && methodInfo.IsPublic)
@@ -344,16 +342,14 @@ namespace Mutagen.Bethesda.Binary
                 .Where((methodInfo) => methodInfo.GetParameters()[1].ParameterType.Equals(typeof(MasterReferences)))
                 .Where((methodInfo) => methodInfo.GetParameters()[2].ParameterType.Equals(typeof(RecordTypeConverter)))
                 .Where((methodInfo) => methodInfo.GetParameters()[3].ParameterType.Equals(typeof(ErrorMaskBuilder)))
-                .ToArray();
-            var method = options
                 .FirstOrDefault();
             if (method == null)
             {
-                throw new NotImplementedException();
+                return null;
             }
             if (method.ReturnType.Equals(tType))
             {
-                var wrap = LoquiBinaryTranslation<T>.CREATE.Value;
+                var wrap = LoquiBinaryTranslation<T>.CREATE;
                 return async (MutagenFrame frame, MasterReferences master, RecordTypeConverter recConv, ErrorMaskBuilder errMask) =>
                 {
                     return wrap(frame, master, recConv, errMask);
@@ -476,7 +472,7 @@ namespace Mutagen.Bethesda.Binary
             ErrorMaskBuilder errorMask,
             RecordTypeConverter recordTypeConverter)
         {
-            var item = await CREATE.Value(
+            var item = await CREATE(
                 reader: frame,
                 recordTypeConverter: recordTypeConverter,
                 masterReferences: masterReferences,
@@ -527,7 +523,7 @@ namespace Mutagen.Bethesda.Binary
             ErrorMaskBuilder errorMask,
             RecordTypeConverter recordTypeConverter)
         {
-            WRITE.Value(
+            WRITE(
                 writer: writer,
                 item: item,
                 masterReferences: masterReferences,
@@ -541,7 +537,7 @@ namespace Mutagen.Bethesda.Binary
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            WRITE.Value(
+            WRITE(
                 writer: writer,
                 item: item,
                 masterReferences: masterReferences,
@@ -561,7 +557,7 @@ namespace Mutagen.Bethesda.Binary
             {
                 try
                 {
-                    WRITE.Value(
+                    WRITE(
                         writer: writer,
                         item: item,
                         masterReferences: masterReferences,

@@ -736,8 +736,9 @@ namespace Mutagen.Bethesda.Oblivion
                 case 0x52484353: // SCHR
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)ScriptFields_FieldIndex.MetadataSummary) return TryGet<int?>.Failure;
-                    using (errorMask.PushIndex((int)ScriptFields_FieldIndex.MetadataSummary))
+                    try
                     {
+                        errorMask?.PushIndex((int)ScriptFields_FieldIndex.MetadataSummary);
                         var tmpMetadataSummary = ScriptMetaSummary.Create_Binary(
                             frame: frame,
                             errorMask: errorMask,
@@ -748,6 +749,15 @@ namespace Mutagen.Bethesda.Oblivion
                             def: null,
                             copyMask: null,
                             errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)ScriptFields_FieldIndex.MetadataSummary);
                 }

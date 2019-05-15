@@ -1630,18 +1630,11 @@ namespace Mutagen.Bethesda.Oblivion
                     try
                     {
                         errorMask?.PushIndex((int)CombatStyle_FieldIndex.Advanced);
-                        if (LoquiBinaryTranslation<CombatStyleAdvanced>.Instance.Parse(
+                        item.Advanced = CombatStyleAdvanced.Create_Binary(
                             frame: frame,
+                            recordTypeConverter: null,
                             masterReferences: masterReferences,
-                            item: out CombatStyleAdvanced AdvancedParse,
-                            errorMask: errorMask))
-                        {
-                            item.Advanced = AdvancedParse;
-                        }
-                        else
-                        {
-                            item.Advanced = default(CombatStyleAdvanced);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

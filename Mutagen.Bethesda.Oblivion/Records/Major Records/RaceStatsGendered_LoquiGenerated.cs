@@ -516,18 +516,11 @@ namespace Mutagen.Bethesda.Oblivion
             try
             {
                 errorMask?.PushIndex((int)RaceStatsGendered_FieldIndex.Male);
-                if (LoquiBinaryTranslation<RaceStats>.Instance.Parse(
+                item.Male = RaceStats.Create_Binary(
                     frame: frame,
+                    recordTypeConverter: null,
                     masterReferences: masterReferences,
-                    item: out RaceStats MaleParse,
-                    errorMask: errorMask))
-                {
-                    item.Male = MaleParse;
-                }
-                else
-                {
-                    item.Male = default(RaceStats);
-                }
+                    errorMask: errorMask);
             }
             catch (Exception ex)
             when (errorMask != null)
@@ -541,18 +534,11 @@ namespace Mutagen.Bethesda.Oblivion
             try
             {
                 errorMask?.PushIndex((int)RaceStatsGendered_FieldIndex.Female);
-                if (LoquiBinaryTranslation<RaceStats>.Instance.Parse(
+                item.Female = RaceStats.Create_Binary(
                     frame: frame,
+                    recordTypeConverter: null,
                     masterReferences: masterReferences,
-                    item: out RaceStats FemaleParse,
-                    errorMask: errorMask))
-                {
-                    item.Female = FemaleParse;
-                }
-                else
-                {
-                    item.Female = default(RaceStats);
-                }
+                    errorMask: errorMask);
             }
             catch (Exception ex)
             when (errorMask != null)

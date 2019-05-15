@@ -1367,18 +1367,11 @@ namespace Mutagen.Bethesda.Oblivion
                     try
                     {
                         errorMask?.PushIndex((int)Cell_FieldIndex.Lighting);
-                        if (LoquiBinaryTranslation<CellLighting>.Instance.Parse(
+                        item.Lighting = CellLighting.Create_Binary(
                             frame: frame,
+                            recordTypeConverter: null,
                             masterReferences: masterReferences,
-                            item: out CellLighting LightingParse,
-                            errorMask: errorMask))
-                        {
-                            item.Lighting = LightingParse;
-                        }
-                        else
-                        {
-                            item.Lighting = default(CellLighting);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

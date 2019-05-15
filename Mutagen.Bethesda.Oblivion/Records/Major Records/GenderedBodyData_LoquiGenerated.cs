@@ -591,18 +591,11 @@ namespace Mutagen.Bethesda.Oblivion
                     try
                     {
                         errorMask?.PushIndex((int)GenderedBodyData_FieldIndex.Male);
-                        if (LoquiBinaryTranslation<BodyData>.Instance.Parse(
+                        item.Male = BodyData.Create_Binary(
                             frame: frame,
+                            recordTypeConverter: null,
                             masterReferences: masterReferences,
-                            item: out BodyData MaleParse,
-                            errorMask: errorMask))
-                        {
-                            item.Male = MaleParse;
-                        }
-                        else
-                        {
-                            item.Male = default(BodyData);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -622,18 +615,11 @@ namespace Mutagen.Bethesda.Oblivion
                     try
                     {
                         errorMask?.PushIndex((int)GenderedBodyData_FieldIndex.Female);
-                        if (LoquiBinaryTranslation<BodyData>.Instance.Parse(
+                        item.Female = BodyData.Create_Binary(
                             frame: frame,
+                            recordTypeConverter: null,
                             masterReferences: masterReferences,
-                            item: out BodyData FemaleParse,
-                            errorMask: errorMask))
-                        {
-                            item.Female = FemaleParse;
-                        }
-                        else
-                        {
-                            item.Female = default(BodyData);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

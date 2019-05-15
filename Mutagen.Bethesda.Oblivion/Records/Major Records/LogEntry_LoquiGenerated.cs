@@ -746,18 +746,11 @@ namespace Mutagen.Bethesda.Oblivion
                     try
                     {
                         errorMask?.PushIndex((int)LogEntry_FieldIndex.ResultScript);
-                        if (LoquiBinaryTranslation<ScriptFields>.Instance.Parse(
+                        item.ResultScript = ScriptFields.Create_Binary(
                             frame: frame,
+                            recordTypeConverter: null,
                             masterReferences: masterReferences,
-                            item: out ScriptFields ResultScriptParse,
-                            errorMask: errorMask))
-                        {
-                            item.ResultScript = ResultScriptParse;
-                        }
-                        else
-                        {
-                            item.ResultScript = default(ScriptFields);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

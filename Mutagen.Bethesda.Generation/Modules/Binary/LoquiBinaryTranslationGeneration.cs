@@ -125,54 +125,54 @@ namespace Mutagen.Bethesda.Generation
                     fg.AppendLine("frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH + contentLength; // Skip marker");
                 }
 
-                if (loquiGen.SingletonType == SingletonLevel.Singleton)
-                {
-                    if (loquiGen.InterfaceType == LoquiInterfaceType.IGetter) return;
-                    fg.AppendLine($"using (errorMask.PushIndex((int){typeGen.IndexEnumName}))");
-                    using (new BraceWrapper(fg))
+                if (loquiGen.InterfaceType == LoquiInterfaceType.IGetter) return;
+                MaskGenerationUtility.WrapErrorFieldIndexPush(fg,
+                    () =>
                     {
-                        using (var args = new ArgsWrapper(fg,
-                            $"var tmp{typeGen.Name} = {Loqui.Generation.Utility.Await(this.IsAsync(typeGen, read: true))}{loquiGen.TypeName}.Create_{ModNickname}"))
+                        if (loquiGen.SingletonType == SingletonLevel.Singleton)
                         {
-                            args.Add($"frame: {frameAccessor}");
-                            args.Add($"errorMask: {errorMaskAccessor}");
-                            args.Add($"recordTypeConverter: null");
-                            args.Add($"masterReferences: masterReferences");
+                            using (var args = new ArgsWrapper(fg,
+                                $"var tmp{typeGen.Name} = {Loqui.Generation.Utility.Await(this.IsAsync(typeGen, read: true))}{loquiGen.TypeName}.Create_{ModNickname}"))
+                            {
+                                args.Add($"frame: {frameAccessor}");
+                                args.Add($"errorMask: {errorMaskAccessor}");
+                                args.Add($"recordTypeConverter: null");
+                                args.Add($"masterReferences: masterReferences");
+                            }
+                            using (var args = new ArgsWrapper(fg,
+                                $"{itemAccessor.DirectAccess}.CopyFieldsFrom{loquiGen.GetGenericTypes(MaskType.Copy)}"))
+                            {
+                                args.Add($"rhs: tmp{typeGen.Name}");
+                                args.Add("def: null");
+                                args.Add("copyMask: null");
+                                args.Add($"errorMask: {errorMaskAccessor}");
+                            }
                         }
-                        using (var args = new ArgsWrapper(fg,
-                            $"{itemAccessor.DirectAccess}.CopyFieldsFrom{loquiGen.GetGenericTypes(MaskType.Copy)}"))
+                        else
                         {
-                            args.Add($"rhs: tmp{typeGen.Name}");
-                            args.Add("def: null");
-                            args.Add("copyMask: null");
-                            args.Add($"errorMask: {errorMaskAccessor}");
+                            using (var args = new ArgsWrapper(fg,
+                                $"{itemAccessor.DirectAccess} = {loquiGen.ObjectTypeName}.Create_{this.Module.ModuleNickname}"))
+                            {
+                                args.Add($"frame: {frameAccessor}");
+                                if (data?.RecordTypeConverter != null
+                                    && data.RecordTypeConverter.FromConversions.Count > 0)
+                                {
+                                    args.Add($"recordTypeConverter: {objGen.RegistrationName}.{typeGen.Name}Converter");
+                                }
+                                else
+                                {
+                                    args.Add("recordTypeConverter: null");
+                                }
+                                args.Add($"masterReferences: masterReferences");
+                                if (this.DoErrorMasks)
+                                {
+                                    args.Add("errorMask: errorMask");
+                                }
+                            }
                         }
-                    }
-                }
-                else
-                {
-                    List<string> extraArgs = new List<string>();
-                    extraArgs.Add($"frame: {frameAccessor}");
-                    if (data?.RecordTypeConverter != null
-                        && data.RecordTypeConverter.FromConversions.Count > 0)
-                    {
-                        extraArgs.Add($"recordTypeConverter: {objGen.RegistrationName}.{typeGen.Name}Converter");
-                    }
-                    extraArgs.Add($"masterReferences: masterReferences");
-                    TranslationGeneration.WrapParseCall(
-                        new TranslationWrapParseArgs()
-                        {
-                            FG = fg,
-                            TypeGen = typeGen,
-                            TranslatorLine = $"LoquiBinaryTranslation<{loquiGen.ObjectTypeName}{loquiGen.GenericTypes}>.Instance",
-                            MaskAccessor = errorMaskAccessor,
-                            ItemAccessor = itemAccessor,
-                            TranslationMaskAccessor = null,
-                            IndexAccessor = typeGen.HasIndex ? typeGen.IndexEnumInt : null,
-                            ExtraArgs = extraArgs.ToArray(),
-                            SkipErrorMask = !this.DoErrorMasks
-                        });
-                }
+                    },
+                    errorMaskAccessor: "errorMask",
+                    indexAccessor: $"(int){typeGen.IndexEnumName}");
             }
             else
             {

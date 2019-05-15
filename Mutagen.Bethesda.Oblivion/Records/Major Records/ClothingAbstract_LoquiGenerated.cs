@@ -997,18 +997,11 @@ namespace Mutagen.Bethesda.Oblivion
                     try
                     {
                         errorMask?.PushIndex((int)ClothingAbstract_FieldIndex.MaleBipedModel);
-                        if (LoquiBinaryTranslation<Model>.Instance.Parse(
+                        item.MaleBipedModel = Model.Create_Binary(
                             frame: frame,
+                            recordTypeConverter: null,
                             masterReferences: masterReferences,
-                            item: out Model MaleBipedModelParse,
-                            errorMask: errorMask))
-                        {
-                            item.MaleBipedModel = MaleBipedModelParse;
-                        }
-                        else
-                        {
-                            item.MaleBipedModel = default(Model);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1026,19 +1019,11 @@ namespace Mutagen.Bethesda.Oblivion
                     try
                     {
                         errorMask?.PushIndex((int)ClothingAbstract_FieldIndex.MaleWorldModel);
-                        if (LoquiBinaryTranslation<Model>.Instance.Parse(
+                        item.MaleWorldModel = Model.Create_Binary(
                             frame: frame,
                             recordTypeConverter: ClothingAbstract_Registration.MaleWorldModelConverter,
                             masterReferences: masterReferences,
-                            item: out Model MaleWorldModelParse,
-                            errorMask: errorMask))
-                        {
-                            item.MaleWorldModel = MaleWorldModelParse;
-                        }
-                        else
-                        {
-                            item.MaleWorldModel = default(Model);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1072,19 +1057,11 @@ namespace Mutagen.Bethesda.Oblivion
                     try
                     {
                         errorMask?.PushIndex((int)ClothingAbstract_FieldIndex.FemaleBipedModel);
-                        if (LoquiBinaryTranslation<Model>.Instance.Parse(
+                        item.FemaleBipedModel = Model.Create_Binary(
                             frame: frame,
                             recordTypeConverter: ClothingAbstract_Registration.FemaleBipedModelConverter,
                             masterReferences: masterReferences,
-                            item: out Model FemaleBipedModelParse,
-                            errorMask: errorMask))
-                        {
-                            item.FemaleBipedModel = FemaleBipedModelParse;
-                        }
-                        else
-                        {
-                            item.FemaleBipedModel = default(Model);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1102,19 +1079,11 @@ namespace Mutagen.Bethesda.Oblivion
                     try
                     {
                         errorMask?.PushIndex((int)ClothingAbstract_FieldIndex.FemaleWorldModel);
-                        if (LoquiBinaryTranslation<Model>.Instance.Parse(
+                        item.FemaleWorldModel = Model.Create_Binary(
                             frame: frame,
                             recordTypeConverter: ClothingAbstract_Registration.FemaleWorldModelConverter,
                             masterReferences: masterReferences,
-                            item: out Model FemaleWorldModelParse,
-                            errorMask: errorMask))
-                        {
-                            item.FemaleWorldModel = FemaleWorldModelParse;
-                        }
-                        else
-                        {
-                            item.FemaleWorldModel = default(Model);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

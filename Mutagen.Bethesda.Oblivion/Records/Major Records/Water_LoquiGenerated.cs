@@ -1773,18 +1773,11 @@ namespace Mutagen.Bethesda.Oblivion
                     try
                     {
                         errorMask?.PushIndex((int)Water_FieldIndex.RelatedWaters);
-                        if (LoquiBinaryTranslation<RelatedWaters>.Instance.Parse(
+                        item.RelatedWaters = RelatedWaters.Create_Binary(
                             frame: frame,
+                            recordTypeConverter: null,
                             masterReferences: masterReferences,
-                            item: out RelatedWaters RelatedWatersParse,
-                            errorMask: errorMask))
-                        {
-                            item.RelatedWaters = RelatedWatersParse;
-                        }
-                        else
-                        {
-                            item.RelatedWaters = default(RelatedWaters);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

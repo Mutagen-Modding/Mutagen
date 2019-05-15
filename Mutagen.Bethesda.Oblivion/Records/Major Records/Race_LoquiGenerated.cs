@@ -1494,18 +1494,11 @@ namespace Mutagen.Bethesda.Oblivion
                     try
                     {
                         errorMask?.PushIndex((int)Race_FieldIndex.Voices);
-                        if (LoquiBinaryTranslation<RaceVoices>.Instance.Parse(
+                        item.Voices = RaceVoices.Create_Binary(
                             frame: frame,
+                            recordTypeConverter: null,
                             masterReferences: masterReferences,
-                            item: out RaceVoices VoicesParse,
-                            errorMask: errorMask))
-                        {
-                            item.Voices = VoicesParse;
-                        }
-                        else
-                        {
-                            item.Voices = default(RaceVoices);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1523,18 +1516,11 @@ namespace Mutagen.Bethesda.Oblivion
                     try
                     {
                         errorMask?.PushIndex((int)Race_FieldIndex.DefaultHair);
-                        if (LoquiBinaryTranslation<RaceHair>.Instance.Parse(
+                        item.DefaultHair = RaceHair.Create_Binary(
                             frame: frame,
+                            recordTypeConverter: null,
                             masterReferences: masterReferences,
-                            item: out RaceHair DefaultHairParse,
-                            errorMask: errorMask))
-                        {
-                            item.DefaultHair = DefaultHairParse;
-                        }
-                        else
-                        {
-                            item.DefaultHair = default(RaceHair);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1597,18 +1583,11 @@ namespace Mutagen.Bethesda.Oblivion
                     try
                     {
                         errorMask?.PushIndex((int)Race_FieldIndex.RaceStats);
-                        if (LoquiBinaryTranslation<RaceStatsGendered>.Instance.Parse(
+                        item.RaceStats = RaceStatsGendered.Create_Binary(
                             frame: frame,
+                            recordTypeConverter: null,
                             masterReferences: masterReferences,
-                            item: out RaceStatsGendered RaceStatsParse,
-                            errorMask: errorMask))
-                        {
-                            item.RaceStats = RaceStatsParse;
-                        }
-                        else
-                        {
-                            item.RaceStats = default(RaceStatsGendered);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1648,18 +1627,11 @@ namespace Mutagen.Bethesda.Oblivion
                     try
                     {
                         errorMask?.PushIndex((int)Race_FieldIndex.BodyData);
-                        if (LoquiBinaryTranslation<GenderedBodyData>.Instance.Parse(
+                        item.BodyData = GenderedBodyData.Create_Binary(
                             frame: frame,
+                            recordTypeConverter: null,
                             masterReferences: masterReferences,
-                            item: out GenderedBodyData BodyDataParse,
-                            errorMask: errorMask))
-                        {
-                            item.BodyData = BodyDataParse;
-                        }
-                        else
-                        {
-                            item.BodyData = default(GenderedBodyData);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1701,18 +1673,11 @@ namespace Mutagen.Bethesda.Oblivion
                     try
                     {
                         errorMask?.PushIndex((int)Race_FieldIndex.FaceGenData);
-                        if (LoquiBinaryTranslation<FaceGenData>.Instance.Parse(
+                        item.FaceGenData = FaceGenData.Create_Binary(
                             frame: frame,
+                            recordTypeConverter: null,
                             masterReferences: masterReferences,
-                            item: out FaceGenData FaceGenDataParse,
-                            errorMask: errorMask))
-                        {
-                            item.FaceGenData = FaceGenDataParse;
-                        }
-                        else
-                        {
-                            item.FaceGenData = default(FaceGenData);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

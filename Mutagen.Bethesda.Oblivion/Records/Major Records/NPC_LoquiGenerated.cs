@@ -2042,18 +2042,11 @@ namespace Mutagen.Bethesda.Oblivion
                     try
                     {
                         errorMask?.PushIndex((int)NPC_FieldIndex.Model);
-                        if (LoquiBinaryTranslation<Model>.Instance.Parse(
+                        item.Model = Model.Create_Binary(
                             frame: frame,
+                            recordTypeConverter: null,
                             masterReferences: masterReferences,
-                            item: out Model ModelParse,
-                            errorMask: errorMask))
-                        {
-                            item.Model = ModelParse;
-                        }
-                        else
-                        {
-                            item.Model = default(Model);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
