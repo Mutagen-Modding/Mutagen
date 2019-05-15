@@ -10,10 +10,10 @@
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>b1e37036b80309f20fc5fe403a15ad0cae23828e</Sha>
+         <Sha>b463e94c3378b162551709704c7310ad01e5514a</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>05-04-2019 20:34:43</CommitDate>
-         <Description>Some prep for async translations</Description>
+         <CommitDate>05-15-2019 17:42:05</CommitDate>
+         <Description>ProtocolRegistration static register call</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>
