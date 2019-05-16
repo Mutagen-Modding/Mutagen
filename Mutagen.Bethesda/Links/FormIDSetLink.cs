@@ -150,7 +150,7 @@ namespace Mutagen.Bethesda
         public virtual bool Link<M>(
             ModList<M> modList,
             M sourceMod)
-            where M : IMod<M>
+            where M : IMod
         {
 #if DEBUG
             this.AttemptedLink = true;

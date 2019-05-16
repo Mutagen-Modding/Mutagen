@@ -21,7 +21,7 @@ using Loqui.Xml;
 
 namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class OblivionMod : IMod<OblivionMod>, ILinkContainer
+    public partial class OblivionMod : IMod, ILinkContainer
     {
         public ISourceList<MasterReference> MasterReferences => this.TES4.MasterReferences;
         public ModKey ModKey { get; }
@@ -51,7 +51,7 @@ namespace Mutagen.Bethesda.Oblivion
                 .PopulateInto(this._majorRecords);
         }
 
-        void IMod<OblivionMod>.Write_Binary(string path, ModKey modKey)
+        void IMod.Write_Binary(string path, ModKey modKey)
         {
             this.Write_Binary(path, modKey, importMask: null);
         }

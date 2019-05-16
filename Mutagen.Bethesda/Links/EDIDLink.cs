@@ -110,7 +110,7 @@ namespace Mutagen.Bethesda
         private static bool TryLinkToMod<M>(
             IEDIDLink<T> link,
             M mod)
-            where M : IMod<M>
+            where M : IMod
         {
             if (string.IsNullOrWhiteSpace(link.EDID.Type)) return false;
             var group = mod.GetGroup<T>();
@@ -129,7 +129,7 @@ namespace Mutagen.Bethesda
             IEDIDLink<T> link,
             ModList<M> modList, 
             M sourceMod)
-            where M : IMod<M>
+            where M : IMod
         {
 #if DEBUG
             link.AttemptedLink = true;

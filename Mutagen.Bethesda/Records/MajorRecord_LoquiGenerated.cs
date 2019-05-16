@@ -520,7 +520,7 @@ namespace Mutagen.Bethesda
         public virtual void Link<M>(
             ModList<M> modList,
             M sourceMod)
-            where M : IMod<M>
+            where M : IMod
         {
         }
 

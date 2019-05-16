@@ -12,7 +12,7 @@ namespace Mutagen.Bethesda
         void Link<M>(
             ModList<M> modList,
             M sourceMod)
-            where M : IMod<M>;
+            where M : IMod;
     }
 
     public interface ILinkContainer

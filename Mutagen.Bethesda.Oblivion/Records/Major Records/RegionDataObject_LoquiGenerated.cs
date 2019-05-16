@@ -605,7 +605,7 @@ namespace Mutagen.Bethesda.Oblivion
         public void Link<M>(
             ModList<M> modList,
             M sourceMod)
-            where M : IMod<M>
+            where M : IMod
         {
             Object_Property.Link(
                 modList,

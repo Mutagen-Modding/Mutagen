@@ -477,7 +477,7 @@ namespace Mutagen.Bethesda.Oblivion
         public void Link<M>(
             ModList<M> modList,
             M sourceMod)
-            where M : IMod<M>
+            where M : IMod
         {
             EnchantEffect_Property.Link(
                 modList,

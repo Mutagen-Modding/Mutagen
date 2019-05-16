@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace Mutagen.Bethesda
 {
     public class ModListing<M>
-        where M : IMod<M>
+        where M : IMod
     {
         public M Mod { get; private set; }
         public ModKey Key { get; private set; }

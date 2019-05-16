@@ -581,7 +581,7 @@ namespace Mutagen.Bethesda.Oblivion
         public void Link<M>(
             ModList<M> modList,
             M sourceMod)
-            where M : IMod<M>
+            where M : IMod
         {
             foreach (var item in References.Items.WhereCastable<ScriptReference, ILinkSubContainer>())
             {

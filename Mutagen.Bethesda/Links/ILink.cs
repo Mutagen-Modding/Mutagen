@@ -15,7 +15,7 @@ namespace Mutagen.Bethesda
         bool Link<M>(
             ModList<M> modList,
             M sourceMod)
-            where M : IMod<M>;
+            where M : IMod;
 #if DEBUG
         bool AttemptedLink { get; set; }
 #endif

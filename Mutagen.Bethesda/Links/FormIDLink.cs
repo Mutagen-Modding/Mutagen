@@ -123,7 +123,7 @@ namespace Mutagen.Bethesda
             ModList<M> modList,
             M sourceMod,
             out T item)
-            where M : IMod<M>
+            where M : IMod
         {
             if (!unlinkedForm.HasValue
                 || unlinkedForm.Equals(FormKey.NULL))
@@ -167,7 +167,7 @@ namespace Mutagen.Bethesda
         public virtual bool Link<M>(
             ModList<M> modList,
             M sourceMod)
-            where M : IMod<M>
+            where M : IMod
         {
 #if DEBUG
             this.AttemptedLink = true;

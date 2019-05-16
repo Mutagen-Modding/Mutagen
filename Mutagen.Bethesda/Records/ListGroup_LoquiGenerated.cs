@@ -482,7 +482,7 @@ namespace Mutagen.Bethesda
         public void Link<M>(
             ModList<M> modList,
             M sourceMod)
-            where M : IMod<M>
+            where M : IMod
         {
             foreach (var item in Items.Items.WhereCastable<T, ILinkSubContainer>())
             {

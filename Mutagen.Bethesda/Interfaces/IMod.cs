@@ -9,13 +9,11 @@ using System.Threading.Tasks;
 
 namespace Mutagen.Bethesda
 {
-    public interface IMod<M> : ILinkContainer
-        where M : IMod<M>
+    public interface IMod : ILinkContainer
     {
         ISourceList<MasterReference> MasterReferences { get; }
         IObservableCache<IMajorRecord, FormKey> MajorRecords { get; }
         ISourceCache<T, FormKey> GetGroup<T>() where T : IMajorRecord;
-        void Link(ModList<M> modList);
         void Write_Binary(
             string path,
             ModKey modKey);
