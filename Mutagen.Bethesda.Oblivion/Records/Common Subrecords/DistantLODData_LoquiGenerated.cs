@@ -288,7 +288,8 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Xml(
+            DistantLODDataXmlTranslation.Instance.Write_Xml(
+                item: this,
                 name: name,
                 node: node,
                 errorMask: errorMaskBuilder,
@@ -320,7 +321,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            this.Write_Xml(
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -351,7 +352,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            this.Write_Xml(
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -375,7 +376,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            this.Write_Xml(
                 name: name,
                 node: node,
                 errorMask: null,
@@ -388,7 +389,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            this.Write_Xml(
                 name: name,
                 node: node,
                 errorMask: null,
@@ -402,7 +403,7 @@ namespace Mutagen.Bethesda.Oblivion
             TranslationCrystal translationMask,
             string name = null)
         {
-            DistantLODDataCommon.Write_Xml(
+            DistantLODDataXmlTranslation.Instance.Write_Xml(
                 item: this,
                 name: name,
                 node: node,
@@ -493,7 +494,8 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Binary(
+            DistantLODDataBinaryTranslation.Instance.Write_Binary(
+                item: this,
                 masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: null,
@@ -518,7 +520,7 @@ namespace Mutagen.Bethesda.Oblivion
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            DistantLODDataCommon.Write_Binary(
+            DistantLODDataBinaryTranslation.Instance.Write_Binary(
                 item: this,
                 masterReferences: masterReferences,
                 writer: writer,
@@ -1138,81 +1140,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         #region Xml Translation
-        #region Xml Write
-        public static void Write_Xml(
-            XElement node,
-            DistantLODData item,
-            bool doMasks,
-            out DistantLODData_ErrorMask errorMask,
-            DistantLODData_TranslationMask translationMask,
-            string name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_Xml(
-                name: name,
-                node: node,
-                item: item,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = DistantLODData_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void Write_Xml(
-            XElement node,
-            DistantLODData item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.DistantLODData");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.DistantLODData");
-            }
-            WriteToNode_Xml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #endregion
-
-        public static void WriteToNode_Xml(
-            this DistantLODData item,
-            XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            if ((translationMask?.GetShouldTranslate((int)DistantLODData_FieldIndex.Unknown0) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Unknown0),
-                    item: item.Unknown0,
-                    fieldIndex: (int)DistantLODData_FieldIndex.Unknown0,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)DistantLODData_FieldIndex.Unknown1) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Unknown1),
-                    item: item.Unknown1,
-                    fieldIndex: (int)DistantLODData_FieldIndex.Unknown1,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)DistantLODData_FieldIndex.Unknown2) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Unknown2),
-                    item: item.Unknown2,
-                    fieldIndex: (int)DistantLODData_FieldIndex.Unknown2,
-                    errorMask: errorMask);
-            }
-        }
-
         public static void FillPublic_Xml(
             this DistantLODData item,
             XElement node,
@@ -1332,70 +1259,93 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        #region Binary Translation
-        #region Binary Write
-        public static void Write_Binary(
-            MutagenWriter writer,
-            DistantLODData item,
-            MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
+    }
+    #endregion
+
+    #region Modules
+    #region Xml Translation
+    public partial class DistantLODDataXmlTranslation
+    {
+        public readonly static DistantLODDataXmlTranslation Instance = new DistantLODDataXmlTranslation();
+
+        public static void WriteToNode_Xml(
+            IDistantLODDataGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            if ((translationMask?.GetShouldTranslate((int)DistantLODData_FieldIndex.Unknown0) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Unknown0),
+                    item: item.Unknown0,
+                    fieldIndex: (int)DistantLODData_FieldIndex.Unknown0,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)DistantLODData_FieldIndex.Unknown1) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Unknown1),
+                    item: item.Unknown1,
+                    fieldIndex: (int)DistantLODData_FieldIndex.Unknown1,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)DistantLODData_FieldIndex.Unknown2) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Unknown2),
+                    item: item.Unknown2,
+                    fieldIndex: (int)DistantLODData_FieldIndex.Unknown2,
+                    errorMask: errorMask);
+            }
+        }
+
+        #region Xml Write
+        public void Write_Xml(
+            XElement node,
+            IDistantLODDataGetter item,
             bool doMasks,
-            out DistantLODData_ErrorMask errorMask)
+            out DistantLODData_ErrorMask errorMask,
+            DistantLODData_TranslationMask translationMask,
+            string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_Binary(
-                masterReferences: masterReferences,
-                writer: writer,
+            Write_Xml(
+                name: name,
+                node: node,
                 item: item,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMaskBuilder);
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal());
             errorMask = DistantLODData_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void Write_Binary(
-            MutagenWriter writer,
-            DistantLODData item,
-            MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
-        {
-            using (HeaderExport.ExportHeader(
-                writer: writer,
-                record: DistantLODData_Registration.XLOD_HEADER,
-                type: ObjectType.Subrecord))
-            {
-                Write_Binary_Embedded(
-                    item: item,
-                    writer: writer,
-                    errorMask: errorMask,
-                    masterReferences: masterReferences);
-            }
-        }
-        #endregion
-
-        public static void Write_Binary_Embedded(
-            DistantLODData item,
-            MutagenWriter writer,
+        public void Write_Xml(
+            XElement node,
+            IDistantLODDataGetter item,
             ErrorMaskBuilder errorMask,
-            MasterReferences masterReferences)
+            TranslationCrystal translationMask,
+            string name = null)
         {
-            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.Unknown0);
-            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.Unknown1);
-            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.Unknown2);
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.DistantLODData");
+            node.Add(elem);
+            if (name != null)
+            {
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.DistantLODData");
+            }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
         }
-
         #endregion
 
     }
     #endregion
 
-    #region Modules
     #region Mask
     public class DistantLODData_Mask<T> : IMask<T>, IEquatable<DistantLODData_Mask<T>>
     {
@@ -1723,6 +1673,71 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Add((Unknown1, null));
             ret.Add((Unknown2, null));
         }
+    }
+    #endregion
+
+    #region Binary Translation
+    public partial class DistantLODDataBinaryTranslation
+    {
+        public readonly static DistantLODDataBinaryTranslation Instance = new DistantLODDataBinaryTranslation();
+
+        public static void Write_Binary_Embedded(
+            IDistantLODDataGetter item,
+            MutagenWriter writer,
+            ErrorMaskBuilder errorMask,
+            MasterReferences masterReferences)
+        {
+            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.Unknown0);
+            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.Unknown1);
+            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.Unknown2);
+        }
+
+        #region Binary Write
+        public void Write_Binary(
+            MutagenWriter writer,
+            IDistantLODDataGetter item,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            bool doMasks,
+            out DistantLODData_ErrorMask errorMask)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            Write_Binary(
+                masterReferences: masterReferences,
+                writer: writer,
+                item: item,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMaskBuilder);
+            errorMask = DistantLODData_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public void Write_Binary(
+            MutagenWriter writer,
+            IDistantLODDataGetter item,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            using (HeaderExport.ExportHeader(
+                writer: writer,
+                record: DistantLODData_Registration.XLOD_HEADER,
+                type: ObjectType.Subrecord))
+            {
+                Write_Binary_Embedded(
+                    item: item,
+                    writer: writer,
+                    errorMask: errorMask,
+                    masterReferences: masterReferences);
+            }
+        }
+        #endregion
+
     }
     #endregion
 

@@ -36,6 +36,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class SkillRecord : 
         OblivionMajorRecord,
         ISkillRecord,
+        ISkillRecordInternal,
         ILoquiObject<SkillRecord>,
         ILoquiObjectSetter,
         IEquatable<SkillRecord>
@@ -294,6 +295,23 @@ namespace Mutagen.Bethesda.Oblivion
             this.MasterText_Set(default(String), false);
         }
         #endregion
+        #region DATADataTypeState
+        private SkillRecord.DATADataType _DATADataTypeState;
+        public SkillRecord.DATADataType DATADataTypeState
+        {
+            get => this._DATADataTypeState;
+            set => this.RaiseAndSetIfChanged(ref this._DATADataTypeState, value, nameof(DATADataTypeState));
+        }
+        SkillRecord.DATADataType ISkillRecordInternal.DATADataTypeState
+        {
+            get => this.DATADataTypeState;
+            set => this.DATADataTypeState = value;
+        }
+        SkillRecord.DATADataType ISkillRecordInternalGetter.DATADataTypeState
+        {
+            get => this.DATADataTypeState;
+        }
+        #endregion
 
         IMask<bool> IEqualsMask<SkillRecord>.GetEqualsMask(SkillRecord rhs, EqualsMaskHelper.Include include) => SkillRecordCommon.GetEqualsMask(this, rhs, include);
         IMask<bool> IEqualsMask<ISkillRecordGetter>.GetEqualsMask(ISkillRecordGetter rhs, EqualsMaskHelper.Include include) => SkillRecordCommon.GetEqualsMask(this, rhs, include);
@@ -370,6 +388,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 if (!string.Equals(this.MasterText, rhs.MasterText)) return false;
             }
+            if (this.DATADataTypeState != rhs.DATADataTypeState) return false;
             return true;
         }
 
@@ -409,6 +428,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 ret = HashHelper.GetHashCode(MasterText).CombineHashCode(ret);
             }
+            ret = HashHelper.GetHashCode(DATADataTypeState).CombineHashCode(ret);
             ret = ret.CombineHashCode(base.GetHashCode());
             return ret;
         }
@@ -582,7 +602,8 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Xml(
+            SkillRecordXmlTranslation.Instance.Write_Xml(
+                item: this,
                 name: name,
                 node: node,
                 errorMask: errorMaskBuilder,
@@ -614,7 +635,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            this.Write_Xml(
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -645,7 +666,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            this.Write_Xml(
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -661,7 +682,8 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Xml(
+            SkillRecordXmlTranslation.Instance.Write_Xml(
+                item: this,
                 name: name,
                 node: node,
                 errorMask: errorMaskBuilder,
@@ -677,7 +699,8 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Xml(
+            SkillRecordXmlTranslation.Instance.Write_Xml(
+                item: this,
                 name: name,
                 node: node,
                 errorMask: errorMaskBuilder,
@@ -693,7 +716,7 @@ namespace Mutagen.Bethesda.Oblivion
             TranslationCrystal translationMask,
             string name = null)
         {
-            SkillRecordCommon.Write_Xml(
+            SkillRecordXmlTranslation.Instance.Write_Xml(
                 item: this,
                 name: name,
                 node: node,
@@ -744,6 +767,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case SkillRecord_FieldIndex.Specialization:
                 case SkillRecord_FieldIndex.UseValueFirst:
                 case SkillRecord_FieldIndex.UseValueSecond:
+                case SkillRecord_FieldIndex.DATADataTypeState:
                     return true;
                 default:
                     return base.GetHasBeenSet(index);
@@ -752,7 +776,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = SkillRecord_Registration.TRIGGERING_RECORD_TYPE;
-        public DATADataType DATADataTypeState;
         [Flags]
         public enum DATADataType
         {
@@ -835,7 +858,8 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Binary(
+            SkillRecordBinaryTranslation.Instance.Write_Binary(
+                item: this,
                 masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: null,
@@ -851,7 +875,8 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Binary(
+            SkillRecordBinaryTranslation.Instance.Write_Binary(
+                item: this,
                 masterReferences: masterReferences,
                 writer: writer,
                 errorMask: errorMaskBuilder,
@@ -866,7 +891,8 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Binary(
+            SkillRecordBinaryTranslation.Instance.Write_Binary(
+                item: this,
                 masterReferences: masterReferences,
                 writer: writer,
                 errorMask: errorMaskBuilder,
@@ -882,7 +908,7 @@ namespace Mutagen.Bethesda.Oblivion
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            SkillRecordCommon.Write_Binary(
+            SkillRecordBinaryTranslation.Instance.Write_Binary(
                 item: this,
                 masterReferences: masterReferences,
                 writer: writer,
@@ -1249,6 +1275,9 @@ namespace Mutagen.Bethesda.Oblivion
                 case SkillRecord_FieldIndex.MasterText:
                     this.MasterText = (String)obj;
                     break;
+                case SkillRecord_FieldIndex.DATADataTypeState:
+                    this.DATADataTypeState = (SkillRecord.DATADataType)obj;
+                    break;
                 default:
                     base.SetNthObject(index, obj);
                     break;
@@ -1316,6 +1345,9 @@ namespace Mutagen.Bethesda.Oblivion
                 case SkillRecord_FieldIndex.MasterText:
                     obj.MasterText = (String)pair.Value;
                     break;
+                case SkillRecord_FieldIndex.DATADataTypeState:
+                    obj.DATADataTypeState = (SkillRecord.DATADataType)pair.Value;
+                    break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
@@ -1370,6 +1402,12 @@ namespace Mutagen.Bethesda.Oblivion
         new bool MasterText_IsSet { get; set; }
         void MasterText_Set(String item, bool hasBeenSet = true);
         void MasterText_Unset();
+
+    }
+
+    public partial interface ISkillRecordInternal : ISkillRecord, ISkillRecordInternalGetter, IOblivionMajorRecordInternal
+    {
+        new SkillRecord.DATADataType DATADataTypeState { get; set; }
 
     }
 
@@ -1433,6 +1471,15 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
+    public partial interface ISkillRecordInternalGetter : ISkillRecordGetter, IOblivionMajorRecordInternalGetter
+    {
+        #region DATADataTypeState
+        SkillRecord.DATADataType DATADataTypeState { get; }
+
+        #endregion
+
+    }
+
     #endregion
 
 }
@@ -1442,23 +1489,25 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #region Field Index
     public enum SkillRecord_FieldIndex
     {
-        FormKey = 0,
-        Version = 1,
-        EditorID = 2,
-        RecordType = 3,
-        OblivionMajorRecordFlags = 4,
-        Skill = 5,
-        Description = 6,
-        Icon = 7,
-        Action = 8,
-        Attribute = 9,
-        Specialization = 10,
-        UseValueFirst = 11,
-        UseValueSecond = 12,
-        ApprenticeText = 13,
-        JourneymanText = 14,
-        ExpertText = 15,
-        MasterText = 16,
+        MajorRecordFlagsRaw = 0,
+        FormKey = 1,
+        Version = 2,
+        EditorID = 3,
+        RecordType = 4,
+        OblivionMajorRecordFlags = 5,
+        Skill = 6,
+        Description = 7,
+        Icon = 8,
+        Action = 9,
+        Attribute = 10,
+        Specialization = 11,
+        UseValueFirst = 12,
+        UseValueSecond = 13,
+        ApprenticeText = 14,
+        JourneymanText = 15,
+        ExpertText = 16,
+        MasterText = 17,
+        DATADataTypeState = 18,
     }
     #endregion
 
@@ -1476,9 +1525,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const string GUID = "d6afa219-e0d6-4f44-83d4-2d0298897f4d";
 
-        public const ushort AdditionalFieldCount = 12;
+        public const ushort AdditionalFieldCount = 13;
 
-        public const ushort FieldCount = 17;
+        public const ushort FieldCount = 19;
 
         public static readonly Type MaskType = typeof(SkillRecord_Mask<>);
 
@@ -1488,11 +1537,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type GetterType = typeof(ISkillRecordGetter);
 
-        public static readonly Type InternalGetterType = null;
+        public static readonly Type InternalGetterType = typeof(ISkillRecordInternalGetter);
 
         public static readonly Type SetterType = typeof(ISkillRecord);
 
-        public static readonly Type InternalSetterType = null;
+        public static readonly Type InternalSetterType = typeof(ISkillRecordInternal);
 
         public static readonly Type CommonType = typeof(SkillRecordCommon);
 
@@ -1534,6 +1583,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (ushort)SkillRecord_FieldIndex.ExpertText;
                 case "MASTERTEXT":
                     return (ushort)SkillRecord_FieldIndex.MasterText;
+                case "DATADATATYPESTATE":
+                    return (ushort)SkillRecord_FieldIndex.DATADataTypeState;
                 default:
                     return null;
             }
@@ -1556,6 +1607,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case SkillRecord_FieldIndex.JourneymanText:
                 case SkillRecord_FieldIndex.ExpertText:
                 case SkillRecord_FieldIndex.MasterText:
+                case SkillRecord_FieldIndex.DATADataTypeState:
                     return false;
                 default:
                     return OblivionMajorRecord_Registration.GetNthIsEnumerable(index);
@@ -1579,6 +1631,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case SkillRecord_FieldIndex.JourneymanText:
                 case SkillRecord_FieldIndex.ExpertText:
                 case SkillRecord_FieldIndex.MasterText:
+                case SkillRecord_FieldIndex.DATADataTypeState:
                     return false;
                 default:
                     return OblivionMajorRecord_Registration.GetNthIsLoqui(index);
@@ -1602,6 +1655,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case SkillRecord_FieldIndex.JourneymanText:
                 case SkillRecord_FieldIndex.ExpertText:
                 case SkillRecord_FieldIndex.MasterText:
+                case SkillRecord_FieldIndex.DATADataTypeState:
                     return false;
                 default:
                     return OblivionMajorRecord_Registration.GetNthIsSingleton(index);
@@ -1637,6 +1691,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return "ExpertText";
                 case SkillRecord_FieldIndex.MasterText:
                     return "MasterText";
+                case SkillRecord_FieldIndex.DATADataTypeState:
+                    return "DATADataTypeState";
                 default:
                     return OblivionMajorRecord_Registration.GetNthName(index);
             }
@@ -1659,6 +1715,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case SkillRecord_FieldIndex.JourneymanText:
                 case SkillRecord_FieldIndex.ExpertText:
                 case SkillRecord_FieldIndex.MasterText:
+                case SkillRecord_FieldIndex.DATADataTypeState:
                     return false;
                 default:
                     return OblivionMajorRecord_Registration.IsNthDerivative(index);
@@ -1682,6 +1739,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case SkillRecord_FieldIndex.JourneymanText:
                 case SkillRecord_FieldIndex.ExpertText:
                 case SkillRecord_FieldIndex.MasterText:
+                case SkillRecord_FieldIndex.DATADataTypeState:
                     return false;
                 default:
                     return OblivionMajorRecord_Registration.IsProtected(index);
@@ -1717,6 +1775,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return typeof(String);
                 case SkillRecord_FieldIndex.MasterText:
                     return typeof(String);
+                case SkillRecord_FieldIndex.DATADataTypeState:
+                    return typeof(SkillRecord.DATADataType);
                 default:
                     return OblivionMajorRecord_Registration.GetNthType(index);
             }
@@ -2207,6 +2267,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     fg.AppendLine($"MasterText => {item.MasterText}");
                 }
+                if (printMask?.DATADataTypeState ?? true)
+                {
+                }
             }
             fg.AppendLine("]");
         }
@@ -2240,6 +2303,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.JourneymanText = item.JourneymanText_IsSet;
             ret.ExpertText = item.ExpertText_IsSet;
             ret.MasterText = item.MasterText_IsSet;
+            ret.DATADataTypeState = true;
             return ret;
         }
 
@@ -2253,6 +2317,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (index)
             {
+                case OblivionMajorRecord_FieldIndex.MajorRecordFlagsRaw:
+                    return (SkillRecord_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.FormKey:
                     return (SkillRecord_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.Version:
@@ -2278,6 +2344,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (index)
             {
+                case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
+                    return (SkillRecord_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
                     return (SkillRecord_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.Version:
@@ -2292,177 +2360,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         #region Xml Translation
-        #region Xml Write
-        public static void Write_Xml(
-            XElement node,
-            SkillRecord item,
-            bool doMasks,
-            out SkillRecord_ErrorMask errorMask,
-            SkillRecord_TranslationMask translationMask,
-            string name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_Xml(
-                name: name,
-                node: node,
-                item: item,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = SkillRecord_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void Write_Xml(
-            XElement node,
-            SkillRecord item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.SkillRecord");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.SkillRecord");
-            }
-            WriteToNode_Xml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #endregion
-
-        public static void WriteToNode_Xml(
-            this SkillRecord item,
-            XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            OblivionMajorRecordCommon.WriteToNode_Xml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            if (item.Skill_IsSet
-                && (translationMask?.GetShouldTranslate((int)SkillRecord_FieldIndex.Skill) ?? true))
-            {
-                EnumXmlTranslation<ActorValue>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Skill),
-                    item: item.Skill,
-                    fieldIndex: (int)SkillRecord_FieldIndex.Skill,
-                    errorMask: errorMask);
-            }
-            if (item.Description_IsSet
-                && (translationMask?.GetShouldTranslate((int)SkillRecord_FieldIndex.Description) ?? true))
-            {
-                StringXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Description),
-                    item: item.Description,
-                    fieldIndex: (int)SkillRecord_FieldIndex.Description,
-                    errorMask: errorMask);
-            }
-            if (item.Icon_IsSet
-                && (translationMask?.GetShouldTranslate((int)SkillRecord_FieldIndex.Icon) ?? true))
-            {
-                StringXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Icon),
-                    item: item.Icon,
-                    fieldIndex: (int)SkillRecord_FieldIndex.Icon,
-                    errorMask: errorMask);
-            }
-            if (item.DATADataTypeState.HasFlag(SkillRecord.DATADataType.Has))
-            {
-                if ((translationMask?.GetShouldTranslate((int)SkillRecord_FieldIndex.Action) ?? true))
-                {
-                    EnumXmlTranslation<ActorValue>.Instance.Write(
-                        node: node,
-                        name: nameof(item.Action),
-                        item: item.Action,
-                        fieldIndex: (int)SkillRecord_FieldIndex.Action,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)SkillRecord_FieldIndex.Attribute) ?? true))
-                {
-                    EnumXmlTranslation<ActorValue>.Instance.Write(
-                        node: node,
-                        name: nameof(item.Attribute),
-                        item: item.Attribute,
-                        fieldIndex: (int)SkillRecord_FieldIndex.Attribute,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)SkillRecord_FieldIndex.Specialization) ?? true))
-                {
-                    EnumXmlTranslation<Specialization>.Instance.Write(
-                        node: node,
-                        name: nameof(item.Specialization),
-                        item: item.Specialization,
-                        fieldIndex: (int)SkillRecord_FieldIndex.Specialization,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)SkillRecord_FieldIndex.UseValueFirst) ?? true))
-                {
-                    FloatXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.UseValueFirst),
-                        item: item.UseValueFirst,
-                        fieldIndex: (int)SkillRecord_FieldIndex.UseValueFirst,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)SkillRecord_FieldIndex.UseValueSecond) ?? true))
-                {
-                    FloatXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.UseValueSecond),
-                        item: item.UseValueSecond,
-                        fieldIndex: (int)SkillRecord_FieldIndex.UseValueSecond,
-                        errorMask: errorMask);
-                }
-            }
-            if (item.ApprenticeText_IsSet
-                && (translationMask?.GetShouldTranslate((int)SkillRecord_FieldIndex.ApprenticeText) ?? true))
-            {
-                StringXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.ApprenticeText),
-                    item: item.ApprenticeText,
-                    fieldIndex: (int)SkillRecord_FieldIndex.ApprenticeText,
-                    errorMask: errorMask);
-            }
-            if (item.JourneymanText_IsSet
-                && (translationMask?.GetShouldTranslate((int)SkillRecord_FieldIndex.JourneymanText) ?? true))
-            {
-                StringXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.JourneymanText),
-                    item: item.JourneymanText,
-                    fieldIndex: (int)SkillRecord_FieldIndex.JourneymanText,
-                    errorMask: errorMask);
-            }
-            if (item.ExpertText_IsSet
-                && (translationMask?.GetShouldTranslate((int)SkillRecord_FieldIndex.ExpertText) ?? true))
-            {
-                StringXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.ExpertText),
-                    item: item.ExpertText,
-                    fieldIndex: (int)SkillRecord_FieldIndex.ExpertText,
-                    errorMask: errorMask);
-            }
-            if (item.MasterText_IsSet
-                && (translationMask?.GetShouldTranslate((int)SkillRecord_FieldIndex.MasterText) ?? true))
-            {
-                StringXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.MasterText),
-                    item: item.MasterText,
-                    fieldIndex: (int)SkillRecord_FieldIndex.MasterText,
-                    errorMask: errorMask);
-            }
-        }
-
         public static void FillPublic_Xml(
             this SkillRecord item,
             XElement node,
@@ -2810,6 +2707,32 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask?.PopIndex();
                     }
                     break;
+                case "DATADataTypeState":
+                    try
+                    {
+                        errorMask?.PushIndex((int)SkillRecord_FieldIndex.DATADataTypeState);
+                        if (EnumXmlTranslation<SkillRecord.DATADataType>.Instance.Parse(
+                            node: node,
+                            item: out SkillRecord.DATADataType DATADataTypeStateParse,
+                            errorMask: errorMask))
+                        {
+                            item.DATADataTypeState = DATADataTypeStateParse;
+                        }
+                        else
+                        {
+                            item.DATADataTypeState = default(SkillRecord.DATADataType);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
                 default:
                     OblivionMajorRecordCommon.FillPublicElement_Xml(
                         item: item,
@@ -2823,61 +2746,809 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        #region Binary Translation
-        #region Binary Write
-        public static void Write_Binary(
-            MutagenWriter writer,
-            SkillRecord item,
-            MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
+    }
+    #endregion
+
+    #region Modules
+    #region Xml Translation
+    public partial class SkillRecordXmlTranslation : OblivionMajorRecordXmlTranslation
+    {
+        public new readonly static SkillRecordXmlTranslation Instance = new SkillRecordXmlTranslation();
+
+        public static void WriteToNode_Xml(
+            ISkillRecordInternalGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            OblivionMajorRecordXmlTranslation.WriteToNode_Xml(
+                item: item,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+            if (item.Skill_IsSet
+                && (translationMask?.GetShouldTranslate((int)SkillRecord_FieldIndex.Skill) ?? true))
+            {
+                EnumXmlTranslation<ActorValue>.Instance.Write(
+                    node: node,
+                    name: nameof(item.Skill),
+                    item: item.Skill,
+                    fieldIndex: (int)SkillRecord_FieldIndex.Skill,
+                    errorMask: errorMask);
+            }
+            if (item.Description_IsSet
+                && (translationMask?.GetShouldTranslate((int)SkillRecord_FieldIndex.Description) ?? true))
+            {
+                StringXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Description),
+                    item: item.Description,
+                    fieldIndex: (int)SkillRecord_FieldIndex.Description,
+                    errorMask: errorMask);
+            }
+            if (item.Icon_IsSet
+                && (translationMask?.GetShouldTranslate((int)SkillRecord_FieldIndex.Icon) ?? true))
+            {
+                StringXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Icon),
+                    item: item.Icon,
+                    fieldIndex: (int)SkillRecord_FieldIndex.Icon,
+                    errorMask: errorMask);
+            }
+            if (item.DATADataTypeState.HasFlag(SkillRecord.DATADataType.Has))
+            {
+                if ((translationMask?.GetShouldTranslate((int)SkillRecord_FieldIndex.Action) ?? true))
+                {
+                    EnumXmlTranslation<ActorValue>.Instance.Write(
+                        node: node,
+                        name: nameof(item.Action),
+                        item: item.Action,
+                        fieldIndex: (int)SkillRecord_FieldIndex.Action,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)SkillRecord_FieldIndex.Attribute) ?? true))
+                {
+                    EnumXmlTranslation<ActorValue>.Instance.Write(
+                        node: node,
+                        name: nameof(item.Attribute),
+                        item: item.Attribute,
+                        fieldIndex: (int)SkillRecord_FieldIndex.Attribute,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)SkillRecord_FieldIndex.Specialization) ?? true))
+                {
+                    EnumXmlTranslation<Specialization>.Instance.Write(
+                        node: node,
+                        name: nameof(item.Specialization),
+                        item: item.Specialization,
+                        fieldIndex: (int)SkillRecord_FieldIndex.Specialization,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)SkillRecord_FieldIndex.UseValueFirst) ?? true))
+                {
+                    FloatXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.UseValueFirst),
+                        item: item.UseValueFirst,
+                        fieldIndex: (int)SkillRecord_FieldIndex.UseValueFirst,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)SkillRecord_FieldIndex.UseValueSecond) ?? true))
+                {
+                    FloatXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.UseValueSecond),
+                        item: item.UseValueSecond,
+                        fieldIndex: (int)SkillRecord_FieldIndex.UseValueSecond,
+                        errorMask: errorMask);
+                }
+            }
+            if (item.ApprenticeText_IsSet
+                && (translationMask?.GetShouldTranslate((int)SkillRecord_FieldIndex.ApprenticeText) ?? true))
+            {
+                StringXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.ApprenticeText),
+                    item: item.ApprenticeText,
+                    fieldIndex: (int)SkillRecord_FieldIndex.ApprenticeText,
+                    errorMask: errorMask);
+            }
+            if (item.JourneymanText_IsSet
+                && (translationMask?.GetShouldTranslate((int)SkillRecord_FieldIndex.JourneymanText) ?? true))
+            {
+                StringXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.JourneymanText),
+                    item: item.JourneymanText,
+                    fieldIndex: (int)SkillRecord_FieldIndex.JourneymanText,
+                    errorMask: errorMask);
+            }
+            if (item.ExpertText_IsSet
+                && (translationMask?.GetShouldTranslate((int)SkillRecord_FieldIndex.ExpertText) ?? true))
+            {
+                StringXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.ExpertText),
+                    item: item.ExpertText,
+                    fieldIndex: (int)SkillRecord_FieldIndex.ExpertText,
+                    errorMask: errorMask);
+            }
+            if (item.MasterText_IsSet
+                && (translationMask?.GetShouldTranslate((int)SkillRecord_FieldIndex.MasterText) ?? true))
+            {
+                StringXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.MasterText),
+                    item: item.MasterText,
+                    fieldIndex: (int)SkillRecord_FieldIndex.MasterText,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)SkillRecord_FieldIndex.DATADataTypeState) ?? true))
+            {
+                EnumXmlTranslation<SkillRecord.DATADataType>.Instance.Write(
+                    node: node,
+                    name: nameof(item.DATADataTypeState),
+                    item: item.DATADataTypeState,
+                    fieldIndex: (int)SkillRecord_FieldIndex.DATADataTypeState,
+                    errorMask: errorMask);
+            }
+        }
+
+        #region Xml Write
+        public void Write_Xml(
+            XElement node,
+            ISkillRecordInternalGetter item,
             bool doMasks,
-            out SkillRecord_ErrorMask errorMask)
+            out SkillRecord_ErrorMask errorMask,
+            SkillRecord_TranslationMask translationMask,
+            string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_Binary(
-                masterReferences: masterReferences,
-                writer: writer,
+            Write_Xml(
+                name: name,
+                node: node,
                 item: item,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMaskBuilder);
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal());
             errorMask = SkillRecord_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void Write_Binary(
-            MutagenWriter writer,
-            SkillRecord item,
-            MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
+        public void Write_Xml(
+            XElement node,
+            ISkillRecordInternalGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
         {
-            using (HeaderExport.ExportHeader(
-                writer: writer,
-                record: SkillRecord_Registration.SKIL_HEADER,
-                type: ObjectType.Record))
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.SkillRecord");
+            node.Add(elem);
+            if (name != null)
             {
-                OblivionMajorRecordCommon.Write_Binary_Embedded(
-                    item: item,
-                    writer: writer,
-                    errorMask: errorMask,
-                    masterReferences: masterReferences);
-                Write_Binary_RecordTypes(
-                    item: item,
-                    writer: writer,
-                    recordTypeConverter: recordTypeConverter,
-                    errorMask: errorMask,
-                    masterReferences: masterReferences);
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.SkillRecord");
             }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
         }
         #endregion
 
+    }
+    #endregion
+
+    #region Mask
+    public class SkillRecord_Mask<T> : OblivionMajorRecord_Mask<T>, IMask<T>, IEquatable<SkillRecord_Mask<T>>
+    {
+        #region Ctors
+        public SkillRecord_Mask()
+        {
+        }
+
+        public SkillRecord_Mask(T initialValue)
+        {
+            this.Skill = initialValue;
+            this.Description = initialValue;
+            this.Icon = initialValue;
+            this.Action = initialValue;
+            this.Attribute = initialValue;
+            this.Specialization = initialValue;
+            this.UseValueFirst = initialValue;
+            this.UseValueSecond = initialValue;
+            this.ApprenticeText = initialValue;
+            this.JourneymanText = initialValue;
+            this.ExpertText = initialValue;
+            this.MasterText = initialValue;
+            this.DATADataTypeState = initialValue;
+        }
+        #endregion
+
+        #region Members
+        public T Skill;
+        public T Description;
+        public T Icon;
+        public T Action;
+        public T Attribute;
+        public T Specialization;
+        public T UseValueFirst;
+        public T UseValueSecond;
+        public T ApprenticeText;
+        public T JourneymanText;
+        public T ExpertText;
+        public T MasterText;
+        public T DATADataTypeState;
+        #endregion
+
+        #region Equals
+        public override bool Equals(object obj)
+        {
+            if (!(obj is SkillRecord_Mask<T> rhs)) return false;
+            return Equals(rhs);
+        }
+
+        public bool Equals(SkillRecord_Mask<T> rhs)
+        {
+            if (rhs == null) return false;
+            if (!base.Equals(rhs)) return false;
+            if (!object.Equals(this.Skill, rhs.Skill)) return false;
+            if (!object.Equals(this.Description, rhs.Description)) return false;
+            if (!object.Equals(this.Icon, rhs.Icon)) return false;
+            if (!object.Equals(this.Action, rhs.Action)) return false;
+            if (!object.Equals(this.Attribute, rhs.Attribute)) return false;
+            if (!object.Equals(this.Specialization, rhs.Specialization)) return false;
+            if (!object.Equals(this.UseValueFirst, rhs.UseValueFirst)) return false;
+            if (!object.Equals(this.UseValueSecond, rhs.UseValueSecond)) return false;
+            if (!object.Equals(this.ApprenticeText, rhs.ApprenticeText)) return false;
+            if (!object.Equals(this.JourneymanText, rhs.JourneymanText)) return false;
+            if (!object.Equals(this.ExpertText, rhs.ExpertText)) return false;
+            if (!object.Equals(this.MasterText, rhs.MasterText)) return false;
+            if (!object.Equals(this.DATADataTypeState, rhs.DATADataTypeState)) return false;
+            return true;
+        }
+        public override int GetHashCode()
+        {
+            int ret = 0;
+            ret = ret.CombineHashCode(this.Skill?.GetHashCode());
+            ret = ret.CombineHashCode(this.Description?.GetHashCode());
+            ret = ret.CombineHashCode(this.Icon?.GetHashCode());
+            ret = ret.CombineHashCode(this.Action?.GetHashCode());
+            ret = ret.CombineHashCode(this.Attribute?.GetHashCode());
+            ret = ret.CombineHashCode(this.Specialization?.GetHashCode());
+            ret = ret.CombineHashCode(this.UseValueFirst?.GetHashCode());
+            ret = ret.CombineHashCode(this.UseValueSecond?.GetHashCode());
+            ret = ret.CombineHashCode(this.ApprenticeText?.GetHashCode());
+            ret = ret.CombineHashCode(this.JourneymanText?.GetHashCode());
+            ret = ret.CombineHashCode(this.ExpertText?.GetHashCode());
+            ret = ret.CombineHashCode(this.MasterText?.GetHashCode());
+            ret = ret.CombineHashCode(this.DATADataTypeState?.GetHashCode());
+            ret = ret.CombineHashCode(base.GetHashCode());
+            return ret;
+        }
+
+        #endregion
+
+        #region All Equal
+        public override bool AllEqual(Func<T, bool> eval)
+        {
+            if (!base.AllEqual(eval)) return false;
+            if (!eval(this.Skill)) return false;
+            if (!eval(this.Description)) return false;
+            if (!eval(this.Icon)) return false;
+            if (!eval(this.Action)) return false;
+            if (!eval(this.Attribute)) return false;
+            if (!eval(this.Specialization)) return false;
+            if (!eval(this.UseValueFirst)) return false;
+            if (!eval(this.UseValueSecond)) return false;
+            if (!eval(this.ApprenticeText)) return false;
+            if (!eval(this.JourneymanText)) return false;
+            if (!eval(this.ExpertText)) return false;
+            if (!eval(this.MasterText)) return false;
+            if (!eval(this.DATADataTypeState)) return false;
+            return true;
+        }
+        #endregion
+
+        #region Translate
+        public new SkillRecord_Mask<R> Translate<R>(Func<T, R> eval)
+        {
+            var ret = new SkillRecord_Mask<R>();
+            this.Translate_InternalFill(ret, eval);
+            return ret;
+        }
+
+        protected void Translate_InternalFill<R>(SkillRecord_Mask<R> obj, Func<T, R> eval)
+        {
+            base.Translate_InternalFill(obj, eval);
+            obj.Skill = eval(this.Skill);
+            obj.Description = eval(this.Description);
+            obj.Icon = eval(this.Icon);
+            obj.Action = eval(this.Action);
+            obj.Attribute = eval(this.Attribute);
+            obj.Specialization = eval(this.Specialization);
+            obj.UseValueFirst = eval(this.UseValueFirst);
+            obj.UseValueSecond = eval(this.UseValueSecond);
+            obj.ApprenticeText = eval(this.ApprenticeText);
+            obj.JourneymanText = eval(this.JourneymanText);
+            obj.ExpertText = eval(this.ExpertText);
+            obj.MasterText = eval(this.MasterText);
+            obj.DATADataTypeState = eval(this.DATADataTypeState);
+        }
+        #endregion
+
+        #region Clear Enumerables
+        public override void ClearEnumerables()
+        {
+            base.ClearEnumerables();
+        }
+        #endregion
+
+        #region To String
+        public override string ToString()
+        {
+            return ToString(printMask: null);
+        }
+
+        public string ToString(SkillRecord_Mask<bool> printMask = null)
+        {
+            var fg = new FileGeneration();
+            ToString(fg, printMask);
+            return fg.ToString();
+        }
+
+        public void ToString(FileGeneration fg, SkillRecord_Mask<bool> printMask = null)
+        {
+            fg.AppendLine($"{nameof(SkillRecord_Mask<T>)} =>");
+            fg.AppendLine("[");
+            using (new DepthWrapper(fg))
+            {
+                if (printMask?.Skill ?? true)
+                {
+                    fg.AppendLine($"Skill => {Skill}");
+                }
+                if (printMask?.Description ?? true)
+                {
+                    fg.AppendLine($"Description => {Description}");
+                }
+                if (printMask?.Icon ?? true)
+                {
+                    fg.AppendLine($"Icon => {Icon}");
+                }
+                if (printMask?.Action ?? true)
+                {
+                    fg.AppendLine($"Action => {Action}");
+                }
+                if (printMask?.Attribute ?? true)
+                {
+                    fg.AppendLine($"Attribute => {Attribute}");
+                }
+                if (printMask?.Specialization ?? true)
+                {
+                    fg.AppendLine($"Specialization => {Specialization}");
+                }
+                if (printMask?.UseValueFirst ?? true)
+                {
+                    fg.AppendLine($"UseValueFirst => {UseValueFirst}");
+                }
+                if (printMask?.UseValueSecond ?? true)
+                {
+                    fg.AppendLine($"UseValueSecond => {UseValueSecond}");
+                }
+                if (printMask?.ApprenticeText ?? true)
+                {
+                    fg.AppendLine($"ApprenticeText => {ApprenticeText}");
+                }
+                if (printMask?.JourneymanText ?? true)
+                {
+                    fg.AppendLine($"JourneymanText => {JourneymanText}");
+                }
+                if (printMask?.ExpertText ?? true)
+                {
+                    fg.AppendLine($"ExpertText => {ExpertText}");
+                }
+                if (printMask?.MasterText ?? true)
+                {
+                    fg.AppendLine($"MasterText => {MasterText}");
+                }
+                if (printMask?.DATADataTypeState ?? true)
+                {
+                    fg.AppendLine($"DATADataTypeState => {DATADataTypeState}");
+                }
+            }
+            fg.AppendLine("]");
+        }
+        #endregion
+
+    }
+
+    public class SkillRecord_ErrorMask : OblivionMajorRecord_ErrorMask, IErrorMask<SkillRecord_ErrorMask>
+    {
+        #region Members
+        public Exception Skill;
+        public Exception Description;
+        public Exception Icon;
+        public Exception Action;
+        public Exception Attribute;
+        public Exception Specialization;
+        public Exception UseValueFirst;
+        public Exception UseValueSecond;
+        public Exception ApprenticeText;
+        public Exception JourneymanText;
+        public Exception ExpertText;
+        public Exception MasterText;
+        public Exception DATADataTypeState;
+        #endregion
+
+        #region IErrorMask
+        public override object GetNthMask(int index)
+        {
+            SkillRecord_FieldIndex enu = (SkillRecord_FieldIndex)index;
+            switch (enu)
+            {
+                case SkillRecord_FieldIndex.Skill:
+                    return Skill;
+                case SkillRecord_FieldIndex.Description:
+                    return Description;
+                case SkillRecord_FieldIndex.Icon:
+                    return Icon;
+                case SkillRecord_FieldIndex.Action:
+                    return Action;
+                case SkillRecord_FieldIndex.Attribute:
+                    return Attribute;
+                case SkillRecord_FieldIndex.Specialization:
+                    return Specialization;
+                case SkillRecord_FieldIndex.UseValueFirst:
+                    return UseValueFirst;
+                case SkillRecord_FieldIndex.UseValueSecond:
+                    return UseValueSecond;
+                case SkillRecord_FieldIndex.ApprenticeText:
+                    return ApprenticeText;
+                case SkillRecord_FieldIndex.JourneymanText:
+                    return JourneymanText;
+                case SkillRecord_FieldIndex.ExpertText:
+                    return ExpertText;
+                case SkillRecord_FieldIndex.MasterText:
+                    return MasterText;
+                case SkillRecord_FieldIndex.DATADataTypeState:
+                    return DATADataTypeState;
+                default:
+                    return base.GetNthMask(index);
+            }
+        }
+
+        public override void SetNthException(int index, Exception ex)
+        {
+            SkillRecord_FieldIndex enu = (SkillRecord_FieldIndex)index;
+            switch (enu)
+            {
+                case SkillRecord_FieldIndex.Skill:
+                    this.Skill = ex;
+                    break;
+                case SkillRecord_FieldIndex.Description:
+                    this.Description = ex;
+                    break;
+                case SkillRecord_FieldIndex.Icon:
+                    this.Icon = ex;
+                    break;
+                case SkillRecord_FieldIndex.Action:
+                    this.Action = ex;
+                    break;
+                case SkillRecord_FieldIndex.Attribute:
+                    this.Attribute = ex;
+                    break;
+                case SkillRecord_FieldIndex.Specialization:
+                    this.Specialization = ex;
+                    break;
+                case SkillRecord_FieldIndex.UseValueFirst:
+                    this.UseValueFirst = ex;
+                    break;
+                case SkillRecord_FieldIndex.UseValueSecond:
+                    this.UseValueSecond = ex;
+                    break;
+                case SkillRecord_FieldIndex.ApprenticeText:
+                    this.ApprenticeText = ex;
+                    break;
+                case SkillRecord_FieldIndex.JourneymanText:
+                    this.JourneymanText = ex;
+                    break;
+                case SkillRecord_FieldIndex.ExpertText:
+                    this.ExpertText = ex;
+                    break;
+                case SkillRecord_FieldIndex.MasterText:
+                    this.MasterText = ex;
+                    break;
+                case SkillRecord_FieldIndex.DATADataTypeState:
+                    this.DATADataTypeState = ex;
+                    break;
+                default:
+                    base.SetNthException(index, ex);
+                    break;
+            }
+        }
+
+        public override void SetNthMask(int index, object obj)
+        {
+            SkillRecord_FieldIndex enu = (SkillRecord_FieldIndex)index;
+            switch (enu)
+            {
+                case SkillRecord_FieldIndex.Skill:
+                    this.Skill = (Exception)obj;
+                    break;
+                case SkillRecord_FieldIndex.Description:
+                    this.Description = (Exception)obj;
+                    break;
+                case SkillRecord_FieldIndex.Icon:
+                    this.Icon = (Exception)obj;
+                    break;
+                case SkillRecord_FieldIndex.Action:
+                    this.Action = (Exception)obj;
+                    break;
+                case SkillRecord_FieldIndex.Attribute:
+                    this.Attribute = (Exception)obj;
+                    break;
+                case SkillRecord_FieldIndex.Specialization:
+                    this.Specialization = (Exception)obj;
+                    break;
+                case SkillRecord_FieldIndex.UseValueFirst:
+                    this.UseValueFirst = (Exception)obj;
+                    break;
+                case SkillRecord_FieldIndex.UseValueSecond:
+                    this.UseValueSecond = (Exception)obj;
+                    break;
+                case SkillRecord_FieldIndex.ApprenticeText:
+                    this.ApprenticeText = (Exception)obj;
+                    break;
+                case SkillRecord_FieldIndex.JourneymanText:
+                    this.JourneymanText = (Exception)obj;
+                    break;
+                case SkillRecord_FieldIndex.ExpertText:
+                    this.ExpertText = (Exception)obj;
+                    break;
+                case SkillRecord_FieldIndex.MasterText:
+                    this.MasterText = (Exception)obj;
+                    break;
+                case SkillRecord_FieldIndex.DATADataTypeState:
+                    this.DATADataTypeState = (Exception)obj;
+                    break;
+                default:
+                    base.SetNthMask(index, obj);
+                    break;
+            }
+        }
+
+        public override bool IsInError()
+        {
+            if (Overall != null) return true;
+            if (Skill != null) return true;
+            if (Description != null) return true;
+            if (Icon != null) return true;
+            if (Action != null) return true;
+            if (Attribute != null) return true;
+            if (Specialization != null) return true;
+            if (UseValueFirst != null) return true;
+            if (UseValueSecond != null) return true;
+            if (ApprenticeText != null) return true;
+            if (JourneymanText != null) return true;
+            if (ExpertText != null) return true;
+            if (MasterText != null) return true;
+            if (DATADataTypeState != null) return true;
+            return false;
+        }
+        #endregion
+
+        #region To String
+        public override string ToString()
+        {
+            var fg = new FileGeneration();
+            ToString(fg);
+            return fg.ToString();
+        }
+
+        public override void ToString(FileGeneration fg)
+        {
+            fg.AppendLine("SkillRecord_ErrorMask =>");
+            fg.AppendLine("[");
+            using (new DepthWrapper(fg))
+            {
+                if (this.Overall != null)
+                {
+                    fg.AppendLine("Overall =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendLine($"{this.Overall}");
+                    }
+                    fg.AppendLine("]");
+                }
+                ToString_FillInternal(fg);
+            }
+            fg.AppendLine("]");
+        }
+        protected override void ToString_FillInternal(FileGeneration fg)
+        {
+            base.ToString_FillInternal(fg);
+            fg.AppendLine($"Skill => {Skill}");
+            fg.AppendLine($"Description => {Description}");
+            fg.AppendLine($"Icon => {Icon}");
+            fg.AppendLine($"Action => {Action}");
+            fg.AppendLine($"Attribute => {Attribute}");
+            fg.AppendLine($"Specialization => {Specialization}");
+            fg.AppendLine($"UseValueFirst => {UseValueFirst}");
+            fg.AppendLine($"UseValueSecond => {UseValueSecond}");
+            fg.AppendLine($"ApprenticeText => {ApprenticeText}");
+            fg.AppendLine($"JourneymanText => {JourneymanText}");
+            fg.AppendLine($"ExpertText => {ExpertText}");
+            fg.AppendLine($"MasterText => {MasterText}");
+            fg.AppendLine($"DATADataTypeState => {DATADataTypeState}");
+        }
+        #endregion
+
+        #region Combine
+        public SkillRecord_ErrorMask Combine(SkillRecord_ErrorMask rhs)
+        {
+            var ret = new SkillRecord_ErrorMask();
+            ret.Skill = this.Skill.Combine(rhs.Skill);
+            ret.Description = this.Description.Combine(rhs.Description);
+            ret.Icon = this.Icon.Combine(rhs.Icon);
+            ret.Action = this.Action.Combine(rhs.Action);
+            ret.Attribute = this.Attribute.Combine(rhs.Attribute);
+            ret.Specialization = this.Specialization.Combine(rhs.Specialization);
+            ret.UseValueFirst = this.UseValueFirst.Combine(rhs.UseValueFirst);
+            ret.UseValueSecond = this.UseValueSecond.Combine(rhs.UseValueSecond);
+            ret.ApprenticeText = this.ApprenticeText.Combine(rhs.ApprenticeText);
+            ret.JourneymanText = this.JourneymanText.Combine(rhs.JourneymanText);
+            ret.ExpertText = this.ExpertText.Combine(rhs.ExpertText);
+            ret.MasterText = this.MasterText.Combine(rhs.MasterText);
+            ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
+            return ret;
+        }
+        public static SkillRecord_ErrorMask Combine(SkillRecord_ErrorMask lhs, SkillRecord_ErrorMask rhs)
+        {
+            if (lhs != null && rhs != null) return lhs.Combine(rhs);
+            return lhs ?? rhs;
+        }
+        #endregion
+
+        #region Factory
+        public static SkillRecord_ErrorMask Factory(ErrorMaskBuilder errorMask)
+        {
+            if (errorMask?.Empty ?? true) return null;
+            return new SkillRecord_ErrorMask();
+        }
+        #endregion
+
+    }
+    public class SkillRecord_CopyMask : OblivionMajorRecord_CopyMask
+    {
+        public SkillRecord_CopyMask()
+        {
+        }
+
+        public SkillRecord_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
+        {
+            this.Skill = defaultOn;
+            this.Description = defaultOn;
+            this.Icon = defaultOn;
+            this.Action = defaultOn;
+            this.Attribute = defaultOn;
+            this.Specialization = defaultOn;
+            this.UseValueFirst = defaultOn;
+            this.UseValueSecond = defaultOn;
+            this.ApprenticeText = defaultOn;
+            this.JourneymanText = defaultOn;
+            this.ExpertText = defaultOn;
+            this.MasterText = defaultOn;
+            this.DATADataTypeState = defaultOn;
+        }
+
+        #region Members
+        public bool Skill;
+        public bool Description;
+        public bool Icon;
+        public bool Action;
+        public bool Attribute;
+        public bool Specialization;
+        public bool UseValueFirst;
+        public bool UseValueSecond;
+        public bool ApprenticeText;
+        public bool JourneymanText;
+        public bool ExpertText;
+        public bool MasterText;
+        public bool DATADataTypeState;
+        #endregion
+
+    }
+
+    public class SkillRecord_TranslationMask : OblivionMajorRecord_TranslationMask
+    {
+        #region Members
+        public bool Skill;
+        public bool Description;
+        public bool Icon;
+        public bool Action;
+        public bool Attribute;
+        public bool Specialization;
+        public bool UseValueFirst;
+        public bool UseValueSecond;
+        public bool ApprenticeText;
+        public bool JourneymanText;
+        public bool ExpertText;
+        public bool MasterText;
+        public bool DATADataTypeState;
+        #endregion
+
+        #region Ctors
+        public SkillRecord_TranslationMask()
+            : base()
+        {
+        }
+
+        public SkillRecord_TranslationMask(bool defaultOn)
+            : base(defaultOn)
+        {
+            this.Skill = defaultOn;
+            this.Description = defaultOn;
+            this.Icon = defaultOn;
+            this.Action = defaultOn;
+            this.Attribute = defaultOn;
+            this.Specialization = defaultOn;
+            this.UseValueFirst = defaultOn;
+            this.UseValueSecond = defaultOn;
+            this.ApprenticeText = defaultOn;
+            this.JourneymanText = defaultOn;
+            this.ExpertText = defaultOn;
+            this.MasterText = defaultOn;
+            this.DATADataTypeState = defaultOn;
+        }
+
+        #endregion
+
+        protected override void GetCrystal(List<(bool On, TranslationCrystal SubCrystal)> ret)
+        {
+            base.GetCrystal(ret);
+            ret.Add((Skill, null));
+            ret.Add((Description, null));
+            ret.Add((Icon, null));
+            ret.Add((Action, null));
+            ret.Add((Attribute, null));
+            ret.Add((Specialization, null));
+            ret.Add((UseValueFirst, null));
+            ret.Add((UseValueSecond, null));
+            ret.Add((ApprenticeText, null));
+            ret.Add((JourneymanText, null));
+            ret.Add((ExpertText, null));
+            ret.Add((MasterText, null));
+            ret.Add((DATADataTypeState, null));
+        }
+    }
+    #endregion
+
+    #region Binary Translation
+    public partial class SkillRecordBinaryTranslation : OblivionMajorRecordBinaryTranslation
+    {
+        public new readonly static SkillRecordBinaryTranslation Instance = new SkillRecordBinaryTranslation();
+
+        public static void Write_Binary_Embedded(
+            ISkillRecordInternalGetter item,
+            MutagenWriter writer,
+            ErrorMaskBuilder errorMask,
+            MasterReferences masterReferences)
+        {
+            OblivionMajorRecordBinaryTranslation.Write_Binary_Embedded(
+                item: item,
+                writer: writer,
+                errorMask: errorMask,
+                masterReferences: masterReferences);
+        }
+
         public static void Write_Binary_RecordTypes(
-            SkillRecord item,
+            ISkillRecordInternalGetter item,
             MutagenWriter writer,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask,
             MasterReferences masterReferences)
         {
-            MajorRecordCommon.Write_Binary_RecordTypes(
+            MajorRecordBinaryTranslation.Write_Binary_RecordTypes(
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
@@ -2966,567 +3637,52 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        #endregion
-
-    }
-    #endregion
-
-    #region Modules
-    #region Mask
-    public class SkillRecord_Mask<T> : OblivionMajorRecord_Mask<T>, IMask<T>, IEquatable<SkillRecord_Mask<T>>
-    {
-        #region Ctors
-        public SkillRecord_Mask()
+        #region Binary Write
+        public void Write_Binary(
+            MutagenWriter writer,
+            ISkillRecordInternalGetter item,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            bool doMasks,
+            out SkillRecord_ErrorMask errorMask)
         {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            Write_Binary(
+                masterReferences: masterReferences,
+                writer: writer,
+                item: item,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMaskBuilder);
+            errorMask = SkillRecord_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public SkillRecord_Mask(T initialValue)
+        public void Write_Binary(
+            MutagenWriter writer,
+            ISkillRecordInternalGetter item,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
         {
-            this.Skill = initialValue;
-            this.Description = initialValue;
-            this.Icon = initialValue;
-            this.Action = initialValue;
-            this.Attribute = initialValue;
-            this.Specialization = initialValue;
-            this.UseValueFirst = initialValue;
-            this.UseValueSecond = initialValue;
-            this.ApprenticeText = initialValue;
-            this.JourneymanText = initialValue;
-            this.ExpertText = initialValue;
-            this.MasterText = initialValue;
-        }
-        #endregion
-
-        #region Members
-        public T Skill;
-        public T Description;
-        public T Icon;
-        public T Action;
-        public T Attribute;
-        public T Specialization;
-        public T UseValueFirst;
-        public T UseValueSecond;
-        public T ApprenticeText;
-        public T JourneymanText;
-        public T ExpertText;
-        public T MasterText;
-        #endregion
-
-        #region Equals
-        public override bool Equals(object obj)
-        {
-            if (!(obj is SkillRecord_Mask<T> rhs)) return false;
-            return Equals(rhs);
-        }
-
-        public bool Equals(SkillRecord_Mask<T> rhs)
-        {
-            if (rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (!object.Equals(this.Skill, rhs.Skill)) return false;
-            if (!object.Equals(this.Description, rhs.Description)) return false;
-            if (!object.Equals(this.Icon, rhs.Icon)) return false;
-            if (!object.Equals(this.Action, rhs.Action)) return false;
-            if (!object.Equals(this.Attribute, rhs.Attribute)) return false;
-            if (!object.Equals(this.Specialization, rhs.Specialization)) return false;
-            if (!object.Equals(this.UseValueFirst, rhs.UseValueFirst)) return false;
-            if (!object.Equals(this.UseValueSecond, rhs.UseValueSecond)) return false;
-            if (!object.Equals(this.ApprenticeText, rhs.ApprenticeText)) return false;
-            if (!object.Equals(this.JourneymanText, rhs.JourneymanText)) return false;
-            if (!object.Equals(this.ExpertText, rhs.ExpertText)) return false;
-            if (!object.Equals(this.MasterText, rhs.MasterText)) return false;
-            return true;
-        }
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = ret.CombineHashCode(this.Skill?.GetHashCode());
-            ret = ret.CombineHashCode(this.Description?.GetHashCode());
-            ret = ret.CombineHashCode(this.Icon?.GetHashCode());
-            ret = ret.CombineHashCode(this.Action?.GetHashCode());
-            ret = ret.CombineHashCode(this.Attribute?.GetHashCode());
-            ret = ret.CombineHashCode(this.Specialization?.GetHashCode());
-            ret = ret.CombineHashCode(this.UseValueFirst?.GetHashCode());
-            ret = ret.CombineHashCode(this.UseValueSecond?.GetHashCode());
-            ret = ret.CombineHashCode(this.ApprenticeText?.GetHashCode());
-            ret = ret.CombineHashCode(this.JourneymanText?.GetHashCode());
-            ret = ret.CombineHashCode(this.ExpertText?.GetHashCode());
-            ret = ret.CombineHashCode(this.MasterText?.GetHashCode());
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
-        }
-
-        #endregion
-
-        #region All Equal
-        public override bool AllEqual(Func<T, bool> eval)
-        {
-            if (!base.AllEqual(eval)) return false;
-            if (!eval(this.Skill)) return false;
-            if (!eval(this.Description)) return false;
-            if (!eval(this.Icon)) return false;
-            if (!eval(this.Action)) return false;
-            if (!eval(this.Attribute)) return false;
-            if (!eval(this.Specialization)) return false;
-            if (!eval(this.UseValueFirst)) return false;
-            if (!eval(this.UseValueSecond)) return false;
-            if (!eval(this.ApprenticeText)) return false;
-            if (!eval(this.JourneymanText)) return false;
-            if (!eval(this.ExpertText)) return false;
-            if (!eval(this.MasterText)) return false;
-            return true;
-        }
-        #endregion
-
-        #region Translate
-        public new SkillRecord_Mask<R> Translate<R>(Func<T, R> eval)
-        {
-            var ret = new SkillRecord_Mask<R>();
-            this.Translate_InternalFill(ret, eval);
-            return ret;
-        }
-
-        protected void Translate_InternalFill<R>(SkillRecord_Mask<R> obj, Func<T, R> eval)
-        {
-            base.Translate_InternalFill(obj, eval);
-            obj.Skill = eval(this.Skill);
-            obj.Description = eval(this.Description);
-            obj.Icon = eval(this.Icon);
-            obj.Action = eval(this.Action);
-            obj.Attribute = eval(this.Attribute);
-            obj.Specialization = eval(this.Specialization);
-            obj.UseValueFirst = eval(this.UseValueFirst);
-            obj.UseValueSecond = eval(this.UseValueSecond);
-            obj.ApprenticeText = eval(this.ApprenticeText);
-            obj.JourneymanText = eval(this.JourneymanText);
-            obj.ExpertText = eval(this.ExpertText);
-            obj.MasterText = eval(this.MasterText);
-        }
-        #endregion
-
-        #region Clear Enumerables
-        public override void ClearEnumerables()
-        {
-            base.ClearEnumerables();
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            return ToString(printMask: null);
-        }
-
-        public string ToString(SkillRecord_Mask<bool> printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(fg, printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg, SkillRecord_Mask<bool> printMask = null)
-        {
-            fg.AppendLine($"{nameof(SkillRecord_Mask<T>)} =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (HeaderExport.ExportHeader(
+                writer: writer,
+                record: SkillRecord_Registration.SKIL_HEADER,
+                type: ObjectType.Record))
             {
-                if (printMask?.Skill ?? true)
-                {
-                    fg.AppendLine($"Skill => {Skill}");
-                }
-                if (printMask?.Description ?? true)
-                {
-                    fg.AppendLine($"Description => {Description}");
-                }
-                if (printMask?.Icon ?? true)
-                {
-                    fg.AppendLine($"Icon => {Icon}");
-                }
-                if (printMask?.Action ?? true)
-                {
-                    fg.AppendLine($"Action => {Action}");
-                }
-                if (printMask?.Attribute ?? true)
-                {
-                    fg.AppendLine($"Attribute => {Attribute}");
-                }
-                if (printMask?.Specialization ?? true)
-                {
-                    fg.AppendLine($"Specialization => {Specialization}");
-                }
-                if (printMask?.UseValueFirst ?? true)
-                {
-                    fg.AppendLine($"UseValueFirst => {UseValueFirst}");
-                }
-                if (printMask?.UseValueSecond ?? true)
-                {
-                    fg.AppendLine($"UseValueSecond => {UseValueSecond}");
-                }
-                if (printMask?.ApprenticeText ?? true)
-                {
-                    fg.AppendLine($"ApprenticeText => {ApprenticeText}");
-                }
-                if (printMask?.JourneymanText ?? true)
-                {
-                    fg.AppendLine($"JourneymanText => {JourneymanText}");
-                }
-                if (printMask?.ExpertText ?? true)
-                {
-                    fg.AppendLine($"ExpertText => {ExpertText}");
-                }
-                if (printMask?.MasterText ?? true)
-                {
-                    fg.AppendLine($"MasterText => {MasterText}");
-                }
-            }
-            fg.AppendLine("]");
-        }
-        #endregion
-
-    }
-
-    public class SkillRecord_ErrorMask : OblivionMajorRecord_ErrorMask, IErrorMask<SkillRecord_ErrorMask>
-    {
-        #region Members
-        public Exception Skill;
-        public Exception Description;
-        public Exception Icon;
-        public Exception Action;
-        public Exception Attribute;
-        public Exception Specialization;
-        public Exception UseValueFirst;
-        public Exception UseValueSecond;
-        public Exception ApprenticeText;
-        public Exception JourneymanText;
-        public Exception ExpertText;
-        public Exception MasterText;
-        #endregion
-
-        #region IErrorMask
-        public override object GetNthMask(int index)
-        {
-            SkillRecord_FieldIndex enu = (SkillRecord_FieldIndex)index;
-            switch (enu)
-            {
-                case SkillRecord_FieldIndex.Skill:
-                    return Skill;
-                case SkillRecord_FieldIndex.Description:
-                    return Description;
-                case SkillRecord_FieldIndex.Icon:
-                    return Icon;
-                case SkillRecord_FieldIndex.Action:
-                    return Action;
-                case SkillRecord_FieldIndex.Attribute:
-                    return Attribute;
-                case SkillRecord_FieldIndex.Specialization:
-                    return Specialization;
-                case SkillRecord_FieldIndex.UseValueFirst:
-                    return UseValueFirst;
-                case SkillRecord_FieldIndex.UseValueSecond:
-                    return UseValueSecond;
-                case SkillRecord_FieldIndex.ApprenticeText:
-                    return ApprenticeText;
-                case SkillRecord_FieldIndex.JourneymanText:
-                    return JourneymanText;
-                case SkillRecord_FieldIndex.ExpertText:
-                    return ExpertText;
-                case SkillRecord_FieldIndex.MasterText:
-                    return MasterText;
-                default:
-                    return base.GetNthMask(index);
+                Write_Binary_Embedded(
+                    item: item,
+                    writer: writer,
+                    errorMask: errorMask,
+                    masterReferences: masterReferences);
+                Write_Binary_RecordTypes(
+                    item: item,
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter,
+                    errorMask: errorMask,
+                    masterReferences: masterReferences);
             }
         }
-
-        public override void SetNthException(int index, Exception ex)
-        {
-            SkillRecord_FieldIndex enu = (SkillRecord_FieldIndex)index;
-            switch (enu)
-            {
-                case SkillRecord_FieldIndex.Skill:
-                    this.Skill = ex;
-                    break;
-                case SkillRecord_FieldIndex.Description:
-                    this.Description = ex;
-                    break;
-                case SkillRecord_FieldIndex.Icon:
-                    this.Icon = ex;
-                    break;
-                case SkillRecord_FieldIndex.Action:
-                    this.Action = ex;
-                    break;
-                case SkillRecord_FieldIndex.Attribute:
-                    this.Attribute = ex;
-                    break;
-                case SkillRecord_FieldIndex.Specialization:
-                    this.Specialization = ex;
-                    break;
-                case SkillRecord_FieldIndex.UseValueFirst:
-                    this.UseValueFirst = ex;
-                    break;
-                case SkillRecord_FieldIndex.UseValueSecond:
-                    this.UseValueSecond = ex;
-                    break;
-                case SkillRecord_FieldIndex.ApprenticeText:
-                    this.ApprenticeText = ex;
-                    break;
-                case SkillRecord_FieldIndex.JourneymanText:
-                    this.JourneymanText = ex;
-                    break;
-                case SkillRecord_FieldIndex.ExpertText:
-                    this.ExpertText = ex;
-                    break;
-                case SkillRecord_FieldIndex.MasterText:
-                    this.MasterText = ex;
-                    break;
-                default:
-                    base.SetNthException(index, ex);
-                    break;
-            }
-        }
-
-        public override void SetNthMask(int index, object obj)
-        {
-            SkillRecord_FieldIndex enu = (SkillRecord_FieldIndex)index;
-            switch (enu)
-            {
-                case SkillRecord_FieldIndex.Skill:
-                    this.Skill = (Exception)obj;
-                    break;
-                case SkillRecord_FieldIndex.Description:
-                    this.Description = (Exception)obj;
-                    break;
-                case SkillRecord_FieldIndex.Icon:
-                    this.Icon = (Exception)obj;
-                    break;
-                case SkillRecord_FieldIndex.Action:
-                    this.Action = (Exception)obj;
-                    break;
-                case SkillRecord_FieldIndex.Attribute:
-                    this.Attribute = (Exception)obj;
-                    break;
-                case SkillRecord_FieldIndex.Specialization:
-                    this.Specialization = (Exception)obj;
-                    break;
-                case SkillRecord_FieldIndex.UseValueFirst:
-                    this.UseValueFirst = (Exception)obj;
-                    break;
-                case SkillRecord_FieldIndex.UseValueSecond:
-                    this.UseValueSecond = (Exception)obj;
-                    break;
-                case SkillRecord_FieldIndex.ApprenticeText:
-                    this.ApprenticeText = (Exception)obj;
-                    break;
-                case SkillRecord_FieldIndex.JourneymanText:
-                    this.JourneymanText = (Exception)obj;
-                    break;
-                case SkillRecord_FieldIndex.ExpertText:
-                    this.ExpertText = (Exception)obj;
-                    break;
-                case SkillRecord_FieldIndex.MasterText:
-                    this.MasterText = (Exception)obj;
-                    break;
-                default:
-                    base.SetNthMask(index, obj);
-                    break;
-            }
-        }
-
-        public override bool IsInError()
-        {
-            if (Overall != null) return true;
-            if (Skill != null) return true;
-            if (Description != null) return true;
-            if (Icon != null) return true;
-            if (Action != null) return true;
-            if (Attribute != null) return true;
-            if (Specialization != null) return true;
-            if (UseValueFirst != null) return true;
-            if (UseValueSecond != null) return true;
-            if (ApprenticeText != null) return true;
-            if (JourneymanText != null) return true;
-            if (ExpertText != null) return true;
-            if (MasterText != null) return true;
-            return false;
-        }
         #endregion
 
-        #region To String
-        public override string ToString()
-        {
-            var fg = new FileGeneration();
-            ToString(fg);
-            return fg.ToString();
-        }
-
-        public override void ToString(FileGeneration fg)
-        {
-            fg.AppendLine("SkillRecord_ErrorMask =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (this.Overall != null)
-                {
-                    fg.AppendLine("Overall =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        fg.AppendLine($"{this.Overall}");
-                    }
-                    fg.AppendLine("]");
-                }
-                ToString_FillInternal(fg);
-            }
-            fg.AppendLine("]");
-        }
-        protected override void ToString_FillInternal(FileGeneration fg)
-        {
-            base.ToString_FillInternal(fg);
-            fg.AppendLine($"Skill => {Skill}");
-            fg.AppendLine($"Description => {Description}");
-            fg.AppendLine($"Icon => {Icon}");
-            fg.AppendLine($"Action => {Action}");
-            fg.AppendLine($"Attribute => {Attribute}");
-            fg.AppendLine($"Specialization => {Specialization}");
-            fg.AppendLine($"UseValueFirst => {UseValueFirst}");
-            fg.AppendLine($"UseValueSecond => {UseValueSecond}");
-            fg.AppendLine($"ApprenticeText => {ApprenticeText}");
-            fg.AppendLine($"JourneymanText => {JourneymanText}");
-            fg.AppendLine($"ExpertText => {ExpertText}");
-            fg.AppendLine($"MasterText => {MasterText}");
-        }
-        #endregion
-
-        #region Combine
-        public SkillRecord_ErrorMask Combine(SkillRecord_ErrorMask rhs)
-        {
-            var ret = new SkillRecord_ErrorMask();
-            ret.Skill = this.Skill.Combine(rhs.Skill);
-            ret.Description = this.Description.Combine(rhs.Description);
-            ret.Icon = this.Icon.Combine(rhs.Icon);
-            ret.Action = this.Action.Combine(rhs.Action);
-            ret.Attribute = this.Attribute.Combine(rhs.Attribute);
-            ret.Specialization = this.Specialization.Combine(rhs.Specialization);
-            ret.UseValueFirst = this.UseValueFirst.Combine(rhs.UseValueFirst);
-            ret.UseValueSecond = this.UseValueSecond.Combine(rhs.UseValueSecond);
-            ret.ApprenticeText = this.ApprenticeText.Combine(rhs.ApprenticeText);
-            ret.JourneymanText = this.JourneymanText.Combine(rhs.JourneymanText);
-            ret.ExpertText = this.ExpertText.Combine(rhs.ExpertText);
-            ret.MasterText = this.MasterText.Combine(rhs.MasterText);
-            return ret;
-        }
-        public static SkillRecord_ErrorMask Combine(SkillRecord_ErrorMask lhs, SkillRecord_ErrorMask rhs)
-        {
-            if (lhs != null && rhs != null) return lhs.Combine(rhs);
-            return lhs ?? rhs;
-        }
-        #endregion
-
-        #region Factory
-        public static SkillRecord_ErrorMask Factory(ErrorMaskBuilder errorMask)
-        {
-            if (errorMask?.Empty ?? true) return null;
-            return new SkillRecord_ErrorMask();
-        }
-        #endregion
-
-    }
-    public class SkillRecord_CopyMask : OblivionMajorRecord_CopyMask
-    {
-        public SkillRecord_CopyMask()
-        {
-        }
-
-        public SkillRecord_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
-        {
-            this.Skill = defaultOn;
-            this.Description = defaultOn;
-            this.Icon = defaultOn;
-            this.Action = defaultOn;
-            this.Attribute = defaultOn;
-            this.Specialization = defaultOn;
-            this.UseValueFirst = defaultOn;
-            this.UseValueSecond = defaultOn;
-            this.ApprenticeText = defaultOn;
-            this.JourneymanText = defaultOn;
-            this.ExpertText = defaultOn;
-            this.MasterText = defaultOn;
-        }
-
-        #region Members
-        public bool Skill;
-        public bool Description;
-        public bool Icon;
-        public bool Action;
-        public bool Attribute;
-        public bool Specialization;
-        public bool UseValueFirst;
-        public bool UseValueSecond;
-        public bool ApprenticeText;
-        public bool JourneymanText;
-        public bool ExpertText;
-        public bool MasterText;
-        #endregion
-
-    }
-
-    public class SkillRecord_TranslationMask : OblivionMajorRecord_TranslationMask
-    {
-        #region Members
-        public bool Skill;
-        public bool Description;
-        public bool Icon;
-        public bool Action;
-        public bool Attribute;
-        public bool Specialization;
-        public bool UseValueFirst;
-        public bool UseValueSecond;
-        public bool ApprenticeText;
-        public bool JourneymanText;
-        public bool ExpertText;
-        public bool MasterText;
-        #endregion
-
-        #region Ctors
-        public SkillRecord_TranslationMask()
-            : base()
-        {
-        }
-
-        public SkillRecord_TranslationMask(bool defaultOn)
-            : base(defaultOn)
-        {
-            this.Skill = defaultOn;
-            this.Description = defaultOn;
-            this.Icon = defaultOn;
-            this.Action = defaultOn;
-            this.Attribute = defaultOn;
-            this.Specialization = defaultOn;
-            this.UseValueFirst = defaultOn;
-            this.UseValueSecond = defaultOn;
-            this.ApprenticeText = defaultOn;
-            this.JourneymanText = defaultOn;
-            this.ExpertText = defaultOn;
-            this.MasterText = defaultOn;
-        }
-
-        #endregion
-
-        protected override void GetCrystal(List<(bool On, TranslationCrystal SubCrystal)> ret)
-        {
-            base.GetCrystal(ret);
-            ret.Add((Skill, null));
-            ret.Add((Description, null));
-            ret.Add((Icon, null));
-            ret.Add((Action, null));
-            ret.Add((Attribute, null));
-            ret.Add((Specialization, null));
-            ret.Add((UseValueFirst, null));
-            ret.Add((UseValueSecond, null));
-            ret.Add((ApprenticeText, null));
-            ret.Add((JourneymanText, null));
-            ret.Add((ExpertText, null));
-            ret.Add((MasterText, null));
-        }
     }
     #endregion
 

@@ -36,6 +36,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class Activator : 
         OblivionMajorRecord,
         IActivator,
+        IActivatorInternal,
         ILoquiObject<Activator>,
         ILoquiObjectSetter,
         INamed,
@@ -370,7 +371,8 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Xml(
+            ActivatorXmlTranslation.Instance.Write_Xml(
+                item: this,
                 name: name,
                 node: node,
                 errorMask: errorMaskBuilder,
@@ -402,7 +404,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            this.Write_Xml(
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -433,7 +435,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            this.Write_Xml(
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -449,7 +451,8 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Xml(
+            ActivatorXmlTranslation.Instance.Write_Xml(
+                item: this,
                 name: name,
                 node: node,
                 errorMask: errorMaskBuilder,
@@ -465,7 +468,8 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Xml(
+            ActivatorXmlTranslation.Instance.Write_Xml(
+                item: this,
                 name: name,
                 node: node,
                 errorMask: errorMaskBuilder,
@@ -481,7 +485,7 @@ namespace Mutagen.Bethesda.Oblivion
             TranslationCrystal translationMask,
             string name = null)
         {
-            ActivatorCommon.Write_Xml(
+            ActivatorXmlTranslation.Instance.Write_Xml(
                 item: this,
                 name: name,
                 node: node,
@@ -635,7 +639,8 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Binary(
+            ActivatorBinaryTranslation.Instance.Write_Binary(
+                item: this,
                 masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: null,
@@ -651,7 +656,8 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Binary(
+            ActivatorBinaryTranslation.Instance.Write_Binary(
+                item: this,
                 masterReferences: masterReferences,
                 writer: writer,
                 errorMask: errorMaskBuilder,
@@ -666,7 +672,8 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Binary(
+            ActivatorBinaryTranslation.Instance.Write_Binary(
+                item: this,
                 masterReferences: masterReferences,
                 writer: writer,
                 errorMask: errorMaskBuilder,
@@ -682,7 +689,7 @@ namespace Mutagen.Bethesda.Oblivion
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            ActivatorCommon.Write_Binary(
+            ActivatorBinaryTranslation.Instance.Write_Binary(
                 item: this,
                 masterReferences: masterReferences,
                 writer: writer,
@@ -984,6 +991,12 @@ namespace Mutagen.Bethesda.Oblivion
         new Sound Sound { get; set; }
     }
 
+    public partial interface IActivatorInternal : IActivator, IActivatorInternalGetter, IOblivionMajorRecordInternal
+    {
+        new Script Script { get; set; }
+        new Sound Sound { get; set; }
+    }
+
     public partial interface IActivatorGetter : IOblivionMajorRecordGetter
     {
         #region Name
@@ -1009,6 +1022,11 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
+    public partial interface IActivatorInternalGetter : IActivatorGetter, IOblivionMajorRecordInternalGetter
+    {
+
+    }
+
     #endregion
 
 }
@@ -1018,15 +1036,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #region Field Index
     public enum Activator_FieldIndex
     {
-        FormKey = 0,
-        Version = 1,
-        EditorID = 2,
-        RecordType = 3,
-        OblivionMajorRecordFlags = 4,
-        Name = 5,
-        Model = 6,
-        Script = 7,
-        Sound = 8,
+        MajorRecordFlagsRaw = 0,
+        FormKey = 1,
+        Version = 2,
+        EditorID = 3,
+        RecordType = 4,
+        OblivionMajorRecordFlags = 5,
+        Name = 6,
+        Model = 7,
+        Script = 8,
+        Sound = 9,
     }
     #endregion
 
@@ -1046,7 +1065,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort AdditionalFieldCount = 4;
 
-        public const ushort FieldCount = 9;
+        public const ushort FieldCount = 10;
 
         public static readonly Type MaskType = typeof(Activator_Mask<>);
 
@@ -1056,11 +1075,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type GetterType = typeof(IActivatorGetter);
 
-        public static readonly Type InternalGetterType = null;
+        public static readonly Type InternalGetterType = typeof(IActivatorInternalGetter);
 
         public static readonly Type SetterType = typeof(IActivator);
 
-        public static readonly Type InternalSetterType = null;
+        public static readonly Type InternalSetterType = typeof(IActivatorInternal);
 
         public static readonly Type CommonType = typeof(ActivatorCommon);
 
@@ -1504,6 +1523,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (index)
             {
+                case OblivionMajorRecord_FieldIndex.MajorRecordFlagsRaw:
+                    return (Activator_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.FormKey:
                     return (Activator_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.Version:
@@ -1529,6 +1550,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (index)
             {
+                case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
+                    return (Activator_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
                     return (Activator_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.Version:
@@ -1543,100 +1566,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         #region Xml Translation
-        #region Xml Write
-        public static void Write_Xml(
-            XElement node,
-            Activator item,
-            bool doMasks,
-            out Activator_ErrorMask errorMask,
-            Activator_TranslationMask translationMask,
-            string name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_Xml(
-                name: name,
-                node: node,
-                item: item,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = Activator_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void Write_Xml(
-            XElement node,
-            Activator item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.Activator");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.Activator");
-            }
-            WriteToNode_Xml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #endregion
-
-        public static void WriteToNode_Xml(
-            this Activator item,
-            XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            OblivionMajorRecordCommon.WriteToNode_Xml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            if (item.Name_IsSet
-                && (translationMask?.GetShouldTranslate((int)Activator_FieldIndex.Name) ?? true))
-            {
-                StringXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Name),
-                    item: item.Name,
-                    fieldIndex: (int)Activator_FieldIndex.Name,
-                    errorMask: errorMask);
-            }
-            if (item.Model_IsSet
-                && (translationMask?.GetShouldTranslate((int)Activator_FieldIndex.Model) ?? true))
-            {
-                LoquiXmlTranslation<Model>.Instance.Write(
-                    node: node,
-                    item: item.Model,
-                    name: nameof(item.Model),
-                    fieldIndex: (int)Activator_FieldIndex.Model,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Activator_FieldIndex.Model));
-            }
-            if (item.Script_Property.HasBeenSet
-                && (translationMask?.GetShouldTranslate((int)Activator_FieldIndex.Script) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Script),
-                    item: item.Script_Property?.FormKey,
-                    fieldIndex: (int)Activator_FieldIndex.Script,
-                    errorMask: errorMask);
-            }
-            if (item.Sound_Property.HasBeenSet
-                && (translationMask?.GetShouldTranslate((int)Activator_FieldIndex.Sound) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Sound),
-                    item: item.Sound_Property?.FormKey,
-                    fieldIndex: (int)Activator_FieldIndex.Sound,
-                    errorMask: errorMask);
-            }
-        }
-
         public static void FillPublic_Xml(
             this Activator item,
             XElement node,
@@ -1751,109 +1680,112 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        #region Binary Translation
-        #region Binary Write
-        public static void Write_Binary(
-            MutagenWriter writer,
-            Activator item,
-            MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
+    }
+    #endregion
+
+    #region Modules
+    #region Xml Translation
+    public partial class ActivatorXmlTranslation : OblivionMajorRecordXmlTranslation
+    {
+        public new readonly static ActivatorXmlTranslation Instance = new ActivatorXmlTranslation();
+
+        public static void WriteToNode_Xml(
+            IActivatorInternalGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            OblivionMajorRecordXmlTranslation.WriteToNode_Xml(
+                item: item,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+            if (item.Name_IsSet
+                && (translationMask?.GetShouldTranslate((int)Activator_FieldIndex.Name) ?? true))
+            {
+                StringXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Name),
+                    item: item.Name,
+                    fieldIndex: (int)Activator_FieldIndex.Name,
+                    errorMask: errorMask);
+            }
+            if (item.Model_IsSet
+                && (translationMask?.GetShouldTranslate((int)Activator_FieldIndex.Model) ?? true))
+            {
+                LoquiXmlTranslation<Model>.Instance.Write(
+                    node: node,
+                    item: item.Model,
+                    name: nameof(item.Model),
+                    fieldIndex: (int)Activator_FieldIndex.Model,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)Activator_FieldIndex.Model));
+            }
+            if (item.Script_Property.HasBeenSet
+                && (translationMask?.GetShouldTranslate((int)Activator_FieldIndex.Script) ?? true))
+            {
+                FormKeyXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Script),
+                    item: item.Script_Property?.FormKey,
+                    fieldIndex: (int)Activator_FieldIndex.Script,
+                    errorMask: errorMask);
+            }
+            if (item.Sound_Property.HasBeenSet
+                && (translationMask?.GetShouldTranslate((int)Activator_FieldIndex.Sound) ?? true))
+            {
+                FormKeyXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Sound),
+                    item: item.Sound_Property?.FormKey,
+                    fieldIndex: (int)Activator_FieldIndex.Sound,
+                    errorMask: errorMask);
+            }
+        }
+
+        #region Xml Write
+        public void Write_Xml(
+            XElement node,
+            IActivatorInternalGetter item,
             bool doMasks,
-            out Activator_ErrorMask errorMask)
+            out Activator_ErrorMask errorMask,
+            Activator_TranslationMask translationMask,
+            string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_Binary(
-                masterReferences: masterReferences,
-                writer: writer,
+            Write_Xml(
+                name: name,
+                node: node,
                 item: item,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMaskBuilder);
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal());
             errorMask = Activator_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void Write_Binary(
-            MutagenWriter writer,
-            Activator item,
-            MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
-        {
-            using (HeaderExport.ExportHeader(
-                writer: writer,
-                record: Activator_Registration.ACTI_HEADER,
-                type: ObjectType.Record))
-            {
-                OblivionMajorRecordCommon.Write_Binary_Embedded(
-                    item: item,
-                    writer: writer,
-                    errorMask: errorMask,
-                    masterReferences: masterReferences);
-                Write_Binary_RecordTypes(
-                    item: item,
-                    writer: writer,
-                    recordTypeConverter: recordTypeConverter,
-                    errorMask: errorMask,
-                    masterReferences: masterReferences);
-            }
-        }
-        #endregion
-
-        public static void Write_Binary_RecordTypes(
-            Activator item,
-            MutagenWriter writer,
-            RecordTypeConverter recordTypeConverter,
+        public void Write_Xml(
+            XElement node,
+            IActivatorInternalGetter item,
             ErrorMaskBuilder errorMask,
-            MasterReferences masterReferences)
+            TranslationCrystal translationMask,
+            string name = null)
         {
-            MajorRecordCommon.Write_Binary_RecordTypes(
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.Activator");
+            node.Add(elem);
+            if (name != null)
+            {
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.Activator");
+            }
+            WriteToNode_Xml(
                 item: item,
-                writer: writer,
-                recordTypeConverter: recordTypeConverter,
+                node: elem,
                 errorMask: errorMask,
-                masterReferences: masterReferences);
-            if (item.Name_IsSet)
-            {
-                Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Name,
-                    header: recordTypeConverter.ConvertToCustom(Activator_Registration.FULL_HEADER),
-                    nullable: false);
-            }
-            if (item.Model_IsSet)
-            {
-                LoquiBinaryTranslation<Model>.Instance.Write(
-                    writer: writer,
-                    item: item.Model,
-                    fieldIndex: (int)Activator_FieldIndex.Model,
-                    errorMask: errorMask,
-                    masterReferences: masterReferences);
-            }
-            if (item.Script_Property.HasBeenSet)
-            {
-                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Script_Property,
-                    header: recordTypeConverter.ConvertToCustom(Activator_Registration.SCRI_HEADER),
-                    nullable: false,
-                    masterReferences: masterReferences);
-            }
-            if (item.Sound_Property.HasBeenSet)
-            {
-                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Sound_Property,
-                    header: recordTypeConverter.ConvertToCustom(Activator_Registration.SNAM_HEADER),
-                    nullable: false,
-                    masterReferences: masterReferences);
-            }
+                translationMask: translationMask);
         }
-
         #endregion
 
     }
     #endregion
 
-    #region Modules
     #region Mask
     public class Activator_Mask<T> : OblivionMajorRecord_Mask<T>, IMask<T>, IEquatable<Activator_Mask<T>>
     {
@@ -2205,6 +2137,110 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Add((Script, null));
             ret.Add((Sound, null));
         }
+    }
+    #endregion
+
+    #region Binary Translation
+    public partial class ActivatorBinaryTranslation : OblivionMajorRecordBinaryTranslation
+    {
+        public new readonly static ActivatorBinaryTranslation Instance = new ActivatorBinaryTranslation();
+
+        public static void Write_Binary_RecordTypes(
+            IActivatorInternalGetter item,
+            MutagenWriter writer,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask,
+            MasterReferences masterReferences)
+        {
+            MajorRecordBinaryTranslation.Write_Binary_RecordTypes(
+                item: item,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask,
+                masterReferences: masterReferences);
+            if (item.Name_IsSet)
+            {
+                Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Name,
+                    header: recordTypeConverter.ConvertToCustom(Activator_Registration.FULL_HEADER),
+                    nullable: false);
+            }
+            if (item.Model_IsSet)
+            {
+                LoquiBinaryTranslation<Model>.Instance.Write(
+                    writer: writer,
+                    item: item.Model,
+                    fieldIndex: (int)Activator_FieldIndex.Model,
+                    errorMask: errorMask,
+                    masterReferences: masterReferences);
+            }
+            if (item.Script_Property.HasBeenSet)
+            {
+                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Script_Property,
+                    header: recordTypeConverter.ConvertToCustom(Activator_Registration.SCRI_HEADER),
+                    nullable: false,
+                    masterReferences: masterReferences);
+            }
+            if (item.Sound_Property.HasBeenSet)
+            {
+                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Sound_Property,
+                    header: recordTypeConverter.ConvertToCustom(Activator_Registration.SNAM_HEADER),
+                    nullable: false,
+                    masterReferences: masterReferences);
+            }
+        }
+
+        #region Binary Write
+        public void Write_Binary(
+            MutagenWriter writer,
+            IActivatorInternalGetter item,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            bool doMasks,
+            out Activator_ErrorMask errorMask)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            Write_Binary(
+                masterReferences: masterReferences,
+                writer: writer,
+                item: item,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMaskBuilder);
+            errorMask = Activator_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public void Write_Binary(
+            MutagenWriter writer,
+            IActivatorInternalGetter item,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            using (HeaderExport.ExportHeader(
+                writer: writer,
+                record: Activator_Registration.ACTI_HEADER,
+                type: ObjectType.Record))
+            {
+                OblivionMajorRecordBinaryTranslation.Write_Binary_Embedded(
+                    item: item,
+                    writer: writer,
+                    errorMask: errorMask,
+                    masterReferences: masterReferences);
+                Write_Binary_RecordTypes(
+                    item: item,
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter,
+                    errorMask: errorMask,
+                    masterReferences: masterReferences);
+            }
+        }
+        #endregion
+
     }
     #endregion
 

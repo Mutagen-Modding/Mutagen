@@ -302,7 +302,8 @@ namespace Mutagen.Bethesda
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Xml(
+            MasterReferenceXmlTranslation.Instance.Write_Xml(
+                item: this,
                 name: name,
                 node: node,
                 errorMask: errorMaskBuilder,
@@ -334,7 +335,7 @@ namespace Mutagen.Bethesda
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            this.Write_Xml(
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -365,7 +366,7 @@ namespace Mutagen.Bethesda
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            this.Write_Xml(
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -389,7 +390,7 @@ namespace Mutagen.Bethesda
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            this.Write_Xml(
                 name: name,
                 node: node,
                 errorMask: null,
@@ -402,7 +403,7 @@ namespace Mutagen.Bethesda
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            this.Write_Xml(
                 name: name,
                 node: node,
                 errorMask: null,
@@ -416,7 +417,7 @@ namespace Mutagen.Bethesda
             TranslationCrystal translationMask,
             string name = null)
         {
-            MasterReferenceCommon.Write_Xml(
+            MasterReferenceXmlTranslation.Instance.Write_Xml(
                 item: this,
                 name: name,
                 node: node,
@@ -505,7 +506,8 @@ namespace Mutagen.Bethesda
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Binary(
+            MasterReferenceBinaryTranslation.Instance.Write_Binary(
+                item: this,
                 masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: null,
@@ -530,7 +532,7 @@ namespace Mutagen.Bethesda
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            MasterReferenceCommon.Write_Binary(
+            MasterReferenceBinaryTranslation.Instance.Write_Binary(
                 item: this,
                 masterReferences: masterReferences,
                 writer: writer,
@@ -1140,73 +1142,6 @@ namespace Mutagen.Bethesda.Internals
         }
 
         #region Xml Translation
-        #region Xml Write
-        public static void Write_Xml(
-            XElement node,
-            MasterReference item,
-            bool doMasks,
-            out MasterReference_ErrorMask errorMask,
-            MasterReference_TranslationMask translationMask,
-            string name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_Xml(
-                name: name,
-                node: node,
-                item: item,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = MasterReference_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void Write_Xml(
-            XElement node,
-            MasterReference item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.MasterReference");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.MasterReference");
-            }
-            WriteToNode_Xml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #endregion
-
-        public static void WriteToNode_Xml(
-            this MasterReference item,
-            XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            if ((translationMask?.GetShouldTranslate((int)MasterReference_FieldIndex.Master) ?? true))
-            {
-                ModKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Master),
-                    item: item.Master,
-                    fieldIndex: (int)MasterReference_FieldIndex.Master,
-                    errorMask: errorMask);
-            }
-            if (item.FileSize_IsSet
-                && (translationMask?.GetShouldTranslate((int)MasterReference_FieldIndex.FileSize) ?? true))
-            {
-                UInt64XmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.FileSize),
-                    item: item.FileSize,
-                    fieldIndex: (int)MasterReference_FieldIndex.FileSize,
-                    errorMask: errorMask);
-            }
-        }
-
         public static void FillPublic_Xml(
             this MasterReference item,
             XElement node,
@@ -1300,70 +1235,85 @@ namespace Mutagen.Bethesda.Internals
 
         #endregion
 
-        #region Binary Translation
-        #region Binary Write
-        public static void Write_Binary(
-            MutagenWriter writer,
-            MasterReference item,
-            MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            bool doMasks,
-            out MasterReference_ErrorMask errorMask)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_Binary(
-                masterReferences: masterReferences,
-                writer: writer,
-                item: item,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMaskBuilder);
-            errorMask = MasterReference_ErrorMask.Factory(errorMaskBuilder);
-        }
+    }
+    #endregion
 
-        public static void Write_Binary(
-            MutagenWriter writer,
-            MasterReference item,
-            MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
-        {
-            Write_Binary_RecordTypes(
-                item: item,
-                writer: writer,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMask,
-                masterReferences: masterReferences);
-        }
-        #endregion
+    #region Modules
+    #region Xml Translation
+    public partial class MasterReferenceXmlTranslation
+    {
+        public readonly static MasterReferenceXmlTranslation Instance = new MasterReferenceXmlTranslation();
 
-        public static void Write_Binary_RecordTypes(
-            MasterReference item,
-            MutagenWriter writer,
-            RecordTypeConverter recordTypeConverter,
+        public static void WriteToNode_Xml(
+            IMasterReferenceGetter item,
+            XElement node,
             ErrorMaskBuilder errorMask,
-            MasterReferences masterReferences)
+            TranslationCrystal translationMask)
         {
-            Mutagen.Bethesda.Binary.ModKeyBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.Master,
-                header: recordTypeConverter.ConvertToCustom(MasterReference_Registration.MAST_HEADER),
-                nullable: false);
-            if (item.FileSize_IsSet)
+            if ((translationMask?.GetShouldTranslate((int)MasterReference_FieldIndex.Master) ?? true))
             {
-                Mutagen.Bethesda.Binary.UInt64BinaryTranslation.Instance.Write(
-                    writer: writer,
+                ModKeyXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Master),
+                    item: item.Master,
+                    fieldIndex: (int)MasterReference_FieldIndex.Master,
+                    errorMask: errorMask);
+            }
+            if (item.FileSize_IsSet
+                && (translationMask?.GetShouldTranslate((int)MasterReference_FieldIndex.FileSize) ?? true))
+            {
+                UInt64XmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.FileSize),
                     item: item.FileSize,
-                    header: recordTypeConverter.ConvertToCustom(MasterReference_Registration.DATA_HEADER),
-                    nullable: false);
+                    fieldIndex: (int)MasterReference_FieldIndex.FileSize,
+                    errorMask: errorMask);
             }
         }
 
+        #region Xml Write
+        public void Write_Xml(
+            XElement node,
+            IMasterReferenceGetter item,
+            bool doMasks,
+            out MasterReference_ErrorMask errorMask,
+            MasterReference_TranslationMask translationMask,
+            string name = null)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            Write_Xml(
+                name: name,
+                node: node,
+                item: item,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal());
+            errorMask = MasterReference_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public void Write_Xml(
+            XElement node,
+            IMasterReferenceGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            var elem = new XElement(name ?? "Mutagen.Bethesda.MasterReference");
+            node.Add(elem);
+            if (name != null)
+            {
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.MasterReference");
+            }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         #endregion
 
     }
     #endregion
 
-    #region Modules
     #region Mask
     public class MasterReference_Mask<T> : IMask<T>, IEquatable<MasterReference_Mask<T>>
     {
@@ -1664,6 +1614,71 @@ namespace Mutagen.Bethesda.Internals
             ret.Add((Master, null));
             ret.Add((FileSize, null));
         }
+    }
+    #endregion
+
+    #region Binary Translation
+    public partial class MasterReferenceBinaryTranslation
+    {
+        public readonly static MasterReferenceBinaryTranslation Instance = new MasterReferenceBinaryTranslation();
+
+        public static void Write_Binary_RecordTypes(
+            IMasterReferenceGetter item,
+            MutagenWriter writer,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask,
+            MasterReferences masterReferences)
+        {
+            Mutagen.Bethesda.Binary.ModKeyBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.Master,
+                header: recordTypeConverter.ConvertToCustom(MasterReference_Registration.MAST_HEADER),
+                nullable: false);
+            if (item.FileSize_IsSet)
+            {
+                Mutagen.Bethesda.Binary.UInt64BinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.FileSize,
+                    header: recordTypeConverter.ConvertToCustom(MasterReference_Registration.DATA_HEADER),
+                    nullable: false);
+            }
+        }
+
+        #region Binary Write
+        public void Write_Binary(
+            MutagenWriter writer,
+            IMasterReferenceGetter item,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            bool doMasks,
+            out MasterReference_ErrorMask errorMask)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            Write_Binary(
+                masterReferences: masterReferences,
+                writer: writer,
+                item: item,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMaskBuilder);
+            errorMask = MasterReference_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public void Write_Binary(
+            MutagenWriter writer,
+            IMasterReferenceGetter item,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            Write_Binary_RecordTypes(
+                item: item,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask,
+                masterReferences: masterReferences);
+        }
+        #endregion
+
     }
     #endregion
 

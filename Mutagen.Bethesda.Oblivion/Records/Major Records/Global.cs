@@ -87,18 +87,24 @@ namespace Mutagen.Bethesda.Oblivion
             }
             return g;
         }
+    }
 
-        static partial void WriteBinary_TypeChar_Custom(
-            MutagenWriter writer, 
-            Global item,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask)
+    namespace Internals
+    {
+        public partial class GlobalBinaryTranslation
         {
-            Mutagen.Bethesda.Binary.CharBinaryTranslation.Instance.Write(
-                writer,
-                item.TypeChar,
-                header: Global_Registration.FNAM_HEADER,
-                nullable: false);
+            static partial void WriteBinary_TypeChar_Custom(
+                MutagenWriter writer,
+                IGlobalInternalGetter item,
+                MasterReferences masterReferences,
+                ErrorMaskBuilder errorMask)
+            {
+                Mutagen.Bethesda.Binary.CharBinaryTranslation.Instance.Write(
+                    writer,
+                    item.TypeChar,
+                    header: Global_Registration.FNAM_HEADER,
+                    nullable: false);
+            }
         }
     }
 }

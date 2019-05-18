@@ -34,6 +34,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class DialogResponse : 
         LoquiNotifyingObject,
         IDialogResponse,
+        IDialogResponseInternal,
         ILoquiObject<DialogResponse>,
         ILoquiObjectSetter,
         IEquatable<DialogResponse>
@@ -169,6 +170,23 @@ namespace Mutagen.Bethesda.Oblivion
             this.ActorNotes_Set(default(String), false);
         }
         #endregion
+        #region TRDTDataTypeState
+        private DialogResponse.TRDTDataType _TRDTDataTypeState;
+        public DialogResponse.TRDTDataType TRDTDataTypeState
+        {
+            get => this._TRDTDataTypeState;
+            set => this.RaiseAndSetIfChanged(ref this._TRDTDataTypeState, value, nameof(TRDTDataTypeState));
+        }
+        DialogResponse.TRDTDataType IDialogResponseInternal.TRDTDataTypeState
+        {
+            get => this.TRDTDataTypeState;
+            set => this.TRDTDataTypeState = value;
+        }
+        DialogResponse.TRDTDataType IDialogResponseInternalGetter.TRDTDataTypeState
+        {
+            get => this.TRDTDataTypeState;
+        }
+        #endregion
 
         IMask<bool> IEqualsMask<DialogResponse>.GetEqualsMask(DialogResponse rhs, EqualsMaskHelper.Include include) => DialogResponseCommon.GetEqualsMask(this, rhs, include);
         IMask<bool> IEqualsMask<IDialogResponseGetter>.GetEqualsMask(IDialogResponseGetter rhs, EqualsMaskHelper.Include include) => DialogResponseCommon.GetEqualsMask(this, rhs, include);
@@ -219,6 +237,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 if (!string.Equals(this.ActorNotes, rhs.ActorNotes)) return false;
             }
+            if (this.TRDTDataTypeState != rhs.TRDTDataTypeState) return false;
             return true;
         }
 
@@ -238,6 +257,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 ret = HashHelper.GetHashCode(ActorNotes).CombineHashCode(ret);
             }
+            ret = HashHelper.GetHashCode(TRDTDataTypeState).CombineHashCode(ret);
             return ret;
         }
 
@@ -404,7 +424,8 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Xml(
+            DialogResponseXmlTranslation.Instance.Write_Xml(
+                item: this,
                 name: name,
                 node: node,
                 errorMask: errorMaskBuilder,
@@ -436,7 +457,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            this.Write_Xml(
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -467,7 +488,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            this.Write_Xml(
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -491,7 +512,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            this.Write_Xml(
                 name: name,
                 node: node,
                 errorMask: null,
@@ -504,7 +525,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            this.Write_Xml(
                 name: name,
                 node: node,
                 errorMask: null,
@@ -518,7 +539,7 @@ namespace Mutagen.Bethesda.Oblivion
             TranslationCrystal translationMask,
             string name = null)
         {
-            DialogResponseCommon.Write_Xml(
+            DialogResponseXmlTranslation.Instance.Write_Xml(
                 item: this,
                 name: name,
                 node: node,
@@ -542,6 +563,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case DialogResponse_FieldIndex.Fluff1:
                 case DialogResponse_FieldIndex.ResponseNumber:
                 case DialogResponse_FieldIndex.Fluff2:
+                case DialogResponse_FieldIndex.TRDTDataTypeState:
                     return true;
                 default:
                     throw new ArgumentException($"Unknown field index: {index}");
@@ -550,7 +572,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = DialogResponse_Registration.TRIGGERING_RECORD_TYPE;
-        public TRDTDataType TRDTDataTypeState;
         [Flags]
         public enum TRDTDataType
         {
@@ -618,7 +639,8 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Binary(
+            DialogResponseBinaryTranslation.Instance.Write_Binary(
+                item: this,
                 masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: null,
@@ -643,7 +665,7 @@ namespace Mutagen.Bethesda.Oblivion
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            DialogResponseCommon.Write_Binary(
+            DialogResponseBinaryTranslation.Instance.Write_Binary(
                 item: this,
                 masterReferences: masterReferences,
                 writer: writer,
@@ -906,6 +928,9 @@ namespace Mutagen.Bethesda.Oblivion
                 case DialogResponse_FieldIndex.ActorNotes:
                     this.ActorNotes = (String)obj;
                     break;
+                case DialogResponse_FieldIndex.TRDTDataTypeState:
+                    this.TRDTDataTypeState = (DialogResponse.TRDTDataType)obj;
+                    break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -964,6 +989,9 @@ namespace Mutagen.Bethesda.Oblivion
                 case DialogResponse_FieldIndex.ActorNotes:
                     obj.ActorNotes = (String)pair.Value;
                     break;
+                case DialogResponse_FieldIndex.TRDTDataTypeState:
+                    obj.TRDTDataTypeState = (DialogResponse.TRDTDataType)pair.Value;
+                    break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
@@ -993,6 +1021,12 @@ namespace Mutagen.Bethesda.Oblivion
         new bool ActorNotes_IsSet { get; set; }
         void ActorNotes_Set(String item, bool hasBeenSet = true);
         void ActorNotes_Unset();
+
+    }
+
+    public partial interface IDialogResponseInternal : IDialogResponse, IDialogResponseInternalGetter
+    {
+        new DialogResponse.TRDTDataType TRDTDataTypeState { get; set; }
 
     }
 
@@ -1031,6 +1065,15 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
+    public partial interface IDialogResponseInternalGetter : IDialogResponseGetter
+    {
+        #region TRDTDataTypeState
+        DialogResponse.TRDTDataType TRDTDataTypeState { get; }
+
+        #endregion
+
+    }
+
     #endregion
 
 }
@@ -1047,6 +1090,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         Fluff2 = 4,
         ResponseText = 5,
         ActorNotes = 6,
+        TRDTDataTypeState = 7,
     }
     #endregion
 
@@ -1064,9 +1108,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const string GUID = "d8438f70-ccc0-4bc8-876d-11134cdabd97";
 
-        public const ushort AdditionalFieldCount = 7;
+        public const ushort AdditionalFieldCount = 8;
 
-        public const ushort FieldCount = 7;
+        public const ushort FieldCount = 8;
 
         public static readonly Type MaskType = typeof(DialogResponse_Mask<>);
 
@@ -1076,11 +1120,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type GetterType = typeof(IDialogResponseGetter);
 
-        public static readonly Type InternalGetterType = null;
+        public static readonly Type InternalGetterType = typeof(IDialogResponseInternalGetter);
 
         public static readonly Type SetterType = typeof(IDialogResponse);
 
-        public static readonly Type InternalSetterType = null;
+        public static readonly Type InternalSetterType = typeof(IDialogResponseInternal);
 
         public static readonly Type CommonType = typeof(DialogResponseCommon);
 
@@ -1112,6 +1156,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (ushort)DialogResponse_FieldIndex.ResponseText;
                 case "ACTORNOTES":
                     return (ushort)DialogResponse_FieldIndex.ActorNotes;
+                case "TRDTDATATYPESTATE":
+                    return (ushort)DialogResponse_FieldIndex.TRDTDataTypeState;
                 default:
                     return null;
             }
@@ -1129,6 +1175,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case DialogResponse_FieldIndex.Fluff2:
                 case DialogResponse_FieldIndex.ResponseText:
                 case DialogResponse_FieldIndex.ActorNotes:
+                case DialogResponse_FieldIndex.TRDTDataTypeState:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1147,6 +1194,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case DialogResponse_FieldIndex.Fluff2:
                 case DialogResponse_FieldIndex.ResponseText:
                 case DialogResponse_FieldIndex.ActorNotes:
+                case DialogResponse_FieldIndex.TRDTDataTypeState:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1165,6 +1213,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case DialogResponse_FieldIndex.Fluff2:
                 case DialogResponse_FieldIndex.ResponseText:
                 case DialogResponse_FieldIndex.ActorNotes:
+                case DialogResponse_FieldIndex.TRDTDataTypeState:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1190,6 +1239,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return "ResponseText";
                 case DialogResponse_FieldIndex.ActorNotes:
                     return "ActorNotes";
+                case DialogResponse_FieldIndex.TRDTDataTypeState:
+                    return "TRDTDataTypeState";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1207,6 +1258,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case DialogResponse_FieldIndex.Fluff2:
                 case DialogResponse_FieldIndex.ResponseText:
                 case DialogResponse_FieldIndex.ActorNotes:
+                case DialogResponse_FieldIndex.TRDTDataTypeState:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1225,6 +1277,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case DialogResponse_FieldIndex.Fluff2:
                 case DialogResponse_FieldIndex.ResponseText:
                 case DialogResponse_FieldIndex.ActorNotes:
+                case DialogResponse_FieldIndex.TRDTDataTypeState:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1250,6 +1303,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return typeof(String);
                 case DialogResponse_FieldIndex.ActorNotes:
                     return typeof(String);
+                case DialogResponse_FieldIndex.TRDTDataTypeState:
+                    return typeof(DialogResponse.TRDTDataType);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1547,6 +1602,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     fg.AppendLine($"ActorNotes => {item.ActorNotes}");
                 }
+                if (printMask?.TRDTDataTypeState ?? true)
+                {
+                }
             }
             fg.AppendLine("]");
         }
@@ -1570,126 +1628,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Fluff2 = true;
             ret.ResponseText = item.ResponseText_IsSet;
             ret.ActorNotes = item.ActorNotes_IsSet;
+            ret.TRDTDataTypeState = true;
             return ret;
         }
 
         #region Xml Translation
-        #region Xml Write
-        public static void Write_Xml(
-            XElement node,
-            DialogResponse item,
-            bool doMasks,
-            out DialogResponse_ErrorMask errorMask,
-            DialogResponse_TranslationMask translationMask,
-            string name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_Xml(
-                name: name,
-                node: node,
-                item: item,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = DialogResponse_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void Write_Xml(
-            XElement node,
-            DialogResponse item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.DialogResponse");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.DialogResponse");
-            }
-            WriteToNode_Xml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #endregion
-
-        public static void WriteToNode_Xml(
-            this DialogResponse item,
-            XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            if (item.TRDTDataTypeState.HasFlag(DialogResponse.TRDTDataType.Has))
-            {
-                if ((translationMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.Emotion) ?? true))
-                {
-                    EnumXmlTranslation<EmotionType>.Instance.Write(
-                        node: node,
-                        name: nameof(item.Emotion),
-                        item: item.Emotion,
-                        fieldIndex: (int)DialogResponse_FieldIndex.Emotion,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.EmotionValue) ?? true))
-                {
-                    Int32XmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.EmotionValue),
-                        item: item.EmotionValue,
-                        fieldIndex: (int)DialogResponse_FieldIndex.EmotionValue,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.Fluff1) ?? true))
-                {
-                    ByteArrayXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.Fluff1),
-                        item: item.Fluff1,
-                        fieldIndex: (int)DialogResponse_FieldIndex.Fluff1,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.ResponseNumber) ?? true))
-                {
-                    ByteXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.ResponseNumber),
-                        item: item.ResponseNumber,
-                        fieldIndex: (int)DialogResponse_FieldIndex.ResponseNumber,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.Fluff2) ?? true))
-                {
-                    ByteArrayXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.Fluff2),
-                        item: item.Fluff2,
-                        fieldIndex: (int)DialogResponse_FieldIndex.Fluff2,
-                        errorMask: errorMask);
-                }
-            }
-            if (item.ResponseText_IsSet
-                && (translationMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.ResponseText) ?? true))
-            {
-                StringXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.ResponseText),
-                    item: item.ResponseText,
-                    fieldIndex: (int)DialogResponse_FieldIndex.ResponseText,
-                    errorMask: errorMask);
-            }
-            if (item.ActorNotes_IsSet
-                && (translationMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.ActorNotes) ?? true))
-            {
-                StringXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.ActorNotes),
-                    item: item.ActorNotes,
-                    fieldIndex: (int)DialogResponse_FieldIndex.ActorNotes,
-                    errorMask: errorMask);
-            }
-        }
-
         public static void FillPublic_Xml(
             this DialogResponse item,
             XElement node,
@@ -1907,93 +1850,34 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask?.PopIndex();
                     }
                     break;
+                case "TRDTDataTypeState":
+                    try
+                    {
+                        errorMask?.PushIndex((int)DialogResponse_FieldIndex.TRDTDataTypeState);
+                        if (EnumXmlTranslation<DialogResponse.TRDTDataType>.Instance.Parse(
+                            node: node,
+                            item: out DialogResponse.TRDTDataType TRDTDataTypeStateParse,
+                            errorMask: errorMask))
+                        {
+                            item.TRDTDataTypeState = TRDTDataTypeStateParse;
+                        }
+                        else
+                        {
+                            item.TRDTDataTypeState = default(DialogResponse.TRDTDataType);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
                 default:
                     break;
-            }
-        }
-
-        #endregion
-
-        #region Binary Translation
-        #region Binary Write
-        public static void Write_Binary(
-            MutagenWriter writer,
-            DialogResponse item,
-            MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            bool doMasks,
-            out DialogResponse_ErrorMask errorMask)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_Binary(
-                masterReferences: masterReferences,
-                writer: writer,
-                item: item,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMaskBuilder);
-            errorMask = DialogResponse_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void Write_Binary(
-            MutagenWriter writer,
-            DialogResponse item,
-            MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
-        {
-            Write_Binary_RecordTypes(
-                item: item,
-                writer: writer,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMask,
-                masterReferences: masterReferences);
-        }
-        #endregion
-
-        public static void Write_Binary_RecordTypes(
-            DialogResponse item,
-            MutagenWriter writer,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask,
-            MasterReferences masterReferences)
-        {
-            if (item.TRDTDataTypeState.HasFlag(DialogResponse.TRDTDataType.Has))
-            {
-                using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(DialogResponse_Registration.TRDT_HEADER)))
-                {
-                    Mutagen.Bethesda.Binary.EnumBinaryTranslation<EmotionType>.Instance.Write(
-                        writer,
-                        item.Emotion,
-                        length: 4);
-                    Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.EmotionValue);
-                    Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.Fluff1);
-                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.ResponseNumber);
-                    Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.Fluff2);
-                }
-            }
-            if (item.ResponseText_IsSet)
-            {
-                Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.ResponseText,
-                    header: recordTypeConverter.ConvertToCustom(DialogResponse_Registration.NAM1_HEADER),
-                    nullable: false);
-            }
-            if (item.ActorNotes_IsSet)
-            {
-                Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.ActorNotes,
-                    header: recordTypeConverter.ConvertToCustom(DialogResponse_Registration.NAM2_HEADER),
-                    nullable: false);
             }
         }
 
@@ -2003,6 +1887,139 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Modules
+    #region Xml Translation
+    public partial class DialogResponseXmlTranslation
+    {
+        public readonly static DialogResponseXmlTranslation Instance = new DialogResponseXmlTranslation();
+
+        public static void WriteToNode_Xml(
+            IDialogResponseInternalGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            if (item.TRDTDataTypeState.HasFlag(DialogResponse.TRDTDataType.Has))
+            {
+                if ((translationMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.Emotion) ?? true))
+                {
+                    EnumXmlTranslation<EmotionType>.Instance.Write(
+                        node: node,
+                        name: nameof(item.Emotion),
+                        item: item.Emotion,
+                        fieldIndex: (int)DialogResponse_FieldIndex.Emotion,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.EmotionValue) ?? true))
+                {
+                    Int32XmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.EmotionValue),
+                        item: item.EmotionValue,
+                        fieldIndex: (int)DialogResponse_FieldIndex.EmotionValue,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.Fluff1) ?? true))
+                {
+                    ByteArrayXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.Fluff1),
+                        item: item.Fluff1,
+                        fieldIndex: (int)DialogResponse_FieldIndex.Fluff1,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.ResponseNumber) ?? true))
+                {
+                    ByteXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.ResponseNumber),
+                        item: item.ResponseNumber,
+                        fieldIndex: (int)DialogResponse_FieldIndex.ResponseNumber,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.Fluff2) ?? true))
+                {
+                    ByteArrayXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.Fluff2),
+                        item: item.Fluff2,
+                        fieldIndex: (int)DialogResponse_FieldIndex.Fluff2,
+                        errorMask: errorMask);
+                }
+            }
+            if (item.ResponseText_IsSet
+                && (translationMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.ResponseText) ?? true))
+            {
+                StringXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.ResponseText),
+                    item: item.ResponseText,
+                    fieldIndex: (int)DialogResponse_FieldIndex.ResponseText,
+                    errorMask: errorMask);
+            }
+            if (item.ActorNotes_IsSet
+                && (translationMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.ActorNotes) ?? true))
+            {
+                StringXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.ActorNotes),
+                    item: item.ActorNotes,
+                    fieldIndex: (int)DialogResponse_FieldIndex.ActorNotes,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.TRDTDataTypeState) ?? true))
+            {
+                EnumXmlTranslation<DialogResponse.TRDTDataType>.Instance.Write(
+                    node: node,
+                    name: nameof(item.TRDTDataTypeState),
+                    item: item.TRDTDataTypeState,
+                    fieldIndex: (int)DialogResponse_FieldIndex.TRDTDataTypeState,
+                    errorMask: errorMask);
+            }
+        }
+
+        #region Xml Write
+        public void Write_Xml(
+            XElement node,
+            IDialogResponseInternalGetter item,
+            bool doMasks,
+            out DialogResponse_ErrorMask errorMask,
+            DialogResponse_TranslationMask translationMask,
+            string name = null)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            Write_Xml(
+                name: name,
+                node: node,
+                item: item,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal());
+            errorMask = DialogResponse_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public void Write_Xml(
+            XElement node,
+            IDialogResponseInternalGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.DialogResponse");
+            node.Add(elem);
+            if (name != null)
+            {
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.DialogResponse");
+            }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        #endregion
+
+    }
+    #endregion
+
     #region Mask
     public class DialogResponse_Mask<T> : IMask<T>, IEquatable<DialogResponse_Mask<T>>
     {
@@ -2020,6 +2037,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.Fluff2 = initialValue;
             this.ResponseText = initialValue;
             this.ActorNotes = initialValue;
+            this.TRDTDataTypeState = initialValue;
         }
         #endregion
 
@@ -2031,6 +2049,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public T Fluff2;
         public T ResponseText;
         public T ActorNotes;
+        public T TRDTDataTypeState;
         #endregion
 
         #region Equals
@@ -2050,6 +2069,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (!object.Equals(this.Fluff2, rhs.Fluff2)) return false;
             if (!object.Equals(this.ResponseText, rhs.ResponseText)) return false;
             if (!object.Equals(this.ActorNotes, rhs.ActorNotes)) return false;
+            if (!object.Equals(this.TRDTDataTypeState, rhs.TRDTDataTypeState)) return false;
             return true;
         }
         public override int GetHashCode()
@@ -2062,6 +2082,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret = ret.CombineHashCode(this.Fluff2?.GetHashCode());
             ret = ret.CombineHashCode(this.ResponseText?.GetHashCode());
             ret = ret.CombineHashCode(this.ActorNotes?.GetHashCode());
+            ret = ret.CombineHashCode(this.TRDTDataTypeState?.GetHashCode());
             return ret;
         }
 
@@ -2077,6 +2098,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (!eval(this.Fluff2)) return false;
             if (!eval(this.ResponseText)) return false;
             if (!eval(this.ActorNotes)) return false;
+            if (!eval(this.TRDTDataTypeState)) return false;
             return true;
         }
         #endregion
@@ -2098,6 +2120,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             obj.Fluff2 = eval(this.Fluff2);
             obj.ResponseText = eval(this.ResponseText);
             obj.ActorNotes = eval(this.ActorNotes);
+            obj.TRDTDataTypeState = eval(this.TRDTDataTypeState);
         }
         #endregion
 
@@ -2154,6 +2177,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     fg.AppendLine($"ActorNotes => {ActorNotes}");
                 }
+                if (printMask?.TRDTDataTypeState ?? true)
+                {
+                    fg.AppendLine($"TRDTDataTypeState => {TRDTDataTypeState}");
+                }
             }
             fg.AppendLine("]");
         }
@@ -2184,6 +2211,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Exception Fluff2;
         public Exception ResponseText;
         public Exception ActorNotes;
+        public Exception TRDTDataTypeState;
         #endregion
 
         #region IErrorMask
@@ -2206,6 +2234,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return ResponseText;
                 case DialogResponse_FieldIndex.ActorNotes:
                     return ActorNotes;
+                case DialogResponse_FieldIndex.TRDTDataTypeState:
+                    return TRDTDataTypeState;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -2236,6 +2266,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     break;
                 case DialogResponse_FieldIndex.ActorNotes:
                     this.ActorNotes = ex;
+                    break;
+                case DialogResponse_FieldIndex.TRDTDataTypeState:
+                    this.TRDTDataTypeState = ex;
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -2268,6 +2301,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case DialogResponse_FieldIndex.ActorNotes:
                     this.ActorNotes = (Exception)obj;
                     break;
+                case DialogResponse_FieldIndex.TRDTDataTypeState:
+                    this.TRDTDataTypeState = (Exception)obj;
+                    break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -2283,6 +2319,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (Fluff2 != null) return true;
             if (ResponseText != null) return true;
             if (ActorNotes != null) return true;
+            if (TRDTDataTypeState != null) return true;
             return false;
         }
         #endregion
@@ -2324,6 +2361,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             fg.AppendLine($"Fluff2 => {Fluff2}");
             fg.AppendLine($"ResponseText => {ResponseText}");
             fg.AppendLine($"ActorNotes => {ActorNotes}");
+            fg.AppendLine($"TRDTDataTypeState => {TRDTDataTypeState}");
         }
         #endregion
 
@@ -2338,6 +2376,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Fluff2 = this.Fluff2.Combine(rhs.Fluff2);
             ret.ResponseText = this.ResponseText.Combine(rhs.ResponseText);
             ret.ActorNotes = this.ActorNotes.Combine(rhs.ActorNotes);
+            ret.TRDTDataTypeState = this.TRDTDataTypeState.Combine(rhs.TRDTDataTypeState);
             return ret;
         }
         public static DialogResponse_ErrorMask Combine(DialogResponse_ErrorMask lhs, DialogResponse_ErrorMask rhs)
@@ -2371,6 +2410,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.Fluff2 = defaultOn;
             this.ResponseText = defaultOn;
             this.ActorNotes = defaultOn;
+            this.TRDTDataTypeState = defaultOn;
         }
 
         #region Members
@@ -2381,6 +2421,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool Fluff2;
         public bool ResponseText;
         public bool ActorNotes;
+        public bool TRDTDataTypeState;
         #endregion
 
     }
@@ -2396,6 +2437,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool Fluff2;
         public bool ResponseText;
         public bool ActorNotes;
+        public bool TRDTDataTypeState;
         #endregion
 
         #region Ctors
@@ -2412,6 +2454,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.Fluff2 = defaultOn;
             this.ResponseText = defaultOn;
             this.ActorNotes = defaultOn;
+            this.TRDTDataTypeState = defaultOn;
         }
 
         #endregion
@@ -2437,7 +2480,111 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Add((Fluff2, null));
             ret.Add((ResponseText, null));
             ret.Add((ActorNotes, null));
+            ret.Add((TRDTDataTypeState, null));
         }
+    }
+    #endregion
+
+    #region Binary Translation
+    public partial class DialogResponseBinaryTranslation
+    {
+        public readonly static DialogResponseBinaryTranslation Instance = new DialogResponseBinaryTranslation();
+
+        public static void Write_Binary_Embedded(
+            IDialogResponseInternalGetter item,
+            MutagenWriter writer,
+            ErrorMaskBuilder errorMask,
+            MasterReferences masterReferences)
+        {
+        }
+
+        public static void Write_Binary_RecordTypes(
+            IDialogResponseInternalGetter item,
+            MutagenWriter writer,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask,
+            MasterReferences masterReferences)
+        {
+            if (item.TRDTDataTypeState.HasFlag(DialogResponse.TRDTDataType.Has))
+            {
+                using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(DialogResponse_Registration.TRDT_HEADER)))
+                {
+                    Mutagen.Bethesda.Binary.EnumBinaryTranslation<EmotionType>.Instance.Write(
+                        writer,
+                        item.Emotion,
+                        length: 4);
+                    Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.EmotionValue);
+                    Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.Fluff1);
+                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.ResponseNumber);
+                    Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.Fluff2);
+                }
+            }
+            if (item.ResponseText_IsSet)
+            {
+                Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.ResponseText,
+                    header: recordTypeConverter.ConvertToCustom(DialogResponse_Registration.NAM1_HEADER),
+                    nullable: false);
+            }
+            if (item.ActorNotes_IsSet)
+            {
+                Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.ActorNotes,
+                    header: recordTypeConverter.ConvertToCustom(DialogResponse_Registration.NAM2_HEADER),
+                    nullable: false);
+            }
+        }
+
+        #region Binary Write
+        public void Write_Binary(
+            MutagenWriter writer,
+            IDialogResponseInternalGetter item,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            bool doMasks,
+            out DialogResponse_ErrorMask errorMask)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            Write_Binary(
+                masterReferences: masterReferences,
+                writer: writer,
+                item: item,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMaskBuilder);
+            errorMask = DialogResponse_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public void Write_Binary(
+            MutagenWriter writer,
+            IDialogResponseInternalGetter item,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            Write_Binary_Embedded(
+                item: item,
+                writer: writer,
+                errorMask: errorMask,
+                masterReferences: masterReferences);
+            Write_Binary_RecordTypes(
+                item: item,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask,
+                masterReferences: masterReferences);
+        }
+        #endregion
+
     }
     #endregion
 

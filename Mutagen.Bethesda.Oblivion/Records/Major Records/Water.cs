@@ -17,37 +17,43 @@ namespace Mutagen.Bethesda.Oblivion
             CausesDamage = 0x01,
             Reflective = 0x02
         }
+    }
 
-        static partial void FillBinary_OddExtraBytes_Custom(MutagenFrame frame, Water item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
+    namespace Internals
+    {
+        public partial class WaterBinaryTranslation
         {
-            if (frame.Remaining == 2)
+            static partial void FillBinary_OddExtraBytes_Custom(MutagenFrame frame, Water item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
             {
-                frame.Position += 2;
+                if (frame.Remaining == 2)
+                {
+                    frame.Position += 2;
+                }
             }
-        }
 
-        static partial void FillBinary_BloodCustomLogic_Custom(MutagenFrame frame, Water item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
-        {
-            if (frame.Remaining == 2)
+            static partial void FillBinary_BloodCustomLogic_Custom(MutagenFrame frame, Water item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
             {
-                frame.Position += 2;
+                if (frame.Remaining == 2)
+                {
+                    frame.Position += 2;
+                }
             }
-        }
 
-        static partial void FillBinary_NothingCustomLogic_Custom(MutagenFrame frame, Water item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
-        {
-            if (frame.Remaining == 2)
+            static partial void FillBinary_NothingCustomLogic_Custom(MutagenFrame frame, Water item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
             {
-                frame.Position += 2;
+                if (frame.Remaining == 2)
+                {
+                    frame.Position += 2;
+                }
+                item.DATADataTypeState |= Water.DATADataType.Has;
             }
-            item.DATADataTypeState |= DATADataType.Has;
-        }
 
-        static partial void FillBinary_OilCustomLogic_Custom(MutagenFrame frame, Water item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
-        {
-            if (frame.Remaining == 2)
+            static partial void FillBinary_OilCustomLogic_Custom(MutagenFrame frame, Water item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
             {
-                frame.Position += 2;
+                if (frame.Remaining == 2)
+                {
+                    frame.Position += 2;
+                }
             }
         }
     }

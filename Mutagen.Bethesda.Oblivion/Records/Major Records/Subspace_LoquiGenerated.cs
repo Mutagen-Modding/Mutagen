@@ -36,6 +36,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class Subspace : 
         OblivionMajorRecord,
         ISubspace,
+        ISubspaceInternal,
         ILoquiObject<Subspace>,
         ILoquiObjectSetter,
         IEquatable<Subspace>
@@ -88,6 +89,23 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
         #endregion
+        #region DNAMDataTypeState
+        private Subspace.DNAMDataType _DNAMDataTypeState;
+        public Subspace.DNAMDataType DNAMDataTypeState
+        {
+            get => this._DNAMDataTypeState;
+            set => this.RaiseAndSetIfChanged(ref this._DNAMDataTypeState, value, nameof(DNAMDataTypeState));
+        }
+        Subspace.DNAMDataType ISubspaceInternal.DNAMDataTypeState
+        {
+            get => this.DNAMDataTypeState;
+            set => this.DNAMDataTypeState = value;
+        }
+        Subspace.DNAMDataType ISubspaceInternalGetter.DNAMDataTypeState
+        {
+            get => this.DNAMDataTypeState;
+        }
+        #endregion
 
         IMask<bool> IEqualsMask<Subspace>.GetEqualsMask(Subspace rhs, EqualsMaskHelper.Include include) => SubspaceCommon.GetEqualsMask(this, rhs, include);
         IMask<bool> IEqualsMask<ISubspaceGetter>.GetEqualsMask(ISubspaceGetter rhs, EqualsMaskHelper.Include include) => SubspaceCommon.GetEqualsMask(this, rhs, include);
@@ -127,6 +145,7 @@ namespace Mutagen.Bethesda.Oblivion
             if (!this.X.EqualsWithin(rhs.X)) return false;
             if (!this.Y.EqualsWithin(rhs.Y)) return false;
             if (!this.Z.EqualsWithin(rhs.Z)) return false;
+            if (this.DNAMDataTypeState != rhs.DNAMDataTypeState) return false;
             return true;
         }
 
@@ -136,6 +155,7 @@ namespace Mutagen.Bethesda.Oblivion
             ret = HashHelper.GetHashCode(X).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(Y).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(Z).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(DNAMDataTypeState).CombineHashCode(ret);
             ret = ret.CombineHashCode(base.GetHashCode());
             return ret;
         }
@@ -309,7 +329,8 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Xml(
+            SubspaceXmlTranslation.Instance.Write_Xml(
+                item: this,
                 name: name,
                 node: node,
                 errorMask: errorMaskBuilder,
@@ -341,7 +362,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            this.Write_Xml(
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -372,7 +393,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            this.Write_Xml(
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -388,7 +409,8 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Xml(
+            SubspaceXmlTranslation.Instance.Write_Xml(
+                item: this,
                 name: name,
                 node: node,
                 errorMask: errorMaskBuilder,
@@ -404,7 +426,8 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Xml(
+            SubspaceXmlTranslation.Instance.Write_Xml(
+                item: this,
                 name: name,
                 node: node,
                 errorMask: errorMaskBuilder,
@@ -420,7 +443,7 @@ namespace Mutagen.Bethesda.Oblivion
             TranslationCrystal translationMask,
             string name = null)
         {
-            SubspaceCommon.Write_Xml(
+            SubspaceXmlTranslation.Instance.Write_Xml(
                 item: this,
                 name: name,
                 node: node,
@@ -461,6 +484,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case Subspace_FieldIndex.X:
                 case Subspace_FieldIndex.Y:
                 case Subspace_FieldIndex.Z:
+                case Subspace_FieldIndex.DNAMDataTypeState:
                     return true;
                 default:
                     return base.GetHasBeenSet(index);
@@ -469,7 +493,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = Subspace_Registration.TRIGGERING_RECORD_TYPE;
-        public DNAMDataType DNAMDataTypeState;
         [Flags]
         public enum DNAMDataType
         {
@@ -552,7 +575,8 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Binary(
+            SubspaceBinaryTranslation.Instance.Write_Binary(
+                item: this,
                 masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: null,
@@ -568,7 +592,8 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Binary(
+            SubspaceBinaryTranslation.Instance.Write_Binary(
+                item: this,
                 masterReferences: masterReferences,
                 writer: writer,
                 errorMask: errorMaskBuilder,
@@ -583,7 +608,8 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Binary(
+            SubspaceBinaryTranslation.Instance.Write_Binary(
+                item: this,
                 masterReferences: masterReferences,
                 writer: writer,
                 errorMask: errorMaskBuilder,
@@ -599,7 +625,7 @@ namespace Mutagen.Bethesda.Oblivion
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            SubspaceCommon.Write_Binary(
+            SubspaceBinaryTranslation.Instance.Write_Binary(
                 item: this,
                 masterReferences: masterReferences,
                 writer: writer,
@@ -808,6 +834,9 @@ namespace Mutagen.Bethesda.Oblivion
                 case Subspace_FieldIndex.Z:
                     this.Z = (Single)obj;
                     break;
+                case Subspace_FieldIndex.DNAMDataTypeState:
+                    this.DNAMDataTypeState = (Subspace.DNAMDataType)obj;
+                    break;
                 default:
                     base.SetNthObject(index, obj);
                     break;
@@ -848,6 +877,9 @@ namespace Mutagen.Bethesda.Oblivion
                 case Subspace_FieldIndex.Z:
                     obj.Z = (Single)pair.Value;
                     break;
+                case Subspace_FieldIndex.DNAMDataTypeState:
+                    obj.DNAMDataTypeState = (Subspace.DNAMDataType)pair.Value;
+                    break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
@@ -863,6 +895,12 @@ namespace Mutagen.Bethesda.Oblivion
         new Single Y { get; set; }
 
         new Single Z { get; set; }
+
+    }
+
+    public partial interface ISubspaceInternal : ISubspace, ISubspaceInternalGetter, IOblivionMajorRecordInternal
+    {
+        new Subspace.DNAMDataType DNAMDataTypeState { get; set; }
 
     }
 
@@ -883,6 +921,15 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
+    public partial interface ISubspaceInternalGetter : ISubspaceGetter, IOblivionMajorRecordInternalGetter
+    {
+        #region DNAMDataTypeState
+        Subspace.DNAMDataType DNAMDataTypeState { get; }
+
+        #endregion
+
+    }
+
     #endregion
 
 }
@@ -892,14 +939,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #region Field Index
     public enum Subspace_FieldIndex
     {
-        FormKey = 0,
-        Version = 1,
-        EditorID = 2,
-        RecordType = 3,
-        OblivionMajorRecordFlags = 4,
-        X = 5,
-        Y = 6,
-        Z = 7,
+        MajorRecordFlagsRaw = 0,
+        FormKey = 1,
+        Version = 2,
+        EditorID = 3,
+        RecordType = 4,
+        OblivionMajorRecordFlags = 5,
+        X = 6,
+        Y = 7,
+        Z = 8,
+        DNAMDataTypeState = 9,
     }
     #endregion
 
@@ -917,9 +966,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const string GUID = "138316d3-f53c-491f-ad98-a9732f8547af";
 
-        public const ushort AdditionalFieldCount = 3;
+        public const ushort AdditionalFieldCount = 4;
 
-        public const ushort FieldCount = 8;
+        public const ushort FieldCount = 10;
 
         public static readonly Type MaskType = typeof(Subspace_Mask<>);
 
@@ -929,11 +978,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type GetterType = typeof(ISubspaceGetter);
 
-        public static readonly Type InternalGetterType = null;
+        public static readonly Type InternalGetterType = typeof(ISubspaceInternalGetter);
 
         public static readonly Type SetterType = typeof(ISubspace);
 
-        public static readonly Type InternalSetterType = null;
+        public static readonly Type InternalSetterType = typeof(ISubspaceInternal);
 
         public static readonly Type CommonType = typeof(SubspaceCommon);
 
@@ -957,6 +1006,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (ushort)Subspace_FieldIndex.Y;
                 case "Z":
                     return (ushort)Subspace_FieldIndex.Z;
+                case "DNAMDATATYPESTATE":
+                    return (ushort)Subspace_FieldIndex.DNAMDataTypeState;
                 default:
                     return null;
             }
@@ -970,6 +1021,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Subspace_FieldIndex.X:
                 case Subspace_FieldIndex.Y:
                 case Subspace_FieldIndex.Z:
+                case Subspace_FieldIndex.DNAMDataTypeState:
                     return false;
                 default:
                     return OblivionMajorRecord_Registration.GetNthIsEnumerable(index);
@@ -984,6 +1036,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Subspace_FieldIndex.X:
                 case Subspace_FieldIndex.Y:
                 case Subspace_FieldIndex.Z:
+                case Subspace_FieldIndex.DNAMDataTypeState:
                     return false;
                 default:
                     return OblivionMajorRecord_Registration.GetNthIsLoqui(index);
@@ -998,6 +1051,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Subspace_FieldIndex.X:
                 case Subspace_FieldIndex.Y:
                 case Subspace_FieldIndex.Z:
+                case Subspace_FieldIndex.DNAMDataTypeState:
                     return false;
                 default:
                     return OblivionMajorRecord_Registration.GetNthIsSingleton(index);
@@ -1015,6 +1069,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return "Y";
                 case Subspace_FieldIndex.Z:
                     return "Z";
+                case Subspace_FieldIndex.DNAMDataTypeState:
+                    return "DNAMDataTypeState";
                 default:
                     return OblivionMajorRecord_Registration.GetNthName(index);
             }
@@ -1028,6 +1084,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Subspace_FieldIndex.X:
                 case Subspace_FieldIndex.Y:
                 case Subspace_FieldIndex.Z:
+                case Subspace_FieldIndex.DNAMDataTypeState:
                     return false;
                 default:
                     return OblivionMajorRecord_Registration.IsNthDerivative(index);
@@ -1042,6 +1099,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Subspace_FieldIndex.X:
                 case Subspace_FieldIndex.Y:
                 case Subspace_FieldIndex.Z:
+                case Subspace_FieldIndex.DNAMDataTypeState:
                     return false;
                 default:
                     return OblivionMajorRecord_Registration.IsProtected(index);
@@ -1059,6 +1117,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return typeof(Single);
                 case Subspace_FieldIndex.Z:
                     return typeof(Single);
+                case Subspace_FieldIndex.DNAMDataTypeState:
+                    return typeof(Subspace.DNAMDataType);
                 default:
                     return OblivionMajorRecord_Registration.GetNthType(index);
             }
@@ -1244,6 +1304,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     fg.AppendLine($"Z => {item.Z}");
                 }
+                if (printMask?.DNAMDataTypeState ?? true)
+                {
+                }
             }
             fg.AppendLine("]");
         }
@@ -1261,6 +1324,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.X = true;
             ret.Y = true;
             ret.Z = true;
+            ret.DNAMDataTypeState = true;
             return ret;
         }
 
@@ -1274,6 +1338,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (index)
             {
+                case OblivionMajorRecord_FieldIndex.MajorRecordFlagsRaw:
+                    return (Subspace_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.FormKey:
                     return (Subspace_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.Version:
@@ -1299,6 +1365,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (index)
             {
+                case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
+                    return (Subspace_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
                     return (Subspace_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.Version:
@@ -1313,89 +1381,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         #region Xml Translation
-        #region Xml Write
-        public static void Write_Xml(
-            XElement node,
-            Subspace item,
-            bool doMasks,
-            out Subspace_ErrorMask errorMask,
-            Subspace_TranslationMask translationMask,
-            string name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_Xml(
-                name: name,
-                node: node,
-                item: item,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = Subspace_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void Write_Xml(
-            XElement node,
-            Subspace item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.Subspace");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.Subspace");
-            }
-            WriteToNode_Xml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #endregion
-
-        public static void WriteToNode_Xml(
-            this Subspace item,
-            XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            OblivionMajorRecordCommon.WriteToNode_Xml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            if (item.DNAMDataTypeState.HasFlag(Subspace.DNAMDataType.Has))
-            {
-                if ((translationMask?.GetShouldTranslate((int)Subspace_FieldIndex.X) ?? true))
-                {
-                    FloatXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.X),
-                        item: item.X,
-                        fieldIndex: (int)Subspace_FieldIndex.X,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Subspace_FieldIndex.Y) ?? true))
-                {
-                    FloatXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.Y),
-                        item: item.Y,
-                        fieldIndex: (int)Subspace_FieldIndex.Y,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Subspace_FieldIndex.Z) ?? true))
-                {
-                    FloatXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.Z),
-                        item: item.Z,
-                        fieldIndex: (int)Subspace_FieldIndex.Z,
-                        errorMask: errorMask);
-                }
-            }
-        }
-
         public static void FillPublic_Xml(
             this Subspace item,
             XElement node,
@@ -1509,6 +1494,32 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask?.PopIndex();
                     }
                     break;
+                case "DNAMDataTypeState":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Subspace_FieldIndex.DNAMDataTypeState);
+                        if (EnumXmlTranslation<Subspace.DNAMDataType>.Instance.Parse(
+                            node: node,
+                            item: out Subspace.DNAMDataType DNAMDataTypeStateParse,
+                            errorMask: errorMask))
+                        {
+                            item.DNAMDataTypeState = DNAMDataTypeStateParse;
+                        }
+                        else
+                        {
+                            item.DNAMDataTypeState = default(Subspace.DNAMDataType);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
                 default:
                     OblivionMajorRecordCommon.FillPublicElement_Xml(
                         item: item,
@@ -1522,89 +1533,110 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        #region Binary Translation
-        #region Binary Write
-        public static void Write_Binary(
-            MutagenWriter writer,
-            Subspace item,
-            MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
+    }
+    #endregion
+
+    #region Modules
+    #region Xml Translation
+    public partial class SubspaceXmlTranslation : OblivionMajorRecordXmlTranslation
+    {
+        public new readonly static SubspaceXmlTranslation Instance = new SubspaceXmlTranslation();
+
+        public static void WriteToNode_Xml(
+            ISubspaceInternalGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            OblivionMajorRecordXmlTranslation.WriteToNode_Xml(
+                item: item,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+            if (item.DNAMDataTypeState.HasFlag(Subspace.DNAMDataType.Has))
+            {
+                if ((translationMask?.GetShouldTranslate((int)Subspace_FieldIndex.X) ?? true))
+                {
+                    FloatXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.X),
+                        item: item.X,
+                        fieldIndex: (int)Subspace_FieldIndex.X,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Subspace_FieldIndex.Y) ?? true))
+                {
+                    FloatXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.Y),
+                        item: item.Y,
+                        fieldIndex: (int)Subspace_FieldIndex.Y,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Subspace_FieldIndex.Z) ?? true))
+                {
+                    FloatXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.Z),
+                        item: item.Z,
+                        fieldIndex: (int)Subspace_FieldIndex.Z,
+                        errorMask: errorMask);
+                }
+            }
+            if ((translationMask?.GetShouldTranslate((int)Subspace_FieldIndex.DNAMDataTypeState) ?? true))
+            {
+                EnumXmlTranslation<Subspace.DNAMDataType>.Instance.Write(
+                    node: node,
+                    name: nameof(item.DNAMDataTypeState),
+                    item: item.DNAMDataTypeState,
+                    fieldIndex: (int)Subspace_FieldIndex.DNAMDataTypeState,
+                    errorMask: errorMask);
+            }
+        }
+
+        #region Xml Write
+        public void Write_Xml(
+            XElement node,
+            ISubspaceInternalGetter item,
             bool doMasks,
-            out Subspace_ErrorMask errorMask)
+            out Subspace_ErrorMask errorMask,
+            Subspace_TranslationMask translationMask,
+            string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_Binary(
-                masterReferences: masterReferences,
-                writer: writer,
+            Write_Xml(
+                name: name,
+                node: node,
                 item: item,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMaskBuilder);
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal());
             errorMask = Subspace_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void Write_Binary(
-            MutagenWriter writer,
-            Subspace item,
-            MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
-        {
-            using (HeaderExport.ExportHeader(
-                writer: writer,
-                record: Subspace_Registration.SBSP_HEADER,
-                type: ObjectType.Record))
-            {
-                OblivionMajorRecordCommon.Write_Binary_Embedded(
-                    item: item,
-                    writer: writer,
-                    errorMask: errorMask,
-                    masterReferences: masterReferences);
-                Write_Binary_RecordTypes(
-                    item: item,
-                    writer: writer,
-                    recordTypeConverter: recordTypeConverter,
-                    errorMask: errorMask,
-                    masterReferences: masterReferences);
-            }
-        }
-        #endregion
-
-        public static void Write_Binary_RecordTypes(
-            Subspace item,
-            MutagenWriter writer,
-            RecordTypeConverter recordTypeConverter,
+        public void Write_Xml(
+            XElement node,
+            ISubspaceInternalGetter item,
             ErrorMaskBuilder errorMask,
-            MasterReferences masterReferences)
+            TranslationCrystal translationMask,
+            string name = null)
         {
-            MajorRecordCommon.Write_Binary_RecordTypes(
-                item: item,
-                writer: writer,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMask,
-                masterReferences: masterReferences);
-            if (item.DNAMDataTypeState.HasFlag(Subspace.DNAMDataType.Has))
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.Subspace");
+            node.Add(elem);
+            if (name != null)
             {
-                using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Subspace_Registration.DNAM_HEADER)))
-                {
-                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.X);
-                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.Y);
-                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.Z);
-                }
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.Subspace");
             }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
         }
-
         #endregion
 
     }
     #endregion
 
-    #region Modules
     #region Mask
     public class Subspace_Mask<T> : OblivionMajorRecord_Mask<T>, IMask<T>, IEquatable<Subspace_Mask<T>>
     {
@@ -1618,6 +1650,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.X = initialValue;
             this.Y = initialValue;
             this.Z = initialValue;
+            this.DNAMDataTypeState = initialValue;
         }
         #endregion
 
@@ -1625,6 +1658,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public T X;
         public T Y;
         public T Z;
+        public T DNAMDataTypeState;
         #endregion
 
         #region Equals
@@ -1641,6 +1675,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (!object.Equals(this.X, rhs.X)) return false;
             if (!object.Equals(this.Y, rhs.Y)) return false;
             if (!object.Equals(this.Z, rhs.Z)) return false;
+            if (!object.Equals(this.DNAMDataTypeState, rhs.DNAMDataTypeState)) return false;
             return true;
         }
         public override int GetHashCode()
@@ -1649,6 +1684,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret = ret.CombineHashCode(this.X?.GetHashCode());
             ret = ret.CombineHashCode(this.Y?.GetHashCode());
             ret = ret.CombineHashCode(this.Z?.GetHashCode());
+            ret = ret.CombineHashCode(this.DNAMDataTypeState?.GetHashCode());
             ret = ret.CombineHashCode(base.GetHashCode());
             return ret;
         }
@@ -1662,6 +1698,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (!eval(this.X)) return false;
             if (!eval(this.Y)) return false;
             if (!eval(this.Z)) return false;
+            if (!eval(this.DNAMDataTypeState)) return false;
             return true;
         }
         #endregion
@@ -1680,6 +1717,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             obj.X = eval(this.X);
             obj.Y = eval(this.Y);
             obj.Z = eval(this.Z);
+            obj.DNAMDataTypeState = eval(this.DNAMDataTypeState);
         }
         #endregion
 
@@ -1721,6 +1759,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     fg.AppendLine($"Z => {Z}");
                 }
+                if (printMask?.DNAMDataTypeState ?? true)
+                {
+                    fg.AppendLine($"DNAMDataTypeState => {DNAMDataTypeState}");
+                }
             }
             fg.AppendLine("]");
         }
@@ -1734,6 +1776,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Exception X;
         public Exception Y;
         public Exception Z;
+        public Exception DNAMDataTypeState;
         #endregion
 
         #region IErrorMask
@@ -1748,6 +1791,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return Y;
                 case Subspace_FieldIndex.Z:
                     return Z;
+                case Subspace_FieldIndex.DNAMDataTypeState:
+                    return DNAMDataTypeState;
                 default:
                     return base.GetNthMask(index);
             }
@@ -1766,6 +1811,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     break;
                 case Subspace_FieldIndex.Z:
                     this.Z = ex;
+                    break;
+                case Subspace_FieldIndex.DNAMDataTypeState:
+                    this.DNAMDataTypeState = ex;
                     break;
                 default:
                     base.SetNthException(index, ex);
@@ -1787,6 +1835,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Subspace_FieldIndex.Z:
                     this.Z = (Exception)obj;
                     break;
+                case Subspace_FieldIndex.DNAMDataTypeState:
+                    this.DNAMDataTypeState = (Exception)obj;
+                    break;
                 default:
                     base.SetNthMask(index, obj);
                     break;
@@ -1799,6 +1850,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (X != null) return true;
             if (Y != null) return true;
             if (Z != null) return true;
+            if (DNAMDataTypeState != null) return true;
             return false;
         }
         #endregion
@@ -1837,6 +1889,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             fg.AppendLine($"X => {X}");
             fg.AppendLine($"Y => {Y}");
             fg.AppendLine($"Z => {Z}");
+            fg.AppendLine($"DNAMDataTypeState => {DNAMDataTypeState}");
         }
         #endregion
 
@@ -1847,6 +1900,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.X = this.X.Combine(rhs.X);
             ret.Y = this.Y.Combine(rhs.Y);
             ret.Z = this.Z.Combine(rhs.Z);
+            ret.DNAMDataTypeState = this.DNAMDataTypeState.Combine(rhs.DNAMDataTypeState);
             return ret;
         }
         public static Subspace_ErrorMask Combine(Subspace_ErrorMask lhs, Subspace_ErrorMask rhs)
@@ -1876,12 +1930,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.X = defaultOn;
             this.Y = defaultOn;
             this.Z = defaultOn;
+            this.DNAMDataTypeState = defaultOn;
         }
 
         #region Members
         public bool X;
         public bool Y;
         public bool Z;
+        public bool DNAMDataTypeState;
         #endregion
 
     }
@@ -1892,6 +1948,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool X;
         public bool Y;
         public bool Z;
+        public bool DNAMDataTypeState;
         #endregion
 
         #region Ctors
@@ -1906,6 +1963,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.X = defaultOn;
             this.Y = defaultOn;
             this.Z = defaultOn;
+            this.DNAMDataTypeState = defaultOn;
         }
 
         #endregion
@@ -1916,7 +1974,105 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Add((X, null));
             ret.Add((Y, null));
             ret.Add((Z, null));
+            ret.Add((DNAMDataTypeState, null));
         }
+    }
+    #endregion
+
+    #region Binary Translation
+    public partial class SubspaceBinaryTranslation : OblivionMajorRecordBinaryTranslation
+    {
+        public new readonly static SubspaceBinaryTranslation Instance = new SubspaceBinaryTranslation();
+
+        public static void Write_Binary_Embedded(
+            ISubspaceInternalGetter item,
+            MutagenWriter writer,
+            ErrorMaskBuilder errorMask,
+            MasterReferences masterReferences)
+        {
+            OblivionMajorRecordBinaryTranslation.Write_Binary_Embedded(
+                item: item,
+                writer: writer,
+                errorMask: errorMask,
+                masterReferences: masterReferences);
+        }
+
+        public static void Write_Binary_RecordTypes(
+            ISubspaceInternalGetter item,
+            MutagenWriter writer,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask,
+            MasterReferences masterReferences)
+        {
+            MajorRecordBinaryTranslation.Write_Binary_RecordTypes(
+                item: item,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask,
+                masterReferences: masterReferences);
+            if (item.DNAMDataTypeState.HasFlag(Subspace.DNAMDataType.Has))
+            {
+                using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Subspace_Registration.DNAM_HEADER)))
+                {
+                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.X);
+                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.Y);
+                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.Z);
+                }
+            }
+        }
+
+        #region Binary Write
+        public void Write_Binary(
+            MutagenWriter writer,
+            ISubspaceInternalGetter item,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            bool doMasks,
+            out Subspace_ErrorMask errorMask)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            Write_Binary(
+                masterReferences: masterReferences,
+                writer: writer,
+                item: item,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMaskBuilder);
+            errorMask = Subspace_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public void Write_Binary(
+            MutagenWriter writer,
+            ISubspaceInternalGetter item,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            using (HeaderExport.ExportHeader(
+                writer: writer,
+                record: Subspace_Registration.SBSP_HEADER,
+                type: ObjectType.Record))
+            {
+                Write_Binary_Embedded(
+                    item: item,
+                    writer: writer,
+                    errorMask: errorMask,
+                    masterReferences: masterReferences);
+                Write_Binary_RecordTypes(
+                    item: item,
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter,
+                    errorMask: errorMask,
+                    masterReferences: masterReferences);
+            }
+        }
+        #endregion
+
     }
     #endregion
 

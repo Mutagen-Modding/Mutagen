@@ -36,6 +36,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class Clothing : 
         ClothingAbstract,
         IClothing,
+        IClothingInternal,
         ILoquiObject<Clothing>,
         ILoquiObjectSetter,
         IEquatable<Clothing>
@@ -76,6 +77,23 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
         #endregion
+        #region DATADataTypeState
+        private Clothing.DATADataType _DATADataTypeState;
+        public Clothing.DATADataType DATADataTypeState
+        {
+            get => this._DATADataTypeState;
+            set => this.RaiseAndSetIfChanged(ref this._DATADataTypeState, value, nameof(DATADataTypeState));
+        }
+        Clothing.DATADataType IClothingInternal.DATADataTypeState
+        {
+            get => this.DATADataTypeState;
+            set => this.DATADataTypeState = value;
+        }
+        Clothing.DATADataType IClothingInternalGetter.DATADataTypeState
+        {
+            get => this.DATADataTypeState;
+        }
+        #endregion
 
         IMask<bool> IEqualsMask<Clothing>.GetEqualsMask(Clothing rhs, EqualsMaskHelper.Include include) => ClothingCommon.GetEqualsMask(this, rhs, include);
         IMask<bool> IEqualsMask<IClothingGetter>.GetEqualsMask(IClothingGetter rhs, EqualsMaskHelper.Include include) => ClothingCommon.GetEqualsMask(this, rhs, include);
@@ -114,6 +132,7 @@ namespace Mutagen.Bethesda.Oblivion
             if (!base.Equals(rhs)) return false;
             if (this.Value != rhs.Value) return false;
             if (!this.Weight.EqualsWithin(rhs.Weight)) return false;
+            if (this.DATADataTypeState != rhs.DATADataTypeState) return false;
             return true;
         }
 
@@ -122,6 +141,7 @@ namespace Mutagen.Bethesda.Oblivion
             int ret = 0;
             ret = HashHelper.GetHashCode(Value).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(Weight).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(DATADataTypeState).CombineHashCode(ret);
             ret = ret.CombineHashCode(base.GetHashCode());
             return ret;
         }
@@ -295,7 +315,8 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Xml(
+            ClothingXmlTranslation.Instance.Write_Xml(
+                item: this,
                 name: name,
                 node: node,
                 errorMask: errorMaskBuilder,
@@ -327,7 +348,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            this.Write_Xml(
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -358,7 +379,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            this.Write_Xml(
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -374,7 +395,8 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Xml(
+            ClothingXmlTranslation.Instance.Write_Xml(
+                item: this,
                 name: name,
                 node: node,
                 errorMask: errorMaskBuilder,
@@ -390,7 +412,8 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Xml(
+            ClothingXmlTranslation.Instance.Write_Xml(
+                item: this,
                 name: name,
                 node: node,
                 errorMask: errorMaskBuilder,
@@ -406,7 +429,8 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Xml(
+            ClothingXmlTranslation.Instance.Write_Xml(
+                item: this,
                 name: name,
                 node: node,
                 errorMask: errorMaskBuilder,
@@ -422,7 +446,8 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Xml(
+            ClothingXmlTranslation.Instance.Write_Xml(
+                item: this,
                 name: name,
                 node: node,
                 errorMask: errorMaskBuilder,
@@ -438,7 +463,7 @@ namespace Mutagen.Bethesda.Oblivion
             TranslationCrystal translationMask,
             string name = null)
         {
-            ClothingCommon.Write_Xml(
+            ClothingXmlTranslation.Instance.Write_Xml(
                 item: this,
                 name: name,
                 node: node,
@@ -478,6 +503,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case Clothing_FieldIndex.Value:
                 case Clothing_FieldIndex.Weight:
+                case Clothing_FieldIndex.DATADataTypeState:
                     return true;
                 default:
                     return base.GetHasBeenSet(index);
@@ -486,7 +512,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = Clothing_Registration.TRIGGERING_RECORD_TYPE;
-        public DATADataType DATADataTypeState;
         [Flags]
         public enum DATADataType
         {
@@ -569,7 +594,8 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Binary(
+            ClothingBinaryTranslation.Instance.Write_Binary(
+                item: this,
                 masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: null,
@@ -585,7 +611,8 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Binary(
+            ClothingBinaryTranslation.Instance.Write_Binary(
+                item: this,
                 masterReferences: masterReferences,
                 writer: writer,
                 errorMask: errorMaskBuilder,
@@ -600,7 +627,8 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Binary(
+            ClothingBinaryTranslation.Instance.Write_Binary(
+                item: this,
                 masterReferences: masterReferences,
                 writer: writer,
                 errorMask: errorMaskBuilder,
@@ -615,7 +643,8 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Binary(
+            ClothingBinaryTranslation.Instance.Write_Binary(
+                item: this,
                 masterReferences: masterReferences,
                 writer: writer,
                 errorMask: errorMaskBuilder,
@@ -630,7 +659,8 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Binary(
+            ClothingBinaryTranslation.Instance.Write_Binary(
+                item: this,
                 masterReferences: masterReferences,
                 writer: writer,
                 errorMask: errorMaskBuilder,
@@ -646,7 +676,7 @@ namespace Mutagen.Bethesda.Oblivion
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            ClothingCommon.Write_Binary(
+            ClothingBinaryTranslation.Instance.Write_Binary(
                 item: this,
                 masterReferences: masterReferences,
                 writer: writer,
@@ -842,6 +872,9 @@ namespace Mutagen.Bethesda.Oblivion
                 case Clothing_FieldIndex.Weight:
                     this.Weight = (Single)obj;
                     break;
+                case Clothing_FieldIndex.DATADataTypeState:
+                    this.DATADataTypeState = (Clothing.DATADataType)obj;
+                    break;
                 default:
                     base.SetNthObject(index, obj);
                     break;
@@ -879,6 +912,9 @@ namespace Mutagen.Bethesda.Oblivion
                 case Clothing_FieldIndex.Weight:
                     obj.Weight = (Single)pair.Value;
                     break;
+                case Clothing_FieldIndex.DATADataTypeState:
+                    obj.DATADataTypeState = (Clothing.DATADataType)pair.Value;
+                    break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
@@ -895,6 +931,12 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
+    public partial interface IClothingInternal : IClothing, IClothingInternalGetter, IClothingAbstractInternal
+    {
+        new Clothing.DATADataType DATADataTypeState { get; set; }
+
+    }
+
     public partial interface IClothingGetter : IClothingAbstractGetter
     {
         #region Value
@@ -903,6 +945,15 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Weight
         Single Weight { get; }
+
+        #endregion
+
+    }
+
+    public partial interface IClothingInternalGetter : IClothingGetter, IClothingAbstractInternalGetter
+    {
+        #region DATADataTypeState
+        Clothing.DATADataType DATADataTypeState { get; }
 
         #endregion
 
@@ -917,25 +968,28 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #region Field Index
     public enum Clothing_FieldIndex
     {
-        FormKey = 0,
-        Version = 1,
-        EditorID = 2,
-        RecordType = 3,
-        OblivionMajorRecordFlags = 4,
-        Name = 5,
-        Script = 6,
-        Enchantment = 7,
-        EnchantmentPoints = 8,
-        BipedFlags = 9,
-        Flags = 10,
-        MaleBipedModel = 11,
-        MaleWorldModel = 12,
-        MaleIcon = 13,
-        FemaleBipedModel = 14,
-        FemaleWorldModel = 15,
-        FemaleIcon = 16,
-        Value = 17,
-        Weight = 18,
+        MajorRecordFlagsRaw = 0,
+        FormKey = 1,
+        Version = 2,
+        EditorID = 3,
+        RecordType = 4,
+        OblivionMajorRecordFlags = 5,
+        Name = 6,
+        Script = 7,
+        Enchantment = 8,
+        EnchantmentPoints = 9,
+        BipedFlags = 10,
+        Flags = 11,
+        MaleBipedModel = 12,
+        MaleWorldModel = 13,
+        MaleIcon = 14,
+        FemaleBipedModel = 15,
+        FemaleWorldModel = 16,
+        FemaleIcon = 17,
+        BMDTDataTypeState = 18,
+        Value = 19,
+        Weight = 20,
+        DATADataTypeState = 21,
     }
     #endregion
 
@@ -953,9 +1007,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const string GUID = "961523f7-15f4-402b-9446-4bac4a46f998";
 
-        public const ushort AdditionalFieldCount = 2;
+        public const ushort AdditionalFieldCount = 3;
 
-        public const ushort FieldCount = 19;
+        public const ushort FieldCount = 22;
 
         public static readonly Type MaskType = typeof(Clothing_Mask<>);
 
@@ -965,11 +1019,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type GetterType = typeof(IClothingGetter);
 
-        public static readonly Type InternalGetterType = null;
+        public static readonly Type InternalGetterType = typeof(IClothingInternalGetter);
 
         public static readonly Type SetterType = typeof(IClothing);
 
-        public static readonly Type InternalSetterType = null;
+        public static readonly Type InternalSetterType = typeof(IClothingInternal);
 
         public static readonly Type CommonType = typeof(ClothingCommon);
 
@@ -991,6 +1045,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (ushort)Clothing_FieldIndex.Value;
                 case "WEIGHT":
                     return (ushort)Clothing_FieldIndex.Weight;
+                case "DATADATATYPESTATE":
+                    return (ushort)Clothing_FieldIndex.DATADataTypeState;
                 default:
                     return null;
             }
@@ -1003,6 +1059,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case Clothing_FieldIndex.Value:
                 case Clothing_FieldIndex.Weight:
+                case Clothing_FieldIndex.DATADataTypeState:
                     return false;
                 default:
                     return ClothingAbstract_Registration.GetNthIsEnumerable(index);
@@ -1016,6 +1073,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case Clothing_FieldIndex.Value:
                 case Clothing_FieldIndex.Weight:
+                case Clothing_FieldIndex.DATADataTypeState:
                     return false;
                 default:
                     return ClothingAbstract_Registration.GetNthIsLoqui(index);
@@ -1029,6 +1087,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case Clothing_FieldIndex.Value:
                 case Clothing_FieldIndex.Weight:
+                case Clothing_FieldIndex.DATADataTypeState:
                     return false;
                 default:
                     return ClothingAbstract_Registration.GetNthIsSingleton(index);
@@ -1044,6 +1103,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return "Value";
                 case Clothing_FieldIndex.Weight:
                     return "Weight";
+                case Clothing_FieldIndex.DATADataTypeState:
+                    return "DATADataTypeState";
                 default:
                     return ClothingAbstract_Registration.GetNthName(index);
             }
@@ -1056,6 +1117,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case Clothing_FieldIndex.Value:
                 case Clothing_FieldIndex.Weight:
+                case Clothing_FieldIndex.DATADataTypeState:
                     return false;
                 default:
                     return ClothingAbstract_Registration.IsNthDerivative(index);
@@ -1069,6 +1131,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case Clothing_FieldIndex.Value:
                 case Clothing_FieldIndex.Weight:
+                case Clothing_FieldIndex.DATADataTypeState:
                     return false;
                 default:
                     return ClothingAbstract_Registration.IsProtected(index);
@@ -1084,6 +1147,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return typeof(UInt32);
                 case Clothing_FieldIndex.Weight:
                     return typeof(Single);
+                case Clothing_FieldIndex.DATADataTypeState:
+                    return typeof(Clothing.DATADataType);
                 default:
                     return ClothingAbstract_Registration.GetNthType(index);
             }
@@ -1246,6 +1311,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     fg.AppendLine($"Weight => {item.Weight}");
                 }
+                if (printMask?.DATADataTypeState ?? true)
+                {
+                }
             }
             fg.AppendLine("]");
         }
@@ -1262,6 +1330,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             var ret = new Clothing_Mask<bool>();
             ret.Value = true;
             ret.Weight = true;
+            ret.DATADataTypeState = true;
             return ret;
         }
 
@@ -1275,6 +1344,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (index)
             {
+                case ClothingAbstract_FieldIndex.MajorRecordFlagsRaw:
+                    return (Clothing_FieldIndex)((int)index);
                 case ClothingAbstract_FieldIndex.FormKey:
                     return (Clothing_FieldIndex)((int)index);
                 case ClothingAbstract_FieldIndex.Version:
@@ -1309,6 +1380,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (Clothing_FieldIndex)((int)index);
                 case ClothingAbstract_FieldIndex.FemaleIcon:
                     return (Clothing_FieldIndex)((int)index);
+                case ClothingAbstract_FieldIndex.BMDTDataTypeState:
+                    return (Clothing_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
@@ -1324,6 +1397,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (index)
             {
+                case ItemAbstract_FieldIndex.MajorRecordFlagsRaw:
+                    return (Clothing_FieldIndex)((int)index);
                 case ItemAbstract_FieldIndex.FormKey:
                     return (Clothing_FieldIndex)((int)index);
                 case ItemAbstract_FieldIndex.Version:
@@ -1349,6 +1424,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (index)
             {
+                case OblivionMajorRecord_FieldIndex.MajorRecordFlagsRaw:
+                    return (Clothing_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.FormKey:
                     return (Clothing_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.Version:
@@ -1374,6 +1451,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (index)
             {
+                case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
+                    return (Clothing_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
                     return (Clothing_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.Version:
@@ -1388,80 +1467,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         #region Xml Translation
-        #region Xml Write
-        public static void Write_Xml(
-            XElement node,
-            Clothing item,
-            bool doMasks,
-            out Clothing_ErrorMask errorMask,
-            Clothing_TranslationMask translationMask,
-            string name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_Xml(
-                name: name,
-                node: node,
-                item: item,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = Clothing_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void Write_Xml(
-            XElement node,
-            Clothing item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.Clothing");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.Clothing");
-            }
-            WriteToNode_Xml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #endregion
-
-        public static void WriteToNode_Xml(
-            this Clothing item,
-            XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            ClothingAbstractCommon.WriteToNode_Xml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            if (item.DATADataTypeState.HasFlag(Clothing.DATADataType.Has))
-            {
-                if ((translationMask?.GetShouldTranslate((int)Clothing_FieldIndex.Value) ?? true))
-                {
-                    UInt32XmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.Value),
-                        item: item.Value,
-                        fieldIndex: (int)Clothing_FieldIndex.Value,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Clothing_FieldIndex.Weight) ?? true))
-                {
-                    FloatXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.Weight),
-                        item: item.Weight,
-                        fieldIndex: (int)Clothing_FieldIndex.Weight,
-                        errorMask: errorMask);
-                }
-            }
-        }
-
         public static void FillPublic_Xml(
             this Clothing item,
             XElement node,
@@ -1549,6 +1554,32 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask?.PopIndex();
                     }
                     break;
+                case "DATADataTypeState":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Clothing_FieldIndex.DATADataTypeState);
+                        if (EnumXmlTranslation<Clothing.DATADataType>.Instance.Parse(
+                            node: node,
+                            item: out Clothing.DATADataType DATADataTypeStateParse,
+                            errorMask: errorMask))
+                        {
+                            item.DATADataTypeState = DATADataTypeStateParse;
+                        }
+                        else
+                        {
+                            item.DATADataTypeState = default(Clothing.DATADataType);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
                 default:
                     ClothingAbstractCommon.FillPublicElement_Xml(
                         item: item,
@@ -1562,86 +1593,101 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        #region Binary Translation
-        #region Binary Write
-        public static void Write_Binary(
-            MutagenWriter writer,
-            Clothing item,
-            MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
+    }
+    #endregion
+
+    #region Modules
+    #region Xml Translation
+    public partial class ClothingXmlTranslation : ClothingAbstractXmlTranslation
+    {
+        public new readonly static ClothingXmlTranslation Instance = new ClothingXmlTranslation();
+
+        public static void WriteToNode_Xml(
+            IClothingInternalGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            ClothingAbstractXmlTranslation.WriteToNode_Xml(
+                item: item,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+            if (item.DATADataTypeState.HasFlag(Clothing.DATADataType.Has))
+            {
+                if ((translationMask?.GetShouldTranslate((int)Clothing_FieldIndex.Value) ?? true))
+                {
+                    UInt32XmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.Value),
+                        item: item.Value,
+                        fieldIndex: (int)Clothing_FieldIndex.Value,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Clothing_FieldIndex.Weight) ?? true))
+                {
+                    FloatXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.Weight),
+                        item: item.Weight,
+                        fieldIndex: (int)Clothing_FieldIndex.Weight,
+                        errorMask: errorMask);
+                }
+            }
+            if ((translationMask?.GetShouldTranslate((int)Clothing_FieldIndex.DATADataTypeState) ?? true))
+            {
+                EnumXmlTranslation<Clothing.DATADataType>.Instance.Write(
+                    node: node,
+                    name: nameof(item.DATADataTypeState),
+                    item: item.DATADataTypeState,
+                    fieldIndex: (int)Clothing_FieldIndex.DATADataTypeState,
+                    errorMask: errorMask);
+            }
+        }
+
+        #region Xml Write
+        public void Write_Xml(
+            XElement node,
+            IClothingInternalGetter item,
             bool doMasks,
-            out Clothing_ErrorMask errorMask)
+            out Clothing_ErrorMask errorMask,
+            Clothing_TranslationMask translationMask,
+            string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_Binary(
-                masterReferences: masterReferences,
-                writer: writer,
+            Write_Xml(
+                name: name,
+                node: node,
                 item: item,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMaskBuilder);
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal());
             errorMask = Clothing_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void Write_Binary(
-            MutagenWriter writer,
-            Clothing item,
-            MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
-        {
-            using (HeaderExport.ExportHeader(
-                writer: writer,
-                record: Clothing_Registration.CLOT_HEADER,
-                type: ObjectType.Record))
-            {
-                OblivionMajorRecordCommon.Write_Binary_Embedded(
-                    item: item,
-                    writer: writer,
-                    errorMask: errorMask,
-                    masterReferences: masterReferences);
-                Write_Binary_RecordTypes(
-                    item: item,
-                    writer: writer,
-                    recordTypeConverter: recordTypeConverter,
-                    errorMask: errorMask,
-                    masterReferences: masterReferences);
-            }
-        }
-        #endregion
-
-        public static void Write_Binary_RecordTypes(
-            Clothing item,
-            MutagenWriter writer,
-            RecordTypeConverter recordTypeConverter,
+        public void Write_Xml(
+            XElement node,
+            IClothingInternalGetter item,
             ErrorMaskBuilder errorMask,
-            MasterReferences masterReferences)
+            TranslationCrystal translationMask,
+            string name = null)
         {
-            ClothingAbstractCommon.Write_Binary_RecordTypes(
-                item: item,
-                writer: writer,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMask,
-                masterReferences: masterReferences);
-            if (item.DATADataTypeState.HasFlag(Clothing.DATADataType.Has))
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.Clothing");
+            node.Add(elem);
+            if (name != null)
             {
-                using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Clothing_Registration.DATA_HEADER)))
-                {
-                    Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.Value);
-                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.Weight);
-                }
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.Clothing");
             }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
         }
-
         #endregion
 
     }
     #endregion
 
-    #region Modules
     #region Mask
     public class Clothing_Mask<T> : ClothingAbstract_Mask<T>, IMask<T>, IEquatable<Clothing_Mask<T>>
     {
@@ -1654,12 +1700,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             this.Value = initialValue;
             this.Weight = initialValue;
+            this.DATADataTypeState = initialValue;
         }
         #endregion
 
         #region Members
         public T Value;
         public T Weight;
+        public T DATADataTypeState;
         #endregion
 
         #region Equals
@@ -1675,6 +1723,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (!base.Equals(rhs)) return false;
             if (!object.Equals(this.Value, rhs.Value)) return false;
             if (!object.Equals(this.Weight, rhs.Weight)) return false;
+            if (!object.Equals(this.DATADataTypeState, rhs.DATADataTypeState)) return false;
             return true;
         }
         public override int GetHashCode()
@@ -1682,6 +1731,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             int ret = 0;
             ret = ret.CombineHashCode(this.Value?.GetHashCode());
             ret = ret.CombineHashCode(this.Weight?.GetHashCode());
+            ret = ret.CombineHashCode(this.DATADataTypeState?.GetHashCode());
             ret = ret.CombineHashCode(base.GetHashCode());
             return ret;
         }
@@ -1694,6 +1744,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (!base.AllEqual(eval)) return false;
             if (!eval(this.Value)) return false;
             if (!eval(this.Weight)) return false;
+            if (!eval(this.DATADataTypeState)) return false;
             return true;
         }
         #endregion
@@ -1711,6 +1762,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             base.Translate_InternalFill(obj, eval);
             obj.Value = eval(this.Value);
             obj.Weight = eval(this.Weight);
+            obj.DATADataTypeState = eval(this.DATADataTypeState);
         }
         #endregion
 
@@ -1748,6 +1800,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     fg.AppendLine($"Weight => {Weight}");
                 }
+                if (printMask?.DATADataTypeState ?? true)
+                {
+                    fg.AppendLine($"DATADataTypeState => {DATADataTypeState}");
+                }
             }
             fg.AppendLine("]");
         }
@@ -1760,6 +1816,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Members
         public Exception Value;
         public Exception Weight;
+        public Exception DATADataTypeState;
         #endregion
 
         #region IErrorMask
@@ -1772,6 +1829,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return Value;
                 case Clothing_FieldIndex.Weight:
                     return Weight;
+                case Clothing_FieldIndex.DATADataTypeState:
+                    return DATADataTypeState;
                 default:
                     return base.GetNthMask(index);
             }
@@ -1787,6 +1846,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     break;
                 case Clothing_FieldIndex.Weight:
                     this.Weight = ex;
+                    break;
+                case Clothing_FieldIndex.DATADataTypeState:
+                    this.DATADataTypeState = ex;
                     break;
                 default:
                     base.SetNthException(index, ex);
@@ -1805,6 +1867,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Clothing_FieldIndex.Weight:
                     this.Weight = (Exception)obj;
                     break;
+                case Clothing_FieldIndex.DATADataTypeState:
+                    this.DATADataTypeState = (Exception)obj;
+                    break;
                 default:
                     base.SetNthMask(index, obj);
                     break;
@@ -1816,6 +1881,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (Overall != null) return true;
             if (Value != null) return true;
             if (Weight != null) return true;
+            if (DATADataTypeState != null) return true;
             return false;
         }
         #endregion
@@ -1853,6 +1919,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             base.ToString_FillInternal(fg);
             fg.AppendLine($"Value => {Value}");
             fg.AppendLine($"Weight => {Weight}");
+            fg.AppendLine($"DATADataTypeState => {DATADataTypeState}");
         }
         #endregion
 
@@ -1862,6 +1929,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             var ret = new Clothing_ErrorMask();
             ret.Value = this.Value.Combine(rhs.Value);
             ret.Weight = this.Weight.Combine(rhs.Weight);
+            ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
             return ret;
         }
         public static Clothing_ErrorMask Combine(Clothing_ErrorMask lhs, Clothing_ErrorMask rhs)
@@ -1890,11 +1958,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             this.Value = defaultOn;
             this.Weight = defaultOn;
+            this.DATADataTypeState = defaultOn;
         }
 
         #region Members
         public bool Value;
         public bool Weight;
+        public bool DATADataTypeState;
         #endregion
 
     }
@@ -1904,6 +1974,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Members
         public bool Value;
         public bool Weight;
+        public bool DATADataTypeState;
         #endregion
 
         #region Ctors
@@ -1917,6 +1988,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             this.Value = defaultOn;
             this.Weight = defaultOn;
+            this.DATADataTypeState = defaultOn;
         }
 
         #endregion
@@ -1926,7 +1998,102 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             base.GetCrystal(ret);
             ret.Add((Value, null));
             ret.Add((Weight, null));
+            ret.Add((DATADataTypeState, null));
         }
+    }
+    #endregion
+
+    #region Binary Translation
+    public partial class ClothingBinaryTranslation : ClothingAbstractBinaryTranslation
+    {
+        public new readonly static ClothingBinaryTranslation Instance = new ClothingBinaryTranslation();
+
+        public static void Write_Binary_Embedded(
+            IClothingInternalGetter item,
+            MutagenWriter writer,
+            ErrorMaskBuilder errorMask,
+            MasterReferences masterReferences)
+        {
+            ClothingAbstractBinaryTranslation.Write_Binary_Embedded(
+                item: item,
+                writer: writer,
+                errorMask: errorMask,
+                masterReferences: masterReferences);
+        }
+
+        public static void Write_Binary_RecordTypes(
+            IClothingInternalGetter item,
+            MutagenWriter writer,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask,
+            MasterReferences masterReferences)
+        {
+            ClothingAbstractBinaryTranslation.Write_Binary_RecordTypes(
+                item: item,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask,
+                masterReferences: masterReferences);
+            if (item.DATADataTypeState.HasFlag(Clothing.DATADataType.Has))
+            {
+                using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Clothing_Registration.DATA_HEADER)))
+                {
+                    Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.Value);
+                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.Weight);
+                }
+            }
+        }
+
+        #region Binary Write
+        public void Write_Binary(
+            MutagenWriter writer,
+            IClothingInternalGetter item,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            bool doMasks,
+            out Clothing_ErrorMask errorMask)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            Write_Binary(
+                masterReferences: masterReferences,
+                writer: writer,
+                item: item,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMaskBuilder);
+            errorMask = Clothing_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public void Write_Binary(
+            MutagenWriter writer,
+            IClothingInternalGetter item,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            using (HeaderExport.ExportHeader(
+                writer: writer,
+                record: Clothing_Registration.CLOT_HEADER,
+                type: ObjectType.Record))
+            {
+                Write_Binary_Embedded(
+                    item: item,
+                    writer: writer,
+                    errorMask: errorMask,
+                    masterReferences: masterReferences);
+                Write_Binary_RecordTypes(
+                    item: item,
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter,
+                    errorMask: errorMask,
+                    masterReferences: masterReferences);
+            }
+        }
+        #endregion
+
     }
     #endregion
 

@@ -365,7 +365,8 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Xml(
+            FacePartXmlTranslation.Instance.Write_Xml(
+                item: this,
                 name: name,
                 node: node,
                 errorMask: errorMaskBuilder,
@@ -397,7 +398,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            this.Write_Xml(
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -428,7 +429,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            this.Write_Xml(
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -452,7 +453,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            this.Write_Xml(
                 name: name,
                 node: node,
                 errorMask: null,
@@ -465,7 +466,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            this.Write_Xml(
                 name: name,
                 node: node,
                 errorMask: null,
@@ -479,7 +480,7 @@ namespace Mutagen.Bethesda.Oblivion
             TranslationCrystal translationMask,
             string name = null)
         {
-            FacePartCommon.Write_Xml(
+            FacePartXmlTranslation.Instance.Write_Xml(
                 item: this,
                 name: name,
                 node: node,
@@ -564,7 +565,8 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Binary(
+            FacePartBinaryTranslation.Instance.Write_Binary(
+                item: this,
                 masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: null,
@@ -589,7 +591,7 @@ namespace Mutagen.Bethesda.Oblivion
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            FacePartCommon.Write_Binary(
+            FacePartBinaryTranslation.Instance.Write_Binary(
                 item: this,
                 masterReferences: masterReferences,
                 writer: writer,
@@ -1359,85 +1361,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         #region Xml Translation
-        #region Xml Write
-        public static void Write_Xml(
-            XElement node,
-            FacePart item,
-            bool doMasks,
-            out FacePart_ErrorMask errorMask,
-            FacePart_TranslationMask translationMask,
-            string name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_Xml(
-                name: name,
-                node: node,
-                item: item,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = FacePart_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void Write_Xml(
-            XElement node,
-            FacePart item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.FacePart");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.FacePart");
-            }
-            WriteToNode_Xml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #endregion
-
-        public static void WriteToNode_Xml(
-            this FacePart item,
-            XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            if (item.Index_IsSet
-                && (translationMask?.GetShouldTranslate((int)FacePart_FieldIndex.Index) ?? true))
-            {
-                EnumXmlTranslation<Race.FaceIndex>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Index),
-                    item: item.Index,
-                    fieldIndex: (int)FacePart_FieldIndex.Index,
-                    errorMask: errorMask);
-            }
-            if (item.Model_IsSet
-                && (translationMask?.GetShouldTranslate((int)FacePart_FieldIndex.Model) ?? true))
-            {
-                LoquiXmlTranslation<Model>.Instance.Write(
-                    node: node,
-                    item: item.Model,
-                    name: nameof(item.Model),
-                    fieldIndex: (int)FacePart_FieldIndex.Model,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)FacePart_FieldIndex.Model));
-            }
-            if (item.Icon_IsSet
-                && (translationMask?.GetShouldTranslate((int)FacePart_FieldIndex.Icon) ?? true))
-            {
-                StringXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Icon),
-                    item: item.Icon,
-                    fieldIndex: (int)FacePart_FieldIndex.Icon,
-                    errorMask: errorMask);
-            }
-        }
-
         public static void FillPublic_Xml(
             this FacePart item,
             XElement node,
@@ -1558,83 +1481,97 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        #region Binary Translation
-        #region Binary Write
-        public static void Write_Binary(
-            MutagenWriter writer,
-            FacePart item,
-            MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
+    }
+    #endregion
+
+    #region Modules
+    #region Xml Translation
+    public partial class FacePartXmlTranslation
+    {
+        public readonly static FacePartXmlTranslation Instance = new FacePartXmlTranslation();
+
+        public static void WriteToNode_Xml(
+            IFacePartGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            if (item.Index_IsSet
+                && (translationMask?.GetShouldTranslate((int)FacePart_FieldIndex.Index) ?? true))
+            {
+                EnumXmlTranslation<Race.FaceIndex>.Instance.Write(
+                    node: node,
+                    name: nameof(item.Index),
+                    item: item.Index,
+                    fieldIndex: (int)FacePart_FieldIndex.Index,
+                    errorMask: errorMask);
+            }
+            if (item.Model_IsSet
+                && (translationMask?.GetShouldTranslate((int)FacePart_FieldIndex.Model) ?? true))
+            {
+                LoquiXmlTranslation<Model>.Instance.Write(
+                    node: node,
+                    item: item.Model,
+                    name: nameof(item.Model),
+                    fieldIndex: (int)FacePart_FieldIndex.Model,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)FacePart_FieldIndex.Model));
+            }
+            if (item.Icon_IsSet
+                && (translationMask?.GetShouldTranslate((int)FacePart_FieldIndex.Icon) ?? true))
+            {
+                StringXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Icon),
+                    item: item.Icon,
+                    fieldIndex: (int)FacePart_FieldIndex.Icon,
+                    errorMask: errorMask);
+            }
+        }
+
+        #region Xml Write
+        public void Write_Xml(
+            XElement node,
+            IFacePartGetter item,
             bool doMasks,
-            out FacePart_ErrorMask errorMask)
+            out FacePart_ErrorMask errorMask,
+            FacePart_TranslationMask translationMask,
+            string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_Binary(
-                masterReferences: masterReferences,
-                writer: writer,
+            Write_Xml(
+                name: name,
+                node: node,
                 item: item,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMaskBuilder);
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal());
             errorMask = FacePart_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void Write_Binary(
-            MutagenWriter writer,
-            FacePart item,
-            MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
-        {
-            Write_Binary_RecordTypes(
-                item: item,
-                writer: writer,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMask,
-                masterReferences: masterReferences);
-        }
-        #endregion
-
-        public static void Write_Binary_RecordTypes(
-            FacePart item,
-            MutagenWriter writer,
-            RecordTypeConverter recordTypeConverter,
+        public void Write_Xml(
+            XElement node,
+            IFacePartGetter item,
             ErrorMaskBuilder errorMask,
-            MasterReferences masterReferences)
+            TranslationCrystal translationMask,
+            string name = null)
         {
-            if (item.Index_IsSet)
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.FacePart");
+            node.Add(elem);
+            if (name != null)
             {
-                Mutagen.Bethesda.Binary.EnumBinaryTranslation<Race.FaceIndex>.Instance.Write(
-                    writer,
-                    item.Index,
-                    length: 4,
-                    header: recordTypeConverter.ConvertToCustom(FacePart_Registration.INDX_HEADER),
-                    nullable: false);
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.FacePart");
             }
-            if (item.Model_IsSet)
-            {
-                LoquiBinaryTranslation<Model>.Instance.Write(
-                    writer: writer,
-                    item: item.Model,
-                    fieldIndex: (int)FacePart_FieldIndex.Model,
-                    errorMask: errorMask,
-                    masterReferences: masterReferences);
-            }
-            if (item.Icon_IsSet)
-            {
-                Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Icon,
-                    header: recordTypeConverter.ConvertToCustom(FacePart_Registration.ICON_HEADER),
-                    nullable: false);
-            }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
         }
-
         #endregion
 
     }
     #endregion
 
-    #region Modules
     #region Mask
     public class FacePart_Mask<T> : IMask<T>, IEquatable<FacePart_Mask<T>>
     {
@@ -1974,6 +1911,84 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Add((Model?.Overall ?? true, Model?.Specific?.GetCrystal()));
             ret.Add((Icon, null));
         }
+    }
+    #endregion
+
+    #region Binary Translation
+    public partial class FacePartBinaryTranslation
+    {
+        public readonly static FacePartBinaryTranslation Instance = new FacePartBinaryTranslation();
+
+        public static void Write_Binary_RecordTypes(
+            IFacePartGetter item,
+            MutagenWriter writer,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask,
+            MasterReferences masterReferences)
+        {
+            if (item.Index_IsSet)
+            {
+                Mutagen.Bethesda.Binary.EnumBinaryTranslation<Race.FaceIndex>.Instance.Write(
+                    writer,
+                    item.Index,
+                    length: 4,
+                    header: recordTypeConverter.ConvertToCustom(FacePart_Registration.INDX_HEADER),
+                    nullable: false);
+            }
+            if (item.Model_IsSet)
+            {
+                LoquiBinaryTranslation<Model>.Instance.Write(
+                    writer: writer,
+                    item: item.Model,
+                    fieldIndex: (int)FacePart_FieldIndex.Model,
+                    errorMask: errorMask,
+                    masterReferences: masterReferences);
+            }
+            if (item.Icon_IsSet)
+            {
+                Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Icon,
+                    header: recordTypeConverter.ConvertToCustom(FacePart_Registration.ICON_HEADER),
+                    nullable: false);
+            }
+        }
+
+        #region Binary Write
+        public void Write_Binary(
+            MutagenWriter writer,
+            IFacePartGetter item,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            bool doMasks,
+            out FacePart_ErrorMask errorMask)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            Write_Binary(
+                masterReferences: masterReferences,
+                writer: writer,
+                item: item,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMaskBuilder);
+            errorMask = FacePart_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public void Write_Binary(
+            MutagenWriter writer,
+            IFacePartGetter item,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            Write_Binary_RecordTypes(
+                item: item,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask,
+                masterReferences: masterReferences);
+        }
+        #endregion
+
     }
     #endregion
 

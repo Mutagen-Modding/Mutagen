@@ -19,114 +19,120 @@ namespace Mutagen.Bethesda.Oblivion
             Secunda,
             MasserSecunda,
         }
+    }
 
-        private static DateTime DateConverter(DateTime d)
+    namespace Internals
+    {
+        public partial class ClimateBinaryTranslation
         {
-            return DateTime.MinValue
-                .AddHours(d.Hour)
-                .AddMinutes(d.Minute / 10 * 10);
-        }
-
-        private static bool GetDate(byte b, out DateTime date, ErrorMaskBuilder errorMask)
-        {
-            if (b > 144)
+            private static DateTime DateConverter(DateTime d)
             {
-                errorMask.ReportExceptionOrThrow(new ArgumentException("Cannot have a time value greater than 144"));
-                date = default(DateTime);
-                return false;
+                return DateTime.MinValue
+                    .AddHours(d.Hour)
+                    .AddMinutes(d.Minute / 10 * 10);
             }
-            date = DateTime.MinValue.AddMinutes(b * 10);
-            return true;
-        }
 
-        private static byte GetByte(DateTime d)
-        {
-            var mins = d.Hour * 60 + d.Minute;
-            return (byte)(mins / 10);
-        }
-        
-        static partial void FillBinary_SunriseBegin_Custom(MutagenFrame frame, Climate item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
-        {
-            if (GetDate(frame.Reader.ReadUInt8(), out var date, errorMask))
+            private static bool GetDate(byte b, out DateTime date, ErrorMaskBuilder errorMask)
             {
-                item.SunriseBegin = date;
+                if (b > 144)
+                {
+                    errorMask.ReportExceptionOrThrow(new ArgumentException("Cannot have a time value greater than 144"));
+                    date = default(DateTime);
+                    return false;
+                }
+                date = DateTime.MinValue.AddMinutes(b * 10);
+                return true;
             }
-        }
 
-        static partial void WriteBinary_SunriseBegin_Custom(MutagenWriter writer, Climate item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
-        {
-            writer.Write(GetByte(item.SunriseBegin));
-        }
-
-        static partial void FillBinary_SunriseEnd_Custom(MutagenFrame frame, Climate item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
-        {
-            if (GetDate(frame.Reader.ReadUInt8(), out var date, errorMask))
+            private static byte GetByte(DateTime d)
             {
-                item.SunriseEnd = date;
+                var mins = d.Hour * 60 + d.Minute;
+                return (byte)(mins / 10);
             }
-        }
 
-        static partial void WriteBinary_SunriseEnd_Custom(MutagenWriter writer, Climate item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
-        {
-            writer.Write(GetByte(item.SunriseEnd));
-        }
-
-        static partial void FillBinary_SunsetBegin_Custom(MutagenFrame frame, Climate item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
-        {
-            if (GetDate(frame.Reader.ReadUInt8(), out var date, errorMask))
+            static partial void FillBinary_SunriseBegin_Custom(MutagenFrame frame, Climate item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
             {
-                item.SunsetBegin = date;
+                if (GetDate(frame.Reader.ReadUInt8(), out var date, errorMask))
+                {
+                    item.SunriseBegin = date;
+                }
             }
-        }
 
-        static partial void WriteBinary_SunsetBegin_Custom(MutagenWriter writer, Climate item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
-        {
-            writer.Write(GetByte(item.SunsetBegin));
-        }
-
-        static partial void FillBinary_SunsetEnd_Custom(MutagenFrame frame, Climate item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
-        {
-            if (GetDate(frame.Reader.ReadUInt8 (), out var date, errorMask))
+            static partial void WriteBinary_SunriseBegin_Custom(MutagenWriter writer, IClimateInternalGetter item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
             {
-                item.SunsetEnd = date;
+                writer.Write(GetByte(item.SunriseBegin));
             }
-        }
 
-        static partial void WriteBinary_SunsetEnd_Custom(MutagenWriter writer, Climate item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
-        {
-            writer.Write(GetByte(item.SunsetEnd));
-        }
-
-        static partial void FillBinary_Phase_Custom(MutagenFrame frame, Climate item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
-        {
-            var b1 = frame.Reader.ReadUInt8();
-            var eInt = b1 / 64;
-            var phaseLen = (byte)(b1 % 64);
-            if (EnumExt.TryParse<Climate.MoonPhase>(eInt, out var e))
+            static partial void FillBinary_SunriseEnd_Custom(MutagenFrame frame, Climate item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
             {
-                item.Phase = e;
+                if (GetDate(frame.Reader.ReadUInt8(), out var date, errorMask))
+                {
+                    item.SunriseEnd = date;
+                }
             }
-            else
+
+            static partial void WriteBinary_SunriseEnd_Custom(MutagenWriter writer, IClimateInternalGetter item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
             {
-                errorMask.ReportException(
-                    new ArgumentException($"Unknown moon phase type: {b1}"));
+                writer.Write(GetByte(item.SunriseEnd));
             }
-            item.PhaseLength = phaseLen;
-        }
 
-        static partial void WriteBinary_Phase_Custom(MutagenWriter writer, Climate item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
-        {
-            var eInt = (byte)(((int)item.Phase) * 64);
-            eInt += item.PhaseLength;
-            writer.Write(eInt);
-        }
+            static partial void FillBinary_SunsetBegin_Custom(MutagenFrame frame, Climate item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
+            {
+                if (GetDate(frame.Reader.ReadUInt8(), out var date, errorMask))
+                {
+                    item.SunsetBegin = date;
+                }
+            }
 
-        static partial void FillBinary_PhaseLength_Custom(MutagenFrame frame, Climate item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
-        { // Handled in Phase section
-        }
+            static partial void WriteBinary_SunsetBegin_Custom(MutagenWriter writer, IClimateInternalGetter item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
+            {
+                writer.Write(GetByte(item.SunsetBegin));
+            }
 
-        static partial void WriteBinary_PhaseLength_Custom(MutagenWriter writer, Climate item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
-        { // Handled in Phase section
+            static partial void FillBinary_SunsetEnd_Custom(MutagenFrame frame, Climate item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
+            {
+                if (GetDate(frame.Reader.ReadUInt8(), out var date, errorMask))
+                {
+                    item.SunsetEnd = date;
+                }
+            }
+
+            static partial void WriteBinary_SunsetEnd_Custom(MutagenWriter writer, IClimateInternalGetter item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
+            {
+                writer.Write(GetByte(item.SunsetEnd));
+            }
+
+            static partial void FillBinary_Phase_Custom(MutagenFrame frame, Climate item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
+            {
+                var b1 = frame.Reader.ReadUInt8();
+                var eInt = b1 / 64;
+                var phaseLen = (byte)(b1 % 64);
+                if (EnumExt.TryParse<Climate.MoonPhase>(eInt, out var e))
+                {
+                    item.Phase = e;
+                }
+                else
+                {
+                    errorMask.ReportException(
+                        new ArgumentException($"Unknown moon phase type: {b1}"));
+                }
+                item.PhaseLength = phaseLen;
+            }
+
+            static partial void WriteBinary_Phase_Custom(MutagenWriter writer, IClimateInternalGetter item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
+            {
+                var eInt = (byte)(((int)item.Phase) * 64);
+                eInt += item.PhaseLength;
+                writer.Write(eInt);
+            }
+
+            static partial void FillBinary_PhaseLength_Custom(MutagenFrame frame, Climate item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
+            { // Handled in Phase section
+            }
+
+            static partial void WriteBinary_PhaseLength_Custom(MutagenWriter writer, IClimateInternalGetter item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
+            { // Handled in Phase section
+            }
         }
     }
 }

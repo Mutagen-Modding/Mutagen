@@ -307,7 +307,8 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Xml(
+            RoadPointXmlTranslation.Instance.Write_Xml(
+                item: this,
                 name: name,
                 node: node,
                 errorMask: errorMaskBuilder,
@@ -339,7 +340,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            this.Write_Xml(
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -370,7 +371,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            this.Write_Xml(
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -394,7 +395,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            this.Write_Xml(
                 name: name,
                 node: node,
                 errorMask: null,
@@ -407,7 +408,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            this.Write_Xml(
                 name: name,
                 node: node,
                 errorMask: null,
@@ -421,7 +422,7 @@ namespace Mutagen.Bethesda.Oblivion
             TranslationCrystal translationMask,
             string name = null)
         {
-            RoadPointCommon.Write_Xml(
+            RoadPointXmlTranslation.Instance.Write_Xml(
                 item: this,
                 name: name,
                 node: node,
@@ -505,7 +506,8 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Binary(
+            RoadPointBinaryTranslation.Instance.Write_Binary(
+                item: this,
                 masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: null,
@@ -530,7 +532,7 @@ namespace Mutagen.Bethesda.Oblivion
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            RoadPointCommon.Write_Binary(
+            RoadPointBinaryTranslation.Instance.Write_Binary(
                 item: this,
                 masterReferences: masterReferences,
                 writer: writer,
@@ -1162,91 +1164,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         #region Xml Translation
-        #region Xml Write
-        public static void Write_Xml(
-            XElement node,
-            RoadPoint item,
-            bool doMasks,
-            out RoadPoint_ErrorMask errorMask,
-            RoadPoint_TranslationMask translationMask,
-            string name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_Xml(
-                name: name,
-                node: node,
-                item: item,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = RoadPoint_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void Write_Xml(
-            XElement node,
-            RoadPoint item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.RoadPoint");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.RoadPoint");
-            }
-            WriteToNode_Xml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #endregion
-
-        public static void WriteToNode_Xml(
-            this RoadPoint item,
-            XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            if ((translationMask?.GetShouldTranslate((int)RoadPoint_FieldIndex.Point) ?? true))
-            {
-                P3FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Point),
-                    item: item.Point,
-                    fieldIndex: (int)RoadPoint_FieldIndex.Point,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)RoadPoint_FieldIndex.NumConnectionsFluffBytes) ?? true))
-            {
-                ByteArrayXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.NumConnectionsFluffBytes),
-                    item: item.NumConnectionsFluffBytes,
-                    fieldIndex: (int)RoadPoint_FieldIndex.NumConnectionsFluffBytes,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)RoadPoint_FieldIndex.Connections) ?? true))
-            {
-                ListXmlTranslation<P3Float>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Connections),
-                    item: item.Connections,
-                    fieldIndex: (int)RoadPoint_FieldIndex.Connections,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)RoadPoint_FieldIndex.Connections),
-                    transl: (XElement subNode, P3Float subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
-                    {
-                        P3FloatXmlTranslation.Instance.Write(
-                            node: subNode,
-                            name: null,
-                            item: subItem,
-                            errorMask: listSubMask);
-                    }
-                    );
-            }
-        }
-
         public static void FillPublic_Xml(
             this RoadPoint item,
             XElement node,
@@ -1368,65 +1285,103 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        #region Binary Translation
-        #region Binary Write
-        public static void Write_Binary(
-            MutagenWriter writer,
-            RoadPoint item,
-            MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
+    }
+    #endregion
+
+    #region Modules
+    #region Xml Translation
+    public partial class RoadPointXmlTranslation
+    {
+        public readonly static RoadPointXmlTranslation Instance = new RoadPointXmlTranslation();
+
+        public static void WriteToNode_Xml(
+            IRoadPointGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            if ((translationMask?.GetShouldTranslate((int)RoadPoint_FieldIndex.Point) ?? true))
+            {
+                P3FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Point),
+                    item: item.Point,
+                    fieldIndex: (int)RoadPoint_FieldIndex.Point,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)RoadPoint_FieldIndex.NumConnectionsFluffBytes) ?? true))
+            {
+                ByteArrayXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.NumConnectionsFluffBytes),
+                    item: item.NumConnectionsFluffBytes,
+                    fieldIndex: (int)RoadPoint_FieldIndex.NumConnectionsFluffBytes,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)RoadPoint_FieldIndex.Connections) ?? true))
+            {
+                ListXmlTranslation<P3Float>.Instance.Write(
+                    node: node,
+                    name: nameof(item.Connections),
+                    item: item.Connections,
+                    fieldIndex: (int)RoadPoint_FieldIndex.Connections,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)RoadPoint_FieldIndex.Connections),
+                    transl: (XElement subNode, P3Float subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
+                    {
+                        P3FloatXmlTranslation.Instance.Write(
+                            node: subNode,
+                            name: null,
+                            item: subItem,
+                            errorMask: listSubMask);
+                    }
+                    );
+            }
+        }
+
+        #region Xml Write
+        public void Write_Xml(
+            XElement node,
+            IRoadPointGetter item,
             bool doMasks,
-            out RoadPoint_ErrorMask errorMask)
+            out RoadPoint_ErrorMask errorMask,
+            RoadPoint_TranslationMask translationMask,
+            string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_Binary(
-                masterReferences: masterReferences,
-                writer: writer,
+            Write_Xml(
+                name: name,
+                node: node,
                 item: item,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMaskBuilder);
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal());
             errorMask = RoadPoint_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void Write_Binary(
-            MutagenWriter writer,
-            RoadPoint item,
-            MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
-        {
-            Write_Binary_Embedded(
-                item: item,
-                writer: writer,
-                errorMask: errorMask,
-                masterReferences: masterReferences);
-        }
-        #endregion
-
-        public static void Write_Binary_Embedded(
-            RoadPoint item,
-            MutagenWriter writer,
+        public void Write_Xml(
+            XElement node,
+            IRoadPointGetter item,
             ErrorMaskBuilder errorMask,
-            MasterReferences masterReferences)
+            TranslationCrystal translationMask,
+            string name = null)
         {
-            Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.Point);
-            Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.NumConnectionsFluffBytes);
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<P3Float>.Instance.Write(
-                writer: writer,
-                items: item.Connections,
-                transl: P3FloatBinaryTranslation.Instance.Write);
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.RoadPoint");
+            node.Add(elem);
+            if (name != null)
+            {
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.RoadPoint");
+            }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
         }
-
         #endregion
 
     }
     #endregion
 
-    #region Modules
     #region Mask
     public class RoadPoint_Mask<T> : IMask<T>, IEquatable<RoadPoint_Mask<T>>
     {
@@ -1823,6 +1778,66 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Add((NumConnectionsFluffBytes, null));
             ret.Add((Connections, null));
         }
+    }
+    #endregion
+
+    #region Binary Translation
+    public partial class RoadPointBinaryTranslation
+    {
+        public readonly static RoadPointBinaryTranslation Instance = new RoadPointBinaryTranslation();
+
+        public static void Write_Binary_Embedded(
+            IRoadPointGetter item,
+            MutagenWriter writer,
+            ErrorMaskBuilder errorMask,
+            MasterReferences masterReferences)
+        {
+            Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.Point);
+            Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.NumConnectionsFluffBytes);
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<P3Float>.Instance.Write(
+                writer: writer,
+                items: item.Connections,
+                transl: P3FloatBinaryTranslation.Instance.Write);
+        }
+
+        #region Binary Write
+        public void Write_Binary(
+            MutagenWriter writer,
+            IRoadPointGetter item,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            bool doMasks,
+            out RoadPoint_ErrorMask errorMask)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            Write_Binary(
+                masterReferences: masterReferences,
+                writer: writer,
+                item: item,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMaskBuilder);
+            errorMask = RoadPoint_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public void Write_Binary(
+            MutagenWriter writer,
+            IRoadPointGetter item,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            Write_Binary_Embedded(
+                item: item,
+                writer: writer,
+                errorMask: errorMask,
+                masterReferences: masterReferences);
+        }
+        #endregion
+
     }
     #endregion
 

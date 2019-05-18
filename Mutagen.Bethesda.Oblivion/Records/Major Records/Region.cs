@@ -5,11 +5,10 @@ using System.Text;
 using System.Threading.Tasks;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Oblivion.Internals;
 
-namespace Mutagen.Bethesda.Oblivion
+namespace Mutagen.Bethesda.Oblivion.Internals
 {
-    public partial class Region
+    public partial class RegionBinaryTranslation
     {
         public static readonly int RDAT_LEN = 14;
         public static readonly RecordType RDOT = new RecordType("RDOT");
@@ -121,7 +120,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        static partial void WriteBinary_RegionAreaLogic_Custom(MutagenWriter writer, Region item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
+        static partial void WriteBinary_RegionAreaLogic_Custom(MutagenWriter writer, IRegionInternalGetter item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
         {
             if (item.Objects_IsSet)
             {

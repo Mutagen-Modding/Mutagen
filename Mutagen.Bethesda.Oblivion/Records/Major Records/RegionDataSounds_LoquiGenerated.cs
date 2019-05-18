@@ -37,6 +37,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class RegionDataSounds : 
         RegionData,
         IRegionDataSounds,
+        IRegionDataSoundsInternal,
         ILoquiObject<RegionDataSounds>,
         ILoquiObjectSetter,
         ILinkSubContainer,
@@ -331,7 +332,8 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Xml(
+            RegionDataSoundsXmlTranslation.Instance.Write_Xml(
+                item: this,
                 name: name,
                 node: node,
                 errorMask: errorMaskBuilder,
@@ -363,7 +365,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            this.Write_Xml(
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -394,7 +396,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            this.Write_Xml(
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -410,7 +412,8 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Xml(
+            RegionDataSoundsXmlTranslation.Instance.Write_Xml(
+                item: this,
                 name: name,
                 node: node,
                 errorMask: errorMaskBuilder,
@@ -426,7 +429,7 @@ namespace Mutagen.Bethesda.Oblivion
             TranslationCrystal translationMask,
             string name = null)
         {
-            RegionDataSoundsCommon.Write_Xml(
+            RegionDataSoundsXmlTranslation.Instance.Write_Xml(
                 item: this,
                 name: name,
                 node: node,
@@ -564,7 +567,8 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Binary(
+            RegionDataSoundsBinaryTranslation.Instance.Write_Binary(
+                item: this,
                 masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: null,
@@ -580,7 +584,8 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Binary(
+            RegionDataSoundsBinaryTranslation.Instance.Write_Binary(
+                item: this,
                 masterReferences: masterReferences,
                 writer: writer,
                 errorMask: errorMaskBuilder,
@@ -596,7 +601,7 @@ namespace Mutagen.Bethesda.Oblivion
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            RegionDataSoundsCommon.Write_Binary(
+            RegionDataSoundsBinaryTranslation.Instance.Write_Binary(
                 item: this,
                 masterReferences: masterReferences,
                 writer: writer,
@@ -611,6 +616,11 @@ namespace Mutagen.Bethesda.Oblivion
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
+            RegionData.Fill_Binary_Structs(
+                item: item,
+                frame: frame,
+                masterReferences: masterReferences,
+                errorMask: errorMask);
         }
 
         protected static TryGet<int?> Fill_Binary_RecordTypes(
@@ -848,6 +858,11 @@ namespace Mutagen.Bethesda.Oblivion
         new ISourceSetList<RegionSound> Sounds { get; }
     }
 
+    public partial interface IRegionDataSoundsInternal : IRegionDataSounds, IRegionDataSoundsInternalGetter, IRegionDataInternal
+    {
+        new ISourceSetList<RegionSound> Sounds { get; }
+    }
+
     public partial interface IRegionDataSoundsGetter : IRegionDataGetter
     {
         #region MusicType
@@ -858,6 +873,11 @@ namespace Mutagen.Bethesda.Oblivion
         #region Sounds
         IObservableSetList<RegionSound> Sounds { get; }
         #endregion
+
+    }
+
+    public partial interface IRegionDataSoundsInternalGetter : IRegionDataSoundsGetter, IRegionDataInternalGetter
+    {
 
     }
 
@@ -873,8 +893,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         DataType = 0,
         Flags = 1,
         Priority = 2,
-        MusicType = 3,
-        Sounds = 4,
+        RDATDataTypeState = 3,
+        MusicType = 4,
+        Sounds = 5,
     }
     #endregion
 
@@ -894,7 +915,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort AdditionalFieldCount = 2;
 
-        public const ushort FieldCount = 5;
+        public const ushort FieldCount = 6;
 
         public static readonly Type MaskType = typeof(RegionDataSounds_Mask<>);
 
@@ -904,11 +925,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type GetterType = typeof(IRegionDataSoundsGetter);
 
-        public static readonly Type InternalGetterType = null;
+        public static readonly Type InternalGetterType = typeof(IRegionDataSoundsInternalGetter);
 
         public static readonly Type SetterType = typeof(IRegionDataSounds);
 
-        public static readonly Type InternalSetterType = null;
+        public static readonly Type InternalSetterType = typeof(IRegionDataSoundsInternal);
 
         public static readonly Type CommonType = typeof(RegionDataSoundsCommon);
 
@@ -1273,96 +1294,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (RegionDataSounds_FieldIndex)((int)index);
                 case RegionData_FieldIndex.Priority:
                     return (RegionDataSounds_FieldIndex)((int)index);
+                case RegionData_FieldIndex.RDATDataTypeState:
+                    return (RegionDataSounds_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
         }
 
         #region Xml Translation
-        #region Xml Write
-        public static void Write_Xml(
-            XElement node,
-            RegionDataSounds item,
-            bool doMasks,
-            out RegionDataSounds_ErrorMask errorMask,
-            RegionDataSounds_TranslationMask translationMask,
-            string name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_Xml(
-                name: name,
-                node: node,
-                item: item,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = RegionDataSounds_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void Write_Xml(
-            XElement node,
-            RegionDataSounds item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.RegionDataSounds");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.RegionDataSounds");
-            }
-            WriteToNode_Xml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #endregion
-
-        public static void WriteToNode_Xml(
-            this RegionDataSounds item,
-            XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            RegionDataCommon.WriteToNode_Xml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            if (item.MusicType_IsSet
-                && (translationMask?.GetShouldTranslate((int)RegionDataSounds_FieldIndex.MusicType) ?? true))
-            {
-                EnumXmlTranslation<MusicType>.Instance.Write(
-                    node: node,
-                    name: nameof(item.MusicType),
-                    item: item.MusicType,
-                    fieldIndex: (int)RegionDataSounds_FieldIndex.MusicType,
-                    errorMask: errorMask);
-            }
-            if (item.Sounds.HasBeenSet
-                && (translationMask?.GetShouldTranslate((int)RegionDataSounds_FieldIndex.Sounds) ?? true))
-            {
-                ListXmlTranslation<RegionSound>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Sounds),
-                    item: item.Sounds,
-                    fieldIndex: (int)RegionDataSounds_FieldIndex.Sounds,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)RegionDataSounds_FieldIndex.Sounds),
-                    transl: (XElement subNode, RegionSound subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
-                    {
-                        LoquiXmlTranslation<RegionSound>.Instance.Write(
-                            node: subNode,
-                            item: subItem,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
-                    }
-                    );
-            }
-        }
-
         public static void FillPublic_Xml(
             this RegionDataSounds item,
             XElement node,
@@ -1464,90 +1403,102 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        #region Binary Translation
-        #region Binary Write
-        public static void Write_Binary(
-            MutagenWriter writer,
-            RegionDataSounds item,
-            MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            bool doMasks,
-            out RegionDataSounds_ErrorMask errorMask)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_Binary(
-                masterReferences: masterReferences,
-                writer: writer,
-                item: item,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMaskBuilder);
-            errorMask = RegionDataSounds_ErrorMask.Factory(errorMaskBuilder);
-        }
+    }
+    #endregion
 
-        public static void Write_Binary(
-            MutagenWriter writer,
-            RegionDataSounds item,
-            MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
-        {
-            Write_Binary_RecordTypes(
-                item: item,
-                writer: writer,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMask,
-                masterReferences: masterReferences);
-        }
-        #endregion
+    #region Modules
+    #region Xml Translation
+    public partial class RegionDataSoundsXmlTranslation : RegionDataXmlTranslation
+    {
+        public new readonly static RegionDataSoundsXmlTranslation Instance = new RegionDataSoundsXmlTranslation();
 
-        public static void Write_Binary_RecordTypes(
-            RegionDataSounds item,
-            MutagenWriter writer,
-            RecordTypeConverter recordTypeConverter,
+        public static void WriteToNode_Xml(
+            IRegionDataSoundsInternalGetter item,
+            XElement node,
             ErrorMaskBuilder errorMask,
-            MasterReferences masterReferences)
+            TranslationCrystal translationMask)
         {
-            RegionDataCommon.Write_Binary_RecordTypes(
+            RegionDataXmlTranslation.WriteToNode_Xml(
                 item: item,
-                writer: writer,
-                recordTypeConverter: recordTypeConverter,
+                node: node,
                 errorMask: errorMask,
-                masterReferences: masterReferences);
-            if (item.MusicType_IsSet)
+                translationMask: translationMask);
+            if (item.MusicType_IsSet
+                && (translationMask?.GetShouldTranslate((int)RegionDataSounds_FieldIndex.MusicType) ?? true))
             {
-                Mutagen.Bethesda.Binary.EnumBinaryTranslation<MusicType>.Instance.Write(
-                    writer,
-                    item.MusicType,
-                    length: 4,
-                    header: recordTypeConverter.ConvertToCustom(RegionDataSounds_Registration.RDMD_HEADER),
-                    nullable: false);
+                EnumXmlTranslation<MusicType>.Instance.Write(
+                    node: node,
+                    name: nameof(item.MusicType),
+                    item: item.MusicType,
+                    fieldIndex: (int)RegionDataSounds_FieldIndex.MusicType,
+                    errorMask: errorMask);
             }
-            if (item.Sounds.HasBeenSet)
+            if (item.Sounds.HasBeenSet
+                && (translationMask?.GetShouldTranslate((int)RegionDataSounds_FieldIndex.Sounds) ?? true))
             {
-                Mutagen.Bethesda.Binary.ListBinaryTranslation<RegionSound>.Instance.Write(
-                    writer: writer,
-                    items: item.Sounds,
+                ListXmlTranslation<RegionSound>.Instance.Write(
+                    node: node,
+                    name: nameof(item.Sounds),
+                    item: item.Sounds,
                     fieldIndex: (int)RegionDataSounds_FieldIndex.Sounds,
-                    recordType: RegionDataSounds_Registration.RDSD_HEADER,
                     errorMask: errorMask,
-                    transl: (MutagenWriter subWriter, RegionSound subItem, ErrorMaskBuilder listErrorMask) =>
+                    translationMask: translationMask?.GetSubCrystal((int)RegionDataSounds_FieldIndex.Sounds),
+                    transl: (XElement subNode, RegionSound subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
-                        LoquiBinaryTranslation<RegionSound>.Instance.Write(
-                            writer: subWriter,
+                        LoquiXmlTranslation<RegionSound>.Instance.Write(
+                            node: subNode,
                             item: subItem,
-                            errorMask: listErrorMask,
-                            masterReferences: masterReferences);
+                            name: null,
+                            errorMask: listSubMask,
+                            translationMask: listTranslMask);
                     }
                     );
             }
         }
 
+        #region Xml Write
+        public void Write_Xml(
+            XElement node,
+            IRegionDataSoundsInternalGetter item,
+            bool doMasks,
+            out RegionDataSounds_ErrorMask errorMask,
+            RegionDataSounds_TranslationMask translationMask,
+            string name = null)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            Write_Xml(
+                name: name,
+                node: node,
+                item: item,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal());
+            errorMask = RegionDataSounds_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public void Write_Xml(
+            XElement node,
+            IRegionDataSoundsInternalGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.RegionDataSounds");
+            node.Add(elem);
+            if (name != null)
+            {
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.RegionDataSounds");
+            }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         #endregion
 
     }
     #endregion
 
-    #region Modules
     #region Mask
     public class RegionDataSounds_Mask<T> : RegionData_Mask<T>, IMask<T>, IEquatable<RegionDataSounds_Mask<T>>
     {
@@ -1911,6 +1862,96 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Add((MusicType, null));
             ret.Add((Sounds?.Overall ?? true, Sounds?.Specific?.GetCrystal()));
         }
+    }
+    #endregion
+
+    #region Binary Translation
+    public partial class RegionDataSoundsBinaryTranslation : RegionDataBinaryTranslation
+    {
+        public new readonly static RegionDataSoundsBinaryTranslation Instance = new RegionDataSoundsBinaryTranslation();
+
+        public static void Write_Binary_RecordTypes(
+            IRegionDataSoundsInternalGetter item,
+            MutagenWriter writer,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask,
+            MasterReferences masterReferences)
+        {
+            RegionDataBinaryTranslation.Write_Binary_RecordTypes(
+                item: item,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask,
+                masterReferences: masterReferences);
+            if (item.MusicType_IsSet)
+            {
+                Mutagen.Bethesda.Binary.EnumBinaryTranslation<MusicType>.Instance.Write(
+                    writer,
+                    item.MusicType,
+                    length: 4,
+                    header: recordTypeConverter.ConvertToCustom(RegionDataSounds_Registration.RDMD_HEADER),
+                    nullable: false);
+            }
+            if (item.Sounds.HasBeenSet)
+            {
+                Mutagen.Bethesda.Binary.ListBinaryTranslation<RegionSound>.Instance.Write(
+                    writer: writer,
+                    items: item.Sounds,
+                    fieldIndex: (int)RegionDataSounds_FieldIndex.Sounds,
+                    recordType: RegionDataSounds_Registration.RDSD_HEADER,
+                    errorMask: errorMask,
+                    transl: (MutagenWriter subWriter, RegionSound subItem, ErrorMaskBuilder listErrorMask) =>
+                    {
+                        LoquiBinaryTranslation<RegionSound>.Instance.Write(
+                            writer: subWriter,
+                            item: subItem,
+                            errorMask: listErrorMask,
+                            masterReferences: masterReferences);
+                    }
+                    );
+            }
+        }
+
+        #region Binary Write
+        public void Write_Binary(
+            MutagenWriter writer,
+            IRegionDataSoundsInternalGetter item,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            bool doMasks,
+            out RegionDataSounds_ErrorMask errorMask)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            Write_Binary(
+                masterReferences: masterReferences,
+                writer: writer,
+                item: item,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMaskBuilder);
+            errorMask = RegionDataSounds_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public void Write_Binary(
+            MutagenWriter writer,
+            IRegionDataSoundsInternalGetter item,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            RegionDataBinaryTranslation.Write_Binary_Embedded(
+                item: item,
+                writer: writer,
+                errorMask: errorMask,
+                masterReferences: masterReferences);
+            Write_Binary_RecordTypes(
+                item: item,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask,
+                masterReferences: masterReferences);
+        }
+        #endregion
+
     }
     #endregion
 

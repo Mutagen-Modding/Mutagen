@@ -52,16 +52,22 @@ namespace Mutagen.Bethesda.Oblivion
                 .DistinctUntilChanged()
                 .BindTo(this, x => x.RawFloat);
         }
+    }
 
-        static partial void FillBinary_Data_Custom(MutagenFrame frame, GlobalInt item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
+    namespace Internals
+    {
+        public partial class GlobalIntBinaryTranslation
         {
-        }
-
-        static partial void WriteBinary_Data_Custom(MutagenWriter writer, GlobalInt item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
-        {
-            using (HeaderExport.ExportSubRecordHeader(writer, GlobalInt_Registration.FLTV_HEADER))
+            static partial void FillBinary_Data_Custom(MutagenFrame frame, GlobalInt item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
             {
-                writer.Write((float)item.Data);
+            }
+
+            static partial void WriteBinary_Data_Custom(MutagenWriter writer, IGlobalIntInternalGetter item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
+            {
+                using (HeaderExport.ExportSubRecordHeader(writer, GlobalInt_Registration.FLTV_HEADER))
+                {
+                    writer.Write((float)item.Data);
+                }
             }
         }
     }

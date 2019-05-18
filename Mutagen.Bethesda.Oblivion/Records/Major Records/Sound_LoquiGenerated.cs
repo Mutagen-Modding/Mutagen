@@ -36,6 +36,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class Sound : 
         OblivionMajorRecord,
         ISound,
+        ISoundInternal,
         ILoquiObject<Sound>,
         ILoquiObjectSetter,
         IEquatable<Sound>
@@ -338,7 +339,8 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Xml(
+            SoundXmlTranslation.Instance.Write_Xml(
+                item: this,
                 name: name,
                 node: node,
                 errorMask: errorMaskBuilder,
@@ -370,7 +372,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            this.Write_Xml(
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -401,7 +403,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            this.Write_Xml(
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -417,7 +419,8 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Xml(
+            SoundXmlTranslation.Instance.Write_Xml(
+                item: this,
                 name: name,
                 node: node,
                 errorMask: errorMaskBuilder,
@@ -433,7 +436,8 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Xml(
+            SoundXmlTranslation.Instance.Write_Xml(
+                item: this,
                 name: name,
                 node: node,
                 errorMask: errorMaskBuilder,
@@ -449,7 +453,7 @@ namespace Mutagen.Bethesda.Oblivion
             TranslationCrystal translationMask,
             string name = null)
         {
-            SoundCommon.Write_Xml(
+            SoundXmlTranslation.Instance.Write_Xml(
                 item: this,
                 name: name,
                 node: node,
@@ -571,7 +575,8 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Binary(
+            SoundBinaryTranslation.Instance.Write_Binary(
+                item: this,
                 masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: null,
@@ -587,7 +592,8 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Binary(
+            SoundBinaryTranslation.Instance.Write_Binary(
+                item: this,
                 masterReferences: masterReferences,
                 writer: writer,
                 errorMask: errorMaskBuilder,
@@ -602,7 +608,8 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Binary(
+            SoundBinaryTranslation.Instance.Write_Binary(
+                item: this,
                 masterReferences: masterReferences,
                 writer: writer,
                 errorMask: errorMaskBuilder,
@@ -618,7 +625,7 @@ namespace Mutagen.Bethesda.Oblivion
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            SoundCommon.Write_Binary(
+            SoundBinaryTranslation.Instance.Write_Binary(
                 item: this,
                 masterReferences: masterReferences,
                 writer: writer,
@@ -917,6 +924,10 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
+    public partial interface ISoundInternal : ISound, ISoundInternalGetter, IOblivionMajorRecordInternal
+    {
+    }
+
     public partial interface ISoundGetter : IOblivionMajorRecordGetter
     {
         #region File
@@ -932,6 +943,11 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
+    public partial interface ISoundInternalGetter : ISoundGetter, IOblivionMajorRecordInternalGetter
+    {
+
+    }
+
     #endregion
 
 }
@@ -941,13 +957,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #region Field Index
     public enum Sound_FieldIndex
     {
-        FormKey = 0,
-        Version = 1,
-        EditorID = 2,
-        RecordType = 3,
-        OblivionMajorRecordFlags = 4,
-        File = 5,
-        Data = 6,
+        MajorRecordFlagsRaw = 0,
+        FormKey = 1,
+        Version = 2,
+        EditorID = 3,
+        RecordType = 4,
+        OblivionMajorRecordFlags = 5,
+        File = 6,
+        Data = 7,
     }
     #endregion
 
@@ -967,7 +984,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort AdditionalFieldCount = 2;
 
-        public const ushort FieldCount = 7;
+        public const ushort FieldCount = 8;
 
         public static readonly Type MaskType = typeof(Sound_Mask<>);
 
@@ -977,11 +994,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type GetterType = typeof(ISoundGetter);
 
-        public static readonly Type InternalGetterType = null;
+        public static readonly Type InternalGetterType = typeof(ISoundInternalGetter);
 
         public static readonly Type SetterType = typeof(ISound);
 
-        public static readonly Type InternalSetterType = null;
+        public static readonly Type InternalSetterType = typeof(ISoundInternal);
 
         public static readonly Type CommonType = typeof(SoundCommon);
 
@@ -1348,6 +1365,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (index)
             {
+                case OblivionMajorRecord_FieldIndex.MajorRecordFlagsRaw:
+                    return (Sound_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.FormKey:
                     return (Sound_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.Version:
@@ -1373,6 +1392,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (index)
             {
+                case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
+                    return (Sound_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
                     return (Sound_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.Version:
@@ -1387,80 +1408,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         #region Xml Translation
-        #region Xml Write
-        public static void Write_Xml(
-            XElement node,
-            Sound item,
-            bool doMasks,
-            out Sound_ErrorMask errorMask,
-            Sound_TranslationMask translationMask,
-            string name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_Xml(
-                name: name,
-                node: node,
-                item: item,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = Sound_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void Write_Xml(
-            XElement node,
-            Sound item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.Sound");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.Sound");
-            }
-            WriteToNode_Xml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #endregion
-
-        public static void WriteToNode_Xml(
-            this Sound item,
-            XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            OblivionMajorRecordCommon.WriteToNode_Xml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            if (item.File_IsSet
-                && (translationMask?.GetShouldTranslate((int)Sound_FieldIndex.File) ?? true))
-            {
-                StringXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.File),
-                    item: item.File,
-                    fieldIndex: (int)Sound_FieldIndex.File,
-                    errorMask: errorMask);
-            }
-            if (item.Data_IsSet
-                && (translationMask?.GetShouldTranslate((int)Sound_FieldIndex.Data) ?? true))
-            {
-                LoquiXmlTranslation<SoundData>.Instance.Write(
-                    node: node,
-                    item: item.Data,
-                    name: nameof(item.Data),
-                    fieldIndex: (int)Sound_FieldIndex.Data,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Sound_FieldIndex.Data));
-            }
-        }
-
         public static void FillPublic_Xml(
             this Sound item,
             XElement node,
@@ -1561,91 +1508,92 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        #region Binary Translation
-        #region Binary Write
-        public static void Write_Binary(
-            MutagenWriter writer,
-            Sound item,
-            MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
+    }
+    #endregion
+
+    #region Modules
+    #region Xml Translation
+    public partial class SoundXmlTranslation : OblivionMajorRecordXmlTranslation
+    {
+        public new readonly static SoundXmlTranslation Instance = new SoundXmlTranslation();
+
+        public static void WriteToNode_Xml(
+            ISoundInternalGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            OblivionMajorRecordXmlTranslation.WriteToNode_Xml(
+                item: item,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+            if (item.File_IsSet
+                && (translationMask?.GetShouldTranslate((int)Sound_FieldIndex.File) ?? true))
+            {
+                StringXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.File),
+                    item: item.File,
+                    fieldIndex: (int)Sound_FieldIndex.File,
+                    errorMask: errorMask);
+            }
+            if (item.Data_IsSet
+                && (translationMask?.GetShouldTranslate((int)Sound_FieldIndex.Data) ?? true))
+            {
+                LoquiXmlTranslation<SoundData>.Instance.Write(
+                    node: node,
+                    item: item.Data,
+                    name: nameof(item.Data),
+                    fieldIndex: (int)Sound_FieldIndex.Data,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)Sound_FieldIndex.Data));
+            }
+        }
+
+        #region Xml Write
+        public void Write_Xml(
+            XElement node,
+            ISoundInternalGetter item,
             bool doMasks,
-            out Sound_ErrorMask errorMask)
+            out Sound_ErrorMask errorMask,
+            Sound_TranslationMask translationMask,
+            string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_Binary(
-                masterReferences: masterReferences,
-                writer: writer,
+            Write_Xml(
+                name: name,
+                node: node,
                 item: item,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMaskBuilder);
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal());
             errorMask = Sound_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void Write_Binary(
-            MutagenWriter writer,
-            Sound item,
-            MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
-        {
-            using (HeaderExport.ExportHeader(
-                writer: writer,
-                record: Sound_Registration.SOUN_HEADER,
-                type: ObjectType.Record))
-            {
-                OblivionMajorRecordCommon.Write_Binary_Embedded(
-                    item: item,
-                    writer: writer,
-                    errorMask: errorMask,
-                    masterReferences: masterReferences);
-                Write_Binary_RecordTypes(
-                    item: item,
-                    writer: writer,
-                    recordTypeConverter: recordTypeConverter,
-                    errorMask: errorMask,
-                    masterReferences: masterReferences);
-            }
-        }
-        #endregion
-
-        public static void Write_Binary_RecordTypes(
-            Sound item,
-            MutagenWriter writer,
-            RecordTypeConverter recordTypeConverter,
+        public void Write_Xml(
+            XElement node,
+            ISoundInternalGetter item,
             ErrorMaskBuilder errorMask,
-            MasterReferences masterReferences)
+            TranslationCrystal translationMask,
+            string name = null)
         {
-            MajorRecordCommon.Write_Binary_RecordTypes(
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.Sound");
+            node.Add(elem);
+            if (name != null)
+            {
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.Sound");
+            }
+            WriteToNode_Xml(
                 item: item,
-                writer: writer,
-                recordTypeConverter: recordTypeConverter,
+                node: elem,
                 errorMask: errorMask,
-                masterReferences: masterReferences);
-            if (item.File_IsSet)
-            {
-                Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.File,
-                    header: recordTypeConverter.ConvertToCustom(Sound_Registration.FNAM_HEADER),
-                    nullable: false);
-            }
-            if (item.Data_IsSet)
-            {
-                LoquiBinaryTranslation<SoundData>.Instance.Write(
-                    writer: writer,
-                    item: item.Data,
-                    fieldIndex: (int)Sound_FieldIndex.Data,
-                    errorMask: errorMask,
-                    masterReferences: masterReferences);
-            }
+                translationMask: translationMask);
         }
-
         #endregion
 
     }
     #endregion
 
-    #region Modules
     #region Mask
     public class Sound_Mask<T> : OblivionMajorRecord_Mask<T>, IMask<T>, IEquatable<Sound_Mask<T>>
     {
@@ -1943,6 +1891,92 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Add((File, null));
             ret.Add((Data?.Overall ?? true, Data?.Specific?.GetCrystal()));
         }
+    }
+    #endregion
+
+    #region Binary Translation
+    public partial class SoundBinaryTranslation : OblivionMajorRecordBinaryTranslation
+    {
+        public new readonly static SoundBinaryTranslation Instance = new SoundBinaryTranslation();
+
+        public static void Write_Binary_RecordTypes(
+            ISoundInternalGetter item,
+            MutagenWriter writer,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask,
+            MasterReferences masterReferences)
+        {
+            MajorRecordBinaryTranslation.Write_Binary_RecordTypes(
+                item: item,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask,
+                masterReferences: masterReferences);
+            if (item.File_IsSet)
+            {
+                Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.File,
+                    header: recordTypeConverter.ConvertToCustom(Sound_Registration.FNAM_HEADER),
+                    nullable: false);
+            }
+            if (item.Data_IsSet)
+            {
+                LoquiBinaryTranslation<SoundData>.Instance.Write(
+                    writer: writer,
+                    item: item.Data,
+                    fieldIndex: (int)Sound_FieldIndex.Data,
+                    errorMask: errorMask,
+                    masterReferences: masterReferences);
+            }
+        }
+
+        #region Binary Write
+        public void Write_Binary(
+            MutagenWriter writer,
+            ISoundInternalGetter item,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            bool doMasks,
+            out Sound_ErrorMask errorMask)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            Write_Binary(
+                masterReferences: masterReferences,
+                writer: writer,
+                item: item,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMaskBuilder);
+            errorMask = Sound_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public void Write_Binary(
+            MutagenWriter writer,
+            ISoundInternalGetter item,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            using (HeaderExport.ExportHeader(
+                writer: writer,
+                record: Sound_Registration.SOUN_HEADER,
+                type: ObjectType.Record))
+            {
+                OblivionMajorRecordBinaryTranslation.Write_Binary_Embedded(
+                    item: item,
+                    writer: writer,
+                    errorMask: errorMask,
+                    masterReferences: masterReferences);
+                Write_Binary_RecordTypes(
+                    item: item,
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter,
+                    errorMask: errorMask,
+                    masterReferences: masterReferences);
+            }
+        }
+        #endregion
+
     }
     #endregion
 

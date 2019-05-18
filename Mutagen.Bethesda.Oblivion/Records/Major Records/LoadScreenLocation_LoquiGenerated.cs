@@ -285,7 +285,8 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Xml(
+            LoadScreenLocationXmlTranslation.Instance.Write_Xml(
+                item: this,
                 name: name,
                 node: node,
                 errorMask: errorMaskBuilder,
@@ -317,7 +318,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            this.Write_Xml(
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -348,7 +349,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            this.Write_Xml(
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -372,7 +373,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            this.Write_Xml(
                 name: name,
                 node: node,
                 errorMask: null,
@@ -385,7 +386,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            this.Write_Xml(
                 name: name,
                 node: node,
                 errorMask: null,
@@ -399,7 +400,7 @@ namespace Mutagen.Bethesda.Oblivion
             TranslationCrystal translationMask,
             string name = null)
         {
-            LoadScreenLocationCommon.Write_Xml(
+            LoadScreenLocationXmlTranslation.Instance.Write_Xml(
                 item: this,
                 name: name,
                 node: node,
@@ -511,7 +512,8 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Binary(
+            LoadScreenLocationBinaryTranslation.Instance.Write_Binary(
+                item: this,
                 masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: null,
@@ -536,7 +538,7 @@ namespace Mutagen.Bethesda.Oblivion
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            LoadScreenLocationCommon.Write_Binary(
+            LoadScreenLocationBinaryTranslation.Instance.Write_Binary(
                 item: this,
                 masterReferences: masterReferences,
                 writer: writer,
@@ -1144,81 +1146,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         #region Xml Translation
-        #region Xml Write
-        public static void Write_Xml(
-            XElement node,
-            LoadScreenLocation item,
-            bool doMasks,
-            out LoadScreenLocation_ErrorMask errorMask,
-            LoadScreenLocation_TranslationMask translationMask,
-            string name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_Xml(
-                name: name,
-                node: node,
-                item: item,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = LoadScreenLocation_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void Write_Xml(
-            XElement node,
-            LoadScreenLocation item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.LoadScreenLocation");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.LoadScreenLocation");
-            }
-            WriteToNode_Xml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #endregion
-
-        public static void WriteToNode_Xml(
-            this LoadScreenLocation item,
-            XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            if ((translationMask?.GetShouldTranslate((int)LoadScreenLocation_FieldIndex.Direct) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Direct),
-                    item: item.Direct_Property?.FormKey,
-                    fieldIndex: (int)LoadScreenLocation_FieldIndex.Direct,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)LoadScreenLocation_FieldIndex.Indirect) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Indirect),
-                    item: item.Indirect_Property?.FormKey,
-                    fieldIndex: (int)LoadScreenLocation_FieldIndex.Indirect,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)LoadScreenLocation_FieldIndex.GridPoint) ?? true))
-            {
-                P2Int16XmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.GridPoint),
-                    item: item.GridPoint,
-                    fieldIndex: (int)LoadScreenLocation_FieldIndex.GridPoint,
-                    errorMask: errorMask);
-            }
-        }
-
         public static void FillPublic_Xml(
             this LoadScreenLocation item,
             XElement node,
@@ -1300,72 +1227,93 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        #region Binary Translation
-        #region Binary Write
-        public static void Write_Binary(
-            MutagenWriter writer,
-            LoadScreenLocation item,
-            MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
+    }
+    #endregion
+
+    #region Modules
+    #region Xml Translation
+    public partial class LoadScreenLocationXmlTranslation
+    {
+        public readonly static LoadScreenLocationXmlTranslation Instance = new LoadScreenLocationXmlTranslation();
+
+        public static void WriteToNode_Xml(
+            ILoadScreenLocationGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            if ((translationMask?.GetShouldTranslate((int)LoadScreenLocation_FieldIndex.Direct) ?? true))
+            {
+                FormKeyXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Direct),
+                    item: item.Direct_Property?.FormKey,
+                    fieldIndex: (int)LoadScreenLocation_FieldIndex.Direct,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)LoadScreenLocation_FieldIndex.Indirect) ?? true))
+            {
+                FormKeyXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Indirect),
+                    item: item.Indirect_Property?.FormKey,
+                    fieldIndex: (int)LoadScreenLocation_FieldIndex.Indirect,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)LoadScreenLocation_FieldIndex.GridPoint) ?? true))
+            {
+                P2Int16XmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.GridPoint),
+                    item: item.GridPoint,
+                    fieldIndex: (int)LoadScreenLocation_FieldIndex.GridPoint,
+                    errorMask: errorMask);
+            }
+        }
+
+        #region Xml Write
+        public void Write_Xml(
+            XElement node,
+            ILoadScreenLocationGetter item,
             bool doMasks,
-            out LoadScreenLocation_ErrorMask errorMask)
+            out LoadScreenLocation_ErrorMask errorMask,
+            LoadScreenLocation_TranslationMask translationMask,
+            string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_Binary(
-                masterReferences: masterReferences,
-                writer: writer,
+            Write_Xml(
+                name: name,
+                node: node,
                 item: item,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMaskBuilder);
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal());
             errorMask = LoadScreenLocation_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void Write_Binary(
-            MutagenWriter writer,
-            LoadScreenLocation item,
-            MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
-        {
-            using (HeaderExport.ExportHeader(
-                writer: writer,
-                record: LoadScreenLocation_Registration.LNAM_HEADER,
-                type: ObjectType.Subrecord))
-            {
-                Write_Binary_Embedded(
-                    item: item,
-                    writer: writer,
-                    errorMask: errorMask,
-                    masterReferences: masterReferences);
-            }
-        }
-        #endregion
-
-        public static void Write_Binary_Embedded(
-            LoadScreenLocation item,
-            MutagenWriter writer,
+        public void Write_Xml(
+            XElement node,
+            ILoadScreenLocationGetter item,
             ErrorMaskBuilder errorMask,
-            MasterReferences masterReferences)
+            TranslationCrystal translationMask,
+            string name = null)
         {
-            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.Direct_Property,
-                masterReferences: masterReferences);
-            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.Indirect_Property,
-                masterReferences: masterReferences);
-            Mutagen.Bethesda.Binary.P2Int16BinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.GridPoint);
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.LoadScreenLocation");
+            node.Add(elem);
+            if (name != null)
+            {
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.LoadScreenLocation");
+            }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
         }
-
         #endregion
 
     }
     #endregion
 
-    #region Modules
     #region Mask
     public class LoadScreenLocation_Mask<T> : IMask<T>, IEquatable<LoadScreenLocation_Mask<T>>
     {
@@ -1693,6 +1641,73 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Add((Indirect, null));
             ret.Add((GridPoint, null));
         }
+    }
+    #endregion
+
+    #region Binary Translation
+    public partial class LoadScreenLocationBinaryTranslation
+    {
+        public readonly static LoadScreenLocationBinaryTranslation Instance = new LoadScreenLocationBinaryTranslation();
+
+        public static void Write_Binary_Embedded(
+            ILoadScreenLocationGetter item,
+            MutagenWriter writer,
+            ErrorMaskBuilder errorMask,
+            MasterReferences masterReferences)
+        {
+            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.Direct_Property,
+                masterReferences: masterReferences);
+            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.Indirect_Property,
+                masterReferences: masterReferences);
+            Mutagen.Bethesda.Binary.P2Int16BinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.GridPoint);
+        }
+
+        #region Binary Write
+        public void Write_Binary(
+            MutagenWriter writer,
+            ILoadScreenLocationGetter item,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            bool doMasks,
+            out LoadScreenLocation_ErrorMask errorMask)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            Write_Binary(
+                masterReferences: masterReferences,
+                writer: writer,
+                item: item,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMaskBuilder);
+            errorMask = LoadScreenLocation_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public void Write_Binary(
+            MutagenWriter writer,
+            ILoadScreenLocationGetter item,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            using (HeaderExport.ExportHeader(
+                writer: writer,
+                record: LoadScreenLocation_Registration.LNAM_HEADER,
+                type: ObjectType.Subrecord))
+            {
+                Write_Binary_Embedded(
+                    item: item,
+                    writer: writer,
+                    errorMask: errorMask,
+                    masterReferences: masterReferences);
+            }
+        }
+        #endregion
+
     }
     #endregion
 

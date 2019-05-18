@@ -36,6 +36,7 @@ namespace Mutagen.Bethesda.Oblivion
     public abstract partial class NPCSpawn : 
         OblivionMajorRecord,
         INPCSpawn,
+        INPCSpawnInternal,
         ILoquiObject<NPCSpawn>,
         ILoquiObjectSetter,
         ILinkSubContainer,
@@ -249,7 +250,8 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Xml(
+            NPCSpawnXmlTranslation.Instance.Write_Xml(
+                item: this,
                 name: name,
                 node: node,
                 errorMask: errorMaskBuilder,
@@ -281,7 +283,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            this.Write_Xml(
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -312,7 +314,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            this.Write_Xml(
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -328,7 +330,8 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Xml(
+            NPCSpawnXmlTranslation.Instance.Write_Xml(
+                item: this,
                 name: name,
                 node: node,
                 errorMask: errorMaskBuilder,
@@ -344,7 +347,8 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Xml(
+            NPCSpawnXmlTranslation.Instance.Write_Xml(
+                item: this,
                 name: name,
                 node: node,
                 errorMask: errorMaskBuilder,
@@ -360,7 +364,7 @@ namespace Mutagen.Bethesda.Oblivion
             TranslationCrystal translationMask,
             string name = null)
         {
-            NPCSpawnCommon.Write_Xml(
+            NPCSpawnXmlTranslation.Instance.Write_Xml(
                 item: this,
                 name: name,
                 node: node,
@@ -429,7 +433,8 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Binary(
+            NPCSpawnBinaryTranslation.Instance.Write_Binary(
+                item: this,
                 masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: null,
@@ -445,7 +450,8 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Binary(
+            NPCSpawnBinaryTranslation.Instance.Write_Binary(
+                item: this,
                 masterReferences: masterReferences,
                 writer: writer,
                 errorMask: errorMaskBuilder,
@@ -460,7 +466,8 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Binary(
+            NPCSpawnBinaryTranslation.Instance.Write_Binary(
+                item: this,
                 masterReferences: masterReferences,
                 writer: writer,
                 errorMask: errorMaskBuilder,
@@ -476,7 +483,7 @@ namespace Mutagen.Bethesda.Oblivion
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            NPCSpawnCommon.Write_Binary(
+            NPCSpawnBinaryTranslation.Instance.Write_Binary(
                 item: this,
                 masterReferences: masterReferences,
                 writer: writer,
@@ -616,7 +623,16 @@ namespace Mutagen.Bethesda.Oblivion
     {
     }
 
+    public partial interface INPCSpawnInternal : INPCSpawn, INPCSpawnInternalGetter, IOblivionMajorRecordInternal
+    {
+    }
+
     public partial interface INPCSpawnGetter : IOblivionMajorRecordGetter
+    {
+
+    }
+
+    public partial interface INPCSpawnInternalGetter : INPCSpawnGetter, IOblivionMajorRecordInternalGetter
     {
 
     }
@@ -630,11 +646,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #region Field Index
     public enum NPCSpawn_FieldIndex
     {
-        FormKey = 0,
-        Version = 1,
-        EditorID = 2,
-        RecordType = 3,
-        OblivionMajorRecordFlags = 4,
+        MajorRecordFlagsRaw = 0,
+        FormKey = 1,
+        Version = 2,
+        EditorID = 3,
+        RecordType = 4,
+        OblivionMajorRecordFlags = 5,
     }
     #endregion
 
@@ -654,7 +671,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort AdditionalFieldCount = 0;
 
-        public const ushort FieldCount = 5;
+        public const ushort FieldCount = 6;
 
         public static readonly Type MaskType = typeof(NPCSpawn_Mask<>);
 
@@ -664,11 +681,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type GetterType = typeof(INPCSpawnGetter);
 
-        public static readonly Type InternalGetterType = null;
+        public static readonly Type InternalGetterType = typeof(INPCSpawnInternalGetter);
 
         public static readonly Type SetterType = typeof(INPCSpawn);
 
-        public static readonly Type InternalSetterType = null;
+        public static readonly Type InternalSetterType = typeof(INPCSpawnInternal);
 
         public static readonly Type CommonType = typeof(NPCSpawnCommon);
 
@@ -912,6 +929,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (index)
             {
+                case OblivionMajorRecord_FieldIndex.MajorRecordFlagsRaw:
+                    return (NPCSpawn_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.FormKey:
                     return (NPCSpawn_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.Version:
@@ -937,6 +956,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (index)
             {
+                case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
+                    return (NPCSpawn_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
                     return (NPCSpawn_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.Version:
@@ -951,59 +972,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         #region Xml Translation
-        #region Xml Write
-        public static void Write_Xml(
-            XElement node,
-            NPCSpawn item,
-            bool doMasks,
-            out NPCSpawn_ErrorMask errorMask,
-            NPCSpawn_TranslationMask translationMask,
-            string name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_Xml(
-                name: name,
-                node: node,
-                item: item,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = NPCSpawn_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void Write_Xml(
-            XElement node,
-            NPCSpawn item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.NPCSpawn");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.NPCSpawn");
-            }
-            WriteToNode_Xml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #endregion
-
-        public static void WriteToNode_Xml(
-            this NPCSpawn item,
-            XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            OblivionMajorRecordCommon.WriteToNode_Xml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
         public static void FillPublic_Xml(
             this NPCSpawn item,
             XElement node,
@@ -1051,53 +1019,71 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        #region Binary Translation
-        #region Binary Write
-        public static void Write_Binary(
-            MutagenWriter writer,
-            NPCSpawn item,
-            MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
+    }
+    #endregion
+
+    #region Modules
+    #region Xml Translation
+    public partial class NPCSpawnXmlTranslation : OblivionMajorRecordXmlTranslation
+    {
+        public new readonly static NPCSpawnXmlTranslation Instance = new NPCSpawnXmlTranslation();
+
+        public static void WriteToNode_Xml(
+            INPCSpawnInternalGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            OblivionMajorRecordXmlTranslation.WriteToNode_Xml(
+                item: item,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        #region Xml Write
+        public void Write_Xml(
+            XElement node,
+            INPCSpawnInternalGetter item,
             bool doMasks,
-            out NPCSpawn_ErrorMask errorMask)
+            out NPCSpawn_ErrorMask errorMask,
+            NPCSpawn_TranslationMask translationMask,
+            string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_Binary(
-                masterReferences: masterReferences,
-                writer: writer,
+            Write_Xml(
+                name: name,
+                node: node,
                 item: item,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMaskBuilder);
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal());
             errorMask = NPCSpawn_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void Write_Binary(
-            MutagenWriter writer,
-            NPCSpawn item,
-            MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
+        public void Write_Xml(
+            XElement node,
+            INPCSpawnInternalGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
         {
-            OblivionMajorRecordCommon.Write_Binary_Embedded(
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.NPCSpawn");
+            node.Add(elem);
+            if (name != null)
+            {
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.NPCSpawn");
+            }
+            WriteToNode_Xml(
                 item: item,
-                writer: writer,
+                node: elem,
                 errorMask: errorMask,
-                masterReferences: masterReferences);
-            MajorRecordCommon.Write_Binary_RecordTypes(
-                item: item,
-                writer: writer,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMask,
-                masterReferences: masterReferences);
+                translationMask: translationMask);
         }
-        #endregion
-
         #endregion
 
     }
     #endregion
 
-    #region Modules
     #region Mask
     public class NPCSpawn_Mask<T> : OblivionMajorRecord_Mask<T>, IMask<T>, IEquatable<NPCSpawn_Mask<T>>
     {
@@ -1311,6 +1297,54 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
         }
 
+        #endregion
+
+    }
+    #endregion
+
+    #region Binary Translation
+    public partial class NPCSpawnBinaryTranslation : OblivionMajorRecordBinaryTranslation
+    {
+        public new readonly static NPCSpawnBinaryTranslation Instance = new NPCSpawnBinaryTranslation();
+
+        #region Binary Write
+        public void Write_Binary(
+            MutagenWriter writer,
+            INPCSpawnInternalGetter item,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            bool doMasks,
+            out NPCSpawn_ErrorMask errorMask)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            Write_Binary(
+                masterReferences: masterReferences,
+                writer: writer,
+                item: item,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMaskBuilder);
+            errorMask = NPCSpawn_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public void Write_Binary(
+            MutagenWriter writer,
+            INPCSpawnInternalGetter item,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            OblivionMajorRecordBinaryTranslation.Write_Binary_Embedded(
+                item: item,
+                writer: writer,
+                errorMask: errorMask,
+                masterReferences: masterReferences);
+            MajorRecordBinaryTranslation.Write_Binary_RecordTypes(
+                item: item,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask,
+                masterReferences: masterReferences);
+        }
         #endregion
 
     }

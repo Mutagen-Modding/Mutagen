@@ -36,6 +36,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class SoulGem : 
         ItemAbstract,
         ISoulGem,
+        ISoulGemInternal,
         ILoquiObject<SoulGem>,
         ILoquiObjectSetter,
         INamed,
@@ -215,6 +216,23 @@ namespace Mutagen.Bethesda.Oblivion
             this.MaximumCapacity_Set(default(SoulLevel), false);
         }
         #endregion
+        #region DATADataTypeState
+        private SoulGem.DATADataType _DATADataTypeState;
+        public SoulGem.DATADataType DATADataTypeState
+        {
+            get => this._DATADataTypeState;
+            set => this.RaiseAndSetIfChanged(ref this._DATADataTypeState, value, nameof(DATADataTypeState));
+        }
+        SoulGem.DATADataType ISoulGemInternal.DATADataTypeState
+        {
+            get => this.DATADataTypeState;
+            set => this.DATADataTypeState = value;
+        }
+        SoulGem.DATADataType ISoulGemInternalGetter.DATADataTypeState
+        {
+            get => this.DATADataTypeState;
+        }
+        #endregion
 
         IMask<bool> IEqualsMask<SoulGem>.GetEqualsMask(SoulGem rhs, EqualsMaskHelper.Include include) => SoulGemCommon.GetEqualsMask(this, rhs, include);
         IMask<bool> IEqualsMask<ISoulGemGetter>.GetEqualsMask(ISoulGemGetter rhs, EqualsMaskHelper.Include include) => SoulGemCommon.GetEqualsMask(this, rhs, include);
@@ -283,6 +301,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 if (this.MaximumCapacity != rhs.MaximumCapacity) return false;
             }
+            if (this.DATADataTypeState != rhs.DATADataTypeState) return false;
             return true;
         }
 
@@ -315,6 +334,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 ret = HashHelper.GetHashCode(MaximumCapacity).CombineHashCode(ret);
             }
+            ret = HashHelper.GetHashCode(DATADataTypeState).CombineHashCode(ret);
             ret = ret.CombineHashCode(base.GetHashCode());
             return ret;
         }
@@ -488,7 +508,8 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Xml(
+            SoulGemXmlTranslation.Instance.Write_Xml(
+                item: this,
                 name: name,
                 node: node,
                 errorMask: errorMaskBuilder,
@@ -520,7 +541,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            this.Write_Xml(
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -551,7 +572,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            this.Write_Xml(
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -567,7 +588,8 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Xml(
+            SoulGemXmlTranslation.Instance.Write_Xml(
+                item: this,
                 name: name,
                 node: node,
                 errorMask: errorMaskBuilder,
@@ -583,7 +605,8 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Xml(
+            SoulGemXmlTranslation.Instance.Write_Xml(
+                item: this,
                 name: name,
                 node: node,
                 errorMask: errorMaskBuilder,
@@ -599,7 +622,8 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Xml(
+            SoulGemXmlTranslation.Instance.Write_Xml(
+                item: this,
                 name: name,
                 node: node,
                 errorMask: errorMaskBuilder,
@@ -615,7 +639,7 @@ namespace Mutagen.Bethesda.Oblivion
             TranslationCrystal translationMask,
             string name = null)
         {
-            SoulGemCommon.Write_Xml(
+            SoulGemXmlTranslation.Instance.Write_Xml(
                 item: this,
                 name: name,
                 node: node,
@@ -663,6 +687,7 @@ namespace Mutagen.Bethesda.Oblivion
                     return Script_Property.HasBeenSet;
                 case SoulGem_FieldIndex.Value:
                 case SoulGem_FieldIndex.Weight:
+                case SoulGem_FieldIndex.DATADataTypeState:
                     return true;
                 default:
                     return base.GetHasBeenSet(index);
@@ -671,7 +696,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = SoulGem_Registration.TRIGGERING_RECORD_TYPE;
-        public DATADataType DATADataTypeState;
         [Flags]
         public enum DATADataType
         {
@@ -778,7 +802,8 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Binary(
+            SoulGemBinaryTranslation.Instance.Write_Binary(
+                item: this,
                 masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: null,
@@ -794,7 +819,8 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Binary(
+            SoulGemBinaryTranslation.Instance.Write_Binary(
+                item: this,
                 masterReferences: masterReferences,
                 writer: writer,
                 errorMask: errorMaskBuilder,
@@ -809,7 +835,8 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Binary(
+            SoulGemBinaryTranslation.Instance.Write_Binary(
+                item: this,
                 masterReferences: masterReferences,
                 writer: writer,
                 errorMask: errorMaskBuilder,
@@ -824,7 +851,8 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Binary(
+            SoulGemBinaryTranslation.Instance.Write_Binary(
+                item: this,
                 masterReferences: masterReferences,
                 writer: writer,
                 errorMask: errorMaskBuilder,
@@ -840,7 +868,7 @@ namespace Mutagen.Bethesda.Oblivion
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            SoulGemCommon.Write_Binary(
+            SoulGemBinaryTranslation.Instance.Write_Binary(
                 item: this,
                 masterReferences: masterReferences,
                 writer: writer,
@@ -1154,6 +1182,9 @@ namespace Mutagen.Bethesda.Oblivion
                 case SoulGem_FieldIndex.MaximumCapacity:
                     this.MaximumCapacity = (SoulLevel)obj;
                     break;
+                case SoulGem_FieldIndex.DATADataTypeState:
+                    this.DATADataTypeState = (SoulGem.DATADataType)obj;
+                    break;
                 default:
                     base.SetNthObject(index, obj);
                     break;
@@ -1209,6 +1240,9 @@ namespace Mutagen.Bethesda.Oblivion
                 case SoulGem_FieldIndex.MaximumCapacity:
                     obj.MaximumCapacity = (SoulLevel)pair.Value;
                     break;
+                case SoulGem_FieldIndex.DATADataTypeState:
+                    obj.DATADataTypeState = (SoulGem.DATADataType)pair.Value;
+                    break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
@@ -1248,6 +1282,13 @@ namespace Mutagen.Bethesda.Oblivion
         new bool MaximumCapacity_IsSet { get; set; }
         void MaximumCapacity_Set(SoulLevel item, bool hasBeenSet = true);
         void MaximumCapacity_Unset();
+
+    }
+
+    public partial interface ISoulGemInternal : ISoulGem, ISoulGemInternalGetter, IItemAbstractInternal
+    {
+        new Script Script { get; set; }
+        new SoulGem.DATADataType DATADataTypeState { get; set; }
 
     }
 
@@ -1294,6 +1335,15 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
+    public partial interface ISoulGemInternalGetter : ISoulGemGetter, IItemAbstractInternalGetter
+    {
+        #region DATADataTypeState
+        SoulGem.DATADataType DATADataTypeState { get; }
+
+        #endregion
+
+    }
+
     #endregion
 
 }
@@ -1303,19 +1353,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #region Field Index
     public enum SoulGem_FieldIndex
     {
-        FormKey = 0,
-        Version = 1,
-        EditorID = 2,
-        RecordType = 3,
-        OblivionMajorRecordFlags = 4,
-        Name = 5,
-        Model = 6,
-        Icon = 7,
-        Script = 8,
-        Value = 9,
-        Weight = 10,
-        ContainedSoul = 11,
-        MaximumCapacity = 12,
+        MajorRecordFlagsRaw = 0,
+        FormKey = 1,
+        Version = 2,
+        EditorID = 3,
+        RecordType = 4,
+        OblivionMajorRecordFlags = 5,
+        Name = 6,
+        Model = 7,
+        Icon = 8,
+        Script = 9,
+        Value = 10,
+        Weight = 11,
+        ContainedSoul = 12,
+        MaximumCapacity = 13,
+        DATADataTypeState = 14,
     }
     #endregion
 
@@ -1333,9 +1385,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const string GUID = "89d80e87-52e9-4c7c-8a27-bb4303d77edf";
 
-        public const ushort AdditionalFieldCount = 8;
+        public const ushort AdditionalFieldCount = 9;
 
-        public const ushort FieldCount = 13;
+        public const ushort FieldCount = 15;
 
         public static readonly Type MaskType = typeof(SoulGem_Mask<>);
 
@@ -1345,11 +1397,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type GetterType = typeof(ISoulGemGetter);
 
-        public static readonly Type InternalGetterType = null;
+        public static readonly Type InternalGetterType = typeof(ISoulGemInternalGetter);
 
         public static readonly Type SetterType = typeof(ISoulGem);
 
-        public static readonly Type InternalSetterType = null;
+        public static readonly Type InternalSetterType = typeof(ISoulGemInternal);
 
         public static readonly Type CommonType = typeof(SoulGemCommon);
 
@@ -1383,6 +1435,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (ushort)SoulGem_FieldIndex.ContainedSoul;
                 case "MAXIMUMCAPACITY":
                     return (ushort)SoulGem_FieldIndex.MaximumCapacity;
+                case "DATADATATYPESTATE":
+                    return (ushort)SoulGem_FieldIndex.DATADataTypeState;
                 default:
                     return null;
             }
@@ -1401,6 +1455,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case SoulGem_FieldIndex.Weight:
                 case SoulGem_FieldIndex.ContainedSoul:
                 case SoulGem_FieldIndex.MaximumCapacity:
+                case SoulGem_FieldIndex.DATADataTypeState:
                     return false;
                 default:
                     return ItemAbstract_Registration.GetNthIsEnumerable(index);
@@ -1421,6 +1476,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case SoulGem_FieldIndex.Weight:
                 case SoulGem_FieldIndex.ContainedSoul:
                 case SoulGem_FieldIndex.MaximumCapacity:
+                case SoulGem_FieldIndex.DATADataTypeState:
                     return false;
                 default:
                     return ItemAbstract_Registration.GetNthIsLoqui(index);
@@ -1440,6 +1496,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case SoulGem_FieldIndex.Weight:
                 case SoulGem_FieldIndex.ContainedSoul:
                 case SoulGem_FieldIndex.MaximumCapacity:
+                case SoulGem_FieldIndex.DATADataTypeState:
                     return false;
                 default:
                     return ItemAbstract_Registration.GetNthIsSingleton(index);
@@ -1467,6 +1524,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return "ContainedSoul";
                 case SoulGem_FieldIndex.MaximumCapacity:
                     return "MaximumCapacity";
+                case SoulGem_FieldIndex.DATADataTypeState:
+                    return "DATADataTypeState";
                 default:
                     return ItemAbstract_Registration.GetNthName(index);
             }
@@ -1485,6 +1544,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case SoulGem_FieldIndex.Weight:
                 case SoulGem_FieldIndex.ContainedSoul:
                 case SoulGem_FieldIndex.MaximumCapacity:
+                case SoulGem_FieldIndex.DATADataTypeState:
                     return false;
                 default:
                     return ItemAbstract_Registration.IsNthDerivative(index);
@@ -1504,6 +1564,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case SoulGem_FieldIndex.Weight:
                 case SoulGem_FieldIndex.ContainedSoul:
                 case SoulGem_FieldIndex.MaximumCapacity:
+                case SoulGem_FieldIndex.DATADataTypeState:
                     return false;
                 default:
                     return ItemAbstract_Registration.IsProtected(index);
@@ -1531,6 +1592,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return typeof(SoulLevel);
                 case SoulGem_FieldIndex.MaximumCapacity:
                     return typeof(SoulLevel);
+                case SoulGem_FieldIndex.DATADataTypeState:
+                    return typeof(SoulGem.DATADataType);
                 default:
                     return ItemAbstract_Registration.GetNthType(index);
             }
@@ -1933,6 +1996,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     fg.AppendLine($"MaximumCapacity => {item.MaximumCapacity}");
                 }
+                if (printMask?.DATADataTypeState ?? true)
+                {
+                }
             }
             fg.AppendLine("]");
         }
@@ -1962,6 +2028,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Weight = true;
             ret.ContainedSoul = item.ContainedSoul_IsSet;
             ret.MaximumCapacity = item.MaximumCapacity_IsSet;
+            ret.DATADataTypeState = true;
             return ret;
         }
 
@@ -1975,6 +2042,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (index)
             {
+                case ItemAbstract_FieldIndex.MajorRecordFlagsRaw:
+                    return (SoulGem_FieldIndex)((int)index);
                 case ItemAbstract_FieldIndex.FormKey:
                     return (SoulGem_FieldIndex)((int)index);
                 case ItemAbstract_FieldIndex.Version:
@@ -2000,6 +2069,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (index)
             {
+                case OblivionMajorRecord_FieldIndex.MajorRecordFlagsRaw:
+                    return (SoulGem_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.FormKey:
                     return (SoulGem_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.Version:
@@ -2025,6 +2096,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (index)
             {
+                case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
+                    return (SoulGem_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
                     return (SoulGem_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.Version:
@@ -2039,141 +2112,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         #region Xml Translation
-        #region Xml Write
-        public static void Write_Xml(
-            XElement node,
-            SoulGem item,
-            bool doMasks,
-            out SoulGem_ErrorMask errorMask,
-            SoulGem_TranslationMask translationMask,
-            string name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_Xml(
-                name: name,
-                node: node,
-                item: item,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = SoulGem_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void Write_Xml(
-            XElement node,
-            SoulGem item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.SoulGem");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.SoulGem");
-            }
-            WriteToNode_Xml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #endregion
-
-        public static void WriteToNode_Xml(
-            this SoulGem item,
-            XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            ItemAbstractCommon.WriteToNode_Xml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            if (item.Name_IsSet
-                && (translationMask?.GetShouldTranslate((int)SoulGem_FieldIndex.Name) ?? true))
-            {
-                StringXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Name),
-                    item: item.Name,
-                    fieldIndex: (int)SoulGem_FieldIndex.Name,
-                    errorMask: errorMask);
-            }
-            if (item.Model_IsSet
-                && (translationMask?.GetShouldTranslate((int)SoulGem_FieldIndex.Model) ?? true))
-            {
-                LoquiXmlTranslation<Model>.Instance.Write(
-                    node: node,
-                    item: item.Model,
-                    name: nameof(item.Model),
-                    fieldIndex: (int)SoulGem_FieldIndex.Model,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)SoulGem_FieldIndex.Model));
-            }
-            if (item.Icon_IsSet
-                && (translationMask?.GetShouldTranslate((int)SoulGem_FieldIndex.Icon) ?? true))
-            {
-                StringXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Icon),
-                    item: item.Icon,
-                    fieldIndex: (int)SoulGem_FieldIndex.Icon,
-                    errorMask: errorMask);
-            }
-            if (item.Script_Property.HasBeenSet
-                && (translationMask?.GetShouldTranslate((int)SoulGem_FieldIndex.Script) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Script),
-                    item: item.Script_Property?.FormKey,
-                    fieldIndex: (int)SoulGem_FieldIndex.Script,
-                    errorMask: errorMask);
-            }
-            if (item.DATADataTypeState.HasFlag(SoulGem.DATADataType.Has))
-            {
-                if ((translationMask?.GetShouldTranslate((int)SoulGem_FieldIndex.Value) ?? true))
-                {
-                    UInt32XmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.Value),
-                        item: item.Value,
-                        fieldIndex: (int)SoulGem_FieldIndex.Value,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)SoulGem_FieldIndex.Weight) ?? true))
-                {
-                    FloatXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.Weight),
-                        item: item.Weight,
-                        fieldIndex: (int)SoulGem_FieldIndex.Weight,
-                        errorMask: errorMask);
-                }
-            }
-            if (item.ContainedSoul_IsSet
-                && (translationMask?.GetShouldTranslate((int)SoulGem_FieldIndex.ContainedSoul) ?? true))
-            {
-                EnumXmlTranslation<SoulLevel>.Instance.Write(
-                    node: node,
-                    name: nameof(item.ContainedSoul),
-                    item: item.ContainedSoul,
-                    fieldIndex: (int)SoulGem_FieldIndex.ContainedSoul,
-                    errorMask: errorMask);
-            }
-            if (item.MaximumCapacity_IsSet
-                && (translationMask?.GetShouldTranslate((int)SoulGem_FieldIndex.MaximumCapacity) ?? true))
-            {
-                EnumXmlTranslation<SoulLevel>.Instance.Write(
-                    node: node,
-                    name: nameof(item.MaximumCapacity),
-                    item: item.MaximumCapacity,
-                    fieldIndex: (int)SoulGem_FieldIndex.MaximumCapacity,
-                    errorMask: errorMask);
-            }
-        }
-
         public static void FillPublic_Xml(
             this SoulGem item,
             XElement node,
@@ -2399,6 +2337,32 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask?.PopIndex();
                     }
                     break;
+                case "DATADataTypeState":
+                    try
+                    {
+                        errorMask?.PushIndex((int)SoulGem_FieldIndex.DATADataTypeState);
+                        if (EnumXmlTranslation<SoulGem.DATADataType>.Instance.Parse(
+                            node: node,
+                            item: out SoulGem.DATADataType DATADataTypeStateParse,
+                            errorMask: errorMask))
+                        {
+                            item.DATADataTypeState = DATADataTypeStateParse;
+                        }
+                        else
+                        {
+                            item.DATADataTypeState = default(SoulGem.DATADataType);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
                 default:
                     ItemAbstractCommon.FillPublicElement_Xml(
                         item: item,
@@ -2412,61 +2376,677 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        #region Binary Translation
-        #region Binary Write
-        public static void Write_Binary(
-            MutagenWriter writer,
-            SoulGem item,
-            MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
+    }
+    #endregion
+
+    #region Modules
+    #region Xml Translation
+    public partial class SoulGemXmlTranslation : ItemAbstractXmlTranslation
+    {
+        public new readonly static SoulGemXmlTranslation Instance = new SoulGemXmlTranslation();
+
+        public static void WriteToNode_Xml(
+            ISoulGemInternalGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            ItemAbstractXmlTranslation.WriteToNode_Xml(
+                item: item,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+            if (item.Name_IsSet
+                && (translationMask?.GetShouldTranslate((int)SoulGem_FieldIndex.Name) ?? true))
+            {
+                StringXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Name),
+                    item: item.Name,
+                    fieldIndex: (int)SoulGem_FieldIndex.Name,
+                    errorMask: errorMask);
+            }
+            if (item.Model_IsSet
+                && (translationMask?.GetShouldTranslate((int)SoulGem_FieldIndex.Model) ?? true))
+            {
+                LoquiXmlTranslation<Model>.Instance.Write(
+                    node: node,
+                    item: item.Model,
+                    name: nameof(item.Model),
+                    fieldIndex: (int)SoulGem_FieldIndex.Model,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)SoulGem_FieldIndex.Model));
+            }
+            if (item.Icon_IsSet
+                && (translationMask?.GetShouldTranslate((int)SoulGem_FieldIndex.Icon) ?? true))
+            {
+                StringXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Icon),
+                    item: item.Icon,
+                    fieldIndex: (int)SoulGem_FieldIndex.Icon,
+                    errorMask: errorMask);
+            }
+            if (item.Script_Property.HasBeenSet
+                && (translationMask?.GetShouldTranslate((int)SoulGem_FieldIndex.Script) ?? true))
+            {
+                FormKeyXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Script),
+                    item: item.Script_Property?.FormKey,
+                    fieldIndex: (int)SoulGem_FieldIndex.Script,
+                    errorMask: errorMask);
+            }
+            if (item.DATADataTypeState.HasFlag(SoulGem.DATADataType.Has))
+            {
+                if ((translationMask?.GetShouldTranslate((int)SoulGem_FieldIndex.Value) ?? true))
+                {
+                    UInt32XmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.Value),
+                        item: item.Value,
+                        fieldIndex: (int)SoulGem_FieldIndex.Value,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)SoulGem_FieldIndex.Weight) ?? true))
+                {
+                    FloatXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.Weight),
+                        item: item.Weight,
+                        fieldIndex: (int)SoulGem_FieldIndex.Weight,
+                        errorMask: errorMask);
+                }
+            }
+            if (item.ContainedSoul_IsSet
+                && (translationMask?.GetShouldTranslate((int)SoulGem_FieldIndex.ContainedSoul) ?? true))
+            {
+                EnumXmlTranslation<SoulLevel>.Instance.Write(
+                    node: node,
+                    name: nameof(item.ContainedSoul),
+                    item: item.ContainedSoul,
+                    fieldIndex: (int)SoulGem_FieldIndex.ContainedSoul,
+                    errorMask: errorMask);
+            }
+            if (item.MaximumCapacity_IsSet
+                && (translationMask?.GetShouldTranslate((int)SoulGem_FieldIndex.MaximumCapacity) ?? true))
+            {
+                EnumXmlTranslation<SoulLevel>.Instance.Write(
+                    node: node,
+                    name: nameof(item.MaximumCapacity),
+                    item: item.MaximumCapacity,
+                    fieldIndex: (int)SoulGem_FieldIndex.MaximumCapacity,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)SoulGem_FieldIndex.DATADataTypeState) ?? true))
+            {
+                EnumXmlTranslation<SoulGem.DATADataType>.Instance.Write(
+                    node: node,
+                    name: nameof(item.DATADataTypeState),
+                    item: item.DATADataTypeState,
+                    fieldIndex: (int)SoulGem_FieldIndex.DATADataTypeState,
+                    errorMask: errorMask);
+            }
+        }
+
+        #region Xml Write
+        public void Write_Xml(
+            XElement node,
+            ISoulGemInternalGetter item,
             bool doMasks,
-            out SoulGem_ErrorMask errorMask)
+            out SoulGem_ErrorMask errorMask,
+            SoulGem_TranslationMask translationMask,
+            string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_Binary(
-                masterReferences: masterReferences,
-                writer: writer,
+            Write_Xml(
+                name: name,
+                node: node,
                 item: item,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMaskBuilder);
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal());
             errorMask = SoulGem_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void Write_Binary(
-            MutagenWriter writer,
-            SoulGem item,
-            MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
+        public void Write_Xml(
+            XElement node,
+            ISoulGemInternalGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
         {
-            using (HeaderExport.ExportHeader(
-                writer: writer,
-                record: SoulGem_Registration.SLGM_HEADER,
-                type: ObjectType.Record))
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.SoulGem");
+            node.Add(elem);
+            if (name != null)
             {
-                OblivionMajorRecordCommon.Write_Binary_Embedded(
-                    item: item,
-                    writer: writer,
-                    errorMask: errorMask,
-                    masterReferences: masterReferences);
-                Write_Binary_RecordTypes(
-                    item: item,
-                    writer: writer,
-                    recordTypeConverter: recordTypeConverter,
-                    errorMask: errorMask,
-                    masterReferences: masterReferences);
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.SoulGem");
             }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
         }
         #endregion
 
+    }
+    #endregion
+
+    #region Mask
+    public class SoulGem_Mask<T> : ItemAbstract_Mask<T>, IMask<T>, IEquatable<SoulGem_Mask<T>>
+    {
+        #region Ctors
+        public SoulGem_Mask()
+        {
+        }
+
+        public SoulGem_Mask(T initialValue)
+        {
+            this.Name = initialValue;
+            this.Model = new MaskItem<T, Model_Mask<T>>(initialValue, new Model_Mask<T>(initialValue));
+            this.Icon = initialValue;
+            this.Script = initialValue;
+            this.Value = initialValue;
+            this.Weight = initialValue;
+            this.ContainedSoul = initialValue;
+            this.MaximumCapacity = initialValue;
+            this.DATADataTypeState = initialValue;
+        }
+        #endregion
+
+        #region Members
+        public T Name;
+        public MaskItem<T, Model_Mask<T>> Model { get; set; }
+        public T Icon;
+        public T Script;
+        public T Value;
+        public T Weight;
+        public T ContainedSoul;
+        public T MaximumCapacity;
+        public T DATADataTypeState;
+        #endregion
+
+        #region Equals
+        public override bool Equals(object obj)
+        {
+            if (!(obj is SoulGem_Mask<T> rhs)) return false;
+            return Equals(rhs);
+        }
+
+        public bool Equals(SoulGem_Mask<T> rhs)
+        {
+            if (rhs == null) return false;
+            if (!base.Equals(rhs)) return false;
+            if (!object.Equals(this.Name, rhs.Name)) return false;
+            if (!object.Equals(this.Model, rhs.Model)) return false;
+            if (!object.Equals(this.Icon, rhs.Icon)) return false;
+            if (!object.Equals(this.Script, rhs.Script)) return false;
+            if (!object.Equals(this.Value, rhs.Value)) return false;
+            if (!object.Equals(this.Weight, rhs.Weight)) return false;
+            if (!object.Equals(this.ContainedSoul, rhs.ContainedSoul)) return false;
+            if (!object.Equals(this.MaximumCapacity, rhs.MaximumCapacity)) return false;
+            if (!object.Equals(this.DATADataTypeState, rhs.DATADataTypeState)) return false;
+            return true;
+        }
+        public override int GetHashCode()
+        {
+            int ret = 0;
+            ret = ret.CombineHashCode(this.Name?.GetHashCode());
+            ret = ret.CombineHashCode(this.Model?.GetHashCode());
+            ret = ret.CombineHashCode(this.Icon?.GetHashCode());
+            ret = ret.CombineHashCode(this.Script?.GetHashCode());
+            ret = ret.CombineHashCode(this.Value?.GetHashCode());
+            ret = ret.CombineHashCode(this.Weight?.GetHashCode());
+            ret = ret.CombineHashCode(this.ContainedSoul?.GetHashCode());
+            ret = ret.CombineHashCode(this.MaximumCapacity?.GetHashCode());
+            ret = ret.CombineHashCode(this.DATADataTypeState?.GetHashCode());
+            ret = ret.CombineHashCode(base.GetHashCode());
+            return ret;
+        }
+
+        #endregion
+
+        #region All Equal
+        public override bool AllEqual(Func<T, bool> eval)
+        {
+            if (!base.AllEqual(eval)) return false;
+            if (!eval(this.Name)) return false;
+            if (Model != null)
+            {
+                if (!eval(this.Model.Overall)) return false;
+                if (this.Model.Specific != null && !this.Model.Specific.AllEqual(eval)) return false;
+            }
+            if (!eval(this.Icon)) return false;
+            if (!eval(this.Script)) return false;
+            if (!eval(this.Value)) return false;
+            if (!eval(this.Weight)) return false;
+            if (!eval(this.ContainedSoul)) return false;
+            if (!eval(this.MaximumCapacity)) return false;
+            if (!eval(this.DATADataTypeState)) return false;
+            return true;
+        }
+        #endregion
+
+        #region Translate
+        public new SoulGem_Mask<R> Translate<R>(Func<T, R> eval)
+        {
+            var ret = new SoulGem_Mask<R>();
+            this.Translate_InternalFill(ret, eval);
+            return ret;
+        }
+
+        protected void Translate_InternalFill<R>(SoulGem_Mask<R> obj, Func<T, R> eval)
+        {
+            base.Translate_InternalFill(obj, eval);
+            obj.Name = eval(this.Name);
+            if (this.Model != null)
+            {
+                obj.Model = new MaskItem<R, Model_Mask<R>>();
+                obj.Model.Overall = eval(this.Model.Overall);
+                if (this.Model.Specific != null)
+                {
+                    obj.Model.Specific = this.Model.Specific.Translate(eval);
+                }
+            }
+            obj.Icon = eval(this.Icon);
+            obj.Script = eval(this.Script);
+            obj.Value = eval(this.Value);
+            obj.Weight = eval(this.Weight);
+            obj.ContainedSoul = eval(this.ContainedSoul);
+            obj.MaximumCapacity = eval(this.MaximumCapacity);
+            obj.DATADataTypeState = eval(this.DATADataTypeState);
+        }
+        #endregion
+
+        #region Clear Enumerables
+        public override void ClearEnumerables()
+        {
+            base.ClearEnumerables();
+        }
+        #endregion
+
+        #region To String
+        public override string ToString()
+        {
+            return ToString(printMask: null);
+        }
+
+        public string ToString(SoulGem_Mask<bool> printMask = null)
+        {
+            var fg = new FileGeneration();
+            ToString(fg, printMask);
+            return fg.ToString();
+        }
+
+        public void ToString(FileGeneration fg, SoulGem_Mask<bool> printMask = null)
+        {
+            fg.AppendLine($"{nameof(SoulGem_Mask<T>)} =>");
+            fg.AppendLine("[");
+            using (new DepthWrapper(fg))
+            {
+                if (printMask?.Name ?? true)
+                {
+                    fg.AppendLine($"Name => {Name}");
+                }
+                if (printMask?.Model?.Overall ?? true)
+                {
+                    Model?.ToString(fg);
+                }
+                if (printMask?.Icon ?? true)
+                {
+                    fg.AppendLine($"Icon => {Icon}");
+                }
+                if (printMask?.Script ?? true)
+                {
+                    fg.AppendLine($"Script => {Script}");
+                }
+                if (printMask?.Value ?? true)
+                {
+                    fg.AppendLine($"Value => {Value}");
+                }
+                if (printMask?.Weight ?? true)
+                {
+                    fg.AppendLine($"Weight => {Weight}");
+                }
+                if (printMask?.ContainedSoul ?? true)
+                {
+                    fg.AppendLine($"ContainedSoul => {ContainedSoul}");
+                }
+                if (printMask?.MaximumCapacity ?? true)
+                {
+                    fg.AppendLine($"MaximumCapacity => {MaximumCapacity}");
+                }
+                if (printMask?.DATADataTypeState ?? true)
+                {
+                    fg.AppendLine($"DATADataTypeState => {DATADataTypeState}");
+                }
+            }
+            fg.AppendLine("]");
+        }
+        #endregion
+
+    }
+
+    public class SoulGem_ErrorMask : ItemAbstract_ErrorMask, IErrorMask<SoulGem_ErrorMask>
+    {
+        #region Members
+        public Exception Name;
+        public MaskItem<Exception, Model_ErrorMask> Model;
+        public Exception Icon;
+        public Exception Script;
+        public Exception Value;
+        public Exception Weight;
+        public Exception ContainedSoul;
+        public Exception MaximumCapacity;
+        public Exception DATADataTypeState;
+        #endregion
+
+        #region IErrorMask
+        public override object GetNthMask(int index)
+        {
+            SoulGem_FieldIndex enu = (SoulGem_FieldIndex)index;
+            switch (enu)
+            {
+                case SoulGem_FieldIndex.Name:
+                    return Name;
+                case SoulGem_FieldIndex.Model:
+                    return Model;
+                case SoulGem_FieldIndex.Icon:
+                    return Icon;
+                case SoulGem_FieldIndex.Script:
+                    return Script;
+                case SoulGem_FieldIndex.Value:
+                    return Value;
+                case SoulGem_FieldIndex.Weight:
+                    return Weight;
+                case SoulGem_FieldIndex.ContainedSoul:
+                    return ContainedSoul;
+                case SoulGem_FieldIndex.MaximumCapacity:
+                    return MaximumCapacity;
+                case SoulGem_FieldIndex.DATADataTypeState:
+                    return DATADataTypeState;
+                default:
+                    return base.GetNthMask(index);
+            }
+        }
+
+        public override void SetNthException(int index, Exception ex)
+        {
+            SoulGem_FieldIndex enu = (SoulGem_FieldIndex)index;
+            switch (enu)
+            {
+                case SoulGem_FieldIndex.Name:
+                    this.Name = ex;
+                    break;
+                case SoulGem_FieldIndex.Model:
+                    this.Model = new MaskItem<Exception, Model_ErrorMask>(ex, null);
+                    break;
+                case SoulGem_FieldIndex.Icon:
+                    this.Icon = ex;
+                    break;
+                case SoulGem_FieldIndex.Script:
+                    this.Script = ex;
+                    break;
+                case SoulGem_FieldIndex.Value:
+                    this.Value = ex;
+                    break;
+                case SoulGem_FieldIndex.Weight:
+                    this.Weight = ex;
+                    break;
+                case SoulGem_FieldIndex.ContainedSoul:
+                    this.ContainedSoul = ex;
+                    break;
+                case SoulGem_FieldIndex.MaximumCapacity:
+                    this.MaximumCapacity = ex;
+                    break;
+                case SoulGem_FieldIndex.DATADataTypeState:
+                    this.DATADataTypeState = ex;
+                    break;
+                default:
+                    base.SetNthException(index, ex);
+                    break;
+            }
+        }
+
+        public override void SetNthMask(int index, object obj)
+        {
+            SoulGem_FieldIndex enu = (SoulGem_FieldIndex)index;
+            switch (enu)
+            {
+                case SoulGem_FieldIndex.Name:
+                    this.Name = (Exception)obj;
+                    break;
+                case SoulGem_FieldIndex.Model:
+                    this.Model = (MaskItem<Exception, Model_ErrorMask>)obj;
+                    break;
+                case SoulGem_FieldIndex.Icon:
+                    this.Icon = (Exception)obj;
+                    break;
+                case SoulGem_FieldIndex.Script:
+                    this.Script = (Exception)obj;
+                    break;
+                case SoulGem_FieldIndex.Value:
+                    this.Value = (Exception)obj;
+                    break;
+                case SoulGem_FieldIndex.Weight:
+                    this.Weight = (Exception)obj;
+                    break;
+                case SoulGem_FieldIndex.ContainedSoul:
+                    this.ContainedSoul = (Exception)obj;
+                    break;
+                case SoulGem_FieldIndex.MaximumCapacity:
+                    this.MaximumCapacity = (Exception)obj;
+                    break;
+                case SoulGem_FieldIndex.DATADataTypeState:
+                    this.DATADataTypeState = (Exception)obj;
+                    break;
+                default:
+                    base.SetNthMask(index, obj);
+                    break;
+            }
+        }
+
+        public override bool IsInError()
+        {
+            if (Overall != null) return true;
+            if (Name != null) return true;
+            if (Model != null) return true;
+            if (Icon != null) return true;
+            if (Script != null) return true;
+            if (Value != null) return true;
+            if (Weight != null) return true;
+            if (ContainedSoul != null) return true;
+            if (MaximumCapacity != null) return true;
+            if (DATADataTypeState != null) return true;
+            return false;
+        }
+        #endregion
+
+        #region To String
+        public override string ToString()
+        {
+            var fg = new FileGeneration();
+            ToString(fg);
+            return fg.ToString();
+        }
+
+        public override void ToString(FileGeneration fg)
+        {
+            fg.AppendLine("SoulGem_ErrorMask =>");
+            fg.AppendLine("[");
+            using (new DepthWrapper(fg))
+            {
+                if (this.Overall != null)
+                {
+                    fg.AppendLine("Overall =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendLine($"{this.Overall}");
+                    }
+                    fg.AppendLine("]");
+                }
+                ToString_FillInternal(fg);
+            }
+            fg.AppendLine("]");
+        }
+        protected override void ToString_FillInternal(FileGeneration fg)
+        {
+            base.ToString_FillInternal(fg);
+            fg.AppendLine($"Name => {Name}");
+            Model?.ToString(fg);
+            fg.AppendLine($"Icon => {Icon}");
+            fg.AppendLine($"Script => {Script}");
+            fg.AppendLine($"Value => {Value}");
+            fg.AppendLine($"Weight => {Weight}");
+            fg.AppendLine($"ContainedSoul => {ContainedSoul}");
+            fg.AppendLine($"MaximumCapacity => {MaximumCapacity}");
+            fg.AppendLine($"DATADataTypeState => {DATADataTypeState}");
+        }
+        #endregion
+
+        #region Combine
+        public SoulGem_ErrorMask Combine(SoulGem_ErrorMask rhs)
+        {
+            var ret = new SoulGem_ErrorMask();
+            ret.Name = this.Name.Combine(rhs.Name);
+            ret.Model = new MaskItem<Exception, Model_ErrorMask>(this.Model.Overall.Combine(rhs.Model.Overall), ((IErrorMask<Model_ErrorMask>)this.Model.Specific).Combine(rhs.Model.Specific));
+            ret.Icon = this.Icon.Combine(rhs.Icon);
+            ret.Script = this.Script.Combine(rhs.Script);
+            ret.Value = this.Value.Combine(rhs.Value);
+            ret.Weight = this.Weight.Combine(rhs.Weight);
+            ret.ContainedSoul = this.ContainedSoul.Combine(rhs.ContainedSoul);
+            ret.MaximumCapacity = this.MaximumCapacity.Combine(rhs.MaximumCapacity);
+            ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
+            return ret;
+        }
+        public static SoulGem_ErrorMask Combine(SoulGem_ErrorMask lhs, SoulGem_ErrorMask rhs)
+        {
+            if (lhs != null && rhs != null) return lhs.Combine(rhs);
+            return lhs ?? rhs;
+        }
+        #endregion
+
+        #region Factory
+        public static SoulGem_ErrorMask Factory(ErrorMaskBuilder errorMask)
+        {
+            if (errorMask?.Empty ?? true) return null;
+            return new SoulGem_ErrorMask();
+        }
+        #endregion
+
+    }
+    public class SoulGem_CopyMask : ItemAbstract_CopyMask
+    {
+        public SoulGem_CopyMask()
+        {
+        }
+
+        public SoulGem_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
+        {
+            this.Name = defaultOn;
+            this.Model = new MaskItem<CopyOption, Model_CopyMask>(deepCopyOption, default);
+            this.Icon = defaultOn;
+            this.Script = defaultOn;
+            this.Value = defaultOn;
+            this.Weight = defaultOn;
+            this.ContainedSoul = defaultOn;
+            this.MaximumCapacity = defaultOn;
+            this.DATADataTypeState = defaultOn;
+        }
+
+        #region Members
+        public bool Name;
+        public MaskItem<CopyOption, Model_CopyMask> Model;
+        public bool Icon;
+        public bool Script;
+        public bool Value;
+        public bool Weight;
+        public bool ContainedSoul;
+        public bool MaximumCapacity;
+        public bool DATADataTypeState;
+        #endregion
+
+    }
+
+    public class SoulGem_TranslationMask : ItemAbstract_TranslationMask
+    {
+        #region Members
+        public bool Name;
+        public MaskItem<bool, Model_TranslationMask> Model;
+        public bool Icon;
+        public bool Script;
+        public bool Value;
+        public bool Weight;
+        public bool ContainedSoul;
+        public bool MaximumCapacity;
+        public bool DATADataTypeState;
+        #endregion
+
+        #region Ctors
+        public SoulGem_TranslationMask()
+            : base()
+        {
+        }
+
+        public SoulGem_TranslationMask(bool defaultOn)
+            : base(defaultOn)
+        {
+            this.Name = defaultOn;
+            this.Model = new MaskItem<bool, Model_TranslationMask>(defaultOn, null);
+            this.Icon = defaultOn;
+            this.Script = defaultOn;
+            this.Value = defaultOn;
+            this.Weight = defaultOn;
+            this.ContainedSoul = defaultOn;
+            this.MaximumCapacity = defaultOn;
+            this.DATADataTypeState = defaultOn;
+        }
+
+        #endregion
+
+        protected override void GetCrystal(List<(bool On, TranslationCrystal SubCrystal)> ret)
+        {
+            base.GetCrystal(ret);
+            ret.Add((Name, null));
+            ret.Add((Model?.Overall ?? true, Model?.Specific?.GetCrystal()));
+            ret.Add((Icon, null));
+            ret.Add((Script, null));
+            ret.Add((Value, null));
+            ret.Add((Weight, null));
+            ret.Add((ContainedSoul, null));
+            ret.Add((MaximumCapacity, null));
+            ret.Add((DATADataTypeState, null));
+        }
+    }
+    #endregion
+
+    #region Binary Translation
+    public partial class SoulGemBinaryTranslation : ItemAbstractBinaryTranslation
+    {
+        public new readonly static SoulGemBinaryTranslation Instance = new SoulGemBinaryTranslation();
+
+        public static void Write_Binary_Embedded(
+            ISoulGemInternalGetter item,
+            MutagenWriter writer,
+            ErrorMaskBuilder errorMask,
+            MasterReferences masterReferences)
+        {
+            OblivionMajorRecordBinaryTranslation.Write_Binary_Embedded(
+                item: item,
+                writer: writer,
+                errorMask: errorMask,
+                masterReferences: masterReferences);
+        }
+
         public static void Write_Binary_RecordTypes(
-            SoulGem item,
+            ISoulGemInternalGetter item,
             MutagenWriter writer,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask,
             MasterReferences masterReferences)
         {
-            MajorRecordCommon.Write_Binary_RecordTypes(
+            MajorRecordBinaryTranslation.Write_Binary_RecordTypes(
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
@@ -2538,471 +3118,52 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        #endregion
-
-    }
-    #endregion
-
-    #region Modules
-    #region Mask
-    public class SoulGem_Mask<T> : ItemAbstract_Mask<T>, IMask<T>, IEquatable<SoulGem_Mask<T>>
-    {
-        #region Ctors
-        public SoulGem_Mask()
+        #region Binary Write
+        public void Write_Binary(
+            MutagenWriter writer,
+            ISoulGemInternalGetter item,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            bool doMasks,
+            out SoulGem_ErrorMask errorMask)
         {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            Write_Binary(
+                masterReferences: masterReferences,
+                writer: writer,
+                item: item,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMaskBuilder);
+            errorMask = SoulGem_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public SoulGem_Mask(T initialValue)
+        public void Write_Binary(
+            MutagenWriter writer,
+            ISoulGemInternalGetter item,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
         {
-            this.Name = initialValue;
-            this.Model = new MaskItem<T, Model_Mask<T>>(initialValue, new Model_Mask<T>(initialValue));
-            this.Icon = initialValue;
-            this.Script = initialValue;
-            this.Value = initialValue;
-            this.Weight = initialValue;
-            this.ContainedSoul = initialValue;
-            this.MaximumCapacity = initialValue;
-        }
-        #endregion
-
-        #region Members
-        public T Name;
-        public MaskItem<T, Model_Mask<T>> Model { get; set; }
-        public T Icon;
-        public T Script;
-        public T Value;
-        public T Weight;
-        public T ContainedSoul;
-        public T MaximumCapacity;
-        #endregion
-
-        #region Equals
-        public override bool Equals(object obj)
-        {
-            if (!(obj is SoulGem_Mask<T> rhs)) return false;
-            return Equals(rhs);
-        }
-
-        public bool Equals(SoulGem_Mask<T> rhs)
-        {
-            if (rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (!object.Equals(this.Name, rhs.Name)) return false;
-            if (!object.Equals(this.Model, rhs.Model)) return false;
-            if (!object.Equals(this.Icon, rhs.Icon)) return false;
-            if (!object.Equals(this.Script, rhs.Script)) return false;
-            if (!object.Equals(this.Value, rhs.Value)) return false;
-            if (!object.Equals(this.Weight, rhs.Weight)) return false;
-            if (!object.Equals(this.ContainedSoul, rhs.ContainedSoul)) return false;
-            if (!object.Equals(this.MaximumCapacity, rhs.MaximumCapacity)) return false;
-            return true;
-        }
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = ret.CombineHashCode(this.Name?.GetHashCode());
-            ret = ret.CombineHashCode(this.Model?.GetHashCode());
-            ret = ret.CombineHashCode(this.Icon?.GetHashCode());
-            ret = ret.CombineHashCode(this.Script?.GetHashCode());
-            ret = ret.CombineHashCode(this.Value?.GetHashCode());
-            ret = ret.CombineHashCode(this.Weight?.GetHashCode());
-            ret = ret.CombineHashCode(this.ContainedSoul?.GetHashCode());
-            ret = ret.CombineHashCode(this.MaximumCapacity?.GetHashCode());
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
-        }
-
-        #endregion
-
-        #region All Equal
-        public override bool AllEqual(Func<T, bool> eval)
-        {
-            if (!base.AllEqual(eval)) return false;
-            if (!eval(this.Name)) return false;
-            if (Model != null)
+            using (HeaderExport.ExportHeader(
+                writer: writer,
+                record: SoulGem_Registration.SLGM_HEADER,
+                type: ObjectType.Record))
             {
-                if (!eval(this.Model.Overall)) return false;
-                if (this.Model.Specific != null && !this.Model.Specific.AllEqual(eval)) return false;
-            }
-            if (!eval(this.Icon)) return false;
-            if (!eval(this.Script)) return false;
-            if (!eval(this.Value)) return false;
-            if (!eval(this.Weight)) return false;
-            if (!eval(this.ContainedSoul)) return false;
-            if (!eval(this.MaximumCapacity)) return false;
-            return true;
-        }
-        #endregion
-
-        #region Translate
-        public new SoulGem_Mask<R> Translate<R>(Func<T, R> eval)
-        {
-            var ret = new SoulGem_Mask<R>();
-            this.Translate_InternalFill(ret, eval);
-            return ret;
-        }
-
-        protected void Translate_InternalFill<R>(SoulGem_Mask<R> obj, Func<T, R> eval)
-        {
-            base.Translate_InternalFill(obj, eval);
-            obj.Name = eval(this.Name);
-            if (this.Model != null)
-            {
-                obj.Model = new MaskItem<R, Model_Mask<R>>();
-                obj.Model.Overall = eval(this.Model.Overall);
-                if (this.Model.Specific != null)
-                {
-                    obj.Model.Specific = this.Model.Specific.Translate(eval);
-                }
-            }
-            obj.Icon = eval(this.Icon);
-            obj.Script = eval(this.Script);
-            obj.Value = eval(this.Value);
-            obj.Weight = eval(this.Weight);
-            obj.ContainedSoul = eval(this.ContainedSoul);
-            obj.MaximumCapacity = eval(this.MaximumCapacity);
-        }
-        #endregion
-
-        #region Clear Enumerables
-        public override void ClearEnumerables()
-        {
-            base.ClearEnumerables();
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            return ToString(printMask: null);
-        }
-
-        public string ToString(SoulGem_Mask<bool> printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(fg, printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg, SoulGem_Mask<bool> printMask = null)
-        {
-            fg.AppendLine($"{nameof(SoulGem_Mask<T>)} =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (printMask?.Name ?? true)
-                {
-                    fg.AppendLine($"Name => {Name}");
-                }
-                if (printMask?.Model?.Overall ?? true)
-                {
-                    Model?.ToString(fg);
-                }
-                if (printMask?.Icon ?? true)
-                {
-                    fg.AppendLine($"Icon => {Icon}");
-                }
-                if (printMask?.Script ?? true)
-                {
-                    fg.AppendLine($"Script => {Script}");
-                }
-                if (printMask?.Value ?? true)
-                {
-                    fg.AppendLine($"Value => {Value}");
-                }
-                if (printMask?.Weight ?? true)
-                {
-                    fg.AppendLine($"Weight => {Weight}");
-                }
-                if (printMask?.ContainedSoul ?? true)
-                {
-                    fg.AppendLine($"ContainedSoul => {ContainedSoul}");
-                }
-                if (printMask?.MaximumCapacity ?? true)
-                {
-                    fg.AppendLine($"MaximumCapacity => {MaximumCapacity}");
-                }
-            }
-            fg.AppendLine("]");
-        }
-        #endregion
-
-    }
-
-    public class SoulGem_ErrorMask : ItemAbstract_ErrorMask, IErrorMask<SoulGem_ErrorMask>
-    {
-        #region Members
-        public Exception Name;
-        public MaskItem<Exception, Model_ErrorMask> Model;
-        public Exception Icon;
-        public Exception Script;
-        public Exception Value;
-        public Exception Weight;
-        public Exception ContainedSoul;
-        public Exception MaximumCapacity;
-        #endregion
-
-        #region IErrorMask
-        public override object GetNthMask(int index)
-        {
-            SoulGem_FieldIndex enu = (SoulGem_FieldIndex)index;
-            switch (enu)
-            {
-                case SoulGem_FieldIndex.Name:
-                    return Name;
-                case SoulGem_FieldIndex.Model:
-                    return Model;
-                case SoulGem_FieldIndex.Icon:
-                    return Icon;
-                case SoulGem_FieldIndex.Script:
-                    return Script;
-                case SoulGem_FieldIndex.Value:
-                    return Value;
-                case SoulGem_FieldIndex.Weight:
-                    return Weight;
-                case SoulGem_FieldIndex.ContainedSoul:
-                    return ContainedSoul;
-                case SoulGem_FieldIndex.MaximumCapacity:
-                    return MaximumCapacity;
-                default:
-                    return base.GetNthMask(index);
+                Write_Binary_Embedded(
+                    item: item,
+                    writer: writer,
+                    errorMask: errorMask,
+                    masterReferences: masterReferences);
+                Write_Binary_RecordTypes(
+                    item: item,
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter,
+                    errorMask: errorMask,
+                    masterReferences: masterReferences);
             }
         }
-
-        public override void SetNthException(int index, Exception ex)
-        {
-            SoulGem_FieldIndex enu = (SoulGem_FieldIndex)index;
-            switch (enu)
-            {
-                case SoulGem_FieldIndex.Name:
-                    this.Name = ex;
-                    break;
-                case SoulGem_FieldIndex.Model:
-                    this.Model = new MaskItem<Exception, Model_ErrorMask>(ex, null);
-                    break;
-                case SoulGem_FieldIndex.Icon:
-                    this.Icon = ex;
-                    break;
-                case SoulGem_FieldIndex.Script:
-                    this.Script = ex;
-                    break;
-                case SoulGem_FieldIndex.Value:
-                    this.Value = ex;
-                    break;
-                case SoulGem_FieldIndex.Weight:
-                    this.Weight = ex;
-                    break;
-                case SoulGem_FieldIndex.ContainedSoul:
-                    this.ContainedSoul = ex;
-                    break;
-                case SoulGem_FieldIndex.MaximumCapacity:
-                    this.MaximumCapacity = ex;
-                    break;
-                default:
-                    base.SetNthException(index, ex);
-                    break;
-            }
-        }
-
-        public override void SetNthMask(int index, object obj)
-        {
-            SoulGem_FieldIndex enu = (SoulGem_FieldIndex)index;
-            switch (enu)
-            {
-                case SoulGem_FieldIndex.Name:
-                    this.Name = (Exception)obj;
-                    break;
-                case SoulGem_FieldIndex.Model:
-                    this.Model = (MaskItem<Exception, Model_ErrorMask>)obj;
-                    break;
-                case SoulGem_FieldIndex.Icon:
-                    this.Icon = (Exception)obj;
-                    break;
-                case SoulGem_FieldIndex.Script:
-                    this.Script = (Exception)obj;
-                    break;
-                case SoulGem_FieldIndex.Value:
-                    this.Value = (Exception)obj;
-                    break;
-                case SoulGem_FieldIndex.Weight:
-                    this.Weight = (Exception)obj;
-                    break;
-                case SoulGem_FieldIndex.ContainedSoul:
-                    this.ContainedSoul = (Exception)obj;
-                    break;
-                case SoulGem_FieldIndex.MaximumCapacity:
-                    this.MaximumCapacity = (Exception)obj;
-                    break;
-                default:
-                    base.SetNthMask(index, obj);
-                    break;
-            }
-        }
-
-        public override bool IsInError()
-        {
-            if (Overall != null) return true;
-            if (Name != null) return true;
-            if (Model != null) return true;
-            if (Icon != null) return true;
-            if (Script != null) return true;
-            if (Value != null) return true;
-            if (Weight != null) return true;
-            if (ContainedSoul != null) return true;
-            if (MaximumCapacity != null) return true;
-            return false;
-        }
         #endregion
 
-        #region To String
-        public override string ToString()
-        {
-            var fg = new FileGeneration();
-            ToString(fg);
-            return fg.ToString();
-        }
-
-        public override void ToString(FileGeneration fg)
-        {
-            fg.AppendLine("SoulGem_ErrorMask =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (this.Overall != null)
-                {
-                    fg.AppendLine("Overall =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        fg.AppendLine($"{this.Overall}");
-                    }
-                    fg.AppendLine("]");
-                }
-                ToString_FillInternal(fg);
-            }
-            fg.AppendLine("]");
-        }
-        protected override void ToString_FillInternal(FileGeneration fg)
-        {
-            base.ToString_FillInternal(fg);
-            fg.AppendLine($"Name => {Name}");
-            Model?.ToString(fg);
-            fg.AppendLine($"Icon => {Icon}");
-            fg.AppendLine($"Script => {Script}");
-            fg.AppendLine($"Value => {Value}");
-            fg.AppendLine($"Weight => {Weight}");
-            fg.AppendLine($"ContainedSoul => {ContainedSoul}");
-            fg.AppendLine($"MaximumCapacity => {MaximumCapacity}");
-        }
-        #endregion
-
-        #region Combine
-        public SoulGem_ErrorMask Combine(SoulGem_ErrorMask rhs)
-        {
-            var ret = new SoulGem_ErrorMask();
-            ret.Name = this.Name.Combine(rhs.Name);
-            ret.Model = new MaskItem<Exception, Model_ErrorMask>(this.Model.Overall.Combine(rhs.Model.Overall), ((IErrorMask<Model_ErrorMask>)this.Model.Specific).Combine(rhs.Model.Specific));
-            ret.Icon = this.Icon.Combine(rhs.Icon);
-            ret.Script = this.Script.Combine(rhs.Script);
-            ret.Value = this.Value.Combine(rhs.Value);
-            ret.Weight = this.Weight.Combine(rhs.Weight);
-            ret.ContainedSoul = this.ContainedSoul.Combine(rhs.ContainedSoul);
-            ret.MaximumCapacity = this.MaximumCapacity.Combine(rhs.MaximumCapacity);
-            return ret;
-        }
-        public static SoulGem_ErrorMask Combine(SoulGem_ErrorMask lhs, SoulGem_ErrorMask rhs)
-        {
-            if (lhs != null && rhs != null) return lhs.Combine(rhs);
-            return lhs ?? rhs;
-        }
-        #endregion
-
-        #region Factory
-        public static SoulGem_ErrorMask Factory(ErrorMaskBuilder errorMask)
-        {
-            if (errorMask?.Empty ?? true) return null;
-            return new SoulGem_ErrorMask();
-        }
-        #endregion
-
-    }
-    public class SoulGem_CopyMask : ItemAbstract_CopyMask
-    {
-        public SoulGem_CopyMask()
-        {
-        }
-
-        public SoulGem_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
-        {
-            this.Name = defaultOn;
-            this.Model = new MaskItem<CopyOption, Model_CopyMask>(deepCopyOption, default);
-            this.Icon = defaultOn;
-            this.Script = defaultOn;
-            this.Value = defaultOn;
-            this.Weight = defaultOn;
-            this.ContainedSoul = defaultOn;
-            this.MaximumCapacity = defaultOn;
-        }
-
-        #region Members
-        public bool Name;
-        public MaskItem<CopyOption, Model_CopyMask> Model;
-        public bool Icon;
-        public bool Script;
-        public bool Value;
-        public bool Weight;
-        public bool ContainedSoul;
-        public bool MaximumCapacity;
-        #endregion
-
-    }
-
-    public class SoulGem_TranslationMask : ItemAbstract_TranslationMask
-    {
-        #region Members
-        public bool Name;
-        public MaskItem<bool, Model_TranslationMask> Model;
-        public bool Icon;
-        public bool Script;
-        public bool Value;
-        public bool Weight;
-        public bool ContainedSoul;
-        public bool MaximumCapacity;
-        #endregion
-
-        #region Ctors
-        public SoulGem_TranslationMask()
-            : base()
-        {
-        }
-
-        public SoulGem_TranslationMask(bool defaultOn)
-            : base(defaultOn)
-        {
-            this.Name = defaultOn;
-            this.Model = new MaskItem<bool, Model_TranslationMask>(defaultOn, null);
-            this.Icon = defaultOn;
-            this.Script = defaultOn;
-            this.Value = defaultOn;
-            this.Weight = defaultOn;
-            this.ContainedSoul = defaultOn;
-            this.MaximumCapacity = defaultOn;
-        }
-
-        #endregion
-
-        protected override void GetCrystal(List<(bool On, TranslationCrystal SubCrystal)> ret)
-        {
-            base.GetCrystal(ret);
-            ret.Add((Name, null));
-            ret.Add((Model?.Overall ?? true, Model?.Specific?.GetCrystal()));
-            ret.Add((Icon, null));
-            ret.Add((Script, null));
-            ret.Add((Value, null));
-            ret.Add((Weight, null));
-            ret.Add((ContainedSoul, null));
-            ret.Add((MaximumCapacity, null));
-        }
     }
     #endregion
 

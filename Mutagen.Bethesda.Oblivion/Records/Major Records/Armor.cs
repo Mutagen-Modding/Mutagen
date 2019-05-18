@@ -8,9 +8,9 @@ using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Oblivion.Internals;
 
-namespace Mutagen.Bethesda.Oblivion
+namespace Mutagen.Bethesda.Oblivion.Internals
 {
-    public partial class Armor
+    public partial class ArmorBinaryTranslation
     {
         static partial void FillBinary_ArmorValue_Custom(MutagenFrame frame, Armor item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
         {
@@ -22,7 +22,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        static partial void WriteBinary_ArmorValue_Custom(MutagenWriter writer, Armor item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
+        static partial void WriteBinary_ArmorValue_Custom(MutagenWriter writer, IArmorInternalGetter item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
         {
             UInt16BinaryTranslation.Instance.Write(
                 writer,

@@ -36,6 +36,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class PlacedObject : 
         OblivionMajorRecord,
         IPlacedObject,
+        IPlacedObjectInternal,
         ILoquiObject<PlacedObject>,
         ILoquiObjectSetter,
         IPlaced,
@@ -549,6 +550,23 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
         #endregion
+        #region DATADataTypeState
+        private PlacedObject.DATADataType _DATADataTypeState;
+        public PlacedObject.DATADataType DATADataTypeState
+        {
+            get => this._DATADataTypeState;
+            set => this.RaiseAndSetIfChanged(ref this._DATADataTypeState, value, nameof(DATADataTypeState));
+        }
+        PlacedObject.DATADataType IPlacedObjectInternal.DATADataTypeState
+        {
+            get => this.DATADataTypeState;
+            set => this.DATADataTypeState = value;
+        }
+        PlacedObject.DATADataType IPlacedObjectInternalGetter.DATADataTypeState
+        {
+            get => this.DATADataTypeState;
+        }
+        #endregion
 
         IMask<bool> IEqualsMask<PlacedObject>.GetEqualsMask(PlacedObject rhs, EqualsMaskHelper.Include include) => PlacedObjectCommon.GetEqualsMask(this, rhs, include);
         IMask<bool> IEqualsMask<IPlacedObjectGetter>.GetEqualsMask(IPlacedObjectGetter rhs, EqualsMaskHelper.Include include) => PlacedObjectCommon.GetEqualsMask(this, rhs, include);
@@ -698,6 +716,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
             if (!this.Position.Equals(rhs.Position)) return false;
             if (!this.Rotation.Equals(rhs.Rotation)) return false;
+            if (this.DATADataTypeState != rhs.DATADataTypeState) return false;
             return true;
         }
 
@@ -795,6 +814,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
             ret = HashHelper.GetHashCode(Position).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(Rotation).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(DATADataTypeState).CombineHashCode(ret);
             ret = ret.CombineHashCode(base.GetHashCode());
             return ret;
         }
@@ -968,7 +988,8 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Xml(
+            PlacedObjectXmlTranslation.Instance.Write_Xml(
+                item: this,
                 name: name,
                 node: node,
                 errorMask: errorMaskBuilder,
@@ -1000,7 +1021,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            this.Write_Xml(
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -1031,7 +1052,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            this.Write_Xml(
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -1047,7 +1068,8 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Xml(
+            PlacedObjectXmlTranslation.Instance.Write_Xml(
+                item: this,
                 name: name,
                 node: node,
                 errorMask: errorMaskBuilder,
@@ -1063,7 +1085,8 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Xml(
+            PlacedObjectXmlTranslation.Instance.Write_Xml(
+                item: this,
                 name: name,
                 node: node,
                 errorMask: errorMaskBuilder,
@@ -1079,7 +1102,7 @@ namespace Mutagen.Bethesda.Oblivion
             TranslationCrystal translationMask,
             string name = null)
         {
-            PlacedObjectCommon.Write_Xml(
+            PlacedObjectXmlTranslation.Instance.Write_Xml(
                 item: this,
                 name: name,
                 node: node,
@@ -1149,6 +1172,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case PlacedObject_FieldIndex.OpenByDefault:
                 case PlacedObject_FieldIndex.Position:
                 case PlacedObject_FieldIndex.Rotation:
+                case PlacedObject_FieldIndex.DATADataTypeState:
                     return true;
                 default:
                     return base.GetHasBeenSet(index);
@@ -1157,7 +1181,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = PlacedObject_Registration.TRIGGERING_RECORD_TYPE;
-        public DATADataType DATADataTypeState;
         [Flags]
         public enum DATADataType
         {
@@ -1323,7 +1346,8 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Binary(
+            PlacedObjectBinaryTranslation.Instance.Write_Binary(
+                item: this,
                 masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: null,
@@ -1339,7 +1363,8 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Binary(
+            PlacedObjectBinaryTranslation.Instance.Write_Binary(
+                item: this,
                 masterReferences: masterReferences,
                 writer: writer,
                 errorMask: errorMaskBuilder,
@@ -1354,7 +1379,8 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Binary(
+            PlacedObjectBinaryTranslation.Instance.Write_Binary(
+                item: this,
                 masterReferences: masterReferences,
                 writer: writer,
                 errorMask: errorMaskBuilder,
@@ -1370,7 +1396,7 @@ namespace Mutagen.Bethesda.Oblivion
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            PlacedObjectCommon.Write_Binary(
+            PlacedObjectBinaryTranslation.Instance.Write_Binary(
                 item: this,
                 masterReferences: masterReferences,
                 writer: writer,
@@ -1378,31 +1404,6 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask);
         }
         #endregion
-
-        static partial void FillBinary_OpenByDefault_Custom(
-            MutagenFrame frame,
-            PlacedObject item,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask);
-
-        static partial void WriteBinary_OpenByDefault_Custom(
-            MutagenWriter writer,
-            PlacedObject item,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask);
-
-        public static void WriteBinary_OpenByDefault(
-            MutagenWriter writer,
-            PlacedObject item,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask)
-        {
-            WriteBinary_OpenByDefault_Custom(
-                writer: writer,
-                item: item,
-                masterReferences: masterReferences,
-                errorMask: errorMask);
-        }
 
         protected static void Fill_Binary_Structs(
             PlacedObject item,
@@ -1757,7 +1758,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 case 0x4D414E4F: // ONAM
                 {
-                    FillBinary_OpenByDefault_Custom(
+                    PlacedObjectBinaryTranslation.FillBinary_OpenByDefault_Custom_Public(
                         frame: frame.SpawnWithLength(Mutagen.Bethesda.Constants.SUBRECORD_LENGTH + contentLength),
                         item: item,
                         masterReferences: masterReferences,
@@ -2034,6 +2035,9 @@ namespace Mutagen.Bethesda.Oblivion
                 case PlacedObject_FieldIndex.Rotation:
                     this.Rotation = (P3Float)obj;
                     break;
+                case PlacedObject_FieldIndex.DATADataTypeState:
+                    this.DATADataTypeState = (PlacedObject.DATADataType)obj;
+                    break;
                 default:
                     base.SetNthObject(index, obj);
                     break;
@@ -2140,6 +2144,9 @@ namespace Mutagen.Bethesda.Oblivion
                 case PlacedObject_FieldIndex.Rotation:
                     obj.Rotation = (P3Float)pair.Value;
                     break;
+                case PlacedObject_FieldIndex.DATADataTypeState:
+                    obj.DATADataTypeState = (PlacedObject.DATADataType)pair.Value;
+                    break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
@@ -2241,6 +2248,18 @@ namespace Mutagen.Bethesda.Oblivion
         new P3Float Position { get; set; }
 
         new P3Float Rotation { get; set; }
+
+    }
+
+    public partial interface IPlacedObjectInternal : IPlacedObject, IPlacedObjectInternalGetter, IOblivionMajorRecordInternal
+    {
+        new OblivionMajorRecord Base { get; set; }
+        new IOwner Owner { get; set; }
+        new Global GlobalVariable { get; set; }
+        new IPlaced Target { get; set; }
+        new OblivionMajorRecord Unknown { get; set; }
+        new SoulGem ContainedSoul { get; set; }
+        new PlacedObject.DATADataType DATADataTypeState { get; set; }
 
     }
 
@@ -2371,6 +2390,15 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
+    public partial interface IPlacedObjectInternalGetter : IPlacedObjectGetter, IOblivionMajorRecordInternalGetter
+    {
+        #region DATADataTypeState
+        PlacedObject.DATADataType DATADataTypeState { get; }
+
+        #endregion
+
+    }
+
     #endregion
 
 }
@@ -2380,36 +2408,38 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #region Field Index
     public enum PlacedObject_FieldIndex
     {
-        FormKey = 0,
-        Version = 1,
-        EditorID = 2,
-        RecordType = 3,
-        OblivionMajorRecordFlags = 4,
-        Base = 5,
-        XPCIFluff = 6,
-        FULLFluff = 7,
-        TeleportDestination = 8,
-        Lock = 9,
-        Owner = 10,
-        FactionRank = 11,
-        GlobalVariable = 12,
-        EnableParent = 13,
-        Target = 14,
-        SpeedTreeSeed = 15,
-        DistantLODData = 16,
-        Charge = 17,
-        Health = 18,
-        LevelModifier = 19,
-        Unknown = 20,
-        ActionFlags = 21,
-        Count = 22,
-        MapMarker = 23,
-        OpenByDefault = 24,
-        RagdollData = 25,
-        Scale = 26,
-        ContainedSoul = 27,
-        Position = 28,
-        Rotation = 29,
+        MajorRecordFlagsRaw = 0,
+        FormKey = 1,
+        Version = 2,
+        EditorID = 3,
+        RecordType = 4,
+        OblivionMajorRecordFlags = 5,
+        Base = 6,
+        XPCIFluff = 7,
+        FULLFluff = 8,
+        TeleportDestination = 9,
+        Lock = 10,
+        Owner = 11,
+        FactionRank = 12,
+        GlobalVariable = 13,
+        EnableParent = 14,
+        Target = 15,
+        SpeedTreeSeed = 16,
+        DistantLODData = 17,
+        Charge = 18,
+        Health = 19,
+        LevelModifier = 20,
+        Unknown = 21,
+        ActionFlags = 22,
+        Count = 23,
+        MapMarker = 24,
+        OpenByDefault = 25,
+        RagdollData = 26,
+        Scale = 27,
+        ContainedSoul = 28,
+        Position = 29,
+        Rotation = 30,
+        DATADataTypeState = 31,
     }
     #endregion
 
@@ -2427,9 +2457,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const string GUID = "7a559a46-7ef9-49e9-98c1-ec16c3df81f2";
 
-        public const ushort AdditionalFieldCount = 25;
+        public const ushort AdditionalFieldCount = 26;
 
-        public const ushort FieldCount = 30;
+        public const ushort FieldCount = 32;
 
         public static readonly Type MaskType = typeof(PlacedObject_Mask<>);
 
@@ -2439,11 +2469,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type GetterType = typeof(IPlacedObjectGetter);
 
-        public static readonly Type InternalGetterType = null;
+        public static readonly Type InternalGetterType = typeof(IPlacedObjectInternalGetter);
 
         public static readonly Type SetterType = typeof(IPlacedObject);
 
-        public static readonly Type InternalSetterType = null;
+        public static readonly Type InternalSetterType = typeof(IPlacedObjectInternal);
 
         public static readonly Type CommonType = typeof(PlacedObjectCommon);
 
@@ -2511,6 +2541,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (ushort)PlacedObject_FieldIndex.Position;
                 case "ROTATION":
                     return (ushort)PlacedObject_FieldIndex.Rotation;
+                case "DATADATATYPESTATE":
+                    return (ushort)PlacedObject_FieldIndex.DATADataTypeState;
                 default:
                     return null;
             }
@@ -2546,6 +2578,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case PlacedObject_FieldIndex.ContainedSoul:
                 case PlacedObject_FieldIndex.Position:
                 case PlacedObject_FieldIndex.Rotation:
+                case PlacedObject_FieldIndex.DATADataTypeState:
                     return false;
                 default:
                     return OblivionMajorRecord_Registration.GetNthIsEnumerable(index);
@@ -2583,6 +2616,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case PlacedObject_FieldIndex.ContainedSoul:
                 case PlacedObject_FieldIndex.Position:
                 case PlacedObject_FieldIndex.Rotation:
+                case PlacedObject_FieldIndex.DATADataTypeState:
                     return false;
                 default:
                     return OblivionMajorRecord_Registration.GetNthIsLoqui(index);
@@ -2619,6 +2653,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case PlacedObject_FieldIndex.ContainedSoul:
                 case PlacedObject_FieldIndex.Position:
                 case PlacedObject_FieldIndex.Rotation:
+                case PlacedObject_FieldIndex.DATADataTypeState:
                     return false;
                 default:
                     return OblivionMajorRecord_Registration.GetNthIsSingleton(index);
@@ -2680,6 +2715,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return "Position";
                 case PlacedObject_FieldIndex.Rotation:
                     return "Rotation";
+                case PlacedObject_FieldIndex.DATADataTypeState:
+                    return "DATADataTypeState";
                 default:
                     return OblivionMajorRecord_Registration.GetNthName(index);
             }
@@ -2715,6 +2752,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case PlacedObject_FieldIndex.ContainedSoul:
                 case PlacedObject_FieldIndex.Position:
                 case PlacedObject_FieldIndex.Rotation:
+                case PlacedObject_FieldIndex.DATADataTypeState:
                     return false;
                 default:
                     return OblivionMajorRecord_Registration.IsNthDerivative(index);
@@ -2751,6 +2789,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case PlacedObject_FieldIndex.ContainedSoul:
                 case PlacedObject_FieldIndex.Position:
                 case PlacedObject_FieldIndex.Rotation:
+                case PlacedObject_FieldIndex.DATADataTypeState:
                     return false;
                 default:
                     return OblivionMajorRecord_Registration.IsProtected(index);
@@ -2812,6 +2851,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return typeof(P3Float);
                 case PlacedObject_FieldIndex.Rotation:
                     return typeof(P3Float);
+                case PlacedObject_FieldIndex.DATADataTypeState:
+                    return typeof(PlacedObject.DATADataType);
                 default:
                     return OblivionMajorRecord_Registration.GetNthType(index);
             }
@@ -3891,6 +3932,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     fg.AppendLine($"Rotation => {item.Rotation}");
                 }
+                if (printMask?.DATADataTypeState ?? true)
+                {
+                }
             }
             fg.AppendLine("]");
         }
@@ -3957,6 +4001,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.ContainedSoul = item.ContainedSoul_Property.HasBeenSet;
             ret.Position = true;
             ret.Rotation = true;
+            ret.DATADataTypeState = true;
             return ret;
         }
 
@@ -3970,6 +4015,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (index)
             {
+                case OblivionMajorRecord_FieldIndex.MajorRecordFlagsRaw:
+                    return (PlacedObject_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.FormKey:
                     return (PlacedObject_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.Version:
@@ -3995,6 +4042,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (index)
             {
+                case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
+                    return (PlacedObject_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
                     return (PlacedObject_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.Version:
@@ -4009,314 +4058,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         #region Xml Translation
-        #region Xml Write
-        public static void Write_Xml(
-            XElement node,
-            PlacedObject item,
-            bool doMasks,
-            out PlacedObject_ErrorMask errorMask,
-            PlacedObject_TranslationMask translationMask,
-            string name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_Xml(
-                name: name,
-                node: node,
-                item: item,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = PlacedObject_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void Write_Xml(
-            XElement node,
-            PlacedObject item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.PlacedObject");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.PlacedObject");
-            }
-            WriteToNode_Xml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #endregion
-
-        public static void WriteToNode_Xml(
-            this PlacedObject item,
-            XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            OblivionMajorRecordCommon.WriteToNode_Xml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            if (item.Base_Property.HasBeenSet
-                && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Base) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Base),
-                    item: item.Base_Property?.FormKey,
-                    fieldIndex: (int)PlacedObject_FieldIndex.Base,
-                    errorMask: errorMask);
-            }
-            if (item.XPCIFluff_IsSet
-                && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.XPCIFluff) ?? true))
-            {
-                ByteArrayXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.XPCIFluff),
-                    item: item.XPCIFluff,
-                    fieldIndex: (int)PlacedObject_FieldIndex.XPCIFluff,
-                    errorMask: errorMask);
-            }
-            if (item.FULLFluff_IsSet
-                && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.FULLFluff) ?? true))
-            {
-                ByteArrayXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.FULLFluff),
-                    item: item.FULLFluff,
-                    fieldIndex: (int)PlacedObject_FieldIndex.FULLFluff,
-                    errorMask: errorMask);
-            }
-            if (item.TeleportDestination_IsSet
-                && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.TeleportDestination) ?? true))
-            {
-                LoquiXmlTranslation<TeleportDestination>.Instance.Write(
-                    node: node,
-                    item: item.TeleportDestination,
-                    name: nameof(item.TeleportDestination),
-                    fieldIndex: (int)PlacedObject_FieldIndex.TeleportDestination,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)PlacedObject_FieldIndex.TeleportDestination));
-            }
-            if (item.Lock_IsSet
-                && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Lock) ?? true))
-            {
-                LoquiXmlTranslation<LockInformation>.Instance.Write(
-                    node: node,
-                    item: item.Lock,
-                    name: nameof(item.Lock),
-                    fieldIndex: (int)PlacedObject_FieldIndex.Lock,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)PlacedObject_FieldIndex.Lock));
-            }
-            if (item.Owner_Property.HasBeenSet
-                && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Owner) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Owner),
-                    item: item.Owner_Property?.FormKey,
-                    fieldIndex: (int)PlacedObject_FieldIndex.Owner,
-                    errorMask: errorMask);
-            }
-            if (item.FactionRank_IsSet
-                && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.FactionRank) ?? true))
-            {
-                Int32XmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.FactionRank),
-                    item: item.FactionRank,
-                    fieldIndex: (int)PlacedObject_FieldIndex.FactionRank,
-                    errorMask: errorMask);
-            }
-            if (item.GlobalVariable_Property.HasBeenSet
-                && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.GlobalVariable) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.GlobalVariable),
-                    item: item.GlobalVariable_Property?.FormKey,
-                    fieldIndex: (int)PlacedObject_FieldIndex.GlobalVariable,
-                    errorMask: errorMask);
-            }
-            if (item.EnableParent_IsSet
-                && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.EnableParent) ?? true))
-            {
-                LoquiXmlTranslation<EnableParent>.Instance.Write(
-                    node: node,
-                    item: item.EnableParent,
-                    name: nameof(item.EnableParent),
-                    fieldIndex: (int)PlacedObject_FieldIndex.EnableParent,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)PlacedObject_FieldIndex.EnableParent));
-            }
-            if (item.Target_Property.HasBeenSet
-                && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Target) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Target),
-                    item: item.Target_Property?.FormKey,
-                    fieldIndex: (int)PlacedObject_FieldIndex.Target,
-                    errorMask: errorMask);
-            }
-            if (item.SpeedTreeSeed_IsSet
-                && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.SpeedTreeSeed) ?? true))
-            {
-                ByteXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.SpeedTreeSeed),
-                    item: item.SpeedTreeSeed,
-                    fieldIndex: (int)PlacedObject_FieldIndex.SpeedTreeSeed,
-                    errorMask: errorMask);
-            }
-            if (item.DistantLODData_IsSet
-                && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.DistantLODData) ?? true))
-            {
-                LoquiXmlTranslation<DistantLODData>.Instance.Write(
-                    node: node,
-                    item: item.DistantLODData,
-                    name: nameof(item.DistantLODData),
-                    fieldIndex: (int)PlacedObject_FieldIndex.DistantLODData,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)PlacedObject_FieldIndex.DistantLODData));
-            }
-            if (item.Charge_IsSet
-                && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Charge) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Charge),
-                    item: item.Charge,
-                    fieldIndex: (int)PlacedObject_FieldIndex.Charge,
-                    errorMask: errorMask);
-            }
-            if (item.Health_IsSet
-                && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Health) ?? true))
-            {
-                Int32XmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Health),
-                    item: item.Health,
-                    fieldIndex: (int)PlacedObject_FieldIndex.Health,
-                    errorMask: errorMask);
-            }
-            if (item.LevelModifier_IsSet
-                && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.LevelModifier) ?? true))
-            {
-                Int32XmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.LevelModifier),
-                    item: item.LevelModifier,
-                    fieldIndex: (int)PlacedObject_FieldIndex.LevelModifier,
-                    errorMask: errorMask);
-            }
-            if (item.Unknown_Property.HasBeenSet
-                && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Unknown) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Unknown),
-                    item: item.Unknown_Property?.FormKey,
-                    fieldIndex: (int)PlacedObject_FieldIndex.Unknown,
-                    errorMask: errorMask);
-            }
-            if (item.ActionFlags_IsSet
-                && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.ActionFlags) ?? true))
-            {
-                EnumXmlTranslation<PlacedObject.ActionFlag>.Instance.Write(
-                    node: node,
-                    name: nameof(item.ActionFlags),
-                    item: item.ActionFlags,
-                    fieldIndex: (int)PlacedObject_FieldIndex.ActionFlags,
-                    errorMask: errorMask);
-            }
-            if (item.Count_IsSet
-                && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Count) ?? true))
-            {
-                Int32XmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Count),
-                    item: item.Count,
-                    fieldIndex: (int)PlacedObject_FieldIndex.Count,
-                    errorMask: errorMask);
-            }
-            if (item.MapMarker_IsSet
-                && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.MapMarker) ?? true))
-            {
-                LoquiXmlTranslation<MapMarker>.Instance.Write(
-                    node: node,
-                    item: item.MapMarker,
-                    name: nameof(item.MapMarker),
-                    fieldIndex: (int)PlacedObject_FieldIndex.MapMarker,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)PlacedObject_FieldIndex.MapMarker));
-            }
-            if ((translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.OpenByDefault) ?? true))
-            {
-                BooleanXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.OpenByDefault),
-                    item: item.OpenByDefault,
-                    fieldIndex: (int)PlacedObject_FieldIndex.OpenByDefault,
-                    errorMask: errorMask);
-            }
-            if (item.RagdollData_IsSet
-                && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.RagdollData) ?? true))
-            {
-                ByteArrayXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.RagdollData),
-                    item: item.RagdollData,
-                    fieldIndex: (int)PlacedObject_FieldIndex.RagdollData,
-                    errorMask: errorMask);
-            }
-            if (item.Scale_IsSet
-                && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Scale) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Scale),
-                    item: item.Scale,
-                    fieldIndex: (int)PlacedObject_FieldIndex.Scale,
-                    errorMask: errorMask);
-            }
-            if (item.ContainedSoul_Property.HasBeenSet
-                && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.ContainedSoul) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.ContainedSoul),
-                    item: item.ContainedSoul_Property?.FormKey,
-                    fieldIndex: (int)PlacedObject_FieldIndex.ContainedSoul,
-                    errorMask: errorMask);
-            }
-            if (item.DATADataTypeState.HasFlag(PlacedObject.DATADataType.Has))
-            {
-                if ((translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Position) ?? true))
-                {
-                    P3FloatXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.Position),
-                        item: item.Position,
-                        fieldIndex: (int)PlacedObject_FieldIndex.Position,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Rotation) ?? true))
-                {
-                    P3FloatXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.Rotation),
-                        item: item.Rotation,
-                        fieldIndex: (int)PlacedObject_FieldIndex.Rotation,
-                        errorMask: errorMask);
-                }
-            }
-        }
-
         public static void FillPublic_Xml(
             this PlacedObject item,
             XElement node,
@@ -4893,6 +4634,32 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask?.PopIndex();
                     }
                     break;
+                case "DATADataTypeState":
+                    try
+                    {
+                        errorMask?.PushIndex((int)PlacedObject_FieldIndex.DATADataTypeState);
+                        if (EnumXmlTranslation<PlacedObject.DATADataType>.Instance.Parse(
+                            node: node,
+                            item: out PlacedObject.DATADataType DATADataTypeStateParse,
+                            errorMask: errorMask))
+                        {
+                            item.DATADataTypeState = DATADataTypeStateParse;
+                        }
+                        else
+                        {
+                            item.DATADataTypeState = default(PlacedObject.DATADataType);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
                 default:
                     OblivionMajorRecordCommon.FillPublicElement_Xml(
                         item: item,
@@ -4906,61 +4673,1395 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        #region Binary Translation
-        #region Binary Write
-        public static void Write_Binary(
-            MutagenWriter writer,
-            PlacedObject item,
-            MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
+    }
+    #endregion
+
+    #region Modules
+    #region Xml Translation
+    public partial class PlacedObjectXmlTranslation : OblivionMajorRecordXmlTranslation
+    {
+        public new readonly static PlacedObjectXmlTranslation Instance = new PlacedObjectXmlTranslation();
+
+        public static void WriteToNode_Xml(
+            IPlacedObjectInternalGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            OblivionMajorRecordXmlTranslation.WriteToNode_Xml(
+                item: item,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+            if (item.Base_Property.HasBeenSet
+                && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Base) ?? true))
+            {
+                FormKeyXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Base),
+                    item: item.Base_Property?.FormKey,
+                    fieldIndex: (int)PlacedObject_FieldIndex.Base,
+                    errorMask: errorMask);
+            }
+            if (item.XPCIFluff_IsSet
+                && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.XPCIFluff) ?? true))
+            {
+                ByteArrayXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.XPCIFluff),
+                    item: item.XPCIFluff,
+                    fieldIndex: (int)PlacedObject_FieldIndex.XPCIFluff,
+                    errorMask: errorMask);
+            }
+            if (item.FULLFluff_IsSet
+                && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.FULLFluff) ?? true))
+            {
+                ByteArrayXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.FULLFluff),
+                    item: item.FULLFluff,
+                    fieldIndex: (int)PlacedObject_FieldIndex.FULLFluff,
+                    errorMask: errorMask);
+            }
+            if (item.TeleportDestination_IsSet
+                && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.TeleportDestination) ?? true))
+            {
+                LoquiXmlTranslation<TeleportDestination>.Instance.Write(
+                    node: node,
+                    item: item.TeleportDestination,
+                    name: nameof(item.TeleportDestination),
+                    fieldIndex: (int)PlacedObject_FieldIndex.TeleportDestination,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)PlacedObject_FieldIndex.TeleportDestination));
+            }
+            if (item.Lock_IsSet
+                && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Lock) ?? true))
+            {
+                LoquiXmlTranslation<LockInformation>.Instance.Write(
+                    node: node,
+                    item: item.Lock,
+                    name: nameof(item.Lock),
+                    fieldIndex: (int)PlacedObject_FieldIndex.Lock,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)PlacedObject_FieldIndex.Lock));
+            }
+            if (item.Owner_Property.HasBeenSet
+                && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Owner) ?? true))
+            {
+                FormKeyXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Owner),
+                    item: item.Owner_Property?.FormKey,
+                    fieldIndex: (int)PlacedObject_FieldIndex.Owner,
+                    errorMask: errorMask);
+            }
+            if (item.FactionRank_IsSet
+                && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.FactionRank) ?? true))
+            {
+                Int32XmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.FactionRank),
+                    item: item.FactionRank,
+                    fieldIndex: (int)PlacedObject_FieldIndex.FactionRank,
+                    errorMask: errorMask);
+            }
+            if (item.GlobalVariable_Property.HasBeenSet
+                && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.GlobalVariable) ?? true))
+            {
+                FormKeyXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.GlobalVariable),
+                    item: item.GlobalVariable_Property?.FormKey,
+                    fieldIndex: (int)PlacedObject_FieldIndex.GlobalVariable,
+                    errorMask: errorMask);
+            }
+            if (item.EnableParent_IsSet
+                && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.EnableParent) ?? true))
+            {
+                LoquiXmlTranslation<EnableParent>.Instance.Write(
+                    node: node,
+                    item: item.EnableParent,
+                    name: nameof(item.EnableParent),
+                    fieldIndex: (int)PlacedObject_FieldIndex.EnableParent,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)PlacedObject_FieldIndex.EnableParent));
+            }
+            if (item.Target_Property.HasBeenSet
+                && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Target) ?? true))
+            {
+                FormKeyXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Target),
+                    item: item.Target_Property?.FormKey,
+                    fieldIndex: (int)PlacedObject_FieldIndex.Target,
+                    errorMask: errorMask);
+            }
+            if (item.SpeedTreeSeed_IsSet
+                && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.SpeedTreeSeed) ?? true))
+            {
+                ByteXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.SpeedTreeSeed),
+                    item: item.SpeedTreeSeed,
+                    fieldIndex: (int)PlacedObject_FieldIndex.SpeedTreeSeed,
+                    errorMask: errorMask);
+            }
+            if (item.DistantLODData_IsSet
+                && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.DistantLODData) ?? true))
+            {
+                LoquiXmlTranslation<DistantLODData>.Instance.Write(
+                    node: node,
+                    item: item.DistantLODData,
+                    name: nameof(item.DistantLODData),
+                    fieldIndex: (int)PlacedObject_FieldIndex.DistantLODData,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)PlacedObject_FieldIndex.DistantLODData));
+            }
+            if (item.Charge_IsSet
+                && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Charge) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Charge),
+                    item: item.Charge,
+                    fieldIndex: (int)PlacedObject_FieldIndex.Charge,
+                    errorMask: errorMask);
+            }
+            if (item.Health_IsSet
+                && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Health) ?? true))
+            {
+                Int32XmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Health),
+                    item: item.Health,
+                    fieldIndex: (int)PlacedObject_FieldIndex.Health,
+                    errorMask: errorMask);
+            }
+            if (item.LevelModifier_IsSet
+                && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.LevelModifier) ?? true))
+            {
+                Int32XmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.LevelModifier),
+                    item: item.LevelModifier,
+                    fieldIndex: (int)PlacedObject_FieldIndex.LevelModifier,
+                    errorMask: errorMask);
+            }
+            if (item.Unknown_Property.HasBeenSet
+                && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Unknown) ?? true))
+            {
+                FormKeyXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Unknown),
+                    item: item.Unknown_Property?.FormKey,
+                    fieldIndex: (int)PlacedObject_FieldIndex.Unknown,
+                    errorMask: errorMask);
+            }
+            if (item.ActionFlags_IsSet
+                && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.ActionFlags) ?? true))
+            {
+                EnumXmlTranslation<PlacedObject.ActionFlag>.Instance.Write(
+                    node: node,
+                    name: nameof(item.ActionFlags),
+                    item: item.ActionFlags,
+                    fieldIndex: (int)PlacedObject_FieldIndex.ActionFlags,
+                    errorMask: errorMask);
+            }
+            if (item.Count_IsSet
+                && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Count) ?? true))
+            {
+                Int32XmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Count),
+                    item: item.Count,
+                    fieldIndex: (int)PlacedObject_FieldIndex.Count,
+                    errorMask: errorMask);
+            }
+            if (item.MapMarker_IsSet
+                && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.MapMarker) ?? true))
+            {
+                LoquiXmlTranslation<MapMarker>.Instance.Write(
+                    node: node,
+                    item: item.MapMarker,
+                    name: nameof(item.MapMarker),
+                    fieldIndex: (int)PlacedObject_FieldIndex.MapMarker,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)PlacedObject_FieldIndex.MapMarker));
+            }
+            if ((translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.OpenByDefault) ?? true))
+            {
+                BooleanXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.OpenByDefault),
+                    item: item.OpenByDefault,
+                    fieldIndex: (int)PlacedObject_FieldIndex.OpenByDefault,
+                    errorMask: errorMask);
+            }
+            if (item.RagdollData_IsSet
+                && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.RagdollData) ?? true))
+            {
+                ByteArrayXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.RagdollData),
+                    item: item.RagdollData,
+                    fieldIndex: (int)PlacedObject_FieldIndex.RagdollData,
+                    errorMask: errorMask);
+            }
+            if (item.Scale_IsSet
+                && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Scale) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Scale),
+                    item: item.Scale,
+                    fieldIndex: (int)PlacedObject_FieldIndex.Scale,
+                    errorMask: errorMask);
+            }
+            if (item.ContainedSoul_Property.HasBeenSet
+                && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.ContainedSoul) ?? true))
+            {
+                FormKeyXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.ContainedSoul),
+                    item: item.ContainedSoul_Property?.FormKey,
+                    fieldIndex: (int)PlacedObject_FieldIndex.ContainedSoul,
+                    errorMask: errorMask);
+            }
+            if (item.DATADataTypeState.HasFlag(PlacedObject.DATADataType.Has))
+            {
+                if ((translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Position) ?? true))
+                {
+                    P3FloatXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.Position),
+                        item: item.Position,
+                        fieldIndex: (int)PlacedObject_FieldIndex.Position,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Rotation) ?? true))
+                {
+                    P3FloatXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.Rotation),
+                        item: item.Rotation,
+                        fieldIndex: (int)PlacedObject_FieldIndex.Rotation,
+                        errorMask: errorMask);
+                }
+            }
+            if ((translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.DATADataTypeState) ?? true))
+            {
+                EnumXmlTranslation<PlacedObject.DATADataType>.Instance.Write(
+                    node: node,
+                    name: nameof(item.DATADataTypeState),
+                    item: item.DATADataTypeState,
+                    fieldIndex: (int)PlacedObject_FieldIndex.DATADataTypeState,
+                    errorMask: errorMask);
+            }
+        }
+
+        #region Xml Write
+        public void Write_Xml(
+            XElement node,
+            IPlacedObjectInternalGetter item,
             bool doMasks,
-            out PlacedObject_ErrorMask errorMask)
+            out PlacedObject_ErrorMask errorMask,
+            PlacedObject_TranslationMask translationMask,
+            string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_Binary(
-                masterReferences: masterReferences,
-                writer: writer,
+            Write_Xml(
+                name: name,
+                node: node,
                 item: item,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMaskBuilder);
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal());
             errorMask = PlacedObject_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void Write_Binary(
-            MutagenWriter writer,
-            PlacedObject item,
-            MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
+        public void Write_Xml(
+            XElement node,
+            IPlacedObjectInternalGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
         {
-            using (HeaderExport.ExportHeader(
-                writer: writer,
-                record: PlacedObject_Registration.REFR_HEADER,
-                type: ObjectType.Record))
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.PlacedObject");
+            node.Add(elem);
+            if (name != null)
             {
-                OblivionMajorRecordCommon.Write_Binary_Embedded(
-                    item: item,
-                    writer: writer,
-                    errorMask: errorMask,
-                    masterReferences: masterReferences);
-                Write_Binary_RecordTypes(
-                    item: item,
-                    writer: writer,
-                    recordTypeConverter: recordTypeConverter,
-                    errorMask: errorMask,
-                    masterReferences: masterReferences);
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.PlacedObject");
             }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
         }
         #endregion
 
-        public static void Write_Binary_RecordTypes(
+    }
+    #endregion
+
+    #region Mask
+    public class PlacedObject_Mask<T> : OblivionMajorRecord_Mask<T>, IMask<T>, IEquatable<PlacedObject_Mask<T>>
+    {
+        #region Ctors
+        public PlacedObject_Mask()
+        {
+        }
+
+        public PlacedObject_Mask(T initialValue)
+        {
+            this.Base = initialValue;
+            this.XPCIFluff = initialValue;
+            this.FULLFluff = initialValue;
+            this.TeleportDestination = new MaskItem<T, TeleportDestination_Mask<T>>(initialValue, new TeleportDestination_Mask<T>(initialValue));
+            this.Lock = new MaskItem<T, LockInformation_Mask<T>>(initialValue, new LockInformation_Mask<T>(initialValue));
+            this.Owner = initialValue;
+            this.FactionRank = initialValue;
+            this.GlobalVariable = initialValue;
+            this.EnableParent = new MaskItem<T, EnableParent_Mask<T>>(initialValue, new EnableParent_Mask<T>(initialValue));
+            this.Target = initialValue;
+            this.SpeedTreeSeed = initialValue;
+            this.DistantLODData = new MaskItem<T, DistantLODData_Mask<T>>(initialValue, new DistantLODData_Mask<T>(initialValue));
+            this.Charge = initialValue;
+            this.Health = initialValue;
+            this.LevelModifier = initialValue;
+            this.Unknown = initialValue;
+            this.ActionFlags = initialValue;
+            this.Count = initialValue;
+            this.MapMarker = new MaskItem<T, MapMarker_Mask<T>>(initialValue, new MapMarker_Mask<T>(initialValue));
+            this.OpenByDefault = initialValue;
+            this.RagdollData = initialValue;
+            this.Scale = initialValue;
+            this.ContainedSoul = initialValue;
+            this.Position = initialValue;
+            this.Rotation = initialValue;
+            this.DATADataTypeState = initialValue;
+        }
+        #endregion
+
+        #region Members
+        public T Base;
+        public T XPCIFluff;
+        public T FULLFluff;
+        public MaskItem<T, TeleportDestination_Mask<T>> TeleportDestination { get; set; }
+        public MaskItem<T, LockInformation_Mask<T>> Lock { get; set; }
+        public T Owner;
+        public T FactionRank;
+        public T GlobalVariable;
+        public MaskItem<T, EnableParent_Mask<T>> EnableParent { get; set; }
+        public T Target;
+        public T SpeedTreeSeed;
+        public MaskItem<T, DistantLODData_Mask<T>> DistantLODData { get; set; }
+        public T Charge;
+        public T Health;
+        public T LevelModifier;
+        public T Unknown;
+        public T ActionFlags;
+        public T Count;
+        public MaskItem<T, MapMarker_Mask<T>> MapMarker { get; set; }
+        public T OpenByDefault;
+        public T RagdollData;
+        public T Scale;
+        public T ContainedSoul;
+        public T Position;
+        public T Rotation;
+        public T DATADataTypeState;
+        #endregion
+
+        #region Equals
+        public override bool Equals(object obj)
+        {
+            if (!(obj is PlacedObject_Mask<T> rhs)) return false;
+            return Equals(rhs);
+        }
+
+        public bool Equals(PlacedObject_Mask<T> rhs)
+        {
+            if (rhs == null) return false;
+            if (!base.Equals(rhs)) return false;
+            if (!object.Equals(this.Base, rhs.Base)) return false;
+            if (!object.Equals(this.XPCIFluff, rhs.XPCIFluff)) return false;
+            if (!object.Equals(this.FULLFluff, rhs.FULLFluff)) return false;
+            if (!object.Equals(this.TeleportDestination, rhs.TeleportDestination)) return false;
+            if (!object.Equals(this.Lock, rhs.Lock)) return false;
+            if (!object.Equals(this.Owner, rhs.Owner)) return false;
+            if (!object.Equals(this.FactionRank, rhs.FactionRank)) return false;
+            if (!object.Equals(this.GlobalVariable, rhs.GlobalVariable)) return false;
+            if (!object.Equals(this.EnableParent, rhs.EnableParent)) return false;
+            if (!object.Equals(this.Target, rhs.Target)) return false;
+            if (!object.Equals(this.SpeedTreeSeed, rhs.SpeedTreeSeed)) return false;
+            if (!object.Equals(this.DistantLODData, rhs.DistantLODData)) return false;
+            if (!object.Equals(this.Charge, rhs.Charge)) return false;
+            if (!object.Equals(this.Health, rhs.Health)) return false;
+            if (!object.Equals(this.LevelModifier, rhs.LevelModifier)) return false;
+            if (!object.Equals(this.Unknown, rhs.Unknown)) return false;
+            if (!object.Equals(this.ActionFlags, rhs.ActionFlags)) return false;
+            if (!object.Equals(this.Count, rhs.Count)) return false;
+            if (!object.Equals(this.MapMarker, rhs.MapMarker)) return false;
+            if (!object.Equals(this.OpenByDefault, rhs.OpenByDefault)) return false;
+            if (!object.Equals(this.RagdollData, rhs.RagdollData)) return false;
+            if (!object.Equals(this.Scale, rhs.Scale)) return false;
+            if (!object.Equals(this.ContainedSoul, rhs.ContainedSoul)) return false;
+            if (!object.Equals(this.Position, rhs.Position)) return false;
+            if (!object.Equals(this.Rotation, rhs.Rotation)) return false;
+            if (!object.Equals(this.DATADataTypeState, rhs.DATADataTypeState)) return false;
+            return true;
+        }
+        public override int GetHashCode()
+        {
+            int ret = 0;
+            ret = ret.CombineHashCode(this.Base?.GetHashCode());
+            ret = ret.CombineHashCode(this.XPCIFluff?.GetHashCode());
+            ret = ret.CombineHashCode(this.FULLFluff?.GetHashCode());
+            ret = ret.CombineHashCode(this.TeleportDestination?.GetHashCode());
+            ret = ret.CombineHashCode(this.Lock?.GetHashCode());
+            ret = ret.CombineHashCode(this.Owner?.GetHashCode());
+            ret = ret.CombineHashCode(this.FactionRank?.GetHashCode());
+            ret = ret.CombineHashCode(this.GlobalVariable?.GetHashCode());
+            ret = ret.CombineHashCode(this.EnableParent?.GetHashCode());
+            ret = ret.CombineHashCode(this.Target?.GetHashCode());
+            ret = ret.CombineHashCode(this.SpeedTreeSeed?.GetHashCode());
+            ret = ret.CombineHashCode(this.DistantLODData?.GetHashCode());
+            ret = ret.CombineHashCode(this.Charge?.GetHashCode());
+            ret = ret.CombineHashCode(this.Health?.GetHashCode());
+            ret = ret.CombineHashCode(this.LevelModifier?.GetHashCode());
+            ret = ret.CombineHashCode(this.Unknown?.GetHashCode());
+            ret = ret.CombineHashCode(this.ActionFlags?.GetHashCode());
+            ret = ret.CombineHashCode(this.Count?.GetHashCode());
+            ret = ret.CombineHashCode(this.MapMarker?.GetHashCode());
+            ret = ret.CombineHashCode(this.OpenByDefault?.GetHashCode());
+            ret = ret.CombineHashCode(this.RagdollData?.GetHashCode());
+            ret = ret.CombineHashCode(this.Scale?.GetHashCode());
+            ret = ret.CombineHashCode(this.ContainedSoul?.GetHashCode());
+            ret = ret.CombineHashCode(this.Position?.GetHashCode());
+            ret = ret.CombineHashCode(this.Rotation?.GetHashCode());
+            ret = ret.CombineHashCode(this.DATADataTypeState?.GetHashCode());
+            ret = ret.CombineHashCode(base.GetHashCode());
+            return ret;
+        }
+
+        #endregion
+
+        #region All Equal
+        public override bool AllEqual(Func<T, bool> eval)
+        {
+            if (!base.AllEqual(eval)) return false;
+            if (!eval(this.Base)) return false;
+            if (!eval(this.XPCIFluff)) return false;
+            if (!eval(this.FULLFluff)) return false;
+            if (TeleportDestination != null)
+            {
+                if (!eval(this.TeleportDestination.Overall)) return false;
+                if (this.TeleportDestination.Specific != null && !this.TeleportDestination.Specific.AllEqual(eval)) return false;
+            }
+            if (Lock != null)
+            {
+                if (!eval(this.Lock.Overall)) return false;
+                if (this.Lock.Specific != null && !this.Lock.Specific.AllEqual(eval)) return false;
+            }
+            if (!eval(this.Owner)) return false;
+            if (!eval(this.FactionRank)) return false;
+            if (!eval(this.GlobalVariable)) return false;
+            if (EnableParent != null)
+            {
+                if (!eval(this.EnableParent.Overall)) return false;
+                if (this.EnableParent.Specific != null && !this.EnableParent.Specific.AllEqual(eval)) return false;
+            }
+            if (!eval(this.Target)) return false;
+            if (!eval(this.SpeedTreeSeed)) return false;
+            if (DistantLODData != null)
+            {
+                if (!eval(this.DistantLODData.Overall)) return false;
+                if (this.DistantLODData.Specific != null && !this.DistantLODData.Specific.AllEqual(eval)) return false;
+            }
+            if (!eval(this.Charge)) return false;
+            if (!eval(this.Health)) return false;
+            if (!eval(this.LevelModifier)) return false;
+            if (!eval(this.Unknown)) return false;
+            if (!eval(this.ActionFlags)) return false;
+            if (!eval(this.Count)) return false;
+            if (MapMarker != null)
+            {
+                if (!eval(this.MapMarker.Overall)) return false;
+                if (this.MapMarker.Specific != null && !this.MapMarker.Specific.AllEqual(eval)) return false;
+            }
+            if (!eval(this.OpenByDefault)) return false;
+            if (!eval(this.RagdollData)) return false;
+            if (!eval(this.Scale)) return false;
+            if (!eval(this.ContainedSoul)) return false;
+            if (!eval(this.Position)) return false;
+            if (!eval(this.Rotation)) return false;
+            if (!eval(this.DATADataTypeState)) return false;
+            return true;
+        }
+        #endregion
+
+        #region Translate
+        public new PlacedObject_Mask<R> Translate<R>(Func<T, R> eval)
+        {
+            var ret = new PlacedObject_Mask<R>();
+            this.Translate_InternalFill(ret, eval);
+            return ret;
+        }
+
+        protected void Translate_InternalFill<R>(PlacedObject_Mask<R> obj, Func<T, R> eval)
+        {
+            base.Translate_InternalFill(obj, eval);
+            obj.Base = eval(this.Base);
+            obj.XPCIFluff = eval(this.XPCIFluff);
+            obj.FULLFluff = eval(this.FULLFluff);
+            if (this.TeleportDestination != null)
+            {
+                obj.TeleportDestination = new MaskItem<R, TeleportDestination_Mask<R>>();
+                obj.TeleportDestination.Overall = eval(this.TeleportDestination.Overall);
+                if (this.TeleportDestination.Specific != null)
+                {
+                    obj.TeleportDestination.Specific = this.TeleportDestination.Specific.Translate(eval);
+                }
+            }
+            if (this.Lock != null)
+            {
+                obj.Lock = new MaskItem<R, LockInformation_Mask<R>>();
+                obj.Lock.Overall = eval(this.Lock.Overall);
+                if (this.Lock.Specific != null)
+                {
+                    obj.Lock.Specific = this.Lock.Specific.Translate(eval);
+                }
+            }
+            obj.Owner = eval(this.Owner);
+            obj.FactionRank = eval(this.FactionRank);
+            obj.GlobalVariable = eval(this.GlobalVariable);
+            if (this.EnableParent != null)
+            {
+                obj.EnableParent = new MaskItem<R, EnableParent_Mask<R>>();
+                obj.EnableParent.Overall = eval(this.EnableParent.Overall);
+                if (this.EnableParent.Specific != null)
+                {
+                    obj.EnableParent.Specific = this.EnableParent.Specific.Translate(eval);
+                }
+            }
+            obj.Target = eval(this.Target);
+            obj.SpeedTreeSeed = eval(this.SpeedTreeSeed);
+            if (this.DistantLODData != null)
+            {
+                obj.DistantLODData = new MaskItem<R, DistantLODData_Mask<R>>();
+                obj.DistantLODData.Overall = eval(this.DistantLODData.Overall);
+                if (this.DistantLODData.Specific != null)
+                {
+                    obj.DistantLODData.Specific = this.DistantLODData.Specific.Translate(eval);
+                }
+            }
+            obj.Charge = eval(this.Charge);
+            obj.Health = eval(this.Health);
+            obj.LevelModifier = eval(this.LevelModifier);
+            obj.Unknown = eval(this.Unknown);
+            obj.ActionFlags = eval(this.ActionFlags);
+            obj.Count = eval(this.Count);
+            if (this.MapMarker != null)
+            {
+                obj.MapMarker = new MaskItem<R, MapMarker_Mask<R>>();
+                obj.MapMarker.Overall = eval(this.MapMarker.Overall);
+                if (this.MapMarker.Specific != null)
+                {
+                    obj.MapMarker.Specific = this.MapMarker.Specific.Translate(eval);
+                }
+            }
+            obj.OpenByDefault = eval(this.OpenByDefault);
+            obj.RagdollData = eval(this.RagdollData);
+            obj.Scale = eval(this.Scale);
+            obj.ContainedSoul = eval(this.ContainedSoul);
+            obj.Position = eval(this.Position);
+            obj.Rotation = eval(this.Rotation);
+            obj.DATADataTypeState = eval(this.DATADataTypeState);
+        }
+        #endregion
+
+        #region Clear Enumerables
+        public override void ClearEnumerables()
+        {
+            base.ClearEnumerables();
+        }
+        #endregion
+
+        #region To String
+        public override string ToString()
+        {
+            return ToString(printMask: null);
+        }
+
+        public string ToString(PlacedObject_Mask<bool> printMask = null)
+        {
+            var fg = new FileGeneration();
+            ToString(fg, printMask);
+            return fg.ToString();
+        }
+
+        public void ToString(FileGeneration fg, PlacedObject_Mask<bool> printMask = null)
+        {
+            fg.AppendLine($"{nameof(PlacedObject_Mask<T>)} =>");
+            fg.AppendLine("[");
+            using (new DepthWrapper(fg))
+            {
+                if (printMask?.Base ?? true)
+                {
+                    fg.AppendLine($"Base => {Base}");
+                }
+                if (printMask?.XPCIFluff ?? true)
+                {
+                    fg.AppendLine($"XPCIFluff => {XPCIFluff}");
+                }
+                if (printMask?.FULLFluff ?? true)
+                {
+                    fg.AppendLine($"FULLFluff => {FULLFluff}");
+                }
+                if (printMask?.TeleportDestination?.Overall ?? true)
+                {
+                    TeleportDestination?.ToString(fg);
+                }
+                if (printMask?.Lock?.Overall ?? true)
+                {
+                    Lock?.ToString(fg);
+                }
+                if (printMask?.Owner ?? true)
+                {
+                    fg.AppendLine($"Owner => {Owner}");
+                }
+                if (printMask?.FactionRank ?? true)
+                {
+                    fg.AppendLine($"FactionRank => {FactionRank}");
+                }
+                if (printMask?.GlobalVariable ?? true)
+                {
+                    fg.AppendLine($"GlobalVariable => {GlobalVariable}");
+                }
+                if (printMask?.EnableParent?.Overall ?? true)
+                {
+                    EnableParent?.ToString(fg);
+                }
+                if (printMask?.Target ?? true)
+                {
+                    fg.AppendLine($"Target => {Target}");
+                }
+                if (printMask?.SpeedTreeSeed ?? true)
+                {
+                    fg.AppendLine($"SpeedTreeSeed => {SpeedTreeSeed}");
+                }
+                if (printMask?.DistantLODData?.Overall ?? true)
+                {
+                    DistantLODData?.ToString(fg);
+                }
+                if (printMask?.Charge ?? true)
+                {
+                    fg.AppendLine($"Charge => {Charge}");
+                }
+                if (printMask?.Health ?? true)
+                {
+                    fg.AppendLine($"Health => {Health}");
+                }
+                if (printMask?.LevelModifier ?? true)
+                {
+                    fg.AppendLine($"LevelModifier => {LevelModifier}");
+                }
+                if (printMask?.Unknown ?? true)
+                {
+                    fg.AppendLine($"Unknown => {Unknown}");
+                }
+                if (printMask?.ActionFlags ?? true)
+                {
+                    fg.AppendLine($"ActionFlags => {ActionFlags}");
+                }
+                if (printMask?.Count ?? true)
+                {
+                    fg.AppendLine($"Count => {Count}");
+                }
+                if (printMask?.MapMarker?.Overall ?? true)
+                {
+                    MapMarker?.ToString(fg);
+                }
+                if (printMask?.OpenByDefault ?? true)
+                {
+                    fg.AppendLine($"OpenByDefault => {OpenByDefault}");
+                }
+                if (printMask?.RagdollData ?? true)
+                {
+                    fg.AppendLine($"RagdollData => {RagdollData}");
+                }
+                if (printMask?.Scale ?? true)
+                {
+                    fg.AppendLine($"Scale => {Scale}");
+                }
+                if (printMask?.ContainedSoul ?? true)
+                {
+                    fg.AppendLine($"ContainedSoul => {ContainedSoul}");
+                }
+                if (printMask?.Position ?? true)
+                {
+                    fg.AppendLine($"Position => {Position}");
+                }
+                if (printMask?.Rotation ?? true)
+                {
+                    fg.AppendLine($"Rotation => {Rotation}");
+                }
+                if (printMask?.DATADataTypeState ?? true)
+                {
+                    fg.AppendLine($"DATADataTypeState => {DATADataTypeState}");
+                }
+            }
+            fg.AppendLine("]");
+        }
+        #endregion
+
+    }
+
+    public class PlacedObject_ErrorMask : OblivionMajorRecord_ErrorMask, IErrorMask<PlacedObject_ErrorMask>
+    {
+        #region Members
+        public Exception Base;
+        public Exception XPCIFluff;
+        public Exception FULLFluff;
+        public MaskItem<Exception, TeleportDestination_ErrorMask> TeleportDestination;
+        public MaskItem<Exception, LockInformation_ErrorMask> Lock;
+        public Exception Owner;
+        public Exception FactionRank;
+        public Exception GlobalVariable;
+        public MaskItem<Exception, EnableParent_ErrorMask> EnableParent;
+        public Exception Target;
+        public Exception SpeedTreeSeed;
+        public MaskItem<Exception, DistantLODData_ErrorMask> DistantLODData;
+        public Exception Charge;
+        public Exception Health;
+        public Exception LevelModifier;
+        public Exception Unknown;
+        public Exception ActionFlags;
+        public Exception Count;
+        public MaskItem<Exception, MapMarker_ErrorMask> MapMarker;
+        public Exception OpenByDefault;
+        public Exception RagdollData;
+        public Exception Scale;
+        public Exception ContainedSoul;
+        public Exception Position;
+        public Exception Rotation;
+        public Exception DATADataTypeState;
+        #endregion
+
+        #region IErrorMask
+        public override object GetNthMask(int index)
+        {
+            PlacedObject_FieldIndex enu = (PlacedObject_FieldIndex)index;
+            switch (enu)
+            {
+                case PlacedObject_FieldIndex.Base:
+                    return Base;
+                case PlacedObject_FieldIndex.XPCIFluff:
+                    return XPCIFluff;
+                case PlacedObject_FieldIndex.FULLFluff:
+                    return FULLFluff;
+                case PlacedObject_FieldIndex.TeleportDestination:
+                    return TeleportDestination;
+                case PlacedObject_FieldIndex.Lock:
+                    return Lock;
+                case PlacedObject_FieldIndex.Owner:
+                    return Owner;
+                case PlacedObject_FieldIndex.FactionRank:
+                    return FactionRank;
+                case PlacedObject_FieldIndex.GlobalVariable:
+                    return GlobalVariable;
+                case PlacedObject_FieldIndex.EnableParent:
+                    return EnableParent;
+                case PlacedObject_FieldIndex.Target:
+                    return Target;
+                case PlacedObject_FieldIndex.SpeedTreeSeed:
+                    return SpeedTreeSeed;
+                case PlacedObject_FieldIndex.DistantLODData:
+                    return DistantLODData;
+                case PlacedObject_FieldIndex.Charge:
+                    return Charge;
+                case PlacedObject_FieldIndex.Health:
+                    return Health;
+                case PlacedObject_FieldIndex.LevelModifier:
+                    return LevelModifier;
+                case PlacedObject_FieldIndex.Unknown:
+                    return Unknown;
+                case PlacedObject_FieldIndex.ActionFlags:
+                    return ActionFlags;
+                case PlacedObject_FieldIndex.Count:
+                    return Count;
+                case PlacedObject_FieldIndex.MapMarker:
+                    return MapMarker;
+                case PlacedObject_FieldIndex.OpenByDefault:
+                    return OpenByDefault;
+                case PlacedObject_FieldIndex.RagdollData:
+                    return RagdollData;
+                case PlacedObject_FieldIndex.Scale:
+                    return Scale;
+                case PlacedObject_FieldIndex.ContainedSoul:
+                    return ContainedSoul;
+                case PlacedObject_FieldIndex.Position:
+                    return Position;
+                case PlacedObject_FieldIndex.Rotation:
+                    return Rotation;
+                case PlacedObject_FieldIndex.DATADataTypeState:
+                    return DATADataTypeState;
+                default:
+                    return base.GetNthMask(index);
+            }
+        }
+
+        public override void SetNthException(int index, Exception ex)
+        {
+            PlacedObject_FieldIndex enu = (PlacedObject_FieldIndex)index;
+            switch (enu)
+            {
+                case PlacedObject_FieldIndex.Base:
+                    this.Base = ex;
+                    break;
+                case PlacedObject_FieldIndex.XPCIFluff:
+                    this.XPCIFluff = ex;
+                    break;
+                case PlacedObject_FieldIndex.FULLFluff:
+                    this.FULLFluff = ex;
+                    break;
+                case PlacedObject_FieldIndex.TeleportDestination:
+                    this.TeleportDestination = new MaskItem<Exception, TeleportDestination_ErrorMask>(ex, null);
+                    break;
+                case PlacedObject_FieldIndex.Lock:
+                    this.Lock = new MaskItem<Exception, LockInformation_ErrorMask>(ex, null);
+                    break;
+                case PlacedObject_FieldIndex.Owner:
+                    this.Owner = ex;
+                    break;
+                case PlacedObject_FieldIndex.FactionRank:
+                    this.FactionRank = ex;
+                    break;
+                case PlacedObject_FieldIndex.GlobalVariable:
+                    this.GlobalVariable = ex;
+                    break;
+                case PlacedObject_FieldIndex.EnableParent:
+                    this.EnableParent = new MaskItem<Exception, EnableParent_ErrorMask>(ex, null);
+                    break;
+                case PlacedObject_FieldIndex.Target:
+                    this.Target = ex;
+                    break;
+                case PlacedObject_FieldIndex.SpeedTreeSeed:
+                    this.SpeedTreeSeed = ex;
+                    break;
+                case PlacedObject_FieldIndex.DistantLODData:
+                    this.DistantLODData = new MaskItem<Exception, DistantLODData_ErrorMask>(ex, null);
+                    break;
+                case PlacedObject_FieldIndex.Charge:
+                    this.Charge = ex;
+                    break;
+                case PlacedObject_FieldIndex.Health:
+                    this.Health = ex;
+                    break;
+                case PlacedObject_FieldIndex.LevelModifier:
+                    this.LevelModifier = ex;
+                    break;
+                case PlacedObject_FieldIndex.Unknown:
+                    this.Unknown = ex;
+                    break;
+                case PlacedObject_FieldIndex.ActionFlags:
+                    this.ActionFlags = ex;
+                    break;
+                case PlacedObject_FieldIndex.Count:
+                    this.Count = ex;
+                    break;
+                case PlacedObject_FieldIndex.MapMarker:
+                    this.MapMarker = new MaskItem<Exception, MapMarker_ErrorMask>(ex, null);
+                    break;
+                case PlacedObject_FieldIndex.OpenByDefault:
+                    this.OpenByDefault = ex;
+                    break;
+                case PlacedObject_FieldIndex.RagdollData:
+                    this.RagdollData = ex;
+                    break;
+                case PlacedObject_FieldIndex.Scale:
+                    this.Scale = ex;
+                    break;
+                case PlacedObject_FieldIndex.ContainedSoul:
+                    this.ContainedSoul = ex;
+                    break;
+                case PlacedObject_FieldIndex.Position:
+                    this.Position = ex;
+                    break;
+                case PlacedObject_FieldIndex.Rotation:
+                    this.Rotation = ex;
+                    break;
+                case PlacedObject_FieldIndex.DATADataTypeState:
+                    this.DATADataTypeState = ex;
+                    break;
+                default:
+                    base.SetNthException(index, ex);
+                    break;
+            }
+        }
+
+        public override void SetNthMask(int index, object obj)
+        {
+            PlacedObject_FieldIndex enu = (PlacedObject_FieldIndex)index;
+            switch (enu)
+            {
+                case PlacedObject_FieldIndex.Base:
+                    this.Base = (Exception)obj;
+                    break;
+                case PlacedObject_FieldIndex.XPCIFluff:
+                    this.XPCIFluff = (Exception)obj;
+                    break;
+                case PlacedObject_FieldIndex.FULLFluff:
+                    this.FULLFluff = (Exception)obj;
+                    break;
+                case PlacedObject_FieldIndex.TeleportDestination:
+                    this.TeleportDestination = (MaskItem<Exception, TeleportDestination_ErrorMask>)obj;
+                    break;
+                case PlacedObject_FieldIndex.Lock:
+                    this.Lock = (MaskItem<Exception, LockInformation_ErrorMask>)obj;
+                    break;
+                case PlacedObject_FieldIndex.Owner:
+                    this.Owner = (Exception)obj;
+                    break;
+                case PlacedObject_FieldIndex.FactionRank:
+                    this.FactionRank = (Exception)obj;
+                    break;
+                case PlacedObject_FieldIndex.GlobalVariable:
+                    this.GlobalVariable = (Exception)obj;
+                    break;
+                case PlacedObject_FieldIndex.EnableParent:
+                    this.EnableParent = (MaskItem<Exception, EnableParent_ErrorMask>)obj;
+                    break;
+                case PlacedObject_FieldIndex.Target:
+                    this.Target = (Exception)obj;
+                    break;
+                case PlacedObject_FieldIndex.SpeedTreeSeed:
+                    this.SpeedTreeSeed = (Exception)obj;
+                    break;
+                case PlacedObject_FieldIndex.DistantLODData:
+                    this.DistantLODData = (MaskItem<Exception, DistantLODData_ErrorMask>)obj;
+                    break;
+                case PlacedObject_FieldIndex.Charge:
+                    this.Charge = (Exception)obj;
+                    break;
+                case PlacedObject_FieldIndex.Health:
+                    this.Health = (Exception)obj;
+                    break;
+                case PlacedObject_FieldIndex.LevelModifier:
+                    this.LevelModifier = (Exception)obj;
+                    break;
+                case PlacedObject_FieldIndex.Unknown:
+                    this.Unknown = (Exception)obj;
+                    break;
+                case PlacedObject_FieldIndex.ActionFlags:
+                    this.ActionFlags = (Exception)obj;
+                    break;
+                case PlacedObject_FieldIndex.Count:
+                    this.Count = (Exception)obj;
+                    break;
+                case PlacedObject_FieldIndex.MapMarker:
+                    this.MapMarker = (MaskItem<Exception, MapMarker_ErrorMask>)obj;
+                    break;
+                case PlacedObject_FieldIndex.OpenByDefault:
+                    this.OpenByDefault = (Exception)obj;
+                    break;
+                case PlacedObject_FieldIndex.RagdollData:
+                    this.RagdollData = (Exception)obj;
+                    break;
+                case PlacedObject_FieldIndex.Scale:
+                    this.Scale = (Exception)obj;
+                    break;
+                case PlacedObject_FieldIndex.ContainedSoul:
+                    this.ContainedSoul = (Exception)obj;
+                    break;
+                case PlacedObject_FieldIndex.Position:
+                    this.Position = (Exception)obj;
+                    break;
+                case PlacedObject_FieldIndex.Rotation:
+                    this.Rotation = (Exception)obj;
+                    break;
+                case PlacedObject_FieldIndex.DATADataTypeState:
+                    this.DATADataTypeState = (Exception)obj;
+                    break;
+                default:
+                    base.SetNthMask(index, obj);
+                    break;
+            }
+        }
+
+        public override bool IsInError()
+        {
+            if (Overall != null) return true;
+            if (Base != null) return true;
+            if (XPCIFluff != null) return true;
+            if (FULLFluff != null) return true;
+            if (TeleportDestination != null) return true;
+            if (Lock != null) return true;
+            if (Owner != null) return true;
+            if (FactionRank != null) return true;
+            if (GlobalVariable != null) return true;
+            if (EnableParent != null) return true;
+            if (Target != null) return true;
+            if (SpeedTreeSeed != null) return true;
+            if (DistantLODData != null) return true;
+            if (Charge != null) return true;
+            if (Health != null) return true;
+            if (LevelModifier != null) return true;
+            if (Unknown != null) return true;
+            if (ActionFlags != null) return true;
+            if (Count != null) return true;
+            if (MapMarker != null) return true;
+            if (OpenByDefault != null) return true;
+            if (RagdollData != null) return true;
+            if (Scale != null) return true;
+            if (ContainedSoul != null) return true;
+            if (Position != null) return true;
+            if (Rotation != null) return true;
+            if (DATADataTypeState != null) return true;
+            return false;
+        }
+        #endregion
+
+        #region To String
+        public override string ToString()
+        {
+            var fg = new FileGeneration();
+            ToString(fg);
+            return fg.ToString();
+        }
+
+        public override void ToString(FileGeneration fg)
+        {
+            fg.AppendLine("PlacedObject_ErrorMask =>");
+            fg.AppendLine("[");
+            using (new DepthWrapper(fg))
+            {
+                if (this.Overall != null)
+                {
+                    fg.AppendLine("Overall =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendLine($"{this.Overall}");
+                    }
+                    fg.AppendLine("]");
+                }
+                ToString_FillInternal(fg);
+            }
+            fg.AppendLine("]");
+        }
+        protected override void ToString_FillInternal(FileGeneration fg)
+        {
+            base.ToString_FillInternal(fg);
+            fg.AppendLine($"Base => {Base}");
+            fg.AppendLine($"XPCIFluff => {XPCIFluff}");
+            fg.AppendLine($"FULLFluff => {FULLFluff}");
+            TeleportDestination?.ToString(fg);
+            Lock?.ToString(fg);
+            fg.AppendLine($"Owner => {Owner}");
+            fg.AppendLine($"FactionRank => {FactionRank}");
+            fg.AppendLine($"GlobalVariable => {GlobalVariable}");
+            EnableParent?.ToString(fg);
+            fg.AppendLine($"Target => {Target}");
+            fg.AppendLine($"SpeedTreeSeed => {SpeedTreeSeed}");
+            DistantLODData?.ToString(fg);
+            fg.AppendLine($"Charge => {Charge}");
+            fg.AppendLine($"Health => {Health}");
+            fg.AppendLine($"LevelModifier => {LevelModifier}");
+            fg.AppendLine($"Unknown => {Unknown}");
+            fg.AppendLine($"ActionFlags => {ActionFlags}");
+            fg.AppendLine($"Count => {Count}");
+            MapMarker?.ToString(fg);
+            fg.AppendLine($"OpenByDefault => {OpenByDefault}");
+            fg.AppendLine($"RagdollData => {RagdollData}");
+            fg.AppendLine($"Scale => {Scale}");
+            fg.AppendLine($"ContainedSoul => {ContainedSoul}");
+            fg.AppendLine($"Position => {Position}");
+            fg.AppendLine($"Rotation => {Rotation}");
+            fg.AppendLine($"DATADataTypeState => {DATADataTypeState}");
+        }
+        #endregion
+
+        #region Combine
+        public PlacedObject_ErrorMask Combine(PlacedObject_ErrorMask rhs)
+        {
+            var ret = new PlacedObject_ErrorMask();
+            ret.Base = this.Base.Combine(rhs.Base);
+            ret.XPCIFluff = this.XPCIFluff.Combine(rhs.XPCIFluff);
+            ret.FULLFluff = this.FULLFluff.Combine(rhs.FULLFluff);
+            ret.TeleportDestination = new MaskItem<Exception, TeleportDestination_ErrorMask>(this.TeleportDestination.Overall.Combine(rhs.TeleportDestination.Overall), ((IErrorMask<TeleportDestination_ErrorMask>)this.TeleportDestination.Specific).Combine(rhs.TeleportDestination.Specific));
+            ret.Lock = new MaskItem<Exception, LockInformation_ErrorMask>(this.Lock.Overall.Combine(rhs.Lock.Overall), ((IErrorMask<LockInformation_ErrorMask>)this.Lock.Specific).Combine(rhs.Lock.Specific));
+            ret.Owner = this.Owner.Combine(rhs.Owner);
+            ret.FactionRank = this.FactionRank.Combine(rhs.FactionRank);
+            ret.GlobalVariable = this.GlobalVariable.Combine(rhs.GlobalVariable);
+            ret.EnableParent = new MaskItem<Exception, EnableParent_ErrorMask>(this.EnableParent.Overall.Combine(rhs.EnableParent.Overall), ((IErrorMask<EnableParent_ErrorMask>)this.EnableParent.Specific).Combine(rhs.EnableParent.Specific));
+            ret.Target = this.Target.Combine(rhs.Target);
+            ret.SpeedTreeSeed = this.SpeedTreeSeed.Combine(rhs.SpeedTreeSeed);
+            ret.DistantLODData = new MaskItem<Exception, DistantLODData_ErrorMask>(this.DistantLODData.Overall.Combine(rhs.DistantLODData.Overall), ((IErrorMask<DistantLODData_ErrorMask>)this.DistantLODData.Specific).Combine(rhs.DistantLODData.Specific));
+            ret.Charge = this.Charge.Combine(rhs.Charge);
+            ret.Health = this.Health.Combine(rhs.Health);
+            ret.LevelModifier = this.LevelModifier.Combine(rhs.LevelModifier);
+            ret.Unknown = this.Unknown.Combine(rhs.Unknown);
+            ret.ActionFlags = this.ActionFlags.Combine(rhs.ActionFlags);
+            ret.Count = this.Count.Combine(rhs.Count);
+            ret.MapMarker = new MaskItem<Exception, MapMarker_ErrorMask>(this.MapMarker.Overall.Combine(rhs.MapMarker.Overall), ((IErrorMask<MapMarker_ErrorMask>)this.MapMarker.Specific).Combine(rhs.MapMarker.Specific));
+            ret.OpenByDefault = this.OpenByDefault.Combine(rhs.OpenByDefault);
+            ret.RagdollData = this.RagdollData.Combine(rhs.RagdollData);
+            ret.Scale = this.Scale.Combine(rhs.Scale);
+            ret.ContainedSoul = this.ContainedSoul.Combine(rhs.ContainedSoul);
+            ret.Position = this.Position.Combine(rhs.Position);
+            ret.Rotation = this.Rotation.Combine(rhs.Rotation);
+            ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
+            return ret;
+        }
+        public static PlacedObject_ErrorMask Combine(PlacedObject_ErrorMask lhs, PlacedObject_ErrorMask rhs)
+        {
+            if (lhs != null && rhs != null) return lhs.Combine(rhs);
+            return lhs ?? rhs;
+        }
+        #endregion
+
+        #region Factory
+        public static PlacedObject_ErrorMask Factory(ErrorMaskBuilder errorMask)
+        {
+            if (errorMask?.Empty ?? true) return null;
+            return new PlacedObject_ErrorMask();
+        }
+        #endregion
+
+    }
+    public class PlacedObject_CopyMask : OblivionMajorRecord_CopyMask
+    {
+        public PlacedObject_CopyMask()
+        {
+        }
+
+        public PlacedObject_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
+        {
+            this.Base = defaultOn;
+            this.XPCIFluff = defaultOn;
+            this.FULLFluff = defaultOn;
+            this.TeleportDestination = new MaskItem<CopyOption, TeleportDestination_CopyMask>(deepCopyOption, default);
+            this.Lock = new MaskItem<CopyOption, LockInformation_CopyMask>(deepCopyOption, default);
+            this.Owner = defaultOn;
+            this.FactionRank = defaultOn;
+            this.GlobalVariable = defaultOn;
+            this.EnableParent = new MaskItem<CopyOption, EnableParent_CopyMask>(deepCopyOption, default);
+            this.Target = defaultOn;
+            this.SpeedTreeSeed = defaultOn;
+            this.DistantLODData = new MaskItem<CopyOption, DistantLODData_CopyMask>(deepCopyOption, default);
+            this.Charge = defaultOn;
+            this.Health = defaultOn;
+            this.LevelModifier = defaultOn;
+            this.Unknown = defaultOn;
+            this.ActionFlags = defaultOn;
+            this.Count = defaultOn;
+            this.MapMarker = new MaskItem<CopyOption, MapMarker_CopyMask>(deepCopyOption, default);
+            this.OpenByDefault = defaultOn;
+            this.RagdollData = defaultOn;
+            this.Scale = defaultOn;
+            this.ContainedSoul = defaultOn;
+            this.Position = defaultOn;
+            this.Rotation = defaultOn;
+            this.DATADataTypeState = defaultOn;
+        }
+
+        #region Members
+        public bool Base;
+        public bool XPCIFluff;
+        public bool FULLFluff;
+        public MaskItem<CopyOption, TeleportDestination_CopyMask> TeleportDestination;
+        public MaskItem<CopyOption, LockInformation_CopyMask> Lock;
+        public bool Owner;
+        public bool FactionRank;
+        public bool GlobalVariable;
+        public MaskItem<CopyOption, EnableParent_CopyMask> EnableParent;
+        public bool Target;
+        public bool SpeedTreeSeed;
+        public MaskItem<CopyOption, DistantLODData_CopyMask> DistantLODData;
+        public bool Charge;
+        public bool Health;
+        public bool LevelModifier;
+        public bool Unknown;
+        public bool ActionFlags;
+        public bool Count;
+        public MaskItem<CopyOption, MapMarker_CopyMask> MapMarker;
+        public bool OpenByDefault;
+        public bool RagdollData;
+        public bool Scale;
+        public bool ContainedSoul;
+        public bool Position;
+        public bool Rotation;
+        public bool DATADataTypeState;
+        #endregion
+
+    }
+
+    public class PlacedObject_TranslationMask : OblivionMajorRecord_TranslationMask
+    {
+        #region Members
+        public bool Base;
+        public bool XPCIFluff;
+        public bool FULLFluff;
+        public MaskItem<bool, TeleportDestination_TranslationMask> TeleportDestination;
+        public MaskItem<bool, LockInformation_TranslationMask> Lock;
+        public bool Owner;
+        public bool FactionRank;
+        public bool GlobalVariable;
+        public MaskItem<bool, EnableParent_TranslationMask> EnableParent;
+        public bool Target;
+        public bool SpeedTreeSeed;
+        public MaskItem<bool, DistantLODData_TranslationMask> DistantLODData;
+        public bool Charge;
+        public bool Health;
+        public bool LevelModifier;
+        public bool Unknown;
+        public bool ActionFlags;
+        public bool Count;
+        public MaskItem<bool, MapMarker_TranslationMask> MapMarker;
+        public bool OpenByDefault;
+        public bool RagdollData;
+        public bool Scale;
+        public bool ContainedSoul;
+        public bool Position;
+        public bool Rotation;
+        public bool DATADataTypeState;
+        #endregion
+
+        #region Ctors
+        public PlacedObject_TranslationMask()
+            : base()
+        {
+        }
+
+        public PlacedObject_TranslationMask(bool defaultOn)
+            : base(defaultOn)
+        {
+            this.Base = defaultOn;
+            this.XPCIFluff = defaultOn;
+            this.FULLFluff = defaultOn;
+            this.TeleportDestination = new MaskItem<bool, TeleportDestination_TranslationMask>(defaultOn, null);
+            this.Lock = new MaskItem<bool, LockInformation_TranslationMask>(defaultOn, null);
+            this.Owner = defaultOn;
+            this.FactionRank = defaultOn;
+            this.GlobalVariable = defaultOn;
+            this.EnableParent = new MaskItem<bool, EnableParent_TranslationMask>(defaultOn, null);
+            this.Target = defaultOn;
+            this.SpeedTreeSeed = defaultOn;
+            this.DistantLODData = new MaskItem<bool, DistantLODData_TranslationMask>(defaultOn, null);
+            this.Charge = defaultOn;
+            this.Health = defaultOn;
+            this.LevelModifier = defaultOn;
+            this.Unknown = defaultOn;
+            this.ActionFlags = defaultOn;
+            this.Count = defaultOn;
+            this.MapMarker = new MaskItem<bool, MapMarker_TranslationMask>(defaultOn, null);
+            this.OpenByDefault = defaultOn;
+            this.RagdollData = defaultOn;
+            this.Scale = defaultOn;
+            this.ContainedSoul = defaultOn;
+            this.Position = defaultOn;
+            this.Rotation = defaultOn;
+            this.DATADataTypeState = defaultOn;
+        }
+
+        #endregion
+
+        protected override void GetCrystal(List<(bool On, TranslationCrystal SubCrystal)> ret)
+        {
+            base.GetCrystal(ret);
+            ret.Add((Base, null));
+            ret.Add((XPCIFluff, null));
+            ret.Add((FULLFluff, null));
+            ret.Add((TeleportDestination?.Overall ?? true, TeleportDestination?.Specific?.GetCrystal()));
+            ret.Add((Lock?.Overall ?? true, Lock?.Specific?.GetCrystal()));
+            ret.Add((Owner, null));
+            ret.Add((FactionRank, null));
+            ret.Add((GlobalVariable, null));
+            ret.Add((EnableParent?.Overall ?? true, EnableParent?.Specific?.GetCrystal()));
+            ret.Add((Target, null));
+            ret.Add((SpeedTreeSeed, null));
+            ret.Add((DistantLODData?.Overall ?? true, DistantLODData?.Specific?.GetCrystal()));
+            ret.Add((Charge, null));
+            ret.Add((Health, null));
+            ret.Add((LevelModifier, null));
+            ret.Add((Unknown, null));
+            ret.Add((ActionFlags, null));
+            ret.Add((Count, null));
+            ret.Add((MapMarker?.Overall ?? true, MapMarker?.Specific?.GetCrystal()));
+            ret.Add((OpenByDefault, null));
+            ret.Add((RagdollData, null));
+            ret.Add((Scale, null));
+            ret.Add((ContainedSoul, null));
+            ret.Add((Position, null));
+            ret.Add((Rotation, null));
+            ret.Add((DATADataTypeState, null));
+        }
+    }
+    #endregion
+
+    #region Binary Translation
+    public partial class PlacedObjectBinaryTranslation : OblivionMajorRecordBinaryTranslation
+    {
+        public new readonly static PlacedObjectBinaryTranslation Instance = new PlacedObjectBinaryTranslation();
+
+        static partial void FillBinary_OpenByDefault_Custom(
+            MutagenFrame frame,
             PlacedObject item,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask);
+
+        public static void FillBinary_OpenByDefault_Custom_Public(
+            MutagenFrame frame,
+            PlacedObject item,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask)
+        {
+            FillBinary_OpenByDefault_Custom(
+                frame: frame,
+                item: item,
+                masterReferences: masterReferences,
+                errorMask: errorMask);
+        }
+
+        static partial void WriteBinary_OpenByDefault_Custom(
+            MutagenWriter writer,
+            IPlacedObjectInternalGetter item,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask);
+
+        public static void WriteBinary_OpenByDefault(
+            MutagenWriter writer,
+            IPlacedObjectInternalGetter item,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask)
+        {
+            WriteBinary_OpenByDefault_Custom(
+                writer: writer,
+                item: item,
+                masterReferences: masterReferences,
+                errorMask: errorMask);
+        }
+
+        public static void Write_Binary_Embedded(
+            IPlacedObjectInternalGetter item,
+            MutagenWriter writer,
+            ErrorMaskBuilder errorMask,
+            MasterReferences masterReferences)
+        {
+            OblivionMajorRecordBinaryTranslation.Write_Binary_Embedded(
+                item: item,
+                writer: writer,
+                errorMask: errorMask,
+                masterReferences: masterReferences);
+        }
+
+        public static void Write_Binary_RecordTypes(
+            IPlacedObjectInternalGetter item,
             MutagenWriter writer,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask,
             MasterReferences masterReferences)
         {
-            MajorRecordCommon.Write_Binary_RecordTypes(
+            MajorRecordBinaryTranslation.Write_Binary_RecordTypes(
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
@@ -5130,7 +6231,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask: errorMask,
                     masterReferences: masterReferences);
             }
-            PlacedObject.WriteBinary_OpenByDefault(
+            PlacedObjectBinaryTranslation.WriteBinary_OpenByDefault(
                 writer: writer,
                 item: item,
                 masterReferences: masterReferences,
@@ -5174,978 +6275,52 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        #endregion
-
-    }
-    #endregion
-
-    #region Modules
-    #region Mask
-    public class PlacedObject_Mask<T> : OblivionMajorRecord_Mask<T>, IMask<T>, IEquatable<PlacedObject_Mask<T>>
-    {
-        #region Ctors
-        public PlacedObject_Mask()
+        #region Binary Write
+        public void Write_Binary(
+            MutagenWriter writer,
+            IPlacedObjectInternalGetter item,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            bool doMasks,
+            out PlacedObject_ErrorMask errorMask)
         {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            Write_Binary(
+                masterReferences: masterReferences,
+                writer: writer,
+                item: item,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMaskBuilder);
+            errorMask = PlacedObject_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public PlacedObject_Mask(T initialValue)
+        public void Write_Binary(
+            MutagenWriter writer,
+            IPlacedObjectInternalGetter item,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
         {
-            this.Base = initialValue;
-            this.XPCIFluff = initialValue;
-            this.FULLFluff = initialValue;
-            this.TeleportDestination = new MaskItem<T, TeleportDestination_Mask<T>>(initialValue, new TeleportDestination_Mask<T>(initialValue));
-            this.Lock = new MaskItem<T, LockInformation_Mask<T>>(initialValue, new LockInformation_Mask<T>(initialValue));
-            this.Owner = initialValue;
-            this.FactionRank = initialValue;
-            this.GlobalVariable = initialValue;
-            this.EnableParent = new MaskItem<T, EnableParent_Mask<T>>(initialValue, new EnableParent_Mask<T>(initialValue));
-            this.Target = initialValue;
-            this.SpeedTreeSeed = initialValue;
-            this.DistantLODData = new MaskItem<T, DistantLODData_Mask<T>>(initialValue, new DistantLODData_Mask<T>(initialValue));
-            this.Charge = initialValue;
-            this.Health = initialValue;
-            this.LevelModifier = initialValue;
-            this.Unknown = initialValue;
-            this.ActionFlags = initialValue;
-            this.Count = initialValue;
-            this.MapMarker = new MaskItem<T, MapMarker_Mask<T>>(initialValue, new MapMarker_Mask<T>(initialValue));
-            this.OpenByDefault = initialValue;
-            this.RagdollData = initialValue;
-            this.Scale = initialValue;
-            this.ContainedSoul = initialValue;
-            this.Position = initialValue;
-            this.Rotation = initialValue;
-        }
-        #endregion
-
-        #region Members
-        public T Base;
-        public T XPCIFluff;
-        public T FULLFluff;
-        public MaskItem<T, TeleportDestination_Mask<T>> TeleportDestination { get; set; }
-        public MaskItem<T, LockInformation_Mask<T>> Lock { get; set; }
-        public T Owner;
-        public T FactionRank;
-        public T GlobalVariable;
-        public MaskItem<T, EnableParent_Mask<T>> EnableParent { get; set; }
-        public T Target;
-        public T SpeedTreeSeed;
-        public MaskItem<T, DistantLODData_Mask<T>> DistantLODData { get; set; }
-        public T Charge;
-        public T Health;
-        public T LevelModifier;
-        public T Unknown;
-        public T ActionFlags;
-        public T Count;
-        public MaskItem<T, MapMarker_Mask<T>> MapMarker { get; set; }
-        public T OpenByDefault;
-        public T RagdollData;
-        public T Scale;
-        public T ContainedSoul;
-        public T Position;
-        public T Rotation;
-        #endregion
-
-        #region Equals
-        public override bool Equals(object obj)
-        {
-            if (!(obj is PlacedObject_Mask<T> rhs)) return false;
-            return Equals(rhs);
-        }
-
-        public bool Equals(PlacedObject_Mask<T> rhs)
-        {
-            if (rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (!object.Equals(this.Base, rhs.Base)) return false;
-            if (!object.Equals(this.XPCIFluff, rhs.XPCIFluff)) return false;
-            if (!object.Equals(this.FULLFluff, rhs.FULLFluff)) return false;
-            if (!object.Equals(this.TeleportDestination, rhs.TeleportDestination)) return false;
-            if (!object.Equals(this.Lock, rhs.Lock)) return false;
-            if (!object.Equals(this.Owner, rhs.Owner)) return false;
-            if (!object.Equals(this.FactionRank, rhs.FactionRank)) return false;
-            if (!object.Equals(this.GlobalVariable, rhs.GlobalVariable)) return false;
-            if (!object.Equals(this.EnableParent, rhs.EnableParent)) return false;
-            if (!object.Equals(this.Target, rhs.Target)) return false;
-            if (!object.Equals(this.SpeedTreeSeed, rhs.SpeedTreeSeed)) return false;
-            if (!object.Equals(this.DistantLODData, rhs.DistantLODData)) return false;
-            if (!object.Equals(this.Charge, rhs.Charge)) return false;
-            if (!object.Equals(this.Health, rhs.Health)) return false;
-            if (!object.Equals(this.LevelModifier, rhs.LevelModifier)) return false;
-            if (!object.Equals(this.Unknown, rhs.Unknown)) return false;
-            if (!object.Equals(this.ActionFlags, rhs.ActionFlags)) return false;
-            if (!object.Equals(this.Count, rhs.Count)) return false;
-            if (!object.Equals(this.MapMarker, rhs.MapMarker)) return false;
-            if (!object.Equals(this.OpenByDefault, rhs.OpenByDefault)) return false;
-            if (!object.Equals(this.RagdollData, rhs.RagdollData)) return false;
-            if (!object.Equals(this.Scale, rhs.Scale)) return false;
-            if (!object.Equals(this.ContainedSoul, rhs.ContainedSoul)) return false;
-            if (!object.Equals(this.Position, rhs.Position)) return false;
-            if (!object.Equals(this.Rotation, rhs.Rotation)) return false;
-            return true;
-        }
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = ret.CombineHashCode(this.Base?.GetHashCode());
-            ret = ret.CombineHashCode(this.XPCIFluff?.GetHashCode());
-            ret = ret.CombineHashCode(this.FULLFluff?.GetHashCode());
-            ret = ret.CombineHashCode(this.TeleportDestination?.GetHashCode());
-            ret = ret.CombineHashCode(this.Lock?.GetHashCode());
-            ret = ret.CombineHashCode(this.Owner?.GetHashCode());
-            ret = ret.CombineHashCode(this.FactionRank?.GetHashCode());
-            ret = ret.CombineHashCode(this.GlobalVariable?.GetHashCode());
-            ret = ret.CombineHashCode(this.EnableParent?.GetHashCode());
-            ret = ret.CombineHashCode(this.Target?.GetHashCode());
-            ret = ret.CombineHashCode(this.SpeedTreeSeed?.GetHashCode());
-            ret = ret.CombineHashCode(this.DistantLODData?.GetHashCode());
-            ret = ret.CombineHashCode(this.Charge?.GetHashCode());
-            ret = ret.CombineHashCode(this.Health?.GetHashCode());
-            ret = ret.CombineHashCode(this.LevelModifier?.GetHashCode());
-            ret = ret.CombineHashCode(this.Unknown?.GetHashCode());
-            ret = ret.CombineHashCode(this.ActionFlags?.GetHashCode());
-            ret = ret.CombineHashCode(this.Count?.GetHashCode());
-            ret = ret.CombineHashCode(this.MapMarker?.GetHashCode());
-            ret = ret.CombineHashCode(this.OpenByDefault?.GetHashCode());
-            ret = ret.CombineHashCode(this.RagdollData?.GetHashCode());
-            ret = ret.CombineHashCode(this.Scale?.GetHashCode());
-            ret = ret.CombineHashCode(this.ContainedSoul?.GetHashCode());
-            ret = ret.CombineHashCode(this.Position?.GetHashCode());
-            ret = ret.CombineHashCode(this.Rotation?.GetHashCode());
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
-        }
-
-        #endregion
-
-        #region All Equal
-        public override bool AllEqual(Func<T, bool> eval)
-        {
-            if (!base.AllEqual(eval)) return false;
-            if (!eval(this.Base)) return false;
-            if (!eval(this.XPCIFluff)) return false;
-            if (!eval(this.FULLFluff)) return false;
-            if (TeleportDestination != null)
+            using (HeaderExport.ExportHeader(
+                writer: writer,
+                record: PlacedObject_Registration.REFR_HEADER,
+                type: ObjectType.Record))
             {
-                if (!eval(this.TeleportDestination.Overall)) return false;
-                if (this.TeleportDestination.Specific != null && !this.TeleportDestination.Specific.AllEqual(eval)) return false;
-            }
-            if (Lock != null)
-            {
-                if (!eval(this.Lock.Overall)) return false;
-                if (this.Lock.Specific != null && !this.Lock.Specific.AllEqual(eval)) return false;
-            }
-            if (!eval(this.Owner)) return false;
-            if (!eval(this.FactionRank)) return false;
-            if (!eval(this.GlobalVariable)) return false;
-            if (EnableParent != null)
-            {
-                if (!eval(this.EnableParent.Overall)) return false;
-                if (this.EnableParent.Specific != null && !this.EnableParent.Specific.AllEqual(eval)) return false;
-            }
-            if (!eval(this.Target)) return false;
-            if (!eval(this.SpeedTreeSeed)) return false;
-            if (DistantLODData != null)
-            {
-                if (!eval(this.DistantLODData.Overall)) return false;
-                if (this.DistantLODData.Specific != null && !this.DistantLODData.Specific.AllEqual(eval)) return false;
-            }
-            if (!eval(this.Charge)) return false;
-            if (!eval(this.Health)) return false;
-            if (!eval(this.LevelModifier)) return false;
-            if (!eval(this.Unknown)) return false;
-            if (!eval(this.ActionFlags)) return false;
-            if (!eval(this.Count)) return false;
-            if (MapMarker != null)
-            {
-                if (!eval(this.MapMarker.Overall)) return false;
-                if (this.MapMarker.Specific != null && !this.MapMarker.Specific.AllEqual(eval)) return false;
-            }
-            if (!eval(this.OpenByDefault)) return false;
-            if (!eval(this.RagdollData)) return false;
-            if (!eval(this.Scale)) return false;
-            if (!eval(this.ContainedSoul)) return false;
-            if (!eval(this.Position)) return false;
-            if (!eval(this.Rotation)) return false;
-            return true;
-        }
-        #endregion
-
-        #region Translate
-        public new PlacedObject_Mask<R> Translate<R>(Func<T, R> eval)
-        {
-            var ret = new PlacedObject_Mask<R>();
-            this.Translate_InternalFill(ret, eval);
-            return ret;
-        }
-
-        protected void Translate_InternalFill<R>(PlacedObject_Mask<R> obj, Func<T, R> eval)
-        {
-            base.Translate_InternalFill(obj, eval);
-            obj.Base = eval(this.Base);
-            obj.XPCIFluff = eval(this.XPCIFluff);
-            obj.FULLFluff = eval(this.FULLFluff);
-            if (this.TeleportDestination != null)
-            {
-                obj.TeleportDestination = new MaskItem<R, TeleportDestination_Mask<R>>();
-                obj.TeleportDestination.Overall = eval(this.TeleportDestination.Overall);
-                if (this.TeleportDestination.Specific != null)
-                {
-                    obj.TeleportDestination.Specific = this.TeleportDestination.Specific.Translate(eval);
-                }
-            }
-            if (this.Lock != null)
-            {
-                obj.Lock = new MaskItem<R, LockInformation_Mask<R>>();
-                obj.Lock.Overall = eval(this.Lock.Overall);
-                if (this.Lock.Specific != null)
-                {
-                    obj.Lock.Specific = this.Lock.Specific.Translate(eval);
-                }
-            }
-            obj.Owner = eval(this.Owner);
-            obj.FactionRank = eval(this.FactionRank);
-            obj.GlobalVariable = eval(this.GlobalVariable);
-            if (this.EnableParent != null)
-            {
-                obj.EnableParent = new MaskItem<R, EnableParent_Mask<R>>();
-                obj.EnableParent.Overall = eval(this.EnableParent.Overall);
-                if (this.EnableParent.Specific != null)
-                {
-                    obj.EnableParent.Specific = this.EnableParent.Specific.Translate(eval);
-                }
-            }
-            obj.Target = eval(this.Target);
-            obj.SpeedTreeSeed = eval(this.SpeedTreeSeed);
-            if (this.DistantLODData != null)
-            {
-                obj.DistantLODData = new MaskItem<R, DistantLODData_Mask<R>>();
-                obj.DistantLODData.Overall = eval(this.DistantLODData.Overall);
-                if (this.DistantLODData.Specific != null)
-                {
-                    obj.DistantLODData.Specific = this.DistantLODData.Specific.Translate(eval);
-                }
-            }
-            obj.Charge = eval(this.Charge);
-            obj.Health = eval(this.Health);
-            obj.LevelModifier = eval(this.LevelModifier);
-            obj.Unknown = eval(this.Unknown);
-            obj.ActionFlags = eval(this.ActionFlags);
-            obj.Count = eval(this.Count);
-            if (this.MapMarker != null)
-            {
-                obj.MapMarker = new MaskItem<R, MapMarker_Mask<R>>();
-                obj.MapMarker.Overall = eval(this.MapMarker.Overall);
-                if (this.MapMarker.Specific != null)
-                {
-                    obj.MapMarker.Specific = this.MapMarker.Specific.Translate(eval);
-                }
-            }
-            obj.OpenByDefault = eval(this.OpenByDefault);
-            obj.RagdollData = eval(this.RagdollData);
-            obj.Scale = eval(this.Scale);
-            obj.ContainedSoul = eval(this.ContainedSoul);
-            obj.Position = eval(this.Position);
-            obj.Rotation = eval(this.Rotation);
-        }
-        #endregion
-
-        #region Clear Enumerables
-        public override void ClearEnumerables()
-        {
-            base.ClearEnumerables();
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            return ToString(printMask: null);
-        }
-
-        public string ToString(PlacedObject_Mask<bool> printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(fg, printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg, PlacedObject_Mask<bool> printMask = null)
-        {
-            fg.AppendLine($"{nameof(PlacedObject_Mask<T>)} =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (printMask?.Base ?? true)
-                {
-                    fg.AppendLine($"Base => {Base}");
-                }
-                if (printMask?.XPCIFluff ?? true)
-                {
-                    fg.AppendLine($"XPCIFluff => {XPCIFluff}");
-                }
-                if (printMask?.FULLFluff ?? true)
-                {
-                    fg.AppendLine($"FULLFluff => {FULLFluff}");
-                }
-                if (printMask?.TeleportDestination?.Overall ?? true)
-                {
-                    TeleportDestination?.ToString(fg);
-                }
-                if (printMask?.Lock?.Overall ?? true)
-                {
-                    Lock?.ToString(fg);
-                }
-                if (printMask?.Owner ?? true)
-                {
-                    fg.AppendLine($"Owner => {Owner}");
-                }
-                if (printMask?.FactionRank ?? true)
-                {
-                    fg.AppendLine($"FactionRank => {FactionRank}");
-                }
-                if (printMask?.GlobalVariable ?? true)
-                {
-                    fg.AppendLine($"GlobalVariable => {GlobalVariable}");
-                }
-                if (printMask?.EnableParent?.Overall ?? true)
-                {
-                    EnableParent?.ToString(fg);
-                }
-                if (printMask?.Target ?? true)
-                {
-                    fg.AppendLine($"Target => {Target}");
-                }
-                if (printMask?.SpeedTreeSeed ?? true)
-                {
-                    fg.AppendLine($"SpeedTreeSeed => {SpeedTreeSeed}");
-                }
-                if (printMask?.DistantLODData?.Overall ?? true)
-                {
-                    DistantLODData?.ToString(fg);
-                }
-                if (printMask?.Charge ?? true)
-                {
-                    fg.AppendLine($"Charge => {Charge}");
-                }
-                if (printMask?.Health ?? true)
-                {
-                    fg.AppendLine($"Health => {Health}");
-                }
-                if (printMask?.LevelModifier ?? true)
-                {
-                    fg.AppendLine($"LevelModifier => {LevelModifier}");
-                }
-                if (printMask?.Unknown ?? true)
-                {
-                    fg.AppendLine($"Unknown => {Unknown}");
-                }
-                if (printMask?.ActionFlags ?? true)
-                {
-                    fg.AppendLine($"ActionFlags => {ActionFlags}");
-                }
-                if (printMask?.Count ?? true)
-                {
-                    fg.AppendLine($"Count => {Count}");
-                }
-                if (printMask?.MapMarker?.Overall ?? true)
-                {
-                    MapMarker?.ToString(fg);
-                }
-                if (printMask?.OpenByDefault ?? true)
-                {
-                    fg.AppendLine($"OpenByDefault => {OpenByDefault}");
-                }
-                if (printMask?.RagdollData ?? true)
-                {
-                    fg.AppendLine($"RagdollData => {RagdollData}");
-                }
-                if (printMask?.Scale ?? true)
-                {
-                    fg.AppendLine($"Scale => {Scale}");
-                }
-                if (printMask?.ContainedSoul ?? true)
-                {
-                    fg.AppendLine($"ContainedSoul => {ContainedSoul}");
-                }
-                if (printMask?.Position ?? true)
-                {
-                    fg.AppendLine($"Position => {Position}");
-                }
-                if (printMask?.Rotation ?? true)
-                {
-                    fg.AppendLine($"Rotation => {Rotation}");
-                }
-            }
-            fg.AppendLine("]");
-        }
-        #endregion
-
-    }
-
-    public class PlacedObject_ErrorMask : OblivionMajorRecord_ErrorMask, IErrorMask<PlacedObject_ErrorMask>
-    {
-        #region Members
-        public Exception Base;
-        public Exception XPCIFluff;
-        public Exception FULLFluff;
-        public MaskItem<Exception, TeleportDestination_ErrorMask> TeleportDestination;
-        public MaskItem<Exception, LockInformation_ErrorMask> Lock;
-        public Exception Owner;
-        public Exception FactionRank;
-        public Exception GlobalVariable;
-        public MaskItem<Exception, EnableParent_ErrorMask> EnableParent;
-        public Exception Target;
-        public Exception SpeedTreeSeed;
-        public MaskItem<Exception, DistantLODData_ErrorMask> DistantLODData;
-        public Exception Charge;
-        public Exception Health;
-        public Exception LevelModifier;
-        public Exception Unknown;
-        public Exception ActionFlags;
-        public Exception Count;
-        public MaskItem<Exception, MapMarker_ErrorMask> MapMarker;
-        public Exception OpenByDefault;
-        public Exception RagdollData;
-        public Exception Scale;
-        public Exception ContainedSoul;
-        public Exception Position;
-        public Exception Rotation;
-        #endregion
-
-        #region IErrorMask
-        public override object GetNthMask(int index)
-        {
-            PlacedObject_FieldIndex enu = (PlacedObject_FieldIndex)index;
-            switch (enu)
-            {
-                case PlacedObject_FieldIndex.Base:
-                    return Base;
-                case PlacedObject_FieldIndex.XPCIFluff:
-                    return XPCIFluff;
-                case PlacedObject_FieldIndex.FULLFluff:
-                    return FULLFluff;
-                case PlacedObject_FieldIndex.TeleportDestination:
-                    return TeleportDestination;
-                case PlacedObject_FieldIndex.Lock:
-                    return Lock;
-                case PlacedObject_FieldIndex.Owner:
-                    return Owner;
-                case PlacedObject_FieldIndex.FactionRank:
-                    return FactionRank;
-                case PlacedObject_FieldIndex.GlobalVariable:
-                    return GlobalVariable;
-                case PlacedObject_FieldIndex.EnableParent:
-                    return EnableParent;
-                case PlacedObject_FieldIndex.Target:
-                    return Target;
-                case PlacedObject_FieldIndex.SpeedTreeSeed:
-                    return SpeedTreeSeed;
-                case PlacedObject_FieldIndex.DistantLODData:
-                    return DistantLODData;
-                case PlacedObject_FieldIndex.Charge:
-                    return Charge;
-                case PlacedObject_FieldIndex.Health:
-                    return Health;
-                case PlacedObject_FieldIndex.LevelModifier:
-                    return LevelModifier;
-                case PlacedObject_FieldIndex.Unknown:
-                    return Unknown;
-                case PlacedObject_FieldIndex.ActionFlags:
-                    return ActionFlags;
-                case PlacedObject_FieldIndex.Count:
-                    return Count;
-                case PlacedObject_FieldIndex.MapMarker:
-                    return MapMarker;
-                case PlacedObject_FieldIndex.OpenByDefault:
-                    return OpenByDefault;
-                case PlacedObject_FieldIndex.RagdollData:
-                    return RagdollData;
-                case PlacedObject_FieldIndex.Scale:
-                    return Scale;
-                case PlacedObject_FieldIndex.ContainedSoul:
-                    return ContainedSoul;
-                case PlacedObject_FieldIndex.Position:
-                    return Position;
-                case PlacedObject_FieldIndex.Rotation:
-                    return Rotation;
-                default:
-                    return base.GetNthMask(index);
+                Write_Binary_Embedded(
+                    item: item,
+                    writer: writer,
+                    errorMask: errorMask,
+                    masterReferences: masterReferences);
+                Write_Binary_RecordTypes(
+                    item: item,
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter,
+                    errorMask: errorMask,
+                    masterReferences: masterReferences);
             }
         }
-
-        public override void SetNthException(int index, Exception ex)
-        {
-            PlacedObject_FieldIndex enu = (PlacedObject_FieldIndex)index;
-            switch (enu)
-            {
-                case PlacedObject_FieldIndex.Base:
-                    this.Base = ex;
-                    break;
-                case PlacedObject_FieldIndex.XPCIFluff:
-                    this.XPCIFluff = ex;
-                    break;
-                case PlacedObject_FieldIndex.FULLFluff:
-                    this.FULLFluff = ex;
-                    break;
-                case PlacedObject_FieldIndex.TeleportDestination:
-                    this.TeleportDestination = new MaskItem<Exception, TeleportDestination_ErrorMask>(ex, null);
-                    break;
-                case PlacedObject_FieldIndex.Lock:
-                    this.Lock = new MaskItem<Exception, LockInformation_ErrorMask>(ex, null);
-                    break;
-                case PlacedObject_FieldIndex.Owner:
-                    this.Owner = ex;
-                    break;
-                case PlacedObject_FieldIndex.FactionRank:
-                    this.FactionRank = ex;
-                    break;
-                case PlacedObject_FieldIndex.GlobalVariable:
-                    this.GlobalVariable = ex;
-                    break;
-                case PlacedObject_FieldIndex.EnableParent:
-                    this.EnableParent = new MaskItem<Exception, EnableParent_ErrorMask>(ex, null);
-                    break;
-                case PlacedObject_FieldIndex.Target:
-                    this.Target = ex;
-                    break;
-                case PlacedObject_FieldIndex.SpeedTreeSeed:
-                    this.SpeedTreeSeed = ex;
-                    break;
-                case PlacedObject_FieldIndex.DistantLODData:
-                    this.DistantLODData = new MaskItem<Exception, DistantLODData_ErrorMask>(ex, null);
-                    break;
-                case PlacedObject_FieldIndex.Charge:
-                    this.Charge = ex;
-                    break;
-                case PlacedObject_FieldIndex.Health:
-                    this.Health = ex;
-                    break;
-                case PlacedObject_FieldIndex.LevelModifier:
-                    this.LevelModifier = ex;
-                    break;
-                case PlacedObject_FieldIndex.Unknown:
-                    this.Unknown = ex;
-                    break;
-                case PlacedObject_FieldIndex.ActionFlags:
-                    this.ActionFlags = ex;
-                    break;
-                case PlacedObject_FieldIndex.Count:
-                    this.Count = ex;
-                    break;
-                case PlacedObject_FieldIndex.MapMarker:
-                    this.MapMarker = new MaskItem<Exception, MapMarker_ErrorMask>(ex, null);
-                    break;
-                case PlacedObject_FieldIndex.OpenByDefault:
-                    this.OpenByDefault = ex;
-                    break;
-                case PlacedObject_FieldIndex.RagdollData:
-                    this.RagdollData = ex;
-                    break;
-                case PlacedObject_FieldIndex.Scale:
-                    this.Scale = ex;
-                    break;
-                case PlacedObject_FieldIndex.ContainedSoul:
-                    this.ContainedSoul = ex;
-                    break;
-                case PlacedObject_FieldIndex.Position:
-                    this.Position = ex;
-                    break;
-                case PlacedObject_FieldIndex.Rotation:
-                    this.Rotation = ex;
-                    break;
-                default:
-                    base.SetNthException(index, ex);
-                    break;
-            }
-        }
-
-        public override void SetNthMask(int index, object obj)
-        {
-            PlacedObject_FieldIndex enu = (PlacedObject_FieldIndex)index;
-            switch (enu)
-            {
-                case PlacedObject_FieldIndex.Base:
-                    this.Base = (Exception)obj;
-                    break;
-                case PlacedObject_FieldIndex.XPCIFluff:
-                    this.XPCIFluff = (Exception)obj;
-                    break;
-                case PlacedObject_FieldIndex.FULLFluff:
-                    this.FULLFluff = (Exception)obj;
-                    break;
-                case PlacedObject_FieldIndex.TeleportDestination:
-                    this.TeleportDestination = (MaskItem<Exception, TeleportDestination_ErrorMask>)obj;
-                    break;
-                case PlacedObject_FieldIndex.Lock:
-                    this.Lock = (MaskItem<Exception, LockInformation_ErrorMask>)obj;
-                    break;
-                case PlacedObject_FieldIndex.Owner:
-                    this.Owner = (Exception)obj;
-                    break;
-                case PlacedObject_FieldIndex.FactionRank:
-                    this.FactionRank = (Exception)obj;
-                    break;
-                case PlacedObject_FieldIndex.GlobalVariable:
-                    this.GlobalVariable = (Exception)obj;
-                    break;
-                case PlacedObject_FieldIndex.EnableParent:
-                    this.EnableParent = (MaskItem<Exception, EnableParent_ErrorMask>)obj;
-                    break;
-                case PlacedObject_FieldIndex.Target:
-                    this.Target = (Exception)obj;
-                    break;
-                case PlacedObject_FieldIndex.SpeedTreeSeed:
-                    this.SpeedTreeSeed = (Exception)obj;
-                    break;
-                case PlacedObject_FieldIndex.DistantLODData:
-                    this.DistantLODData = (MaskItem<Exception, DistantLODData_ErrorMask>)obj;
-                    break;
-                case PlacedObject_FieldIndex.Charge:
-                    this.Charge = (Exception)obj;
-                    break;
-                case PlacedObject_FieldIndex.Health:
-                    this.Health = (Exception)obj;
-                    break;
-                case PlacedObject_FieldIndex.LevelModifier:
-                    this.LevelModifier = (Exception)obj;
-                    break;
-                case PlacedObject_FieldIndex.Unknown:
-                    this.Unknown = (Exception)obj;
-                    break;
-                case PlacedObject_FieldIndex.ActionFlags:
-                    this.ActionFlags = (Exception)obj;
-                    break;
-                case PlacedObject_FieldIndex.Count:
-                    this.Count = (Exception)obj;
-                    break;
-                case PlacedObject_FieldIndex.MapMarker:
-                    this.MapMarker = (MaskItem<Exception, MapMarker_ErrorMask>)obj;
-                    break;
-                case PlacedObject_FieldIndex.OpenByDefault:
-                    this.OpenByDefault = (Exception)obj;
-                    break;
-                case PlacedObject_FieldIndex.RagdollData:
-                    this.RagdollData = (Exception)obj;
-                    break;
-                case PlacedObject_FieldIndex.Scale:
-                    this.Scale = (Exception)obj;
-                    break;
-                case PlacedObject_FieldIndex.ContainedSoul:
-                    this.ContainedSoul = (Exception)obj;
-                    break;
-                case PlacedObject_FieldIndex.Position:
-                    this.Position = (Exception)obj;
-                    break;
-                case PlacedObject_FieldIndex.Rotation:
-                    this.Rotation = (Exception)obj;
-                    break;
-                default:
-                    base.SetNthMask(index, obj);
-                    break;
-            }
-        }
-
-        public override bool IsInError()
-        {
-            if (Overall != null) return true;
-            if (Base != null) return true;
-            if (XPCIFluff != null) return true;
-            if (FULLFluff != null) return true;
-            if (TeleportDestination != null) return true;
-            if (Lock != null) return true;
-            if (Owner != null) return true;
-            if (FactionRank != null) return true;
-            if (GlobalVariable != null) return true;
-            if (EnableParent != null) return true;
-            if (Target != null) return true;
-            if (SpeedTreeSeed != null) return true;
-            if (DistantLODData != null) return true;
-            if (Charge != null) return true;
-            if (Health != null) return true;
-            if (LevelModifier != null) return true;
-            if (Unknown != null) return true;
-            if (ActionFlags != null) return true;
-            if (Count != null) return true;
-            if (MapMarker != null) return true;
-            if (OpenByDefault != null) return true;
-            if (RagdollData != null) return true;
-            if (Scale != null) return true;
-            if (ContainedSoul != null) return true;
-            if (Position != null) return true;
-            if (Rotation != null) return true;
-            return false;
-        }
         #endregion
 
-        #region To String
-        public override string ToString()
-        {
-            var fg = new FileGeneration();
-            ToString(fg);
-            return fg.ToString();
-        }
-
-        public override void ToString(FileGeneration fg)
-        {
-            fg.AppendLine("PlacedObject_ErrorMask =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (this.Overall != null)
-                {
-                    fg.AppendLine("Overall =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        fg.AppendLine($"{this.Overall}");
-                    }
-                    fg.AppendLine("]");
-                }
-                ToString_FillInternal(fg);
-            }
-            fg.AppendLine("]");
-        }
-        protected override void ToString_FillInternal(FileGeneration fg)
-        {
-            base.ToString_FillInternal(fg);
-            fg.AppendLine($"Base => {Base}");
-            fg.AppendLine($"XPCIFluff => {XPCIFluff}");
-            fg.AppendLine($"FULLFluff => {FULLFluff}");
-            TeleportDestination?.ToString(fg);
-            Lock?.ToString(fg);
-            fg.AppendLine($"Owner => {Owner}");
-            fg.AppendLine($"FactionRank => {FactionRank}");
-            fg.AppendLine($"GlobalVariable => {GlobalVariable}");
-            EnableParent?.ToString(fg);
-            fg.AppendLine($"Target => {Target}");
-            fg.AppendLine($"SpeedTreeSeed => {SpeedTreeSeed}");
-            DistantLODData?.ToString(fg);
-            fg.AppendLine($"Charge => {Charge}");
-            fg.AppendLine($"Health => {Health}");
-            fg.AppendLine($"LevelModifier => {LevelModifier}");
-            fg.AppendLine($"Unknown => {Unknown}");
-            fg.AppendLine($"ActionFlags => {ActionFlags}");
-            fg.AppendLine($"Count => {Count}");
-            MapMarker?.ToString(fg);
-            fg.AppendLine($"OpenByDefault => {OpenByDefault}");
-            fg.AppendLine($"RagdollData => {RagdollData}");
-            fg.AppendLine($"Scale => {Scale}");
-            fg.AppendLine($"ContainedSoul => {ContainedSoul}");
-            fg.AppendLine($"Position => {Position}");
-            fg.AppendLine($"Rotation => {Rotation}");
-        }
-        #endregion
-
-        #region Combine
-        public PlacedObject_ErrorMask Combine(PlacedObject_ErrorMask rhs)
-        {
-            var ret = new PlacedObject_ErrorMask();
-            ret.Base = this.Base.Combine(rhs.Base);
-            ret.XPCIFluff = this.XPCIFluff.Combine(rhs.XPCIFluff);
-            ret.FULLFluff = this.FULLFluff.Combine(rhs.FULLFluff);
-            ret.TeleportDestination = new MaskItem<Exception, TeleportDestination_ErrorMask>(this.TeleportDestination.Overall.Combine(rhs.TeleportDestination.Overall), ((IErrorMask<TeleportDestination_ErrorMask>)this.TeleportDestination.Specific).Combine(rhs.TeleportDestination.Specific));
-            ret.Lock = new MaskItem<Exception, LockInformation_ErrorMask>(this.Lock.Overall.Combine(rhs.Lock.Overall), ((IErrorMask<LockInformation_ErrorMask>)this.Lock.Specific).Combine(rhs.Lock.Specific));
-            ret.Owner = this.Owner.Combine(rhs.Owner);
-            ret.FactionRank = this.FactionRank.Combine(rhs.FactionRank);
-            ret.GlobalVariable = this.GlobalVariable.Combine(rhs.GlobalVariable);
-            ret.EnableParent = new MaskItem<Exception, EnableParent_ErrorMask>(this.EnableParent.Overall.Combine(rhs.EnableParent.Overall), ((IErrorMask<EnableParent_ErrorMask>)this.EnableParent.Specific).Combine(rhs.EnableParent.Specific));
-            ret.Target = this.Target.Combine(rhs.Target);
-            ret.SpeedTreeSeed = this.SpeedTreeSeed.Combine(rhs.SpeedTreeSeed);
-            ret.DistantLODData = new MaskItem<Exception, DistantLODData_ErrorMask>(this.DistantLODData.Overall.Combine(rhs.DistantLODData.Overall), ((IErrorMask<DistantLODData_ErrorMask>)this.DistantLODData.Specific).Combine(rhs.DistantLODData.Specific));
-            ret.Charge = this.Charge.Combine(rhs.Charge);
-            ret.Health = this.Health.Combine(rhs.Health);
-            ret.LevelModifier = this.LevelModifier.Combine(rhs.LevelModifier);
-            ret.Unknown = this.Unknown.Combine(rhs.Unknown);
-            ret.ActionFlags = this.ActionFlags.Combine(rhs.ActionFlags);
-            ret.Count = this.Count.Combine(rhs.Count);
-            ret.MapMarker = new MaskItem<Exception, MapMarker_ErrorMask>(this.MapMarker.Overall.Combine(rhs.MapMarker.Overall), ((IErrorMask<MapMarker_ErrorMask>)this.MapMarker.Specific).Combine(rhs.MapMarker.Specific));
-            ret.OpenByDefault = this.OpenByDefault.Combine(rhs.OpenByDefault);
-            ret.RagdollData = this.RagdollData.Combine(rhs.RagdollData);
-            ret.Scale = this.Scale.Combine(rhs.Scale);
-            ret.ContainedSoul = this.ContainedSoul.Combine(rhs.ContainedSoul);
-            ret.Position = this.Position.Combine(rhs.Position);
-            ret.Rotation = this.Rotation.Combine(rhs.Rotation);
-            return ret;
-        }
-        public static PlacedObject_ErrorMask Combine(PlacedObject_ErrorMask lhs, PlacedObject_ErrorMask rhs)
-        {
-            if (lhs != null && rhs != null) return lhs.Combine(rhs);
-            return lhs ?? rhs;
-        }
-        #endregion
-
-        #region Factory
-        public static PlacedObject_ErrorMask Factory(ErrorMaskBuilder errorMask)
-        {
-            if (errorMask?.Empty ?? true) return null;
-            return new PlacedObject_ErrorMask();
-        }
-        #endregion
-
-    }
-    public class PlacedObject_CopyMask : OblivionMajorRecord_CopyMask
-    {
-        public PlacedObject_CopyMask()
-        {
-        }
-
-        public PlacedObject_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
-        {
-            this.Base = defaultOn;
-            this.XPCIFluff = defaultOn;
-            this.FULLFluff = defaultOn;
-            this.TeleportDestination = new MaskItem<CopyOption, TeleportDestination_CopyMask>(deepCopyOption, default);
-            this.Lock = new MaskItem<CopyOption, LockInformation_CopyMask>(deepCopyOption, default);
-            this.Owner = defaultOn;
-            this.FactionRank = defaultOn;
-            this.GlobalVariable = defaultOn;
-            this.EnableParent = new MaskItem<CopyOption, EnableParent_CopyMask>(deepCopyOption, default);
-            this.Target = defaultOn;
-            this.SpeedTreeSeed = defaultOn;
-            this.DistantLODData = new MaskItem<CopyOption, DistantLODData_CopyMask>(deepCopyOption, default);
-            this.Charge = defaultOn;
-            this.Health = defaultOn;
-            this.LevelModifier = defaultOn;
-            this.Unknown = defaultOn;
-            this.ActionFlags = defaultOn;
-            this.Count = defaultOn;
-            this.MapMarker = new MaskItem<CopyOption, MapMarker_CopyMask>(deepCopyOption, default);
-            this.OpenByDefault = defaultOn;
-            this.RagdollData = defaultOn;
-            this.Scale = defaultOn;
-            this.ContainedSoul = defaultOn;
-            this.Position = defaultOn;
-            this.Rotation = defaultOn;
-        }
-
-        #region Members
-        public bool Base;
-        public bool XPCIFluff;
-        public bool FULLFluff;
-        public MaskItem<CopyOption, TeleportDestination_CopyMask> TeleportDestination;
-        public MaskItem<CopyOption, LockInformation_CopyMask> Lock;
-        public bool Owner;
-        public bool FactionRank;
-        public bool GlobalVariable;
-        public MaskItem<CopyOption, EnableParent_CopyMask> EnableParent;
-        public bool Target;
-        public bool SpeedTreeSeed;
-        public MaskItem<CopyOption, DistantLODData_CopyMask> DistantLODData;
-        public bool Charge;
-        public bool Health;
-        public bool LevelModifier;
-        public bool Unknown;
-        public bool ActionFlags;
-        public bool Count;
-        public MaskItem<CopyOption, MapMarker_CopyMask> MapMarker;
-        public bool OpenByDefault;
-        public bool RagdollData;
-        public bool Scale;
-        public bool ContainedSoul;
-        public bool Position;
-        public bool Rotation;
-        #endregion
-
-    }
-
-    public class PlacedObject_TranslationMask : OblivionMajorRecord_TranslationMask
-    {
-        #region Members
-        public bool Base;
-        public bool XPCIFluff;
-        public bool FULLFluff;
-        public MaskItem<bool, TeleportDestination_TranslationMask> TeleportDestination;
-        public MaskItem<bool, LockInformation_TranslationMask> Lock;
-        public bool Owner;
-        public bool FactionRank;
-        public bool GlobalVariable;
-        public MaskItem<bool, EnableParent_TranslationMask> EnableParent;
-        public bool Target;
-        public bool SpeedTreeSeed;
-        public MaskItem<bool, DistantLODData_TranslationMask> DistantLODData;
-        public bool Charge;
-        public bool Health;
-        public bool LevelModifier;
-        public bool Unknown;
-        public bool ActionFlags;
-        public bool Count;
-        public MaskItem<bool, MapMarker_TranslationMask> MapMarker;
-        public bool OpenByDefault;
-        public bool RagdollData;
-        public bool Scale;
-        public bool ContainedSoul;
-        public bool Position;
-        public bool Rotation;
-        #endregion
-
-        #region Ctors
-        public PlacedObject_TranslationMask()
-            : base()
-        {
-        }
-
-        public PlacedObject_TranslationMask(bool defaultOn)
-            : base(defaultOn)
-        {
-            this.Base = defaultOn;
-            this.XPCIFluff = defaultOn;
-            this.FULLFluff = defaultOn;
-            this.TeleportDestination = new MaskItem<bool, TeleportDestination_TranslationMask>(defaultOn, null);
-            this.Lock = new MaskItem<bool, LockInformation_TranslationMask>(defaultOn, null);
-            this.Owner = defaultOn;
-            this.FactionRank = defaultOn;
-            this.GlobalVariable = defaultOn;
-            this.EnableParent = new MaskItem<bool, EnableParent_TranslationMask>(defaultOn, null);
-            this.Target = defaultOn;
-            this.SpeedTreeSeed = defaultOn;
-            this.DistantLODData = new MaskItem<bool, DistantLODData_TranslationMask>(defaultOn, null);
-            this.Charge = defaultOn;
-            this.Health = defaultOn;
-            this.LevelModifier = defaultOn;
-            this.Unknown = defaultOn;
-            this.ActionFlags = defaultOn;
-            this.Count = defaultOn;
-            this.MapMarker = new MaskItem<bool, MapMarker_TranslationMask>(defaultOn, null);
-            this.OpenByDefault = defaultOn;
-            this.RagdollData = defaultOn;
-            this.Scale = defaultOn;
-            this.ContainedSoul = defaultOn;
-            this.Position = defaultOn;
-            this.Rotation = defaultOn;
-        }
-
-        #endregion
-
-        protected override void GetCrystal(List<(bool On, TranslationCrystal SubCrystal)> ret)
-        {
-            base.GetCrystal(ret);
-            ret.Add((Base, null));
-            ret.Add((XPCIFluff, null));
-            ret.Add((FULLFluff, null));
-            ret.Add((TeleportDestination?.Overall ?? true, TeleportDestination?.Specific?.GetCrystal()));
-            ret.Add((Lock?.Overall ?? true, Lock?.Specific?.GetCrystal()));
-            ret.Add((Owner, null));
-            ret.Add((FactionRank, null));
-            ret.Add((GlobalVariable, null));
-            ret.Add((EnableParent?.Overall ?? true, EnableParent?.Specific?.GetCrystal()));
-            ret.Add((Target, null));
-            ret.Add((SpeedTreeSeed, null));
-            ret.Add((DistantLODData?.Overall ?? true, DistantLODData?.Specific?.GetCrystal()));
-            ret.Add((Charge, null));
-            ret.Add((Health, null));
-            ret.Add((LevelModifier, null));
-            ret.Add((Unknown, null));
-            ret.Add((ActionFlags, null));
-            ret.Add((Count, null));
-            ret.Add((MapMarker?.Overall ?? true, MapMarker?.Specific?.GetCrystal()));
-            ret.Add((OpenByDefault, null));
-            ret.Add((RagdollData, null));
-            ret.Add((Scale, null));
-            ret.Add((ContainedSoul, null));
-            ret.Add((Position, null));
-            ret.Add((Rotation, null));
-        }
     }
     #endregion
 

@@ -27,20 +27,6 @@ namespace Mutagen.Bethesda.Oblivion
             DoNotAcquire = 0x0100,
         }
 
-        static partial void FillBinary_SecondaryFlags_Custom(MutagenFrame frame, CombatStyle item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
-        {
-            int flags = frame.ReadInt32();
-            var otherFlag = (CombatStyle.Flag)(flags << 8);
-            item.Flags = item.Flags | otherFlag;
-        }
-
-        static partial void WriteBinary_SecondaryFlags_Custom(MutagenWriter writer, CombatStyle item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
-        {
-            int flags = (int)item.Flags;
-            flags = flags >> 8;
-            writer.Write(flags);
-        }
-
         public static async Task<CombatStyle> Create_XmlFolder(
             XElement node,
             string path,
@@ -74,13 +60,33 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.CombatStyle");
             }
-            CombatStyleCommon.WriteToNode_Xml(
+            CombatStyleXmlTranslation.WriteToNode_Xml(
                 item: this,
                 node: elem,
                 errorMask: errorMask,
                 translationMask: null);
             if (!this.CSTDDataTypeState.HasFlag(CSTDDataType.Break4)) return;
             elem.Add(new XElement("CustomEndingFlags", new XAttribute("value", "false")));
+        }
+    }
+
+    namespace Internals
+    {
+        public partial class CombatStyleBinaryTranslation
+        {
+            static partial void FillBinary_SecondaryFlags_Custom(MutagenFrame frame, CombatStyle item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
+            {
+                int flags = frame.ReadInt32();
+                var otherFlag = (CombatStyle.Flag)(flags << 8);
+                item.Flags = item.Flags | otherFlag;
+            }
+
+            static partial void WriteBinary_SecondaryFlags_Custom(MutagenWriter writer, ICombatStyleInternalGetter item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
+            {
+                int flags = (int)item.Flags;
+                flags = flags >> 8;
+                writer.Write(flags);
+            }
         }
     }
 }

@@ -34,6 +34,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class ScriptEffect : 
         LoquiNotifyingObject,
         IScriptEffect,
+        IScriptEffectInternal,
         ILoquiObject<ScriptEffect>,
         ILoquiObjectSetter,
         INamed,
@@ -118,6 +119,23 @@ namespace Mutagen.Bethesda.Oblivion
             this.Name_Set(default(String), false);
         }
         #endregion
+        #region SCITDataTypeState
+        private ScriptEffect.SCITDataType _SCITDataTypeState;
+        public ScriptEffect.SCITDataType SCITDataTypeState
+        {
+            get => this._SCITDataTypeState;
+            set => this.RaiseAndSetIfChanged(ref this._SCITDataTypeState, value, nameof(SCITDataTypeState));
+        }
+        ScriptEffect.SCITDataType IScriptEffectInternal.SCITDataTypeState
+        {
+            get => this.SCITDataTypeState;
+            set => this.SCITDataTypeState = value;
+        }
+        ScriptEffect.SCITDataType IScriptEffectInternalGetter.SCITDataTypeState
+        {
+            get => this.SCITDataTypeState;
+        }
+        #endregion
 
         IMask<bool> IEqualsMask<ScriptEffect>.GetEqualsMask(ScriptEffect rhs, EqualsMaskHelper.Include include) => ScriptEffectCommon.GetEqualsMask(this, rhs, include);
         IMask<bool> IEqualsMask<IScriptEffectGetter>.GetEqualsMask(IScriptEffectGetter rhs, EqualsMaskHelper.Include include) => ScriptEffectCommon.GetEqualsMask(this, rhs, include);
@@ -162,6 +180,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 if (!string.Equals(this.Name, rhs.Name)) return false;
             }
+            if (this.SCITDataTypeState != rhs.SCITDataTypeState) return false;
             return true;
         }
 
@@ -176,6 +195,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 ret = HashHelper.GetHashCode(Name).CombineHashCode(ret);
             }
+            ret = HashHelper.GetHashCode(SCITDataTypeState).CombineHashCode(ret);
             return ret;
         }
 
@@ -344,7 +364,8 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Xml(
+            ScriptEffectXmlTranslation.Instance.Write_Xml(
+                item: this,
                 name: name,
                 node: node,
                 errorMask: errorMaskBuilder,
@@ -376,7 +397,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            this.Write_Xml(
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -407,7 +428,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            this.Write_Xml(
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -431,7 +452,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            this.Write_Xml(
                 name: name,
                 node: node,
                 errorMask: null,
@@ -444,7 +465,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            this.Write_Xml(
                 name: name,
                 node: node,
                 errorMask: null,
@@ -458,7 +479,7 @@ namespace Mutagen.Bethesda.Oblivion
             TranslationCrystal translationMask,
             string name = null)
         {
-            ScriptEffectCommon.Write_Xml(
+            ScriptEffectXmlTranslation.Instance.Write_Xml(
                 item: this,
                 name: name,
                 node: node,
@@ -480,6 +501,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case ScriptEffect_FieldIndex.MagicSchool:
                 case ScriptEffect_FieldIndex.VisualEffect:
                 case ScriptEffect_FieldIndex.Flags:
+                case ScriptEffect_FieldIndex.SCITDataTypeState:
                     return true;
                 default:
                     throw new ArgumentException($"Unknown field index: {index}");
@@ -488,7 +510,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = ScriptEffect_Registration.TRIGGERING_RECORD_TYPE;
-        public SCITDataType SCITDataTypeState;
         [Flags]
         public enum SCITDataType
         {
@@ -600,7 +621,8 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Binary(
+            ScriptEffectBinaryTranslation.Instance.Write_Binary(
+                item: this,
                 masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: null,
@@ -625,7 +647,7 @@ namespace Mutagen.Bethesda.Oblivion
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            ScriptEffectCommon.Write_Binary(
+            ScriptEffectBinaryTranslation.Instance.Write_Binary(
                 item: this,
                 masterReferences: masterReferences,
                 writer: writer,
@@ -853,6 +875,9 @@ namespace Mutagen.Bethesda.Oblivion
                 case ScriptEffect_FieldIndex.Name:
                     this.Name = (String)obj;
                     break;
+                case ScriptEffect_FieldIndex.SCITDataTypeState:
+                    this.SCITDataTypeState = (ScriptEffect.SCITDataType)obj;
+                    break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -905,6 +930,9 @@ namespace Mutagen.Bethesda.Oblivion
                 case ScriptEffect_FieldIndex.Name:
                     obj.Name = (String)pair.Value;
                     break;
+                case ScriptEffect_FieldIndex.SCITDataTypeState:
+                    obj.SCITDataTypeState = (ScriptEffect.SCITDataType)pair.Value;
+                    break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
@@ -925,6 +953,14 @@ namespace Mutagen.Bethesda.Oblivion
         new bool Name_IsSet { get; set; }
         void Name_Set(String item, bool hasBeenSet = true);
         void Name_Unset();
+
+    }
+
+    public partial interface IScriptEffectInternal : IScriptEffect, IScriptEffectInternalGetter
+    {
+        new Script Script { get; set; }
+        new MagicEffect VisualEffect { get; set; }
+        new ScriptEffect.SCITDataType SCITDataTypeState { get; set; }
 
     }
 
@@ -956,6 +992,15 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
+    public partial interface IScriptEffectInternalGetter : IScriptEffectGetter
+    {
+        #region SCITDataTypeState
+        ScriptEffect.SCITDataType SCITDataTypeState { get; }
+
+        #endregion
+
+    }
+
     #endregion
 
 }
@@ -970,6 +1015,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         VisualEffect = 2,
         Flags = 3,
         Name = 4,
+        SCITDataTypeState = 5,
     }
     #endregion
 
@@ -987,9 +1033,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const string GUID = "52a9e0c6-6771-4b3d-a4e7-a082ff8384a9";
 
-        public const ushort AdditionalFieldCount = 5;
+        public const ushort AdditionalFieldCount = 6;
 
-        public const ushort FieldCount = 5;
+        public const ushort FieldCount = 6;
 
         public static readonly Type MaskType = typeof(ScriptEffect_Mask<>);
 
@@ -999,11 +1045,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type GetterType = typeof(IScriptEffectGetter);
 
-        public static readonly Type InternalGetterType = null;
+        public static readonly Type InternalGetterType = typeof(IScriptEffectInternalGetter);
 
         public static readonly Type SetterType = typeof(IScriptEffect);
 
-        public static readonly Type InternalSetterType = null;
+        public static readonly Type InternalSetterType = typeof(IScriptEffectInternal);
 
         public static readonly Type CommonType = typeof(ScriptEffectCommon);
 
@@ -1031,6 +1077,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (ushort)ScriptEffect_FieldIndex.Flags;
                 case "NAME":
                     return (ushort)ScriptEffect_FieldIndex.Name;
+                case "SCITDATATYPESTATE":
+                    return (ushort)ScriptEffect_FieldIndex.SCITDataTypeState;
                 default:
                     return null;
             }
@@ -1046,6 +1094,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case ScriptEffect_FieldIndex.VisualEffect:
                 case ScriptEffect_FieldIndex.Flags:
                 case ScriptEffect_FieldIndex.Name:
+                case ScriptEffect_FieldIndex.SCITDataTypeState:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1062,6 +1111,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case ScriptEffect_FieldIndex.VisualEffect:
                 case ScriptEffect_FieldIndex.Flags:
                 case ScriptEffect_FieldIndex.Name:
+                case ScriptEffect_FieldIndex.SCITDataTypeState:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1078,6 +1128,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case ScriptEffect_FieldIndex.VisualEffect:
                 case ScriptEffect_FieldIndex.Flags:
                 case ScriptEffect_FieldIndex.Name:
+                case ScriptEffect_FieldIndex.SCITDataTypeState:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1099,6 +1150,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return "Flags";
                 case ScriptEffect_FieldIndex.Name:
                     return "Name";
+                case ScriptEffect_FieldIndex.SCITDataTypeState:
+                    return "SCITDataTypeState";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1114,6 +1167,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case ScriptEffect_FieldIndex.VisualEffect:
                 case ScriptEffect_FieldIndex.Flags:
                 case ScriptEffect_FieldIndex.Name:
+                case ScriptEffect_FieldIndex.SCITDataTypeState:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1130,6 +1184,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case ScriptEffect_FieldIndex.VisualEffect:
                 case ScriptEffect_FieldIndex.Flags:
                 case ScriptEffect_FieldIndex.Name:
+                case ScriptEffect_FieldIndex.SCITDataTypeState:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1151,6 +1206,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return typeof(ScriptEffect.Flag);
                 case ScriptEffect_FieldIndex.Name:
                     return typeof(String);
+                case ScriptEffect_FieldIndex.SCITDataTypeState:
+                    return typeof(ScriptEffect.SCITDataType);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1388,6 +1445,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     fg.AppendLine($"Name => {item.Name}");
                 }
+                if (printMask?.SCITDataTypeState ?? true)
+                {
+                }
             }
             fg.AppendLine("]");
         }
@@ -1408,117 +1468,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.VisualEffect = true;
             ret.Flags = true;
             ret.Name = item.Name_IsSet;
+            ret.SCITDataTypeState = true;
             return ret;
         }
 
         #region Xml Translation
-        #region Xml Write
-        public static void Write_Xml(
-            XElement node,
-            ScriptEffect item,
-            bool doMasks,
-            out ScriptEffect_ErrorMask errorMask,
-            ScriptEffect_TranslationMask translationMask,
-            string name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_Xml(
-                name: name,
-                node: node,
-                item: item,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = ScriptEffect_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void Write_Xml(
-            XElement node,
-            ScriptEffect item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.ScriptEffect");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.ScriptEffect");
-            }
-            WriteToNode_Xml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #endregion
-
-        public static void WriteToNode_Xml(
-            this ScriptEffect item,
-            XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            if (item.SCITDataTypeState.HasFlag(ScriptEffect.SCITDataType.Has))
-            {
-                if ((translationMask?.GetShouldTranslate((int)ScriptEffect_FieldIndex.Script) ?? true))
-                {
-                    FormKeyXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.Script),
-                        item: item.Script_Property?.FormKey,
-                        fieldIndex: (int)ScriptEffect_FieldIndex.Script,
-                        errorMask: errorMask);
-                }
-                if (!item.SCITDataTypeState.HasFlag(ScriptEffect.SCITDataType.Break0))
-                {
-                    if ((translationMask?.GetShouldTranslate((int)ScriptEffect_FieldIndex.MagicSchool) ?? true))
-                    {
-                        EnumXmlTranslation<MagicSchool>.Instance.Write(
-                            node: node,
-                            name: nameof(item.MagicSchool),
-                            item: item.MagicSchool,
-                            fieldIndex: (int)ScriptEffect_FieldIndex.MagicSchool,
-                            errorMask: errorMask);
-                    }
-                    if ((translationMask?.GetShouldTranslate((int)ScriptEffect_FieldIndex.VisualEffect) ?? true))
-                    {
-                        FormKeyXmlTranslation.Instance.Write(
-                            node: node,
-                            name: nameof(item.VisualEffect),
-                            item: item.VisualEffect_Property?.FormKey,
-                            fieldIndex: (int)ScriptEffect_FieldIndex.VisualEffect,
-                            errorMask: errorMask);
-                    }
-                    if (!item.SCITDataTypeState.HasFlag(ScriptEffect.SCITDataType.Break1))
-                    {
-                        if ((translationMask?.GetShouldTranslate((int)ScriptEffect_FieldIndex.Flags) ?? true))
-                        {
-                            EnumXmlTranslation<ScriptEffect.Flag>.Instance.Write(
-                                node: node,
-                                name: nameof(item.Flags),
-                                item: item.Flags,
-                                fieldIndex: (int)ScriptEffect_FieldIndex.Flags,
-                                errorMask: errorMask);
-                        }
-                    }
-                }
-                else
-                {
-                    node.Add(new XElement("HasSCITDataType"));
-                }
-            }
-            if (item.Name_IsSet
-                && (translationMask?.GetShouldTranslate((int)ScriptEffect_FieldIndex.Name) ?? true))
-            {
-                StringXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Name),
-                    item: item.Name,
-                    fieldIndex: (int)ScriptEffect_FieldIndex.Name,
-                    errorMask: errorMask);
-            }
-        }
-
         public static void FillPublic_Xml(
             this ScriptEffect item,
             XElement node,
@@ -1648,90 +1602,34 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                default:
-                    break;
-            }
-        }
-
-        #endregion
-
-        #region Binary Translation
-        #region Binary Write
-        public static void Write_Binary(
-            MutagenWriter writer,
-            ScriptEffect item,
-            MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            bool doMasks,
-            out ScriptEffect_ErrorMask errorMask)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_Binary(
-                masterReferences: masterReferences,
-                writer: writer,
-                item: item,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMaskBuilder);
-            errorMask = ScriptEffect_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void Write_Binary(
-            MutagenWriter writer,
-            ScriptEffect item,
-            MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
-        {
-            Write_Binary_RecordTypes(
-                item: item,
-                writer: writer,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMask,
-                masterReferences: masterReferences);
-        }
-        #endregion
-
-        public static void Write_Binary_RecordTypes(
-            ScriptEffect item,
-            MutagenWriter writer,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask,
-            MasterReferences masterReferences)
-        {
-            if (item.SCITDataTypeState.HasFlag(ScriptEffect.SCITDataType.Has))
-            {
-                using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(ScriptEffect_Registration.SCIT_HEADER)))
-                {
-                    Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.Script_Property,
-                        masterReferences: masterReferences);
-                    if (!item.SCITDataTypeState.HasFlag(ScriptEffect.SCITDataType.Break0))
+                case "SCITDataTypeState":
+                    try
                     {
-                        Mutagen.Bethesda.Binary.EnumBinaryTranslation<MagicSchool>.Instance.Write(
-                            writer,
-                            item.MagicSchool,
-                            length: 4);
-                        Mutagen.Bethesda.Binary.RecordTypeBinaryTranslation.Instance.Write(
-                            writer: writer,
-                            item: item.VisualEffect_Property);
-                        if (!item.SCITDataTypeState.HasFlag(ScriptEffect.SCITDataType.Break1))
+                        errorMask?.PushIndex((int)ScriptEffect_FieldIndex.SCITDataTypeState);
+                        if (EnumXmlTranslation<ScriptEffect.SCITDataType>.Instance.Parse(
+                            node: node,
+                            item: out ScriptEffect.SCITDataType SCITDataTypeStateParse,
+                            errorMask: errorMask))
                         {
-                            Mutagen.Bethesda.Binary.EnumBinaryTranslation<ScriptEffect.Flag>.Instance.Write(
-                                writer,
-                                item.Flags,
-                                length: 4);
+                            item.SCITDataTypeState = SCITDataTypeStateParse;
+                        }
+                        else
+                        {
+                            item.SCITDataTypeState = default(ScriptEffect.SCITDataType);
                         }
                     }
-                }
-            }
-            if (item.Name_IsSet)
-            {
-                Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Name,
-                    header: recordTypeConverter.ConvertToCustom(ScriptEffect_Registration.FULL_HEADER),
-                    nullable: false);
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                default:
+                    break;
             }
         }
 
@@ -1741,6 +1639,130 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Modules
+    #region Xml Translation
+    public partial class ScriptEffectXmlTranslation
+    {
+        public readonly static ScriptEffectXmlTranslation Instance = new ScriptEffectXmlTranslation();
+
+        public static void WriteToNode_Xml(
+            IScriptEffectInternalGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            if (item.SCITDataTypeState.HasFlag(ScriptEffect.SCITDataType.Has))
+            {
+                if ((translationMask?.GetShouldTranslate((int)ScriptEffect_FieldIndex.Script) ?? true))
+                {
+                    FormKeyXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.Script),
+                        item: item.Script_Property?.FormKey,
+                        fieldIndex: (int)ScriptEffect_FieldIndex.Script,
+                        errorMask: errorMask);
+                }
+                if (!item.SCITDataTypeState.HasFlag(ScriptEffect.SCITDataType.Break0))
+                {
+                    if ((translationMask?.GetShouldTranslate((int)ScriptEffect_FieldIndex.MagicSchool) ?? true))
+                    {
+                        EnumXmlTranslation<MagicSchool>.Instance.Write(
+                            node: node,
+                            name: nameof(item.MagicSchool),
+                            item: item.MagicSchool,
+                            fieldIndex: (int)ScriptEffect_FieldIndex.MagicSchool,
+                            errorMask: errorMask);
+                    }
+                    if ((translationMask?.GetShouldTranslate((int)ScriptEffect_FieldIndex.VisualEffect) ?? true))
+                    {
+                        FormKeyXmlTranslation.Instance.Write(
+                            node: node,
+                            name: nameof(item.VisualEffect),
+                            item: item.VisualEffect_Property?.FormKey,
+                            fieldIndex: (int)ScriptEffect_FieldIndex.VisualEffect,
+                            errorMask: errorMask);
+                    }
+                    if (!item.SCITDataTypeState.HasFlag(ScriptEffect.SCITDataType.Break1))
+                    {
+                        if ((translationMask?.GetShouldTranslate((int)ScriptEffect_FieldIndex.Flags) ?? true))
+                        {
+                            EnumXmlTranslation<ScriptEffect.Flag>.Instance.Write(
+                                node: node,
+                                name: nameof(item.Flags),
+                                item: item.Flags,
+                                fieldIndex: (int)ScriptEffect_FieldIndex.Flags,
+                                errorMask: errorMask);
+                        }
+                    }
+                }
+                else
+                {
+                    node.Add(new XElement("HasSCITDataType"));
+                }
+            }
+            if (item.Name_IsSet
+                && (translationMask?.GetShouldTranslate((int)ScriptEffect_FieldIndex.Name) ?? true))
+            {
+                StringXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Name),
+                    item: item.Name,
+                    fieldIndex: (int)ScriptEffect_FieldIndex.Name,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)ScriptEffect_FieldIndex.SCITDataTypeState) ?? true))
+            {
+                EnumXmlTranslation<ScriptEffect.SCITDataType>.Instance.Write(
+                    node: node,
+                    name: nameof(item.SCITDataTypeState),
+                    item: item.SCITDataTypeState,
+                    fieldIndex: (int)ScriptEffect_FieldIndex.SCITDataTypeState,
+                    errorMask: errorMask);
+            }
+        }
+
+        #region Xml Write
+        public void Write_Xml(
+            XElement node,
+            IScriptEffectInternalGetter item,
+            bool doMasks,
+            out ScriptEffect_ErrorMask errorMask,
+            ScriptEffect_TranslationMask translationMask,
+            string name = null)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            Write_Xml(
+                name: name,
+                node: node,
+                item: item,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal());
+            errorMask = ScriptEffect_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public void Write_Xml(
+            XElement node,
+            IScriptEffectInternalGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.ScriptEffect");
+            node.Add(elem);
+            if (name != null)
+            {
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.ScriptEffect");
+            }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        #endregion
+
+    }
+    #endregion
+
     #region Mask
     public class ScriptEffect_Mask<T> : IMask<T>, IEquatable<ScriptEffect_Mask<T>>
     {
@@ -1756,6 +1778,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.VisualEffect = initialValue;
             this.Flags = initialValue;
             this.Name = initialValue;
+            this.SCITDataTypeState = initialValue;
         }
         #endregion
 
@@ -1765,6 +1788,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public T VisualEffect;
         public T Flags;
         public T Name;
+        public T SCITDataTypeState;
         #endregion
 
         #region Equals
@@ -1782,6 +1806,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (!object.Equals(this.VisualEffect, rhs.VisualEffect)) return false;
             if (!object.Equals(this.Flags, rhs.Flags)) return false;
             if (!object.Equals(this.Name, rhs.Name)) return false;
+            if (!object.Equals(this.SCITDataTypeState, rhs.SCITDataTypeState)) return false;
             return true;
         }
         public override int GetHashCode()
@@ -1792,6 +1817,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret = ret.CombineHashCode(this.VisualEffect?.GetHashCode());
             ret = ret.CombineHashCode(this.Flags?.GetHashCode());
             ret = ret.CombineHashCode(this.Name?.GetHashCode());
+            ret = ret.CombineHashCode(this.SCITDataTypeState?.GetHashCode());
             return ret;
         }
 
@@ -1805,6 +1831,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (!eval(this.VisualEffect)) return false;
             if (!eval(this.Flags)) return false;
             if (!eval(this.Name)) return false;
+            if (!eval(this.SCITDataTypeState)) return false;
             return true;
         }
         #endregion
@@ -1824,6 +1851,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             obj.VisualEffect = eval(this.VisualEffect);
             obj.Flags = eval(this.Flags);
             obj.Name = eval(this.Name);
+            obj.SCITDataTypeState = eval(this.SCITDataTypeState);
         }
         #endregion
 
@@ -1872,6 +1900,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     fg.AppendLine($"Name => {Name}");
                 }
+                if (printMask?.SCITDataTypeState ?? true)
+                {
+                    fg.AppendLine($"SCITDataTypeState => {SCITDataTypeState}");
+                }
             }
             fg.AppendLine("]");
         }
@@ -1900,6 +1932,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Exception VisualEffect;
         public Exception Flags;
         public Exception Name;
+        public Exception SCITDataTypeState;
         #endregion
 
         #region IErrorMask
@@ -1918,6 +1951,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return Flags;
                 case ScriptEffect_FieldIndex.Name:
                     return Name;
+                case ScriptEffect_FieldIndex.SCITDataTypeState:
+                    return SCITDataTypeState;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1942,6 +1977,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     break;
                 case ScriptEffect_FieldIndex.Name:
                     this.Name = ex;
+                    break;
+                case ScriptEffect_FieldIndex.SCITDataTypeState:
+                    this.SCITDataTypeState = ex;
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1968,6 +2006,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case ScriptEffect_FieldIndex.Name:
                     this.Name = (Exception)obj;
                     break;
+                case ScriptEffect_FieldIndex.SCITDataTypeState:
+                    this.SCITDataTypeState = (Exception)obj;
+                    break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1981,6 +2022,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (VisualEffect != null) return true;
             if (Flags != null) return true;
             if (Name != null) return true;
+            if (SCITDataTypeState != null) return true;
             return false;
         }
         #endregion
@@ -2020,6 +2062,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             fg.AppendLine($"VisualEffect => {VisualEffect}");
             fg.AppendLine($"Flags => {Flags}");
             fg.AppendLine($"Name => {Name}");
+            fg.AppendLine($"SCITDataTypeState => {SCITDataTypeState}");
         }
         #endregion
 
@@ -2032,6 +2075,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.VisualEffect = this.VisualEffect.Combine(rhs.VisualEffect);
             ret.Flags = this.Flags.Combine(rhs.Flags);
             ret.Name = this.Name.Combine(rhs.Name);
+            ret.SCITDataTypeState = this.SCITDataTypeState.Combine(rhs.SCITDataTypeState);
             return ret;
         }
         public static ScriptEffect_ErrorMask Combine(ScriptEffect_ErrorMask lhs, ScriptEffect_ErrorMask rhs)
@@ -2063,6 +2107,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.VisualEffect = defaultOn;
             this.Flags = defaultOn;
             this.Name = defaultOn;
+            this.SCITDataTypeState = defaultOn;
         }
 
         #region Members
@@ -2071,6 +2116,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool VisualEffect;
         public bool Flags;
         public bool Name;
+        public bool SCITDataTypeState;
         #endregion
 
     }
@@ -2084,6 +2130,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool VisualEffect;
         public bool Flags;
         public bool Name;
+        public bool SCITDataTypeState;
         #endregion
 
         #region Ctors
@@ -2098,6 +2145,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.VisualEffect = defaultOn;
             this.Flags = defaultOn;
             this.Name = defaultOn;
+            this.SCITDataTypeState = defaultOn;
         }
 
         #endregion
@@ -2121,7 +2169,108 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Add((VisualEffect, null));
             ret.Add((Flags, null));
             ret.Add((Name, null));
+            ret.Add((SCITDataTypeState, null));
         }
+    }
+    #endregion
+
+    #region Binary Translation
+    public partial class ScriptEffectBinaryTranslation
+    {
+        public readonly static ScriptEffectBinaryTranslation Instance = new ScriptEffectBinaryTranslation();
+
+        public static void Write_Binary_Embedded(
+            IScriptEffectInternalGetter item,
+            MutagenWriter writer,
+            ErrorMaskBuilder errorMask,
+            MasterReferences masterReferences)
+        {
+        }
+
+        public static void Write_Binary_RecordTypes(
+            IScriptEffectInternalGetter item,
+            MutagenWriter writer,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask,
+            MasterReferences masterReferences)
+        {
+            if (item.SCITDataTypeState.HasFlag(ScriptEffect.SCITDataType.Has))
+            {
+                using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(ScriptEffect_Registration.SCIT_HEADER)))
+                {
+                    Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.Script_Property,
+                        masterReferences: masterReferences);
+                    if (!item.SCITDataTypeState.HasFlag(ScriptEffect.SCITDataType.Break0))
+                    {
+                        Mutagen.Bethesda.Binary.EnumBinaryTranslation<MagicSchool>.Instance.Write(
+                            writer,
+                            item.MagicSchool,
+                            length: 4);
+                        Mutagen.Bethesda.Binary.RecordTypeBinaryTranslation.Instance.Write(
+                            writer: writer,
+                            item: item.VisualEffect_Property);
+                        if (!item.SCITDataTypeState.HasFlag(ScriptEffect.SCITDataType.Break1))
+                        {
+                            Mutagen.Bethesda.Binary.EnumBinaryTranslation<ScriptEffect.Flag>.Instance.Write(
+                                writer,
+                                item.Flags,
+                                length: 4);
+                        }
+                    }
+                }
+            }
+            if (item.Name_IsSet)
+            {
+                Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Name,
+                    header: recordTypeConverter.ConvertToCustom(ScriptEffect_Registration.FULL_HEADER),
+                    nullable: false);
+            }
+        }
+
+        #region Binary Write
+        public void Write_Binary(
+            MutagenWriter writer,
+            IScriptEffectInternalGetter item,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            bool doMasks,
+            out ScriptEffect_ErrorMask errorMask)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            Write_Binary(
+                masterReferences: masterReferences,
+                writer: writer,
+                item: item,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMaskBuilder);
+            errorMask = ScriptEffect_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public void Write_Binary(
+            MutagenWriter writer,
+            IScriptEffectInternalGetter item,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            Write_Binary_Embedded(
+                item: item,
+                writer: writer,
+                errorMask: errorMask,
+                masterReferences: masterReferences);
+            Write_Binary_RecordTypes(
+                item: item,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask,
+                masterReferences: masterReferences);
+        }
+        #endregion
+
     }
     #endregion
 

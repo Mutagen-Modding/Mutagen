@@ -35,7 +35,6 @@ namespace Mutagen.Bethesda.Generation
             gen.Add(new ReactiveModule());
             gen.Namespaces.Add("Mutagen.Bethesda.Internals");
             gen.XmlTranslation.ShouldGenerateXSD = false;
-            gen.XmlTranslation.ExportWithIGetter = false;
             gen.XmlTranslation.AddTypeAssociation<FormIDLinkType>(new FormIDLinkXmlTranslationGeneration());
             gen.XmlTranslation.AddTypeAssociation<FormIDType>(new PrimitiveXmlTranslationGeneration<FormID>());
             gen.XmlTranslation.AddTypeAssociation<FormKeyType>(new PrimitiveXmlTranslationGeneration<FormKey>());

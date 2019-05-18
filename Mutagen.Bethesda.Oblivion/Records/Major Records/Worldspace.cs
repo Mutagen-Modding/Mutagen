@@ -86,192 +86,6 @@ namespace Mutagen.Bethesda.Oblivion
             }));
         }
 
-        static partial void FillBinary_OffsetLength_Custom(MutagenFrame frame, Worldspace item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
-        {
-            item.UsingOffsetLength = true;
-            if (!HeaderTranslation.ReadNextSubRecordType(frame.Reader, out var xLen).Equals(Worldspace_Registration.XXXX_HEADER)
-                || xLen != 4)
-            {
-                errorMask.ReportExceptionOrThrow(new ArgumentException());
-                return;
-            }
-            var contentLen = frame.Reader.ReadInt32();
-            if (!HeaderTranslation.ReadNextSubRecordType(frame.Reader, out var oLen).Equals(Worldspace_Registration.OFST_HEADER)
-                || oLen != 0)
-            {
-                errorMask.ReportExceptionOrThrow(new ArgumentException());
-                return;
-            }
-            item.OffsetData = frame.Reader.ReadBytes(contentLen);
-        }
-
-        static partial void WriteBinary_OffsetLength_Custom(MutagenWriter writer, Worldspace item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
-        {
-            if (!item.OffsetData_IsSet) return;
-            if (!item.UsingOffsetLength) return;
-            using (HeaderExport.ExportSubRecordHeader(writer, Worldspace_Registration.XXXX_HEADER))
-            {
-                writer.Write(item.OffsetData.Length);
-            }
-            writer.Write(Worldspace_Registration.OFST_HEADER.Type);
-            writer.WriteZeros(2);
-            writer.Write(item.OffsetData);
-        }
-
-        static partial void FillBinary_OffsetData_Custom(MutagenFrame frame, Worldspace item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
-        {
-            if (item.UsingOffsetLength) return;
-            if (!HeaderTranslation.ReadNextSubRecordType(frame.Reader, out var len).Equals(Worldspace_Registration.OFST_HEADER))
-            {
-                throw new ArgumentException();
-            }
-            item.OffsetData = frame.Reader.ReadBytes(len);
-        }
-
-        static partial void WriteBinary_OffsetData_Custom(MutagenWriter writer, Worldspace item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
-        {
-            if (item.UsingOffsetLength) return;
-            if (!item.OffsetData_IsSet) return;
-            using (HeaderExport.ExportSubRecordHeader(writer, Worldspace_Registration.OFST_HEADER))
-            {
-                ByteArrayBinaryTranslation.Instance.Write(writer, item.OffsetData);
-            }
-        }
-
-        static async Task CustomBinaryEnd_Import(MutagenFrame frame, Worldspace obj, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
-        {
-            if (frame.Reader.Complete) return;
-            var next = HeaderTranslation.GetNextType(
-                reader: frame.Reader, 
-                contentLength: out var len, 
-                finalPos: out var _,
-                hopGroup: false);
-            if (!next.Equals(Group_Registration.GRUP_HEADER)) return;
-            frame.Reader.Position += 8;
-            var formKey = FormKey.Factory(masterReferences, frame.Reader.ReadUInt32());
-            var grupType = (GroupTypeEnum)frame.Reader.ReadInt32();
-            if (grupType == GroupTypeEnum.WorldChildren)
-            {
-                obj.SubCellsTimestamp = frame.Reader.ReadBytes(4);
-                if (formKey != obj.FormKey)
-                {
-                    errorMask.ReportExceptionOrThrow(
-                        new ArgumentException("Cell children group did not match the FormID of the parent worldspace."));
-                    return;
-                }
-            }
-            else
-            {
-                frame.Reader.Position -= 16;
-                return;
-            }
-            var subFrame = MutagenFrame.ByLength(frame.Reader, len - 20);
-            for (int i = 0; i < 3; i++)
-            {
-                if (subFrame.Complete) return;
-                var subType = HeaderTranslation.GetNextSubRecordType(frame.Reader, out var subLen);
-                switch (subType.TypeInt)
-                {
-                    case 0x44414F52: // "ROAD":
-                        if (LoquiBinaryTranslation<Road>.Instance.Parse(
-                            frame: subFrame,
-                            item: out var road,
-                            fieldIndex: (int)Worldspace_FieldIndex.Road,
-                            masterReferences: masterReferences,
-                            errorMask: errorMask))
-                        {
-                            obj.Road = road;
-                        }
-                        else
-                        {
-                            obj.Road_Unset();
-                        }
-                        break;
-                    case 0x4C4C4543: // "CELL":
-                        var topCell = await LoquiBinaryAsyncTranslation<Cell>.Instance.Parse(
-                            frame: subFrame,
-                            fieldIndex: (int)Worldspace_FieldIndex.TopCell,
-                            masterReferences: masterReferences,
-                            errorMask: errorMask);
-                        if (topCell.Succeeded)
-                        {
-                            obj.TopCell = topCell.Value;
-                        }
-                        else
-                        {
-                            obj.TopCell_Unset();
-                        }
-                        break;
-                    case 0x50555247: // "GRUP":
-                        await Mutagen.Bethesda.Binary.ListAsyncBinaryTranslation<WorldspaceBlock>.Instance.ParseRepeatedItem(
-                            frame: frame,
-                            item: obj._SubCells,
-                            triggeringRecord: Worldspace_Registration.GRUP_HEADER,
-                            fieldIndex: (int)Worldspace_FieldIndex.SubCells,
-                            lengthLength: Mutagen.Bethesda.Constants.RECORD_LENGTHLENGTH,
-                            errorMask: errorMask,
-                            transl: (MutagenFrame r, ErrorMaskBuilder subErrorMask) =>
-                            {
-                                return LoquiBinaryAsyncTranslation<WorldspaceBlock>.Instance.Parse(
-                                    frame: r,
-                                    masterReferences: masterReferences,
-                                    errorMask: errorMask);
-                            });
-                        break;
-                    default:
-                        return;
-                }
-            }
-        }
-
-        static partial void CustomBinaryEnd_Export(MutagenWriter writer, Worldspace obj, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
-        {
-            if (obj._SubCells.Count == 0
-                && !obj.Road_IsSet
-                && !obj.TopCell_IsSet) return;
-            using (HeaderExport.ExportHeader(writer, Group_Registration.GRUP_HEADER, ObjectType.Group))
-            {
-                FormKeyBinaryTranslation.Instance.Write(
-                    writer,
-                    obj.FormKey,
-                    masterReferences);
-                writer.Write((int)GroupTypeEnum.WorldChildren);
-                writer.Write(obj.SubCellsTimestamp);
-
-                if (obj.Road_IsSet)
-                {
-                    LoquiBinaryTranslation<Road>.Instance.Write(
-                        writer,
-                        obj.Road,
-                        (int)Worldspace_FieldIndex.Road,
-                        masterReferences: masterReferences,
-                        errorMask: errorMask);
-                }
-                if (obj.TopCell_IsSet)
-                {
-                    LoquiBinaryTranslation<Cell>.Instance.Write(
-                        writer,
-                        obj.TopCell,
-                        (int)Worldspace_FieldIndex.TopCell,
-                        masterReferences: masterReferences,
-                        errorMask: errorMask);
-                }
-                Mutagen.Bethesda.Binary.ListBinaryTranslation<WorldspaceBlock>.Instance.Write(
-                    writer: writer,
-                    items: obj.SubCells,
-                    fieldIndex: (int)Worldspace_FieldIndex.SubCells,
-                    errorMask: errorMask,
-                    transl: (MutagenWriter subWriter, WorldspaceBlock subItem, ErrorMaskBuilder listSubMask) =>
-                    {
-                        LoquiBinaryTranslation<WorldspaceBlock>.Instance.Write(
-                            writer: subWriter,
-                            item: subItem,
-                            masterReferences: masterReferences,
-                            errorMask: listSubMask);
-                    });
-            }
-        }
-
         public static async Task<TryGet<Worldspace>> TryCreate_Xml_Folder(
             DirectoryPath dir,
             ErrorMaskBuilder errorMask)
@@ -453,6 +267,198 @@ namespace Mutagen.Bethesda.Oblivion
                 }
             }
             await Task.WhenAll(tasks);
+        }
+    }
+
+    namespace Internals
+    {
+        public partial class WorldspaceBinaryTranslation
+        {
+            static partial void FillBinary_OffsetLength_Custom(MutagenFrame frame, Worldspace item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
+            {
+                item.UsingOffsetLength = true;
+                if (!HeaderTranslation.ReadNextSubRecordType(frame.Reader, out var xLen).Equals(Worldspace_Registration.XXXX_HEADER)
+                    || xLen != 4)
+                {
+                    errorMask.ReportExceptionOrThrow(new ArgumentException());
+                    return;
+                }
+                var contentLen = frame.Reader.ReadInt32();
+                if (!HeaderTranslation.ReadNextSubRecordType(frame.Reader, out var oLen).Equals(Worldspace_Registration.OFST_HEADER)
+                    || oLen != 0)
+                {
+                    errorMask.ReportExceptionOrThrow(new ArgumentException());
+                    return;
+                }
+                item.OffsetData = frame.Reader.ReadBytes(contentLen);
+            }
+
+            static partial void WriteBinary_OffsetLength_Custom(MutagenWriter writer, IWorldspaceInternalGetter item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
+            {
+                if (!item.OffsetData_IsSet) return;
+                if (!item.UsingOffsetLength) return;
+                using (HeaderExport.ExportSubRecordHeader(writer, Worldspace_Registration.XXXX_HEADER))
+                {
+                    writer.Write(item.OffsetData.Length);
+                }
+                writer.Write(Worldspace_Registration.OFST_HEADER.Type);
+                writer.WriteZeros(2);
+                writer.Write(item.OffsetData);
+            }
+
+            static partial void FillBinary_OffsetData_Custom(MutagenFrame frame, Worldspace item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
+            {
+                if (item.UsingOffsetLength) return;
+                if (!HeaderTranslation.ReadNextSubRecordType(frame.Reader, out var len).Equals(Worldspace_Registration.OFST_HEADER))
+                {
+                    throw new ArgumentException();
+                }
+                item.OffsetData = frame.Reader.ReadBytes(len);
+            }
+
+            static partial void WriteBinary_OffsetData_Custom(MutagenWriter writer, IWorldspaceInternalGetter item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
+            {
+                if (item.UsingOffsetLength) return;
+                if (!item.OffsetData_IsSet) return;
+                using (HeaderExport.ExportSubRecordHeader(writer, Worldspace_Registration.OFST_HEADER))
+                {
+                    ByteArrayBinaryTranslation.Instance.Write(writer, item.OffsetData);
+                }
+            }
+
+            public static async Task CustomBinaryEnd_Import(MutagenFrame frame, Worldspace obj, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
+            {
+                if (frame.Reader.Complete) return;
+                var next = HeaderTranslation.GetNextType(
+                    reader: frame.Reader,
+                    contentLength: out var len,
+                    finalPos: out var _,
+                    hopGroup: false);
+                if (!next.Equals(Group_Registration.GRUP_HEADER)) return;
+                frame.Reader.Position += 8;
+                var formKey = FormKey.Factory(masterReferences, frame.Reader.ReadUInt32());
+                var grupType = (GroupTypeEnum)frame.Reader.ReadInt32();
+                if (grupType == GroupTypeEnum.WorldChildren)
+                {
+                    obj.SubCellsTimestamp = frame.Reader.ReadBytes(4);
+                    if (formKey != obj.FormKey)
+                    {
+                        errorMask.ReportExceptionOrThrow(
+                            new ArgumentException("Cell children group did not match the FormID of the parent worldspace."));
+                        return;
+                    }
+                }
+                else
+                {
+                    frame.Reader.Position -= 16;
+                    return;
+                }
+                var subFrame = MutagenFrame.ByLength(frame.Reader, len - 20);
+                for (int i = 0; i < 3; i++)
+                {
+                    if (subFrame.Complete) return;
+                    var subType = HeaderTranslation.GetNextSubRecordType(frame.Reader, out var subLen);
+                    switch (subType.TypeInt)
+                    {
+                        case 0x44414F52: // "ROAD":
+                            if (LoquiBinaryTranslation<Road>.Instance.Parse(
+                                frame: subFrame,
+                                item: out var road,
+                                fieldIndex: (int)Worldspace_FieldIndex.Road,
+                                masterReferences: masterReferences,
+                                errorMask: errorMask))
+                            {
+                                obj.Road = road;
+                            }
+                            else
+                            {
+                                obj.Road_Unset();
+                            }
+                            break;
+                        case 0x4C4C4543: // "CELL":
+                            var topCell = await LoquiBinaryAsyncTranslation<Cell>.Instance.Parse(
+                                frame: subFrame,
+                                fieldIndex: (int)Worldspace_FieldIndex.TopCell,
+                                masterReferences: masterReferences,
+                                errorMask: errorMask);
+                            if (topCell.Succeeded)
+                            {
+                                obj.TopCell = topCell.Value;
+                            }
+                            else
+                            {
+                                obj.TopCell_Unset();
+                            }
+                            break;
+                        case 0x50555247: // "GRUP":
+                            await Mutagen.Bethesda.Binary.ListAsyncBinaryTranslation<WorldspaceBlock>.Instance.ParseRepeatedItem(
+                                frame: frame,
+                                item: obj.SubCells,
+                                triggeringRecord: Worldspace_Registration.GRUP_HEADER,
+                                fieldIndex: (int)Worldspace_FieldIndex.SubCells,
+                                lengthLength: Mutagen.Bethesda.Constants.RECORD_LENGTHLENGTH,
+                                errorMask: errorMask,
+                                transl: (MutagenFrame r, ErrorMaskBuilder subErrorMask) =>
+                                {
+                                    return LoquiBinaryAsyncTranslation<WorldspaceBlock>.Instance.Parse(
+                                        frame: r,
+                                        masterReferences: masterReferences,
+                                        errorMask: errorMask);
+                                });
+                            break;
+                        default:
+                            return;
+                    }
+                }
+            }
+
+            static partial void CustomBinaryEnd_Export(MutagenWriter writer, IWorldspaceInternalGetter obj, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
+            {
+                if (obj.SubCells.Count == 0
+                    && !obj.Road_IsSet
+                    && !obj.TopCell_IsSet) return;
+                using (HeaderExport.ExportHeader(writer, Group_Registration.GRUP_HEADER, ObjectType.Group))
+                {
+                    FormKeyBinaryTranslation.Instance.Write(
+                        writer,
+                        obj.FormKey,
+                        masterReferences);
+                    writer.Write((int)GroupTypeEnum.WorldChildren);
+                    writer.Write(obj.SubCellsTimestamp);
+
+                    if (obj.Road_IsSet)
+                    {
+                        LoquiBinaryTranslation<Road>.Instance.Write(
+                            writer,
+                            obj.Road,
+                            (int)Worldspace_FieldIndex.Road,
+                            masterReferences: masterReferences,
+                            errorMask: errorMask);
+                    }
+                    if (obj.TopCell_IsSet)
+                    {
+                        LoquiBinaryTranslation<Cell>.Instance.Write(
+                            writer,
+                            obj.TopCell,
+                            (int)Worldspace_FieldIndex.TopCell,
+                            masterReferences: masterReferences,
+                            errorMask: errorMask);
+                    }
+                    Mutagen.Bethesda.Binary.ListBinaryTranslation<WorldspaceBlock>.Instance.Write(
+                        writer: writer,
+                        items: obj.SubCells,
+                        fieldIndex: (int)Worldspace_FieldIndex.SubCells,
+                        errorMask: errorMask,
+                        transl: (MutagenWriter subWriter, WorldspaceBlock subItem, ErrorMaskBuilder listSubMask) =>
+                        {
+                            LoquiBinaryTranslation<WorldspaceBlock>.Instance.Write(
+                                writer: subWriter,
+                                item: subItem,
+                                masterReferences: masterReferences,
+                                errorMask: listSubMask);
+                        });
+                }
+            }
         }
     }
 }

@@ -38,6 +38,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class Tree : 
         OblivionMajorRecord,
         ITree,
+        ITreeInternal,
         ILoquiObject<Tree>,
         ILoquiObjectSetter,
         IEquatable<Tree>
@@ -245,6 +246,40 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
         #endregion
+        #region CNAMDataTypeState
+        private Tree.CNAMDataType _CNAMDataTypeState;
+        public Tree.CNAMDataType CNAMDataTypeState
+        {
+            get => this._CNAMDataTypeState;
+            set => this.RaiseAndSetIfChanged(ref this._CNAMDataTypeState, value, nameof(CNAMDataTypeState));
+        }
+        Tree.CNAMDataType ITreeInternal.CNAMDataTypeState
+        {
+            get => this.CNAMDataTypeState;
+            set => this.CNAMDataTypeState = value;
+        }
+        Tree.CNAMDataType ITreeInternalGetter.CNAMDataTypeState
+        {
+            get => this.CNAMDataTypeState;
+        }
+        #endregion
+        #region BNAMDataTypeState
+        private Tree.BNAMDataType _BNAMDataTypeState;
+        public Tree.BNAMDataType BNAMDataTypeState
+        {
+            get => this._BNAMDataTypeState;
+            set => this.RaiseAndSetIfChanged(ref this._BNAMDataTypeState, value, nameof(BNAMDataTypeState));
+        }
+        Tree.BNAMDataType ITreeInternal.BNAMDataTypeState
+        {
+            get => this.BNAMDataTypeState;
+            set => this.BNAMDataTypeState = value;
+        }
+        Tree.BNAMDataType ITreeInternalGetter.BNAMDataTypeState
+        {
+            get => this.BNAMDataTypeState;
+        }
+        #endregion
 
         IMask<bool> IEqualsMask<Tree>.GetEqualsMask(Tree rhs, EqualsMaskHelper.Include include) => TreeCommon.GetEqualsMask(this, rhs, include);
         IMask<bool> IEqualsMask<ITreeGetter>.GetEqualsMask(ITreeGetter rhs, EqualsMaskHelper.Include include) => TreeCommon.GetEqualsMask(this, rhs, include);
@@ -306,6 +341,8 @@ namespace Mutagen.Bethesda.Oblivion
             if (!this.RustleSpeed.EqualsWithin(rhs.RustleSpeed)) return false;
             if (!this.BillboardWidth.EqualsWithin(rhs.BillboardWidth)) return false;
             if (!this.BillboardHeight.EqualsWithin(rhs.BillboardHeight)) return false;
+            if (this.CNAMDataTypeState != rhs.CNAMDataTypeState) return false;
+            if (this.BNAMDataTypeState != rhs.BNAMDataTypeState) return false;
             return true;
         }
 
@@ -334,6 +371,8 @@ namespace Mutagen.Bethesda.Oblivion
             ret = HashHelper.GetHashCode(RustleSpeed).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(BillboardWidth).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(BillboardHeight).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(CNAMDataTypeState).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(BNAMDataTypeState).CombineHashCode(ret);
             ret = ret.CombineHashCode(base.GetHashCode());
             return ret;
         }
@@ -507,7 +546,8 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Xml(
+            TreeXmlTranslation.Instance.Write_Xml(
+                item: this,
                 name: name,
                 node: node,
                 errorMask: errorMaskBuilder,
@@ -539,7 +579,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            this.Write_Xml(
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -570,7 +610,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            this.Write_Xml(
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -586,7 +626,8 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Xml(
+            TreeXmlTranslation.Instance.Write_Xml(
+                item: this,
                 name: name,
                 node: node,
                 errorMask: errorMaskBuilder,
@@ -602,7 +643,8 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Xml(
+            TreeXmlTranslation.Instance.Write_Xml(
+                item: this,
                 name: name,
                 node: node,
                 errorMask: errorMaskBuilder,
@@ -618,7 +660,7 @@ namespace Mutagen.Bethesda.Oblivion
             TranslationCrystal translationMask,
             string name = null)
         {
-            TreeCommon.Write_Xml(
+            TreeXmlTranslation.Instance.Write_Xml(
                 item: this,
                 name: name,
                 node: node,
@@ -674,6 +716,8 @@ namespace Mutagen.Bethesda.Oblivion
                 case Tree_FieldIndex.RustleSpeed:
                 case Tree_FieldIndex.BillboardWidth:
                 case Tree_FieldIndex.BillboardHeight:
+                case Tree_FieldIndex.CNAMDataTypeState:
+                case Tree_FieldIndex.BNAMDataTypeState:
                     return true;
                 default:
                     return base.GetHasBeenSet(index);
@@ -682,13 +726,11 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = Tree_Registration.TRIGGERING_RECORD_TYPE;
-        public CNAMDataType CNAMDataTypeState;
         [Flags]
         public enum CNAMDataType
         {
             Has = 1
         }
-        public BNAMDataType BNAMDataTypeState;
         [Flags]
         public enum BNAMDataType
         {
@@ -771,7 +813,8 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Binary(
+            TreeBinaryTranslation.Instance.Write_Binary(
+                item: this,
                 masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: null,
@@ -787,7 +830,8 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Binary(
+            TreeBinaryTranslation.Instance.Write_Binary(
+                item: this,
                 masterReferences: masterReferences,
                 writer: writer,
                 errorMask: errorMaskBuilder,
@@ -802,7 +846,8 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Binary(
+            TreeBinaryTranslation.Instance.Write_Binary(
+                item: this,
                 masterReferences: masterReferences,
                 writer: writer,
                 errorMask: errorMaskBuilder,
@@ -818,7 +863,7 @@ namespace Mutagen.Bethesda.Oblivion
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            TreeCommon.Write_Binary(
+            TreeBinaryTranslation.Instance.Write_Binary(
                 item: this,
                 masterReferences: masterReferences,
                 writer: writer,
@@ -1192,6 +1237,12 @@ namespace Mutagen.Bethesda.Oblivion
                 case Tree_FieldIndex.BillboardHeight:
                     this.BillboardHeight = (Single)obj;
                     break;
+                case Tree_FieldIndex.CNAMDataTypeState:
+                    this.CNAMDataTypeState = (Tree.CNAMDataType)obj;
+                    break;
+                case Tree_FieldIndex.BNAMDataTypeState:
+                    this.BNAMDataTypeState = (Tree.BNAMDataType)obj;
+                    break;
                 default:
                     base.SetNthObject(index, obj);
                     break;
@@ -1262,6 +1313,12 @@ namespace Mutagen.Bethesda.Oblivion
                 case Tree_FieldIndex.BillboardHeight:
                     obj.BillboardHeight = (Single)pair.Value;
                     break;
+                case Tree_FieldIndex.CNAMDataTypeState:
+                    obj.CNAMDataTypeState = (Tree.CNAMDataType)pair.Value;
+                    break;
+                case Tree_FieldIndex.BNAMDataTypeState:
+                    obj.BNAMDataTypeState = (Tree.BNAMDataType)pair.Value;
+                    break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
@@ -1302,6 +1359,15 @@ namespace Mutagen.Bethesda.Oblivion
         new Single BillboardWidth { get; set; }
 
         new Single BillboardHeight { get; set; }
+
+    }
+
+    public partial interface ITreeInternal : ITree, ITreeInternalGetter, IOblivionMajorRecordInternal
+    {
+        new ISourceSetList<UInt32> SpeedTreeSeeds { get; }
+        new Tree.CNAMDataType CNAMDataTypeState { get; set; }
+
+        new Tree.BNAMDataType BNAMDataTypeState { get; set; }
 
     }
 
@@ -1363,6 +1429,19 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
+    public partial interface ITreeInternalGetter : ITreeGetter, IOblivionMajorRecordInternalGetter
+    {
+        #region CNAMDataTypeState
+        Tree.CNAMDataType CNAMDataTypeState { get; }
+
+        #endregion
+        #region BNAMDataTypeState
+        Tree.BNAMDataType BNAMDataTypeState { get; }
+
+        #endregion
+
+    }
+
     #endregion
 
 }
@@ -1372,24 +1451,27 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #region Field Index
     public enum Tree_FieldIndex
     {
-        FormKey = 0,
-        Version = 1,
-        EditorID = 2,
-        RecordType = 3,
-        OblivionMajorRecordFlags = 4,
-        Model = 5,
-        Icon = 6,
-        SpeedTreeSeeds = 7,
-        LeafCurvature = 8,
-        MinimumLeafAngle = 9,
-        MaximumLeafAngle = 10,
-        BranchDimmingValue = 11,
-        LeafDimmingValue = 12,
-        ShadowRadius = 13,
-        RockingSpeed = 14,
-        RustleSpeed = 15,
-        BillboardWidth = 16,
-        BillboardHeight = 17,
+        MajorRecordFlagsRaw = 0,
+        FormKey = 1,
+        Version = 2,
+        EditorID = 3,
+        RecordType = 4,
+        OblivionMajorRecordFlags = 5,
+        Model = 6,
+        Icon = 7,
+        SpeedTreeSeeds = 8,
+        LeafCurvature = 9,
+        MinimumLeafAngle = 10,
+        MaximumLeafAngle = 11,
+        BranchDimmingValue = 12,
+        LeafDimmingValue = 13,
+        ShadowRadius = 14,
+        RockingSpeed = 15,
+        RustleSpeed = 16,
+        BillboardWidth = 17,
+        BillboardHeight = 18,
+        CNAMDataTypeState = 19,
+        BNAMDataTypeState = 20,
     }
     #endregion
 
@@ -1407,9 +1489,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const string GUID = "82606775-b1a1-4c44-9052-b021c5ccc13a";
 
-        public const ushort AdditionalFieldCount = 13;
+        public const ushort AdditionalFieldCount = 15;
 
-        public const ushort FieldCount = 18;
+        public const ushort FieldCount = 21;
 
         public static readonly Type MaskType = typeof(Tree_Mask<>);
 
@@ -1419,11 +1501,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type GetterType = typeof(ITreeGetter);
 
-        public static readonly Type InternalGetterType = null;
+        public static readonly Type InternalGetterType = typeof(ITreeInternalGetter);
 
         public static readonly Type SetterType = typeof(ITree);
 
-        public static readonly Type InternalSetterType = null;
+        public static readonly Type InternalSetterType = typeof(ITreeInternal);
 
         public static readonly Type CommonType = typeof(TreeCommon);
 
@@ -1467,6 +1549,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (ushort)Tree_FieldIndex.BillboardWidth;
                 case "BILLBOARDHEIGHT":
                     return (ushort)Tree_FieldIndex.BillboardHeight;
+                case "CNAMDATATYPESTATE":
+                    return (ushort)Tree_FieldIndex.CNAMDataTypeState;
+                case "BNAMDATATYPESTATE":
+                    return (ushort)Tree_FieldIndex.BNAMDataTypeState;
                 default:
                     return null;
             }
@@ -1491,6 +1577,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Tree_FieldIndex.RustleSpeed:
                 case Tree_FieldIndex.BillboardWidth:
                 case Tree_FieldIndex.BillboardHeight:
+                case Tree_FieldIndex.CNAMDataTypeState:
+                case Tree_FieldIndex.BNAMDataTypeState:
                     return false;
                 default:
                     return OblivionMajorRecord_Registration.GetNthIsEnumerable(index);
@@ -1516,6 +1604,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Tree_FieldIndex.RustleSpeed:
                 case Tree_FieldIndex.BillboardWidth:
                 case Tree_FieldIndex.BillboardHeight:
+                case Tree_FieldIndex.CNAMDataTypeState:
+                case Tree_FieldIndex.BNAMDataTypeState:
                     return false;
                 default:
                     return OblivionMajorRecord_Registration.GetNthIsLoqui(index);
@@ -1540,6 +1630,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Tree_FieldIndex.RustleSpeed:
                 case Tree_FieldIndex.BillboardWidth:
                 case Tree_FieldIndex.BillboardHeight:
+                case Tree_FieldIndex.CNAMDataTypeState:
+                case Tree_FieldIndex.BNAMDataTypeState:
                     return false;
                 default:
                     return OblivionMajorRecord_Registration.GetNthIsSingleton(index);
@@ -1577,6 +1669,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return "BillboardWidth";
                 case Tree_FieldIndex.BillboardHeight:
                     return "BillboardHeight";
+                case Tree_FieldIndex.CNAMDataTypeState:
+                    return "CNAMDataTypeState";
+                case Tree_FieldIndex.BNAMDataTypeState:
+                    return "BNAMDataTypeState";
                 default:
                     return OblivionMajorRecord_Registration.GetNthName(index);
             }
@@ -1600,6 +1696,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Tree_FieldIndex.RustleSpeed:
                 case Tree_FieldIndex.BillboardWidth:
                 case Tree_FieldIndex.BillboardHeight:
+                case Tree_FieldIndex.CNAMDataTypeState:
+                case Tree_FieldIndex.BNAMDataTypeState:
                     return false;
                 default:
                     return OblivionMajorRecord_Registration.IsNthDerivative(index);
@@ -1624,6 +1722,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Tree_FieldIndex.RustleSpeed:
                 case Tree_FieldIndex.BillboardWidth:
                 case Tree_FieldIndex.BillboardHeight:
+                case Tree_FieldIndex.CNAMDataTypeState:
+                case Tree_FieldIndex.BNAMDataTypeState:
                     return false;
                 default:
                     return OblivionMajorRecord_Registration.IsProtected(index);
@@ -1661,6 +1761,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return typeof(Single);
                 case Tree_FieldIndex.BillboardHeight:
                     return typeof(Single);
+                case Tree_FieldIndex.CNAMDataTypeState:
+                    return typeof(Tree.CNAMDataType);
+                case Tree_FieldIndex.BNAMDataTypeState:
+                    return typeof(Tree.BNAMDataType);
                 default:
                     return OblivionMajorRecord_Registration.GetNthType(index);
             }
@@ -2154,6 +2258,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     fg.AppendLine($"BillboardHeight => {item.BillboardHeight}");
                 }
+                if (printMask?.CNAMDataTypeState ?? true)
+                {
+                }
+                if (printMask?.BNAMDataTypeState ?? true)
+                {
+                }
             }
             fg.AppendLine("]");
         }
@@ -2185,6 +2295,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.RustleSpeed = true;
             ret.BillboardWidth = true;
             ret.BillboardHeight = true;
+            ret.CNAMDataTypeState = true;
+            ret.BNAMDataTypeState = true;
             return ret;
         }
 
@@ -2198,6 +2310,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (index)
             {
+                case OblivionMajorRecord_FieldIndex.MajorRecordFlagsRaw:
+                    return (Tree_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.FormKey:
                     return (Tree_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.Version:
@@ -2223,6 +2337,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (index)
             {
+                case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
+                    return (Tree_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
                     return (Tree_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.Version:
@@ -2237,196 +2353,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         #region Xml Translation
-        #region Xml Write
-        public static void Write_Xml(
-            XElement node,
-            Tree item,
-            bool doMasks,
-            out Tree_ErrorMask errorMask,
-            Tree_TranslationMask translationMask,
-            string name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_Xml(
-                name: name,
-                node: node,
-                item: item,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = Tree_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void Write_Xml(
-            XElement node,
-            Tree item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.Tree");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.Tree");
-            }
-            WriteToNode_Xml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #endregion
-
-        public static void WriteToNode_Xml(
-            this Tree item,
-            XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            OblivionMajorRecordCommon.WriteToNode_Xml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            if (item.Model_IsSet
-                && (translationMask?.GetShouldTranslate((int)Tree_FieldIndex.Model) ?? true))
-            {
-                LoquiXmlTranslation<Model>.Instance.Write(
-                    node: node,
-                    item: item.Model,
-                    name: nameof(item.Model),
-                    fieldIndex: (int)Tree_FieldIndex.Model,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Tree_FieldIndex.Model));
-            }
-            if (item.Icon_IsSet
-                && (translationMask?.GetShouldTranslate((int)Tree_FieldIndex.Icon) ?? true))
-            {
-                StringXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Icon),
-                    item: item.Icon,
-                    fieldIndex: (int)Tree_FieldIndex.Icon,
-                    errorMask: errorMask);
-            }
-            if (item.SpeedTreeSeeds.HasBeenSet
-                && (translationMask?.GetShouldTranslate((int)Tree_FieldIndex.SpeedTreeSeeds) ?? true))
-            {
-                ListXmlTranslation<UInt32>.Instance.Write(
-                    node: node,
-                    name: nameof(item.SpeedTreeSeeds),
-                    item: item.SpeedTreeSeeds,
-                    fieldIndex: (int)Tree_FieldIndex.SpeedTreeSeeds,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Tree_FieldIndex.SpeedTreeSeeds),
-                    transl: (XElement subNode, UInt32 subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
-                    {
-                        UInt32XmlTranslation.Instance.Write(
-                            node: subNode,
-                            name: null,
-                            item: subItem,
-                            errorMask: listSubMask);
-                    }
-                    );
-            }
-            if (item.CNAMDataTypeState.HasFlag(Tree.CNAMDataType.Has))
-            {
-                if ((translationMask?.GetShouldTranslate((int)Tree_FieldIndex.LeafCurvature) ?? true))
-                {
-                    FloatXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.LeafCurvature),
-                        item: item.LeafCurvature,
-                        fieldIndex: (int)Tree_FieldIndex.LeafCurvature,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Tree_FieldIndex.MinimumLeafAngle) ?? true))
-                {
-                    FloatXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.MinimumLeafAngle),
-                        item: item.MinimumLeafAngle,
-                        fieldIndex: (int)Tree_FieldIndex.MinimumLeafAngle,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Tree_FieldIndex.MaximumLeafAngle) ?? true))
-                {
-                    FloatXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.MaximumLeafAngle),
-                        item: item.MaximumLeafAngle,
-                        fieldIndex: (int)Tree_FieldIndex.MaximumLeafAngle,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Tree_FieldIndex.BranchDimmingValue) ?? true))
-                {
-                    FloatXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.BranchDimmingValue),
-                        item: item.BranchDimmingValue,
-                        fieldIndex: (int)Tree_FieldIndex.BranchDimmingValue,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Tree_FieldIndex.LeafDimmingValue) ?? true))
-                {
-                    FloatXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.LeafDimmingValue),
-                        item: item.LeafDimmingValue,
-                        fieldIndex: (int)Tree_FieldIndex.LeafDimmingValue,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Tree_FieldIndex.ShadowRadius) ?? true))
-                {
-                    Int32XmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.ShadowRadius),
-                        item: item.ShadowRadius,
-                        fieldIndex: (int)Tree_FieldIndex.ShadowRadius,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Tree_FieldIndex.RockingSpeed) ?? true))
-                {
-                    FloatXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.RockingSpeed),
-                        item: item.RockingSpeed,
-                        fieldIndex: (int)Tree_FieldIndex.RockingSpeed,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Tree_FieldIndex.RustleSpeed) ?? true))
-                {
-                    FloatXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.RustleSpeed),
-                        item: item.RustleSpeed,
-                        fieldIndex: (int)Tree_FieldIndex.RustleSpeed,
-                        errorMask: errorMask);
-                }
-            }
-            if (item.BNAMDataTypeState.HasFlag(Tree.BNAMDataType.Has))
-            {
-                if ((translationMask?.GetShouldTranslate((int)Tree_FieldIndex.BillboardWidth) ?? true))
-                {
-                    FloatXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.BillboardWidth),
-                        item: item.BillboardWidth,
-                        fieldIndex: (int)Tree_FieldIndex.BillboardWidth,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Tree_FieldIndex.BillboardHeight) ?? true))
-                {
-                    FloatXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.BillboardHeight),
-                        item: item.BillboardHeight,
-                        fieldIndex: (int)Tree_FieldIndex.BillboardHeight,
-                        errorMask: errorMask);
-                }
-            }
-        }
-
         public static void FillPublic_Xml(
             this Tree item,
             XElement node,
@@ -2804,6 +2730,58 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask?.PopIndex();
                     }
                     break;
+                case "CNAMDataTypeState":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Tree_FieldIndex.CNAMDataTypeState);
+                        if (EnumXmlTranslation<Tree.CNAMDataType>.Instance.Parse(
+                            node: node,
+                            item: out Tree.CNAMDataType CNAMDataTypeStateParse,
+                            errorMask: errorMask))
+                        {
+                            item.CNAMDataTypeState = CNAMDataTypeStateParse;
+                        }
+                        else
+                        {
+                            item.CNAMDataTypeState = default(Tree.CNAMDataType);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "BNAMDataTypeState":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Tree_FieldIndex.BNAMDataTypeState);
+                        if (EnumXmlTranslation<Tree.BNAMDataType>.Instance.Parse(
+                            node: node,
+                            item: out Tree.BNAMDataType BNAMDataTypeStateParse,
+                            errorMask: errorMask))
+                        {
+                            item.BNAMDataTypeState = BNAMDataTypeStateParse;
+                        }
+                        else
+                        {
+                            item.BNAMDataTypeState = default(Tree.BNAMDataType);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
                 default:
                     OblivionMajorRecordCommon.FillPublicElement_Xml(
                         item: item,
@@ -2817,141 +2795,226 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        #region Binary Translation
-        #region Binary Write
-        public static void Write_Binary(
-            MutagenWriter writer,
-            Tree item,
-            MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            bool doMasks,
-            out Tree_ErrorMask errorMask)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_Binary(
-                masterReferences: masterReferences,
-                writer: writer,
-                item: item,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMaskBuilder);
-            errorMask = Tree_ErrorMask.Factory(errorMaskBuilder);
-        }
+    }
+    #endregion
 
-        public static void Write_Binary(
-            MutagenWriter writer,
-            Tree item,
-            MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
-        {
-            using (HeaderExport.ExportHeader(
-                writer: writer,
-                record: Tree_Registration.TREE_HEADER,
-                type: ObjectType.Record))
-            {
-                OblivionMajorRecordCommon.Write_Binary_Embedded(
-                    item: item,
-                    writer: writer,
-                    errorMask: errorMask,
-                    masterReferences: masterReferences);
-                Write_Binary_RecordTypes(
-                    item: item,
-                    writer: writer,
-                    recordTypeConverter: recordTypeConverter,
-                    errorMask: errorMask,
-                    masterReferences: masterReferences);
-            }
-        }
-        #endregion
+    #region Modules
+    #region Xml Translation
+    public partial class TreeXmlTranslation : OblivionMajorRecordXmlTranslation
+    {
+        public new readonly static TreeXmlTranslation Instance = new TreeXmlTranslation();
 
-        public static void Write_Binary_RecordTypes(
-            Tree item,
-            MutagenWriter writer,
-            RecordTypeConverter recordTypeConverter,
+        public static void WriteToNode_Xml(
+            ITreeInternalGetter item,
+            XElement node,
             ErrorMaskBuilder errorMask,
-            MasterReferences masterReferences)
+            TranslationCrystal translationMask)
         {
-            MajorRecordCommon.Write_Binary_RecordTypes(
+            OblivionMajorRecordXmlTranslation.WriteToNode_Xml(
                 item: item,
-                writer: writer,
-                recordTypeConverter: recordTypeConverter,
+                node: node,
                 errorMask: errorMask,
-                masterReferences: masterReferences);
-            if (item.Model_IsSet)
+                translationMask: translationMask);
+            if (item.Model_IsSet
+                && (translationMask?.GetShouldTranslate((int)Tree_FieldIndex.Model) ?? true))
             {
-                LoquiBinaryTranslation<Model>.Instance.Write(
-                    writer: writer,
+                LoquiXmlTranslation<Model>.Instance.Write(
+                    node: node,
                     item: item.Model,
+                    name: nameof(item.Model),
                     fieldIndex: (int)Tree_FieldIndex.Model,
                     errorMask: errorMask,
-                    masterReferences: masterReferences);
+                    translationMask: translationMask?.GetSubCrystal((int)Tree_FieldIndex.Model));
             }
-            if (item.Icon_IsSet)
+            if (item.Icon_IsSet
+                && (translationMask?.GetShouldTranslate((int)Tree_FieldIndex.Icon) ?? true))
             {
-                Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
-                    writer: writer,
+                StringXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Icon),
                     item: item.Icon,
-                    header: recordTypeConverter.ConvertToCustom(Tree_Registration.ICON_HEADER),
-                    nullable: false);
+                    fieldIndex: (int)Tree_FieldIndex.Icon,
+                    errorMask: errorMask);
             }
-            if (item.SpeedTreeSeeds.HasBeenSet)
+            if (item.SpeedTreeSeeds.HasBeenSet
+                && (translationMask?.GetShouldTranslate((int)Tree_FieldIndex.SpeedTreeSeeds) ?? true))
             {
-                Mutagen.Bethesda.Binary.ListBinaryTranslation<UInt32>.Instance.Write(
-                    writer: writer,
-                    items: item.SpeedTreeSeeds,
-                    recordType: Tree_Registration.SNAM_HEADER,
-                    transl: UInt32BinaryTranslation.Instance.Write);
+                ListXmlTranslation<UInt32>.Instance.Write(
+                    node: node,
+                    name: nameof(item.SpeedTreeSeeds),
+                    item: item.SpeedTreeSeeds,
+                    fieldIndex: (int)Tree_FieldIndex.SpeedTreeSeeds,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)Tree_FieldIndex.SpeedTreeSeeds),
+                    transl: (XElement subNode, UInt32 subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
+                    {
+                        UInt32XmlTranslation.Instance.Write(
+                            node: subNode,
+                            name: null,
+                            item: subItem,
+                            errorMask: listSubMask);
+                    }
+                    );
             }
             if (item.CNAMDataTypeState.HasFlag(Tree.CNAMDataType.Has))
             {
-                using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Tree_Registration.CNAM_HEADER)))
+                if ((translationMask?.GetShouldTranslate((int)Tree_FieldIndex.LeafCurvature) ?? true))
                 {
-                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.LeafCurvature);
-                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.MinimumLeafAngle);
-                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.MaximumLeafAngle);
-                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.BranchDimmingValue);
-                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.LeafDimmingValue);
-                    Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.ShadowRadius);
-                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.RockingSpeed);
-                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.RustleSpeed);
+                    FloatXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.LeafCurvature),
+                        item: item.LeafCurvature,
+                        fieldIndex: (int)Tree_FieldIndex.LeafCurvature,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Tree_FieldIndex.MinimumLeafAngle) ?? true))
+                {
+                    FloatXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.MinimumLeafAngle),
+                        item: item.MinimumLeafAngle,
+                        fieldIndex: (int)Tree_FieldIndex.MinimumLeafAngle,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Tree_FieldIndex.MaximumLeafAngle) ?? true))
+                {
+                    FloatXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.MaximumLeafAngle),
+                        item: item.MaximumLeafAngle,
+                        fieldIndex: (int)Tree_FieldIndex.MaximumLeafAngle,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Tree_FieldIndex.BranchDimmingValue) ?? true))
+                {
+                    FloatXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.BranchDimmingValue),
+                        item: item.BranchDimmingValue,
+                        fieldIndex: (int)Tree_FieldIndex.BranchDimmingValue,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Tree_FieldIndex.LeafDimmingValue) ?? true))
+                {
+                    FloatXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.LeafDimmingValue),
+                        item: item.LeafDimmingValue,
+                        fieldIndex: (int)Tree_FieldIndex.LeafDimmingValue,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Tree_FieldIndex.ShadowRadius) ?? true))
+                {
+                    Int32XmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.ShadowRadius),
+                        item: item.ShadowRadius,
+                        fieldIndex: (int)Tree_FieldIndex.ShadowRadius,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Tree_FieldIndex.RockingSpeed) ?? true))
+                {
+                    FloatXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.RockingSpeed),
+                        item: item.RockingSpeed,
+                        fieldIndex: (int)Tree_FieldIndex.RockingSpeed,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Tree_FieldIndex.RustleSpeed) ?? true))
+                {
+                    FloatXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.RustleSpeed),
+                        item: item.RustleSpeed,
+                        fieldIndex: (int)Tree_FieldIndex.RustleSpeed,
+                        errorMask: errorMask);
                 }
             }
             if (item.BNAMDataTypeState.HasFlag(Tree.BNAMDataType.Has))
             {
-                using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Tree_Registration.BNAM_HEADER)))
+                if ((translationMask?.GetShouldTranslate((int)Tree_FieldIndex.BillboardWidth) ?? true))
                 {
-                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.BillboardWidth);
-                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.BillboardHeight);
+                    FloatXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.BillboardWidth),
+                        item: item.BillboardWidth,
+                        fieldIndex: (int)Tree_FieldIndex.BillboardWidth,
+                        errorMask: errorMask);
                 }
+                if ((translationMask?.GetShouldTranslate((int)Tree_FieldIndex.BillboardHeight) ?? true))
+                {
+                    FloatXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.BillboardHeight),
+                        item: item.BillboardHeight,
+                        fieldIndex: (int)Tree_FieldIndex.BillboardHeight,
+                        errorMask: errorMask);
+                }
+            }
+            if ((translationMask?.GetShouldTranslate((int)Tree_FieldIndex.CNAMDataTypeState) ?? true))
+            {
+                EnumXmlTranslation<Tree.CNAMDataType>.Instance.Write(
+                    node: node,
+                    name: nameof(item.CNAMDataTypeState),
+                    item: item.CNAMDataTypeState,
+                    fieldIndex: (int)Tree_FieldIndex.CNAMDataTypeState,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Tree_FieldIndex.BNAMDataTypeState) ?? true))
+            {
+                EnumXmlTranslation<Tree.BNAMDataType>.Instance.Write(
+                    node: node,
+                    name: nameof(item.BNAMDataTypeState),
+                    item: item.BNAMDataTypeState,
+                    fieldIndex: (int)Tree_FieldIndex.BNAMDataTypeState,
+                    errorMask: errorMask);
             }
         }
 
+        #region Xml Write
+        public void Write_Xml(
+            XElement node,
+            ITreeInternalGetter item,
+            bool doMasks,
+            out Tree_ErrorMask errorMask,
+            Tree_TranslationMask translationMask,
+            string name = null)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            Write_Xml(
+                name: name,
+                node: node,
+                item: item,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal());
+            errorMask = Tree_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public void Write_Xml(
+            XElement node,
+            ITreeInternalGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.Tree");
+            node.Add(elem);
+            if (name != null)
+            {
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.Tree");
+            }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         #endregion
 
     }
     #endregion
 
-    #region Modules
     #region Mask
     public class Tree_Mask<T> : OblivionMajorRecord_Mask<T>, IMask<T>, IEquatable<Tree_Mask<T>>
     {
@@ -2975,6 +3038,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.RustleSpeed = initialValue;
             this.BillboardWidth = initialValue;
             this.BillboardHeight = initialValue;
+            this.CNAMDataTypeState = initialValue;
+            this.BNAMDataTypeState = initialValue;
         }
         #endregion
 
@@ -2992,6 +3057,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public T RustleSpeed;
         public T BillboardWidth;
         public T BillboardHeight;
+        public T CNAMDataTypeState;
+        public T BNAMDataTypeState;
         #endregion
 
         #region Equals
@@ -3018,6 +3085,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (!object.Equals(this.RustleSpeed, rhs.RustleSpeed)) return false;
             if (!object.Equals(this.BillboardWidth, rhs.BillboardWidth)) return false;
             if (!object.Equals(this.BillboardHeight, rhs.BillboardHeight)) return false;
+            if (!object.Equals(this.CNAMDataTypeState, rhs.CNAMDataTypeState)) return false;
+            if (!object.Equals(this.BNAMDataTypeState, rhs.BNAMDataTypeState)) return false;
             return true;
         }
         public override int GetHashCode()
@@ -3036,6 +3105,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret = ret.CombineHashCode(this.RustleSpeed?.GetHashCode());
             ret = ret.CombineHashCode(this.BillboardWidth?.GetHashCode());
             ret = ret.CombineHashCode(this.BillboardHeight?.GetHashCode());
+            ret = ret.CombineHashCode(this.CNAMDataTypeState?.GetHashCode());
+            ret = ret.CombineHashCode(this.BNAMDataTypeState?.GetHashCode());
             ret = ret.CombineHashCode(base.GetHashCode());
             return ret;
         }
@@ -3073,6 +3144,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (!eval(this.RustleSpeed)) return false;
             if (!eval(this.BillboardWidth)) return false;
             if (!eval(this.BillboardHeight)) return false;
+            if (!eval(this.CNAMDataTypeState)) return false;
+            if (!eval(this.BNAMDataTypeState)) return false;
             return true;
         }
         #endregion
@@ -3125,6 +3198,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             obj.RustleSpeed = eval(this.RustleSpeed);
             obj.BillboardWidth = eval(this.BillboardWidth);
             obj.BillboardHeight = eval(this.BillboardHeight);
+            obj.CNAMDataTypeState = eval(this.CNAMDataTypeState);
+            obj.BNAMDataTypeState = eval(this.BNAMDataTypeState);
         }
         #endregion
 
@@ -3228,6 +3303,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     fg.AppendLine($"BillboardHeight => {BillboardHeight}");
                 }
+                if (printMask?.CNAMDataTypeState ?? true)
+                {
+                    fg.AppendLine($"CNAMDataTypeState => {CNAMDataTypeState}");
+                }
+                if (printMask?.BNAMDataTypeState ?? true)
+                {
+                    fg.AppendLine($"BNAMDataTypeState => {BNAMDataTypeState}");
+                }
             }
             fg.AppendLine("]");
         }
@@ -3251,6 +3334,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Exception RustleSpeed;
         public Exception BillboardWidth;
         public Exception BillboardHeight;
+        public Exception CNAMDataTypeState;
+        public Exception BNAMDataTypeState;
         #endregion
 
         #region IErrorMask
@@ -3285,6 +3370,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return BillboardWidth;
                 case Tree_FieldIndex.BillboardHeight:
                     return BillboardHeight;
+                case Tree_FieldIndex.CNAMDataTypeState:
+                    return CNAMDataTypeState;
+                case Tree_FieldIndex.BNAMDataTypeState:
+                    return BNAMDataTypeState;
                 default:
                     return base.GetNthMask(index);
             }
@@ -3333,6 +3422,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     break;
                 case Tree_FieldIndex.BillboardHeight:
                     this.BillboardHeight = ex;
+                    break;
+                case Tree_FieldIndex.CNAMDataTypeState:
+                    this.CNAMDataTypeState = ex;
+                    break;
+                case Tree_FieldIndex.BNAMDataTypeState:
+                    this.BNAMDataTypeState = ex;
                     break;
                 default:
                     base.SetNthException(index, ex);
@@ -3384,6 +3479,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Tree_FieldIndex.BillboardHeight:
                     this.BillboardHeight = (Exception)obj;
                     break;
+                case Tree_FieldIndex.CNAMDataTypeState:
+                    this.CNAMDataTypeState = (Exception)obj;
+                    break;
+                case Tree_FieldIndex.BNAMDataTypeState:
+                    this.BNAMDataTypeState = (Exception)obj;
+                    break;
                 default:
                     base.SetNthMask(index, obj);
                     break;
@@ -3406,6 +3507,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (RustleSpeed != null) return true;
             if (BillboardWidth != null) return true;
             if (BillboardHeight != null) return true;
+            if (CNAMDataTypeState != null) return true;
+            if (BNAMDataTypeState != null) return true;
             return false;
         }
         #endregion
@@ -3475,6 +3578,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             fg.AppendLine($"RustleSpeed => {RustleSpeed}");
             fg.AppendLine($"BillboardWidth => {BillboardWidth}");
             fg.AppendLine($"BillboardHeight => {BillboardHeight}");
+            fg.AppendLine($"CNAMDataTypeState => {CNAMDataTypeState}");
+            fg.AppendLine($"BNAMDataTypeState => {BNAMDataTypeState}");
         }
         #endregion
 
@@ -3495,6 +3600,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.RustleSpeed = this.RustleSpeed.Combine(rhs.RustleSpeed);
             ret.BillboardWidth = this.BillboardWidth.Combine(rhs.BillboardWidth);
             ret.BillboardHeight = this.BillboardHeight.Combine(rhs.BillboardHeight);
+            ret.CNAMDataTypeState = this.CNAMDataTypeState.Combine(rhs.CNAMDataTypeState);
+            ret.BNAMDataTypeState = this.BNAMDataTypeState.Combine(rhs.BNAMDataTypeState);
             return ret;
         }
         public static Tree_ErrorMask Combine(Tree_ErrorMask lhs, Tree_ErrorMask rhs)
@@ -3534,6 +3641,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.RustleSpeed = defaultOn;
             this.BillboardWidth = defaultOn;
             this.BillboardHeight = defaultOn;
+            this.CNAMDataTypeState = defaultOn;
+            this.BNAMDataTypeState = defaultOn;
         }
 
         #region Members
@@ -3550,6 +3659,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool RustleSpeed;
         public bool BillboardWidth;
         public bool BillboardHeight;
+        public bool CNAMDataTypeState;
+        public bool BNAMDataTypeState;
         #endregion
 
     }
@@ -3570,6 +3681,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool RustleSpeed;
         public bool BillboardWidth;
         public bool BillboardHeight;
+        public bool CNAMDataTypeState;
+        public bool BNAMDataTypeState;
         #endregion
 
         #region Ctors
@@ -3594,6 +3707,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.RustleSpeed = defaultOn;
             this.BillboardWidth = defaultOn;
             this.BillboardHeight = defaultOn;
+            this.CNAMDataTypeState = defaultOn;
+            this.BNAMDataTypeState = defaultOn;
         }
 
         #endregion
@@ -3614,7 +3729,158 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Add((RustleSpeed, null));
             ret.Add((BillboardWidth, null));
             ret.Add((BillboardHeight, null));
+            ret.Add((CNAMDataTypeState, null));
+            ret.Add((BNAMDataTypeState, null));
         }
+    }
+    #endregion
+
+    #region Binary Translation
+    public partial class TreeBinaryTranslation : OblivionMajorRecordBinaryTranslation
+    {
+        public new readonly static TreeBinaryTranslation Instance = new TreeBinaryTranslation();
+
+        public static void Write_Binary_Embedded(
+            ITreeInternalGetter item,
+            MutagenWriter writer,
+            ErrorMaskBuilder errorMask,
+            MasterReferences masterReferences)
+        {
+            OblivionMajorRecordBinaryTranslation.Write_Binary_Embedded(
+                item: item,
+                writer: writer,
+                errorMask: errorMask,
+                masterReferences: masterReferences);
+        }
+
+        public static void Write_Binary_RecordTypes(
+            ITreeInternalGetter item,
+            MutagenWriter writer,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask,
+            MasterReferences masterReferences)
+        {
+            MajorRecordBinaryTranslation.Write_Binary_RecordTypes(
+                item: item,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask,
+                masterReferences: masterReferences);
+            if (item.Model_IsSet)
+            {
+                LoquiBinaryTranslation<Model>.Instance.Write(
+                    writer: writer,
+                    item: item.Model,
+                    fieldIndex: (int)Tree_FieldIndex.Model,
+                    errorMask: errorMask,
+                    masterReferences: masterReferences);
+            }
+            if (item.Icon_IsSet)
+            {
+                Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Icon,
+                    header: recordTypeConverter.ConvertToCustom(Tree_Registration.ICON_HEADER),
+                    nullable: false);
+            }
+            if (item.SpeedTreeSeeds.HasBeenSet)
+            {
+                Mutagen.Bethesda.Binary.ListBinaryTranslation<UInt32>.Instance.Write(
+                    writer: writer,
+                    items: item.SpeedTreeSeeds,
+                    recordType: Tree_Registration.SNAM_HEADER,
+                    transl: UInt32BinaryTranslation.Instance.Write);
+            }
+            if (item.CNAMDataTypeState.HasFlag(Tree.CNAMDataType.Has))
+            {
+                using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Tree_Registration.CNAM_HEADER)))
+                {
+                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.LeafCurvature);
+                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.MinimumLeafAngle);
+                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.MaximumLeafAngle);
+                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.BranchDimmingValue);
+                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.LeafDimmingValue);
+                    Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.ShadowRadius);
+                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.RockingSpeed);
+                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.RustleSpeed);
+                }
+            }
+            if (item.BNAMDataTypeState.HasFlag(Tree.BNAMDataType.Has))
+            {
+                using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Tree_Registration.BNAM_HEADER)))
+                {
+                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.BillboardWidth);
+                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.BillboardHeight);
+                }
+            }
+        }
+
+        #region Binary Write
+        public void Write_Binary(
+            MutagenWriter writer,
+            ITreeInternalGetter item,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            bool doMasks,
+            out Tree_ErrorMask errorMask)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            Write_Binary(
+                masterReferences: masterReferences,
+                writer: writer,
+                item: item,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMaskBuilder);
+            errorMask = Tree_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public void Write_Binary(
+            MutagenWriter writer,
+            ITreeInternalGetter item,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            using (HeaderExport.ExportHeader(
+                writer: writer,
+                record: Tree_Registration.TREE_HEADER,
+                type: ObjectType.Record))
+            {
+                Write_Binary_Embedded(
+                    item: item,
+                    writer: writer,
+                    errorMask: errorMask,
+                    masterReferences: masterReferences);
+                Write_Binary_RecordTypes(
+                    item: item,
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter,
+                    errorMask: errorMask,
+                    masterReferences: masterReferences);
+            }
+        }
+        #endregion
+
     }
     #endregion
 

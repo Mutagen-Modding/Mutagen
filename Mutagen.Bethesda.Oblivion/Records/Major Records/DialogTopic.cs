@@ -17,73 +17,79 @@ namespace Mutagen.Bethesda.Oblivion
         {
             obj.Items.SetTo(rhs.Items.Select((dia) => (DialogItem)dia.Duplicate(getNextFormKey, duplicatedRecords)));
         }
+    }
 
-        static partial void CustomBinaryEnd_Import(MutagenFrame frame, DialogTopic obj, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
+    namespace Internals
+    {
+        public partial class DialogTopicBinaryTranslation
         {
-            if (frame.Reader.Complete) return;
-            var next = HeaderTranslation.GetNextType(
-                reader: frame.Reader,
-                contentLength: out var len,
-                finalPos: out var _,
-                hopGroup: false);
-            if (!next.Equals(Group_Registration.GRUP_HEADER)) return;
-            frame.Reader.Position += 8;
-            var formKey = FormKey.Factory(masterReferences, frame.Reader.ReadUInt32());
-            var grupType = (GroupTypeEnum)frame.Reader.ReadInt32();
-            if (grupType == GroupTypeEnum.TopicChildren)
+            static partial void CustomBinaryEnd_Import(MutagenFrame frame, DialogTopic obj, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
             {
-                obj.Timestamp = frame.Reader.ReadBytes(4);
-                if (formKey != obj.FormKey)
+                if (frame.Reader.Complete) return;
+                var next = HeaderTranslation.GetNextType(
+                    reader: frame.Reader,
+                    contentLength: out var len,
+                    finalPos: out var _,
+                    hopGroup: false);
+                if (!next.Equals(Group_Registration.GRUP_HEADER)) return;
+                frame.Reader.Position += 8;
+                var formKey = FormKey.Factory(masterReferences, frame.Reader.ReadUInt32());
+                var grupType = (GroupTypeEnum)frame.Reader.ReadInt32();
+                if (grupType == GroupTypeEnum.TopicChildren)
                 {
-                    throw new ArgumentException("Dialog children group did not match the FormID of the parent.");
-                }
-            }
-            else
-            {
-                frame.Reader.Position -= 16;
-                return;
-            }
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<DialogItem>.Instance.ParseRepeatedItem(
-                frame: frame.SpawnWithLength(len - Mutagen.Bethesda.Constants.RECORD_HEADER_LENGTH),
-                fieldIndex: (int)DialogTopic_FieldIndex.Items,
-                lengthLength: 4,
-                item: obj.Items,
-                errorMask: errorMask,
-                transl: (MutagenFrame r, RecordType header, out DialogItem listItem, ErrorMaskBuilder listErrorMask) =>
-                {
-                    return LoquiBinaryTranslation<DialogItem>.Instance.Parse(
-                        frame: r,
-                        item: out listItem,
-                        masterReferences: masterReferences,
-                        errorMask: listErrorMask);
-                }
-                );
-        }
-
-        static partial void CustomBinaryEnd_Export(MutagenWriter writer, DialogTopic obj, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
-        {
-            if (obj.Items.Count == 0) return;
-            using (HeaderExport.ExportHeader(writer, Group_Registration.GRUP_HEADER, ObjectType.Group))
-            {
-                FormKeyBinaryTranslation.Instance.Write(
-                    writer,
-                    obj.FormKey,
-                    masterReferences);
-                writer.Write((int)GroupTypeEnum.TopicChildren);
-                writer.Write(obj.Timestamp);
-                Mutagen.Bethesda.Binary.ListBinaryTranslation<DialogItem>.Instance.Write(
-                    writer: writer,
-                    items: obj.Items,
-                    fieldIndex: (int)DialogTopic_FieldIndex.Items,
-                    errorMask: errorMask,
-                    transl: (MutagenWriter subWriter, DialogItem subItem, ErrorMaskBuilder listErrMask) =>
+                    obj.Timestamp = frame.Reader.ReadBytes(4);
+                    if (formKey != obj.FormKey)
                     {
-                        LoquiBinaryTranslation<DialogItem>.Instance.Write(
-                            writer: subWriter,
-                            item: subItem,
+                        throw new ArgumentException("Dialog children group did not match the FormID of the parent.");
+                    }
+                }
+                else
+                {
+                    frame.Reader.Position -= 16;
+                    return;
+                }
+                Mutagen.Bethesda.Binary.ListBinaryTranslation<DialogItem>.Instance.ParseRepeatedItem(
+                    frame: frame.SpawnWithLength(len - Mutagen.Bethesda.Constants.RECORD_HEADER_LENGTH),
+                    fieldIndex: (int)DialogTopic_FieldIndex.Items,
+                    lengthLength: 4,
+                    item: obj.Items,
+                    errorMask: errorMask,
+                    transl: (MutagenFrame r, RecordType header, out DialogItem listItem, ErrorMaskBuilder listErrorMask) =>
+                    {
+                        return LoquiBinaryTranslation<DialogItem>.Instance.Parse(
+                            frame: r,
+                            item: out listItem,
                             masterReferences: masterReferences,
-                            errorMask: listErrMask);
-                    });
+                            errorMask: listErrorMask);
+                    }
+                    );
+            }
+
+            static partial void CustomBinaryEnd_Export(MutagenWriter writer, IDialogTopicInternalGetter obj, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
+            {
+                if (obj.Items.Count == 0) return;
+                using (HeaderExport.ExportHeader(writer, Group_Registration.GRUP_HEADER, ObjectType.Group))
+                {
+                    FormKeyBinaryTranslation.Instance.Write(
+                        writer,
+                        obj.FormKey,
+                        masterReferences);
+                    writer.Write((int)GroupTypeEnum.TopicChildren);
+                    writer.Write(obj.Timestamp);
+                    Mutagen.Bethesda.Binary.ListBinaryTranslation<DialogItem>.Instance.Write(
+                        writer: writer,
+                        items: obj.Items,
+                        fieldIndex: (int)DialogTopic_FieldIndex.Items,
+                        errorMask: errorMask,
+                        transl: (MutagenWriter subWriter, DialogItem subItem, ErrorMaskBuilder listErrMask) =>
+                        {
+                            LoquiBinaryTranslation<DialogItem>.Instance.Write(
+                                writer: subWriter,
+                                item: subItem,
+                                masterReferences: masterReferences,
+                                errorMask: listErrMask);
+                        });
+                }
             }
         }
     }

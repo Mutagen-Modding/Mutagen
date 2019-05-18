@@ -35,6 +35,7 @@ namespace Mutagen.Bethesda.Oblivion
     public abstract partial class OblivionMajorRecord : 
         MajorRecord,
         IOblivionMajorRecord,
+        IOblivionMajorRecordInternal,
         ILoquiObject<OblivionMajorRecord>,
         ILoquiObjectSetter,
         ILinkSubContainer,
@@ -250,7 +251,8 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Xml(
+            OblivionMajorRecordXmlTranslation.Instance.Write_Xml(
+                item: this,
                 name: name,
                 node: node,
                 errorMask: errorMaskBuilder,
@@ -282,7 +284,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            this.Write_Xml(
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -313,7 +315,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            this.Write_Xml(
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -329,7 +331,8 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Xml(
+            OblivionMajorRecordXmlTranslation.Instance.Write_Xml(
+                item: this,
                 name: name,
                 node: node,
                 errorMask: errorMaskBuilder,
@@ -345,7 +348,7 @@ namespace Mutagen.Bethesda.Oblivion
             TranslationCrystal translationMask,
             string name = null)
         {
-            OblivionMajorRecordCommon.Write_Xml(
+            OblivionMajorRecordXmlTranslation.Instance.Write_Xml(
                 item: this,
                 name: name,
                 node: node,
@@ -425,7 +428,8 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Binary(
+            OblivionMajorRecordBinaryTranslation.Instance.Write_Binary(
+                item: this,
                 masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: null,
@@ -441,7 +445,8 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Binary(
+            OblivionMajorRecordBinaryTranslation.Instance.Write_Binary(
+                item: this,
                 masterReferences: masterReferences,
                 writer: writer,
                 errorMask: errorMaskBuilder,
@@ -457,7 +462,7 @@ namespace Mutagen.Bethesda.Oblivion
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            OblivionMajorRecordCommon.Write_Binary(
+            OblivionMajorRecordBinaryTranslation.Instance.Write_Binary(
                 item: this,
                 masterReferences: masterReferences,
                 writer: writer,
@@ -618,12 +623,21 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
+    public partial interface IOblivionMajorRecordInternal : IOblivionMajorRecord, IOblivionMajorRecordInternalGetter, IMajorRecordInternal
+    {
+    }
+
     public partial interface IOblivionMajorRecordGetter : IMajorRecordGetter
     {
         #region OblivionMajorRecordFlags
         OblivionMajorRecord.OblivionMajorRecordFlag OblivionMajorRecordFlags { get; }
 
         #endregion
+
+    }
+
+    public partial interface IOblivionMajorRecordInternalGetter : IOblivionMajorRecordGetter, IMajorRecordInternalGetter
+    {
 
     }
 
@@ -636,11 +650,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #region Field Index
     public enum OblivionMajorRecord_FieldIndex
     {
-        FormKey = 0,
-        Version = 1,
-        EditorID = 2,
-        RecordType = 3,
-        OblivionMajorRecordFlags = 4,
+        MajorRecordFlagsRaw = 0,
+        FormKey = 1,
+        Version = 2,
+        EditorID = 3,
+        RecordType = 4,
+        OblivionMajorRecordFlags = 5,
     }
     #endregion
 
@@ -660,7 +675,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort AdditionalFieldCount = 1;
 
-        public const ushort FieldCount = 5;
+        public const ushort FieldCount = 6;
 
         public static readonly Type MaskType = typeof(OblivionMajorRecord_Mask<>);
 
@@ -670,11 +685,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type GetterType = typeof(IOblivionMajorRecordGetter);
 
-        public static readonly Type InternalGetterType = null;
+        public static readonly Type InternalGetterType = typeof(IOblivionMajorRecordInternalGetter);
 
         public static readonly Type SetterType = typeof(IOblivionMajorRecord);
 
-        public static readonly Type InternalSetterType = null;
+        public static readonly Type InternalSetterType = typeof(IOblivionMajorRecordInternal);
 
         public static readonly Type CommonType = typeof(OblivionMajorRecordCommon);
 
@@ -1088,6 +1103,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (index)
             {
+                case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
+                    return (OblivionMajorRecord_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
                     return (OblivionMajorRecord_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.Version:
@@ -1102,68 +1119,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         #region Xml Translation
-        #region Xml Write
-        public static void Write_Xml(
-            XElement node,
-            OblivionMajorRecord item,
-            bool doMasks,
-            out OblivionMajorRecord_ErrorMask errorMask,
-            OblivionMajorRecord_TranslationMask translationMask,
-            string name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_Xml(
-                name: name,
-                node: node,
-                item: item,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = OblivionMajorRecord_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void Write_Xml(
-            XElement node,
-            OblivionMajorRecord item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.OblivionMajorRecord");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.OblivionMajorRecord");
-            }
-            WriteToNode_Xml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #endregion
-
-        public static void WriteToNode_Xml(
-            this OblivionMajorRecord item,
-            XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            MajorRecordCommon.WriteToNode_Xml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            if ((translationMask?.GetShouldTranslate((int)OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags) ?? true))
-            {
-                EnumXmlTranslation<OblivionMajorRecord.OblivionMajorRecordFlag>.Instance.Write(
-                    node: node,
-                    name: nameof(item.OblivionMajorRecordFlags),
-                    item: item.OblivionMajorRecordFlags,
-                    fieldIndex: (int)OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags,
-                    errorMask: errorMask);
-            }
-        }
-
         public static void FillPublic_Xml(
             this OblivionMajorRecord item,
             XElement node,
@@ -1237,66 +1192,80 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        #region Binary Translation
-        #region Binary Write
-        public static void Write_Binary(
-            MutagenWriter writer,
-            OblivionMajorRecord item,
-            MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
+    }
+    #endregion
+
+    #region Modules
+    #region Xml Translation
+    public partial class OblivionMajorRecordXmlTranslation : MajorRecordXmlTranslation
+    {
+        public new readonly static OblivionMajorRecordXmlTranslation Instance = new OblivionMajorRecordXmlTranslation();
+
+        public static void WriteToNode_Xml(
+            IOblivionMajorRecordInternalGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            MajorRecordXmlTranslation.WriteToNode_Xml(
+                item: item,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+            if ((translationMask?.GetShouldTranslate((int)OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags) ?? true))
+            {
+                EnumXmlTranslation<OblivionMajorRecord.OblivionMajorRecordFlag>.Instance.Write(
+                    node: node,
+                    name: nameof(item.OblivionMajorRecordFlags),
+                    item: item.OblivionMajorRecordFlags,
+                    fieldIndex: (int)OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags,
+                    errorMask: errorMask);
+            }
+        }
+
+        #region Xml Write
+        public void Write_Xml(
+            XElement node,
+            IOblivionMajorRecordInternalGetter item,
             bool doMasks,
-            out OblivionMajorRecord_ErrorMask errorMask)
+            out OblivionMajorRecord_ErrorMask errorMask,
+            OblivionMajorRecord_TranslationMask translationMask,
+            string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_Binary(
-                masterReferences: masterReferences,
-                writer: writer,
+            Write_Xml(
+                name: name,
+                node: node,
                 item: item,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMaskBuilder);
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal());
             errorMask = OblivionMajorRecord_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void Write_Binary(
-            MutagenWriter writer,
-            OblivionMajorRecord item,
-            MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
-        {
-            Write_Binary_Embedded(
-                item: item,
-                writer: writer,
-                errorMask: errorMask,
-                masterReferences: masterReferences);
-            MajorRecordCommon.Write_Binary_RecordTypes(
-                item: item,
-                writer: writer,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMask,
-                masterReferences: masterReferences);
-        }
-        #endregion
-
-        public static void Write_Binary_Embedded(
-            OblivionMajorRecord item,
-            MutagenWriter writer,
+        public void Write_Xml(
+            XElement node,
+            IOblivionMajorRecordInternalGetter item,
             ErrorMaskBuilder errorMask,
-            MasterReferences masterReferences)
+            TranslationCrystal translationMask,
+            string name = null)
         {
-            MajorRecordCommon.Write_Binary_Embedded(
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.OblivionMajorRecord");
+            node.Add(elem);
+            if (name != null)
+            {
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.OblivionMajorRecord");
+            }
+            WriteToNode_Xml(
                 item: item,
-                writer: writer,
+                node: elem,
                 errorMask: errorMask,
-                masterReferences: masterReferences);
+                translationMask: translationMask);
         }
-
         #endregion
 
     }
     #endregion
 
-    #region Modules
     #region Mask
     public class OblivionMajorRecord_Mask<T> : MajorRecord_Mask<T>, IMask<T>, IEquatable<OblivionMajorRecord_Mask<T>>
     {
@@ -1555,6 +1524,67 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             base.GetCrystal(ret);
             ret.Add((OblivionMajorRecordFlags, null));
         }
+    }
+    #endregion
+
+    #region Binary Translation
+    public partial class OblivionMajorRecordBinaryTranslation : MajorRecordBinaryTranslation
+    {
+        public new readonly static OblivionMajorRecordBinaryTranslation Instance = new OblivionMajorRecordBinaryTranslation();
+
+        public static void Write_Binary_Embedded(
+            IOblivionMajorRecordInternalGetter item,
+            MutagenWriter writer,
+            ErrorMaskBuilder errorMask,
+            MasterReferences masterReferences)
+        {
+            MajorRecordBinaryTranslation.Write_Binary_Embedded(
+                item: item,
+                writer: writer,
+                errorMask: errorMask,
+                masterReferences: masterReferences);
+        }
+
+        #region Binary Write
+        public void Write_Binary(
+            MutagenWriter writer,
+            IOblivionMajorRecordInternalGetter item,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            bool doMasks,
+            out OblivionMajorRecord_ErrorMask errorMask)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            Write_Binary(
+                masterReferences: masterReferences,
+                writer: writer,
+                item: item,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMaskBuilder);
+            errorMask = OblivionMajorRecord_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public void Write_Binary(
+            MutagenWriter writer,
+            IOblivionMajorRecordInternalGetter item,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            Write_Binary_Embedded(
+                item: item,
+                writer: writer,
+                errorMask: errorMask,
+                masterReferences: masterReferences);
+            MajorRecordBinaryTranslation.Write_Binary_RecordTypes(
+                item: item,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask,
+                masterReferences: masterReferences);
+        }
+        #endregion
+
     }
     #endregion
 

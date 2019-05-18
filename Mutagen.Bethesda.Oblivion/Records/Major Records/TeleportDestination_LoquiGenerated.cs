@@ -287,7 +287,8 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Xml(
+            TeleportDestinationXmlTranslation.Instance.Write_Xml(
+                item: this,
                 name: name,
                 node: node,
                 errorMask: errorMaskBuilder,
@@ -319,7 +320,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            this.Write_Xml(
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -350,7 +351,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            this.Write_Xml(
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -374,7 +375,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            this.Write_Xml(
                 name: name,
                 node: node,
                 errorMask: null,
@@ -387,7 +388,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            this.Write_Xml(
                 name: name,
                 node: node,
                 errorMask: null,
@@ -401,7 +402,7 @@ namespace Mutagen.Bethesda.Oblivion
             TranslationCrystal translationMask,
             string name = null)
         {
-            TeleportDestinationCommon.Write_Xml(
+            TeleportDestinationXmlTranslation.Instance.Write_Xml(
                 item: this,
                 name: name,
                 node: node,
@@ -509,7 +510,8 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Binary(
+            TeleportDestinationBinaryTranslation.Instance.Write_Binary(
+                item: this,
                 masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: null,
@@ -534,7 +536,7 @@ namespace Mutagen.Bethesda.Oblivion
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            TeleportDestinationCommon.Write_Binary(
+            TeleportDestinationBinaryTranslation.Instance.Write_Binary(
                 item: this,
                 masterReferences: masterReferences,
                 writer: writer,
@@ -1148,81 +1150,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         #region Xml Translation
-        #region Xml Write
-        public static void Write_Xml(
-            XElement node,
-            TeleportDestination item,
-            bool doMasks,
-            out TeleportDestination_ErrorMask errorMask,
-            TeleportDestination_TranslationMask translationMask,
-            string name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_Xml(
-                name: name,
-                node: node,
-                item: item,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = TeleportDestination_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void Write_Xml(
-            XElement node,
-            TeleportDestination item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.TeleportDestination");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.TeleportDestination");
-            }
-            WriteToNode_Xml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #endregion
-
-        public static void WriteToNode_Xml(
-            this TeleportDestination item,
-            XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            if ((translationMask?.GetShouldTranslate((int)TeleportDestination_FieldIndex.Destination) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Destination),
-                    item: item.Destination_Property?.FormKey,
-                    fieldIndex: (int)TeleportDestination_FieldIndex.Destination,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)TeleportDestination_FieldIndex.Position) ?? true))
-            {
-                P3FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Position),
-                    item: item.Position,
-                    fieldIndex: (int)TeleportDestination_FieldIndex.Position,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)TeleportDestination_FieldIndex.Rotation) ?? true))
-            {
-                P3FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Rotation),
-                    item: item.Rotation,
-                    fieldIndex: (int)TeleportDestination_FieldIndex.Rotation,
-                    errorMask: errorMask);
-            }
-        }
-
         public static void FillPublic_Xml(
             this TeleportDestination item,
             XElement node,
@@ -1323,71 +1250,93 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        #region Binary Translation
-        #region Binary Write
-        public static void Write_Binary(
-            MutagenWriter writer,
-            TeleportDestination item,
-            MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
+    }
+    #endregion
+
+    #region Modules
+    #region Xml Translation
+    public partial class TeleportDestinationXmlTranslation
+    {
+        public readonly static TeleportDestinationXmlTranslation Instance = new TeleportDestinationXmlTranslation();
+
+        public static void WriteToNode_Xml(
+            ITeleportDestinationGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            if ((translationMask?.GetShouldTranslate((int)TeleportDestination_FieldIndex.Destination) ?? true))
+            {
+                FormKeyXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Destination),
+                    item: item.Destination_Property?.FormKey,
+                    fieldIndex: (int)TeleportDestination_FieldIndex.Destination,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)TeleportDestination_FieldIndex.Position) ?? true))
+            {
+                P3FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Position),
+                    item: item.Position,
+                    fieldIndex: (int)TeleportDestination_FieldIndex.Position,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)TeleportDestination_FieldIndex.Rotation) ?? true))
+            {
+                P3FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Rotation),
+                    item: item.Rotation,
+                    fieldIndex: (int)TeleportDestination_FieldIndex.Rotation,
+                    errorMask: errorMask);
+            }
+        }
+
+        #region Xml Write
+        public void Write_Xml(
+            XElement node,
+            ITeleportDestinationGetter item,
             bool doMasks,
-            out TeleportDestination_ErrorMask errorMask)
+            out TeleportDestination_ErrorMask errorMask,
+            TeleportDestination_TranslationMask translationMask,
+            string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_Binary(
-                masterReferences: masterReferences,
-                writer: writer,
+            Write_Xml(
+                name: name,
+                node: node,
                 item: item,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMaskBuilder);
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal());
             errorMask = TeleportDestination_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void Write_Binary(
-            MutagenWriter writer,
-            TeleportDestination item,
-            MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
-        {
-            using (HeaderExport.ExportHeader(
-                writer: writer,
-                record: TeleportDestination_Registration.XTEL_HEADER,
-                type: ObjectType.Subrecord))
-            {
-                Write_Binary_Embedded(
-                    item: item,
-                    writer: writer,
-                    errorMask: errorMask,
-                    masterReferences: masterReferences);
-            }
-        }
-        #endregion
-
-        public static void Write_Binary_Embedded(
-            TeleportDestination item,
-            MutagenWriter writer,
+        public void Write_Xml(
+            XElement node,
+            ITeleportDestinationGetter item,
             ErrorMaskBuilder errorMask,
-            MasterReferences masterReferences)
+            TranslationCrystal translationMask,
+            string name = null)
         {
-            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.Destination_Property,
-                masterReferences: masterReferences);
-            Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.Position);
-            Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.Rotation);
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.TeleportDestination");
+            node.Add(elem);
+            if (name != null)
+            {
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.TeleportDestination");
+            }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
         }
-
         #endregion
 
     }
     #endregion
 
-    #region Modules
     #region Mask
     public class TeleportDestination_Mask<T> : IMask<T>, IEquatable<TeleportDestination_Mask<T>>
     {
@@ -1715,6 +1664,72 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Add((Position, null));
             ret.Add((Rotation, null));
         }
+    }
+    #endregion
+
+    #region Binary Translation
+    public partial class TeleportDestinationBinaryTranslation
+    {
+        public readonly static TeleportDestinationBinaryTranslation Instance = new TeleportDestinationBinaryTranslation();
+
+        public static void Write_Binary_Embedded(
+            ITeleportDestinationGetter item,
+            MutagenWriter writer,
+            ErrorMaskBuilder errorMask,
+            MasterReferences masterReferences)
+        {
+            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.Destination_Property,
+                masterReferences: masterReferences);
+            Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.Position);
+            Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.Rotation);
+        }
+
+        #region Binary Write
+        public void Write_Binary(
+            MutagenWriter writer,
+            ITeleportDestinationGetter item,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            bool doMasks,
+            out TeleportDestination_ErrorMask errorMask)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            Write_Binary(
+                masterReferences: masterReferences,
+                writer: writer,
+                item: item,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMaskBuilder);
+            errorMask = TeleportDestination_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public void Write_Binary(
+            MutagenWriter writer,
+            ITeleportDestinationGetter item,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            using (HeaderExport.ExportHeader(
+                writer: writer,
+                record: TeleportDestination_Registration.XTEL_HEADER,
+                type: ObjectType.Subrecord))
+            {
+                Write_Binary_Embedded(
+                    item: item,
+                    writer: writer,
+                    errorMask: errorMask,
+                    masterReferences: masterReferences);
+            }
+        }
+        #endregion
+
     }
     #endregion
 

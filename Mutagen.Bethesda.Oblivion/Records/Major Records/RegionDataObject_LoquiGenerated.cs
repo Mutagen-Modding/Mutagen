@@ -441,7 +441,8 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Xml(
+            RegionDataObjectXmlTranslation.Instance.Write_Xml(
+                item: this,
                 name: name,
                 node: node,
                 errorMask: errorMaskBuilder,
@@ -473,7 +474,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            this.Write_Xml(
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -504,7 +505,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            this.Write_Xml(
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -528,7 +529,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            this.Write_Xml(
                 name: name,
                 node: node,
                 errorMask: null,
@@ -541,7 +542,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            this.Write_Xml(
                 name: name,
                 node: node,
                 errorMask: null,
@@ -555,7 +556,7 @@ namespace Mutagen.Bethesda.Oblivion
             TranslationCrystal translationMask,
             string name = null)
         {
-            RegionDataObjectCommon.Write_Xml(
+            RegionDataObjectXmlTranslation.Instance.Write_Xml(
                 item: this,
                 name: name,
                 node: node,
@@ -673,7 +674,8 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Binary(
+            RegionDataObjectBinaryTranslation.Instance.Write_Binary(
+                item: this,
                 masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: null,
@@ -698,7 +700,7 @@ namespace Mutagen.Bethesda.Oblivion
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            RegionDataObjectCommon.Write_Binary(
+            RegionDataObjectBinaryTranslation.Instance.Write_Binary(
                 item: this,
                 masterReferences: masterReferences,
                 writer: writer,
@@ -2122,207 +2124,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         #region Xml Translation
-        #region Xml Write
-        public static void Write_Xml(
-            XElement node,
-            RegionDataObject item,
-            bool doMasks,
-            out RegionDataObject_ErrorMask errorMask,
-            RegionDataObject_TranslationMask translationMask,
-            string name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_Xml(
-                name: name,
-                node: node,
-                item: item,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = RegionDataObject_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void Write_Xml(
-            XElement node,
-            RegionDataObject item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.RegionDataObject");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.RegionDataObject");
-            }
-            WriteToNode_Xml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #endregion
-
-        public static void WriteToNode_Xml(
-            this RegionDataObject item,
-            XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            if ((translationMask?.GetShouldTranslate((int)RegionDataObject_FieldIndex.Object) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Object),
-                    item: item.Object_Property?.FormKey,
-                    fieldIndex: (int)RegionDataObject_FieldIndex.Object,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)RegionDataObject_FieldIndex.ParentIndex) ?? true))
-            {
-                UInt16XmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.ParentIndex),
-                    item: item.ParentIndex,
-                    fieldIndex: (int)RegionDataObject_FieldIndex.ParentIndex,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)RegionDataObject_FieldIndex.Unknown1) ?? true))
-            {
-                ByteArrayXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Unknown1),
-                    item: item.Unknown1,
-                    fieldIndex: (int)RegionDataObject_FieldIndex.Unknown1,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)RegionDataObject_FieldIndex.Density) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Density),
-                    item: item.Density,
-                    fieldIndex: (int)RegionDataObject_FieldIndex.Density,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)RegionDataObject_FieldIndex.Clustering) ?? true))
-            {
-                ByteXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Clustering),
-                    item: item.Clustering,
-                    fieldIndex: (int)RegionDataObject_FieldIndex.Clustering,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)RegionDataObject_FieldIndex.MinSlope) ?? true))
-            {
-                ByteXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.MinSlope),
-                    item: item.MinSlope,
-                    fieldIndex: (int)RegionDataObject_FieldIndex.MinSlope,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)RegionDataObject_FieldIndex.MaxSlope) ?? true))
-            {
-                ByteXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.MaxSlope),
-                    item: item.MaxSlope,
-                    fieldIndex: (int)RegionDataObject_FieldIndex.MaxSlope,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)RegionDataObject_FieldIndex.Flags) ?? true))
-            {
-                EnumXmlTranslation<RegionDataObject.Flag>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Flags),
-                    item: item.Flags,
-                    fieldIndex: (int)RegionDataObject_FieldIndex.Flags,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)RegionDataObject_FieldIndex.RadiusWrtPercent) ?? true))
-            {
-                UInt16XmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.RadiusWrtPercent),
-                    item: item.RadiusWrtPercent,
-                    fieldIndex: (int)RegionDataObject_FieldIndex.RadiusWrtPercent,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)RegionDataObject_FieldIndex.Radius) ?? true))
-            {
-                UInt16XmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Radius),
-                    item: item.Radius,
-                    fieldIndex: (int)RegionDataObject_FieldIndex.Radius,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)RegionDataObject_FieldIndex.MinHeight) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.MinHeight),
-                    item: item.MinHeight,
-                    fieldIndex: (int)RegionDataObject_FieldIndex.MinHeight,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)RegionDataObject_FieldIndex.MaxHeight) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.MaxHeight),
-                    item: item.MaxHeight,
-                    fieldIndex: (int)RegionDataObject_FieldIndex.MaxHeight,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)RegionDataObject_FieldIndex.Sink) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Sink),
-                    item: item.Sink,
-                    fieldIndex: (int)RegionDataObject_FieldIndex.Sink,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)RegionDataObject_FieldIndex.SinkVariance) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.SinkVariance),
-                    item: item.SinkVariance,
-                    fieldIndex: (int)RegionDataObject_FieldIndex.SinkVariance,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)RegionDataObject_FieldIndex.SizeVariance) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.SizeVariance),
-                    item: item.SizeVariance,
-                    fieldIndex: (int)RegionDataObject_FieldIndex.SizeVariance,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)RegionDataObject_FieldIndex.AngleVariance) ?? true))
-            {
-                P3UInt16XmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.AngleVariance),
-                    item: item.AngleVariance,
-                    fieldIndex: (int)RegionDataObject_FieldIndex.AngleVariance,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)RegionDataObject_FieldIndex.Unknow2n) ?? true))
-            {
-                ByteArrayXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Unknow2n),
-                    item: item.Unknow2n,
-                    fieldIndex: (int)RegionDataObject_FieldIndex.Unknow2n,
-                    errorMask: errorMask);
-            }
-        }
-
         public static void FillPublic_Xml(
             this RegionDataObject item,
             XElement node,
@@ -2787,108 +2588,219 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        #region Binary Translation
-        #region Binary Write
-        public static void Write_Binary(
-            MutagenWriter writer,
-            RegionDataObject item,
-            MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
+    }
+    #endregion
+
+    #region Modules
+    #region Xml Translation
+    public partial class RegionDataObjectXmlTranslation
+    {
+        public readonly static RegionDataObjectXmlTranslation Instance = new RegionDataObjectXmlTranslation();
+
+        public static void WriteToNode_Xml(
+            IRegionDataObjectGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            if ((translationMask?.GetShouldTranslate((int)RegionDataObject_FieldIndex.Object) ?? true))
+            {
+                FormKeyXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Object),
+                    item: item.Object_Property?.FormKey,
+                    fieldIndex: (int)RegionDataObject_FieldIndex.Object,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)RegionDataObject_FieldIndex.ParentIndex) ?? true))
+            {
+                UInt16XmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.ParentIndex),
+                    item: item.ParentIndex,
+                    fieldIndex: (int)RegionDataObject_FieldIndex.ParentIndex,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)RegionDataObject_FieldIndex.Unknown1) ?? true))
+            {
+                ByteArrayXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Unknown1),
+                    item: item.Unknown1,
+                    fieldIndex: (int)RegionDataObject_FieldIndex.Unknown1,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)RegionDataObject_FieldIndex.Density) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Density),
+                    item: item.Density,
+                    fieldIndex: (int)RegionDataObject_FieldIndex.Density,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)RegionDataObject_FieldIndex.Clustering) ?? true))
+            {
+                ByteXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Clustering),
+                    item: item.Clustering,
+                    fieldIndex: (int)RegionDataObject_FieldIndex.Clustering,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)RegionDataObject_FieldIndex.MinSlope) ?? true))
+            {
+                ByteXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.MinSlope),
+                    item: item.MinSlope,
+                    fieldIndex: (int)RegionDataObject_FieldIndex.MinSlope,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)RegionDataObject_FieldIndex.MaxSlope) ?? true))
+            {
+                ByteXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.MaxSlope),
+                    item: item.MaxSlope,
+                    fieldIndex: (int)RegionDataObject_FieldIndex.MaxSlope,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)RegionDataObject_FieldIndex.Flags) ?? true))
+            {
+                EnumXmlTranslation<RegionDataObject.Flag>.Instance.Write(
+                    node: node,
+                    name: nameof(item.Flags),
+                    item: item.Flags,
+                    fieldIndex: (int)RegionDataObject_FieldIndex.Flags,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)RegionDataObject_FieldIndex.RadiusWrtPercent) ?? true))
+            {
+                UInt16XmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.RadiusWrtPercent),
+                    item: item.RadiusWrtPercent,
+                    fieldIndex: (int)RegionDataObject_FieldIndex.RadiusWrtPercent,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)RegionDataObject_FieldIndex.Radius) ?? true))
+            {
+                UInt16XmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Radius),
+                    item: item.Radius,
+                    fieldIndex: (int)RegionDataObject_FieldIndex.Radius,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)RegionDataObject_FieldIndex.MinHeight) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.MinHeight),
+                    item: item.MinHeight,
+                    fieldIndex: (int)RegionDataObject_FieldIndex.MinHeight,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)RegionDataObject_FieldIndex.MaxHeight) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.MaxHeight),
+                    item: item.MaxHeight,
+                    fieldIndex: (int)RegionDataObject_FieldIndex.MaxHeight,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)RegionDataObject_FieldIndex.Sink) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Sink),
+                    item: item.Sink,
+                    fieldIndex: (int)RegionDataObject_FieldIndex.Sink,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)RegionDataObject_FieldIndex.SinkVariance) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.SinkVariance),
+                    item: item.SinkVariance,
+                    fieldIndex: (int)RegionDataObject_FieldIndex.SinkVariance,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)RegionDataObject_FieldIndex.SizeVariance) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.SizeVariance),
+                    item: item.SizeVariance,
+                    fieldIndex: (int)RegionDataObject_FieldIndex.SizeVariance,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)RegionDataObject_FieldIndex.AngleVariance) ?? true))
+            {
+                P3UInt16XmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.AngleVariance),
+                    item: item.AngleVariance,
+                    fieldIndex: (int)RegionDataObject_FieldIndex.AngleVariance,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)RegionDataObject_FieldIndex.Unknow2n) ?? true))
+            {
+                ByteArrayXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Unknow2n),
+                    item: item.Unknow2n,
+                    fieldIndex: (int)RegionDataObject_FieldIndex.Unknow2n,
+                    errorMask: errorMask);
+            }
+        }
+
+        #region Xml Write
+        public void Write_Xml(
+            XElement node,
+            IRegionDataObjectGetter item,
             bool doMasks,
-            out RegionDataObject_ErrorMask errorMask)
+            out RegionDataObject_ErrorMask errorMask,
+            RegionDataObject_TranslationMask translationMask,
+            string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_Binary(
-                masterReferences: masterReferences,
-                writer: writer,
+            Write_Xml(
+                name: name,
+                node: node,
                 item: item,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMaskBuilder);
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal());
             errorMask = RegionDataObject_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void Write_Binary(
-            MutagenWriter writer,
-            RegionDataObject item,
-            MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
-        {
-            Write_Binary_Embedded(
-                item: item,
-                writer: writer,
-                errorMask: errorMask,
-                masterReferences: masterReferences);
-        }
-        #endregion
-
-        public static void Write_Binary_Embedded(
-            RegionDataObject item,
-            MutagenWriter writer,
+        public void Write_Xml(
+            XElement node,
+            IRegionDataObjectGetter item,
             ErrorMaskBuilder errorMask,
-            MasterReferences masterReferences)
+            TranslationCrystal translationMask,
+            string name = null)
         {
-            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.Object_Property,
-                masterReferences: masterReferences);
-            Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.ParentIndex);
-            Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.Unknown1);
-            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.Density);
-            Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.Clustering);
-            Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.MinSlope);
-            Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.MaxSlope);
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<RegionDataObject.Flag>.Instance.Write(
-                writer,
-                item.Flags,
-                length: 1);
-            Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.RadiusWrtPercent);
-            Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.Radius);
-            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.MinHeight);
-            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.MaxHeight);
-            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.Sink);
-            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.SinkVariance);
-            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.SizeVariance);
-            Mutagen.Bethesda.Binary.P3UInt16BinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.AngleVariance);
-            Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.Unknow2n);
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.RegionDataObject");
+            node.Add(elem);
+            if (name != null)
+            {
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.RegionDataObject");
+            }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
         }
-
         #endregion
 
     }
     #endregion
 
-    #region Modules
     #region Mask
     public class RegionDataObject_Mask<T> : IMask<T>, IEquatable<RegionDataObject_Mask<T>>
     {
@@ -3594,6 +3506,109 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Add((AngleVariance, null));
             ret.Add((Unknow2n, null));
         }
+    }
+    #endregion
+
+    #region Binary Translation
+    public partial class RegionDataObjectBinaryTranslation
+    {
+        public readonly static RegionDataObjectBinaryTranslation Instance = new RegionDataObjectBinaryTranslation();
+
+        public static void Write_Binary_Embedded(
+            IRegionDataObjectGetter item,
+            MutagenWriter writer,
+            ErrorMaskBuilder errorMask,
+            MasterReferences masterReferences)
+        {
+            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.Object_Property,
+                masterReferences: masterReferences);
+            Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.ParentIndex);
+            Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.Unknown1);
+            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.Density);
+            Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.Clustering);
+            Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.MinSlope);
+            Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.MaxSlope);
+            Mutagen.Bethesda.Binary.EnumBinaryTranslation<RegionDataObject.Flag>.Instance.Write(
+                writer,
+                item.Flags,
+                length: 1);
+            Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.RadiusWrtPercent);
+            Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.Radius);
+            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.MinHeight);
+            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.MaxHeight);
+            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.Sink);
+            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.SinkVariance);
+            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.SizeVariance);
+            Mutagen.Bethesda.Binary.P3UInt16BinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.AngleVariance);
+            Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.Unknow2n);
+        }
+
+        #region Binary Write
+        public void Write_Binary(
+            MutagenWriter writer,
+            IRegionDataObjectGetter item,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            bool doMasks,
+            out RegionDataObject_ErrorMask errorMask)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            Write_Binary(
+                masterReferences: masterReferences,
+                writer: writer,
+                item: item,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMaskBuilder);
+            errorMask = RegionDataObject_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public void Write_Binary(
+            MutagenWriter writer,
+            IRegionDataObjectGetter item,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            Write_Binary_Embedded(
+                item: item,
+                writer: writer,
+                errorMask: errorMask,
+                masterReferences: masterReferences);
+        }
+        #endregion
+
     }
     #endregion
 

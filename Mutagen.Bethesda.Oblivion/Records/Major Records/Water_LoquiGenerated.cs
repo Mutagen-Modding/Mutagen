@@ -38,6 +38,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class Water : 
         OblivionMajorRecord,
         IWater,
+        IWaterInternal,
         ILoquiObject<Water>,
         ILoquiObjectSetter,
         ILinkSubContainer,
@@ -562,6 +563,23 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         RelatedWaters IWaterGetter.RelatedWaters => this.RelatedWaters;
         #endregion
+        #region DATADataTypeState
+        private Water.DATADataType _DATADataTypeState;
+        public Water.DATADataType DATADataTypeState
+        {
+            get => this._DATADataTypeState;
+            set => this.RaiseAndSetIfChanged(ref this._DATADataTypeState, value, nameof(DATADataTypeState));
+        }
+        Water.DATADataType IWaterInternal.DATADataTypeState
+        {
+            get => this.DATADataTypeState;
+            set => this.DATADataTypeState = value;
+        }
+        Water.DATADataType IWaterInternalGetter.DATADataTypeState
+        {
+            get => this.DATADataTypeState;
+        }
+        #endregion
 
         IMask<bool> IEqualsMask<Water>.GetEqualsMask(Water rhs, EqualsMaskHelper.Include include) => WaterCommon.GetEqualsMask(this, rhs, include);
         IMask<bool> IEqualsMask<IWaterGetter>.GetEqualsMask(IWaterGetter rhs, EqualsMaskHelper.Include include) => WaterCommon.GetEqualsMask(this, rhs, include);
@@ -654,6 +672,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 if (!object.Equals(this.RelatedWaters, rhs.RelatedWaters)) return false;
             }
+            if (this.DATADataTypeState != rhs.DATADataTypeState) return false;
             return true;
         }
 
@@ -710,6 +729,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 ret = HashHelper.GetHashCode(RelatedWaters).CombineHashCode(ret);
             }
+            ret = HashHelper.GetHashCode(DATADataTypeState).CombineHashCode(ret);
             ret = ret.CombineHashCode(base.GetHashCode());
             return ret;
         }
@@ -887,7 +907,8 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Xml(
+            WaterXmlTranslation.Instance.Write_Xml(
+                item: this,
                 name: name,
                 node: node,
                 errorMask: errorMaskBuilder,
@@ -919,7 +940,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            this.Write_Xml(
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -950,7 +971,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            this.Write_Xml(
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -966,7 +987,8 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Xml(
+            WaterXmlTranslation.Instance.Write_Xml(
+                item: this,
                 name: name,
                 node: node,
                 errorMask: errorMaskBuilder,
@@ -982,7 +1004,8 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Xml(
+            WaterXmlTranslation.Instance.Write_Xml(
+                item: this,
                 name: name,
                 node: node,
                 errorMask: errorMaskBuilder,
@@ -998,7 +1021,7 @@ namespace Mutagen.Bethesda.Oblivion
             TranslationCrystal translationMask,
             string name = null)
         {
-            WaterCommon.Write_Xml(
+            WaterXmlTranslation.Instance.Write_Xml(
                 item: this,
                 name: name,
                 node: node,
@@ -1070,6 +1093,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case Water_FieldIndex.DisplacementSimulatorDampner:
                 case Water_FieldIndex.DisplacementSimulatorStartingSize:
                 case Water_FieldIndex.Damage:
+                case Water_FieldIndex.DATADataTypeState:
                     return true;
                 default:
                     return base.GetHasBeenSet(index);
@@ -1078,7 +1102,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = Water_Registration.TRIGGERING_RECORD_TYPE;
-        public DATADataType DATADataTypeState;
         [Flags]
         public enum DATADataType
         {
@@ -1202,7 +1225,8 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Binary(
+            WaterBinaryTranslation.Instance.Write_Binary(
+                item: this,
                 masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: null,
@@ -1218,7 +1242,8 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Binary(
+            WaterBinaryTranslation.Instance.Write_Binary(
+                item: this,
                 masterReferences: masterReferences,
                 writer: writer,
                 errorMask: errorMaskBuilder,
@@ -1233,7 +1258,8 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Binary(
+            WaterBinaryTranslation.Instance.Write_Binary(
+                item: this,
                 masterReferences: masterReferences,
                 writer: writer,
                 errorMask: errorMaskBuilder,
@@ -1249,7 +1275,7 @@ namespace Mutagen.Bethesda.Oblivion
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            WaterCommon.Write_Binary(
+            WaterBinaryTranslation.Instance.Write_Binary(
                 item: this,
                 masterReferences: masterReferences,
                 writer: writer,
@@ -1257,106 +1283,6 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask);
         }
         #endregion
-
-        static partial void FillBinary_NothingCustomLogic_Custom(
-            MutagenFrame frame,
-            Water item,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask);
-
-        static partial void WriteBinary_NothingCustomLogic_Custom(
-            MutagenWriter writer,
-            Water item,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask);
-
-        public static void WriteBinary_NothingCustomLogic(
-            MutagenWriter writer,
-            Water item,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask)
-        {
-            WriteBinary_NothingCustomLogic_Custom(
-                writer: writer,
-                item: item,
-                masterReferences: masterReferences,
-                errorMask: errorMask);
-        }
-
-        static partial void FillBinary_BloodCustomLogic_Custom(
-            MutagenFrame frame,
-            Water item,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask);
-
-        static partial void WriteBinary_BloodCustomLogic_Custom(
-            MutagenWriter writer,
-            Water item,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask);
-
-        public static void WriteBinary_BloodCustomLogic(
-            MutagenWriter writer,
-            Water item,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask)
-        {
-            WriteBinary_BloodCustomLogic_Custom(
-                writer: writer,
-                item: item,
-                masterReferences: masterReferences,
-                errorMask: errorMask);
-        }
-
-        static partial void FillBinary_OilCustomLogic_Custom(
-            MutagenFrame frame,
-            Water item,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask);
-
-        static partial void WriteBinary_OilCustomLogic_Custom(
-            MutagenWriter writer,
-            Water item,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask);
-
-        public static void WriteBinary_OilCustomLogic(
-            MutagenWriter writer,
-            Water item,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask)
-        {
-            WriteBinary_OilCustomLogic_Custom(
-                writer: writer,
-                item: item,
-                masterReferences: masterReferences,
-                errorMask: errorMask);
-        }
-
-        static partial void FillBinary_OddExtraBytes_Custom(
-            MutagenFrame frame,
-            Water item,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask);
-
-        static partial void WriteBinary_OddExtraBytes_Custom(
-            MutagenWriter writer,
-            Water item,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask);
-
-        public static void WriteBinary_OddExtraBytes(
-            MutagenWriter writer,
-            Water item,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask)
-        {
-            WriteBinary_OddExtraBytes_Custom(
-                writer: writer,
-                item: item,
-                masterReferences: masterReferences,
-                errorMask: errorMask);
-        }
 
         protected static void Fill_Binary_Structs(
             Water item,
@@ -1462,7 +1388,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.DATADataTypeState = DATADataType.Has;
                     }
-                    FillBinary_NothingCustomLogic_Custom(
+                    WaterBinaryTranslation.FillBinary_NothingCustomLogic_Custom_Public(
                         frame: dataFrame,
                         item: item,
                         masterReferences: masterReferences,
@@ -1572,7 +1498,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.FogDistanceNearPlane = default(Single);
                     }
-                    FillBinary_BloodCustomLogic_Custom(
+                    WaterBinaryTranslation.FillBinary_BloodCustomLogic_Custom_Public(
                         frame: dataFrame,
                         item: item,
                         masterReferences: masterReferences,
@@ -1636,7 +1562,7 @@ namespace Mutagen.Bethesda.Oblivion
                         item.TextureBlend = default(Byte);
                     }
                     dataFrame.SetPosition(dataFrame.Position + 3);
-                    FillBinary_OilCustomLogic_Custom(
+                    WaterBinaryTranslation.FillBinary_OilCustomLogic_Custom_Public(
                         frame: dataFrame,
                         item: item,
                         masterReferences: masterReferences,
@@ -1706,7 +1632,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.DisplacementSimulatorForce = default(Single);
                     }
-                    FillBinary_OddExtraBytes_Custom(
+                    WaterBinaryTranslation.FillBinary_OddExtraBytes_Custom_Public(
                         frame: dataFrame,
                         item: item,
                         masterReferences: masterReferences,
@@ -2019,6 +1945,9 @@ namespace Mutagen.Bethesda.Oblivion
                 case Water_FieldIndex.RelatedWaters:
                     this.RelatedWaters = (RelatedWaters)obj;
                     break;
+                case Water_FieldIndex.DATADataTypeState:
+                    this.DATADataTypeState = (Water.DATADataType)obj;
+                    break;
                 default:
                     base.SetNthObject(index, obj);
                     break;
@@ -2146,6 +2075,9 @@ namespace Mutagen.Bethesda.Oblivion
                 case Water_FieldIndex.RelatedWaters:
                     obj.RelatedWaters = (RelatedWaters)pair.Value;
                     break;
+                case Water_FieldIndex.DATADataTypeState:
+                    obj.DATADataTypeState = (Water.DATADataType)pair.Value;
+                    break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
@@ -2233,6 +2165,13 @@ namespace Mutagen.Bethesda.Oblivion
         new bool RelatedWaters_IsSet { get; set; }
         void RelatedWaters_Set(RelatedWaters item, bool hasBeenSet = true);
         void RelatedWaters_Unset();
+
+    }
+
+    public partial interface IWaterInternal : IWater, IWaterInternalGetter, IOblivionMajorRecordInternal
+    {
+        new Sound Sound { get; set; }
+        new Water.DATADataType DATADataTypeState { get; set; }
 
     }
 
@@ -2375,6 +2314,15 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
+    public partial interface IWaterInternalGetter : IWaterGetter, IOblivionMajorRecordInternalGetter
+    {
+        #region DATADataTypeState
+        Water.DATADataType DATADataTypeState { get; }
+
+        #endregion
+
+    }
+
     #endregion
 
 }
@@ -2384,43 +2332,45 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #region Field Index
     public enum Water_FieldIndex
     {
-        FormKey = 0,
-        Version = 1,
-        EditorID = 2,
-        RecordType = 3,
-        OblivionMajorRecordFlags = 4,
-        Texture = 5,
-        Opacity = 6,
-        Flags = 7,
-        MaterialID = 8,
-        Sound = 9,
-        WindVelocity = 10,
-        WindDirection = 11,
-        WaveAmplitude = 12,
-        WaveFrequency = 13,
-        SunPower = 14,
-        ReflectivityAmount = 15,
-        FresnelAmount = 16,
-        ScrollXSpeed = 17,
-        ScrollYSpeed = 18,
-        FogDistanceNearPlane = 19,
-        FogDistanceFarPlane = 20,
-        ShallowColor = 21,
-        DeepColor = 22,
-        ReflectionColor = 23,
-        TextureBlend = 24,
-        RainSimulatorForce = 25,
-        RainSimulatorVelocity = 26,
-        RainSimulatorFalloff = 27,
-        RainSimulatorDampner = 28,
-        RainSimulatorStartingSize = 29,
-        DisplacementSimulatorForce = 30,
-        DisplacementSimulatorVelocity = 31,
-        DisplacementSimulatorFalloff = 32,
-        DisplacementSimulatorDampner = 33,
-        DisplacementSimulatorStartingSize = 34,
-        Damage = 35,
-        RelatedWaters = 36,
+        MajorRecordFlagsRaw = 0,
+        FormKey = 1,
+        Version = 2,
+        EditorID = 3,
+        RecordType = 4,
+        OblivionMajorRecordFlags = 5,
+        Texture = 6,
+        Opacity = 7,
+        Flags = 8,
+        MaterialID = 9,
+        Sound = 10,
+        WindVelocity = 11,
+        WindDirection = 12,
+        WaveAmplitude = 13,
+        WaveFrequency = 14,
+        SunPower = 15,
+        ReflectivityAmount = 16,
+        FresnelAmount = 17,
+        ScrollXSpeed = 18,
+        ScrollYSpeed = 19,
+        FogDistanceNearPlane = 20,
+        FogDistanceFarPlane = 21,
+        ShallowColor = 22,
+        DeepColor = 23,
+        ReflectionColor = 24,
+        TextureBlend = 25,
+        RainSimulatorForce = 26,
+        RainSimulatorVelocity = 27,
+        RainSimulatorFalloff = 28,
+        RainSimulatorDampner = 29,
+        RainSimulatorStartingSize = 30,
+        DisplacementSimulatorForce = 31,
+        DisplacementSimulatorVelocity = 32,
+        DisplacementSimulatorFalloff = 33,
+        DisplacementSimulatorDampner = 34,
+        DisplacementSimulatorStartingSize = 35,
+        Damage = 36,
+        RelatedWaters = 37,
+        DATADataTypeState = 38,
     }
     #endregion
 
@@ -2438,9 +2388,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const string GUID = "31d50641-f6df-4533-89c3-e764dc35a702";
 
-        public const ushort AdditionalFieldCount = 32;
+        public const ushort AdditionalFieldCount = 33;
 
-        public const ushort FieldCount = 37;
+        public const ushort FieldCount = 39;
 
         public static readonly Type MaskType = typeof(Water_Mask<>);
 
@@ -2450,11 +2400,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type GetterType = typeof(IWaterGetter);
 
-        public static readonly Type InternalGetterType = null;
+        public static readonly Type InternalGetterType = typeof(IWaterInternalGetter);
 
         public static readonly Type SetterType = typeof(IWater);
 
-        public static readonly Type InternalSetterType = null;
+        public static readonly Type InternalSetterType = typeof(IWaterInternal);
 
         public static readonly Type CommonType = typeof(WaterCommon);
 
@@ -2536,6 +2486,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (ushort)Water_FieldIndex.Damage;
                 case "RELATEDWATERS":
                     return (ushort)Water_FieldIndex.RelatedWaters;
+                case "DATADATATYPESTATE":
+                    return (ushort)Water_FieldIndex.DATADataTypeState;
                 default:
                     return null;
             }
@@ -2578,6 +2530,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Water_FieldIndex.DisplacementSimulatorStartingSize:
                 case Water_FieldIndex.Damage:
                 case Water_FieldIndex.RelatedWaters:
+                case Water_FieldIndex.DATADataTypeState:
                     return false;
                 default:
                     return OblivionMajorRecord_Registration.GetNthIsEnumerable(index);
@@ -2622,6 +2575,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Water_FieldIndex.DisplacementSimulatorDampner:
                 case Water_FieldIndex.DisplacementSimulatorStartingSize:
                 case Water_FieldIndex.Damage:
+                case Water_FieldIndex.DATADataTypeState:
                     return false;
                 default:
                     return OblivionMajorRecord_Registration.GetNthIsLoqui(index);
@@ -2665,6 +2619,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Water_FieldIndex.DisplacementSimulatorStartingSize:
                 case Water_FieldIndex.Damage:
                 case Water_FieldIndex.RelatedWaters:
+                case Water_FieldIndex.DATADataTypeState:
                     return false;
                 default:
                     return OblivionMajorRecord_Registration.GetNthIsSingleton(index);
@@ -2740,6 +2695,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return "Damage";
                 case Water_FieldIndex.RelatedWaters:
                     return "RelatedWaters";
+                case Water_FieldIndex.DATADataTypeState:
+                    return "DATADataTypeState";
                 default:
                     return OblivionMajorRecord_Registration.GetNthName(index);
             }
@@ -2782,6 +2739,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Water_FieldIndex.DisplacementSimulatorStartingSize:
                 case Water_FieldIndex.Damage:
                 case Water_FieldIndex.RelatedWaters:
+                case Water_FieldIndex.DATADataTypeState:
                     return false;
                 default:
                     return OblivionMajorRecord_Registration.IsNthDerivative(index);
@@ -2825,6 +2783,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Water_FieldIndex.DisplacementSimulatorStartingSize:
                 case Water_FieldIndex.Damage:
                 case Water_FieldIndex.RelatedWaters:
+                case Water_FieldIndex.DATADataTypeState:
                     return false;
                 default:
                     return OblivionMajorRecord_Registration.IsProtected(index);
@@ -2900,6 +2859,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return typeof(UInt16);
                 case Water_FieldIndex.RelatedWaters:
                     return typeof(RelatedWaters);
+                case Water_FieldIndex.DATADataTypeState:
+                    return typeof(Water.DATADataType);
                 default:
                     return OblivionMajorRecord_Registration.GetNthType(index);
             }
@@ -3854,6 +3815,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.RelatedWaters?.ToString(fg, "RelatedWaters");
                 }
+                if (printMask?.DATADataTypeState ?? true)
+                {
+                }
             }
             fg.AppendLine("]");
         }
@@ -3907,6 +3871,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.DisplacementSimulatorStartingSize = true;
             ret.Damage = true;
             ret.RelatedWaters = new MaskItem<bool, RelatedWaters_Mask<bool>>(item.RelatedWaters_IsSet, RelatedWatersCommon.GetHasBeenSetMask(item.RelatedWaters));
+            ret.DATADataTypeState = true;
             return ret;
         }
 
@@ -3920,6 +3885,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (index)
             {
+                case OblivionMajorRecord_FieldIndex.MajorRecordFlagsRaw:
+                    return (Water_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.FormKey:
                     return (Water_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.Version:
@@ -3945,6 +3912,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (index)
             {
+                case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
+                    return (Water_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
                     return (Water_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.Version:
@@ -3959,373 +3928,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         #region Xml Translation
-        #region Xml Write
-        public static void Write_Xml(
-            XElement node,
-            Water item,
-            bool doMasks,
-            out Water_ErrorMask errorMask,
-            Water_TranslationMask translationMask,
-            string name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_Xml(
-                name: name,
-                node: node,
-                item: item,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = Water_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void Write_Xml(
-            XElement node,
-            Water item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.Water");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.Water");
-            }
-            WriteToNode_Xml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #endregion
-
-        public static void WriteToNode_Xml(
-            this Water item,
-            XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            OblivionMajorRecordCommon.WriteToNode_Xml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            if (item.Texture_IsSet
-                && (translationMask?.GetShouldTranslate((int)Water_FieldIndex.Texture) ?? true))
-            {
-                StringXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Texture),
-                    item: item.Texture,
-                    fieldIndex: (int)Water_FieldIndex.Texture,
-                    errorMask: errorMask);
-            }
-            if (item.Opacity_IsSet
-                && (translationMask?.GetShouldTranslate((int)Water_FieldIndex.Opacity) ?? true))
-            {
-                ByteXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Opacity),
-                    item: item.Opacity,
-                    fieldIndex: (int)Water_FieldIndex.Opacity,
-                    errorMask: errorMask);
-            }
-            if (item.Flags_IsSet
-                && (translationMask?.GetShouldTranslate((int)Water_FieldIndex.Flags) ?? true))
-            {
-                EnumXmlTranslation<Water.Flag>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Flags),
-                    item: item.Flags,
-                    fieldIndex: (int)Water_FieldIndex.Flags,
-                    errorMask: errorMask);
-            }
-            if (item.MaterialID_IsSet
-                && (translationMask?.GetShouldTranslate((int)Water_FieldIndex.MaterialID) ?? true))
-            {
-                StringXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.MaterialID),
-                    item: item.MaterialID,
-                    fieldIndex: (int)Water_FieldIndex.MaterialID,
-                    errorMask: errorMask);
-            }
-            if (item.Sound_Property.HasBeenSet
-                && (translationMask?.GetShouldTranslate((int)Water_FieldIndex.Sound) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Sound),
-                    item: item.Sound_Property?.FormKey,
-                    fieldIndex: (int)Water_FieldIndex.Sound,
-                    errorMask: errorMask);
-            }
-            if (item.DATADataTypeState.HasFlag(Water.DATADataType.Has))
-            {
-                if (!item.DATADataTypeState.HasFlag(Water.DATADataType.Break0))
-                {
-                    if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.WindVelocity) ?? true))
-                    {
-                        FloatXmlTranslation.Instance.Write(
-                            node: node,
-                            name: nameof(item.WindVelocity),
-                            item: item.WindVelocity,
-                            fieldIndex: (int)Water_FieldIndex.WindVelocity,
-                            errorMask: errorMask);
-                    }
-                    if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.WindDirection) ?? true))
-                    {
-                        FloatXmlTranslation.Instance.Write(
-                            node: node,
-                            name: nameof(item.WindDirection),
-                            item: item.WindDirection,
-                            fieldIndex: (int)Water_FieldIndex.WindDirection,
-                            errorMask: errorMask);
-                    }
-                    if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.WaveAmplitude) ?? true))
-                    {
-                        FloatXmlTranslation.Instance.Write(
-                            node: node,
-                            name: nameof(item.WaveAmplitude),
-                            item: item.WaveAmplitude,
-                            fieldIndex: (int)Water_FieldIndex.WaveAmplitude,
-                            errorMask: errorMask);
-                    }
-                    if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.WaveFrequency) ?? true))
-                    {
-                        FloatXmlTranslation.Instance.Write(
-                            node: node,
-                            name: nameof(item.WaveFrequency),
-                            item: item.WaveFrequency,
-                            fieldIndex: (int)Water_FieldIndex.WaveFrequency,
-                            errorMask: errorMask);
-                    }
-                    if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.SunPower) ?? true))
-                    {
-                        FloatXmlTranslation.Instance.Write(
-                            node: node,
-                            name: nameof(item.SunPower),
-                            item: item.SunPower,
-                            fieldIndex: (int)Water_FieldIndex.SunPower,
-                            errorMask: errorMask);
-                    }
-                    if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.ReflectivityAmount) ?? true))
-                    {
-                        FloatXmlTranslation.Instance.Write(
-                            node: node,
-                            name: nameof(item.ReflectivityAmount),
-                            item: item.ReflectivityAmount,
-                            fieldIndex: (int)Water_FieldIndex.ReflectivityAmount,
-                            errorMask: errorMask);
-                    }
-                    if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.FresnelAmount) ?? true))
-                    {
-                        FloatXmlTranslation.Instance.Write(
-                            node: node,
-                            name: nameof(item.FresnelAmount),
-                            item: item.FresnelAmount,
-                            fieldIndex: (int)Water_FieldIndex.FresnelAmount,
-                            errorMask: errorMask);
-                    }
-                    if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.ScrollXSpeed) ?? true))
-                    {
-                        FloatXmlTranslation.Instance.Write(
-                            node: node,
-                            name: nameof(item.ScrollXSpeed),
-                            item: item.ScrollXSpeed,
-                            fieldIndex: (int)Water_FieldIndex.ScrollXSpeed,
-                            errorMask: errorMask);
-                    }
-                    if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.ScrollYSpeed) ?? true))
-                    {
-                        FloatXmlTranslation.Instance.Write(
-                            node: node,
-                            name: nameof(item.ScrollYSpeed),
-                            item: item.ScrollYSpeed,
-                            fieldIndex: (int)Water_FieldIndex.ScrollYSpeed,
-                            errorMask: errorMask);
-                    }
-                    if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.FogDistanceNearPlane) ?? true))
-                    {
-                        FloatXmlTranslation.Instance.Write(
-                            node: node,
-                            name: nameof(item.FogDistanceNearPlane),
-                            item: item.FogDistanceNearPlane,
-                            fieldIndex: (int)Water_FieldIndex.FogDistanceNearPlane,
-                            errorMask: errorMask);
-                    }
-                    if (!item.DATADataTypeState.HasFlag(Water.DATADataType.Break1))
-                    {
-                        if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.FogDistanceFarPlane) ?? true))
-                        {
-                            FloatXmlTranslation.Instance.Write(
-                                node: node,
-                                name: nameof(item.FogDistanceFarPlane),
-                                item: item.FogDistanceFarPlane,
-                                fieldIndex: (int)Water_FieldIndex.FogDistanceFarPlane,
-                                errorMask: errorMask);
-                        }
-                        if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.ShallowColor) ?? true))
-                        {
-                            ColorXmlTranslation.Instance.Write(
-                                node: node,
-                                name: nameof(item.ShallowColor),
-                                item: item.ShallowColor,
-                                fieldIndex: (int)Water_FieldIndex.ShallowColor,
-                                errorMask: errorMask);
-                        }
-                        if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.DeepColor) ?? true))
-                        {
-                            ColorXmlTranslation.Instance.Write(
-                                node: node,
-                                name: nameof(item.DeepColor),
-                                item: item.DeepColor,
-                                fieldIndex: (int)Water_FieldIndex.DeepColor,
-                                errorMask: errorMask);
-                        }
-                        if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.ReflectionColor) ?? true))
-                        {
-                            ColorXmlTranslation.Instance.Write(
-                                node: node,
-                                name: nameof(item.ReflectionColor),
-                                item: item.ReflectionColor,
-                                fieldIndex: (int)Water_FieldIndex.ReflectionColor,
-                                errorMask: errorMask);
-                        }
-                        if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.TextureBlend) ?? true))
-                        {
-                            ByteXmlTranslation.Instance.Write(
-                                node: node,
-                                name: nameof(item.TextureBlend),
-                                item: item.TextureBlend,
-                                fieldIndex: (int)Water_FieldIndex.TextureBlend,
-                                errorMask: errorMask);
-                        }
-                        if (!item.DATADataTypeState.HasFlag(Water.DATADataType.Break2))
-                        {
-                            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.RainSimulatorForce) ?? true))
-                            {
-                                FloatXmlTranslation.Instance.Write(
-                                    node: node,
-                                    name: nameof(item.RainSimulatorForce),
-                                    item: item.RainSimulatorForce,
-                                    fieldIndex: (int)Water_FieldIndex.RainSimulatorForce,
-                                    errorMask: errorMask);
-                            }
-                            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.RainSimulatorVelocity) ?? true))
-                            {
-                                FloatXmlTranslation.Instance.Write(
-                                    node: node,
-                                    name: nameof(item.RainSimulatorVelocity),
-                                    item: item.RainSimulatorVelocity,
-                                    fieldIndex: (int)Water_FieldIndex.RainSimulatorVelocity,
-                                    errorMask: errorMask);
-                            }
-                            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.RainSimulatorFalloff) ?? true))
-                            {
-                                FloatXmlTranslation.Instance.Write(
-                                    node: node,
-                                    name: nameof(item.RainSimulatorFalloff),
-                                    item: item.RainSimulatorFalloff,
-                                    fieldIndex: (int)Water_FieldIndex.RainSimulatorFalloff,
-                                    errorMask: errorMask);
-                            }
-                            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.RainSimulatorDampner) ?? true))
-                            {
-                                FloatXmlTranslation.Instance.Write(
-                                    node: node,
-                                    name: nameof(item.RainSimulatorDampner),
-                                    item: item.RainSimulatorDampner,
-                                    fieldIndex: (int)Water_FieldIndex.RainSimulatorDampner,
-                                    errorMask: errorMask);
-                            }
-                            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.RainSimulatorStartingSize) ?? true))
-                            {
-                                FloatXmlTranslation.Instance.Write(
-                                    node: node,
-                                    name: nameof(item.RainSimulatorStartingSize),
-                                    item: item.RainSimulatorStartingSize,
-                                    fieldIndex: (int)Water_FieldIndex.RainSimulatorStartingSize,
-                                    errorMask: errorMask);
-                            }
-                            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.DisplacementSimulatorForce) ?? true))
-                            {
-                                FloatXmlTranslation.Instance.Write(
-                                    node: node,
-                                    name: nameof(item.DisplacementSimulatorForce),
-                                    item: item.DisplacementSimulatorForce,
-                                    fieldIndex: (int)Water_FieldIndex.DisplacementSimulatorForce,
-                                    errorMask: errorMask);
-                            }
-                            if (!item.DATADataTypeState.HasFlag(Water.DATADataType.Break3))
-                            {
-                                if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.DisplacementSimulatorVelocity) ?? true))
-                                {
-                                    FloatXmlTranslation.Instance.Write(
-                                        node: node,
-                                        name: nameof(item.DisplacementSimulatorVelocity),
-                                        item: item.DisplacementSimulatorVelocity,
-                                        fieldIndex: (int)Water_FieldIndex.DisplacementSimulatorVelocity,
-                                        errorMask: errorMask);
-                                }
-                                if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.DisplacementSimulatorFalloff) ?? true))
-                                {
-                                    FloatXmlTranslation.Instance.Write(
-                                        node: node,
-                                        name: nameof(item.DisplacementSimulatorFalloff),
-                                        item: item.DisplacementSimulatorFalloff,
-                                        fieldIndex: (int)Water_FieldIndex.DisplacementSimulatorFalloff,
-                                        errorMask: errorMask);
-                                }
-                                if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.DisplacementSimulatorDampner) ?? true))
-                                {
-                                    FloatXmlTranslation.Instance.Write(
-                                        node: node,
-                                        name: nameof(item.DisplacementSimulatorDampner),
-                                        item: item.DisplacementSimulatorDampner,
-                                        fieldIndex: (int)Water_FieldIndex.DisplacementSimulatorDampner,
-                                        errorMask: errorMask);
-                                }
-                                if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.DisplacementSimulatorStartingSize) ?? true))
-                                {
-                                    FloatXmlTranslation.Instance.Write(
-                                        node: node,
-                                        name: nameof(item.DisplacementSimulatorStartingSize),
-                                        item: item.DisplacementSimulatorStartingSize,
-                                        fieldIndex: (int)Water_FieldIndex.DisplacementSimulatorStartingSize,
-                                        errorMask: errorMask);
-                                }
-                                if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.Damage) ?? true))
-                                {
-                                    UInt16XmlTranslation.Instance.Write(
-                                        node: node,
-                                        name: nameof(item.Damage),
-                                        item: item.Damage,
-                                        fieldIndex: (int)Water_FieldIndex.Damage,
-                                        errorMask: errorMask);
-                                }
-                            }
-                        }
-                    }
-                }
-                else
-                {
-                    node.Add(new XElement("HasDATADataType"));
-                }
-            }
-            if (item.RelatedWaters_IsSet
-                && (translationMask?.GetShouldTranslate((int)Water_FieldIndex.RelatedWaters) ?? true))
-            {
-                LoquiXmlTranslation<RelatedWaters>.Instance.Write(
-                    node: node,
-                    item: item.RelatedWaters,
-                    name: nameof(item.RelatedWaters),
-                    fieldIndex: (int)Water_FieldIndex.RelatedWaters,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Water_FieldIndex.RelatedWaters));
-            }
-        }
-
         public static void FillPublic_Xml(
             this Water item,
             XElement node,
@@ -5178,6 +4780,32 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask?.PopIndex();
                     }
                     break;
+                case "DATADataTypeState":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Water_FieldIndex.DATADataTypeState);
+                        if (EnumXmlTranslation<Water.DATADataType>.Instance.Parse(
+                            node: node,
+                            item: out Water.DATADataType DATADataTypeStateParse,
+                            errorMask: errorMask))
+                        {
+                            item.DATADataTypeState = DATADataTypeStateParse;
+                        }
+                        else
+                        {
+                            item.DATADataTypeState = default(Water.DATADataType);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
                 default:
                     OblivionMajorRecordCommon.FillPublicElement_Xml(
                         item: item,
@@ -5191,245 +4819,394 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        #region Binary Translation
-        #region Binary Write
-        public static void Write_Binary(
-            MutagenWriter writer,
-            Water item,
-            MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            bool doMasks,
-            out Water_ErrorMask errorMask)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_Binary(
-                masterReferences: masterReferences,
-                writer: writer,
-                item: item,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMaskBuilder);
-            errorMask = Water_ErrorMask.Factory(errorMaskBuilder);
-        }
+    }
+    #endregion
 
-        public static void Write_Binary(
-            MutagenWriter writer,
-            Water item,
-            MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
-        {
-            using (HeaderExport.ExportHeader(
-                writer: writer,
-                record: Water_Registration.WATR_HEADER,
-                type: ObjectType.Record))
-            {
-                OblivionMajorRecordCommon.Write_Binary_Embedded(
-                    item: item,
-                    writer: writer,
-                    errorMask: errorMask,
-                    masterReferences: masterReferences);
-                Write_Binary_RecordTypes(
-                    item: item,
-                    writer: writer,
-                    recordTypeConverter: recordTypeConverter,
-                    errorMask: errorMask,
-                    masterReferences: masterReferences);
-            }
-        }
-        #endregion
+    #region Modules
+    #region Xml Translation
+    public partial class WaterXmlTranslation : OblivionMajorRecordXmlTranslation
+    {
+        public new readonly static WaterXmlTranslation Instance = new WaterXmlTranslation();
 
-        public static void Write_Binary_RecordTypes(
-            Water item,
-            MutagenWriter writer,
-            RecordTypeConverter recordTypeConverter,
+        public static void WriteToNode_Xml(
+            IWaterInternalGetter item,
+            XElement node,
             ErrorMaskBuilder errorMask,
-            MasterReferences masterReferences)
+            TranslationCrystal translationMask)
         {
-            MajorRecordCommon.Write_Binary_RecordTypes(
+            OblivionMajorRecordXmlTranslation.WriteToNode_Xml(
                 item: item,
-                writer: writer,
-                recordTypeConverter: recordTypeConverter,
+                node: node,
                 errorMask: errorMask,
-                masterReferences: masterReferences);
-            if (item.Texture_IsSet)
+                translationMask: translationMask);
+            if (item.Texture_IsSet
+                && (translationMask?.GetShouldTranslate((int)Water_FieldIndex.Texture) ?? true))
             {
-                Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
-                    writer: writer,
+                StringXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Texture),
                     item: item.Texture,
-                    header: recordTypeConverter.ConvertToCustom(Water_Registration.TNAM_HEADER),
-                    nullable: false);
+                    fieldIndex: (int)Water_FieldIndex.Texture,
+                    errorMask: errorMask);
             }
-            if (item.Opacity_IsSet)
+            if (item.Opacity_IsSet
+                && (translationMask?.GetShouldTranslate((int)Water_FieldIndex.Opacity) ?? true))
             {
-                Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                    writer: writer,
+                ByteXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Opacity),
                     item: item.Opacity,
-                    header: recordTypeConverter.ConvertToCustom(Water_Registration.ANAM_HEADER),
-                    nullable: false);
+                    fieldIndex: (int)Water_FieldIndex.Opacity,
+                    errorMask: errorMask);
             }
-            if (item.Flags_IsSet)
+            if (item.Flags_IsSet
+                && (translationMask?.GetShouldTranslate((int)Water_FieldIndex.Flags) ?? true))
             {
-                Mutagen.Bethesda.Binary.EnumBinaryTranslation<Water.Flag>.Instance.Write(
-                    writer,
-                    item.Flags,
-                    length: 1,
-                    header: recordTypeConverter.ConvertToCustom(Water_Registration.FNAM_HEADER),
-                    nullable: false);
+                EnumXmlTranslation<Water.Flag>.Instance.Write(
+                    node: node,
+                    name: nameof(item.Flags),
+                    item: item.Flags,
+                    fieldIndex: (int)Water_FieldIndex.Flags,
+                    errorMask: errorMask);
             }
-            if (item.MaterialID_IsSet)
+            if (item.MaterialID_IsSet
+                && (translationMask?.GetShouldTranslate((int)Water_FieldIndex.MaterialID) ?? true))
             {
-                Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
-                    writer: writer,
+                StringXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.MaterialID),
                     item: item.MaterialID,
-                    header: recordTypeConverter.ConvertToCustom(Water_Registration.MNAM_HEADER),
-                    nullable: false);
+                    fieldIndex: (int)Water_FieldIndex.MaterialID,
+                    errorMask: errorMask);
             }
-            if (item.Sound_Property.HasBeenSet)
+            if (item.Sound_Property.HasBeenSet
+                && (translationMask?.GetShouldTranslate((int)Water_FieldIndex.Sound) ?? true))
             {
-                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Sound_Property,
-                    header: recordTypeConverter.ConvertToCustom(Water_Registration.SNAM_HEADER),
-                    nullable: false,
-                    masterReferences: masterReferences);
+                FormKeyXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Sound),
+                    item: item.Sound_Property?.FormKey,
+                    fieldIndex: (int)Water_FieldIndex.Sound,
+                    errorMask: errorMask);
             }
             if (item.DATADataTypeState.HasFlag(Water.DATADataType.Has))
             {
-                using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Water_Registration.DATA_HEADER)))
+                if (!item.DATADataTypeState.HasFlag(Water.DATADataType.Break0))
                 {
-                    Water.WriteBinary_NothingCustomLogic(
-                        writer: writer,
-                        item: item,
-                        masterReferences: masterReferences,
-                        errorMask: errorMask);
-                    if (!item.DATADataTypeState.HasFlag(Water.DATADataType.Break0))
+                    if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.WindVelocity) ?? true))
                     {
-                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                            writer: writer,
-                            item: item.WindVelocity);
-                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                            writer: writer,
-                            item: item.WindDirection);
-                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                            writer: writer,
-                            item: item.WaveAmplitude);
-                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                            writer: writer,
-                            item: item.WaveFrequency);
-                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                            writer: writer,
-                            item: item.SunPower);
-                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                            writer: writer,
-                            item: item.ReflectivityAmount);
-                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                            writer: writer,
-                            item: item.FresnelAmount);
-                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                            writer: writer,
-                            item: item.ScrollXSpeed);
-                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                            writer: writer,
-                            item: item.ScrollYSpeed);
-                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                            writer: writer,
-                            item: item.FogDistanceNearPlane);
-                        Water.WriteBinary_BloodCustomLogic(
-                            writer: writer,
-                            item: item,
-                            masterReferences: masterReferences,
+                        FloatXmlTranslation.Instance.Write(
+                            node: node,
+                            name: nameof(item.WindVelocity),
+                            item: item.WindVelocity,
+                            fieldIndex: (int)Water_FieldIndex.WindVelocity,
                             errorMask: errorMask);
-                        if (!item.DATADataTypeState.HasFlag(Water.DATADataType.Break1))
+                    }
+                    if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.WindDirection) ?? true))
+                    {
+                        FloatXmlTranslation.Instance.Write(
+                            node: node,
+                            name: nameof(item.WindDirection),
+                            item: item.WindDirection,
+                            fieldIndex: (int)Water_FieldIndex.WindDirection,
+                            errorMask: errorMask);
+                    }
+                    if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.WaveAmplitude) ?? true))
+                    {
+                        FloatXmlTranslation.Instance.Write(
+                            node: node,
+                            name: nameof(item.WaveAmplitude),
+                            item: item.WaveAmplitude,
+                            fieldIndex: (int)Water_FieldIndex.WaveAmplitude,
+                            errorMask: errorMask);
+                    }
+                    if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.WaveFrequency) ?? true))
+                    {
+                        FloatXmlTranslation.Instance.Write(
+                            node: node,
+                            name: nameof(item.WaveFrequency),
+                            item: item.WaveFrequency,
+                            fieldIndex: (int)Water_FieldIndex.WaveFrequency,
+                            errorMask: errorMask);
+                    }
+                    if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.SunPower) ?? true))
+                    {
+                        FloatXmlTranslation.Instance.Write(
+                            node: node,
+                            name: nameof(item.SunPower),
+                            item: item.SunPower,
+                            fieldIndex: (int)Water_FieldIndex.SunPower,
+                            errorMask: errorMask);
+                    }
+                    if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.ReflectivityAmount) ?? true))
+                    {
+                        FloatXmlTranslation.Instance.Write(
+                            node: node,
+                            name: nameof(item.ReflectivityAmount),
+                            item: item.ReflectivityAmount,
+                            fieldIndex: (int)Water_FieldIndex.ReflectivityAmount,
+                            errorMask: errorMask);
+                    }
+                    if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.FresnelAmount) ?? true))
+                    {
+                        FloatXmlTranslation.Instance.Write(
+                            node: node,
+                            name: nameof(item.FresnelAmount),
+                            item: item.FresnelAmount,
+                            fieldIndex: (int)Water_FieldIndex.FresnelAmount,
+                            errorMask: errorMask);
+                    }
+                    if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.ScrollXSpeed) ?? true))
+                    {
+                        FloatXmlTranslation.Instance.Write(
+                            node: node,
+                            name: nameof(item.ScrollXSpeed),
+                            item: item.ScrollXSpeed,
+                            fieldIndex: (int)Water_FieldIndex.ScrollXSpeed,
+                            errorMask: errorMask);
+                    }
+                    if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.ScrollYSpeed) ?? true))
+                    {
+                        FloatXmlTranslation.Instance.Write(
+                            node: node,
+                            name: nameof(item.ScrollYSpeed),
+                            item: item.ScrollYSpeed,
+                            fieldIndex: (int)Water_FieldIndex.ScrollYSpeed,
+                            errorMask: errorMask);
+                    }
+                    if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.FogDistanceNearPlane) ?? true))
+                    {
+                        FloatXmlTranslation.Instance.Write(
+                            node: node,
+                            name: nameof(item.FogDistanceNearPlane),
+                            item: item.FogDistanceNearPlane,
+                            fieldIndex: (int)Water_FieldIndex.FogDistanceNearPlane,
+                            errorMask: errorMask);
+                    }
+                    if (!item.DATADataTypeState.HasFlag(Water.DATADataType.Break1))
+                    {
+                        if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.FogDistanceFarPlane) ?? true))
                         {
-                            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                                writer: writer,
-                                item: item.FogDistanceFarPlane);
-                            Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Write(
-                                writer: writer,
-                                item: item.ShallowColor,
-                                extraByte: true);
-                            Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Write(
-                                writer: writer,
-                                item: item.DeepColor,
-                                extraByte: true);
-                            Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Write(
-                                writer: writer,
-                                item: item.ReflectionColor,
-                                extraByte: true);
-                            Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                                writer: writer,
-                                item: item.TextureBlend);
-                            writer.WriteZeros(3);
-                            Water.WriteBinary_OilCustomLogic(
-                                writer: writer,
-                                item: item,
-                                masterReferences: masterReferences,
+                            FloatXmlTranslation.Instance.Write(
+                                node: node,
+                                name: nameof(item.FogDistanceFarPlane),
+                                item: item.FogDistanceFarPlane,
+                                fieldIndex: (int)Water_FieldIndex.FogDistanceFarPlane,
                                 errorMask: errorMask);
-                            if (!item.DATADataTypeState.HasFlag(Water.DATADataType.Break2))
+                        }
+                        if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.ShallowColor) ?? true))
+                        {
+                            ColorXmlTranslation.Instance.Write(
+                                node: node,
+                                name: nameof(item.ShallowColor),
+                                item: item.ShallowColor,
+                                fieldIndex: (int)Water_FieldIndex.ShallowColor,
+                                errorMask: errorMask);
+                        }
+                        if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.DeepColor) ?? true))
+                        {
+                            ColorXmlTranslation.Instance.Write(
+                                node: node,
+                                name: nameof(item.DeepColor),
+                                item: item.DeepColor,
+                                fieldIndex: (int)Water_FieldIndex.DeepColor,
+                                errorMask: errorMask);
+                        }
+                        if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.ReflectionColor) ?? true))
+                        {
+                            ColorXmlTranslation.Instance.Write(
+                                node: node,
+                                name: nameof(item.ReflectionColor),
+                                item: item.ReflectionColor,
+                                fieldIndex: (int)Water_FieldIndex.ReflectionColor,
+                                errorMask: errorMask);
+                        }
+                        if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.TextureBlend) ?? true))
+                        {
+                            ByteXmlTranslation.Instance.Write(
+                                node: node,
+                                name: nameof(item.TextureBlend),
+                                item: item.TextureBlend,
+                                fieldIndex: (int)Water_FieldIndex.TextureBlend,
+                                errorMask: errorMask);
+                        }
+                        if (!item.DATADataTypeState.HasFlag(Water.DATADataType.Break2))
+                        {
+                            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.RainSimulatorForce) ?? true))
                             {
-                                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                                    writer: writer,
-                                    item: item.RainSimulatorForce);
-                                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                                    writer: writer,
-                                    item: item.RainSimulatorVelocity);
-                                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                                    writer: writer,
-                                    item: item.RainSimulatorFalloff);
-                                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                                    writer: writer,
-                                    item: item.RainSimulatorDampner);
-                                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                                    writer: writer,
-                                    item: item.RainSimulatorStartingSize);
-                                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                                    writer: writer,
-                                    item: item.DisplacementSimulatorForce);
-                                Water.WriteBinary_OddExtraBytes(
-                                    writer: writer,
-                                    item: item,
-                                    masterReferences: masterReferences,
+                                FloatXmlTranslation.Instance.Write(
+                                    node: node,
+                                    name: nameof(item.RainSimulatorForce),
+                                    item: item.RainSimulatorForce,
+                                    fieldIndex: (int)Water_FieldIndex.RainSimulatorForce,
                                     errorMask: errorMask);
-                                if (!item.DATADataTypeState.HasFlag(Water.DATADataType.Break3))
+                            }
+                            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.RainSimulatorVelocity) ?? true))
+                            {
+                                FloatXmlTranslation.Instance.Write(
+                                    node: node,
+                                    name: nameof(item.RainSimulatorVelocity),
+                                    item: item.RainSimulatorVelocity,
+                                    fieldIndex: (int)Water_FieldIndex.RainSimulatorVelocity,
+                                    errorMask: errorMask);
+                            }
+                            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.RainSimulatorFalloff) ?? true))
+                            {
+                                FloatXmlTranslation.Instance.Write(
+                                    node: node,
+                                    name: nameof(item.RainSimulatorFalloff),
+                                    item: item.RainSimulatorFalloff,
+                                    fieldIndex: (int)Water_FieldIndex.RainSimulatorFalloff,
+                                    errorMask: errorMask);
+                            }
+                            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.RainSimulatorDampner) ?? true))
+                            {
+                                FloatXmlTranslation.Instance.Write(
+                                    node: node,
+                                    name: nameof(item.RainSimulatorDampner),
+                                    item: item.RainSimulatorDampner,
+                                    fieldIndex: (int)Water_FieldIndex.RainSimulatorDampner,
+                                    errorMask: errorMask);
+                            }
+                            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.RainSimulatorStartingSize) ?? true))
+                            {
+                                FloatXmlTranslation.Instance.Write(
+                                    node: node,
+                                    name: nameof(item.RainSimulatorStartingSize),
+                                    item: item.RainSimulatorStartingSize,
+                                    fieldIndex: (int)Water_FieldIndex.RainSimulatorStartingSize,
+                                    errorMask: errorMask);
+                            }
+                            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.DisplacementSimulatorForce) ?? true))
+                            {
+                                FloatXmlTranslation.Instance.Write(
+                                    node: node,
+                                    name: nameof(item.DisplacementSimulatorForce),
+                                    item: item.DisplacementSimulatorForce,
+                                    fieldIndex: (int)Water_FieldIndex.DisplacementSimulatorForce,
+                                    errorMask: errorMask);
+                            }
+                            if (!item.DATADataTypeState.HasFlag(Water.DATADataType.Break3))
+                            {
+                                if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.DisplacementSimulatorVelocity) ?? true))
                                 {
-                                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                                        writer: writer,
-                                        item: item.DisplacementSimulatorVelocity);
-                                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                                        writer: writer,
-                                        item: item.DisplacementSimulatorFalloff);
-                                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                                        writer: writer,
-                                        item: item.DisplacementSimulatorDampner);
-                                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                                        writer: writer,
-                                        item: item.DisplacementSimulatorStartingSize);
-                                    Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Write(
-                                        writer: writer,
-                                        item: item.Damage);
+                                    FloatXmlTranslation.Instance.Write(
+                                        node: node,
+                                        name: nameof(item.DisplacementSimulatorVelocity),
+                                        item: item.DisplacementSimulatorVelocity,
+                                        fieldIndex: (int)Water_FieldIndex.DisplacementSimulatorVelocity,
+                                        errorMask: errorMask);
+                                }
+                                if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.DisplacementSimulatorFalloff) ?? true))
+                                {
+                                    FloatXmlTranslation.Instance.Write(
+                                        node: node,
+                                        name: nameof(item.DisplacementSimulatorFalloff),
+                                        item: item.DisplacementSimulatorFalloff,
+                                        fieldIndex: (int)Water_FieldIndex.DisplacementSimulatorFalloff,
+                                        errorMask: errorMask);
+                                }
+                                if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.DisplacementSimulatorDampner) ?? true))
+                                {
+                                    FloatXmlTranslation.Instance.Write(
+                                        node: node,
+                                        name: nameof(item.DisplacementSimulatorDampner),
+                                        item: item.DisplacementSimulatorDampner,
+                                        fieldIndex: (int)Water_FieldIndex.DisplacementSimulatorDampner,
+                                        errorMask: errorMask);
+                                }
+                                if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.DisplacementSimulatorStartingSize) ?? true))
+                                {
+                                    FloatXmlTranslation.Instance.Write(
+                                        node: node,
+                                        name: nameof(item.DisplacementSimulatorStartingSize),
+                                        item: item.DisplacementSimulatorStartingSize,
+                                        fieldIndex: (int)Water_FieldIndex.DisplacementSimulatorStartingSize,
+                                        errorMask: errorMask);
+                                }
+                                if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.Damage) ?? true))
+                                {
+                                    UInt16XmlTranslation.Instance.Write(
+                                        node: node,
+                                        name: nameof(item.Damage),
+                                        item: item.Damage,
+                                        fieldIndex: (int)Water_FieldIndex.Damage,
+                                        errorMask: errorMask);
                                 }
                             }
                         }
                     }
                 }
+                else
+                {
+                    node.Add(new XElement("HasDATADataType"));
+                }
             }
-            if (item.RelatedWaters_IsSet)
+            if (item.RelatedWaters_IsSet
+                && (translationMask?.GetShouldTranslate((int)Water_FieldIndex.RelatedWaters) ?? true))
             {
-                LoquiBinaryTranslation<RelatedWaters>.Instance.Write(
-                    writer: writer,
+                LoquiXmlTranslation<RelatedWaters>.Instance.Write(
+                    node: node,
                     item: item.RelatedWaters,
+                    name: nameof(item.RelatedWaters),
                     fieldIndex: (int)Water_FieldIndex.RelatedWaters,
                     errorMask: errorMask,
-                    masterReferences: masterReferences);
+                    translationMask: translationMask?.GetSubCrystal((int)Water_FieldIndex.RelatedWaters));
+            }
+            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.DATADataTypeState) ?? true))
+            {
+                EnumXmlTranslation<Water.DATADataType>.Instance.Write(
+                    node: node,
+                    name: nameof(item.DATADataTypeState),
+                    item: item.DATADataTypeState,
+                    fieldIndex: (int)Water_FieldIndex.DATADataTypeState,
+                    errorMask: errorMask);
             }
         }
 
+        #region Xml Write
+        public void Write_Xml(
+            XElement node,
+            IWaterInternalGetter item,
+            bool doMasks,
+            out Water_ErrorMask errorMask,
+            Water_TranslationMask translationMask,
+            string name = null)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            Write_Xml(
+                name: name,
+                node: node,
+                item: item,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal());
+            errorMask = Water_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public void Write_Xml(
+            XElement node,
+            IWaterInternalGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.Water");
+            node.Add(elem);
+            if (name != null)
+            {
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.Water");
+            }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         #endregion
 
     }
     #endregion
 
-    #region Modules
     #region Mask
     public class Water_Mask<T> : OblivionMajorRecord_Mask<T>, IMask<T>, IEquatable<Water_Mask<T>>
     {
@@ -5472,6 +5249,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.DisplacementSimulatorStartingSize = initialValue;
             this.Damage = initialValue;
             this.RelatedWaters = new MaskItem<T, RelatedWaters_Mask<T>>(initialValue, new RelatedWaters_Mask<T>(initialValue));
+            this.DATADataTypeState = initialValue;
         }
         #endregion
 
@@ -5508,6 +5286,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public T DisplacementSimulatorStartingSize;
         public T Damage;
         public MaskItem<T, RelatedWaters_Mask<T>> RelatedWaters { get; set; }
+        public T DATADataTypeState;
         #endregion
 
         #region Equals
@@ -5553,6 +5332,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (!object.Equals(this.DisplacementSimulatorStartingSize, rhs.DisplacementSimulatorStartingSize)) return false;
             if (!object.Equals(this.Damage, rhs.Damage)) return false;
             if (!object.Equals(this.RelatedWaters, rhs.RelatedWaters)) return false;
+            if (!object.Equals(this.DATADataTypeState, rhs.DATADataTypeState)) return false;
             return true;
         }
         public override int GetHashCode()
@@ -5590,6 +5370,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret = ret.CombineHashCode(this.DisplacementSimulatorStartingSize?.GetHashCode());
             ret = ret.CombineHashCode(this.Damage?.GetHashCode());
             ret = ret.CombineHashCode(this.RelatedWaters?.GetHashCode());
+            ret = ret.CombineHashCode(this.DATADataTypeState?.GetHashCode());
             ret = ret.CombineHashCode(base.GetHashCode());
             return ret;
         }
@@ -5636,6 +5417,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 if (!eval(this.RelatedWaters.Overall)) return false;
                 if (this.RelatedWaters.Specific != null && !this.RelatedWaters.Specific.AllEqual(eval)) return false;
             }
+            if (!eval(this.DATADataTypeState)) return false;
             return true;
         }
         #endregion
@@ -5691,6 +5473,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.RelatedWaters.Specific = this.RelatedWaters.Specific.Translate(eval);
                 }
             }
+            obj.DATADataTypeState = eval(this.DATADataTypeState);
         }
         #endregion
 
@@ -5848,6 +5631,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     RelatedWaters?.ToString(fg);
                 }
+                if (printMask?.DATADataTypeState ?? true)
+                {
+                    fg.AppendLine($"DATADataTypeState => {DATADataTypeState}");
+                }
             }
             fg.AppendLine("]");
         }
@@ -5890,6 +5677,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Exception DisplacementSimulatorStartingSize;
         public Exception Damage;
         public MaskItem<Exception, RelatedWaters_ErrorMask> RelatedWaters;
+        public Exception DATADataTypeState;
         #endregion
 
         #region IErrorMask
@@ -5962,6 +5750,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return Damage;
                 case Water_FieldIndex.RelatedWaters:
                     return RelatedWaters;
+                case Water_FieldIndex.DATADataTypeState:
+                    return DATADataTypeState;
                 default:
                     return base.GetNthMask(index);
             }
@@ -6067,6 +5857,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     break;
                 case Water_FieldIndex.RelatedWaters:
                     this.RelatedWaters = new MaskItem<Exception, RelatedWaters_ErrorMask>(ex, null);
+                    break;
+                case Water_FieldIndex.DATADataTypeState:
+                    this.DATADataTypeState = ex;
                     break;
                 default:
                     base.SetNthException(index, ex);
@@ -6175,6 +5968,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Water_FieldIndex.RelatedWaters:
                     this.RelatedWaters = (MaskItem<Exception, RelatedWaters_ErrorMask>)obj;
                     break;
+                case Water_FieldIndex.DATADataTypeState:
+                    this.DATADataTypeState = (Exception)obj;
+                    break;
                 default:
                     base.SetNthMask(index, obj);
                     break;
@@ -6216,6 +6012,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (DisplacementSimulatorStartingSize != null) return true;
             if (Damage != null) return true;
             if (RelatedWaters != null) return true;
+            if (DATADataTypeState != null) return true;
             return false;
         }
         #endregion
@@ -6283,6 +6080,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             fg.AppendLine($"DisplacementSimulatorStartingSize => {DisplacementSimulatorStartingSize}");
             fg.AppendLine($"Damage => {Damage}");
             RelatedWaters?.ToString(fg);
+            fg.AppendLine($"DATADataTypeState => {DATADataTypeState}");
         }
         #endregion
 
@@ -6322,6 +6120,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.DisplacementSimulatorStartingSize = this.DisplacementSimulatorStartingSize.Combine(rhs.DisplacementSimulatorStartingSize);
             ret.Damage = this.Damage.Combine(rhs.Damage);
             ret.RelatedWaters = new MaskItem<Exception, RelatedWaters_ErrorMask>(this.RelatedWaters.Overall.Combine(rhs.RelatedWaters.Overall), ((IErrorMask<RelatedWaters_ErrorMask>)this.RelatedWaters.Specific).Combine(rhs.RelatedWaters.Specific));
+            ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
             return ret;
         }
         public static Water_ErrorMask Combine(Water_ErrorMask lhs, Water_ErrorMask rhs)
@@ -6380,6 +6179,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.DisplacementSimulatorStartingSize = defaultOn;
             this.Damage = defaultOn;
             this.RelatedWaters = new MaskItem<CopyOption, RelatedWaters_CopyMask>(deepCopyOption, default);
+            this.DATADataTypeState = defaultOn;
         }
 
         #region Members
@@ -6415,6 +6215,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool DisplacementSimulatorStartingSize;
         public bool Damage;
         public MaskItem<CopyOption, RelatedWaters_CopyMask> RelatedWaters;
+        public bool DATADataTypeState;
         #endregion
 
     }
@@ -6454,6 +6255,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool DisplacementSimulatorStartingSize;
         public bool Damage;
         public MaskItem<bool, RelatedWaters_TranslationMask> RelatedWaters;
+        public bool DATADataTypeState;
         #endregion
 
         #region Ctors
@@ -6497,6 +6299,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.DisplacementSimulatorStartingSize = defaultOn;
             this.Damage = defaultOn;
             this.RelatedWaters = new MaskItem<bool, RelatedWaters_TranslationMask>(defaultOn, null);
+            this.DATADataTypeState = defaultOn;
         }
 
         #endregion
@@ -6536,7 +6339,413 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Add((DisplacementSimulatorStartingSize, null));
             ret.Add((Damage, null));
             ret.Add((RelatedWaters?.Overall ?? true, RelatedWaters?.Specific?.GetCrystal()));
+            ret.Add((DATADataTypeState, null));
         }
+    }
+    #endregion
+
+    #region Binary Translation
+    public partial class WaterBinaryTranslation : OblivionMajorRecordBinaryTranslation
+    {
+        public new readonly static WaterBinaryTranslation Instance = new WaterBinaryTranslation();
+
+        static partial void FillBinary_NothingCustomLogic_Custom(
+            MutagenFrame frame,
+            Water item,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask);
+
+        public static void FillBinary_NothingCustomLogic_Custom_Public(
+            MutagenFrame frame,
+            Water item,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask)
+        {
+            FillBinary_NothingCustomLogic_Custom(
+                frame: frame,
+                item: item,
+                masterReferences: masterReferences,
+                errorMask: errorMask);
+        }
+
+        static partial void WriteBinary_NothingCustomLogic_Custom(
+            MutagenWriter writer,
+            IWaterInternalGetter item,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask);
+
+        public static void WriteBinary_NothingCustomLogic(
+            MutagenWriter writer,
+            IWaterInternalGetter item,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask)
+        {
+            WriteBinary_NothingCustomLogic_Custom(
+                writer: writer,
+                item: item,
+                masterReferences: masterReferences,
+                errorMask: errorMask);
+        }
+
+        static partial void FillBinary_BloodCustomLogic_Custom(
+            MutagenFrame frame,
+            Water item,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask);
+
+        public static void FillBinary_BloodCustomLogic_Custom_Public(
+            MutagenFrame frame,
+            Water item,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask)
+        {
+            FillBinary_BloodCustomLogic_Custom(
+                frame: frame,
+                item: item,
+                masterReferences: masterReferences,
+                errorMask: errorMask);
+        }
+
+        static partial void WriteBinary_BloodCustomLogic_Custom(
+            MutagenWriter writer,
+            IWaterInternalGetter item,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask);
+
+        public static void WriteBinary_BloodCustomLogic(
+            MutagenWriter writer,
+            IWaterInternalGetter item,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask)
+        {
+            WriteBinary_BloodCustomLogic_Custom(
+                writer: writer,
+                item: item,
+                masterReferences: masterReferences,
+                errorMask: errorMask);
+        }
+
+        static partial void FillBinary_OilCustomLogic_Custom(
+            MutagenFrame frame,
+            Water item,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask);
+
+        public static void FillBinary_OilCustomLogic_Custom_Public(
+            MutagenFrame frame,
+            Water item,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask)
+        {
+            FillBinary_OilCustomLogic_Custom(
+                frame: frame,
+                item: item,
+                masterReferences: masterReferences,
+                errorMask: errorMask);
+        }
+
+        static partial void WriteBinary_OilCustomLogic_Custom(
+            MutagenWriter writer,
+            IWaterInternalGetter item,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask);
+
+        public static void WriteBinary_OilCustomLogic(
+            MutagenWriter writer,
+            IWaterInternalGetter item,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask)
+        {
+            WriteBinary_OilCustomLogic_Custom(
+                writer: writer,
+                item: item,
+                masterReferences: masterReferences,
+                errorMask: errorMask);
+        }
+
+        static partial void FillBinary_OddExtraBytes_Custom(
+            MutagenFrame frame,
+            Water item,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask);
+
+        public static void FillBinary_OddExtraBytes_Custom_Public(
+            MutagenFrame frame,
+            Water item,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask)
+        {
+            FillBinary_OddExtraBytes_Custom(
+                frame: frame,
+                item: item,
+                masterReferences: masterReferences,
+                errorMask: errorMask);
+        }
+
+        static partial void WriteBinary_OddExtraBytes_Custom(
+            MutagenWriter writer,
+            IWaterInternalGetter item,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask);
+
+        public static void WriteBinary_OddExtraBytes(
+            MutagenWriter writer,
+            IWaterInternalGetter item,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask)
+        {
+            WriteBinary_OddExtraBytes_Custom(
+                writer: writer,
+                item: item,
+                masterReferences: masterReferences,
+                errorMask: errorMask);
+        }
+
+        public static void Write_Binary_Embedded(
+            IWaterInternalGetter item,
+            MutagenWriter writer,
+            ErrorMaskBuilder errorMask,
+            MasterReferences masterReferences)
+        {
+            OblivionMajorRecordBinaryTranslation.Write_Binary_Embedded(
+                item: item,
+                writer: writer,
+                errorMask: errorMask,
+                masterReferences: masterReferences);
+        }
+
+        public static void Write_Binary_RecordTypes(
+            IWaterInternalGetter item,
+            MutagenWriter writer,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask,
+            MasterReferences masterReferences)
+        {
+            MajorRecordBinaryTranslation.Write_Binary_RecordTypes(
+                item: item,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask,
+                masterReferences: masterReferences);
+            if (item.Texture_IsSet)
+            {
+                Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Texture,
+                    header: recordTypeConverter.ConvertToCustom(Water_Registration.TNAM_HEADER),
+                    nullable: false);
+            }
+            if (item.Opacity_IsSet)
+            {
+                Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Opacity,
+                    header: recordTypeConverter.ConvertToCustom(Water_Registration.ANAM_HEADER),
+                    nullable: false);
+            }
+            if (item.Flags_IsSet)
+            {
+                Mutagen.Bethesda.Binary.EnumBinaryTranslation<Water.Flag>.Instance.Write(
+                    writer,
+                    item.Flags,
+                    length: 1,
+                    header: recordTypeConverter.ConvertToCustom(Water_Registration.FNAM_HEADER),
+                    nullable: false);
+            }
+            if (item.MaterialID_IsSet)
+            {
+                Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.MaterialID,
+                    header: recordTypeConverter.ConvertToCustom(Water_Registration.MNAM_HEADER),
+                    nullable: false);
+            }
+            if (item.Sound_Property.HasBeenSet)
+            {
+                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Sound_Property,
+                    header: recordTypeConverter.ConvertToCustom(Water_Registration.SNAM_HEADER),
+                    nullable: false,
+                    masterReferences: masterReferences);
+            }
+            if (item.DATADataTypeState.HasFlag(Water.DATADataType.Has))
+            {
+                using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Water_Registration.DATA_HEADER)))
+                {
+                    WaterBinaryTranslation.WriteBinary_NothingCustomLogic(
+                        writer: writer,
+                        item: item,
+                        masterReferences: masterReferences,
+                        errorMask: errorMask);
+                    if (!item.DATADataTypeState.HasFlag(Water.DATADataType.Break0))
+                    {
+                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                            writer: writer,
+                            item: item.WindVelocity);
+                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                            writer: writer,
+                            item: item.WindDirection);
+                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                            writer: writer,
+                            item: item.WaveAmplitude);
+                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                            writer: writer,
+                            item: item.WaveFrequency);
+                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                            writer: writer,
+                            item: item.SunPower);
+                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                            writer: writer,
+                            item: item.ReflectivityAmount);
+                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                            writer: writer,
+                            item: item.FresnelAmount);
+                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                            writer: writer,
+                            item: item.ScrollXSpeed);
+                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                            writer: writer,
+                            item: item.ScrollYSpeed);
+                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                            writer: writer,
+                            item: item.FogDistanceNearPlane);
+                        WaterBinaryTranslation.WriteBinary_BloodCustomLogic(
+                            writer: writer,
+                            item: item,
+                            masterReferences: masterReferences,
+                            errorMask: errorMask);
+                        if (!item.DATADataTypeState.HasFlag(Water.DATADataType.Break1))
+                        {
+                            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                                writer: writer,
+                                item: item.FogDistanceFarPlane);
+                            Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Write(
+                                writer: writer,
+                                item: item.ShallowColor,
+                                extraByte: true);
+                            Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Write(
+                                writer: writer,
+                                item: item.DeepColor,
+                                extraByte: true);
+                            Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Write(
+                                writer: writer,
+                                item: item.ReflectionColor,
+                                extraByte: true);
+                            Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
+                                writer: writer,
+                                item: item.TextureBlend);
+                            writer.WriteZeros(3);
+                            WaterBinaryTranslation.WriteBinary_OilCustomLogic(
+                                writer: writer,
+                                item: item,
+                                masterReferences: masterReferences,
+                                errorMask: errorMask);
+                            if (!item.DATADataTypeState.HasFlag(Water.DATADataType.Break2))
+                            {
+                                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                                    writer: writer,
+                                    item: item.RainSimulatorForce);
+                                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                                    writer: writer,
+                                    item: item.RainSimulatorVelocity);
+                                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                                    writer: writer,
+                                    item: item.RainSimulatorFalloff);
+                                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                                    writer: writer,
+                                    item: item.RainSimulatorDampner);
+                                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                                    writer: writer,
+                                    item: item.RainSimulatorStartingSize);
+                                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                                    writer: writer,
+                                    item: item.DisplacementSimulatorForce);
+                                WaterBinaryTranslation.WriteBinary_OddExtraBytes(
+                                    writer: writer,
+                                    item: item,
+                                    masterReferences: masterReferences,
+                                    errorMask: errorMask);
+                                if (!item.DATADataTypeState.HasFlag(Water.DATADataType.Break3))
+                                {
+                                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                                        writer: writer,
+                                        item: item.DisplacementSimulatorVelocity);
+                                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                                        writer: writer,
+                                        item: item.DisplacementSimulatorFalloff);
+                                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                                        writer: writer,
+                                        item: item.DisplacementSimulatorDampner);
+                                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                                        writer: writer,
+                                        item: item.DisplacementSimulatorStartingSize);
+                                    Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Write(
+                                        writer: writer,
+                                        item: item.Damage);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            if (item.RelatedWaters_IsSet)
+            {
+                LoquiBinaryTranslation<RelatedWaters>.Instance.Write(
+                    writer: writer,
+                    item: item.RelatedWaters,
+                    fieldIndex: (int)Water_FieldIndex.RelatedWaters,
+                    errorMask: errorMask,
+                    masterReferences: masterReferences);
+            }
+        }
+
+        #region Binary Write
+        public void Write_Binary(
+            MutagenWriter writer,
+            IWaterInternalGetter item,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            bool doMasks,
+            out Water_ErrorMask errorMask)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            Write_Binary(
+                masterReferences: masterReferences,
+                writer: writer,
+                item: item,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMaskBuilder);
+            errorMask = Water_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public void Write_Binary(
+            MutagenWriter writer,
+            IWaterInternalGetter item,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            using (HeaderExport.ExportHeader(
+                writer: writer,
+                record: Water_Registration.WATR_HEADER,
+                type: ObjectType.Record))
+            {
+                Write_Binary_Embedded(
+                    item: item,
+                    writer: writer,
+                    errorMask: errorMask,
+                    masterReferences: masterReferences);
+                Write_Binary_RecordTypes(
+                    item: item,
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter,
+                    errorMask: errorMask,
+                    masterReferences: masterReferences);
+            }
+        }
+        #endregion
+
     }
     #endregion
 

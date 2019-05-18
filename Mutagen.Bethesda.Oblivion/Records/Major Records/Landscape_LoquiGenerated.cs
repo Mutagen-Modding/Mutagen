@@ -38,6 +38,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class Landscape : 
         OblivionMajorRecord,
         ILandscape,
+        ILandscapeInternal,
         ILoquiObject<Landscape>,
         ILoquiObjectSetter,
         IPlaced,
@@ -473,7 +474,8 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Xml(
+            LandscapeXmlTranslation.Instance.Write_Xml(
+                item: this,
                 name: name,
                 node: node,
                 errorMask: errorMaskBuilder,
@@ -505,7 +507,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            this.Write_Xml(
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -536,7 +538,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            this.Write_Xml(
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -552,7 +554,8 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Xml(
+            LandscapeXmlTranslation.Instance.Write_Xml(
+                item: this,
                 name: name,
                 node: node,
                 errorMask: errorMaskBuilder,
@@ -568,7 +571,8 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Xml(
+            LandscapeXmlTranslation.Instance.Write_Xml(
+                item: this,
                 name: name,
                 node: node,
                 errorMask: errorMaskBuilder,
@@ -584,7 +588,7 @@ namespace Mutagen.Bethesda.Oblivion
             TranslationCrystal translationMask,
             string name = null)
         {
-            LandscapeCommon.Write_Xml(
+            LandscapeXmlTranslation.Instance.Write_Xml(
                 item: this,
                 name: name,
                 node: node,
@@ -752,7 +756,8 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Binary(
+            LandscapeBinaryTranslation.Instance.Write_Binary(
+                item: this,
                 masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: null,
@@ -768,7 +773,8 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Binary(
+            LandscapeBinaryTranslation.Instance.Write_Binary(
+                item: this,
                 masterReferences: masterReferences,
                 writer: writer,
                 errorMask: errorMaskBuilder,
@@ -783,7 +789,8 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Binary(
+            LandscapeBinaryTranslation.Instance.Write_Binary(
+                item: this,
                 masterReferences: masterReferences,
                 writer: writer,
                 errorMask: errorMaskBuilder,
@@ -799,7 +806,7 @@ namespace Mutagen.Bethesda.Oblivion
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            LandscapeCommon.Write_Binary(
+            LandscapeBinaryTranslation.Instance.Write_Binary(
                 item: this,
                 masterReferences: masterReferences,
                 writer: writer,
@@ -1164,6 +1171,12 @@ namespace Mutagen.Bethesda.Oblivion
         new ISourceSetList<FormIDLink<LandTexture>> Textures { get; }
     }
 
+    public partial interface ILandscapeInternal : ILandscape, ILandscapeInternalGetter, IOblivionMajorRecordInternal
+    {
+        new ISourceSetList<BaseLayer> Layers { get; }
+        new ISourceSetList<FormIDLink<LandTexture>> Textures { get; }
+    }
+
     public partial interface ILandscapeGetter : IOblivionMajorRecordGetter
     {
         #region Unknown
@@ -1195,6 +1208,11 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
+    public partial interface ILandscapeInternalGetter : ILandscapeGetter, IOblivionMajorRecordInternalGetter
+    {
+
+    }
+
     #endregion
 
 }
@@ -1204,17 +1222,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #region Field Index
     public enum Landscape_FieldIndex
     {
-        FormKey = 0,
-        Version = 1,
-        EditorID = 2,
-        RecordType = 3,
-        OblivionMajorRecordFlags = 4,
-        Unknown = 5,
-        VertexNormals = 6,
-        VertexHeightMap = 7,
-        VertexColors = 8,
-        Layers = 9,
-        Textures = 10,
+        MajorRecordFlagsRaw = 0,
+        FormKey = 1,
+        Version = 2,
+        EditorID = 3,
+        RecordType = 4,
+        OblivionMajorRecordFlags = 5,
+        Unknown = 6,
+        VertexNormals = 7,
+        VertexHeightMap = 8,
+        VertexColors = 9,
+        Layers = 10,
+        Textures = 11,
     }
     #endregion
 
@@ -1234,7 +1253,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort AdditionalFieldCount = 6;
 
-        public const ushort FieldCount = 11;
+        public const ushort FieldCount = 12;
 
         public static readonly Type MaskType = typeof(Landscape_Mask<>);
 
@@ -1244,11 +1263,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type GetterType = typeof(ILandscapeGetter);
 
-        public static readonly Type InternalGetterType = null;
+        public static readonly Type InternalGetterType = typeof(ILandscapeInternalGetter);
 
         public static readonly Type SetterType = typeof(ILandscape);
 
-        public static readonly Type InternalSetterType = null;
+        public static readonly Type InternalSetterType = typeof(ILandscapeInternal);
 
         public static readonly Type CommonType = typeof(LandscapeCommon);
 
@@ -1814,6 +1833,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (index)
             {
+                case OblivionMajorRecord_FieldIndex.MajorRecordFlagsRaw:
+                    return (Landscape_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.FormKey:
                     return (Landscape_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.Version:
@@ -1839,6 +1860,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (index)
             {
+                case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
+                    return (Landscape_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
                     return (Landscape_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.Version:
@@ -1853,140 +1876,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         #region Xml Translation
-        #region Xml Write
-        public static void Write_Xml(
-            XElement node,
-            Landscape item,
-            bool doMasks,
-            out Landscape_ErrorMask errorMask,
-            Landscape_TranslationMask translationMask,
-            string name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_Xml(
-                name: name,
-                node: node,
-                item: item,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = Landscape_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void Write_Xml(
-            XElement node,
-            Landscape item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.Landscape");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.Landscape");
-            }
-            WriteToNode_Xml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #endregion
-
-        public static void WriteToNode_Xml(
-            this Landscape item,
-            XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            OblivionMajorRecordCommon.WriteToNode_Xml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            if (item.Unknown_IsSet
-                && (translationMask?.GetShouldTranslate((int)Landscape_FieldIndex.Unknown) ?? true))
-            {
-                ByteArrayXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Unknown),
-                    item: item.Unknown,
-                    fieldIndex: (int)Landscape_FieldIndex.Unknown,
-                    errorMask: errorMask);
-            }
-            if (item.VertexNormals_IsSet
-                && (translationMask?.GetShouldTranslate((int)Landscape_FieldIndex.VertexNormals) ?? true))
-            {
-                ByteArrayXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.VertexNormals),
-                    item: item.VertexNormals,
-                    fieldIndex: (int)Landscape_FieldIndex.VertexNormals,
-                    errorMask: errorMask);
-            }
-            if (item.VertexHeightMap_IsSet
-                && (translationMask?.GetShouldTranslate((int)Landscape_FieldIndex.VertexHeightMap) ?? true))
-            {
-                ByteArrayXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.VertexHeightMap),
-                    item: item.VertexHeightMap,
-                    fieldIndex: (int)Landscape_FieldIndex.VertexHeightMap,
-                    errorMask: errorMask);
-            }
-            if (item.VertexColors_IsSet
-                && (translationMask?.GetShouldTranslate((int)Landscape_FieldIndex.VertexColors) ?? true))
-            {
-                ByteArrayXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.VertexColors),
-                    item: item.VertexColors,
-                    fieldIndex: (int)Landscape_FieldIndex.VertexColors,
-                    errorMask: errorMask);
-            }
-            if (item.Layers.HasBeenSet
-                && (translationMask?.GetShouldTranslate((int)Landscape_FieldIndex.Layers) ?? true))
-            {
-                ListXmlTranslation<BaseLayer>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Layers),
-                    item: item.Layers,
-                    fieldIndex: (int)Landscape_FieldIndex.Layers,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Landscape_FieldIndex.Layers),
-                    transl: (XElement subNode, BaseLayer subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
-                    {
-                        LoquiXmlTranslation<BaseLayer>.Instance.Write(
-                            node: subNode,
-                            item: subItem,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
-                    }
-                    );
-            }
-            if (item.Textures.HasBeenSet
-                && (translationMask?.GetShouldTranslate((int)Landscape_FieldIndex.Textures) ?? true))
-            {
-                ListXmlTranslation<FormIDLink<LandTexture>>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Textures),
-                    item: item.Textures,
-                    fieldIndex: (int)Landscape_FieldIndex.Textures,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Landscape_FieldIndex.Textures),
-                    transl: (XElement subNode, FormIDLink<LandTexture> subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
-                    {
-                        FormKeyXmlTranslation.Instance.Write(
-                            node: subNode,
-                            name: null,
-                            item: subItem?.FormKey,
-                            errorMask: listSubMask);
-                    }
-                    );
-            }
-        }
-
         public static void FillPublic_Xml(
             this Landscape item,
             XElement node,
@@ -2194,138 +2083,152 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        #region Binary Translation
-        #region Binary Write
-        public static void Write_Binary(
-            MutagenWriter writer,
-            Landscape item,
-            MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
+    }
+    #endregion
+
+    #region Modules
+    #region Xml Translation
+    public partial class LandscapeXmlTranslation : OblivionMajorRecordXmlTranslation
+    {
+        public new readonly static LandscapeXmlTranslation Instance = new LandscapeXmlTranslation();
+
+        public static void WriteToNode_Xml(
+            ILandscapeInternalGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            OblivionMajorRecordXmlTranslation.WriteToNode_Xml(
+                item: item,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+            if (item.Unknown_IsSet
+                && (translationMask?.GetShouldTranslate((int)Landscape_FieldIndex.Unknown) ?? true))
+            {
+                ByteArrayXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Unknown),
+                    item: item.Unknown,
+                    fieldIndex: (int)Landscape_FieldIndex.Unknown,
+                    errorMask: errorMask);
+            }
+            if (item.VertexNormals_IsSet
+                && (translationMask?.GetShouldTranslate((int)Landscape_FieldIndex.VertexNormals) ?? true))
+            {
+                ByteArrayXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.VertexNormals),
+                    item: item.VertexNormals,
+                    fieldIndex: (int)Landscape_FieldIndex.VertexNormals,
+                    errorMask: errorMask);
+            }
+            if (item.VertexHeightMap_IsSet
+                && (translationMask?.GetShouldTranslate((int)Landscape_FieldIndex.VertexHeightMap) ?? true))
+            {
+                ByteArrayXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.VertexHeightMap),
+                    item: item.VertexHeightMap,
+                    fieldIndex: (int)Landscape_FieldIndex.VertexHeightMap,
+                    errorMask: errorMask);
+            }
+            if (item.VertexColors_IsSet
+                && (translationMask?.GetShouldTranslate((int)Landscape_FieldIndex.VertexColors) ?? true))
+            {
+                ByteArrayXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.VertexColors),
+                    item: item.VertexColors,
+                    fieldIndex: (int)Landscape_FieldIndex.VertexColors,
+                    errorMask: errorMask);
+            }
+            if (item.Layers.HasBeenSet
+                && (translationMask?.GetShouldTranslate((int)Landscape_FieldIndex.Layers) ?? true))
+            {
+                ListXmlTranslation<BaseLayer>.Instance.Write(
+                    node: node,
+                    name: nameof(item.Layers),
+                    item: item.Layers,
+                    fieldIndex: (int)Landscape_FieldIndex.Layers,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)Landscape_FieldIndex.Layers),
+                    transl: (XElement subNode, BaseLayer subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
+                    {
+                        LoquiXmlTranslation<BaseLayer>.Instance.Write(
+                            node: subNode,
+                            item: subItem,
+                            name: null,
+                            errorMask: listSubMask,
+                            translationMask: listTranslMask);
+                    }
+                    );
+            }
+            if (item.Textures.HasBeenSet
+                && (translationMask?.GetShouldTranslate((int)Landscape_FieldIndex.Textures) ?? true))
+            {
+                ListXmlTranslation<FormIDLink<LandTexture>>.Instance.Write(
+                    node: node,
+                    name: nameof(item.Textures),
+                    item: item.Textures,
+                    fieldIndex: (int)Landscape_FieldIndex.Textures,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)Landscape_FieldIndex.Textures),
+                    transl: (XElement subNode, FormIDLink<LandTexture> subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
+                    {
+                        FormKeyXmlTranslation.Instance.Write(
+                            node: subNode,
+                            name: null,
+                            item: subItem?.FormKey,
+                            errorMask: listSubMask);
+                    }
+                    );
+            }
+        }
+
+        #region Xml Write
+        public void Write_Xml(
+            XElement node,
+            ILandscapeInternalGetter item,
             bool doMasks,
-            out Landscape_ErrorMask errorMask)
+            out Landscape_ErrorMask errorMask,
+            Landscape_TranslationMask translationMask,
+            string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_Binary(
-                masterReferences: masterReferences,
-                writer: writer,
+            Write_Xml(
+                name: name,
+                node: node,
                 item: item,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMaskBuilder);
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal());
             errorMask = Landscape_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void Write_Binary(
-            MutagenWriter writer,
-            Landscape item,
-            MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
-        {
-            using (HeaderExport.ExportHeader(
-                writer: writer,
-                record: Landscape_Registration.LAND_HEADER,
-                type: ObjectType.Record))
-            {
-                OblivionMajorRecordCommon.Write_Binary_Embedded(
-                    item: item,
-                    writer: writer,
-                    errorMask: errorMask,
-                    masterReferences: masterReferences);
-                Write_Binary_RecordTypes(
-                    item: item,
-                    writer: writer,
-                    recordTypeConverter: recordTypeConverter,
-                    errorMask: errorMask,
-                    masterReferences: masterReferences);
-            }
-        }
-        #endregion
-
-        public static void Write_Binary_RecordTypes(
-            Landscape item,
-            MutagenWriter writer,
-            RecordTypeConverter recordTypeConverter,
+        public void Write_Xml(
+            XElement node,
+            ILandscapeInternalGetter item,
             ErrorMaskBuilder errorMask,
-            MasterReferences masterReferences)
+            TranslationCrystal translationMask,
+            string name = null)
         {
-            MajorRecordCommon.Write_Binary_RecordTypes(
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.Landscape");
+            node.Add(elem);
+            if (name != null)
+            {
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.Landscape");
+            }
+            WriteToNode_Xml(
                 item: item,
-                writer: writer,
-                recordTypeConverter: recordTypeConverter,
+                node: elem,
                 errorMask: errorMask,
-                masterReferences: masterReferences);
-            if (item.Unknown_IsSet)
-            {
-                Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Unknown,
-                    header: recordTypeConverter.ConvertToCustom(Landscape_Registration.DATA_HEADER),
-                    nullable: false);
-            }
-            if (item.VertexNormals_IsSet)
-            {
-                Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.VertexNormals,
-                    header: recordTypeConverter.ConvertToCustom(Landscape_Registration.VNML_HEADER),
-                    nullable: false);
-            }
-            if (item.VertexHeightMap_IsSet)
-            {
-                Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.VertexHeightMap,
-                    header: recordTypeConverter.ConvertToCustom(Landscape_Registration.VHGT_HEADER),
-                    nullable: false);
-            }
-            if (item.VertexColors_IsSet)
-            {
-                Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.VertexColors,
-                    header: recordTypeConverter.ConvertToCustom(Landscape_Registration.VCLR_HEADER),
-                    nullable: false);
-            }
-            if (item.Layers.HasBeenSet)
-            {
-                Mutagen.Bethesda.Binary.ListBinaryTranslation<BaseLayer>.Instance.Write(
-                    writer: writer,
-                    items: item.Layers,
-                    fieldIndex: (int)Landscape_FieldIndex.Layers,
-                    errorMask: errorMask,
-                    transl: (MutagenWriter subWriter, BaseLayer subItem, ErrorMaskBuilder listErrorMask) =>
-                    {
-                        LoquiBinaryTranslation<BaseLayer>.Instance.Write(
-                            writer: subWriter,
-                            item: subItem,
-                            errorMask: listErrorMask,
-                            masterReferences: masterReferences);
-                    }
-                    );
-            }
-            if (item.Textures.HasBeenSet)
-            {
-                Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDLink<LandTexture>>.Instance.Write(
-                    writer: writer,
-                    items: item.Textures,
-                    recordType: Landscape_Registration.VTEX_HEADER,
-                    transl: (MutagenWriter subWriter, FormIDLink<LandTexture> subItem) =>
-                    {
-                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
-                            writer: subWriter,
-                            item: subItem,
-                            masterReferences: masterReferences);
-                    }
-                    );
-            }
+                translationMask: translationMask);
         }
-
         #endregion
 
     }
     #endregion
 
-    #region Modules
     #region Mask
     public class Landscape_Mask<T> : OblivionMajorRecord_Mask<T>, IMask<T>, IEquatable<Landscape_Mask<T>>
     {
@@ -2866,6 +2769,139 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Add((Layers?.Overall ?? true, Layers?.Specific?.GetCrystal()));
             ret.Add((Textures, null));
         }
+    }
+    #endregion
+
+    #region Binary Translation
+    public partial class LandscapeBinaryTranslation : OblivionMajorRecordBinaryTranslation
+    {
+        public new readonly static LandscapeBinaryTranslation Instance = new LandscapeBinaryTranslation();
+
+        public static void Write_Binary_RecordTypes(
+            ILandscapeInternalGetter item,
+            MutagenWriter writer,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask,
+            MasterReferences masterReferences)
+        {
+            MajorRecordBinaryTranslation.Write_Binary_RecordTypes(
+                item: item,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask,
+                masterReferences: masterReferences);
+            if (item.Unknown_IsSet)
+            {
+                Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Unknown,
+                    header: recordTypeConverter.ConvertToCustom(Landscape_Registration.DATA_HEADER),
+                    nullable: false);
+            }
+            if (item.VertexNormals_IsSet)
+            {
+                Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.VertexNormals,
+                    header: recordTypeConverter.ConvertToCustom(Landscape_Registration.VNML_HEADER),
+                    nullable: false);
+            }
+            if (item.VertexHeightMap_IsSet)
+            {
+                Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.VertexHeightMap,
+                    header: recordTypeConverter.ConvertToCustom(Landscape_Registration.VHGT_HEADER),
+                    nullable: false);
+            }
+            if (item.VertexColors_IsSet)
+            {
+                Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.VertexColors,
+                    header: recordTypeConverter.ConvertToCustom(Landscape_Registration.VCLR_HEADER),
+                    nullable: false);
+            }
+            if (item.Layers.HasBeenSet)
+            {
+                Mutagen.Bethesda.Binary.ListBinaryTranslation<BaseLayer>.Instance.Write(
+                    writer: writer,
+                    items: item.Layers,
+                    fieldIndex: (int)Landscape_FieldIndex.Layers,
+                    errorMask: errorMask,
+                    transl: (MutagenWriter subWriter, BaseLayer subItem, ErrorMaskBuilder listErrorMask) =>
+                    {
+                        LoquiBinaryTranslation<BaseLayer>.Instance.Write(
+                            writer: subWriter,
+                            item: subItem,
+                            errorMask: listErrorMask,
+                            masterReferences: masterReferences);
+                    }
+                    );
+            }
+            if (item.Textures.HasBeenSet)
+            {
+                Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDLink<LandTexture>>.Instance.Write(
+                    writer: writer,
+                    items: item.Textures,
+                    recordType: Landscape_Registration.VTEX_HEADER,
+                    transl: (MutagenWriter subWriter, FormIDLink<LandTexture> subItem) =>
+                    {
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
+                            writer: subWriter,
+                            item: subItem,
+                            masterReferences: masterReferences);
+                    }
+                    );
+            }
+        }
+
+        #region Binary Write
+        public void Write_Binary(
+            MutagenWriter writer,
+            ILandscapeInternalGetter item,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            bool doMasks,
+            out Landscape_ErrorMask errorMask)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            Write_Binary(
+                masterReferences: masterReferences,
+                writer: writer,
+                item: item,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMaskBuilder);
+            errorMask = Landscape_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public void Write_Binary(
+            MutagenWriter writer,
+            ILandscapeInternalGetter item,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            using (HeaderExport.ExportHeader(
+                writer: writer,
+                record: Landscape_Registration.LAND_HEADER,
+                type: ObjectType.Record))
+            {
+                OblivionMajorRecordBinaryTranslation.Write_Binary_Embedded(
+                    item: item,
+                    writer: writer,
+                    errorMask: errorMask,
+                    masterReferences: masterReferences);
+                Write_Binary_RecordTypes(
+                    item: item,
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter,
+                    errorMask: errorMask,
+                    masterReferences: masterReferences);
+            }
+        }
+        #endregion
+
     }
     #endregion
 

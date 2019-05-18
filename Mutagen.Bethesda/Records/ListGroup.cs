@@ -22,26 +22,6 @@ namespace Mutagen.Bethesda
         {
             Items = new MaskItem<bool, TranslationMaskStub>(false, default)
         };
-
-        static partial void FillBinary_ContainedRecordType_Custom(
-            MutagenFrame frame,
-            ListGroup<T> item,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask)
-        {
-            frame.Reader.Position += 4;
-        }
-
-        static partial void WriteBinary_ContainedRecordType_Custom(
-            MutagenWriter writer,
-            ListGroup<T> item,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask)
-        {
-            Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Write(
-                writer,
-                GRUP_RECORD_TYPE.TypeInt);
-        }
     }
 
     public static class ListGroupExt
@@ -142,7 +122,8 @@ namespace Mutagen.Bethesda
                         dir = new DirectoryPath(Path.Combine(dir.Path, name));
                         dir.Create();
                         XElement topNode = new XElement("Group");
-                        list.WriteToNode_Xml(
+                        ListGroupXmlTranslation<T>.WriteToNode_Xml(
+                            list,
                             topNode,
                             errorMask,
                             translationMask: ListGroup<T>.XmlFolderTranslationMask.GetCrystal());
@@ -181,6 +162,32 @@ namespace Mutagen.Bethesda
                         errorMask.ReportException(ex);
                     }
                 }
+            }
+        }
+    }
+
+    namespace Internals
+    {
+        public partial class ListGroupBinaryTranslation<T>
+        {
+            static partial void FillBinary_ContainedRecordType_Custom(
+                MutagenFrame frame,
+                ListGroup<T> item,
+                MasterReferences masterReferences,
+                ErrorMaskBuilder errorMask)
+            {
+                frame.Reader.Position += 4;
+            }
+
+            static partial void WriteBinary_ContainedRecordType_Custom(
+                MutagenWriter writer,
+                IListGroupGetter<T> item,
+                MasterReferences masterReferences,
+                ErrorMaskBuilder errorMask)
+            {
+                Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Write(
+                    writer,
+                    ListGroup<T>.GRUP_RECORD_TYPE.TypeInt);
             }
         }
     }

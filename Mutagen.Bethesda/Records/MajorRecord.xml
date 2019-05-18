@@ -2,9 +2,9 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="MajorRecord" objType="Record" abstract="true" GUID="1382b2d8-9016-424e-923f-502a4417cbc7" ID="1">
     <Fields>
-      <CustomLogic name="MajorRecordFlagsRaw" />
-      <FormKey name="FormKey" setPermission="protected" hasBeenSet="False" notifying="None" />
-      <UInt32 name="Version" />
+      <Int32 name="MajorRecordFlagsRaw" hasBeenSet="False" />
+      <FormKey name="FormKey" setPermission="protected" hasBeenSet="False" notifying="None" internalSetInterface="true" />
+      <UInt32 name="Version" hasBeenSet="False" />
       <String name="EditorID" recordType="EDID" />
       <UnsafeObject name="RecordType" derivative="true" hasBeenSet="False" notifying="None">
         <TargetType>RecordType</TargetType>

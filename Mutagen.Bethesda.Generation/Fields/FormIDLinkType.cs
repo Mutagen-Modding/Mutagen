@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Generation
         public override async Task Load(XElement node, bool requireName = true)
         {
             await base.Load(node, requireName);
-            loquiType =  this.ObjectGen.ProtoGen.Gen.GetTypeGeneration<LoquiType>();
+            loquiType = this.ObjectGen.ProtoGen.Gen.GetTypeGeneration<LoquiType>();
             _rawFormID = this.ObjectGen.ProtoGen.Gen.GetTypeGeneration<FormIDType>();
             this.NotifyingProperty.Set(NotifyingType.ReactiveUI);
             this.ObjectCentralizedProperty.Set(false);
@@ -74,18 +74,20 @@ namespace Mutagen.Bethesda.Generation
             fg.AppendLine($"{this.TypeName} {this.ObjectGen.Interface(getter: true)}.{this.Property} => this.{this.Property};");
         }
 
-        public override void GenerateForGetterInterface(FileGeneration fg)
-        {
-            fg.AppendLine($"{loquiType.TypeName} {this.Name} {{ get; }}");
-            fg.AppendLine($"{TypeName} {this.Property} {{ get; }}");
-            fg.AppendLine();
-        }
-
         public override string EqualsMaskAccessor(string accessor) => accessor;
 
-        public override void GenerateForInterface(FileGeneration fg)
+        public override void GenerateForInterface(FileGeneration fg, bool getter, bool internalInterface)
         {
-            fg.AppendLine($"new {loquiType.TypeName} {this.Name} {{ get; set; }}");
+            if (getter)
+            {
+                fg.AppendLine($"{loquiType.TypeName} {this.Name} {{ get; }}");
+                fg.AppendLine($"{TypeName} {this.Property} {{ get; }}");
+                fg.AppendLine();
+            }
+            else
+            {
+                fg.AppendLine($"new {loquiType.TypeName} {this.Name} {{ get; set; }}");
+            }
         }
 
         public override string SkipCheck(string copyMaskAccessor)

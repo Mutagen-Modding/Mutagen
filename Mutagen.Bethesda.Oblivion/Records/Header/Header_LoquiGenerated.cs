@@ -288,7 +288,8 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Xml(
+            HeaderXmlTranslation.Instance.Write_Xml(
+                item: this,
                 name: name,
                 node: node,
                 errorMask: errorMaskBuilder,
@@ -320,7 +321,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            this.Write_Xml(
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -351,7 +352,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            this.Write_Xml(
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -375,7 +376,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            this.Write_Xml(
                 name: name,
                 node: node,
                 errorMask: null,
@@ -388,7 +389,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            this.Write_Xml(
                 name: name,
                 node: node,
                 errorMask: null,
@@ -402,7 +403,7 @@ namespace Mutagen.Bethesda.Oblivion
             TranslationCrystal translationMask,
             string name = null)
         {
-            HeaderCommon.Write_Xml(
+            HeaderXmlTranslation.Instance.Write_Xml(
                 item: this,
                 name: name,
                 node: node,
@@ -493,7 +494,8 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Binary(
+            HeaderBinaryTranslation.Instance.Write_Binary(
+                item: this,
                 masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: null,
@@ -518,7 +520,7 @@ namespace Mutagen.Bethesda.Oblivion
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            HeaderCommon.Write_Binary(
+            HeaderBinaryTranslation.Instance.Write_Binary(
                 item: this,
                 masterReferences: masterReferences,
                 writer: writer,
@@ -1138,81 +1140,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         #region Xml Translation
-        #region Xml Write
-        public static void Write_Xml(
-            XElement node,
-            Header item,
-            bool doMasks,
-            out Header_ErrorMask errorMask,
-            Header_TranslationMask translationMask,
-            string name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_Xml(
-                name: name,
-                node: node,
-                item: item,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = Header_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void Write_Xml(
-            XElement node,
-            Header item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.Header");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.Header");
-            }
-            WriteToNode_Xml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #endregion
-
-        public static void WriteToNode_Xml(
-            this Header item,
-            XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            if ((translationMask?.GetShouldTranslate((int)Header_FieldIndex.Version) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Version),
-                    item: item.Version,
-                    fieldIndex: (int)Header_FieldIndex.Version,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Header_FieldIndex.NumRecords) ?? true))
-            {
-                Int32XmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.NumRecords),
-                    item: item.NumRecords,
-                    fieldIndex: (int)Header_FieldIndex.NumRecords,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Header_FieldIndex.NextObjectID) ?? true))
-            {
-                UInt32XmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.NextObjectID),
-                    item: item.NextObjectID,
-                    fieldIndex: (int)Header_FieldIndex.NextObjectID,
-                    errorMask: errorMask);
-            }
-        }
-
         public static void FillPublic_Xml(
             this Header item,
             XElement node,
@@ -1332,70 +1259,93 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        #region Binary Translation
-        #region Binary Write
-        public static void Write_Binary(
-            MutagenWriter writer,
-            Header item,
-            MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
+    }
+    #endregion
+
+    #region Modules
+    #region Xml Translation
+    public partial class HeaderXmlTranslation
+    {
+        public readonly static HeaderXmlTranslation Instance = new HeaderXmlTranslation();
+
+        public static void WriteToNode_Xml(
+            IHeaderGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            if ((translationMask?.GetShouldTranslate((int)Header_FieldIndex.Version) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Version),
+                    item: item.Version,
+                    fieldIndex: (int)Header_FieldIndex.Version,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Header_FieldIndex.NumRecords) ?? true))
+            {
+                Int32XmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.NumRecords),
+                    item: item.NumRecords,
+                    fieldIndex: (int)Header_FieldIndex.NumRecords,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Header_FieldIndex.NextObjectID) ?? true))
+            {
+                UInt32XmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.NextObjectID),
+                    item: item.NextObjectID,
+                    fieldIndex: (int)Header_FieldIndex.NextObjectID,
+                    errorMask: errorMask);
+            }
+        }
+
+        #region Xml Write
+        public void Write_Xml(
+            XElement node,
+            IHeaderGetter item,
             bool doMasks,
-            out Header_ErrorMask errorMask)
+            out Header_ErrorMask errorMask,
+            Header_TranslationMask translationMask,
+            string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_Binary(
-                masterReferences: masterReferences,
-                writer: writer,
+            Write_Xml(
+                name: name,
+                node: node,
                 item: item,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMaskBuilder);
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal());
             errorMask = Header_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void Write_Binary(
-            MutagenWriter writer,
-            Header item,
-            MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
-        {
-            using (HeaderExport.ExportHeader(
-                writer: writer,
-                record: Header_Registration.HEDR_HEADER,
-                type: ObjectType.Subrecord))
-            {
-                Write_Binary_Embedded(
-                    item: item,
-                    writer: writer,
-                    errorMask: errorMask,
-                    masterReferences: masterReferences);
-            }
-        }
-        #endregion
-
-        public static void Write_Binary_Embedded(
-            Header item,
-            MutagenWriter writer,
+        public void Write_Xml(
+            XElement node,
+            IHeaderGetter item,
             ErrorMaskBuilder errorMask,
-            MasterReferences masterReferences)
+            TranslationCrystal translationMask,
+            string name = null)
         {
-            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.Version);
-            Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.NumRecords);
-            Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.NextObjectID);
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.Header");
+            node.Add(elem);
+            if (name != null)
+            {
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.Header");
+            }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
         }
-
         #endregion
 
     }
     #endregion
 
-    #region Modules
     #region Mask
     public class Header_Mask<T> : IMask<T>, IEquatable<Header_Mask<T>>
     {
@@ -1723,6 +1673,71 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Add((NumRecords, null));
             ret.Add((NextObjectID, null));
         }
+    }
+    #endregion
+
+    #region Binary Translation
+    public partial class HeaderBinaryTranslation
+    {
+        public readonly static HeaderBinaryTranslation Instance = new HeaderBinaryTranslation();
+
+        public static void Write_Binary_Embedded(
+            IHeaderGetter item,
+            MutagenWriter writer,
+            ErrorMaskBuilder errorMask,
+            MasterReferences masterReferences)
+        {
+            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.Version);
+            Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.NumRecords);
+            Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.NextObjectID);
+        }
+
+        #region Binary Write
+        public void Write_Binary(
+            MutagenWriter writer,
+            IHeaderGetter item,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            bool doMasks,
+            out Header_ErrorMask errorMask)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            Write_Binary(
+                masterReferences: masterReferences,
+                writer: writer,
+                item: item,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMaskBuilder);
+            errorMask = Header_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public void Write_Binary(
+            MutagenWriter writer,
+            IHeaderGetter item,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            using (HeaderExport.ExportHeader(
+                writer: writer,
+                record: Header_Registration.HEDR_HEADER,
+                type: ObjectType.Subrecord))
+            {
+                Write_Binary_Embedded(
+                    item: item,
+                    writer: writer,
+                    errorMask: errorMask,
+                    masterReferences: masterReferences);
+            }
+        }
+        #endregion
+
     }
     #endregion
 

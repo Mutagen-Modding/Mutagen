@@ -23,7 +23,7 @@ namespace Mutagen.Bethesda.Generation
                 $"public static void WriteToNode_{ModuleNickname}{obj.GetGenericTypes(MaskType.Normal)}",
                 obj.GenericTypeMaskWheres(MaskType.Normal)))
             {
-                args.Add($"this {(this.ExportWithIGetter ? obj.Interface(getter: true) : obj.ObjectName)} item");
+                args.Add($"{obj.Interface(internalInterface: obj.HasInternalInterface, getter: true)} item");
                 args.Add($"XElement {XmlTranslationModule.XElementLine.GetParameterName(obj)}");
                 args.Add($"ErrorMaskBuilder errorMask");
                 args.Add($"{nameof(TranslationCrystal)} translationMask");
@@ -33,7 +33,7 @@ namespace Mutagen.Bethesda.Generation
                 if (obj.HasLoquiBaseObject)
                 {
                     using (var args = new ArgsWrapper(fg,
-                        $"{obj.BaseClass.ExtCommonName}.WriteToNode_{ModuleNickname}"))
+                        $"{this.TranslationClass(obj.BaseClass)}.WriteToNode_{ModuleNickname}"))
                     {
                         args.Add($"item: item");
                         args.Add($"{XmlTranslationModule.XElementLine.GetParameterName(obj)}: {XmlTranslationModule.XElementLine.GetParameterName(obj)}");

@@ -33,6 +33,7 @@ namespace Mutagen.Bethesda
     public abstract partial class MajorRecord : 
         LoquiNotifyingObject,
         IMajorRecord,
+        IMajorRecordInternal,
         ILoquiObject<MajorRecord>,
         ILoquiObjectSetter,
         ILinkSubContainer,
@@ -51,12 +52,25 @@ namespace Mutagen.Bethesda
         partial void CustomCtor();
         #endregion
 
+        #region MajorRecordFlagsRaw
+        private Int32 _MajorRecordFlagsRaw;
+        public Int32 MajorRecordFlagsRaw
+        {
+            get => this._MajorRecordFlagsRaw;
+            set => this.RaiseAndSetIfChanged(ref this._MajorRecordFlagsRaw, value, nameof(MajorRecordFlagsRaw));
+        }
+        #endregion
         #region FormKey
         public FormKey FormKey { get; protected set; }
         protected void UnsetFormKey()
         {
             _hasBeenSetTracker[(int)MajorRecord_FieldIndex.FormKey] = false;
             FormKey = default(FormKey);
+        }
+        FormKey IMajorRecordInternal.FormKey
+        {
+            get => this.FormKey;
+            set => this.FormKey = value;
         }
         #endregion
         #region Version
@@ -136,6 +150,7 @@ namespace Mutagen.Bethesda
         public bool Equals(MajorRecord rhs)
         {
             if (rhs == null) return false;
+            if (this.MajorRecordFlagsRaw != rhs.MajorRecordFlagsRaw) return false;
             if (this.FormKey != rhs.FormKey) return false;
             if (this.Version != rhs.Version) return false;
             if (EditorID_IsSet != rhs.EditorID_IsSet) return false;
@@ -150,6 +165,7 @@ namespace Mutagen.Bethesda
         public override int GetHashCode()
         {
             int ret = 0;
+            ret = HashHelper.GetHashCode(MajorRecordFlagsRaw).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(FormKey).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(Version).CombineHashCode(ret);
             if (EditorID_IsSet)
@@ -310,7 +326,8 @@ namespace Mutagen.Bethesda
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Xml(
+            MajorRecordXmlTranslation.Instance.Write_Xml(
+                item: this,
                 name: name,
                 node: node,
                 errorMask: errorMaskBuilder,
@@ -342,7 +359,7 @@ namespace Mutagen.Bethesda
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            this.Write_Xml(
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -373,7 +390,7 @@ namespace Mutagen.Bethesda
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            this.Write_Xml(
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -397,7 +414,7 @@ namespace Mutagen.Bethesda
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            this.Write_Xml(
                 name: name,
                 node: node,
                 errorMask: null,
@@ -410,7 +427,7 @@ namespace Mutagen.Bethesda
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            this.Write_Xml(
                 name: name,
                 node: node,
                 errorMask: null,
@@ -424,7 +441,7 @@ namespace Mutagen.Bethesda
             TranslationCrystal translationMask,
             string name = null)
         {
-            MajorRecordCommon.Write_Xml(
+            MajorRecordXmlTranslation.Instance.Write_Xml(
                 item: this,
                 name: name,
                 node: node,
@@ -482,6 +499,7 @@ namespace Mutagen.Bethesda
             {
                 case MajorRecord_FieldIndex.EditorID:
                     return _hasBeenSetTracker[index];
+                case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
                 case MajorRecord_FieldIndex.FormKey:
                 case MajorRecord_FieldIndex.Version:
                 case MajorRecord_FieldIndex.RecordType:
@@ -535,7 +553,8 @@ namespace Mutagen.Bethesda
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Binary(
+            MajorRecordBinaryTranslation.Instance.Write_Binary(
+                item: this,
                 masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: null,
@@ -560,7 +579,7 @@ namespace Mutagen.Bethesda
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            MajorRecordCommon.Write_Binary(
+            MajorRecordBinaryTranslation.Instance.Write_Binary(
                 item: this,
                 masterReferences: masterReferences,
                 writer: writer,
@@ -569,42 +588,22 @@ namespace Mutagen.Bethesda
         }
         #endregion
 
-        static partial void FillBinary_MajorRecordFlagsRaw_Custom(
-            MutagenFrame frame,
-            MajorRecord item,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask);
-
-        static partial void WriteBinary_MajorRecordFlagsRaw_Custom(
-            MutagenWriter writer,
-            MajorRecord item,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask);
-
-        public static void WriteBinary_MajorRecordFlagsRaw(
-            MutagenWriter writer,
-            MajorRecord item,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask)
-        {
-            WriteBinary_MajorRecordFlagsRaw_Custom(
-                writer: writer,
-                item: item,
-                masterReferences: masterReferences,
-                errorMask: errorMask);
-        }
-
         protected static void Fill_Binary_Structs(
             MajorRecord item,
             MutagenFrame frame,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            FillBinary_MajorRecordFlagsRaw_Custom(
+            if (Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
                 frame: frame,
-                item: item,
-                masterReferences: masterReferences,
-                errorMask: errorMask);
+                item: out Int32 MajorRecordFlagsRawParse))
+            {
+                item.MajorRecordFlagsRaw = MajorRecordFlagsRawParse;
+            }
+            else
+            {
+                item.MajorRecordFlagsRaw = default(Int32);
+            }
             if (Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.Parse(
                 frame: frame,
                 masterReferences: masterReferences,
@@ -763,6 +762,9 @@ namespace Mutagen.Bethesda
             {
                 case MajorRecord_FieldIndex.RecordType:
                     throw new ArgumentException($"Tried to set at a derivative index {index}");
+                case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
+                    this.MajorRecordFlagsRaw = (Int32)obj;
+                    break;
                 case MajorRecord_FieldIndex.FormKey:
                     this.FormKey = (FormKey)obj;
                     break;
@@ -799,6 +801,9 @@ namespace Mutagen.Bethesda
             }
             switch (enu)
             {
+                case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
+                    obj.MajorRecordFlagsRaw = (Int32)pair.Value;
+                    break;
                 case MajorRecord_FieldIndex.FormKey:
                     obj.FormKey = (FormKey)pair.Value;
                     break;
@@ -818,6 +823,8 @@ namespace Mutagen.Bethesda
     #region Interface
     public partial interface IMajorRecord : IMajorRecordGetter, ILoquiClass<IMajorRecord, IMajorRecordGetter>, ILoquiClass<MajorRecord, IMajorRecordGetter>
     {
+        new Int32 MajorRecordFlagsRaw { get; set; }
+
         new UInt32 Version { get; set; }
 
         new String EditorID { get; set; }
@@ -827,8 +834,18 @@ namespace Mutagen.Bethesda
 
     }
 
+    public partial interface IMajorRecordInternal : IMajorRecord, IMajorRecordInternalGetter
+    {
+        new FormKey FormKey { get; set; }
+
+    }
+
     public partial interface IMajorRecordGetter : ILoquiObject
     {
+        #region MajorRecordFlagsRaw
+        Int32 MajorRecordFlagsRaw { get; }
+
+        #endregion
         #region FormKey
         FormKey FormKey { get; }
 
@@ -849,6 +866,11 @@ namespace Mutagen.Bethesda
 
     }
 
+    public partial interface IMajorRecordInternalGetter : IMajorRecordGetter
+    {
+
+    }
+
     #endregion
 
 }
@@ -858,10 +880,11 @@ namespace Mutagen.Bethesda.Internals
     #region Field Index
     public enum MajorRecord_FieldIndex
     {
-        FormKey = 0,
-        Version = 1,
-        EditorID = 2,
-        RecordType = 3,
+        MajorRecordFlagsRaw = 0,
+        FormKey = 1,
+        Version = 2,
+        EditorID = 3,
+        RecordType = 4,
     }
     #endregion
 
@@ -879,9 +902,9 @@ namespace Mutagen.Bethesda.Internals
 
         public const string GUID = "1382b2d8-9016-424e-923f-502a4417cbc7";
 
-        public const ushort AdditionalFieldCount = 4;
+        public const ushort AdditionalFieldCount = 5;
 
-        public const ushort FieldCount = 4;
+        public const ushort FieldCount = 5;
 
         public static readonly Type MaskType = typeof(MajorRecord_Mask<>);
 
@@ -891,11 +914,11 @@ namespace Mutagen.Bethesda.Internals
 
         public static readonly Type GetterType = typeof(IMajorRecordGetter);
 
-        public static readonly Type InternalGetterType = null;
+        public static readonly Type InternalGetterType = typeof(IMajorRecordInternalGetter);
 
         public static readonly Type SetterType = typeof(IMajorRecord);
 
-        public static readonly Type InternalSetterType = null;
+        public static readonly Type InternalSetterType = typeof(IMajorRecordInternal);
 
         public static readonly Type CommonType = typeof(MajorRecordCommon);
 
@@ -913,6 +936,8 @@ namespace Mutagen.Bethesda.Internals
         {
             switch (str.Upper)
             {
+                case "MAJORRECORDFLAGSRAW":
+                    return (ushort)MajorRecord_FieldIndex.MajorRecordFlagsRaw;
                 case "FORMKEY":
                     return (ushort)MajorRecord_FieldIndex.FormKey;
                 case "VERSION":
@@ -931,6 +956,7 @@ namespace Mutagen.Bethesda.Internals
             MajorRecord_FieldIndex enu = (MajorRecord_FieldIndex)index;
             switch (enu)
             {
+                case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
                 case MajorRecord_FieldIndex.FormKey:
                 case MajorRecord_FieldIndex.Version:
                 case MajorRecord_FieldIndex.EditorID:
@@ -946,6 +972,7 @@ namespace Mutagen.Bethesda.Internals
             MajorRecord_FieldIndex enu = (MajorRecord_FieldIndex)index;
             switch (enu)
             {
+                case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
                 case MajorRecord_FieldIndex.FormKey:
                 case MajorRecord_FieldIndex.Version:
                 case MajorRecord_FieldIndex.EditorID:
@@ -961,6 +988,7 @@ namespace Mutagen.Bethesda.Internals
             MajorRecord_FieldIndex enu = (MajorRecord_FieldIndex)index;
             switch (enu)
             {
+                case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
                 case MajorRecord_FieldIndex.FormKey:
                 case MajorRecord_FieldIndex.Version:
                 case MajorRecord_FieldIndex.EditorID:
@@ -976,6 +1004,8 @@ namespace Mutagen.Bethesda.Internals
             MajorRecord_FieldIndex enu = (MajorRecord_FieldIndex)index;
             switch (enu)
             {
+                case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
+                    return "MajorRecordFlagsRaw";
                 case MajorRecord_FieldIndex.FormKey:
                     return "FormKey";
                 case MajorRecord_FieldIndex.Version:
@@ -996,6 +1026,7 @@ namespace Mutagen.Bethesda.Internals
             {
                 case MajorRecord_FieldIndex.RecordType:
                     return true;
+                case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
                 case MajorRecord_FieldIndex.FormKey:
                 case MajorRecord_FieldIndex.Version:
                 case MajorRecord_FieldIndex.EditorID:
@@ -1013,6 +1044,7 @@ namespace Mutagen.Bethesda.Internals
                 case MajorRecord_FieldIndex.FormKey:
                 case MajorRecord_FieldIndex.RecordType:
                     return true;
+                case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
                 case MajorRecord_FieldIndex.Version:
                 case MajorRecord_FieldIndex.EditorID:
                     return false;
@@ -1026,6 +1058,8 @@ namespace Mutagen.Bethesda.Internals
             MajorRecord_FieldIndex enu = (MajorRecord_FieldIndex)index;
             switch (enu)
             {
+                case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
+                    return typeof(Int32);
                 case MajorRecord_FieldIndex.FormKey:
                     return typeof(FormKey);
                 case MajorRecord_FieldIndex.Version:
@@ -1186,7 +1220,7 @@ namespace Mutagen.Bethesda.Internals
                     })
             );
         });
-        public const int NumStructFields = 3;
+        public const int NumStructFields = 4;
         public const int NumTypedFields = 1;
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1229,6 +1263,23 @@ namespace Mutagen.Bethesda.Internals
             ErrorMaskBuilder errorMask,
             MajorRecord_CopyMask copyMask)
         {
+            if (copyMask?.MajorRecordFlagsRaw ?? true)
+            {
+                errorMask?.PushIndex((int)MajorRecord_FieldIndex.MajorRecordFlagsRaw);
+                try
+                {
+                    item.MajorRecordFlagsRaw = rhs.MajorRecordFlagsRaw;
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
             if (copyMask?.Version ?? true)
             {
                 errorMask?.PushIndex((int)MajorRecord_FieldIndex.Version);
@@ -1282,6 +1333,7 @@ namespace Mutagen.Bethesda.Internals
 
         public static void Clear(IMajorRecord item)
         {
+            item.MajorRecordFlagsRaw = default(Int32);
             item.Version = default(UInt32);
             item.EditorID_Unset();
         }
@@ -1307,7 +1359,7 @@ namespace Mutagen.Bethesda.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.FormKey = item.FormKey == rhs.FormKey;
+            ret.MajorRecordFlagsRaw = item.MajorRecordFlagsRaw == rhs.MajorRecordFlagsRaw;
             ret.Version = item.Version == rhs.Version;
             ret.EditorID = item.EditorID_IsSet == rhs.EditorID_IsSet && string.Equals(item.EditorID, rhs.EditorID);
             ret.RecordType = object.Equals(item.RecordType, rhs.RecordType);
@@ -1340,9 +1392,12 @@ namespace Mutagen.Bethesda.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
+                if (printMask?.MajorRecordFlagsRaw ?? true)
+                {
+                    fg.AppendLine($"MajorRecordFlagsRaw => {item.MajorRecordFlagsRaw}");
+                }
                 if (printMask?.FormKey ?? true)
                 {
-                    fg.AppendLine($"FormKey => {item.FormKey}");
                 }
                 if (printMask?.Version ?? true)
                 {
@@ -1371,6 +1426,7 @@ namespace Mutagen.Bethesda.Internals
         public static MajorRecord_Mask<bool> GetHasBeenSetMask(IMajorRecordGetter item)
         {
             var ret = new MajorRecord_Mask<bool>();
+            ret.MajorRecordFlagsRaw = true;
             ret.FormKey = true;
             ret.Version = true;
             ret.EditorID = item.EditorID_IsSet;
@@ -1379,82 +1435,6 @@ namespace Mutagen.Bethesda.Internals
         }
 
         #region Xml Translation
-        #region Xml Write
-        public static void Write_Xml(
-            XElement node,
-            MajorRecord item,
-            bool doMasks,
-            out MajorRecord_ErrorMask errorMask,
-            MajorRecord_TranslationMask translationMask,
-            string name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_Xml(
-                name: name,
-                node: node,
-                item: item,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = MajorRecord_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void Write_Xml(
-            XElement node,
-            MajorRecord item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.MajorRecord");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.MajorRecord");
-            }
-            WriteToNode_Xml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #endregion
-
-        public static void WriteToNode_Xml(
-            this MajorRecord item,
-            XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            if ((translationMask?.GetShouldTranslate((int)MajorRecord_FieldIndex.FormKey) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.FormKey),
-                    item: item.FormKey,
-                    fieldIndex: (int)MajorRecord_FieldIndex.FormKey,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)MajorRecord_FieldIndex.Version) ?? true))
-            {
-                UInt32XmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Version),
-                    item: item.Version,
-                    fieldIndex: (int)MajorRecord_FieldIndex.Version,
-                    errorMask: errorMask);
-            }
-            if (item.EditorID_IsSet
-                && (translationMask?.GetShouldTranslate((int)MajorRecord_FieldIndex.EditorID) ?? true))
-            {
-                StringXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.EditorID),
-                    item: item.EditorID,
-                    fieldIndex: (int)MajorRecord_FieldIndex.EditorID,
-                    errorMask: errorMask);
-            }
-        }
-
         public static void FillPublic_Xml(
             this MajorRecord item,
             XElement node,
@@ -1489,6 +1469,32 @@ namespace Mutagen.Bethesda.Internals
         {
             switch (name)
             {
+                case "MajorRecordFlagsRaw":
+                    try
+                    {
+                        errorMask?.PushIndex((int)MajorRecord_FieldIndex.MajorRecordFlagsRaw);
+                        if (Int32XmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out Int32 MajorRecordFlagsRawParse,
+                            errorMask: errorMask))
+                        {
+                            item.MajorRecordFlagsRaw = MajorRecordFlagsRawParse;
+                        }
+                        else
+                        {
+                            item.MajorRecordFlagsRaw = default(Int32);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
                 case "Version":
                     try
                     {
@@ -1548,90 +1554,103 @@ namespace Mutagen.Bethesda.Internals
 
         #endregion
 
-        #region Binary Translation
-        #region Binary Write
-        public static void Write_Binary(
-            MutagenWriter writer,
-            MajorRecord item,
-            MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            bool doMasks,
-            out MajorRecord_ErrorMask errorMask)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_Binary(
-                masterReferences: masterReferences,
-                writer: writer,
-                item: item,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMaskBuilder);
-            errorMask = MajorRecord_ErrorMask.Factory(errorMaskBuilder);
-        }
+    }
+    #endregion
 
-        public static void Write_Binary(
-            MutagenWriter writer,
-            MajorRecord item,
-            MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
-        {
-            Write_Binary_Embedded(
-                item: item,
-                writer: writer,
-                errorMask: errorMask,
-                masterReferences: masterReferences);
-            Write_Binary_RecordTypes(
-                item: item,
-                writer: writer,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMask,
-                masterReferences: masterReferences);
-        }
-        #endregion
+    #region Modules
+    #region Xml Translation
+    public partial class MajorRecordXmlTranslation
+    {
+        public readonly static MajorRecordXmlTranslation Instance = new MajorRecordXmlTranslation();
 
-        public static void Write_Binary_Embedded(
-            MajorRecord item,
-            MutagenWriter writer,
+        public static void WriteToNode_Xml(
+            IMajorRecordInternalGetter item,
+            XElement node,
             ErrorMaskBuilder errorMask,
-            MasterReferences masterReferences)
+            TranslationCrystal translationMask)
         {
-            MajorRecord.WriteBinary_MajorRecordFlagsRaw(
-                writer: writer,
-                item: item,
-                masterReferences: masterReferences,
-                errorMask: errorMask);
-            Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.FormKey,
-                masterReferences: masterReferences);
-            Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.Version);
-        }
-
-        public static void Write_Binary_RecordTypes(
-            MajorRecord item,
-            MutagenWriter writer,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask,
-            MasterReferences masterReferences)
-        {
-            if (item.EditorID_IsSet)
+            if ((translationMask?.GetShouldTranslate((int)MajorRecord_FieldIndex.MajorRecordFlagsRaw) ?? true))
             {
-                Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
-                    writer: writer,
+                Int32XmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.MajorRecordFlagsRaw),
+                    item: item.MajorRecordFlagsRaw,
+                    fieldIndex: (int)MajorRecord_FieldIndex.MajorRecordFlagsRaw,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)MajorRecord_FieldIndex.FormKey) ?? true))
+            {
+                FormKeyXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.FormKey),
+                    item: item.FormKey,
+                    fieldIndex: (int)MajorRecord_FieldIndex.FormKey,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)MajorRecord_FieldIndex.Version) ?? true))
+            {
+                UInt32XmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Version),
+                    item: item.Version,
+                    fieldIndex: (int)MajorRecord_FieldIndex.Version,
+                    errorMask: errorMask);
+            }
+            if (item.EditorID_IsSet
+                && (translationMask?.GetShouldTranslate((int)MajorRecord_FieldIndex.EditorID) ?? true))
+            {
+                StringXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.EditorID),
                     item: item.EditorID,
-                    header: recordTypeConverter.ConvertToCustom(MajorRecord_Registration.EDID_HEADER),
-                    nullable: false);
+                    fieldIndex: (int)MajorRecord_FieldIndex.EditorID,
+                    errorMask: errorMask);
             }
         }
 
+        #region Xml Write
+        public void Write_Xml(
+            XElement node,
+            IMajorRecordInternalGetter item,
+            bool doMasks,
+            out MajorRecord_ErrorMask errorMask,
+            MajorRecord_TranslationMask translationMask,
+            string name = null)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            Write_Xml(
+                name: name,
+                node: node,
+                item: item,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal());
+            errorMask = MajorRecord_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public void Write_Xml(
+            XElement node,
+            IMajorRecordInternalGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            var elem = new XElement(name ?? "Mutagen.Bethesda.MajorRecord");
+            node.Add(elem);
+            if (name != null)
+            {
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.MajorRecord");
+            }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         #endregion
 
     }
     #endregion
 
-    #region Modules
     #region Mask
     public class MajorRecord_Mask<T> : IMask<T>, IEquatable<MajorRecord_Mask<T>>
     {
@@ -1642,6 +1661,7 @@ namespace Mutagen.Bethesda.Internals
 
         public MajorRecord_Mask(T initialValue)
         {
+            this.MajorRecordFlagsRaw = initialValue;
             this.FormKey = initialValue;
             this.Version = initialValue;
             this.EditorID = initialValue;
@@ -1650,6 +1670,7 @@ namespace Mutagen.Bethesda.Internals
         #endregion
 
         #region Members
+        public T MajorRecordFlagsRaw;
         public T FormKey;
         public T Version;
         public T EditorID;
@@ -1666,6 +1687,7 @@ namespace Mutagen.Bethesda.Internals
         public bool Equals(MajorRecord_Mask<T> rhs)
         {
             if (rhs == null) return false;
+            if (!object.Equals(this.MajorRecordFlagsRaw, rhs.MajorRecordFlagsRaw)) return false;
             if (!object.Equals(this.FormKey, rhs.FormKey)) return false;
             if (!object.Equals(this.Version, rhs.Version)) return false;
             if (!object.Equals(this.EditorID, rhs.EditorID)) return false;
@@ -1675,6 +1697,7 @@ namespace Mutagen.Bethesda.Internals
         public override int GetHashCode()
         {
             int ret = 0;
+            ret = ret.CombineHashCode(this.MajorRecordFlagsRaw?.GetHashCode());
             ret = ret.CombineHashCode(this.FormKey?.GetHashCode());
             ret = ret.CombineHashCode(this.Version?.GetHashCode());
             ret = ret.CombineHashCode(this.EditorID?.GetHashCode());
@@ -1687,6 +1710,7 @@ namespace Mutagen.Bethesda.Internals
         #region All Equal
         public virtual bool AllEqual(Func<T, bool> eval)
         {
+            if (!eval(this.MajorRecordFlagsRaw)) return false;
             if (!eval(this.FormKey)) return false;
             if (!eval(this.Version)) return false;
             if (!eval(this.EditorID)) return false;
@@ -1705,6 +1729,7 @@ namespace Mutagen.Bethesda.Internals
 
         protected void Translate_InternalFill<R>(MajorRecord_Mask<R> obj, Func<T, R> eval)
         {
+            obj.MajorRecordFlagsRaw = eval(this.MajorRecordFlagsRaw);
             obj.FormKey = eval(this.FormKey);
             obj.Version = eval(this.Version);
             obj.EditorID = eval(this.EditorID);
@@ -1737,6 +1762,10 @@ namespace Mutagen.Bethesda.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
+                if (printMask?.MajorRecordFlagsRaw ?? true)
+                {
+                    fg.AppendLine($"MajorRecordFlagsRaw => {MajorRecordFlagsRaw}");
+                }
                 if (printMask?.FormKey ?? true)
                 {
                     fg.AppendLine($"FormKey => {FormKey}");
@@ -1776,6 +1805,7 @@ namespace Mutagen.Bethesda.Internals
                 return _warnings;
             }
         }
+        public Exception MajorRecordFlagsRaw;
         public Exception FormKey;
         public Exception Version;
         public Exception EditorID;
@@ -1788,6 +1818,8 @@ namespace Mutagen.Bethesda.Internals
             MajorRecord_FieldIndex enu = (MajorRecord_FieldIndex)index;
             switch (enu)
             {
+                case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
+                    return MajorRecordFlagsRaw;
                 case MajorRecord_FieldIndex.FormKey:
                     return FormKey;
                 case MajorRecord_FieldIndex.Version:
@@ -1806,6 +1838,9 @@ namespace Mutagen.Bethesda.Internals
             MajorRecord_FieldIndex enu = (MajorRecord_FieldIndex)index;
             switch (enu)
             {
+                case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
+                    this.MajorRecordFlagsRaw = ex;
+                    break;
                 case MajorRecord_FieldIndex.FormKey:
                     this.FormKey = ex;
                     break;
@@ -1828,6 +1863,9 @@ namespace Mutagen.Bethesda.Internals
             MajorRecord_FieldIndex enu = (MajorRecord_FieldIndex)index;
             switch (enu)
             {
+                case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
+                    this.MajorRecordFlagsRaw = (Exception)obj;
+                    break;
                 case MajorRecord_FieldIndex.FormKey:
                     this.FormKey = (Exception)obj;
                     break;
@@ -1848,6 +1886,7 @@ namespace Mutagen.Bethesda.Internals
         public virtual bool IsInError()
         {
             if (Overall != null) return true;
+            if (MajorRecordFlagsRaw != null) return true;
             if (FormKey != null) return true;
             if (Version != null) return true;
             if (EditorID != null) return true;
@@ -1886,6 +1925,7 @@ namespace Mutagen.Bethesda.Internals
         }
         protected virtual void ToString_FillInternal(FileGeneration fg)
         {
+            fg.AppendLine($"MajorRecordFlagsRaw => {MajorRecordFlagsRaw}");
             fg.AppendLine($"FormKey => {FormKey}");
             fg.AppendLine($"Version => {Version}");
             fg.AppendLine($"EditorID => {EditorID}");
@@ -1897,6 +1937,7 @@ namespace Mutagen.Bethesda.Internals
         public MajorRecord_ErrorMask Combine(MajorRecord_ErrorMask rhs)
         {
             var ret = new MajorRecord_ErrorMask();
+            ret.MajorRecordFlagsRaw = this.MajorRecordFlagsRaw.Combine(rhs.MajorRecordFlagsRaw);
             ret.FormKey = this.FormKey.Combine(rhs.FormKey);
             ret.Version = this.Version.Combine(rhs.Version);
             ret.EditorID = this.EditorID.Combine(rhs.EditorID);
@@ -1927,6 +1968,7 @@ namespace Mutagen.Bethesda.Internals
 
         public MajorRecord_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
         {
+            this.MajorRecordFlagsRaw = defaultOn;
             this.FormKey = defaultOn;
             this.Version = defaultOn;
             this.EditorID = defaultOn;
@@ -1934,6 +1976,7 @@ namespace Mutagen.Bethesda.Internals
         }
 
         #region Members
+        public bool MajorRecordFlagsRaw;
         public bool FormKey;
         public bool Version;
         public bool EditorID;
@@ -1946,6 +1989,7 @@ namespace Mutagen.Bethesda.Internals
     {
         #region Members
         private TranslationCrystal _crystal;
+        public bool MajorRecordFlagsRaw;
         public bool FormKey;
         public bool Version;
         public bool EditorID;
@@ -1959,6 +2003,7 @@ namespace Mutagen.Bethesda.Internals
 
         public MajorRecord_TranslationMask(bool defaultOn)
         {
+            this.MajorRecordFlagsRaw = defaultOn;
             this.FormKey = defaultOn;
             this.Version = defaultOn;
             this.EditorID = defaultOn;
@@ -1981,11 +2026,95 @@ namespace Mutagen.Bethesda.Internals
 
         protected virtual void GetCrystal(List<(bool On, TranslationCrystal SubCrystal)> ret)
         {
+            ret.Add((MajorRecordFlagsRaw, null));
             ret.Add((FormKey, null));
             ret.Add((Version, null));
             ret.Add((EditorID, null));
             ret.Add((RecordType, null));
         }
+    }
+    #endregion
+
+    #region Binary Translation
+    public partial class MajorRecordBinaryTranslation
+    {
+        public readonly static MajorRecordBinaryTranslation Instance = new MajorRecordBinaryTranslation();
+
+        public static void Write_Binary_Embedded(
+            IMajorRecordInternalGetter item,
+            MutagenWriter writer,
+            ErrorMaskBuilder errorMask,
+            MasterReferences masterReferences)
+        {
+            Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.MajorRecordFlagsRaw);
+            Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.FormKey,
+                masterReferences: masterReferences);
+            Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.Version);
+        }
+
+        public static void Write_Binary_RecordTypes(
+            IMajorRecordInternalGetter item,
+            MutagenWriter writer,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask,
+            MasterReferences masterReferences)
+        {
+            if (item.EditorID_IsSet)
+            {
+                Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.EditorID,
+                    header: recordTypeConverter.ConvertToCustom(MajorRecord_Registration.EDID_HEADER),
+                    nullable: false);
+            }
+        }
+
+        #region Binary Write
+        public void Write_Binary(
+            MutagenWriter writer,
+            IMajorRecordInternalGetter item,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            bool doMasks,
+            out MajorRecord_ErrorMask errorMask)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            Write_Binary(
+                masterReferences: masterReferences,
+                writer: writer,
+                item: item,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMaskBuilder);
+            errorMask = MajorRecord_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public void Write_Binary(
+            MutagenWriter writer,
+            IMajorRecordInternalGetter item,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            Write_Binary_Embedded(
+                item: item,
+                writer: writer,
+                errorMask: errorMask,
+                masterReferences: masterReferences);
+            Write_Binary_RecordTypes(
+                item: item,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask,
+                masterReferences: masterReferences);
+        }
+        #endregion
+
     }
     #endregion
 

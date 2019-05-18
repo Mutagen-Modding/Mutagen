@@ -322,7 +322,8 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Xml(
+            RegionAreaXmlTranslation.Instance.Write_Xml(
+                item: this,
                 name: name,
                 node: node,
                 errorMask: errorMaskBuilder,
@@ -354,7 +355,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            this.Write_Xml(
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -385,7 +386,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            this.Write_Xml(
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -409,7 +410,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            this.Write_Xml(
                 name: name,
                 node: node,
                 errorMask: null,
@@ -422,7 +423,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            this.Write_Xml(
                 name: name,
                 node: node,
                 errorMask: null,
@@ -436,7 +437,7 @@ namespace Mutagen.Bethesda.Oblivion
             TranslationCrystal translationMask,
             string name = null)
         {
-            RegionAreaCommon.Write_Xml(
+            RegionAreaXmlTranslation.Instance.Write_Xml(
                 item: this,
                 name: name,
                 node: node,
@@ -521,7 +522,8 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Binary(
+            RegionAreaBinaryTranslation.Instance.Write_Binary(
+                item: this,
                 masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: null,
@@ -546,7 +548,7 @@ namespace Mutagen.Bethesda.Oblivion
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            RegionAreaCommon.Write_Binary(
+            RegionAreaBinaryTranslation.Instance.Write_Binary(
                 item: this,
                 masterReferences: masterReferences,
                 writer: writer,
@@ -1182,84 +1184,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         #region Xml Translation
-        #region Xml Write
-        public static void Write_Xml(
-            XElement node,
-            RegionArea item,
-            bool doMasks,
-            out RegionArea_ErrorMask errorMask,
-            RegionArea_TranslationMask translationMask,
-            string name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_Xml(
-                name: name,
-                node: node,
-                item: item,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = RegionArea_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void Write_Xml(
-            XElement node,
-            RegionArea item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.RegionArea");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.RegionArea");
-            }
-            WriteToNode_Xml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #endregion
-
-        public static void WriteToNode_Xml(
-            this RegionArea item,
-            XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            if (item.EdgeFallOff_IsSet
-                && (translationMask?.GetShouldTranslate((int)RegionArea_FieldIndex.EdgeFallOff) ?? true))
-            {
-                UInt32XmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.EdgeFallOff),
-                    item: item.EdgeFallOff,
-                    fieldIndex: (int)RegionArea_FieldIndex.EdgeFallOff,
-                    errorMask: errorMask);
-            }
-            if (item.RegionPoints.HasBeenSet
-                && (translationMask?.GetShouldTranslate((int)RegionArea_FieldIndex.RegionPoints) ?? true))
-            {
-                ListXmlTranslation<P2Float>.Instance.Write(
-                    node: node,
-                    name: nameof(item.RegionPoints),
-                    item: item.RegionPoints,
-                    fieldIndex: (int)RegionArea_FieldIndex.RegionPoints,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)RegionArea_FieldIndex.RegionPoints),
-                    transl: (XElement subNode, P2Float subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
-                    {
-                        P2FloatXmlTranslation.Instance.Write(
-                            node: subNode,
-                            name: null,
-                            item: subItem,
-                            errorMask: listSubMask);
-                    }
-                    );
-            }
-        }
-
         public static void FillPublic_Xml(
             this RegionArea item,
             XElement node,
@@ -1355,73 +1279,96 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        #region Binary Translation
-        #region Binary Write
-        public static void Write_Binary(
-            MutagenWriter writer,
-            RegionArea item,
-            MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
+    }
+    #endregion
+
+    #region Modules
+    #region Xml Translation
+    public partial class RegionAreaXmlTranslation
+    {
+        public readonly static RegionAreaXmlTranslation Instance = new RegionAreaXmlTranslation();
+
+        public static void WriteToNode_Xml(
+            IRegionAreaGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            if (item.EdgeFallOff_IsSet
+                && (translationMask?.GetShouldTranslate((int)RegionArea_FieldIndex.EdgeFallOff) ?? true))
+            {
+                UInt32XmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.EdgeFallOff),
+                    item: item.EdgeFallOff,
+                    fieldIndex: (int)RegionArea_FieldIndex.EdgeFallOff,
+                    errorMask: errorMask);
+            }
+            if (item.RegionPoints.HasBeenSet
+                && (translationMask?.GetShouldTranslate((int)RegionArea_FieldIndex.RegionPoints) ?? true))
+            {
+                ListXmlTranslation<P2Float>.Instance.Write(
+                    node: node,
+                    name: nameof(item.RegionPoints),
+                    item: item.RegionPoints,
+                    fieldIndex: (int)RegionArea_FieldIndex.RegionPoints,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)RegionArea_FieldIndex.RegionPoints),
+                    transl: (XElement subNode, P2Float subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
+                    {
+                        P2FloatXmlTranslation.Instance.Write(
+                            node: subNode,
+                            name: null,
+                            item: subItem,
+                            errorMask: listSubMask);
+                    }
+                    );
+            }
+        }
+
+        #region Xml Write
+        public void Write_Xml(
+            XElement node,
+            IRegionAreaGetter item,
             bool doMasks,
-            out RegionArea_ErrorMask errorMask)
+            out RegionArea_ErrorMask errorMask,
+            RegionArea_TranslationMask translationMask,
+            string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_Binary(
-                masterReferences: masterReferences,
-                writer: writer,
+            Write_Xml(
+                name: name,
+                node: node,
                 item: item,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMaskBuilder);
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal());
             errorMask = RegionArea_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void Write_Binary(
-            MutagenWriter writer,
-            RegionArea item,
-            MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
-        {
-            Write_Binary_RecordTypes(
-                item: item,
-                writer: writer,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMask,
-                masterReferences: masterReferences);
-        }
-        #endregion
-
-        public static void Write_Binary_RecordTypes(
-            RegionArea item,
-            MutagenWriter writer,
-            RecordTypeConverter recordTypeConverter,
+        public void Write_Xml(
+            XElement node,
+            IRegionAreaGetter item,
             ErrorMaskBuilder errorMask,
-            MasterReferences masterReferences)
+            TranslationCrystal translationMask,
+            string name = null)
         {
-            if (item.EdgeFallOff_IsSet)
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.RegionArea");
+            node.Add(elem);
+            if (name != null)
             {
-                Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.EdgeFallOff,
-                    header: recordTypeConverter.ConvertToCustom(RegionArea_Registration.RPLI_HEADER),
-                    nullable: false);
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.RegionArea");
             }
-            if (item.RegionPoints.HasBeenSet)
-            {
-                Mutagen.Bethesda.Binary.ListBinaryTranslation<P2Float>.Instance.Write(
-                    writer: writer,
-                    items: item.RegionPoints,
-                    recordType: RegionArea_Registration.RPLD_HEADER,
-                    transl: P2FloatBinaryTranslation.Instance.Write);
-            }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
         }
-
         #endregion
 
     }
     #endregion
 
-    #region Modules
     #region Mask
     public class RegionArea_Mask<T> : IMask<T>, IEquatable<RegionArea_Mask<T>>
     {
@@ -1791,6 +1738,74 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Add((EdgeFallOff, null));
             ret.Add((RegionPoints, null));
         }
+    }
+    #endregion
+
+    #region Binary Translation
+    public partial class RegionAreaBinaryTranslation
+    {
+        public readonly static RegionAreaBinaryTranslation Instance = new RegionAreaBinaryTranslation();
+
+        public static void Write_Binary_RecordTypes(
+            IRegionAreaGetter item,
+            MutagenWriter writer,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask,
+            MasterReferences masterReferences)
+        {
+            if (item.EdgeFallOff_IsSet)
+            {
+                Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.EdgeFallOff,
+                    header: recordTypeConverter.ConvertToCustom(RegionArea_Registration.RPLI_HEADER),
+                    nullable: false);
+            }
+            if (item.RegionPoints.HasBeenSet)
+            {
+                Mutagen.Bethesda.Binary.ListBinaryTranslation<P2Float>.Instance.Write(
+                    writer: writer,
+                    items: item.RegionPoints,
+                    recordType: RegionArea_Registration.RPLD_HEADER,
+                    transl: P2FloatBinaryTranslation.Instance.Write);
+            }
+        }
+
+        #region Binary Write
+        public void Write_Binary(
+            MutagenWriter writer,
+            IRegionAreaGetter item,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            bool doMasks,
+            out RegionArea_ErrorMask errorMask)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            Write_Binary(
+                masterReferences: masterReferences,
+                writer: writer,
+                item: item,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMaskBuilder);
+            errorMask = RegionArea_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public void Write_Binary(
+            MutagenWriter writer,
+            IRegionAreaGetter item,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            Write_Binary_RecordTypes(
+                item: item,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask,
+                masterReferences: masterReferences);
+        }
+        #endregion
+
     }
     #endregion
 

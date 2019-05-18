@@ -24,11 +24,6 @@ namespace Mutagen.Bethesda.Oblivion
         public IEnumerable<ScriptObjectReference> ObjectReferences => this.References.Items.WhereCastable<ScriptReference, ScriptObjectReference>();
         public IEnumerable<ScriptVariableReference> VariableReferences => this.References.Items.WhereCastable<ScriptReference, ScriptVariableReference>();
 
-        private readonly static RecordTypeConverter metaConverter = new RecordTypeConverter(
-            new KeyValuePair<RecordType, RecordType>(
-                new RecordType("SCHR"),
-                new RecordType("SCHD")));
-
         #region CompiledScript
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public bool CompiledScript_IsSet
@@ -59,23 +54,34 @@ namespace Mutagen.Bethesda.Oblivion
             this.CompiledScript_Set(default(Byte[]), false);
         }
         #endregion
+    }
 
-        static partial void FillBinary_MetadataSummaryOld_Custom(MutagenFrame frame, ScriptFields item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
+    namespace Internals
+    {
+        public partial class ScriptFieldsBinaryTranslation
         {
-            var tmpMetadataSummary = ScriptMetaSummary.Create_Binary(
-                frame: frame,
-                errorMask: errorMask,
-                masterReferences: masterReferences,
-                recordTypeConverter: metaConverter);
-            item.MetadataSummary.CopyFieldsFrom(
-                rhs: tmpMetadataSummary,
-                def: null,
-                copyMask: null,
-                errorMask: errorMask);
-        }
+            private readonly static RecordTypeConverter metaConverter = new RecordTypeConverter(
+                new KeyValuePair<RecordType, RecordType>(
+                    new RecordType("SCHR"),
+                    new RecordType("SCHD")));
 
-        static partial void WriteBinary_MetadataSummaryOld_Custom(MutagenWriter writer, ScriptFields item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
-        {
+            static partial void FillBinary_MetadataSummaryOld_Custom(MutagenFrame frame, ScriptFields item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
+            {
+                var tmpMetadataSummary = ScriptMetaSummary.Create_Binary(
+                    frame: frame,
+                    errorMask: errorMask,
+                    masterReferences: masterReferences,
+                    recordTypeConverter: metaConverter);
+                item.MetadataSummary.CopyFieldsFrom(
+                    rhs: tmpMetadataSummary,
+                    def: null,
+                    copyMask: null,
+                    errorMask: errorMask);
+            }
+
+            static partial void WriteBinary_MetadataSummaryOld_Custom(MutagenWriter writer, IScriptFieldsGetter item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
+            {
+            }
         }
     }
 }

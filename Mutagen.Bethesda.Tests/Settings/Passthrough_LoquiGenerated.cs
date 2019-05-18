@@ -366,7 +366,8 @@ namespace Mutagen.Bethesda.Tests
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Xml(
+            PassthroughXmlTranslation.Instance.Write_Xml(
+                item: this,
                 name: name,
                 node: node,
                 errorMask: errorMaskBuilder,
@@ -398,7 +399,7 @@ namespace Mutagen.Bethesda.Tests
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            this.Write_Xml(
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -429,7 +430,7 @@ namespace Mutagen.Bethesda.Tests
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            this.Write_Xml(
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -453,7 +454,7 @@ namespace Mutagen.Bethesda.Tests
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            this.Write_Xml(
                 name: name,
                 node: node,
                 errorMask: null,
@@ -466,7 +467,7 @@ namespace Mutagen.Bethesda.Tests
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            this.Write_Xml(
                 name: name,
                 node: node,
                 errorMask: null,
@@ -480,7 +481,7 @@ namespace Mutagen.Bethesda.Tests
             TranslationCrystal translationMask,
             string name = null)
         {
-            PassthroughCommon.Write_Xml(
+            PassthroughXmlTranslation.Instance.Write_Xml(
                 item: this,
                 name: name,
                 node: node,
@@ -1025,81 +1026,6 @@ namespace Mutagen.Bethesda.Tests.Internals
         }
 
         #region Xml Translation
-        #region Xml Write
-        public static void Write_Xml(
-            XElement node,
-            IPassthroughGetter item,
-            bool doMasks,
-            out Passthrough_ErrorMask errorMask,
-            Passthrough_TranslationMask translationMask,
-            string name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_Xml(
-                name: name,
-                node: node,
-                item: item,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = Passthrough_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void Write_Xml(
-            XElement node,
-            IPassthroughGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Tests.Passthrough");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Tests.Passthrough");
-            }
-            WriteToNode_Xml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #endregion
-
-        public static void WriteToNode_Xml(
-            this IPassthroughGetter item,
-            XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            if ((translationMask?.GetShouldTranslate((int)Passthrough_FieldIndex.Do) ?? true))
-            {
-                BooleanXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Do),
-                    item: item.Do,
-                    fieldIndex: (int)Passthrough_FieldIndex.Do,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Passthrough_FieldIndex.Path) ?? true))
-            {
-                StringXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Path),
-                    item: item.Path,
-                    fieldIndex: (int)Passthrough_FieldIndex.Path,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Passthrough_FieldIndex.NumMasters) ?? true))
-            {
-                ByteXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.NumMasters),
-                    item: item.NumMasters,
-                    fieldIndex: (int)Passthrough_FieldIndex.NumMasters,
-                    errorMask: errorMask);
-            }
-        }
-
         public static void FillPublic_Xml(
             this Passthrough item,
             XElement node,
@@ -1232,6 +1158,89 @@ namespace Mutagen.Bethesda.Tests.Internals
     #endregion
 
     #region Modules
+    #region Xml Translation
+    public partial class PassthroughXmlTranslation
+    {
+        public readonly static PassthroughXmlTranslation Instance = new PassthroughXmlTranslation();
+
+        public static void WriteToNode_Xml(
+            IPassthroughGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            if ((translationMask?.GetShouldTranslate((int)Passthrough_FieldIndex.Do) ?? true))
+            {
+                BooleanXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Do),
+                    item: item.Do,
+                    fieldIndex: (int)Passthrough_FieldIndex.Do,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Passthrough_FieldIndex.Path) ?? true))
+            {
+                StringXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Path),
+                    item: item.Path,
+                    fieldIndex: (int)Passthrough_FieldIndex.Path,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Passthrough_FieldIndex.NumMasters) ?? true))
+            {
+                ByteXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.NumMasters),
+                    item: item.NumMasters,
+                    fieldIndex: (int)Passthrough_FieldIndex.NumMasters,
+                    errorMask: errorMask);
+            }
+        }
+
+        #region Xml Write
+        public void Write_Xml(
+            XElement node,
+            IPassthroughGetter item,
+            bool doMasks,
+            out Passthrough_ErrorMask errorMask,
+            Passthrough_TranslationMask translationMask,
+            string name = null)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            Write_Xml(
+                name: name,
+                node: node,
+                item: item,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal());
+            errorMask = Passthrough_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public void Write_Xml(
+            XElement node,
+            IPassthroughGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Tests.Passthrough");
+            node.Add(elem);
+            if (name != null)
+            {
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Tests.Passthrough");
+            }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        #endregion
+
+    }
+    #endregion
+
     #region Mask
     public class Passthrough_Mask<T> : IMask<T>, IEquatable<Passthrough_Mask<T>>
     {

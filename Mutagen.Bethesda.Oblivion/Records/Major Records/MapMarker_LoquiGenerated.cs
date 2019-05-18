@@ -358,7 +358,8 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Xml(
+            MapMarkerXmlTranslation.Instance.Write_Xml(
+                item: this,
                 name: name,
                 node: node,
                 errorMask: errorMaskBuilder,
@@ -390,7 +391,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            this.Write_Xml(
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -421,7 +422,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            this.Write_Xml(
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -445,7 +446,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            this.Write_Xml(
                 name: name,
                 node: node,
                 errorMask: null,
@@ -458,7 +459,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            this.Write_Xml(
                 name: name,
                 node: node,
                 errorMask: null,
@@ -472,7 +473,7 @@ namespace Mutagen.Bethesda.Oblivion
             TranslationCrystal translationMask,
             string name = null)
         {
-            MapMarkerCommon.Write_Xml(
+            MapMarkerXmlTranslation.Instance.Write_Xml(
                 item: this,
                 name: name,
                 node: node,
@@ -558,7 +559,8 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Binary(
+            MapMarkerBinaryTranslation.Instance.Write_Binary(
+                item: this,
                 masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: null,
@@ -583,7 +585,7 @@ namespace Mutagen.Bethesda.Oblivion
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            MapMarkerCommon.Write_Binary(
+            MapMarkerBinaryTranslation.Instance.Write_Binary(
                 item: this,
                 masterReferences: masterReferences,
                 writer: writer,
@@ -1310,94 +1312,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         #region Xml Translation
-        #region Xml Write
-        public static void Write_Xml(
-            XElement node,
-            MapMarker item,
-            bool doMasks,
-            out MapMarker_ErrorMask errorMask,
-            MapMarker_TranslationMask translationMask,
-            string name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_Xml(
-                name: name,
-                node: node,
-                item: item,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = MapMarker_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void Write_Xml(
-            XElement node,
-            MapMarker item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.MapMarker");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.MapMarker");
-            }
-            WriteToNode_Xml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #endregion
-
-        public static void WriteToNode_Xml(
-            this MapMarker item,
-            XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            if (item.Flags_IsSet
-                && (translationMask?.GetShouldTranslate((int)MapMarker_FieldIndex.Flags) ?? true))
-            {
-                EnumXmlTranslation<MapMarker.Flag>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Flags),
-                    item: item.Flags,
-                    fieldIndex: (int)MapMarker_FieldIndex.Flags,
-                    errorMask: errorMask);
-            }
-            if (item.Name_IsSet
-                && (translationMask?.GetShouldTranslate((int)MapMarker_FieldIndex.Name) ?? true))
-            {
-                StringXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Name),
-                    item: item.Name,
-                    fieldIndex: (int)MapMarker_FieldIndex.Name,
-                    errorMask: errorMask);
-            }
-            if (item.Types.HasBeenSet
-                && (translationMask?.GetShouldTranslate((int)MapMarker_FieldIndex.Types) ?? true))
-            {
-                ListXmlTranslation<MapMarker.Type>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Types),
-                    item: item.Types,
-                    fieldIndex: (int)MapMarker_FieldIndex.Types,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)MapMarker_FieldIndex.Types),
-                    transl: (XElement subNode, MapMarker.Type subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
-                    {
-                        EnumXmlTranslation<MapMarker.Type>.Instance.Write(
-                            node: subNode,
-                            name: null,
-                            item: subItem,
-                            errorMask: listSubMask);
-                    }
-                    );
-            }
-        }
-
         public static void FillPublic_Xml(
             this MapMarker item,
             XElement node,
@@ -1519,89 +1433,106 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        #region Binary Translation
-        #region Binary Write
-        public static void Write_Binary(
-            MutagenWriter writer,
-            MapMarker item,
-            MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            bool doMasks,
-            out MapMarker_ErrorMask errorMask)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_Binary(
-                masterReferences: masterReferences,
-                writer: writer,
-                item: item,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMaskBuilder);
-            errorMask = MapMarker_ErrorMask.Factory(errorMaskBuilder);
-        }
+    }
+    #endregion
 
-        public static void Write_Binary(
-            MutagenWriter writer,
-            MapMarker item,
-            MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
-        {
-            Write_Binary_RecordTypes(
-                item: item,
-                writer: writer,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMask,
-                masterReferences: masterReferences);
-        }
-        #endregion
+    #region Modules
+    #region Xml Translation
+    public partial class MapMarkerXmlTranslation
+    {
+        public readonly static MapMarkerXmlTranslation Instance = new MapMarkerXmlTranslation();
 
-        public static void Write_Binary_RecordTypes(
-            MapMarker item,
-            MutagenWriter writer,
-            RecordTypeConverter recordTypeConverter,
+        public static void WriteToNode_Xml(
+            IMapMarkerGetter item,
+            XElement node,
             ErrorMaskBuilder errorMask,
-            MasterReferences masterReferences)
+            TranslationCrystal translationMask)
         {
-            if (item.Flags_IsSet)
+            if (item.Flags_IsSet
+                && (translationMask?.GetShouldTranslate((int)MapMarker_FieldIndex.Flags) ?? true))
             {
-                Mutagen.Bethesda.Binary.EnumBinaryTranslation<MapMarker.Flag>.Instance.Write(
-                    writer,
-                    item.Flags,
-                    length: 1,
-                    header: recordTypeConverter.ConvertToCustom(MapMarker_Registration.FNAM_HEADER),
-                    nullable: false);
+                EnumXmlTranslation<MapMarker.Flag>.Instance.Write(
+                    node: node,
+                    name: nameof(item.Flags),
+                    item: item.Flags,
+                    fieldIndex: (int)MapMarker_FieldIndex.Flags,
+                    errorMask: errorMask);
             }
-            if (item.Name_IsSet)
+            if (item.Name_IsSet
+                && (translationMask?.GetShouldTranslate((int)MapMarker_FieldIndex.Name) ?? true))
             {
-                Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
-                    writer: writer,
+                StringXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Name),
                     item: item.Name,
-                    header: recordTypeConverter.ConvertToCustom(MapMarker_Registration.FULL_HEADER),
-                    nullable: false);
+                    fieldIndex: (int)MapMarker_FieldIndex.Name,
+                    errorMask: errorMask);
             }
-            if (item.Types.HasBeenSet)
+            if (item.Types.HasBeenSet
+                && (translationMask?.GetShouldTranslate((int)MapMarker_FieldIndex.Types) ?? true))
             {
-                Mutagen.Bethesda.Binary.ListBinaryTranslation<MapMarker.Type>.Instance.Write(
-                    writer: writer,
-                    items: item.Types,
-                    recordType: MapMarker_Registration.TNAM_HEADER,
-                    transl: (MutagenWriter subWriter, MapMarker.Type subItem) =>
+                ListXmlTranslation<MapMarker.Type>.Instance.Write(
+                    node: node,
+                    name: nameof(item.Types),
+                    item: item.Types,
+                    fieldIndex: (int)MapMarker_FieldIndex.Types,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)MapMarker_FieldIndex.Types),
+                    transl: (XElement subNode, MapMarker.Type subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
-                        Mutagen.Bethesda.Binary.EnumBinaryTranslation<MapMarker.Type>.Instance.Write(
-                            subWriter,
-                            subItem,
-                            length: 2);
+                        EnumXmlTranslation<MapMarker.Type>.Instance.Write(
+                            node: subNode,
+                            name: null,
+                            item: subItem,
+                            errorMask: listSubMask);
                     }
                     );
             }
         }
 
+        #region Xml Write
+        public void Write_Xml(
+            XElement node,
+            IMapMarkerGetter item,
+            bool doMasks,
+            out MapMarker_ErrorMask errorMask,
+            MapMarker_TranslationMask translationMask,
+            string name = null)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            Write_Xml(
+                name: name,
+                node: node,
+                item: item,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal());
+            errorMask = MapMarker_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public void Write_Xml(
+            XElement node,
+            IMapMarkerGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.MapMarker");
+            node.Add(elem);
+            if (name != null)
+            {
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.MapMarker");
+            }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         #endregion
 
     }
     #endregion
 
-    #region Modules
     #region Mask
     public class MapMarker_Mask<T> : IMask<T>, IEquatable<MapMarker_Mask<T>>
     {
@@ -1998,6 +1929,90 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Add((Name, null));
             ret.Add((Types, null));
         }
+    }
+    #endregion
+
+    #region Binary Translation
+    public partial class MapMarkerBinaryTranslation
+    {
+        public readonly static MapMarkerBinaryTranslation Instance = new MapMarkerBinaryTranslation();
+
+        public static void Write_Binary_RecordTypes(
+            IMapMarkerGetter item,
+            MutagenWriter writer,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask,
+            MasterReferences masterReferences)
+        {
+            if (item.Flags_IsSet)
+            {
+                Mutagen.Bethesda.Binary.EnumBinaryTranslation<MapMarker.Flag>.Instance.Write(
+                    writer,
+                    item.Flags,
+                    length: 1,
+                    header: recordTypeConverter.ConvertToCustom(MapMarker_Registration.FNAM_HEADER),
+                    nullable: false);
+            }
+            if (item.Name_IsSet)
+            {
+                Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Name,
+                    header: recordTypeConverter.ConvertToCustom(MapMarker_Registration.FULL_HEADER),
+                    nullable: false);
+            }
+            if (item.Types.HasBeenSet)
+            {
+                Mutagen.Bethesda.Binary.ListBinaryTranslation<MapMarker.Type>.Instance.Write(
+                    writer: writer,
+                    items: item.Types,
+                    recordType: MapMarker_Registration.TNAM_HEADER,
+                    transl: (MutagenWriter subWriter, MapMarker.Type subItem) =>
+                    {
+                        Mutagen.Bethesda.Binary.EnumBinaryTranslation<MapMarker.Type>.Instance.Write(
+                            subWriter,
+                            subItem,
+                            length: 2);
+                    }
+                    );
+            }
+        }
+
+        #region Binary Write
+        public void Write_Binary(
+            MutagenWriter writer,
+            IMapMarkerGetter item,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            bool doMasks,
+            out MapMarker_ErrorMask errorMask)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            Write_Binary(
+                masterReferences: masterReferences,
+                writer: writer,
+                item: item,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMaskBuilder);
+            errorMask = MapMarker_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public void Write_Binary(
+            MutagenWriter writer,
+            IMapMarkerGetter item,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            Write_Binary_RecordTypes(
+                item: item,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask,
+                masterReferences: masterReferences);
+        }
+        #endregion
+
     }
     #endregion
 

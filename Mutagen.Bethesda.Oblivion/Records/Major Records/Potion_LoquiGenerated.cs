@@ -38,6 +38,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class Potion : 
         ItemAbstract,
         IPotion,
+        IPotionInternal,
         ILoquiObject<Potion>,
         ILoquiObjectSetter,
         INamed,
@@ -209,6 +210,23 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #endregion
+        #region ENITDataTypeState
+        private Potion.ENITDataType _ENITDataTypeState;
+        public Potion.ENITDataType ENITDataTypeState
+        {
+            get => this._ENITDataTypeState;
+            set => this.RaiseAndSetIfChanged(ref this._ENITDataTypeState, value, nameof(ENITDataTypeState));
+        }
+        Potion.ENITDataType IPotionInternal.ENITDataTypeState
+        {
+            get => this.ENITDataTypeState;
+            set => this.ENITDataTypeState = value;
+        }
+        Potion.ENITDataType IPotionInternalGetter.ENITDataTypeState
+        {
+            get => this.ENITDataTypeState;
+        }
+        #endregion
 
         IMask<bool> IEqualsMask<Potion>.GetEqualsMask(Potion rhs, EqualsMaskHelper.Include include) => PotionCommon.GetEqualsMask(this, rhs, include);
         IMask<bool> IEqualsMask<IPotionGetter>.GetEqualsMask(IPotionGetter rhs, EqualsMaskHelper.Include include) => PotionCommon.GetEqualsMask(this, rhs, include);
@@ -277,6 +295,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 if (!this.Effects.SequenceEqual(rhs.Effects)) return false;
             }
+            if (this.ENITDataTypeState != rhs.ENITDataTypeState) return false;
             return true;
         }
 
@@ -309,6 +328,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 ret = HashHelper.GetHashCode(Effects).CombineHashCode(ret);
             }
+            ret = HashHelper.GetHashCode(ENITDataTypeState).CombineHashCode(ret);
             ret = ret.CombineHashCode(base.GetHashCode());
             return ret;
         }
@@ -482,7 +502,8 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Xml(
+            PotionXmlTranslation.Instance.Write_Xml(
+                item: this,
                 name: name,
                 node: node,
                 errorMask: errorMaskBuilder,
@@ -514,7 +535,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            this.Write_Xml(
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -545,7 +566,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            this.Write_Xml(
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -561,7 +582,8 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Xml(
+            PotionXmlTranslation.Instance.Write_Xml(
+                item: this,
                 name: name,
                 node: node,
                 errorMask: errorMaskBuilder,
@@ -577,7 +599,8 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Xml(
+            PotionXmlTranslation.Instance.Write_Xml(
+                item: this,
                 name: name,
                 node: node,
                 errorMask: errorMaskBuilder,
@@ -593,7 +616,8 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Xml(
+            PotionXmlTranslation.Instance.Write_Xml(
+                item: this,
                 name: name,
                 node: node,
                 errorMask: errorMaskBuilder,
@@ -609,7 +633,7 @@ namespace Mutagen.Bethesda.Oblivion
             TranslationCrystal translationMask,
             string name = null)
         {
-            PotionCommon.Write_Xml(
+            PotionXmlTranslation.Instance.Write_Xml(
                 item: this,
                 name: name,
                 node: node,
@@ -658,6 +682,7 @@ namespace Mutagen.Bethesda.Oblivion
                     return Effects.HasBeenSet;
                 case Potion_FieldIndex.Value:
                 case Potion_FieldIndex.Flags:
+                case Potion_FieldIndex.ENITDataTypeState:
                     return true;
                 default:
                     return base.GetHasBeenSet(index);
@@ -666,7 +691,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = Potion_Registration.TRIGGERING_RECORD_TYPE;
-        public ENITDataType ENITDataTypeState;
         [Flags]
         public enum ENITDataType
         {
@@ -783,7 +807,8 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Binary(
+            PotionBinaryTranslation.Instance.Write_Binary(
+                item: this,
                 masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: null,
@@ -799,7 +824,8 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Binary(
+            PotionBinaryTranslation.Instance.Write_Binary(
+                item: this,
                 masterReferences: masterReferences,
                 writer: writer,
                 errorMask: errorMaskBuilder,
@@ -814,7 +840,8 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Binary(
+            PotionBinaryTranslation.Instance.Write_Binary(
+                item: this,
                 masterReferences: masterReferences,
                 writer: writer,
                 errorMask: errorMaskBuilder,
@@ -829,7 +856,8 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Binary(
+            PotionBinaryTranslation.Instance.Write_Binary(
+                item: this,
                 masterReferences: masterReferences,
                 writer: writer,
                 errorMask: errorMaskBuilder,
@@ -845,7 +873,7 @@ namespace Mutagen.Bethesda.Oblivion
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            PotionCommon.Write_Binary(
+            PotionBinaryTranslation.Instance.Write_Binary(
                 item: this,
                 masterReferences: masterReferences,
                 writer: writer,
@@ -1164,6 +1192,9 @@ namespace Mutagen.Bethesda.Oblivion
                 case Potion_FieldIndex.Effects:
                     this._Effects.SetTo((IEnumerable<Effect>)obj);
                     break;
+                case Potion_FieldIndex.ENITDataTypeState:
+                    this.ENITDataTypeState = (Potion.ENITDataType)obj;
+                    break;
                 default:
                     base.SetNthObject(index, obj);
                     break;
@@ -1219,6 +1250,9 @@ namespace Mutagen.Bethesda.Oblivion
                 case Potion_FieldIndex.Effects:
                     obj._Effects.SetTo((IEnumerable<Effect>)pair.Value);
                     break;
+                case Potion_FieldIndex.ENITDataTypeState:
+                    obj.ENITDataTypeState = (Potion.ENITDataType)pair.Value;
+                    break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
@@ -1255,6 +1289,14 @@ namespace Mutagen.Bethesda.Oblivion
         new IngredientFlag Flags { get; set; }
 
         new ISourceSetList<Effect> Effects { get; }
+    }
+
+    public partial interface IPotionInternal : IPotion, IPotionInternalGetter, IItemAbstractInternal
+    {
+        new Script Script { get; set; }
+        new ISourceSetList<Effect> Effects { get; }
+        new Potion.ENITDataType ENITDataTypeState { get; set; }
+
     }
 
     public partial interface IPotionGetter : IItemAbstractGetter
@@ -1298,6 +1340,15 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
+    public partial interface IPotionInternalGetter : IPotionGetter, IItemAbstractInternalGetter
+    {
+        #region ENITDataTypeState
+        Potion.ENITDataType ENITDataTypeState { get; }
+
+        #endregion
+
+    }
+
     #endregion
 
 }
@@ -1307,19 +1358,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #region Field Index
     public enum Potion_FieldIndex
     {
-        FormKey = 0,
-        Version = 1,
-        EditorID = 2,
-        RecordType = 3,
-        OblivionMajorRecordFlags = 4,
-        Name = 5,
-        Model = 6,
-        Icon = 7,
-        Script = 8,
-        Weight = 9,
-        Value = 10,
-        Flags = 11,
-        Effects = 12,
+        MajorRecordFlagsRaw = 0,
+        FormKey = 1,
+        Version = 2,
+        EditorID = 3,
+        RecordType = 4,
+        OblivionMajorRecordFlags = 5,
+        Name = 6,
+        Model = 7,
+        Icon = 8,
+        Script = 9,
+        Weight = 10,
+        Value = 11,
+        Flags = 12,
+        Effects = 13,
+        ENITDataTypeState = 14,
     }
     #endregion
 
@@ -1337,9 +1390,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const string GUID = "f28ef4d6-1e08-4aab-a73e-af679ad7a30f";
 
-        public const ushort AdditionalFieldCount = 8;
+        public const ushort AdditionalFieldCount = 9;
 
-        public const ushort FieldCount = 13;
+        public const ushort FieldCount = 15;
 
         public static readonly Type MaskType = typeof(Potion_Mask<>);
 
@@ -1349,11 +1402,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type GetterType = typeof(IPotionGetter);
 
-        public static readonly Type InternalGetterType = null;
+        public static readonly Type InternalGetterType = typeof(IPotionInternalGetter);
 
         public static readonly Type SetterType = typeof(IPotion);
 
-        public static readonly Type InternalSetterType = null;
+        public static readonly Type InternalSetterType = typeof(IPotionInternal);
 
         public static readonly Type CommonType = typeof(PotionCommon);
 
@@ -1387,6 +1440,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (ushort)Potion_FieldIndex.Flags;
                 case "EFFECTS":
                     return (ushort)Potion_FieldIndex.Effects;
+                case "ENITDATATYPESTATE":
+                    return (ushort)Potion_FieldIndex.ENITDataTypeState;
                 default:
                     return null;
             }
@@ -1406,6 +1461,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Potion_FieldIndex.Weight:
                 case Potion_FieldIndex.Value:
                 case Potion_FieldIndex.Flags:
+                case Potion_FieldIndex.ENITDataTypeState:
                     return false;
                 default:
                     return ItemAbstract_Registration.GetNthIsEnumerable(index);
@@ -1426,6 +1482,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Potion_FieldIndex.Weight:
                 case Potion_FieldIndex.Value:
                 case Potion_FieldIndex.Flags:
+                case Potion_FieldIndex.ENITDataTypeState:
                     return false;
                 default:
                     return ItemAbstract_Registration.GetNthIsLoqui(index);
@@ -1445,6 +1502,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Potion_FieldIndex.Value:
                 case Potion_FieldIndex.Flags:
                 case Potion_FieldIndex.Effects:
+                case Potion_FieldIndex.ENITDataTypeState:
                     return false;
                 default:
                     return ItemAbstract_Registration.GetNthIsSingleton(index);
@@ -1472,6 +1530,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return "Flags";
                 case Potion_FieldIndex.Effects:
                     return "Effects";
+                case Potion_FieldIndex.ENITDataTypeState:
+                    return "ENITDataTypeState";
                 default:
                     return ItemAbstract_Registration.GetNthName(index);
             }
@@ -1490,6 +1550,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Potion_FieldIndex.Value:
                 case Potion_FieldIndex.Flags:
                 case Potion_FieldIndex.Effects:
+                case Potion_FieldIndex.ENITDataTypeState:
                     return false;
                 default:
                     return ItemAbstract_Registration.IsNthDerivative(index);
@@ -1509,6 +1570,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Potion_FieldIndex.Value:
                 case Potion_FieldIndex.Flags:
                 case Potion_FieldIndex.Effects:
+                case Potion_FieldIndex.ENITDataTypeState:
                     return false;
                 default:
                     return ItemAbstract_Registration.IsProtected(index);
@@ -1536,6 +1598,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return typeof(IngredientFlag);
                 case Potion_FieldIndex.Effects:
                     return typeof(SourceSetList<Effect>);
+                case Potion_FieldIndex.ENITDataTypeState:
+                    return typeof(Potion.ENITDataType);
                 default:
                     return ItemAbstract_Registration.GetNthType(index);
             }
@@ -1960,6 +2024,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     fg.AppendLine("]");
                 }
+                if (printMask?.ENITDataTypeState ?? true)
+                {
+                }
             }
             fg.AppendLine("]");
         }
@@ -1989,6 +2056,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Value = true;
             ret.Flags = true;
             ret.Effects = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Effect_Mask<bool>>>>(item.Effects.HasBeenSet, item.Effects.WithIndex().Select((i) => new MaskItemIndexed<bool, Effect_Mask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            ret.ENITDataTypeState = true;
             return ret;
         }
 
@@ -2002,6 +2070,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (index)
             {
+                case ItemAbstract_FieldIndex.MajorRecordFlagsRaw:
+                    return (Potion_FieldIndex)((int)index);
                 case ItemAbstract_FieldIndex.FormKey:
                     return (Potion_FieldIndex)((int)index);
                 case ItemAbstract_FieldIndex.Version:
@@ -2027,6 +2097,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (index)
             {
+                case OblivionMajorRecord_FieldIndex.MajorRecordFlagsRaw:
+                    return (Potion_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.FormKey:
                     return (Potion_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.Version:
@@ -2052,6 +2124,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (index)
             {
+                case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
+                    return (Potion_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
                     return (Potion_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.Version:
@@ -2066,152 +2140,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         #region Xml Translation
-        #region Xml Write
-        public static void Write_Xml(
-            XElement node,
-            Potion item,
-            bool doMasks,
-            out Potion_ErrorMask errorMask,
-            Potion_TranslationMask translationMask,
-            string name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_Xml(
-                name: name,
-                node: node,
-                item: item,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = Potion_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void Write_Xml(
-            XElement node,
-            Potion item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.Potion");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.Potion");
-            }
-            WriteToNode_Xml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #endregion
-
-        public static void WriteToNode_Xml(
-            this Potion item,
-            XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            ItemAbstractCommon.WriteToNode_Xml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            if (item.Name_IsSet
-                && (translationMask?.GetShouldTranslate((int)Potion_FieldIndex.Name) ?? true))
-            {
-                StringXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Name),
-                    item: item.Name,
-                    fieldIndex: (int)Potion_FieldIndex.Name,
-                    errorMask: errorMask);
-            }
-            if (item.Model_IsSet
-                && (translationMask?.GetShouldTranslate((int)Potion_FieldIndex.Model) ?? true))
-            {
-                LoquiXmlTranslation<Model>.Instance.Write(
-                    node: node,
-                    item: item.Model,
-                    name: nameof(item.Model),
-                    fieldIndex: (int)Potion_FieldIndex.Model,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Potion_FieldIndex.Model));
-            }
-            if (item.Icon_IsSet
-                && (translationMask?.GetShouldTranslate((int)Potion_FieldIndex.Icon) ?? true))
-            {
-                StringXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Icon),
-                    item: item.Icon,
-                    fieldIndex: (int)Potion_FieldIndex.Icon,
-                    errorMask: errorMask);
-            }
-            if (item.Script_Property.HasBeenSet
-                && (translationMask?.GetShouldTranslate((int)Potion_FieldIndex.Script) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Script),
-                    item: item.Script_Property?.FormKey,
-                    fieldIndex: (int)Potion_FieldIndex.Script,
-                    errorMask: errorMask);
-            }
-            if (item.Weight_IsSet
-                && (translationMask?.GetShouldTranslate((int)Potion_FieldIndex.Weight) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Weight),
-                    item: item.Weight,
-                    fieldIndex: (int)Potion_FieldIndex.Weight,
-                    errorMask: errorMask);
-            }
-            if (item.ENITDataTypeState.HasFlag(Potion.ENITDataType.Has))
-            {
-                if ((translationMask?.GetShouldTranslate((int)Potion_FieldIndex.Value) ?? true))
-                {
-                    UInt32XmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.Value),
-                        item: item.Value,
-                        fieldIndex: (int)Potion_FieldIndex.Value,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Potion_FieldIndex.Flags) ?? true))
-                {
-                    EnumXmlTranslation<IngredientFlag>.Instance.Write(
-                        node: node,
-                        name: nameof(item.Flags),
-                        item: item.Flags,
-                        fieldIndex: (int)Potion_FieldIndex.Flags,
-                        errorMask: errorMask);
-                }
-            }
-            if (item.Effects.HasBeenSet
-                && (translationMask?.GetShouldTranslate((int)Potion_FieldIndex.Effects) ?? true))
-            {
-                ListXmlTranslation<Effect>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Effects),
-                    item: item.Effects,
-                    fieldIndex: (int)Potion_FieldIndex.Effects,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Potion_FieldIndex.Effects),
-                    transl: (XElement subNode, Effect subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
-                    {
-                        LoquiXmlTranslation<Effect>.Instance.Write(
-                            node: subNode,
-                            item: subItem,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
-                    }
-                    );
-            }
-        }
-
         public static void FillPublic_Xml(
             this Potion item,
             XElement node,
@@ -2439,6 +2367,32 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask?.PopIndex();
                     }
                     break;
+                case "ENITDataTypeState":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Potion_FieldIndex.ENITDataTypeState);
+                        if (EnumXmlTranslation<Potion.ENITDataType>.Instance.Parse(
+                            node: node,
+                            item: out Potion.ENITDataType ENITDataTypeStateParse,
+                            errorMask: errorMask))
+                        {
+                            item.ENITDataTypeState = ENITDataTypeStateParse;
+                        }
+                        else
+                        {
+                            item.ENITDataTypeState = default(Potion.ENITDataType);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
                 default:
                     ItemAbstractCommon.FillPublicElement_Xml(
                         item: item,
@@ -2452,146 +2406,173 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        #region Binary Translation
-        #region Binary Write
-        public static void Write_Binary(
-            MutagenWriter writer,
-            Potion item,
-            MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            bool doMasks,
-            out Potion_ErrorMask errorMask)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_Binary(
-                masterReferences: masterReferences,
-                writer: writer,
-                item: item,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMaskBuilder);
-            errorMask = Potion_ErrorMask.Factory(errorMaskBuilder);
-        }
+    }
+    #endregion
 
-        public static void Write_Binary(
-            MutagenWriter writer,
-            Potion item,
-            MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
-        {
-            using (HeaderExport.ExportHeader(
-                writer: writer,
-                record: Potion_Registration.ALCH_HEADER,
-                type: ObjectType.Record))
-            {
-                OblivionMajorRecordCommon.Write_Binary_Embedded(
-                    item: item,
-                    writer: writer,
-                    errorMask: errorMask,
-                    masterReferences: masterReferences);
-                Write_Binary_RecordTypes(
-                    item: item,
-                    writer: writer,
-                    recordTypeConverter: recordTypeConverter,
-                    errorMask: errorMask,
-                    masterReferences: masterReferences);
-            }
-        }
-        #endregion
+    #region Modules
+    #region Xml Translation
+    public partial class PotionXmlTranslation : ItemAbstractXmlTranslation
+    {
+        public new readonly static PotionXmlTranslation Instance = new PotionXmlTranslation();
 
-        public static void Write_Binary_RecordTypes(
-            Potion item,
-            MutagenWriter writer,
-            RecordTypeConverter recordTypeConverter,
+        public static void WriteToNode_Xml(
+            IPotionInternalGetter item,
+            XElement node,
             ErrorMaskBuilder errorMask,
-            MasterReferences masterReferences)
+            TranslationCrystal translationMask)
         {
-            MajorRecordCommon.Write_Binary_RecordTypes(
+            ItemAbstractXmlTranslation.WriteToNode_Xml(
                 item: item,
-                writer: writer,
-                recordTypeConverter: recordTypeConverter,
+                node: node,
                 errorMask: errorMask,
-                masterReferences: masterReferences);
-            if (item.Name_IsSet)
+                translationMask: translationMask);
+            if (item.Name_IsSet
+                && (translationMask?.GetShouldTranslate((int)Potion_FieldIndex.Name) ?? true))
             {
-                Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
-                    writer: writer,
+                StringXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Name),
                     item: item.Name,
-                    header: recordTypeConverter.ConvertToCustom(Potion_Registration.FULL_HEADER),
-                    nullable: false);
+                    fieldIndex: (int)Potion_FieldIndex.Name,
+                    errorMask: errorMask);
             }
-            if (item.Model_IsSet)
+            if (item.Model_IsSet
+                && (translationMask?.GetShouldTranslate((int)Potion_FieldIndex.Model) ?? true))
             {
-                LoquiBinaryTranslation<Model>.Instance.Write(
-                    writer: writer,
+                LoquiXmlTranslation<Model>.Instance.Write(
+                    node: node,
                     item: item.Model,
+                    name: nameof(item.Model),
                     fieldIndex: (int)Potion_FieldIndex.Model,
                     errorMask: errorMask,
-                    masterReferences: masterReferences);
+                    translationMask: translationMask?.GetSubCrystal((int)Potion_FieldIndex.Model));
             }
-            if (item.Icon_IsSet)
+            if (item.Icon_IsSet
+                && (translationMask?.GetShouldTranslate((int)Potion_FieldIndex.Icon) ?? true))
             {
-                Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
-                    writer: writer,
+                StringXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Icon),
                     item: item.Icon,
-                    header: recordTypeConverter.ConvertToCustom(Potion_Registration.ICON_HEADER),
-                    nullable: false);
+                    fieldIndex: (int)Potion_FieldIndex.Icon,
+                    errorMask: errorMask);
             }
-            if (item.Script_Property.HasBeenSet)
+            if (item.Script_Property.HasBeenSet
+                && (translationMask?.GetShouldTranslate((int)Potion_FieldIndex.Script) ?? true))
             {
-                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Script_Property,
-                    header: recordTypeConverter.ConvertToCustom(Potion_Registration.SCRI_HEADER),
-                    nullable: false,
-                    masterReferences: masterReferences);
+                FormKeyXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Script),
+                    item: item.Script_Property?.FormKey,
+                    fieldIndex: (int)Potion_FieldIndex.Script,
+                    errorMask: errorMask);
             }
-            if (item.Weight_IsSet)
+            if (item.Weight_IsSet
+                && (translationMask?.GetShouldTranslate((int)Potion_FieldIndex.Weight) ?? true))
             {
-                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                    writer: writer,
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Weight),
                     item: item.Weight,
-                    header: recordTypeConverter.ConvertToCustom(Potion_Registration.DATA_HEADER),
-                    nullable: false);
+                    fieldIndex: (int)Potion_FieldIndex.Weight,
+                    errorMask: errorMask);
             }
             if (item.ENITDataTypeState.HasFlag(Potion.ENITDataType.Has))
             {
-                using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Potion_Registration.ENIT_HEADER)))
+                if ((translationMask?.GetShouldTranslate((int)Potion_FieldIndex.Value) ?? true))
                 {
-                    Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.Value);
-                    Mutagen.Bethesda.Binary.EnumBinaryTranslation<IngredientFlag>.Instance.Write(
-                        writer,
-                        item.Flags,
-                        length: 4);
+                    UInt32XmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.Value),
+                        item: item.Value,
+                        fieldIndex: (int)Potion_FieldIndex.Value,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Potion_FieldIndex.Flags) ?? true))
+                {
+                    EnumXmlTranslation<IngredientFlag>.Instance.Write(
+                        node: node,
+                        name: nameof(item.Flags),
+                        item: item.Flags,
+                        fieldIndex: (int)Potion_FieldIndex.Flags,
+                        errorMask: errorMask);
                 }
             }
-            if (item.Effects.HasBeenSet)
+            if (item.Effects.HasBeenSet
+                && (translationMask?.GetShouldTranslate((int)Potion_FieldIndex.Effects) ?? true))
             {
-                Mutagen.Bethesda.Binary.ListBinaryTranslation<Effect>.Instance.Write(
-                    writer: writer,
-                    items: item.Effects,
+                ListXmlTranslation<Effect>.Instance.Write(
+                    node: node,
+                    name: nameof(item.Effects),
+                    item: item.Effects,
                     fieldIndex: (int)Potion_FieldIndex.Effects,
                     errorMask: errorMask,
-                    transl: (MutagenWriter subWriter, Effect subItem, ErrorMaskBuilder listErrorMask) =>
+                    translationMask: translationMask?.GetSubCrystal((int)Potion_FieldIndex.Effects),
+                    transl: (XElement subNode, Effect subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
-                        LoquiBinaryTranslation<Effect>.Instance.Write(
-                            writer: subWriter,
+                        LoquiXmlTranslation<Effect>.Instance.Write(
+                            node: subNode,
                             item: subItem,
-                            errorMask: listErrorMask,
-                            masterReferences: masterReferences);
+                            name: null,
+                            errorMask: listSubMask,
+                            translationMask: listTranslMask);
                     }
                     );
             }
+            if ((translationMask?.GetShouldTranslate((int)Potion_FieldIndex.ENITDataTypeState) ?? true))
+            {
+                EnumXmlTranslation<Potion.ENITDataType>.Instance.Write(
+                    node: node,
+                    name: nameof(item.ENITDataTypeState),
+                    item: item.ENITDataTypeState,
+                    fieldIndex: (int)Potion_FieldIndex.ENITDataTypeState,
+                    errorMask: errorMask);
+            }
         }
 
+        #region Xml Write
+        public void Write_Xml(
+            XElement node,
+            IPotionInternalGetter item,
+            bool doMasks,
+            out Potion_ErrorMask errorMask,
+            Potion_TranslationMask translationMask,
+            string name = null)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            Write_Xml(
+                name: name,
+                node: node,
+                item: item,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal());
+            errorMask = Potion_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public void Write_Xml(
+            XElement node,
+            IPotionInternalGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.Potion");
+            node.Add(elem);
+            if (name != null)
+            {
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.Potion");
+            }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         #endregion
 
     }
     #endregion
 
-    #region Modules
     #region Mask
     public class Potion_Mask<T> : ItemAbstract_Mask<T>, IMask<T>, IEquatable<Potion_Mask<T>>
     {
@@ -2610,6 +2591,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.Value = initialValue;
             this.Flags = initialValue;
             this.Effects = new MaskItem<T, IEnumerable<MaskItemIndexed<T, Effect_Mask<T>>>>(initialValue, null);
+            this.ENITDataTypeState = initialValue;
         }
         #endregion
 
@@ -2622,6 +2604,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public T Value;
         public T Flags;
         public MaskItem<T, IEnumerable<MaskItemIndexed<T, Effect_Mask<T>>>> Effects;
+        public T ENITDataTypeState;
         #endregion
 
         #region Equals
@@ -2643,6 +2626,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (!object.Equals(this.Value, rhs.Value)) return false;
             if (!object.Equals(this.Flags, rhs.Flags)) return false;
             if (!object.Equals(this.Effects, rhs.Effects)) return false;
+            if (!object.Equals(this.ENITDataTypeState, rhs.ENITDataTypeState)) return false;
             return true;
         }
         public override int GetHashCode()
@@ -2656,6 +2640,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret = ret.CombineHashCode(this.Value?.GetHashCode());
             ret = ret.CombineHashCode(this.Flags?.GetHashCode());
             ret = ret.CombineHashCode(this.Effects?.GetHashCode());
+            ret = ret.CombineHashCode(this.ENITDataTypeState?.GetHashCode());
             ret = ret.CombineHashCode(base.GetHashCode());
             return ret;
         }
@@ -2689,6 +2674,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                 }
             }
+            if (!eval(this.ENITDataTypeState)) return false;
             return true;
         }
         #endregion
@@ -2744,6 +2730,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                 }
             }
+            obj.ENITDataTypeState = eval(this.ENITDataTypeState);
         }
         #endregion
 
@@ -2827,6 +2814,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     fg.AppendLine("]");
                 }
+                if (printMask?.ENITDataTypeState ?? true)
+                {
+                    fg.AppendLine($"ENITDataTypeState => {ENITDataTypeState}");
+                }
             }
             fg.AppendLine("]");
         }
@@ -2845,6 +2836,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Exception Value;
         public Exception Flags;
         public MaskItem<Exception, IEnumerable<MaskItem<Exception, Effect_ErrorMask>>> Effects;
+        public Exception ENITDataTypeState;
         #endregion
 
         #region IErrorMask
@@ -2869,6 +2861,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return Flags;
                 case Potion_FieldIndex.Effects:
                     return Effects;
+                case Potion_FieldIndex.ENITDataTypeState:
+                    return ENITDataTypeState;
                 default:
                     return base.GetNthMask(index);
             }
@@ -2902,6 +2896,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     break;
                 case Potion_FieldIndex.Effects:
                     this.Effects = new MaskItem<Exception, IEnumerable<MaskItem<Exception, Effect_ErrorMask>>>(ex, null);
+                    break;
+                case Potion_FieldIndex.ENITDataTypeState:
+                    this.ENITDataTypeState = ex;
                     break;
                 default:
                     base.SetNthException(index, ex);
@@ -2938,6 +2935,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Potion_FieldIndex.Effects:
                     this.Effects = (MaskItem<Exception, IEnumerable<MaskItem<Exception, Effect_ErrorMask>>>)obj;
                     break;
+                case Potion_FieldIndex.ENITDataTypeState:
+                    this.ENITDataTypeState = (Exception)obj;
+                    break;
                 default:
                     base.SetNthMask(index, obj);
                     break;
@@ -2955,6 +2955,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (Value != null) return true;
             if (Flags != null) return true;
             if (Effects != null) return true;
+            if (ENITDataTypeState != null) return true;
             return false;
         }
         #endregion
@@ -3019,6 +3020,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
             }
             fg.AppendLine("]");
+            fg.AppendLine($"ENITDataTypeState => {ENITDataTypeState}");
         }
         #endregion
 
@@ -3034,6 +3036,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Value = this.Value.Combine(rhs.Value);
             ret.Flags = this.Flags.Combine(rhs.Flags);
             ret.Effects = new MaskItem<Exception, IEnumerable<MaskItem<Exception, Effect_ErrorMask>>>(this.Effects.Overall.Combine(rhs.Effects.Overall), new List<MaskItem<Exception, Effect_ErrorMask>>(this.Effects.Specific.And(rhs.Effects.Specific)));
+            ret.ENITDataTypeState = this.ENITDataTypeState.Combine(rhs.ENITDataTypeState);
             return ret;
         }
         public static Potion_ErrorMask Combine(Potion_ErrorMask lhs, Potion_ErrorMask rhs)
@@ -3068,6 +3071,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.Value = defaultOn;
             this.Flags = defaultOn;
             this.Effects = new MaskItem<CopyOption, Effect_CopyMask>(deepCopyOption, default);
+            this.ENITDataTypeState = defaultOn;
         }
 
         #region Members
@@ -3079,6 +3083,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool Value;
         public bool Flags;
         public MaskItem<CopyOption, Effect_CopyMask> Effects;
+        public bool ENITDataTypeState;
         #endregion
 
     }
@@ -3094,6 +3099,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool Value;
         public bool Flags;
         public MaskItem<bool, Effect_TranslationMask> Effects;
+        public bool ENITDataTypeState;
         #endregion
 
         #region Ctors
@@ -3113,6 +3119,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.Value = defaultOn;
             this.Flags = defaultOn;
             this.Effects = new MaskItem<bool, Effect_TranslationMask>(defaultOn, null);
+            this.ENITDataTypeState = defaultOn;
         }
 
         #endregion
@@ -3128,7 +3135,162 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Add((Value, null));
             ret.Add((Flags, null));
             ret.Add((Effects?.Overall ?? true, Effects?.Specific?.GetCrystal()));
+            ret.Add((ENITDataTypeState, null));
         }
+    }
+    #endregion
+
+    #region Binary Translation
+    public partial class PotionBinaryTranslation : ItemAbstractBinaryTranslation
+    {
+        public new readonly static PotionBinaryTranslation Instance = new PotionBinaryTranslation();
+
+        public static void Write_Binary_Embedded(
+            IPotionInternalGetter item,
+            MutagenWriter writer,
+            ErrorMaskBuilder errorMask,
+            MasterReferences masterReferences)
+        {
+            OblivionMajorRecordBinaryTranslation.Write_Binary_Embedded(
+                item: item,
+                writer: writer,
+                errorMask: errorMask,
+                masterReferences: masterReferences);
+        }
+
+        public static void Write_Binary_RecordTypes(
+            IPotionInternalGetter item,
+            MutagenWriter writer,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask,
+            MasterReferences masterReferences)
+        {
+            MajorRecordBinaryTranslation.Write_Binary_RecordTypes(
+                item: item,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask,
+                masterReferences: masterReferences);
+            if (item.Name_IsSet)
+            {
+                Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Name,
+                    header: recordTypeConverter.ConvertToCustom(Potion_Registration.FULL_HEADER),
+                    nullable: false);
+            }
+            if (item.Model_IsSet)
+            {
+                LoquiBinaryTranslation<Model>.Instance.Write(
+                    writer: writer,
+                    item: item.Model,
+                    fieldIndex: (int)Potion_FieldIndex.Model,
+                    errorMask: errorMask,
+                    masterReferences: masterReferences);
+            }
+            if (item.Icon_IsSet)
+            {
+                Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Icon,
+                    header: recordTypeConverter.ConvertToCustom(Potion_Registration.ICON_HEADER),
+                    nullable: false);
+            }
+            if (item.Script_Property.HasBeenSet)
+            {
+                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Script_Property,
+                    header: recordTypeConverter.ConvertToCustom(Potion_Registration.SCRI_HEADER),
+                    nullable: false,
+                    masterReferences: masterReferences);
+            }
+            if (item.Weight_IsSet)
+            {
+                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Weight,
+                    header: recordTypeConverter.ConvertToCustom(Potion_Registration.DATA_HEADER),
+                    nullable: false);
+            }
+            if (item.ENITDataTypeState.HasFlag(Potion.ENITDataType.Has))
+            {
+                using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Potion_Registration.ENIT_HEADER)))
+                {
+                    Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.Value);
+                    Mutagen.Bethesda.Binary.EnumBinaryTranslation<IngredientFlag>.Instance.Write(
+                        writer,
+                        item.Flags,
+                        length: 4);
+                }
+            }
+            if (item.Effects.HasBeenSet)
+            {
+                Mutagen.Bethesda.Binary.ListBinaryTranslation<Effect>.Instance.Write(
+                    writer: writer,
+                    items: item.Effects,
+                    fieldIndex: (int)Potion_FieldIndex.Effects,
+                    errorMask: errorMask,
+                    transl: (MutagenWriter subWriter, Effect subItem, ErrorMaskBuilder listErrorMask) =>
+                    {
+                        LoquiBinaryTranslation<Effect>.Instance.Write(
+                            writer: subWriter,
+                            item: subItem,
+                            errorMask: listErrorMask,
+                            masterReferences: masterReferences);
+                    }
+                    );
+            }
+        }
+
+        #region Binary Write
+        public void Write_Binary(
+            MutagenWriter writer,
+            IPotionInternalGetter item,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            bool doMasks,
+            out Potion_ErrorMask errorMask)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            Write_Binary(
+                masterReferences: masterReferences,
+                writer: writer,
+                item: item,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMaskBuilder);
+            errorMask = Potion_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public void Write_Binary(
+            MutagenWriter writer,
+            IPotionInternalGetter item,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            using (HeaderExport.ExportHeader(
+                writer: writer,
+                record: Potion_Registration.ALCH_HEADER,
+                type: ObjectType.Record))
+            {
+                Write_Binary_Embedded(
+                    item: item,
+                    writer: writer,
+                    errorMask: errorMask,
+                    masterReferences: masterReferences);
+                Write_Binary_RecordTypes(
+                    item: item,
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter,
+                    errorMask: errorMask,
+                    masterReferences: masterReferences);
+            }
+        }
+        #endregion
+
     }
     #endregion
 

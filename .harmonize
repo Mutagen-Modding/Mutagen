@@ -10,10 +10,10 @@
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>2cc4b6d0b505aff52f721fe30791a6cd45df6b02</Sha>
+         <Sha>01162f5b3bf8443f2040e2a562014a40b75c746e</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>05-12-2019 03:26:13</CommitDate>
-         <Description>ProtectedSet -&gt; SetPermission enum</Description>
+         <CommitDate>05-18-2019 15:01:53</CommitDate>
+         <Description>Exports are now done in an external translation class utilizing interfaces</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>

@@ -495,7 +495,8 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Xml(
+            TES4XmlTranslation.Instance.Write_Xml(
+                item: this,
                 name: name,
                 node: node,
                 errorMask: errorMaskBuilder,
@@ -527,7 +528,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            this.Write_Xml(
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -558,7 +559,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            this.Write_Xml(
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -582,7 +583,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            this.Write_Xml(
                 name: name,
                 node: node,
                 errorMask: null,
@@ -595,7 +596,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            this.Write_Xml(
                 name: name,
                 node: node,
                 errorMask: null,
@@ -609,7 +610,7 @@ namespace Mutagen.Bethesda.Oblivion
             TranslationCrystal translationMask,
             string name = null)
         {
-            TES4Common.Write_Xml(
+            TES4XmlTranslation.Instance.Write_Xml(
                 item: this,
                 name: name,
                 node: node,
@@ -720,7 +721,8 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Binary(
+            TES4BinaryTranslation.Instance.Write_Binary(
+                item: this,
                 masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: null,
@@ -745,7 +747,7 @@ namespace Mutagen.Bethesda.Oblivion
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            TES4Common.Write_Binary(
+            TES4BinaryTranslation.Instance.Write_Binary(
                 item: this,
                 masterReferences: masterReferences,
                 writer: writer,
@@ -1891,144 +1893,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         #region Xml Translation
-        #region Xml Write
-        public static void Write_Xml(
-            XElement node,
-            TES4 item,
-            bool doMasks,
-            out TES4_ErrorMask errorMask,
-            TES4_TranslationMask translationMask,
-            string name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_Xml(
-                name: name,
-                node: node,
-                item: item,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = TES4_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void Write_Xml(
-            XElement node,
-            TES4 item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.TES4");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.TES4");
-            }
-            WriteToNode_Xml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #endregion
-
-        public static void WriteToNode_Xml(
-            this TES4 item,
-            XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            if ((translationMask?.GetShouldTranslate((int)TES4_FieldIndex.Fluff) ?? true))
-            {
-                ByteArrayXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Fluff),
-                    item: item.Fluff,
-                    fieldIndex: (int)TES4_FieldIndex.Fluff,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)TES4_FieldIndex.Header) ?? true))
-            {
-                LoquiXmlTranslation<Header>.Instance.Write(
-                    node: node,
-                    item: item.Header,
-                    name: nameof(item.Header),
-                    fieldIndex: (int)TES4_FieldIndex.Header,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)TES4_FieldIndex.Header));
-            }
-            if (item.TypeOffsets_IsSet
-                && (translationMask?.GetShouldTranslate((int)TES4_FieldIndex.TypeOffsets) ?? true))
-            {
-                ByteArrayXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.TypeOffsets),
-                    item: item.TypeOffsets,
-                    fieldIndex: (int)TES4_FieldIndex.TypeOffsets,
-                    errorMask: errorMask);
-            }
-            if (item.Deleted_IsSet
-                && (translationMask?.GetShouldTranslate((int)TES4_FieldIndex.Deleted) ?? true))
-            {
-                ByteArrayXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Deleted),
-                    item: item.Deleted,
-                    fieldIndex: (int)TES4_FieldIndex.Deleted,
-                    errorMask: errorMask);
-            }
-            if (item.Author_IsSet
-                && (translationMask?.GetShouldTranslate((int)TES4_FieldIndex.Author) ?? true))
-            {
-                StringXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Author),
-                    item: item.Author,
-                    fieldIndex: (int)TES4_FieldIndex.Author,
-                    errorMask: errorMask);
-            }
-            if (item.Description_IsSet
-                && (translationMask?.GetShouldTranslate((int)TES4_FieldIndex.Description) ?? true))
-            {
-                StringXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Description),
-                    item: item.Description,
-                    fieldIndex: (int)TES4_FieldIndex.Description,
-                    errorMask: errorMask);
-            }
-            if (item.MasterReferences.HasBeenSet
-                && (translationMask?.GetShouldTranslate((int)TES4_FieldIndex.MasterReferences) ?? true))
-            {
-                ListXmlTranslation<MasterReference>.Instance.Write(
-                    node: node,
-                    name: nameof(item.MasterReferences),
-                    item: item.MasterReferences,
-                    fieldIndex: (int)TES4_FieldIndex.MasterReferences,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)TES4_FieldIndex.MasterReferences),
-                    transl: (XElement subNode, MasterReference subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
-                    {
-                        LoquiXmlTranslation<MasterReference>.Instance.Write(
-                            node: subNode,
-                            item: subItem,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
-                    }
-                    );
-            }
-            if (item.VestigialData_IsSet
-                && (translationMask?.GetShouldTranslate((int)TES4_FieldIndex.VestigialData) ?? true))
-            {
-                UInt64XmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.VestigialData),
-                    item: item.VestigialData,
-                    fieldIndex: (int)TES4_FieldIndex.VestigialData,
-                    errorMask: errorMask);
-            }
-        }
-
         public static void FillPublic_Xml(
             this TES4 item,
             XElement node,
@@ -2281,142 +2145,156 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        #region Binary Translation
-        #region Binary Write
-        public static void Write_Binary(
-            MutagenWriter writer,
-            TES4 item,
-            MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            bool doMasks,
-            out TES4_ErrorMask errorMask)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_Binary(
-                masterReferences: masterReferences,
-                writer: writer,
-                item: item,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMaskBuilder);
-            errorMask = TES4_ErrorMask.Factory(errorMaskBuilder);
-        }
+    }
+    #endregion
 
-        public static void Write_Binary(
-            MutagenWriter writer,
-            TES4 item,
-            MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
+    #region Modules
+    #region Xml Translation
+    public partial class TES4XmlTranslation
+    {
+        public readonly static TES4XmlTranslation Instance = new TES4XmlTranslation();
+
+        public static void WriteToNode_Xml(
+            ITES4Getter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
         {
-            using (HeaderExport.ExportHeader(
-                writer: writer,
-                record: TES4_Registration.TES4_HEADER,
-                type: ObjectType.Record))
+            if ((translationMask?.GetShouldTranslate((int)TES4_FieldIndex.Fluff) ?? true))
             {
-                Write_Binary_Embedded(
-                    item: item,
-                    writer: writer,
-                    errorMask: errorMask,
-                    masterReferences: masterReferences);
-                Write_Binary_RecordTypes(
-                    item: item,
-                    writer: writer,
-                    recordTypeConverter: recordTypeConverter,
-                    errorMask: errorMask,
-                    masterReferences: masterReferences);
+                ByteArrayXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Fluff),
+                    item: item.Fluff,
+                    fieldIndex: (int)TES4_FieldIndex.Fluff,
+                    errorMask: errorMask);
             }
-        }
-        #endregion
-
-        public static void Write_Binary_Embedded(
-            TES4 item,
-            MutagenWriter writer,
-            ErrorMaskBuilder errorMask,
-            MasterReferences masterReferences)
-        {
-            Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.Fluff);
-        }
-
-        public static void Write_Binary_RecordTypes(
-            TES4 item,
-            MutagenWriter writer,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask,
-            MasterReferences masterReferences)
-        {
-            LoquiBinaryTranslation<Header>.Instance.Write(
-                writer: writer,
-                item: item.Header,
-                fieldIndex: (int)TES4_FieldIndex.Header,
-                errorMask: errorMask,
-                masterReferences: masterReferences);
-            if (item.TypeOffsets_IsSet)
+            if ((translationMask?.GetShouldTranslate((int)TES4_FieldIndex.Header) ?? true))
             {
-                Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
-                    writer: writer,
+                LoquiXmlTranslation<Header>.Instance.Write(
+                    node: node,
+                    item: item.Header,
+                    name: nameof(item.Header),
+                    fieldIndex: (int)TES4_FieldIndex.Header,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)TES4_FieldIndex.Header));
+            }
+            if (item.TypeOffsets_IsSet
+                && (translationMask?.GetShouldTranslate((int)TES4_FieldIndex.TypeOffsets) ?? true))
+            {
+                ByteArrayXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.TypeOffsets),
                     item: item.TypeOffsets,
-                    header: recordTypeConverter.ConvertToCustom(TES4_Registration.OFST_HEADER),
-                    nullable: false);
+                    fieldIndex: (int)TES4_FieldIndex.TypeOffsets,
+                    errorMask: errorMask);
             }
-            if (item.Deleted_IsSet)
+            if (item.Deleted_IsSet
+                && (translationMask?.GetShouldTranslate((int)TES4_FieldIndex.Deleted) ?? true))
             {
-                Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
-                    writer: writer,
+                ByteArrayXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Deleted),
                     item: item.Deleted,
-                    header: recordTypeConverter.ConvertToCustom(TES4_Registration.DELE_HEADER),
-                    nullable: false);
+                    fieldIndex: (int)TES4_FieldIndex.Deleted,
+                    errorMask: errorMask);
             }
-            if (item.Author_IsSet)
+            if (item.Author_IsSet
+                && (translationMask?.GetShouldTranslate((int)TES4_FieldIndex.Author) ?? true))
             {
-                Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
-                    writer: writer,
+                StringXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Author),
                     item: item.Author,
-                    header: recordTypeConverter.ConvertToCustom(TES4_Registration.CNAM_HEADER),
-                    nullable: false);
+                    fieldIndex: (int)TES4_FieldIndex.Author,
+                    errorMask: errorMask);
             }
-            if (item.Description_IsSet)
+            if (item.Description_IsSet
+                && (translationMask?.GetShouldTranslate((int)TES4_FieldIndex.Description) ?? true))
             {
-                Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
-                    writer: writer,
+                StringXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Description),
                     item: item.Description,
-                    header: recordTypeConverter.ConvertToCustom(TES4_Registration.SNAM_HEADER),
-                    nullable: false);
+                    fieldIndex: (int)TES4_FieldIndex.Description,
+                    errorMask: errorMask);
             }
-            if (item.MasterReferences.HasBeenSet)
+            if (item.MasterReferences.HasBeenSet
+                && (translationMask?.GetShouldTranslate((int)TES4_FieldIndex.MasterReferences) ?? true))
             {
-                Mutagen.Bethesda.Binary.ListBinaryTranslation<MasterReference>.Instance.Write(
-                    writer: writer,
-                    items: item.MasterReferences,
+                ListXmlTranslation<MasterReference>.Instance.Write(
+                    node: node,
+                    name: nameof(item.MasterReferences),
+                    item: item.MasterReferences,
                     fieldIndex: (int)TES4_FieldIndex.MasterReferences,
                     errorMask: errorMask,
-                    transl: (MutagenWriter subWriter, MasterReference subItem, ErrorMaskBuilder listErrorMask) =>
+                    translationMask: translationMask?.GetSubCrystal((int)TES4_FieldIndex.MasterReferences),
+                    transl: (XElement subNode, MasterReference subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
-                        LoquiBinaryTranslation<MasterReference>.Instance.Write(
-                            writer: subWriter,
+                        LoquiXmlTranslation<MasterReference>.Instance.Write(
+                            node: subNode,
                             item: subItem,
-                            errorMask: listErrorMask,
-                            masterReferences: masterReferences);
+                            name: null,
+                            errorMask: listSubMask,
+                            translationMask: listTranslMask);
                     }
                     );
             }
-            if (item.VestigialData_IsSet)
+            if (item.VestigialData_IsSet
+                && (translationMask?.GetShouldTranslate((int)TES4_FieldIndex.VestigialData) ?? true))
             {
-                Mutagen.Bethesda.Binary.UInt64BinaryTranslation.Instance.Write(
-                    writer: writer,
+                UInt64XmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.VestigialData),
                     item: item.VestigialData,
-                    header: recordTypeConverter.ConvertToCustom(TES4_Registration.DATA_HEADER),
-                    nullable: false);
+                    fieldIndex: (int)TES4_FieldIndex.VestigialData,
+                    errorMask: errorMask);
             }
         }
 
+        #region Xml Write
+        public void Write_Xml(
+            XElement node,
+            ITES4Getter item,
+            bool doMasks,
+            out TES4_ErrorMask errorMask,
+            TES4_TranslationMask translationMask,
+            string name = null)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            Write_Xml(
+                name: name,
+                node: node,
+                item: item,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal());
+            errorMask = TES4_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public void Write_Xml(
+            XElement node,
+            ITES4Getter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.TES4");
+            node.Add(elem);
+            if (name != null)
+            {
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.TES4");
+            }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         #endregion
 
     }
     #endregion
 
-    #region Modules
     #region Mask
     public class TES4_Mask<T> : IMask<T>, IEquatable<TES4_Mask<T>>
     {
@@ -2969,6 +2847,143 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Add((MasterReferences?.Overall ?? true, MasterReferences?.Specific?.GetCrystal()));
             ret.Add((VestigialData, null));
         }
+    }
+    #endregion
+
+    #region Binary Translation
+    public partial class TES4BinaryTranslation
+    {
+        public readonly static TES4BinaryTranslation Instance = new TES4BinaryTranslation();
+
+        public static void Write_Binary_Embedded(
+            ITES4Getter item,
+            MutagenWriter writer,
+            ErrorMaskBuilder errorMask,
+            MasterReferences masterReferences)
+        {
+            Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.Fluff);
+        }
+
+        public static void Write_Binary_RecordTypes(
+            ITES4Getter item,
+            MutagenWriter writer,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask,
+            MasterReferences masterReferences)
+        {
+            LoquiBinaryTranslation<Header>.Instance.Write(
+                writer: writer,
+                item: item.Header,
+                fieldIndex: (int)TES4_FieldIndex.Header,
+                errorMask: errorMask,
+                masterReferences: masterReferences);
+            if (item.TypeOffsets_IsSet)
+            {
+                Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.TypeOffsets,
+                    header: recordTypeConverter.ConvertToCustom(TES4_Registration.OFST_HEADER),
+                    nullable: false);
+            }
+            if (item.Deleted_IsSet)
+            {
+                Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Deleted,
+                    header: recordTypeConverter.ConvertToCustom(TES4_Registration.DELE_HEADER),
+                    nullable: false);
+            }
+            if (item.Author_IsSet)
+            {
+                Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Author,
+                    header: recordTypeConverter.ConvertToCustom(TES4_Registration.CNAM_HEADER),
+                    nullable: false);
+            }
+            if (item.Description_IsSet)
+            {
+                Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Description,
+                    header: recordTypeConverter.ConvertToCustom(TES4_Registration.SNAM_HEADER),
+                    nullable: false);
+            }
+            if (item.MasterReferences.HasBeenSet)
+            {
+                Mutagen.Bethesda.Binary.ListBinaryTranslation<MasterReference>.Instance.Write(
+                    writer: writer,
+                    items: item.MasterReferences,
+                    fieldIndex: (int)TES4_FieldIndex.MasterReferences,
+                    errorMask: errorMask,
+                    transl: (MutagenWriter subWriter, MasterReference subItem, ErrorMaskBuilder listErrorMask) =>
+                    {
+                        LoquiBinaryTranslation<MasterReference>.Instance.Write(
+                            writer: subWriter,
+                            item: subItem,
+                            errorMask: listErrorMask,
+                            masterReferences: masterReferences);
+                    }
+                    );
+            }
+            if (item.VestigialData_IsSet)
+            {
+                Mutagen.Bethesda.Binary.UInt64BinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.VestigialData,
+                    header: recordTypeConverter.ConvertToCustom(TES4_Registration.DATA_HEADER),
+                    nullable: false);
+            }
+        }
+
+        #region Binary Write
+        public void Write_Binary(
+            MutagenWriter writer,
+            ITES4Getter item,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            bool doMasks,
+            out TES4_ErrorMask errorMask)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            Write_Binary(
+                masterReferences: masterReferences,
+                writer: writer,
+                item: item,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMaskBuilder);
+            errorMask = TES4_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public void Write_Binary(
+            MutagenWriter writer,
+            ITES4Getter item,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            using (HeaderExport.ExportHeader(
+                writer: writer,
+                record: TES4_Registration.TES4_HEADER,
+                type: ObjectType.Record))
+            {
+                Write_Binary_Embedded(
+                    item: item,
+                    writer: writer,
+                    errorMask: errorMask,
+                    masterReferences: masterReferences);
+                Write_Binary_RecordTypes(
+                    item: item,
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter,
+                    errorMask: errorMask,
+                    masterReferences: masterReferences);
+            }
+        }
+        #endregion
+
     }
     #endregion
 

@@ -742,7 +742,8 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Xml(
+            OblivionModXmlTranslation.Instance.Write_Xml(
+                item: this,
                 name: name,
                 node: node,
                 errorMask: errorMaskBuilder,
@@ -774,7 +775,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            this.Write_Xml(
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -805,7 +806,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            this.Write_Xml(
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -829,7 +830,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            this.Write_Xml(
                 name: name,
                 node: node,
                 errorMask: null,
@@ -842,7 +843,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            this.Write_Xml(
                 name: name,
                 node: node,
                 errorMask: null,
@@ -856,7 +857,7 @@ namespace Mutagen.Bethesda.Oblivion
             TranslationCrystal translationMask,
             string name = null)
         {
-            OblivionModCommon.Write_Xml(
+            OblivionModXmlTranslation.Instance.Write_Xml(
                 item: this,
                 name: name,
                 node: node,
@@ -3105,7 +3106,8 @@ namespace Mutagen.Bethesda.Oblivion
             GroupMask importMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Binary(
+            OblivionModBinaryTranslation.Instance.Write_Binary(
+                item: this,
                 importMask: importMask,
                 modKey: modKey,
                 writer: writer,
@@ -3150,7 +3152,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 using (var writer = new MutagenWriter(memStream, dispose: false))
                 {
-                    Write_Binary(
+                    this.Write_Binary(
                         importMask: importMask,
                         modKey: modKey,
                         writer: writer,
@@ -3190,7 +3192,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             using (var writer = new MutagenWriter(stream))
             {
-                Write_Binary(
+                this.Write_Binary(
                     importMask: importMask,
                     modKey: modKey,
                     writer: writer,
@@ -3220,7 +3222,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 using (var writer = new MutagenWriter(memStream, dispose: false))
                 {
-                    Write_Binary(
+                    this.Write_Binary(
                         importMask: importMask,
                         modKey: modKey,
                         writer: writer,
@@ -3242,7 +3244,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             using (var writer = new MutagenWriter(stream))
             {
-                Write_Binary(
+                this.Write_Binary(
                     importMask: importMask,
                     modKey: modKey,
                     writer: writer,
@@ -3258,7 +3260,7 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMask,
             GroupMask importMask = null)
         {
-            OblivionModCommon.Write_Binary(
+            OblivionModBinaryTranslation.Instance.Write_Binary(
                 item: this,
                 importMask: importMask,
                 modKey: modKey,
@@ -7957,625 +7959,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         #region Xml Translation
-        #region Xml Write
-        public static void Write_Xml(
-            XElement node,
-            OblivionMod item,
-            bool doMasks,
-            out OblivionMod_ErrorMask errorMask,
-            OblivionMod_TranslationMask translationMask,
-            string name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_Xml(
-                name: name,
-                node: node,
-                item: item,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = OblivionMod_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void Write_Xml(
-            XElement node,
-            OblivionMod item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.OblivionMod");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.OblivionMod");
-            }
-            WriteToNode_Xml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #endregion
-
-        public static void WriteToNode_Xml(
-            this OblivionMod item,
-            XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            if (item.TES4_IsSet
-                && (translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.TES4) ?? true))
-            {
-                LoquiXmlTranslation<TES4>.Instance.Write(
-                    node: node,
-                    item: item.TES4,
-                    name: nameof(item.TES4),
-                    fieldIndex: (int)OblivionMod_FieldIndex.TES4,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.TES4));
-            }
-            if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.GameSettings) ?? true))
-            {
-                LoquiXmlTranslation<Group<GameSetting>>.Instance.Write(
-                    node: node,
-                    item: item.GameSettings,
-                    name: nameof(item.GameSettings),
-                    fieldIndex: (int)OblivionMod_FieldIndex.GameSettings,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.GameSettings));
-            }
-            if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Globals) ?? true))
-            {
-                LoquiXmlTranslation<Group<Global>>.Instance.Write(
-                    node: node,
-                    item: item.Globals,
-                    name: nameof(item.Globals),
-                    fieldIndex: (int)OblivionMod_FieldIndex.Globals,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Globals));
-            }
-            if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Classes) ?? true))
-            {
-                LoquiXmlTranslation<Group<Class>>.Instance.Write(
-                    node: node,
-                    item: item.Classes,
-                    name: nameof(item.Classes),
-                    fieldIndex: (int)OblivionMod_FieldIndex.Classes,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Classes));
-            }
-            if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Factions) ?? true))
-            {
-                LoquiXmlTranslation<Group<Faction>>.Instance.Write(
-                    node: node,
-                    item: item.Factions,
-                    name: nameof(item.Factions),
-                    fieldIndex: (int)OblivionMod_FieldIndex.Factions,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Factions));
-            }
-            if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Hairs) ?? true))
-            {
-                LoquiXmlTranslation<Group<Hair>>.Instance.Write(
-                    node: node,
-                    item: item.Hairs,
-                    name: nameof(item.Hairs),
-                    fieldIndex: (int)OblivionMod_FieldIndex.Hairs,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Hairs));
-            }
-            if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Eyes) ?? true))
-            {
-                LoquiXmlTranslation<Group<Eye>>.Instance.Write(
-                    node: node,
-                    item: item.Eyes,
-                    name: nameof(item.Eyes),
-                    fieldIndex: (int)OblivionMod_FieldIndex.Eyes,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Eyes));
-            }
-            if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Races) ?? true))
-            {
-                LoquiXmlTranslation<Group<Race>>.Instance.Write(
-                    node: node,
-                    item: item.Races,
-                    name: nameof(item.Races),
-                    fieldIndex: (int)OblivionMod_FieldIndex.Races,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Races));
-            }
-            if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Sounds) ?? true))
-            {
-                LoquiXmlTranslation<Group<Sound>>.Instance.Write(
-                    node: node,
-                    item: item.Sounds,
-                    name: nameof(item.Sounds),
-                    fieldIndex: (int)OblivionMod_FieldIndex.Sounds,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Sounds));
-            }
-            if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Skills) ?? true))
-            {
-                LoquiXmlTranslation<Group<SkillRecord>>.Instance.Write(
-                    node: node,
-                    item: item.Skills,
-                    name: nameof(item.Skills),
-                    fieldIndex: (int)OblivionMod_FieldIndex.Skills,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Skills));
-            }
-            if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.MagicEffects) ?? true))
-            {
-                LoquiXmlTranslation<Group<MagicEffect>>.Instance.Write(
-                    node: node,
-                    item: item.MagicEffects,
-                    name: nameof(item.MagicEffects),
-                    fieldIndex: (int)OblivionMod_FieldIndex.MagicEffects,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.MagicEffects));
-            }
-            if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Scripts) ?? true))
-            {
-                LoquiXmlTranslation<Group<Script>>.Instance.Write(
-                    node: node,
-                    item: item.Scripts,
-                    name: nameof(item.Scripts),
-                    fieldIndex: (int)OblivionMod_FieldIndex.Scripts,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Scripts));
-            }
-            if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.LandTextures) ?? true))
-            {
-                LoquiXmlTranslation<Group<LandTexture>>.Instance.Write(
-                    node: node,
-                    item: item.LandTextures,
-                    name: nameof(item.LandTextures),
-                    fieldIndex: (int)OblivionMod_FieldIndex.LandTextures,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.LandTextures));
-            }
-            if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Enchantments) ?? true))
-            {
-                LoquiXmlTranslation<Group<Enchantment>>.Instance.Write(
-                    node: node,
-                    item: item.Enchantments,
-                    name: nameof(item.Enchantments),
-                    fieldIndex: (int)OblivionMod_FieldIndex.Enchantments,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Enchantments));
-            }
-            if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Spells) ?? true))
-            {
-                LoquiXmlTranslation<Group<SpellUnleveled>>.Instance.Write(
-                    node: node,
-                    item: item.Spells,
-                    name: nameof(item.Spells),
-                    fieldIndex: (int)OblivionMod_FieldIndex.Spells,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Spells));
-            }
-            if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Birthsigns) ?? true))
-            {
-                LoquiXmlTranslation<Group<Birthsign>>.Instance.Write(
-                    node: node,
-                    item: item.Birthsigns,
-                    name: nameof(item.Birthsigns),
-                    fieldIndex: (int)OblivionMod_FieldIndex.Birthsigns,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Birthsigns));
-            }
-            if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Activators) ?? true))
-            {
-                LoquiXmlTranslation<Group<Activator>>.Instance.Write(
-                    node: node,
-                    item: item.Activators,
-                    name: nameof(item.Activators),
-                    fieldIndex: (int)OblivionMod_FieldIndex.Activators,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Activators));
-            }
-            if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.AlchemicalApparatus) ?? true))
-            {
-                LoquiXmlTranslation<Group<AlchemicalApparatus>>.Instance.Write(
-                    node: node,
-                    item: item.AlchemicalApparatus,
-                    name: nameof(item.AlchemicalApparatus),
-                    fieldIndex: (int)OblivionMod_FieldIndex.AlchemicalApparatus,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.AlchemicalApparatus));
-            }
-            if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Armors) ?? true))
-            {
-                LoquiXmlTranslation<Group<Armor>>.Instance.Write(
-                    node: node,
-                    item: item.Armors,
-                    name: nameof(item.Armors),
-                    fieldIndex: (int)OblivionMod_FieldIndex.Armors,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Armors));
-            }
-            if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Books) ?? true))
-            {
-                LoquiXmlTranslation<Group<Book>>.Instance.Write(
-                    node: node,
-                    item: item.Books,
-                    name: nameof(item.Books),
-                    fieldIndex: (int)OblivionMod_FieldIndex.Books,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Books));
-            }
-            if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Clothes) ?? true))
-            {
-                LoquiXmlTranslation<Group<Clothing>>.Instance.Write(
-                    node: node,
-                    item: item.Clothes,
-                    name: nameof(item.Clothes),
-                    fieldIndex: (int)OblivionMod_FieldIndex.Clothes,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Clothes));
-            }
-            if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Containers) ?? true))
-            {
-                LoquiXmlTranslation<Group<Container>>.Instance.Write(
-                    node: node,
-                    item: item.Containers,
-                    name: nameof(item.Containers),
-                    fieldIndex: (int)OblivionMod_FieldIndex.Containers,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Containers));
-            }
-            if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Doors) ?? true))
-            {
-                LoquiXmlTranslation<Group<Door>>.Instance.Write(
-                    node: node,
-                    item: item.Doors,
-                    name: nameof(item.Doors),
-                    fieldIndex: (int)OblivionMod_FieldIndex.Doors,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Doors));
-            }
-            if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Ingredients) ?? true))
-            {
-                LoquiXmlTranslation<Group<Ingredient>>.Instance.Write(
-                    node: node,
-                    item: item.Ingredients,
-                    name: nameof(item.Ingredients),
-                    fieldIndex: (int)OblivionMod_FieldIndex.Ingredients,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Ingredients));
-            }
-            if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Lights) ?? true))
-            {
-                LoquiXmlTranslation<Group<Light>>.Instance.Write(
-                    node: node,
-                    item: item.Lights,
-                    name: nameof(item.Lights),
-                    fieldIndex: (int)OblivionMod_FieldIndex.Lights,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Lights));
-            }
-            if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Miscellaneous) ?? true))
-            {
-                LoquiXmlTranslation<Group<Miscellaneous>>.Instance.Write(
-                    node: node,
-                    item: item.Miscellaneous,
-                    name: nameof(item.Miscellaneous),
-                    fieldIndex: (int)OblivionMod_FieldIndex.Miscellaneous,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Miscellaneous));
-            }
-            if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Statics) ?? true))
-            {
-                LoquiXmlTranslation<Group<Static>>.Instance.Write(
-                    node: node,
-                    item: item.Statics,
-                    name: nameof(item.Statics),
-                    fieldIndex: (int)OblivionMod_FieldIndex.Statics,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Statics));
-            }
-            if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Grasses) ?? true))
-            {
-                LoquiXmlTranslation<Group<Grass>>.Instance.Write(
-                    node: node,
-                    item: item.Grasses,
-                    name: nameof(item.Grasses),
-                    fieldIndex: (int)OblivionMod_FieldIndex.Grasses,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Grasses));
-            }
-            if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Trees) ?? true))
-            {
-                LoquiXmlTranslation<Group<Tree>>.Instance.Write(
-                    node: node,
-                    item: item.Trees,
-                    name: nameof(item.Trees),
-                    fieldIndex: (int)OblivionMod_FieldIndex.Trees,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Trees));
-            }
-            if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Flora) ?? true))
-            {
-                LoquiXmlTranslation<Group<Flora>>.Instance.Write(
-                    node: node,
-                    item: item.Flora,
-                    name: nameof(item.Flora),
-                    fieldIndex: (int)OblivionMod_FieldIndex.Flora,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Flora));
-            }
-            if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Furnature) ?? true))
-            {
-                LoquiXmlTranslation<Group<Furnature>>.Instance.Write(
-                    node: node,
-                    item: item.Furnature,
-                    name: nameof(item.Furnature),
-                    fieldIndex: (int)OblivionMod_FieldIndex.Furnature,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Furnature));
-            }
-            if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Weapons) ?? true))
-            {
-                LoquiXmlTranslation<Group<Weapon>>.Instance.Write(
-                    node: node,
-                    item: item.Weapons,
-                    name: nameof(item.Weapons),
-                    fieldIndex: (int)OblivionMod_FieldIndex.Weapons,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Weapons));
-            }
-            if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Ammo) ?? true))
-            {
-                LoquiXmlTranslation<Group<Ammo>>.Instance.Write(
-                    node: node,
-                    item: item.Ammo,
-                    name: nameof(item.Ammo),
-                    fieldIndex: (int)OblivionMod_FieldIndex.Ammo,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Ammo));
-            }
-            if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.NPCs) ?? true))
-            {
-                LoquiXmlTranslation<Group<NPC>>.Instance.Write(
-                    node: node,
-                    item: item.NPCs,
-                    name: nameof(item.NPCs),
-                    fieldIndex: (int)OblivionMod_FieldIndex.NPCs,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.NPCs));
-            }
-            if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Creatures) ?? true))
-            {
-                LoquiXmlTranslation<Group<Creature>>.Instance.Write(
-                    node: node,
-                    item: item.Creatures,
-                    name: nameof(item.Creatures),
-                    fieldIndex: (int)OblivionMod_FieldIndex.Creatures,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Creatures));
-            }
-            if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.LeveledCreatures) ?? true))
-            {
-                LoquiXmlTranslation<Group<LeveledCreature>>.Instance.Write(
-                    node: node,
-                    item: item.LeveledCreatures,
-                    name: nameof(item.LeveledCreatures),
-                    fieldIndex: (int)OblivionMod_FieldIndex.LeveledCreatures,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.LeveledCreatures));
-            }
-            if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.SoulGems) ?? true))
-            {
-                LoquiXmlTranslation<Group<SoulGem>>.Instance.Write(
-                    node: node,
-                    item: item.SoulGems,
-                    name: nameof(item.SoulGems),
-                    fieldIndex: (int)OblivionMod_FieldIndex.SoulGems,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.SoulGems));
-            }
-            if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Keys) ?? true))
-            {
-                LoquiXmlTranslation<Group<Key>>.Instance.Write(
-                    node: node,
-                    item: item.Keys,
-                    name: nameof(item.Keys),
-                    fieldIndex: (int)OblivionMod_FieldIndex.Keys,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Keys));
-            }
-            if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Potions) ?? true))
-            {
-                LoquiXmlTranslation<Group<Potion>>.Instance.Write(
-                    node: node,
-                    item: item.Potions,
-                    name: nameof(item.Potions),
-                    fieldIndex: (int)OblivionMod_FieldIndex.Potions,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Potions));
-            }
-            if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Subspaces) ?? true))
-            {
-                LoquiXmlTranslation<Group<Subspace>>.Instance.Write(
-                    node: node,
-                    item: item.Subspaces,
-                    name: nameof(item.Subspaces),
-                    fieldIndex: (int)OblivionMod_FieldIndex.Subspaces,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Subspaces));
-            }
-            if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.SigilStones) ?? true))
-            {
-                LoquiXmlTranslation<Group<SigilStone>>.Instance.Write(
-                    node: node,
-                    item: item.SigilStones,
-                    name: nameof(item.SigilStones),
-                    fieldIndex: (int)OblivionMod_FieldIndex.SigilStones,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.SigilStones));
-            }
-            if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.LeveledItems) ?? true))
-            {
-                LoquiXmlTranslation<Group<LeveledItem>>.Instance.Write(
-                    node: node,
-                    item: item.LeveledItems,
-                    name: nameof(item.LeveledItems),
-                    fieldIndex: (int)OblivionMod_FieldIndex.LeveledItems,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.LeveledItems));
-            }
-            if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Weathers) ?? true))
-            {
-                LoquiXmlTranslation<Group<Weather>>.Instance.Write(
-                    node: node,
-                    item: item.Weathers,
-                    name: nameof(item.Weathers),
-                    fieldIndex: (int)OblivionMod_FieldIndex.Weathers,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Weathers));
-            }
-            if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Climates) ?? true))
-            {
-                LoquiXmlTranslation<Group<Climate>>.Instance.Write(
-                    node: node,
-                    item: item.Climates,
-                    name: nameof(item.Climates),
-                    fieldIndex: (int)OblivionMod_FieldIndex.Climates,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Climates));
-            }
-            if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Regions) ?? true))
-            {
-                LoquiXmlTranslation<Group<Region>>.Instance.Write(
-                    node: node,
-                    item: item.Regions,
-                    name: nameof(item.Regions),
-                    fieldIndex: (int)OblivionMod_FieldIndex.Regions,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Regions));
-            }
-            if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Cells) ?? true))
-            {
-                LoquiXmlTranslation<ListGroup<CellBlock>>.Instance.Write(
-                    node: node,
-                    item: item.Cells,
-                    name: nameof(item.Cells),
-                    fieldIndex: (int)OblivionMod_FieldIndex.Cells,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Cells));
-            }
-            if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Worldspaces) ?? true))
-            {
-                LoquiXmlTranslation<Group<Worldspace>>.Instance.Write(
-                    node: node,
-                    item: item.Worldspaces,
-                    name: nameof(item.Worldspaces),
-                    fieldIndex: (int)OblivionMod_FieldIndex.Worldspaces,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Worldspaces));
-            }
-            if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.DialogTopics) ?? true))
-            {
-                LoquiXmlTranslation<Group<DialogTopic>>.Instance.Write(
-                    node: node,
-                    item: item.DialogTopics,
-                    name: nameof(item.DialogTopics),
-                    fieldIndex: (int)OblivionMod_FieldIndex.DialogTopics,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.DialogTopics));
-            }
-            if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Quests) ?? true))
-            {
-                LoquiXmlTranslation<Group<Quest>>.Instance.Write(
-                    node: node,
-                    item: item.Quests,
-                    name: nameof(item.Quests),
-                    fieldIndex: (int)OblivionMod_FieldIndex.Quests,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Quests));
-            }
-            if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.IdleAnimations) ?? true))
-            {
-                LoquiXmlTranslation<Group<IdleAnimation>>.Instance.Write(
-                    node: node,
-                    item: item.IdleAnimations,
-                    name: nameof(item.IdleAnimations),
-                    fieldIndex: (int)OblivionMod_FieldIndex.IdleAnimations,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.IdleAnimations));
-            }
-            if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.AIPackages) ?? true))
-            {
-                LoquiXmlTranslation<Group<AIPackage>>.Instance.Write(
-                    node: node,
-                    item: item.AIPackages,
-                    name: nameof(item.AIPackages),
-                    fieldIndex: (int)OblivionMod_FieldIndex.AIPackages,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.AIPackages));
-            }
-            if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.CombatStyles) ?? true))
-            {
-                LoquiXmlTranslation<Group<CombatStyle>>.Instance.Write(
-                    node: node,
-                    item: item.CombatStyles,
-                    name: nameof(item.CombatStyles),
-                    fieldIndex: (int)OblivionMod_FieldIndex.CombatStyles,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.CombatStyles));
-            }
-            if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.LoadScreens) ?? true))
-            {
-                LoquiXmlTranslation<Group<LoadScreen>>.Instance.Write(
-                    node: node,
-                    item: item.LoadScreens,
-                    name: nameof(item.LoadScreens),
-                    fieldIndex: (int)OblivionMod_FieldIndex.LoadScreens,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.LoadScreens));
-            }
-            if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.LeveledSpells) ?? true))
-            {
-                LoquiXmlTranslation<Group<LeveledSpell>>.Instance.Write(
-                    node: node,
-                    item: item.LeveledSpells,
-                    name: nameof(item.LeveledSpells),
-                    fieldIndex: (int)OblivionMod_FieldIndex.LeveledSpells,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.LeveledSpells));
-            }
-            if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.AnimatedObjects) ?? true))
-            {
-                LoquiXmlTranslation<Group<AnimatedObject>>.Instance.Write(
-                    node: node,
-                    item: item.AnimatedObjects,
-                    name: nameof(item.AnimatedObjects),
-                    fieldIndex: (int)OblivionMod_FieldIndex.AnimatedObjects,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.AnimatedObjects));
-            }
-            if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Waters) ?? true))
-            {
-                LoquiXmlTranslation<Group<Water>>.Instance.Write(
-                    node: node,
-                    item: item.Waters,
-                    name: nameof(item.Waters),
-                    fieldIndex: (int)OblivionMod_FieldIndex.Waters,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Waters));
-            }
-            if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.EffectShaders) ?? true))
-            {
-                LoquiXmlTranslation<Group<EffectShader>>.Instance.Write(
-                    node: node,
-                    item: item.EffectShaders,
-                    name: nameof(item.EffectShaders),
-                    fieldIndex: (int)OblivionMod_FieldIndex.EffectShaders,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.EffectShaders));
-            }
-        }
-
         public static void FillPublic_Xml(
             this OblivionMod item,
             XElement node,
@@ -9937,744 +9320,637 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        #region Binary Translation
-        #region Binary Write
-        public static void Write_Binary(
-            MutagenWriter writer,
-            OblivionMod item,
-            ModKey modKey,
-            RecordTypeConverter recordTypeConverter,
+    }
+    #endregion
+
+    #region Modules
+    #region Xml Translation
+    public partial class OblivionModXmlTranslation
+    {
+        public readonly static OblivionModXmlTranslation Instance = new OblivionModXmlTranslation();
+
+        public static void WriteToNode_Xml(
+            IOblivionModGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            if (item.TES4_IsSet
+                && (translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.TES4) ?? true))
+            {
+                LoquiXmlTranslation<TES4>.Instance.Write(
+                    node: node,
+                    item: item.TES4,
+                    name: nameof(item.TES4),
+                    fieldIndex: (int)OblivionMod_FieldIndex.TES4,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.TES4));
+            }
+            if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.GameSettings) ?? true))
+            {
+                LoquiXmlTranslation<Group<GameSetting>>.Instance.Write(
+                    node: node,
+                    item: item.GameSettings,
+                    name: nameof(item.GameSettings),
+                    fieldIndex: (int)OblivionMod_FieldIndex.GameSettings,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.GameSettings));
+            }
+            if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Globals) ?? true))
+            {
+                LoquiXmlTranslation<Group<Global>>.Instance.Write(
+                    node: node,
+                    item: item.Globals,
+                    name: nameof(item.Globals),
+                    fieldIndex: (int)OblivionMod_FieldIndex.Globals,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Globals));
+            }
+            if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Classes) ?? true))
+            {
+                LoquiXmlTranslation<Group<Class>>.Instance.Write(
+                    node: node,
+                    item: item.Classes,
+                    name: nameof(item.Classes),
+                    fieldIndex: (int)OblivionMod_FieldIndex.Classes,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Classes));
+            }
+            if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Factions) ?? true))
+            {
+                LoquiXmlTranslation<Group<Faction>>.Instance.Write(
+                    node: node,
+                    item: item.Factions,
+                    name: nameof(item.Factions),
+                    fieldIndex: (int)OblivionMod_FieldIndex.Factions,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Factions));
+            }
+            if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Hairs) ?? true))
+            {
+                LoquiXmlTranslation<Group<Hair>>.Instance.Write(
+                    node: node,
+                    item: item.Hairs,
+                    name: nameof(item.Hairs),
+                    fieldIndex: (int)OblivionMod_FieldIndex.Hairs,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Hairs));
+            }
+            if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Eyes) ?? true))
+            {
+                LoquiXmlTranslation<Group<Eye>>.Instance.Write(
+                    node: node,
+                    item: item.Eyes,
+                    name: nameof(item.Eyes),
+                    fieldIndex: (int)OblivionMod_FieldIndex.Eyes,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Eyes));
+            }
+            if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Races) ?? true))
+            {
+                LoquiXmlTranslation<Group<Race>>.Instance.Write(
+                    node: node,
+                    item: item.Races,
+                    name: nameof(item.Races),
+                    fieldIndex: (int)OblivionMod_FieldIndex.Races,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Races));
+            }
+            if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Sounds) ?? true))
+            {
+                LoquiXmlTranslation<Group<Sound>>.Instance.Write(
+                    node: node,
+                    item: item.Sounds,
+                    name: nameof(item.Sounds),
+                    fieldIndex: (int)OblivionMod_FieldIndex.Sounds,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Sounds));
+            }
+            if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Skills) ?? true))
+            {
+                LoquiXmlTranslation<Group<SkillRecord>>.Instance.Write(
+                    node: node,
+                    item: item.Skills,
+                    name: nameof(item.Skills),
+                    fieldIndex: (int)OblivionMod_FieldIndex.Skills,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Skills));
+            }
+            if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.MagicEffects) ?? true))
+            {
+                LoquiXmlTranslation<Group<MagicEffect>>.Instance.Write(
+                    node: node,
+                    item: item.MagicEffects,
+                    name: nameof(item.MagicEffects),
+                    fieldIndex: (int)OblivionMod_FieldIndex.MagicEffects,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.MagicEffects));
+            }
+            if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Scripts) ?? true))
+            {
+                LoquiXmlTranslation<Group<Script>>.Instance.Write(
+                    node: node,
+                    item: item.Scripts,
+                    name: nameof(item.Scripts),
+                    fieldIndex: (int)OblivionMod_FieldIndex.Scripts,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Scripts));
+            }
+            if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.LandTextures) ?? true))
+            {
+                LoquiXmlTranslation<Group<LandTexture>>.Instance.Write(
+                    node: node,
+                    item: item.LandTextures,
+                    name: nameof(item.LandTextures),
+                    fieldIndex: (int)OblivionMod_FieldIndex.LandTextures,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.LandTextures));
+            }
+            if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Enchantments) ?? true))
+            {
+                LoquiXmlTranslation<Group<Enchantment>>.Instance.Write(
+                    node: node,
+                    item: item.Enchantments,
+                    name: nameof(item.Enchantments),
+                    fieldIndex: (int)OblivionMod_FieldIndex.Enchantments,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Enchantments));
+            }
+            if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Spells) ?? true))
+            {
+                LoquiXmlTranslation<Group<SpellUnleveled>>.Instance.Write(
+                    node: node,
+                    item: item.Spells,
+                    name: nameof(item.Spells),
+                    fieldIndex: (int)OblivionMod_FieldIndex.Spells,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Spells));
+            }
+            if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Birthsigns) ?? true))
+            {
+                LoquiXmlTranslation<Group<Birthsign>>.Instance.Write(
+                    node: node,
+                    item: item.Birthsigns,
+                    name: nameof(item.Birthsigns),
+                    fieldIndex: (int)OblivionMod_FieldIndex.Birthsigns,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Birthsigns));
+            }
+            if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Activators) ?? true))
+            {
+                LoquiXmlTranslation<Group<Activator>>.Instance.Write(
+                    node: node,
+                    item: item.Activators,
+                    name: nameof(item.Activators),
+                    fieldIndex: (int)OblivionMod_FieldIndex.Activators,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Activators));
+            }
+            if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.AlchemicalApparatus) ?? true))
+            {
+                LoquiXmlTranslation<Group<AlchemicalApparatus>>.Instance.Write(
+                    node: node,
+                    item: item.AlchemicalApparatus,
+                    name: nameof(item.AlchemicalApparatus),
+                    fieldIndex: (int)OblivionMod_FieldIndex.AlchemicalApparatus,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.AlchemicalApparatus));
+            }
+            if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Armors) ?? true))
+            {
+                LoquiXmlTranslation<Group<Armor>>.Instance.Write(
+                    node: node,
+                    item: item.Armors,
+                    name: nameof(item.Armors),
+                    fieldIndex: (int)OblivionMod_FieldIndex.Armors,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Armors));
+            }
+            if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Books) ?? true))
+            {
+                LoquiXmlTranslation<Group<Book>>.Instance.Write(
+                    node: node,
+                    item: item.Books,
+                    name: nameof(item.Books),
+                    fieldIndex: (int)OblivionMod_FieldIndex.Books,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Books));
+            }
+            if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Clothes) ?? true))
+            {
+                LoquiXmlTranslation<Group<Clothing>>.Instance.Write(
+                    node: node,
+                    item: item.Clothes,
+                    name: nameof(item.Clothes),
+                    fieldIndex: (int)OblivionMod_FieldIndex.Clothes,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Clothes));
+            }
+            if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Containers) ?? true))
+            {
+                LoquiXmlTranslation<Group<Container>>.Instance.Write(
+                    node: node,
+                    item: item.Containers,
+                    name: nameof(item.Containers),
+                    fieldIndex: (int)OblivionMod_FieldIndex.Containers,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Containers));
+            }
+            if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Doors) ?? true))
+            {
+                LoquiXmlTranslation<Group<Door>>.Instance.Write(
+                    node: node,
+                    item: item.Doors,
+                    name: nameof(item.Doors),
+                    fieldIndex: (int)OblivionMod_FieldIndex.Doors,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Doors));
+            }
+            if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Ingredients) ?? true))
+            {
+                LoquiXmlTranslation<Group<Ingredient>>.Instance.Write(
+                    node: node,
+                    item: item.Ingredients,
+                    name: nameof(item.Ingredients),
+                    fieldIndex: (int)OblivionMod_FieldIndex.Ingredients,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Ingredients));
+            }
+            if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Lights) ?? true))
+            {
+                LoquiXmlTranslation<Group<Light>>.Instance.Write(
+                    node: node,
+                    item: item.Lights,
+                    name: nameof(item.Lights),
+                    fieldIndex: (int)OblivionMod_FieldIndex.Lights,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Lights));
+            }
+            if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Miscellaneous) ?? true))
+            {
+                LoquiXmlTranslation<Group<Miscellaneous>>.Instance.Write(
+                    node: node,
+                    item: item.Miscellaneous,
+                    name: nameof(item.Miscellaneous),
+                    fieldIndex: (int)OblivionMod_FieldIndex.Miscellaneous,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Miscellaneous));
+            }
+            if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Statics) ?? true))
+            {
+                LoquiXmlTranslation<Group<Static>>.Instance.Write(
+                    node: node,
+                    item: item.Statics,
+                    name: nameof(item.Statics),
+                    fieldIndex: (int)OblivionMod_FieldIndex.Statics,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Statics));
+            }
+            if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Grasses) ?? true))
+            {
+                LoquiXmlTranslation<Group<Grass>>.Instance.Write(
+                    node: node,
+                    item: item.Grasses,
+                    name: nameof(item.Grasses),
+                    fieldIndex: (int)OblivionMod_FieldIndex.Grasses,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Grasses));
+            }
+            if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Trees) ?? true))
+            {
+                LoquiXmlTranslation<Group<Tree>>.Instance.Write(
+                    node: node,
+                    item: item.Trees,
+                    name: nameof(item.Trees),
+                    fieldIndex: (int)OblivionMod_FieldIndex.Trees,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Trees));
+            }
+            if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Flora) ?? true))
+            {
+                LoquiXmlTranslation<Group<Flora>>.Instance.Write(
+                    node: node,
+                    item: item.Flora,
+                    name: nameof(item.Flora),
+                    fieldIndex: (int)OblivionMod_FieldIndex.Flora,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Flora));
+            }
+            if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Furnature) ?? true))
+            {
+                LoquiXmlTranslation<Group<Furnature>>.Instance.Write(
+                    node: node,
+                    item: item.Furnature,
+                    name: nameof(item.Furnature),
+                    fieldIndex: (int)OblivionMod_FieldIndex.Furnature,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Furnature));
+            }
+            if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Weapons) ?? true))
+            {
+                LoquiXmlTranslation<Group<Weapon>>.Instance.Write(
+                    node: node,
+                    item: item.Weapons,
+                    name: nameof(item.Weapons),
+                    fieldIndex: (int)OblivionMod_FieldIndex.Weapons,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Weapons));
+            }
+            if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Ammo) ?? true))
+            {
+                LoquiXmlTranslation<Group<Ammo>>.Instance.Write(
+                    node: node,
+                    item: item.Ammo,
+                    name: nameof(item.Ammo),
+                    fieldIndex: (int)OblivionMod_FieldIndex.Ammo,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Ammo));
+            }
+            if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.NPCs) ?? true))
+            {
+                LoquiXmlTranslation<Group<NPC>>.Instance.Write(
+                    node: node,
+                    item: item.NPCs,
+                    name: nameof(item.NPCs),
+                    fieldIndex: (int)OblivionMod_FieldIndex.NPCs,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.NPCs));
+            }
+            if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Creatures) ?? true))
+            {
+                LoquiXmlTranslation<Group<Creature>>.Instance.Write(
+                    node: node,
+                    item: item.Creatures,
+                    name: nameof(item.Creatures),
+                    fieldIndex: (int)OblivionMod_FieldIndex.Creatures,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Creatures));
+            }
+            if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.LeveledCreatures) ?? true))
+            {
+                LoquiXmlTranslation<Group<LeveledCreature>>.Instance.Write(
+                    node: node,
+                    item: item.LeveledCreatures,
+                    name: nameof(item.LeveledCreatures),
+                    fieldIndex: (int)OblivionMod_FieldIndex.LeveledCreatures,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.LeveledCreatures));
+            }
+            if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.SoulGems) ?? true))
+            {
+                LoquiXmlTranslation<Group<SoulGem>>.Instance.Write(
+                    node: node,
+                    item: item.SoulGems,
+                    name: nameof(item.SoulGems),
+                    fieldIndex: (int)OblivionMod_FieldIndex.SoulGems,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.SoulGems));
+            }
+            if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Keys) ?? true))
+            {
+                LoquiXmlTranslation<Group<Key>>.Instance.Write(
+                    node: node,
+                    item: item.Keys,
+                    name: nameof(item.Keys),
+                    fieldIndex: (int)OblivionMod_FieldIndex.Keys,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Keys));
+            }
+            if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Potions) ?? true))
+            {
+                LoquiXmlTranslation<Group<Potion>>.Instance.Write(
+                    node: node,
+                    item: item.Potions,
+                    name: nameof(item.Potions),
+                    fieldIndex: (int)OblivionMod_FieldIndex.Potions,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Potions));
+            }
+            if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Subspaces) ?? true))
+            {
+                LoquiXmlTranslation<Group<Subspace>>.Instance.Write(
+                    node: node,
+                    item: item.Subspaces,
+                    name: nameof(item.Subspaces),
+                    fieldIndex: (int)OblivionMod_FieldIndex.Subspaces,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Subspaces));
+            }
+            if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.SigilStones) ?? true))
+            {
+                LoquiXmlTranslation<Group<SigilStone>>.Instance.Write(
+                    node: node,
+                    item: item.SigilStones,
+                    name: nameof(item.SigilStones),
+                    fieldIndex: (int)OblivionMod_FieldIndex.SigilStones,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.SigilStones));
+            }
+            if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.LeveledItems) ?? true))
+            {
+                LoquiXmlTranslation<Group<LeveledItem>>.Instance.Write(
+                    node: node,
+                    item: item.LeveledItems,
+                    name: nameof(item.LeveledItems),
+                    fieldIndex: (int)OblivionMod_FieldIndex.LeveledItems,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.LeveledItems));
+            }
+            if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Weathers) ?? true))
+            {
+                LoquiXmlTranslation<Group<Weather>>.Instance.Write(
+                    node: node,
+                    item: item.Weathers,
+                    name: nameof(item.Weathers),
+                    fieldIndex: (int)OblivionMod_FieldIndex.Weathers,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Weathers));
+            }
+            if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Climates) ?? true))
+            {
+                LoquiXmlTranslation<Group<Climate>>.Instance.Write(
+                    node: node,
+                    item: item.Climates,
+                    name: nameof(item.Climates),
+                    fieldIndex: (int)OblivionMod_FieldIndex.Climates,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Climates));
+            }
+            if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Regions) ?? true))
+            {
+                LoquiXmlTranslation<Group<Region>>.Instance.Write(
+                    node: node,
+                    item: item.Regions,
+                    name: nameof(item.Regions),
+                    fieldIndex: (int)OblivionMod_FieldIndex.Regions,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Regions));
+            }
+            if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Cells) ?? true))
+            {
+                LoquiXmlTranslation<ListGroup<CellBlock>>.Instance.Write(
+                    node: node,
+                    item: item.Cells,
+                    name: nameof(item.Cells),
+                    fieldIndex: (int)OblivionMod_FieldIndex.Cells,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Cells));
+            }
+            if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Worldspaces) ?? true))
+            {
+                LoquiXmlTranslation<Group<Worldspace>>.Instance.Write(
+                    node: node,
+                    item: item.Worldspaces,
+                    name: nameof(item.Worldspaces),
+                    fieldIndex: (int)OblivionMod_FieldIndex.Worldspaces,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Worldspaces));
+            }
+            if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.DialogTopics) ?? true))
+            {
+                LoquiXmlTranslation<Group<DialogTopic>>.Instance.Write(
+                    node: node,
+                    item: item.DialogTopics,
+                    name: nameof(item.DialogTopics),
+                    fieldIndex: (int)OblivionMod_FieldIndex.DialogTopics,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.DialogTopics));
+            }
+            if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Quests) ?? true))
+            {
+                LoquiXmlTranslation<Group<Quest>>.Instance.Write(
+                    node: node,
+                    item: item.Quests,
+                    name: nameof(item.Quests),
+                    fieldIndex: (int)OblivionMod_FieldIndex.Quests,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Quests));
+            }
+            if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.IdleAnimations) ?? true))
+            {
+                LoquiXmlTranslation<Group<IdleAnimation>>.Instance.Write(
+                    node: node,
+                    item: item.IdleAnimations,
+                    name: nameof(item.IdleAnimations),
+                    fieldIndex: (int)OblivionMod_FieldIndex.IdleAnimations,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.IdleAnimations));
+            }
+            if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.AIPackages) ?? true))
+            {
+                LoquiXmlTranslation<Group<AIPackage>>.Instance.Write(
+                    node: node,
+                    item: item.AIPackages,
+                    name: nameof(item.AIPackages),
+                    fieldIndex: (int)OblivionMod_FieldIndex.AIPackages,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.AIPackages));
+            }
+            if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.CombatStyles) ?? true))
+            {
+                LoquiXmlTranslation<Group<CombatStyle>>.Instance.Write(
+                    node: node,
+                    item: item.CombatStyles,
+                    name: nameof(item.CombatStyles),
+                    fieldIndex: (int)OblivionMod_FieldIndex.CombatStyles,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.CombatStyles));
+            }
+            if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.LoadScreens) ?? true))
+            {
+                LoquiXmlTranslation<Group<LoadScreen>>.Instance.Write(
+                    node: node,
+                    item: item.LoadScreens,
+                    name: nameof(item.LoadScreens),
+                    fieldIndex: (int)OblivionMod_FieldIndex.LoadScreens,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.LoadScreens));
+            }
+            if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.LeveledSpells) ?? true))
+            {
+                LoquiXmlTranslation<Group<LeveledSpell>>.Instance.Write(
+                    node: node,
+                    item: item.LeveledSpells,
+                    name: nameof(item.LeveledSpells),
+                    fieldIndex: (int)OblivionMod_FieldIndex.LeveledSpells,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.LeveledSpells));
+            }
+            if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.AnimatedObjects) ?? true))
+            {
+                LoquiXmlTranslation<Group<AnimatedObject>>.Instance.Write(
+                    node: node,
+                    item: item.AnimatedObjects,
+                    name: nameof(item.AnimatedObjects),
+                    fieldIndex: (int)OblivionMod_FieldIndex.AnimatedObjects,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.AnimatedObjects));
+            }
+            if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Waters) ?? true))
+            {
+                LoquiXmlTranslation<Group<Water>>.Instance.Write(
+                    node: node,
+                    item: item.Waters,
+                    name: nameof(item.Waters),
+                    fieldIndex: (int)OblivionMod_FieldIndex.Waters,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Waters));
+            }
+            if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.EffectShaders) ?? true))
+            {
+                LoquiXmlTranslation<Group<EffectShader>>.Instance.Write(
+                    node: node,
+                    item: item.EffectShaders,
+                    name: nameof(item.EffectShaders),
+                    fieldIndex: (int)OblivionMod_FieldIndex.EffectShaders,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.EffectShaders));
+            }
+        }
+
+        #region Xml Write
+        public void Write_Xml(
+            XElement node,
+            IOblivionModGetter item,
             bool doMasks,
             out OblivionMod_ErrorMask errorMask,
-            GroupMask importMask = null)
+            OblivionMod_TranslationMask translationMask,
+            string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_Binary(
-                importMask: importMask,
-                modKey: modKey,
-                writer: writer,
+            Write_Xml(
+                name: name,
+                node: node,
                 item: item,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMaskBuilder);
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal());
             errorMask = OblivionMod_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void Write_Binary(
-            MutagenWriter writer,
-            OblivionMod item,
-            ModKey modKey,
-            RecordTypeConverter recordTypeConverter,
+        public void Write_Xml(
+            XElement node,
+            IOblivionModGetter item,
             ErrorMaskBuilder errorMask,
-            GroupMask importMask = null)
+            TranslationCrystal translationMask,
+            string name = null)
         {
-            Write_Binary_RecordTypes(
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.OblivionMod");
+            node.Add(elem);
+            if (name != null)
+            {
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.OblivionMod");
+            }
+            WriteToNode_Xml(
                 item: item,
-                writer: writer,
-                importMask: importMask,
-                modKey: modKey,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMask);
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
         }
-        #endregion
-
-        public static void Write_Binary_RecordTypes(
-            OblivionMod item,
-            MutagenWriter writer,
-            GroupMask importMask,
-            ModKey modKey,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
-        {
-            MasterReferences masterReferences = new MasterReferences(item.TES4.MasterReferences, modKey);
-            if (item.TES4_IsSet)
-            {
-                LoquiBinaryTranslation<TES4>.Instance.Write(
-                    writer: writer,
-                    item: item.TES4,
-                    fieldIndex: (int)OblivionMod_FieldIndex.TES4,
-                    errorMask: errorMask,
-                    masterReferences: masterReferences);
-            }
-            if (importMask?.GameSettings ?? true)
-            {
-                if (item.GameSettings.Items.Count > 0)
-                {
-                    LoquiBinaryTranslation<Group<GameSetting>>.Instance.Write(
-                        writer: writer,
-                        item: item.GameSettings,
-                        fieldIndex: (int)OblivionMod_FieldIndex.GameSettings,
-                        errorMask: errorMask,
-                        masterReferences: masterReferences);
-                }
-            }
-            if (importMask?.Globals ?? true)
-            {
-                if (item.Globals.Items.Count > 0)
-                {
-                    LoquiBinaryTranslation<Group<Global>>.Instance.Write(
-                        writer: writer,
-                        item: item.Globals,
-                        fieldIndex: (int)OblivionMod_FieldIndex.Globals,
-                        errorMask: errorMask,
-                        masterReferences: masterReferences);
-                }
-            }
-            if (importMask?.Classes ?? true)
-            {
-                if (item.Classes.Items.Count > 0)
-                {
-                    LoquiBinaryTranslation<Group<Class>>.Instance.Write(
-                        writer: writer,
-                        item: item.Classes,
-                        fieldIndex: (int)OblivionMod_FieldIndex.Classes,
-                        errorMask: errorMask,
-                        masterReferences: masterReferences);
-                }
-            }
-            if (importMask?.Factions ?? true)
-            {
-                if (item.Factions.Items.Count > 0)
-                {
-                    LoquiBinaryTranslation<Group<Faction>>.Instance.Write(
-                        writer: writer,
-                        item: item.Factions,
-                        fieldIndex: (int)OblivionMod_FieldIndex.Factions,
-                        errorMask: errorMask,
-                        masterReferences: masterReferences);
-                }
-            }
-            if (importMask?.Hairs ?? true)
-            {
-                if (item.Hairs.Items.Count > 0)
-                {
-                    LoquiBinaryTranslation<Group<Hair>>.Instance.Write(
-                        writer: writer,
-                        item: item.Hairs,
-                        fieldIndex: (int)OblivionMod_FieldIndex.Hairs,
-                        errorMask: errorMask,
-                        masterReferences: masterReferences);
-                }
-            }
-            if (importMask?.Eyes ?? true)
-            {
-                if (item.Eyes.Items.Count > 0)
-                {
-                    LoquiBinaryTranslation<Group<Eye>>.Instance.Write(
-                        writer: writer,
-                        item: item.Eyes,
-                        fieldIndex: (int)OblivionMod_FieldIndex.Eyes,
-                        errorMask: errorMask,
-                        masterReferences: masterReferences);
-                }
-            }
-            if (importMask?.Races ?? true)
-            {
-                if (item.Races.Items.Count > 0)
-                {
-                    LoquiBinaryTranslation<Group<Race>>.Instance.Write(
-                        writer: writer,
-                        item: item.Races,
-                        fieldIndex: (int)OblivionMod_FieldIndex.Races,
-                        errorMask: errorMask,
-                        masterReferences: masterReferences);
-                }
-            }
-            if (importMask?.Sounds ?? true)
-            {
-                if (item.Sounds.Items.Count > 0)
-                {
-                    LoquiBinaryTranslation<Group<Sound>>.Instance.Write(
-                        writer: writer,
-                        item: item.Sounds,
-                        fieldIndex: (int)OblivionMod_FieldIndex.Sounds,
-                        errorMask: errorMask,
-                        masterReferences: masterReferences);
-                }
-            }
-            if (importMask?.Skills ?? true)
-            {
-                if (item.Skills.Items.Count > 0)
-                {
-                    LoquiBinaryTranslation<Group<SkillRecord>>.Instance.Write(
-                        writer: writer,
-                        item: item.Skills,
-                        fieldIndex: (int)OblivionMod_FieldIndex.Skills,
-                        errorMask: errorMask,
-                        masterReferences: masterReferences);
-                }
-            }
-            if (importMask?.MagicEffects ?? true)
-            {
-                if (item.MagicEffects.Items.Count > 0)
-                {
-                    LoquiBinaryTranslation<Group<MagicEffect>>.Instance.Write(
-                        writer: writer,
-                        item: item.MagicEffects,
-                        fieldIndex: (int)OblivionMod_FieldIndex.MagicEffects,
-                        errorMask: errorMask,
-                        masterReferences: masterReferences);
-                }
-            }
-            if (importMask?.Scripts ?? true)
-            {
-                if (item.Scripts.Items.Count > 0)
-                {
-                    LoquiBinaryTranslation<Group<Script>>.Instance.Write(
-                        writer: writer,
-                        item: item.Scripts,
-                        fieldIndex: (int)OblivionMod_FieldIndex.Scripts,
-                        errorMask: errorMask,
-                        masterReferences: masterReferences);
-                }
-            }
-            if (importMask?.LandTextures ?? true)
-            {
-                if (item.LandTextures.Items.Count > 0)
-                {
-                    LoquiBinaryTranslation<Group<LandTexture>>.Instance.Write(
-                        writer: writer,
-                        item: item.LandTextures,
-                        fieldIndex: (int)OblivionMod_FieldIndex.LandTextures,
-                        errorMask: errorMask,
-                        masterReferences: masterReferences);
-                }
-            }
-            if (importMask?.Enchantments ?? true)
-            {
-                if (item.Enchantments.Items.Count > 0)
-                {
-                    LoquiBinaryTranslation<Group<Enchantment>>.Instance.Write(
-                        writer: writer,
-                        item: item.Enchantments,
-                        fieldIndex: (int)OblivionMod_FieldIndex.Enchantments,
-                        errorMask: errorMask,
-                        masterReferences: masterReferences);
-                }
-            }
-            if (importMask?.Spells ?? true)
-            {
-                if (item.Spells.Items.Count > 0)
-                {
-                    LoquiBinaryTranslation<Group<SpellUnleveled>>.Instance.Write(
-                        writer: writer,
-                        item: item.Spells,
-                        fieldIndex: (int)OblivionMod_FieldIndex.Spells,
-                        errorMask: errorMask,
-                        masterReferences: masterReferences);
-                }
-            }
-            if (importMask?.Birthsigns ?? true)
-            {
-                if (item.Birthsigns.Items.Count > 0)
-                {
-                    LoquiBinaryTranslation<Group<Birthsign>>.Instance.Write(
-                        writer: writer,
-                        item: item.Birthsigns,
-                        fieldIndex: (int)OblivionMod_FieldIndex.Birthsigns,
-                        errorMask: errorMask,
-                        masterReferences: masterReferences);
-                }
-            }
-            if (importMask?.Activators ?? true)
-            {
-                if (item.Activators.Items.Count > 0)
-                {
-                    LoquiBinaryTranslation<Group<Activator>>.Instance.Write(
-                        writer: writer,
-                        item: item.Activators,
-                        fieldIndex: (int)OblivionMod_FieldIndex.Activators,
-                        errorMask: errorMask,
-                        masterReferences: masterReferences);
-                }
-            }
-            if (importMask?.AlchemicalApparatus ?? true)
-            {
-                if (item.AlchemicalApparatus.Items.Count > 0)
-                {
-                    LoquiBinaryTranslation<Group<AlchemicalApparatus>>.Instance.Write(
-                        writer: writer,
-                        item: item.AlchemicalApparatus,
-                        fieldIndex: (int)OblivionMod_FieldIndex.AlchemicalApparatus,
-                        errorMask: errorMask,
-                        masterReferences: masterReferences);
-                }
-            }
-            if (importMask?.Armors ?? true)
-            {
-                if (item.Armors.Items.Count > 0)
-                {
-                    LoquiBinaryTranslation<Group<Armor>>.Instance.Write(
-                        writer: writer,
-                        item: item.Armors,
-                        fieldIndex: (int)OblivionMod_FieldIndex.Armors,
-                        errorMask: errorMask,
-                        masterReferences: masterReferences);
-                }
-            }
-            if (importMask?.Books ?? true)
-            {
-                if (item.Books.Items.Count > 0)
-                {
-                    LoquiBinaryTranslation<Group<Book>>.Instance.Write(
-                        writer: writer,
-                        item: item.Books,
-                        fieldIndex: (int)OblivionMod_FieldIndex.Books,
-                        errorMask: errorMask,
-                        masterReferences: masterReferences);
-                }
-            }
-            if (importMask?.Clothes ?? true)
-            {
-                if (item.Clothes.Items.Count > 0)
-                {
-                    LoquiBinaryTranslation<Group<Clothing>>.Instance.Write(
-                        writer: writer,
-                        item: item.Clothes,
-                        fieldIndex: (int)OblivionMod_FieldIndex.Clothes,
-                        errorMask: errorMask,
-                        masterReferences: masterReferences);
-                }
-            }
-            if (importMask?.Containers ?? true)
-            {
-                if (item.Containers.Items.Count > 0)
-                {
-                    LoquiBinaryTranslation<Group<Container>>.Instance.Write(
-                        writer: writer,
-                        item: item.Containers,
-                        fieldIndex: (int)OblivionMod_FieldIndex.Containers,
-                        errorMask: errorMask,
-                        masterReferences: masterReferences);
-                }
-            }
-            if (importMask?.Doors ?? true)
-            {
-                if (item.Doors.Items.Count > 0)
-                {
-                    LoquiBinaryTranslation<Group<Door>>.Instance.Write(
-                        writer: writer,
-                        item: item.Doors,
-                        fieldIndex: (int)OblivionMod_FieldIndex.Doors,
-                        errorMask: errorMask,
-                        masterReferences: masterReferences);
-                }
-            }
-            if (importMask?.Ingredients ?? true)
-            {
-                if (item.Ingredients.Items.Count > 0)
-                {
-                    LoquiBinaryTranslation<Group<Ingredient>>.Instance.Write(
-                        writer: writer,
-                        item: item.Ingredients,
-                        fieldIndex: (int)OblivionMod_FieldIndex.Ingredients,
-                        errorMask: errorMask,
-                        masterReferences: masterReferences);
-                }
-            }
-            if (importMask?.Lights ?? true)
-            {
-                if (item.Lights.Items.Count > 0)
-                {
-                    LoquiBinaryTranslation<Group<Light>>.Instance.Write(
-                        writer: writer,
-                        item: item.Lights,
-                        fieldIndex: (int)OblivionMod_FieldIndex.Lights,
-                        errorMask: errorMask,
-                        masterReferences: masterReferences);
-                }
-            }
-            if (importMask?.Miscellaneous ?? true)
-            {
-                if (item.Miscellaneous.Items.Count > 0)
-                {
-                    LoquiBinaryTranslation<Group<Miscellaneous>>.Instance.Write(
-                        writer: writer,
-                        item: item.Miscellaneous,
-                        fieldIndex: (int)OblivionMod_FieldIndex.Miscellaneous,
-                        errorMask: errorMask,
-                        masterReferences: masterReferences);
-                }
-            }
-            if (importMask?.Statics ?? true)
-            {
-                if (item.Statics.Items.Count > 0)
-                {
-                    LoquiBinaryTranslation<Group<Static>>.Instance.Write(
-                        writer: writer,
-                        item: item.Statics,
-                        fieldIndex: (int)OblivionMod_FieldIndex.Statics,
-                        errorMask: errorMask,
-                        masterReferences: masterReferences);
-                }
-            }
-            if (importMask?.Grasses ?? true)
-            {
-                if (item.Grasses.Items.Count > 0)
-                {
-                    LoquiBinaryTranslation<Group<Grass>>.Instance.Write(
-                        writer: writer,
-                        item: item.Grasses,
-                        fieldIndex: (int)OblivionMod_FieldIndex.Grasses,
-                        errorMask: errorMask,
-                        masterReferences: masterReferences);
-                }
-            }
-            if (importMask?.Trees ?? true)
-            {
-                if (item.Trees.Items.Count > 0)
-                {
-                    LoquiBinaryTranslation<Group<Tree>>.Instance.Write(
-                        writer: writer,
-                        item: item.Trees,
-                        fieldIndex: (int)OblivionMod_FieldIndex.Trees,
-                        errorMask: errorMask,
-                        masterReferences: masterReferences);
-                }
-            }
-            if (importMask?.Flora ?? true)
-            {
-                if (item.Flora.Items.Count > 0)
-                {
-                    LoquiBinaryTranslation<Group<Flora>>.Instance.Write(
-                        writer: writer,
-                        item: item.Flora,
-                        fieldIndex: (int)OblivionMod_FieldIndex.Flora,
-                        errorMask: errorMask,
-                        masterReferences: masterReferences);
-                }
-            }
-            if (importMask?.Furnature ?? true)
-            {
-                if (item.Furnature.Items.Count > 0)
-                {
-                    LoquiBinaryTranslation<Group<Furnature>>.Instance.Write(
-                        writer: writer,
-                        item: item.Furnature,
-                        fieldIndex: (int)OblivionMod_FieldIndex.Furnature,
-                        errorMask: errorMask,
-                        masterReferences: masterReferences);
-                }
-            }
-            if (importMask?.Weapons ?? true)
-            {
-                if (item.Weapons.Items.Count > 0)
-                {
-                    LoquiBinaryTranslation<Group<Weapon>>.Instance.Write(
-                        writer: writer,
-                        item: item.Weapons,
-                        fieldIndex: (int)OblivionMod_FieldIndex.Weapons,
-                        errorMask: errorMask,
-                        masterReferences: masterReferences);
-                }
-            }
-            if (importMask?.Ammo ?? true)
-            {
-                if (item.Ammo.Items.Count > 0)
-                {
-                    LoquiBinaryTranslation<Group<Ammo>>.Instance.Write(
-                        writer: writer,
-                        item: item.Ammo,
-                        fieldIndex: (int)OblivionMod_FieldIndex.Ammo,
-                        errorMask: errorMask,
-                        masterReferences: masterReferences);
-                }
-            }
-            if (importMask?.NPCs ?? true)
-            {
-                if (item.NPCs.Items.Count > 0)
-                {
-                    LoquiBinaryTranslation<Group<NPC>>.Instance.Write(
-                        writer: writer,
-                        item: item.NPCs,
-                        fieldIndex: (int)OblivionMod_FieldIndex.NPCs,
-                        errorMask: errorMask,
-                        masterReferences: masterReferences);
-                }
-            }
-            if (importMask?.Creatures ?? true)
-            {
-                if (item.Creatures.Items.Count > 0)
-                {
-                    LoquiBinaryTranslation<Group<Creature>>.Instance.Write(
-                        writer: writer,
-                        item: item.Creatures,
-                        fieldIndex: (int)OblivionMod_FieldIndex.Creatures,
-                        errorMask: errorMask,
-                        masterReferences: masterReferences);
-                }
-            }
-            if (importMask?.LeveledCreatures ?? true)
-            {
-                if (item.LeveledCreatures.Items.Count > 0)
-                {
-                    LoquiBinaryTranslation<Group<LeveledCreature>>.Instance.Write(
-                        writer: writer,
-                        item: item.LeveledCreatures,
-                        fieldIndex: (int)OblivionMod_FieldIndex.LeveledCreatures,
-                        errorMask: errorMask,
-                        masterReferences: masterReferences);
-                }
-            }
-            if (importMask?.SoulGems ?? true)
-            {
-                if (item.SoulGems.Items.Count > 0)
-                {
-                    LoquiBinaryTranslation<Group<SoulGem>>.Instance.Write(
-                        writer: writer,
-                        item: item.SoulGems,
-                        fieldIndex: (int)OblivionMod_FieldIndex.SoulGems,
-                        errorMask: errorMask,
-                        masterReferences: masterReferences);
-                }
-            }
-            if (importMask?.Keys ?? true)
-            {
-                if (item.Keys.Items.Count > 0)
-                {
-                    LoquiBinaryTranslation<Group<Key>>.Instance.Write(
-                        writer: writer,
-                        item: item.Keys,
-                        fieldIndex: (int)OblivionMod_FieldIndex.Keys,
-                        errorMask: errorMask,
-                        masterReferences: masterReferences);
-                }
-            }
-            if (importMask?.Potions ?? true)
-            {
-                if (item.Potions.Items.Count > 0)
-                {
-                    LoquiBinaryTranslation<Group<Potion>>.Instance.Write(
-                        writer: writer,
-                        item: item.Potions,
-                        fieldIndex: (int)OblivionMod_FieldIndex.Potions,
-                        errorMask: errorMask,
-                        masterReferences: masterReferences);
-                }
-            }
-            if (importMask?.Subspaces ?? true)
-            {
-                if (item.Subspaces.Items.Count > 0)
-                {
-                    LoquiBinaryTranslation<Group<Subspace>>.Instance.Write(
-                        writer: writer,
-                        item: item.Subspaces,
-                        fieldIndex: (int)OblivionMod_FieldIndex.Subspaces,
-                        errorMask: errorMask,
-                        masterReferences: masterReferences);
-                }
-            }
-            if (importMask?.SigilStones ?? true)
-            {
-                if (item.SigilStones.Items.Count > 0)
-                {
-                    LoquiBinaryTranslation<Group<SigilStone>>.Instance.Write(
-                        writer: writer,
-                        item: item.SigilStones,
-                        fieldIndex: (int)OblivionMod_FieldIndex.SigilStones,
-                        errorMask: errorMask,
-                        masterReferences: masterReferences);
-                }
-            }
-            if (importMask?.LeveledItems ?? true)
-            {
-                if (item.LeveledItems.Items.Count > 0)
-                {
-                    LoquiBinaryTranslation<Group<LeveledItem>>.Instance.Write(
-                        writer: writer,
-                        item: item.LeveledItems,
-                        fieldIndex: (int)OblivionMod_FieldIndex.LeveledItems,
-                        errorMask: errorMask,
-                        masterReferences: masterReferences);
-                }
-            }
-            if (importMask?.Weathers ?? true)
-            {
-                if (item.Weathers.Items.Count > 0)
-                {
-                    LoquiBinaryTranslation<Group<Weather>>.Instance.Write(
-                        writer: writer,
-                        item: item.Weathers,
-                        fieldIndex: (int)OblivionMod_FieldIndex.Weathers,
-                        errorMask: errorMask,
-                        masterReferences: masterReferences);
-                }
-            }
-            if (importMask?.Climates ?? true)
-            {
-                if (item.Climates.Items.Count > 0)
-                {
-                    LoquiBinaryTranslation<Group<Climate>>.Instance.Write(
-                        writer: writer,
-                        item: item.Climates,
-                        fieldIndex: (int)OblivionMod_FieldIndex.Climates,
-                        errorMask: errorMask,
-                        masterReferences: masterReferences);
-                }
-            }
-            if (importMask?.Regions ?? true)
-            {
-                if (item.Regions.Items.Count > 0)
-                {
-                    LoquiBinaryTranslation<Group<Region>>.Instance.Write(
-                        writer: writer,
-                        item: item.Regions,
-                        fieldIndex: (int)OblivionMod_FieldIndex.Regions,
-                        errorMask: errorMask,
-                        masterReferences: masterReferences);
-                }
-            }
-            if (importMask?.Cells ?? true)
-            {
-                if (item.Cells.Items.Count > 0)
-                {
-                    LoquiBinaryTranslation<ListGroup<CellBlock>>.Instance.Write(
-                        writer: writer,
-                        item: item.Cells,
-                        fieldIndex: (int)OblivionMod_FieldIndex.Cells,
-                        errorMask: errorMask,
-                        masterReferences: masterReferences);
-                }
-            }
-            if (importMask?.Worldspaces ?? true)
-            {
-                if (item.Worldspaces.Items.Count > 0)
-                {
-                    LoquiBinaryTranslation<Group<Worldspace>>.Instance.Write(
-                        writer: writer,
-                        item: item.Worldspaces,
-                        fieldIndex: (int)OblivionMod_FieldIndex.Worldspaces,
-                        errorMask: errorMask,
-                        masterReferences: masterReferences);
-                }
-            }
-            if (importMask?.DialogTopics ?? true)
-            {
-                if (item.DialogTopics.Items.Count > 0)
-                {
-                    LoquiBinaryTranslation<Group<DialogTopic>>.Instance.Write(
-                        writer: writer,
-                        item: item.DialogTopics,
-                        fieldIndex: (int)OblivionMod_FieldIndex.DialogTopics,
-                        errorMask: errorMask,
-                        masterReferences: masterReferences);
-                }
-            }
-            if (importMask?.Quests ?? true)
-            {
-                if (item.Quests.Items.Count > 0)
-                {
-                    LoquiBinaryTranslation<Group<Quest>>.Instance.Write(
-                        writer: writer,
-                        item: item.Quests,
-                        fieldIndex: (int)OblivionMod_FieldIndex.Quests,
-                        errorMask: errorMask,
-                        masterReferences: masterReferences);
-                }
-            }
-            if (importMask?.IdleAnimations ?? true)
-            {
-                if (item.IdleAnimations.Items.Count > 0)
-                {
-                    LoquiBinaryTranslation<Group<IdleAnimation>>.Instance.Write(
-                        writer: writer,
-                        item: item.IdleAnimations,
-                        fieldIndex: (int)OblivionMod_FieldIndex.IdleAnimations,
-                        errorMask: errorMask,
-                        masterReferences: masterReferences);
-                }
-            }
-            if (importMask?.AIPackages ?? true)
-            {
-                if (item.AIPackages.Items.Count > 0)
-                {
-                    LoquiBinaryTranslation<Group<AIPackage>>.Instance.Write(
-                        writer: writer,
-                        item: item.AIPackages,
-                        fieldIndex: (int)OblivionMod_FieldIndex.AIPackages,
-                        errorMask: errorMask,
-                        masterReferences: masterReferences);
-                }
-            }
-            if (importMask?.CombatStyles ?? true)
-            {
-                if (item.CombatStyles.Items.Count > 0)
-                {
-                    LoquiBinaryTranslation<Group<CombatStyle>>.Instance.Write(
-                        writer: writer,
-                        item: item.CombatStyles,
-                        fieldIndex: (int)OblivionMod_FieldIndex.CombatStyles,
-                        errorMask: errorMask,
-                        masterReferences: masterReferences);
-                }
-            }
-            if (importMask?.LoadScreens ?? true)
-            {
-                if (item.LoadScreens.Items.Count > 0)
-                {
-                    LoquiBinaryTranslation<Group<LoadScreen>>.Instance.Write(
-                        writer: writer,
-                        item: item.LoadScreens,
-                        fieldIndex: (int)OblivionMod_FieldIndex.LoadScreens,
-                        errorMask: errorMask,
-                        masterReferences: masterReferences);
-                }
-            }
-            if (importMask?.LeveledSpells ?? true)
-            {
-                if (item.LeveledSpells.Items.Count > 0)
-                {
-                    LoquiBinaryTranslation<Group<LeveledSpell>>.Instance.Write(
-                        writer: writer,
-                        item: item.LeveledSpells,
-                        fieldIndex: (int)OblivionMod_FieldIndex.LeveledSpells,
-                        errorMask: errorMask,
-                        masterReferences: masterReferences);
-                }
-            }
-            if (importMask?.AnimatedObjects ?? true)
-            {
-                if (item.AnimatedObjects.Items.Count > 0)
-                {
-                    LoquiBinaryTranslation<Group<AnimatedObject>>.Instance.Write(
-                        writer: writer,
-                        item: item.AnimatedObjects,
-                        fieldIndex: (int)OblivionMod_FieldIndex.AnimatedObjects,
-                        errorMask: errorMask,
-                        masterReferences: masterReferences);
-                }
-            }
-            if (importMask?.Waters ?? true)
-            {
-                if (item.Waters.Items.Count > 0)
-                {
-                    LoquiBinaryTranslation<Group<Water>>.Instance.Write(
-                        writer: writer,
-                        item: item.Waters,
-                        fieldIndex: (int)OblivionMod_FieldIndex.Waters,
-                        errorMask: errorMask,
-                        masterReferences: masterReferences);
-                }
-            }
-            if (importMask?.EffectShaders ?? true)
-            {
-                if (item.EffectShaders.Items.Count > 0)
-                {
-                    LoquiBinaryTranslation<Group<EffectShader>>.Instance.Write(
-                        writer: writer,
-                        item: item.EffectShaders,
-                        fieldIndex: (int)OblivionMod_FieldIndex.EffectShaders,
-                        errorMask: errorMask,
-                        masterReferences: masterReferences);
-                }
-            }
-        }
-
         #endregion
 
     }
     #endregion
 
-    #region Modules
     #region Mask
     public class OblivionMod_Mask<T> : IMask<T>, IEquatable<OblivionMod_Mask<T>>
     {
@@ -13268,6 +12544,745 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Waters = defaultValue;
             EffectShaders = defaultValue;
         }
+    }
+    #endregion
+
+    #region Binary Translation
+    public partial class OblivionModBinaryTranslation
+    {
+        public readonly static OblivionModBinaryTranslation Instance = new OblivionModBinaryTranslation();
+
+        public static void Write_Binary_RecordTypes(
+            IOblivionModGetter item,
+            MutagenWriter writer,
+            GroupMask importMask,
+            ModKey modKey,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            MasterReferences masterReferences = new MasterReferences(item.TES4.MasterReferences, modKey);
+            if (item.TES4_IsSet)
+            {
+                LoquiBinaryTranslation<TES4>.Instance.Write(
+                    writer: writer,
+                    item: item.TES4,
+                    fieldIndex: (int)OblivionMod_FieldIndex.TES4,
+                    errorMask: errorMask,
+                    masterReferences: masterReferences);
+            }
+            if (importMask?.GameSettings ?? true)
+            {
+                if (item.GameSettings.Items.Count > 0)
+                {
+                    LoquiBinaryTranslation<Group<GameSetting>>.Instance.Write(
+                        writer: writer,
+                        item: item.GameSettings,
+                        fieldIndex: (int)OblivionMod_FieldIndex.GameSettings,
+                        errorMask: errorMask,
+                        masterReferences: masterReferences);
+                }
+            }
+            if (importMask?.Globals ?? true)
+            {
+                if (item.Globals.Items.Count > 0)
+                {
+                    LoquiBinaryTranslation<Group<Global>>.Instance.Write(
+                        writer: writer,
+                        item: item.Globals,
+                        fieldIndex: (int)OblivionMod_FieldIndex.Globals,
+                        errorMask: errorMask,
+                        masterReferences: masterReferences);
+                }
+            }
+            if (importMask?.Classes ?? true)
+            {
+                if (item.Classes.Items.Count > 0)
+                {
+                    LoquiBinaryTranslation<Group<Class>>.Instance.Write(
+                        writer: writer,
+                        item: item.Classes,
+                        fieldIndex: (int)OblivionMod_FieldIndex.Classes,
+                        errorMask: errorMask,
+                        masterReferences: masterReferences);
+                }
+            }
+            if (importMask?.Factions ?? true)
+            {
+                if (item.Factions.Items.Count > 0)
+                {
+                    LoquiBinaryTranslation<Group<Faction>>.Instance.Write(
+                        writer: writer,
+                        item: item.Factions,
+                        fieldIndex: (int)OblivionMod_FieldIndex.Factions,
+                        errorMask: errorMask,
+                        masterReferences: masterReferences);
+                }
+            }
+            if (importMask?.Hairs ?? true)
+            {
+                if (item.Hairs.Items.Count > 0)
+                {
+                    LoquiBinaryTranslation<Group<Hair>>.Instance.Write(
+                        writer: writer,
+                        item: item.Hairs,
+                        fieldIndex: (int)OblivionMod_FieldIndex.Hairs,
+                        errorMask: errorMask,
+                        masterReferences: masterReferences);
+                }
+            }
+            if (importMask?.Eyes ?? true)
+            {
+                if (item.Eyes.Items.Count > 0)
+                {
+                    LoquiBinaryTranslation<Group<Eye>>.Instance.Write(
+                        writer: writer,
+                        item: item.Eyes,
+                        fieldIndex: (int)OblivionMod_FieldIndex.Eyes,
+                        errorMask: errorMask,
+                        masterReferences: masterReferences);
+                }
+            }
+            if (importMask?.Races ?? true)
+            {
+                if (item.Races.Items.Count > 0)
+                {
+                    LoquiBinaryTranslation<Group<Race>>.Instance.Write(
+                        writer: writer,
+                        item: item.Races,
+                        fieldIndex: (int)OblivionMod_FieldIndex.Races,
+                        errorMask: errorMask,
+                        masterReferences: masterReferences);
+                }
+            }
+            if (importMask?.Sounds ?? true)
+            {
+                if (item.Sounds.Items.Count > 0)
+                {
+                    LoquiBinaryTranslation<Group<Sound>>.Instance.Write(
+                        writer: writer,
+                        item: item.Sounds,
+                        fieldIndex: (int)OblivionMod_FieldIndex.Sounds,
+                        errorMask: errorMask,
+                        masterReferences: masterReferences);
+                }
+            }
+            if (importMask?.Skills ?? true)
+            {
+                if (item.Skills.Items.Count > 0)
+                {
+                    LoquiBinaryTranslation<Group<SkillRecord>>.Instance.Write(
+                        writer: writer,
+                        item: item.Skills,
+                        fieldIndex: (int)OblivionMod_FieldIndex.Skills,
+                        errorMask: errorMask,
+                        masterReferences: masterReferences);
+                }
+            }
+            if (importMask?.MagicEffects ?? true)
+            {
+                if (item.MagicEffects.Items.Count > 0)
+                {
+                    LoquiBinaryTranslation<Group<MagicEffect>>.Instance.Write(
+                        writer: writer,
+                        item: item.MagicEffects,
+                        fieldIndex: (int)OblivionMod_FieldIndex.MagicEffects,
+                        errorMask: errorMask,
+                        masterReferences: masterReferences);
+                }
+            }
+            if (importMask?.Scripts ?? true)
+            {
+                if (item.Scripts.Items.Count > 0)
+                {
+                    LoquiBinaryTranslation<Group<Script>>.Instance.Write(
+                        writer: writer,
+                        item: item.Scripts,
+                        fieldIndex: (int)OblivionMod_FieldIndex.Scripts,
+                        errorMask: errorMask,
+                        masterReferences: masterReferences);
+                }
+            }
+            if (importMask?.LandTextures ?? true)
+            {
+                if (item.LandTextures.Items.Count > 0)
+                {
+                    LoquiBinaryTranslation<Group<LandTexture>>.Instance.Write(
+                        writer: writer,
+                        item: item.LandTextures,
+                        fieldIndex: (int)OblivionMod_FieldIndex.LandTextures,
+                        errorMask: errorMask,
+                        masterReferences: masterReferences);
+                }
+            }
+            if (importMask?.Enchantments ?? true)
+            {
+                if (item.Enchantments.Items.Count > 0)
+                {
+                    LoquiBinaryTranslation<Group<Enchantment>>.Instance.Write(
+                        writer: writer,
+                        item: item.Enchantments,
+                        fieldIndex: (int)OblivionMod_FieldIndex.Enchantments,
+                        errorMask: errorMask,
+                        masterReferences: masterReferences);
+                }
+            }
+            if (importMask?.Spells ?? true)
+            {
+                if (item.Spells.Items.Count > 0)
+                {
+                    LoquiBinaryTranslation<Group<SpellUnleveled>>.Instance.Write(
+                        writer: writer,
+                        item: item.Spells,
+                        fieldIndex: (int)OblivionMod_FieldIndex.Spells,
+                        errorMask: errorMask,
+                        masterReferences: masterReferences);
+                }
+            }
+            if (importMask?.Birthsigns ?? true)
+            {
+                if (item.Birthsigns.Items.Count > 0)
+                {
+                    LoquiBinaryTranslation<Group<Birthsign>>.Instance.Write(
+                        writer: writer,
+                        item: item.Birthsigns,
+                        fieldIndex: (int)OblivionMod_FieldIndex.Birthsigns,
+                        errorMask: errorMask,
+                        masterReferences: masterReferences);
+                }
+            }
+            if (importMask?.Activators ?? true)
+            {
+                if (item.Activators.Items.Count > 0)
+                {
+                    LoquiBinaryTranslation<Group<Activator>>.Instance.Write(
+                        writer: writer,
+                        item: item.Activators,
+                        fieldIndex: (int)OblivionMod_FieldIndex.Activators,
+                        errorMask: errorMask,
+                        masterReferences: masterReferences);
+                }
+            }
+            if (importMask?.AlchemicalApparatus ?? true)
+            {
+                if (item.AlchemicalApparatus.Items.Count > 0)
+                {
+                    LoquiBinaryTranslation<Group<AlchemicalApparatus>>.Instance.Write(
+                        writer: writer,
+                        item: item.AlchemicalApparatus,
+                        fieldIndex: (int)OblivionMod_FieldIndex.AlchemicalApparatus,
+                        errorMask: errorMask,
+                        masterReferences: masterReferences);
+                }
+            }
+            if (importMask?.Armors ?? true)
+            {
+                if (item.Armors.Items.Count > 0)
+                {
+                    LoquiBinaryTranslation<Group<Armor>>.Instance.Write(
+                        writer: writer,
+                        item: item.Armors,
+                        fieldIndex: (int)OblivionMod_FieldIndex.Armors,
+                        errorMask: errorMask,
+                        masterReferences: masterReferences);
+                }
+            }
+            if (importMask?.Books ?? true)
+            {
+                if (item.Books.Items.Count > 0)
+                {
+                    LoquiBinaryTranslation<Group<Book>>.Instance.Write(
+                        writer: writer,
+                        item: item.Books,
+                        fieldIndex: (int)OblivionMod_FieldIndex.Books,
+                        errorMask: errorMask,
+                        masterReferences: masterReferences);
+                }
+            }
+            if (importMask?.Clothes ?? true)
+            {
+                if (item.Clothes.Items.Count > 0)
+                {
+                    LoquiBinaryTranslation<Group<Clothing>>.Instance.Write(
+                        writer: writer,
+                        item: item.Clothes,
+                        fieldIndex: (int)OblivionMod_FieldIndex.Clothes,
+                        errorMask: errorMask,
+                        masterReferences: masterReferences);
+                }
+            }
+            if (importMask?.Containers ?? true)
+            {
+                if (item.Containers.Items.Count > 0)
+                {
+                    LoquiBinaryTranslation<Group<Container>>.Instance.Write(
+                        writer: writer,
+                        item: item.Containers,
+                        fieldIndex: (int)OblivionMod_FieldIndex.Containers,
+                        errorMask: errorMask,
+                        masterReferences: masterReferences);
+                }
+            }
+            if (importMask?.Doors ?? true)
+            {
+                if (item.Doors.Items.Count > 0)
+                {
+                    LoquiBinaryTranslation<Group<Door>>.Instance.Write(
+                        writer: writer,
+                        item: item.Doors,
+                        fieldIndex: (int)OblivionMod_FieldIndex.Doors,
+                        errorMask: errorMask,
+                        masterReferences: masterReferences);
+                }
+            }
+            if (importMask?.Ingredients ?? true)
+            {
+                if (item.Ingredients.Items.Count > 0)
+                {
+                    LoquiBinaryTranslation<Group<Ingredient>>.Instance.Write(
+                        writer: writer,
+                        item: item.Ingredients,
+                        fieldIndex: (int)OblivionMod_FieldIndex.Ingredients,
+                        errorMask: errorMask,
+                        masterReferences: masterReferences);
+                }
+            }
+            if (importMask?.Lights ?? true)
+            {
+                if (item.Lights.Items.Count > 0)
+                {
+                    LoquiBinaryTranslation<Group<Light>>.Instance.Write(
+                        writer: writer,
+                        item: item.Lights,
+                        fieldIndex: (int)OblivionMod_FieldIndex.Lights,
+                        errorMask: errorMask,
+                        masterReferences: masterReferences);
+                }
+            }
+            if (importMask?.Miscellaneous ?? true)
+            {
+                if (item.Miscellaneous.Items.Count > 0)
+                {
+                    LoquiBinaryTranslation<Group<Miscellaneous>>.Instance.Write(
+                        writer: writer,
+                        item: item.Miscellaneous,
+                        fieldIndex: (int)OblivionMod_FieldIndex.Miscellaneous,
+                        errorMask: errorMask,
+                        masterReferences: masterReferences);
+                }
+            }
+            if (importMask?.Statics ?? true)
+            {
+                if (item.Statics.Items.Count > 0)
+                {
+                    LoquiBinaryTranslation<Group<Static>>.Instance.Write(
+                        writer: writer,
+                        item: item.Statics,
+                        fieldIndex: (int)OblivionMod_FieldIndex.Statics,
+                        errorMask: errorMask,
+                        masterReferences: masterReferences);
+                }
+            }
+            if (importMask?.Grasses ?? true)
+            {
+                if (item.Grasses.Items.Count > 0)
+                {
+                    LoquiBinaryTranslation<Group<Grass>>.Instance.Write(
+                        writer: writer,
+                        item: item.Grasses,
+                        fieldIndex: (int)OblivionMod_FieldIndex.Grasses,
+                        errorMask: errorMask,
+                        masterReferences: masterReferences);
+                }
+            }
+            if (importMask?.Trees ?? true)
+            {
+                if (item.Trees.Items.Count > 0)
+                {
+                    LoquiBinaryTranslation<Group<Tree>>.Instance.Write(
+                        writer: writer,
+                        item: item.Trees,
+                        fieldIndex: (int)OblivionMod_FieldIndex.Trees,
+                        errorMask: errorMask,
+                        masterReferences: masterReferences);
+                }
+            }
+            if (importMask?.Flora ?? true)
+            {
+                if (item.Flora.Items.Count > 0)
+                {
+                    LoquiBinaryTranslation<Group<Flora>>.Instance.Write(
+                        writer: writer,
+                        item: item.Flora,
+                        fieldIndex: (int)OblivionMod_FieldIndex.Flora,
+                        errorMask: errorMask,
+                        masterReferences: masterReferences);
+                }
+            }
+            if (importMask?.Furnature ?? true)
+            {
+                if (item.Furnature.Items.Count > 0)
+                {
+                    LoquiBinaryTranslation<Group<Furnature>>.Instance.Write(
+                        writer: writer,
+                        item: item.Furnature,
+                        fieldIndex: (int)OblivionMod_FieldIndex.Furnature,
+                        errorMask: errorMask,
+                        masterReferences: masterReferences);
+                }
+            }
+            if (importMask?.Weapons ?? true)
+            {
+                if (item.Weapons.Items.Count > 0)
+                {
+                    LoquiBinaryTranslation<Group<Weapon>>.Instance.Write(
+                        writer: writer,
+                        item: item.Weapons,
+                        fieldIndex: (int)OblivionMod_FieldIndex.Weapons,
+                        errorMask: errorMask,
+                        masterReferences: masterReferences);
+                }
+            }
+            if (importMask?.Ammo ?? true)
+            {
+                if (item.Ammo.Items.Count > 0)
+                {
+                    LoquiBinaryTranslation<Group<Ammo>>.Instance.Write(
+                        writer: writer,
+                        item: item.Ammo,
+                        fieldIndex: (int)OblivionMod_FieldIndex.Ammo,
+                        errorMask: errorMask,
+                        masterReferences: masterReferences);
+                }
+            }
+            if (importMask?.NPCs ?? true)
+            {
+                if (item.NPCs.Items.Count > 0)
+                {
+                    LoquiBinaryTranslation<Group<NPC>>.Instance.Write(
+                        writer: writer,
+                        item: item.NPCs,
+                        fieldIndex: (int)OblivionMod_FieldIndex.NPCs,
+                        errorMask: errorMask,
+                        masterReferences: masterReferences);
+                }
+            }
+            if (importMask?.Creatures ?? true)
+            {
+                if (item.Creatures.Items.Count > 0)
+                {
+                    LoquiBinaryTranslation<Group<Creature>>.Instance.Write(
+                        writer: writer,
+                        item: item.Creatures,
+                        fieldIndex: (int)OblivionMod_FieldIndex.Creatures,
+                        errorMask: errorMask,
+                        masterReferences: masterReferences);
+                }
+            }
+            if (importMask?.LeveledCreatures ?? true)
+            {
+                if (item.LeveledCreatures.Items.Count > 0)
+                {
+                    LoquiBinaryTranslation<Group<LeveledCreature>>.Instance.Write(
+                        writer: writer,
+                        item: item.LeveledCreatures,
+                        fieldIndex: (int)OblivionMod_FieldIndex.LeveledCreatures,
+                        errorMask: errorMask,
+                        masterReferences: masterReferences);
+                }
+            }
+            if (importMask?.SoulGems ?? true)
+            {
+                if (item.SoulGems.Items.Count > 0)
+                {
+                    LoquiBinaryTranslation<Group<SoulGem>>.Instance.Write(
+                        writer: writer,
+                        item: item.SoulGems,
+                        fieldIndex: (int)OblivionMod_FieldIndex.SoulGems,
+                        errorMask: errorMask,
+                        masterReferences: masterReferences);
+                }
+            }
+            if (importMask?.Keys ?? true)
+            {
+                if (item.Keys.Items.Count > 0)
+                {
+                    LoquiBinaryTranslation<Group<Key>>.Instance.Write(
+                        writer: writer,
+                        item: item.Keys,
+                        fieldIndex: (int)OblivionMod_FieldIndex.Keys,
+                        errorMask: errorMask,
+                        masterReferences: masterReferences);
+                }
+            }
+            if (importMask?.Potions ?? true)
+            {
+                if (item.Potions.Items.Count > 0)
+                {
+                    LoquiBinaryTranslation<Group<Potion>>.Instance.Write(
+                        writer: writer,
+                        item: item.Potions,
+                        fieldIndex: (int)OblivionMod_FieldIndex.Potions,
+                        errorMask: errorMask,
+                        masterReferences: masterReferences);
+                }
+            }
+            if (importMask?.Subspaces ?? true)
+            {
+                if (item.Subspaces.Items.Count > 0)
+                {
+                    LoquiBinaryTranslation<Group<Subspace>>.Instance.Write(
+                        writer: writer,
+                        item: item.Subspaces,
+                        fieldIndex: (int)OblivionMod_FieldIndex.Subspaces,
+                        errorMask: errorMask,
+                        masterReferences: masterReferences);
+                }
+            }
+            if (importMask?.SigilStones ?? true)
+            {
+                if (item.SigilStones.Items.Count > 0)
+                {
+                    LoquiBinaryTranslation<Group<SigilStone>>.Instance.Write(
+                        writer: writer,
+                        item: item.SigilStones,
+                        fieldIndex: (int)OblivionMod_FieldIndex.SigilStones,
+                        errorMask: errorMask,
+                        masterReferences: masterReferences);
+                }
+            }
+            if (importMask?.LeveledItems ?? true)
+            {
+                if (item.LeveledItems.Items.Count > 0)
+                {
+                    LoquiBinaryTranslation<Group<LeveledItem>>.Instance.Write(
+                        writer: writer,
+                        item: item.LeveledItems,
+                        fieldIndex: (int)OblivionMod_FieldIndex.LeveledItems,
+                        errorMask: errorMask,
+                        masterReferences: masterReferences);
+                }
+            }
+            if (importMask?.Weathers ?? true)
+            {
+                if (item.Weathers.Items.Count > 0)
+                {
+                    LoquiBinaryTranslation<Group<Weather>>.Instance.Write(
+                        writer: writer,
+                        item: item.Weathers,
+                        fieldIndex: (int)OblivionMod_FieldIndex.Weathers,
+                        errorMask: errorMask,
+                        masterReferences: masterReferences);
+                }
+            }
+            if (importMask?.Climates ?? true)
+            {
+                if (item.Climates.Items.Count > 0)
+                {
+                    LoquiBinaryTranslation<Group<Climate>>.Instance.Write(
+                        writer: writer,
+                        item: item.Climates,
+                        fieldIndex: (int)OblivionMod_FieldIndex.Climates,
+                        errorMask: errorMask,
+                        masterReferences: masterReferences);
+                }
+            }
+            if (importMask?.Regions ?? true)
+            {
+                if (item.Regions.Items.Count > 0)
+                {
+                    LoquiBinaryTranslation<Group<Region>>.Instance.Write(
+                        writer: writer,
+                        item: item.Regions,
+                        fieldIndex: (int)OblivionMod_FieldIndex.Regions,
+                        errorMask: errorMask,
+                        masterReferences: masterReferences);
+                }
+            }
+            if (importMask?.Cells ?? true)
+            {
+                if (item.Cells.Items.Count > 0)
+                {
+                    LoquiBinaryTranslation<ListGroup<CellBlock>>.Instance.Write(
+                        writer: writer,
+                        item: item.Cells,
+                        fieldIndex: (int)OblivionMod_FieldIndex.Cells,
+                        errorMask: errorMask,
+                        masterReferences: masterReferences);
+                }
+            }
+            if (importMask?.Worldspaces ?? true)
+            {
+                if (item.Worldspaces.Items.Count > 0)
+                {
+                    LoquiBinaryTranslation<Group<Worldspace>>.Instance.Write(
+                        writer: writer,
+                        item: item.Worldspaces,
+                        fieldIndex: (int)OblivionMod_FieldIndex.Worldspaces,
+                        errorMask: errorMask,
+                        masterReferences: masterReferences);
+                }
+            }
+            if (importMask?.DialogTopics ?? true)
+            {
+                if (item.DialogTopics.Items.Count > 0)
+                {
+                    LoquiBinaryTranslation<Group<DialogTopic>>.Instance.Write(
+                        writer: writer,
+                        item: item.DialogTopics,
+                        fieldIndex: (int)OblivionMod_FieldIndex.DialogTopics,
+                        errorMask: errorMask,
+                        masterReferences: masterReferences);
+                }
+            }
+            if (importMask?.Quests ?? true)
+            {
+                if (item.Quests.Items.Count > 0)
+                {
+                    LoquiBinaryTranslation<Group<Quest>>.Instance.Write(
+                        writer: writer,
+                        item: item.Quests,
+                        fieldIndex: (int)OblivionMod_FieldIndex.Quests,
+                        errorMask: errorMask,
+                        masterReferences: masterReferences);
+                }
+            }
+            if (importMask?.IdleAnimations ?? true)
+            {
+                if (item.IdleAnimations.Items.Count > 0)
+                {
+                    LoquiBinaryTranslation<Group<IdleAnimation>>.Instance.Write(
+                        writer: writer,
+                        item: item.IdleAnimations,
+                        fieldIndex: (int)OblivionMod_FieldIndex.IdleAnimations,
+                        errorMask: errorMask,
+                        masterReferences: masterReferences);
+                }
+            }
+            if (importMask?.AIPackages ?? true)
+            {
+                if (item.AIPackages.Items.Count > 0)
+                {
+                    LoquiBinaryTranslation<Group<AIPackage>>.Instance.Write(
+                        writer: writer,
+                        item: item.AIPackages,
+                        fieldIndex: (int)OblivionMod_FieldIndex.AIPackages,
+                        errorMask: errorMask,
+                        masterReferences: masterReferences);
+                }
+            }
+            if (importMask?.CombatStyles ?? true)
+            {
+                if (item.CombatStyles.Items.Count > 0)
+                {
+                    LoquiBinaryTranslation<Group<CombatStyle>>.Instance.Write(
+                        writer: writer,
+                        item: item.CombatStyles,
+                        fieldIndex: (int)OblivionMod_FieldIndex.CombatStyles,
+                        errorMask: errorMask,
+                        masterReferences: masterReferences);
+                }
+            }
+            if (importMask?.LoadScreens ?? true)
+            {
+                if (item.LoadScreens.Items.Count > 0)
+                {
+                    LoquiBinaryTranslation<Group<LoadScreen>>.Instance.Write(
+                        writer: writer,
+                        item: item.LoadScreens,
+                        fieldIndex: (int)OblivionMod_FieldIndex.LoadScreens,
+                        errorMask: errorMask,
+                        masterReferences: masterReferences);
+                }
+            }
+            if (importMask?.LeveledSpells ?? true)
+            {
+                if (item.LeveledSpells.Items.Count > 0)
+                {
+                    LoquiBinaryTranslation<Group<LeveledSpell>>.Instance.Write(
+                        writer: writer,
+                        item: item.LeveledSpells,
+                        fieldIndex: (int)OblivionMod_FieldIndex.LeveledSpells,
+                        errorMask: errorMask,
+                        masterReferences: masterReferences);
+                }
+            }
+            if (importMask?.AnimatedObjects ?? true)
+            {
+                if (item.AnimatedObjects.Items.Count > 0)
+                {
+                    LoquiBinaryTranslation<Group<AnimatedObject>>.Instance.Write(
+                        writer: writer,
+                        item: item.AnimatedObjects,
+                        fieldIndex: (int)OblivionMod_FieldIndex.AnimatedObjects,
+                        errorMask: errorMask,
+                        masterReferences: masterReferences);
+                }
+            }
+            if (importMask?.Waters ?? true)
+            {
+                if (item.Waters.Items.Count > 0)
+                {
+                    LoquiBinaryTranslation<Group<Water>>.Instance.Write(
+                        writer: writer,
+                        item: item.Waters,
+                        fieldIndex: (int)OblivionMod_FieldIndex.Waters,
+                        errorMask: errorMask,
+                        masterReferences: masterReferences);
+                }
+            }
+            if (importMask?.EffectShaders ?? true)
+            {
+                if (item.EffectShaders.Items.Count > 0)
+                {
+                    LoquiBinaryTranslation<Group<EffectShader>>.Instance.Write(
+                        writer: writer,
+                        item: item.EffectShaders,
+                        fieldIndex: (int)OblivionMod_FieldIndex.EffectShaders,
+                        errorMask: errorMask,
+                        masterReferences: masterReferences);
+                }
+            }
+        }
+
+        #region Binary Write
+        public void Write_Binary(
+            MutagenWriter writer,
+            IOblivionModGetter item,
+            ModKey modKey,
+            RecordTypeConverter recordTypeConverter,
+            bool doMasks,
+            out OblivionMod_ErrorMask errorMask,
+            GroupMask importMask = null)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            Write_Binary(
+                importMask: importMask,
+                modKey: modKey,
+                writer: writer,
+                item: item,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMaskBuilder);
+            errorMask = OblivionMod_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public void Write_Binary(
+            MutagenWriter writer,
+            IOblivionModGetter item,
+            ModKey modKey,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask,
+            GroupMask importMask = null)
+        {
+            Write_Binary_RecordTypes(
+                item: item,
+                writer: writer,
+                importMask: importMask,
+                modKey: modKey,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask);
+        }
+        #endregion
+
     }
     #endregion
 

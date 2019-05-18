@@ -34,6 +34,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class LocalVariable : 
         LoquiNotifyingObject,
         ILocalVariable,
+        ILocalVariableInternal,
         ILoquiObject<LocalVariable>,
         ILoquiObjectSetter,
         IEquatable<LocalVariable>
@@ -131,6 +132,23 @@ namespace Mutagen.Bethesda.Oblivion
             this.Name_Set(default(String), false);
         }
         #endregion
+        #region SLSDDataTypeState
+        private LocalVariable.SLSDDataType _SLSDDataTypeState;
+        public LocalVariable.SLSDDataType SLSDDataTypeState
+        {
+            get => this._SLSDDataTypeState;
+            set => this.RaiseAndSetIfChanged(ref this._SLSDDataTypeState, value, nameof(SLSDDataTypeState));
+        }
+        LocalVariable.SLSDDataType ILocalVariableInternal.SLSDDataTypeState
+        {
+            get => this.SLSDDataTypeState;
+            set => this.SLSDDataTypeState = value;
+        }
+        LocalVariable.SLSDDataType ILocalVariableInternalGetter.SLSDDataTypeState
+        {
+            get => this.SLSDDataTypeState;
+        }
+        #endregion
 
         IMask<bool> IEqualsMask<LocalVariable>.GetEqualsMask(LocalVariable rhs, EqualsMaskHelper.Include include) => LocalVariableCommon.GetEqualsMask(this, rhs, include);
         IMask<bool> IEqualsMask<ILocalVariableGetter>.GetEqualsMask(ILocalVariableGetter rhs, EqualsMaskHelper.Include include) => LocalVariableCommon.GetEqualsMask(this, rhs, include);
@@ -175,6 +193,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 if (!string.Equals(this.Name, rhs.Name)) return false;
             }
+            if (this.SLSDDataTypeState != rhs.SLSDDataTypeState) return false;
             return true;
         }
 
@@ -189,6 +208,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 ret = HashHelper.GetHashCode(Name).CombineHashCode(ret);
             }
+            ret = HashHelper.GetHashCode(SLSDDataTypeState).CombineHashCode(ret);
             return ret;
         }
 
@@ -355,7 +375,8 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Xml(
+            LocalVariableXmlTranslation.Instance.Write_Xml(
+                item: this,
                 name: name,
                 node: node,
                 errorMask: errorMaskBuilder,
@@ -387,7 +408,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            this.Write_Xml(
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -418,7 +439,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            this.Write_Xml(
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -442,7 +463,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            this.Write_Xml(
                 name: name,
                 node: node,
                 errorMask: null,
@@ -455,7 +476,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            this.Write_Xml(
                 name: name,
                 node: node,
                 errorMask: null,
@@ -469,7 +490,7 @@ namespace Mutagen.Bethesda.Oblivion
             TranslationCrystal translationMask,
             string name = null)
         {
-            LocalVariableCommon.Write_Xml(
+            LocalVariableXmlTranslation.Instance.Write_Xml(
                 item: this,
                 name: name,
                 node: node,
@@ -491,6 +512,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case LocalVariable_FieldIndex.Fluff:
                 case LocalVariable_FieldIndex.Flags:
                 case LocalVariable_FieldIndex.Fluff2:
+                case LocalVariable_FieldIndex.SLSDDataTypeState:
                     return true;
                 default:
                     throw new ArgumentException($"Unknown field index: {index}");
@@ -499,7 +521,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = LocalVariable_Registration.TRIGGERING_RECORD_TYPE;
-        public SLSDDataType SLSDDataTypeState;
         [Flags]
         public enum SLSDDataType
         {
@@ -567,7 +588,8 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Binary(
+            LocalVariableBinaryTranslation.Instance.Write_Binary(
+                item: this,
                 masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: null,
@@ -592,7 +614,7 @@ namespace Mutagen.Bethesda.Oblivion
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            LocalVariableCommon.Write_Binary(
+            LocalVariableBinaryTranslation.Instance.Write_Binary(
                 item: this,
                 masterReferences: masterReferences,
                 writer: writer,
@@ -823,6 +845,9 @@ namespace Mutagen.Bethesda.Oblivion
                 case LocalVariable_FieldIndex.Name:
                     this.Name = (String)obj;
                     break;
+                case LocalVariable_FieldIndex.SLSDDataTypeState:
+                    this.SLSDDataTypeState = (LocalVariable.SLSDDataType)obj;
+                    break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -875,6 +900,9 @@ namespace Mutagen.Bethesda.Oblivion
                 case LocalVariable_FieldIndex.Name:
                     obj.Name = (String)pair.Value;
                     break;
+                case LocalVariable_FieldIndex.SLSDDataTypeState:
+                    obj.SLSDDataTypeState = (LocalVariable.SLSDDataType)pair.Value;
+                    break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
@@ -897,6 +925,12 @@ namespace Mutagen.Bethesda.Oblivion
         new bool Name_IsSet { get; set; }
         void Name_Set(String item, bool hasBeenSet = true);
         void Name_Unset();
+
+    }
+
+    public partial interface ILocalVariableInternal : ILocalVariable, ILocalVariableInternalGetter
+    {
+        new LocalVariable.SLSDDataType SLSDDataTypeState { get; set; }
 
     }
 
@@ -926,6 +960,15 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
+    public partial interface ILocalVariableInternalGetter : ILocalVariableGetter
+    {
+        #region SLSDDataTypeState
+        LocalVariable.SLSDDataType SLSDDataTypeState { get; }
+
+        #endregion
+
+    }
+
     #endregion
 
 }
@@ -940,6 +983,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         Flags = 2,
         Fluff2 = 3,
         Name = 4,
+        SLSDDataTypeState = 5,
     }
     #endregion
 
@@ -957,9 +1001,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const string GUID = "b77aa416-b182-4265-8276-44b34bace18f";
 
-        public const ushort AdditionalFieldCount = 5;
+        public const ushort AdditionalFieldCount = 6;
 
-        public const ushort FieldCount = 5;
+        public const ushort FieldCount = 6;
 
         public static readonly Type MaskType = typeof(LocalVariable_Mask<>);
 
@@ -969,11 +1013,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type GetterType = typeof(ILocalVariableGetter);
 
-        public static readonly Type InternalGetterType = null;
+        public static readonly Type InternalGetterType = typeof(ILocalVariableInternalGetter);
 
         public static readonly Type SetterType = typeof(ILocalVariable);
 
-        public static readonly Type InternalSetterType = null;
+        public static readonly Type InternalSetterType = typeof(ILocalVariableInternal);
 
         public static readonly Type CommonType = typeof(LocalVariableCommon);
 
@@ -1001,6 +1045,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (ushort)LocalVariable_FieldIndex.Fluff2;
                 case "NAME":
                     return (ushort)LocalVariable_FieldIndex.Name;
+                case "SLSDDATATYPESTATE":
+                    return (ushort)LocalVariable_FieldIndex.SLSDDataTypeState;
                 default:
                     return null;
             }
@@ -1016,6 +1062,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case LocalVariable_FieldIndex.Flags:
                 case LocalVariable_FieldIndex.Fluff2:
                 case LocalVariable_FieldIndex.Name:
+                case LocalVariable_FieldIndex.SLSDDataTypeState:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1032,6 +1079,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case LocalVariable_FieldIndex.Flags:
                 case LocalVariable_FieldIndex.Fluff2:
                 case LocalVariable_FieldIndex.Name:
+                case LocalVariable_FieldIndex.SLSDDataTypeState:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1048,6 +1096,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case LocalVariable_FieldIndex.Flags:
                 case LocalVariable_FieldIndex.Fluff2:
                 case LocalVariable_FieldIndex.Name:
+                case LocalVariable_FieldIndex.SLSDDataTypeState:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1069,6 +1118,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return "Fluff2";
                 case LocalVariable_FieldIndex.Name:
                     return "Name";
+                case LocalVariable_FieldIndex.SLSDDataTypeState:
+                    return "SLSDDataTypeState";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1084,6 +1135,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case LocalVariable_FieldIndex.Flags:
                 case LocalVariable_FieldIndex.Fluff2:
                 case LocalVariable_FieldIndex.Name:
+                case LocalVariable_FieldIndex.SLSDDataTypeState:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1100,6 +1152,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case LocalVariable_FieldIndex.Flags:
                 case LocalVariable_FieldIndex.Fluff2:
                 case LocalVariable_FieldIndex.Name:
+                case LocalVariable_FieldIndex.SLSDDataTypeState:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1121,6 +1174,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return typeof(Byte[]);
                 case LocalVariable_FieldIndex.Name:
                     return typeof(String);
+                case LocalVariable_FieldIndex.SLSDDataTypeState:
+                    return typeof(LocalVariable.SLSDDataType);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1358,6 +1413,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     fg.AppendLine($"Name => {item.Name}");
                 }
+                if (printMask?.SLSDDataTypeState ?? true)
+                {
+                }
             }
             fg.AppendLine("]");
         }
@@ -1378,107 +1436,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Flags = true;
             ret.Fluff2 = true;
             ret.Name = item.Name_IsSet;
+            ret.SLSDDataTypeState = true;
             return ret;
         }
 
         #region Xml Translation
-        #region Xml Write
-        public static void Write_Xml(
-            XElement node,
-            LocalVariable item,
-            bool doMasks,
-            out LocalVariable_ErrorMask errorMask,
-            LocalVariable_TranslationMask translationMask,
-            string name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_Xml(
-                name: name,
-                node: node,
-                item: item,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = LocalVariable_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void Write_Xml(
-            XElement node,
-            LocalVariable item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.LocalVariable");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.LocalVariable");
-            }
-            WriteToNode_Xml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #endregion
-
-        public static void WriteToNode_Xml(
-            this LocalVariable item,
-            XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            if (item.SLSDDataTypeState.HasFlag(LocalVariable.SLSDDataType.Has))
-            {
-                if ((translationMask?.GetShouldTranslate((int)LocalVariable_FieldIndex.Index) ?? true))
-                {
-                    Int32XmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.Index),
-                        item: item.Index,
-                        fieldIndex: (int)LocalVariable_FieldIndex.Index,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)LocalVariable_FieldIndex.Fluff) ?? true))
-                {
-                    ByteArrayXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.Fluff),
-                        item: item.Fluff,
-                        fieldIndex: (int)LocalVariable_FieldIndex.Fluff,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)LocalVariable_FieldIndex.Flags) ?? true))
-                {
-                    EnumXmlTranslation<Script.LocalVariableFlag>.Instance.Write(
-                        node: node,
-                        name: nameof(item.Flags),
-                        item: item.Flags,
-                        fieldIndex: (int)LocalVariable_FieldIndex.Flags,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)LocalVariable_FieldIndex.Fluff2) ?? true))
-                {
-                    ByteArrayXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.Fluff2),
-                        item: item.Fluff2,
-                        fieldIndex: (int)LocalVariable_FieldIndex.Fluff2,
-                        errorMask: errorMask);
-                }
-            }
-            if (item.Name_IsSet
-                && (translationMask?.GetShouldTranslate((int)LocalVariable_FieldIndex.Name) ?? true))
-            {
-                StringXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Name),
-                    item: item.Name,
-                    fieldIndex: (int)LocalVariable_FieldIndex.Name,
-                    errorMask: errorMask);
-            }
-        }
-
         public static void FillPublic_Xml(
             this LocalVariable item,
             XElement node,
@@ -1644,82 +1606,34 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask?.PopIndex();
                     }
                     break;
+                case "SLSDDataTypeState":
+                    try
+                    {
+                        errorMask?.PushIndex((int)LocalVariable_FieldIndex.SLSDDataTypeState);
+                        if (EnumXmlTranslation<LocalVariable.SLSDDataType>.Instance.Parse(
+                            node: node,
+                            item: out LocalVariable.SLSDDataType SLSDDataTypeStateParse,
+                            errorMask: errorMask))
+                        {
+                            item.SLSDDataTypeState = SLSDDataTypeStateParse;
+                        }
+                        else
+                        {
+                            item.SLSDDataTypeState = default(LocalVariable.SLSDDataType);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
                 default:
                     break;
-            }
-        }
-
-        #endregion
-
-        #region Binary Translation
-        #region Binary Write
-        public static void Write_Binary(
-            MutagenWriter writer,
-            LocalVariable item,
-            MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            bool doMasks,
-            out LocalVariable_ErrorMask errorMask)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_Binary(
-                masterReferences: masterReferences,
-                writer: writer,
-                item: item,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMaskBuilder);
-            errorMask = LocalVariable_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void Write_Binary(
-            MutagenWriter writer,
-            LocalVariable item,
-            MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
-        {
-            Write_Binary_RecordTypes(
-                item: item,
-                writer: writer,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMask,
-                masterReferences: masterReferences);
-        }
-        #endregion
-
-        public static void Write_Binary_RecordTypes(
-            LocalVariable item,
-            MutagenWriter writer,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask,
-            MasterReferences masterReferences)
-        {
-            if (item.SLSDDataTypeState.HasFlag(LocalVariable.SLSDDataType.Has))
-            {
-                using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(LocalVariable_Registration.SLSD_HEADER)))
-                {
-                    Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.Index);
-                    Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.Fluff);
-                    Mutagen.Bethesda.Binary.EnumBinaryTranslation<Script.LocalVariableFlag>.Instance.Write(
-                        writer,
-                        item.Flags,
-                        length: 4);
-                    Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.Fluff2);
-                }
-            }
-            if (item.Name_IsSet)
-            {
-                Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Name,
-                    header: recordTypeConverter.ConvertToCustom(LocalVariable_Registration.SCVR_HEADER),
-                    nullable: false);
             }
         }
 
@@ -1729,6 +1643,120 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Modules
+    #region Xml Translation
+    public partial class LocalVariableXmlTranslation
+    {
+        public readonly static LocalVariableXmlTranslation Instance = new LocalVariableXmlTranslation();
+
+        public static void WriteToNode_Xml(
+            ILocalVariableInternalGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            if (item.SLSDDataTypeState.HasFlag(LocalVariable.SLSDDataType.Has))
+            {
+                if ((translationMask?.GetShouldTranslate((int)LocalVariable_FieldIndex.Index) ?? true))
+                {
+                    Int32XmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.Index),
+                        item: item.Index,
+                        fieldIndex: (int)LocalVariable_FieldIndex.Index,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)LocalVariable_FieldIndex.Fluff) ?? true))
+                {
+                    ByteArrayXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.Fluff),
+                        item: item.Fluff,
+                        fieldIndex: (int)LocalVariable_FieldIndex.Fluff,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)LocalVariable_FieldIndex.Flags) ?? true))
+                {
+                    EnumXmlTranslation<Script.LocalVariableFlag>.Instance.Write(
+                        node: node,
+                        name: nameof(item.Flags),
+                        item: item.Flags,
+                        fieldIndex: (int)LocalVariable_FieldIndex.Flags,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)LocalVariable_FieldIndex.Fluff2) ?? true))
+                {
+                    ByteArrayXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.Fluff2),
+                        item: item.Fluff2,
+                        fieldIndex: (int)LocalVariable_FieldIndex.Fluff2,
+                        errorMask: errorMask);
+                }
+            }
+            if (item.Name_IsSet
+                && (translationMask?.GetShouldTranslate((int)LocalVariable_FieldIndex.Name) ?? true))
+            {
+                StringXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Name),
+                    item: item.Name,
+                    fieldIndex: (int)LocalVariable_FieldIndex.Name,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)LocalVariable_FieldIndex.SLSDDataTypeState) ?? true))
+            {
+                EnumXmlTranslation<LocalVariable.SLSDDataType>.Instance.Write(
+                    node: node,
+                    name: nameof(item.SLSDDataTypeState),
+                    item: item.SLSDDataTypeState,
+                    fieldIndex: (int)LocalVariable_FieldIndex.SLSDDataTypeState,
+                    errorMask: errorMask);
+            }
+        }
+
+        #region Xml Write
+        public void Write_Xml(
+            XElement node,
+            ILocalVariableInternalGetter item,
+            bool doMasks,
+            out LocalVariable_ErrorMask errorMask,
+            LocalVariable_TranslationMask translationMask,
+            string name = null)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            Write_Xml(
+                name: name,
+                node: node,
+                item: item,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal());
+            errorMask = LocalVariable_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public void Write_Xml(
+            XElement node,
+            ILocalVariableInternalGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.LocalVariable");
+            node.Add(elem);
+            if (name != null)
+            {
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.LocalVariable");
+            }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        #endregion
+
+    }
+    #endregion
+
     #region Mask
     public class LocalVariable_Mask<T> : IMask<T>, IEquatable<LocalVariable_Mask<T>>
     {
@@ -1744,6 +1772,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.Flags = initialValue;
             this.Fluff2 = initialValue;
             this.Name = initialValue;
+            this.SLSDDataTypeState = initialValue;
         }
         #endregion
 
@@ -1753,6 +1782,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public T Flags;
         public T Fluff2;
         public T Name;
+        public T SLSDDataTypeState;
         #endregion
 
         #region Equals
@@ -1770,6 +1800,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (!object.Equals(this.Flags, rhs.Flags)) return false;
             if (!object.Equals(this.Fluff2, rhs.Fluff2)) return false;
             if (!object.Equals(this.Name, rhs.Name)) return false;
+            if (!object.Equals(this.SLSDDataTypeState, rhs.SLSDDataTypeState)) return false;
             return true;
         }
         public override int GetHashCode()
@@ -1780,6 +1811,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret = ret.CombineHashCode(this.Flags?.GetHashCode());
             ret = ret.CombineHashCode(this.Fluff2?.GetHashCode());
             ret = ret.CombineHashCode(this.Name?.GetHashCode());
+            ret = ret.CombineHashCode(this.SLSDDataTypeState?.GetHashCode());
             return ret;
         }
 
@@ -1793,6 +1825,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (!eval(this.Flags)) return false;
             if (!eval(this.Fluff2)) return false;
             if (!eval(this.Name)) return false;
+            if (!eval(this.SLSDDataTypeState)) return false;
             return true;
         }
         #endregion
@@ -1812,6 +1845,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             obj.Flags = eval(this.Flags);
             obj.Fluff2 = eval(this.Fluff2);
             obj.Name = eval(this.Name);
+            obj.SLSDDataTypeState = eval(this.SLSDDataTypeState);
         }
         #endregion
 
@@ -1860,6 +1894,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     fg.AppendLine($"Name => {Name}");
                 }
+                if (printMask?.SLSDDataTypeState ?? true)
+                {
+                    fg.AppendLine($"SLSDDataTypeState => {SLSDDataTypeState}");
+                }
             }
             fg.AppendLine("]");
         }
@@ -1888,6 +1926,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Exception Flags;
         public Exception Fluff2;
         public Exception Name;
+        public Exception SLSDDataTypeState;
         #endregion
 
         #region IErrorMask
@@ -1906,6 +1945,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return Fluff2;
                 case LocalVariable_FieldIndex.Name:
                     return Name;
+                case LocalVariable_FieldIndex.SLSDDataTypeState:
+                    return SLSDDataTypeState;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1930,6 +1971,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     break;
                 case LocalVariable_FieldIndex.Name:
                     this.Name = ex;
+                    break;
+                case LocalVariable_FieldIndex.SLSDDataTypeState:
+                    this.SLSDDataTypeState = ex;
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1956,6 +2000,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case LocalVariable_FieldIndex.Name:
                     this.Name = (Exception)obj;
                     break;
+                case LocalVariable_FieldIndex.SLSDDataTypeState:
+                    this.SLSDDataTypeState = (Exception)obj;
+                    break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1969,6 +2016,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (Flags != null) return true;
             if (Fluff2 != null) return true;
             if (Name != null) return true;
+            if (SLSDDataTypeState != null) return true;
             return false;
         }
         #endregion
@@ -2008,6 +2056,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             fg.AppendLine($"Flags => {Flags}");
             fg.AppendLine($"Fluff2 => {Fluff2}");
             fg.AppendLine($"Name => {Name}");
+            fg.AppendLine($"SLSDDataTypeState => {SLSDDataTypeState}");
         }
         #endregion
 
@@ -2020,6 +2069,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Flags = this.Flags.Combine(rhs.Flags);
             ret.Fluff2 = this.Fluff2.Combine(rhs.Fluff2);
             ret.Name = this.Name.Combine(rhs.Name);
+            ret.SLSDDataTypeState = this.SLSDDataTypeState.Combine(rhs.SLSDDataTypeState);
             return ret;
         }
         public static LocalVariable_ErrorMask Combine(LocalVariable_ErrorMask lhs, LocalVariable_ErrorMask rhs)
@@ -2051,6 +2101,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.Flags = defaultOn;
             this.Fluff2 = defaultOn;
             this.Name = defaultOn;
+            this.SLSDDataTypeState = defaultOn;
         }
 
         #region Members
@@ -2059,6 +2110,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool Flags;
         public bool Fluff2;
         public bool Name;
+        public bool SLSDDataTypeState;
         #endregion
 
     }
@@ -2072,6 +2124,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool Flags;
         public bool Fluff2;
         public bool Name;
+        public bool SLSDDataTypeState;
         #endregion
 
         #region Ctors
@@ -2086,6 +2139,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.Flags = defaultOn;
             this.Fluff2 = defaultOn;
             this.Name = defaultOn;
+            this.SLSDDataTypeState = defaultOn;
         }
 
         #endregion
@@ -2109,7 +2163,100 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Add((Flags, null));
             ret.Add((Fluff2, null));
             ret.Add((Name, null));
+            ret.Add((SLSDDataTypeState, null));
         }
+    }
+    #endregion
+
+    #region Binary Translation
+    public partial class LocalVariableBinaryTranslation
+    {
+        public readonly static LocalVariableBinaryTranslation Instance = new LocalVariableBinaryTranslation();
+
+        public static void Write_Binary_Embedded(
+            ILocalVariableInternalGetter item,
+            MutagenWriter writer,
+            ErrorMaskBuilder errorMask,
+            MasterReferences masterReferences)
+        {
+        }
+
+        public static void Write_Binary_RecordTypes(
+            ILocalVariableInternalGetter item,
+            MutagenWriter writer,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask,
+            MasterReferences masterReferences)
+        {
+            if (item.SLSDDataTypeState.HasFlag(LocalVariable.SLSDDataType.Has))
+            {
+                using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(LocalVariable_Registration.SLSD_HEADER)))
+                {
+                    Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.Index);
+                    Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.Fluff);
+                    Mutagen.Bethesda.Binary.EnumBinaryTranslation<Script.LocalVariableFlag>.Instance.Write(
+                        writer,
+                        item.Flags,
+                        length: 4);
+                    Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.Fluff2);
+                }
+            }
+            if (item.Name_IsSet)
+            {
+                Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Name,
+                    header: recordTypeConverter.ConvertToCustom(LocalVariable_Registration.SCVR_HEADER),
+                    nullable: false);
+            }
+        }
+
+        #region Binary Write
+        public void Write_Binary(
+            MutagenWriter writer,
+            ILocalVariableInternalGetter item,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            bool doMasks,
+            out LocalVariable_ErrorMask errorMask)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            Write_Binary(
+                masterReferences: masterReferences,
+                writer: writer,
+                item: item,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMaskBuilder);
+            errorMask = LocalVariable_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public void Write_Binary(
+            MutagenWriter writer,
+            ILocalVariableInternalGetter item,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            Write_Binary_Embedded(
+                item: item,
+                writer: writer,
+                errorMask: errorMask,
+                masterReferences: masterReferences);
+            Write_Binary_RecordTypes(
+                item: item,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask,
+                masterReferences: masterReferences);
+        }
+        #endregion
+
     }
     #endregion
 

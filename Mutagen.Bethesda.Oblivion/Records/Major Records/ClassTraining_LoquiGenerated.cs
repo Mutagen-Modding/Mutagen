@@ -299,7 +299,8 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Xml(
+            ClassTrainingXmlTranslation.Instance.Write_Xml(
+                item: this,
                 name: name,
                 node: node,
                 errorMask: errorMaskBuilder,
@@ -331,7 +332,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            this.Write_Xml(
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -362,7 +363,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            this.Write_Xml(
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -386,7 +387,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            this.Write_Xml(
                 name: name,
                 node: node,
                 errorMask: null,
@@ -399,7 +400,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            this.Write_Xml(
                 name: name,
                 node: node,
                 errorMask: null,
@@ -413,7 +414,7 @@ namespace Mutagen.Bethesda.Oblivion
             TranslationCrystal translationMask,
             string name = null)
         {
-            ClassTrainingCommon.Write_Xml(
+            ClassTrainingXmlTranslation.Instance.Write_Xml(
                 item: this,
                 name: name,
                 node: node,
@@ -497,7 +498,8 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Binary(
+            ClassTrainingBinaryTranslation.Instance.Write_Binary(
+                item: this,
                 masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: null,
@@ -522,7 +524,7 @@ namespace Mutagen.Bethesda.Oblivion
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            ClassTrainingCommon.Write_Binary(
+            ClassTrainingBinaryTranslation.Instance.Write_Binary(
                 item: this,
                 masterReferences: masterReferences,
                 writer: writer,
@@ -1140,81 +1142,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         #region Xml Translation
-        #region Xml Write
-        public static void Write_Xml(
-            XElement node,
-            ClassTraining item,
-            bool doMasks,
-            out ClassTraining_ErrorMask errorMask,
-            ClassTraining_TranslationMask translationMask,
-            string name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_Xml(
-                name: name,
-                node: node,
-                item: item,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = ClassTraining_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void Write_Xml(
-            XElement node,
-            ClassTraining item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.ClassTraining");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.ClassTraining");
-            }
-            WriteToNode_Xml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #endregion
-
-        public static void WriteToNode_Xml(
-            this ClassTraining item,
-            XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            if ((translationMask?.GetShouldTranslate((int)ClassTraining_FieldIndex.TrainedSkill) ?? true))
-            {
-                EnumXmlTranslation<Skill>.Instance.Write(
-                    node: node,
-                    name: nameof(item.TrainedSkill),
-                    item: item.TrainedSkill,
-                    fieldIndex: (int)ClassTraining_FieldIndex.TrainedSkill,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)ClassTraining_FieldIndex.MaximumTrainingLevel) ?? true))
-            {
-                ByteXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.MaximumTrainingLevel),
-                    item: item.MaximumTrainingLevel,
-                    fieldIndex: (int)ClassTraining_FieldIndex.MaximumTrainingLevel,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)ClassTraining_FieldIndex.Fluff) ?? true))
-            {
-                ByteArrayXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Fluff),
-                    item: item.Fluff,
-                    fieldIndex: (int)ClassTraining_FieldIndex.Fluff,
-                    errorMask: errorMask);
-            }
-        }
-
         public static void FillPublic_Xml(
             this ClassTraining item,
             XElement node,
@@ -1334,65 +1261,93 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        #region Binary Translation
-        #region Binary Write
-        public static void Write_Binary(
-            MutagenWriter writer,
-            ClassTraining item,
-            MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
+    }
+    #endregion
+
+    #region Modules
+    #region Xml Translation
+    public partial class ClassTrainingXmlTranslation
+    {
+        public readonly static ClassTrainingXmlTranslation Instance = new ClassTrainingXmlTranslation();
+
+        public static void WriteToNode_Xml(
+            IClassTrainingGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            if ((translationMask?.GetShouldTranslate((int)ClassTraining_FieldIndex.TrainedSkill) ?? true))
+            {
+                EnumXmlTranslation<Skill>.Instance.Write(
+                    node: node,
+                    name: nameof(item.TrainedSkill),
+                    item: item.TrainedSkill,
+                    fieldIndex: (int)ClassTraining_FieldIndex.TrainedSkill,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)ClassTraining_FieldIndex.MaximumTrainingLevel) ?? true))
+            {
+                ByteXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.MaximumTrainingLevel),
+                    item: item.MaximumTrainingLevel,
+                    fieldIndex: (int)ClassTraining_FieldIndex.MaximumTrainingLevel,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)ClassTraining_FieldIndex.Fluff) ?? true))
+            {
+                ByteArrayXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Fluff),
+                    item: item.Fluff,
+                    fieldIndex: (int)ClassTraining_FieldIndex.Fluff,
+                    errorMask: errorMask);
+            }
+        }
+
+        #region Xml Write
+        public void Write_Xml(
+            XElement node,
+            IClassTrainingGetter item,
             bool doMasks,
-            out ClassTraining_ErrorMask errorMask)
+            out ClassTraining_ErrorMask errorMask,
+            ClassTraining_TranslationMask translationMask,
+            string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_Binary(
-                masterReferences: masterReferences,
-                writer: writer,
+            Write_Xml(
+                name: name,
+                node: node,
                 item: item,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMaskBuilder);
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal());
             errorMask = ClassTraining_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void Write_Binary(
-            MutagenWriter writer,
-            ClassTraining item,
-            MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
-        {
-            Write_Binary_Embedded(
-                item: item,
-                writer: writer,
-                errorMask: errorMask,
-                masterReferences: masterReferences);
-        }
-        #endregion
-
-        public static void Write_Binary_Embedded(
-            ClassTraining item,
-            MutagenWriter writer,
+        public void Write_Xml(
+            XElement node,
+            IClassTrainingGetter item,
             ErrorMaskBuilder errorMask,
-            MasterReferences masterReferences)
+            TranslationCrystal translationMask,
+            string name = null)
         {
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<Skill>.Instance.Write(
-                writer,
-                item.TrainedSkill,
-                length: 1);
-            Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.MaximumTrainingLevel);
-            Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.Fluff);
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.ClassTraining");
+            node.Add(elem);
+            if (name != null)
+            {
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.ClassTraining");
+            }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
         }
-
         #endregion
 
     }
     #endregion
 
-    #region Modules
     #region Mask
     public class ClassTraining_Mask<T> : IMask<T>, IEquatable<ClassTraining_Mask<T>>
     {
@@ -1720,6 +1675,66 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Add((MaximumTrainingLevel, null));
             ret.Add((Fluff, null));
         }
+    }
+    #endregion
+
+    #region Binary Translation
+    public partial class ClassTrainingBinaryTranslation
+    {
+        public readonly static ClassTrainingBinaryTranslation Instance = new ClassTrainingBinaryTranslation();
+
+        public static void Write_Binary_Embedded(
+            IClassTrainingGetter item,
+            MutagenWriter writer,
+            ErrorMaskBuilder errorMask,
+            MasterReferences masterReferences)
+        {
+            Mutagen.Bethesda.Binary.EnumBinaryTranslation<Skill>.Instance.Write(
+                writer,
+                item.TrainedSkill,
+                length: 1);
+            Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.MaximumTrainingLevel);
+            Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.Fluff);
+        }
+
+        #region Binary Write
+        public void Write_Binary(
+            MutagenWriter writer,
+            IClassTrainingGetter item,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            bool doMasks,
+            out ClassTraining_ErrorMask errorMask)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            Write_Binary(
+                masterReferences: masterReferences,
+                writer: writer,
+                item: item,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMaskBuilder);
+            errorMask = ClassTraining_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public void Write_Binary(
+            MutagenWriter writer,
+            IClassTrainingGetter item,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            Write_Binary_Embedded(
+                item: item,
+                writer: writer,
+                errorMask: errorMask,
+                masterReferences: masterReferences);
+        }
+        #endregion
+
     }
     #endregion
 

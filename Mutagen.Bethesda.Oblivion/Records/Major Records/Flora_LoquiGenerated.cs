@@ -36,6 +36,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class Flora : 
         OblivionMajorRecord,
         IFlora,
+        IFloraInternal,
         ILoquiObject<Flora>,
         ILoquiObjectSetter,
         INamed,
@@ -167,6 +168,23 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
         #endregion
+        #region PFPCDataTypeState
+        private Flora.PFPCDataType _PFPCDataTypeState;
+        public Flora.PFPCDataType PFPCDataTypeState
+        {
+            get => this._PFPCDataTypeState;
+            set => this.RaiseAndSetIfChanged(ref this._PFPCDataTypeState, value, nameof(PFPCDataTypeState));
+        }
+        Flora.PFPCDataType IFloraInternal.PFPCDataTypeState
+        {
+            get => this.PFPCDataTypeState;
+            set => this.PFPCDataTypeState = value;
+        }
+        Flora.PFPCDataType IFloraInternalGetter.PFPCDataTypeState
+        {
+            get => this.PFPCDataTypeState;
+        }
+        #endregion
 
         IMask<bool> IEqualsMask<Flora>.GetEqualsMask(Flora rhs, EqualsMaskHelper.Include include) => FloraCommon.GetEqualsMask(this, rhs, include);
         IMask<bool> IEqualsMask<IFloraGetter>.GetEqualsMask(IFloraGetter rhs, EqualsMaskHelper.Include include) => FloraCommon.GetEqualsMask(this, rhs, include);
@@ -227,6 +245,7 @@ namespace Mutagen.Bethesda.Oblivion
             if (this.Summer != rhs.Summer) return false;
             if (this.Fall != rhs.Fall) return false;
             if (this.Winter != rhs.Winter) return false;
+            if (this.PFPCDataTypeState != rhs.PFPCDataTypeState) return false;
             return true;
         }
 
@@ -253,6 +272,7 @@ namespace Mutagen.Bethesda.Oblivion
             ret = HashHelper.GetHashCode(Summer).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(Fall).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(Winter).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(PFPCDataTypeState).CombineHashCode(ret);
             ret = ret.CombineHashCode(base.GetHashCode());
             return ret;
         }
@@ -426,7 +446,8 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Xml(
+            FloraXmlTranslation.Instance.Write_Xml(
+                item: this,
                 name: name,
                 node: node,
                 errorMask: errorMaskBuilder,
@@ -458,7 +479,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            this.Write_Xml(
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -489,7 +510,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            this.Write_Xml(
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -505,7 +526,8 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Xml(
+            FloraXmlTranslation.Instance.Write_Xml(
+                item: this,
                 name: name,
                 node: node,
                 errorMask: errorMaskBuilder,
@@ -521,7 +543,8 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Xml(
+            FloraXmlTranslation.Instance.Write_Xml(
+                item: this,
                 name: name,
                 node: node,
                 errorMask: errorMaskBuilder,
@@ -537,7 +560,7 @@ namespace Mutagen.Bethesda.Oblivion
             TranslationCrystal translationMask,
             string name = null)
         {
-            FloraCommon.Write_Xml(
+            FloraXmlTranslation.Instance.Write_Xml(
                 item: this,
                 name: name,
                 node: node,
@@ -586,6 +609,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case Flora_FieldIndex.Summer:
                 case Flora_FieldIndex.Fall:
                 case Flora_FieldIndex.Winter:
+                case Flora_FieldIndex.PFPCDataTypeState:
                     return true;
                 default:
                     return base.GetHasBeenSet(index);
@@ -594,7 +618,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = Flora_Registration.TRIGGERING_RECORD_TYPE;
-        public PFPCDataType PFPCDataTypeState;
         [Flags]
         public enum PFPCDataType
         {
@@ -705,7 +728,8 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Binary(
+            FloraBinaryTranslation.Instance.Write_Binary(
+                item: this,
                 masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: null,
@@ -721,7 +745,8 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Binary(
+            FloraBinaryTranslation.Instance.Write_Binary(
+                item: this,
                 masterReferences: masterReferences,
                 writer: writer,
                 errorMask: errorMaskBuilder,
@@ -736,7 +761,8 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Binary(
+            FloraBinaryTranslation.Instance.Write_Binary(
+                item: this,
                 masterReferences: masterReferences,
                 writer: writer,
                 errorMask: errorMaskBuilder,
@@ -752,7 +778,7 @@ namespace Mutagen.Bethesda.Oblivion
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            FloraCommon.Write_Binary(
+            FloraBinaryTranslation.Instance.Write_Binary(
                 item: this,
                 masterReferences: masterReferences,
                 writer: writer,
@@ -1049,6 +1075,9 @@ namespace Mutagen.Bethesda.Oblivion
                 case Flora_FieldIndex.Winter:
                     this.Winter = (Byte)obj;
                     break;
+                case Flora_FieldIndex.PFPCDataTypeState:
+                    this.PFPCDataTypeState = (Flora.PFPCDataType)obj;
+                    break;
                 default:
                     base.SetNthObject(index, obj);
                     break;
@@ -1104,6 +1133,9 @@ namespace Mutagen.Bethesda.Oblivion
                 case Flora_FieldIndex.Winter:
                     obj.Winter = (Byte)pair.Value;
                     break;
+                case Flora_FieldIndex.PFPCDataTypeState:
+                    obj.PFPCDataTypeState = (Flora.PFPCDataType)pair.Value;
+                    break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
@@ -1133,6 +1165,14 @@ namespace Mutagen.Bethesda.Oblivion
         new Byte Fall { get; set; }
 
         new Byte Winter { get; set; }
+
+    }
+
+    public partial interface IFloraInternal : IFlora, IFloraInternalGetter, IOblivionMajorRecordInternal
+    {
+        new Script Script { get; set; }
+        new Ingredient Ingredient { get; set; }
+        new Flora.PFPCDataType PFPCDataTypeState { get; set; }
 
     }
 
@@ -1177,6 +1217,15 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
+    public partial interface IFloraInternalGetter : IFloraGetter, IOblivionMajorRecordInternalGetter
+    {
+        #region PFPCDataTypeState
+        Flora.PFPCDataType PFPCDataTypeState { get; }
+
+        #endregion
+
+    }
+
     #endregion
 
 }
@@ -1186,19 +1235,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #region Field Index
     public enum Flora_FieldIndex
     {
-        FormKey = 0,
-        Version = 1,
-        EditorID = 2,
-        RecordType = 3,
-        OblivionMajorRecordFlags = 4,
-        Name = 5,
-        Model = 6,
-        Script = 7,
-        Ingredient = 8,
-        Spring = 9,
-        Summer = 10,
-        Fall = 11,
-        Winter = 12,
+        MajorRecordFlagsRaw = 0,
+        FormKey = 1,
+        Version = 2,
+        EditorID = 3,
+        RecordType = 4,
+        OblivionMajorRecordFlags = 5,
+        Name = 6,
+        Model = 7,
+        Script = 8,
+        Ingredient = 9,
+        Spring = 10,
+        Summer = 11,
+        Fall = 12,
+        Winter = 13,
+        PFPCDataTypeState = 14,
     }
     #endregion
 
@@ -1216,9 +1267,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const string GUID = "5cc7a37a-95ea-4486-8c4c-02c55c3a4566";
 
-        public const ushort AdditionalFieldCount = 8;
+        public const ushort AdditionalFieldCount = 9;
 
-        public const ushort FieldCount = 13;
+        public const ushort FieldCount = 15;
 
         public static readonly Type MaskType = typeof(Flora_Mask<>);
 
@@ -1228,11 +1279,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type GetterType = typeof(IFloraGetter);
 
-        public static readonly Type InternalGetterType = null;
+        public static readonly Type InternalGetterType = typeof(IFloraInternalGetter);
 
         public static readonly Type SetterType = typeof(IFlora);
 
-        public static readonly Type InternalSetterType = null;
+        public static readonly Type InternalSetterType = typeof(IFloraInternal);
 
         public static readonly Type CommonType = typeof(FloraCommon);
 
@@ -1266,6 +1317,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (ushort)Flora_FieldIndex.Fall;
                 case "WINTER":
                     return (ushort)Flora_FieldIndex.Winter;
+                case "PFPCDATATYPESTATE":
+                    return (ushort)Flora_FieldIndex.PFPCDataTypeState;
                 default:
                     return null;
             }
@@ -1284,6 +1337,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Flora_FieldIndex.Summer:
                 case Flora_FieldIndex.Fall:
                 case Flora_FieldIndex.Winter:
+                case Flora_FieldIndex.PFPCDataTypeState:
                     return false;
                 default:
                     return OblivionMajorRecord_Registration.GetNthIsEnumerable(index);
@@ -1304,6 +1358,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Flora_FieldIndex.Summer:
                 case Flora_FieldIndex.Fall:
                 case Flora_FieldIndex.Winter:
+                case Flora_FieldIndex.PFPCDataTypeState:
                     return false;
                 default:
                     return OblivionMajorRecord_Registration.GetNthIsLoqui(index);
@@ -1323,6 +1378,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Flora_FieldIndex.Summer:
                 case Flora_FieldIndex.Fall:
                 case Flora_FieldIndex.Winter:
+                case Flora_FieldIndex.PFPCDataTypeState:
                     return false;
                 default:
                     return OblivionMajorRecord_Registration.GetNthIsSingleton(index);
@@ -1350,6 +1406,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return "Fall";
                 case Flora_FieldIndex.Winter:
                     return "Winter";
+                case Flora_FieldIndex.PFPCDataTypeState:
+                    return "PFPCDataTypeState";
                 default:
                     return OblivionMajorRecord_Registration.GetNthName(index);
             }
@@ -1368,6 +1426,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Flora_FieldIndex.Summer:
                 case Flora_FieldIndex.Fall:
                 case Flora_FieldIndex.Winter:
+                case Flora_FieldIndex.PFPCDataTypeState:
                     return false;
                 default:
                     return OblivionMajorRecord_Registration.IsNthDerivative(index);
@@ -1387,6 +1446,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Flora_FieldIndex.Summer:
                 case Flora_FieldIndex.Fall:
                 case Flora_FieldIndex.Winter:
+                case Flora_FieldIndex.PFPCDataTypeState:
                     return false;
                 default:
                     return OblivionMajorRecord_Registration.IsProtected(index);
@@ -1414,6 +1474,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return typeof(Byte);
                 case Flora_FieldIndex.Winter:
                     return typeof(Byte);
+                case Flora_FieldIndex.PFPCDataTypeState:
+                    return typeof(Flora.PFPCDataType);
                 default:
                     return OblivionMajorRecord_Registration.GetNthType(index);
             }
@@ -1777,6 +1839,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     fg.AppendLine($"Winter => {item.Winter}");
                 }
+                if (printMask?.PFPCDataTypeState ?? true)
+                {
+                }
             }
             fg.AppendLine("]");
         }
@@ -1804,6 +1869,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Summer = true;
             ret.Fall = true;
             ret.Winter = true;
+            ret.PFPCDataTypeState = true;
             return ret;
         }
 
@@ -1817,6 +1883,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (index)
             {
+                case OblivionMajorRecord_FieldIndex.MajorRecordFlagsRaw:
+                    return (Flora_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.FormKey:
                     return (Flora_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.Version:
@@ -1842,6 +1910,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (index)
             {
+                case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
+                    return (Flora_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
                     return (Flora_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.Version:
@@ -1856,139 +1926,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         #region Xml Translation
-        #region Xml Write
-        public static void Write_Xml(
-            XElement node,
-            Flora item,
-            bool doMasks,
-            out Flora_ErrorMask errorMask,
-            Flora_TranslationMask translationMask,
-            string name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_Xml(
-                name: name,
-                node: node,
-                item: item,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = Flora_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void Write_Xml(
-            XElement node,
-            Flora item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.Flora");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.Flora");
-            }
-            WriteToNode_Xml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #endregion
-
-        public static void WriteToNode_Xml(
-            this Flora item,
-            XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            OblivionMajorRecordCommon.WriteToNode_Xml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            if (item.Name_IsSet
-                && (translationMask?.GetShouldTranslate((int)Flora_FieldIndex.Name) ?? true))
-            {
-                StringXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Name),
-                    item: item.Name,
-                    fieldIndex: (int)Flora_FieldIndex.Name,
-                    errorMask: errorMask);
-            }
-            if (item.Model_IsSet
-                && (translationMask?.GetShouldTranslate((int)Flora_FieldIndex.Model) ?? true))
-            {
-                LoquiXmlTranslation<Model>.Instance.Write(
-                    node: node,
-                    item: item.Model,
-                    name: nameof(item.Model),
-                    fieldIndex: (int)Flora_FieldIndex.Model,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Flora_FieldIndex.Model));
-            }
-            if (item.Script_Property.HasBeenSet
-                && (translationMask?.GetShouldTranslate((int)Flora_FieldIndex.Script) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Script),
-                    item: item.Script_Property?.FormKey,
-                    fieldIndex: (int)Flora_FieldIndex.Script,
-                    errorMask: errorMask);
-            }
-            if (item.Ingredient_Property.HasBeenSet
-                && (translationMask?.GetShouldTranslate((int)Flora_FieldIndex.Ingredient) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Ingredient),
-                    item: item.Ingredient_Property?.FormKey,
-                    fieldIndex: (int)Flora_FieldIndex.Ingredient,
-                    errorMask: errorMask);
-            }
-            if (item.PFPCDataTypeState.HasFlag(Flora.PFPCDataType.Has))
-            {
-                if ((translationMask?.GetShouldTranslate((int)Flora_FieldIndex.Spring) ?? true))
-                {
-                    ByteXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.Spring),
-                        item: item.Spring,
-                        fieldIndex: (int)Flora_FieldIndex.Spring,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Flora_FieldIndex.Summer) ?? true))
-                {
-                    ByteXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.Summer),
-                        item: item.Summer,
-                        fieldIndex: (int)Flora_FieldIndex.Summer,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Flora_FieldIndex.Fall) ?? true))
-                {
-                    ByteXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.Fall),
-                        item: item.Fall,
-                        fieldIndex: (int)Flora_FieldIndex.Fall,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Flora_FieldIndex.Winter) ?? true))
-                {
-                    ByteXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.Winter),
-                        item: item.Winter,
-                        fieldIndex: (int)Flora_FieldIndex.Winter,
-                        errorMask: errorMask);
-                }
-            }
-        }
-
         public static void FillPublic_Xml(
             this Flora item,
             XElement node,
@@ -2195,6 +2132,32 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask?.PopIndex();
                     }
                     break;
+                case "PFPCDataTypeState":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Flora_FieldIndex.PFPCDataTypeState);
+                        if (EnumXmlTranslation<Flora.PFPCDataType>.Instance.Parse(
+                            node: node,
+                            item: out Flora.PFPCDataType PFPCDataTypeStateParse,
+                            errorMask: errorMask))
+                        {
+                            item.PFPCDataTypeState = PFPCDataTypeStateParse;
+                        }
+                        else
+                        {
+                            item.PFPCDataTypeState = default(Flora.PFPCDataType);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
                 default:
                     OblivionMajorRecordCommon.FillPublicElement_Xml(
                         item: item,
@@ -2208,127 +2171,160 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        #region Binary Translation
-        #region Binary Write
-        public static void Write_Binary(
-            MutagenWriter writer,
-            Flora item,
-            MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            bool doMasks,
-            out Flora_ErrorMask errorMask)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_Binary(
-                masterReferences: masterReferences,
-                writer: writer,
-                item: item,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMaskBuilder);
-            errorMask = Flora_ErrorMask.Factory(errorMaskBuilder);
-        }
+    }
+    #endregion
 
-        public static void Write_Binary(
-            MutagenWriter writer,
-            Flora item,
-            MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
-        {
-            using (HeaderExport.ExportHeader(
-                writer: writer,
-                record: Flora_Registration.FLOR_HEADER,
-                type: ObjectType.Record))
-            {
-                OblivionMajorRecordCommon.Write_Binary_Embedded(
-                    item: item,
-                    writer: writer,
-                    errorMask: errorMask,
-                    masterReferences: masterReferences);
-                Write_Binary_RecordTypes(
-                    item: item,
-                    writer: writer,
-                    recordTypeConverter: recordTypeConverter,
-                    errorMask: errorMask,
-                    masterReferences: masterReferences);
-            }
-        }
-        #endregion
+    #region Modules
+    #region Xml Translation
+    public partial class FloraXmlTranslation : OblivionMajorRecordXmlTranslation
+    {
+        public new readonly static FloraXmlTranslation Instance = new FloraXmlTranslation();
 
-        public static void Write_Binary_RecordTypes(
-            Flora item,
-            MutagenWriter writer,
-            RecordTypeConverter recordTypeConverter,
+        public static void WriteToNode_Xml(
+            IFloraInternalGetter item,
+            XElement node,
             ErrorMaskBuilder errorMask,
-            MasterReferences masterReferences)
+            TranslationCrystal translationMask)
         {
-            MajorRecordCommon.Write_Binary_RecordTypes(
+            OblivionMajorRecordXmlTranslation.WriteToNode_Xml(
                 item: item,
-                writer: writer,
-                recordTypeConverter: recordTypeConverter,
+                node: node,
                 errorMask: errorMask,
-                masterReferences: masterReferences);
-            if (item.Name_IsSet)
+                translationMask: translationMask);
+            if (item.Name_IsSet
+                && (translationMask?.GetShouldTranslate((int)Flora_FieldIndex.Name) ?? true))
             {
-                Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
-                    writer: writer,
+                StringXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Name),
                     item: item.Name,
-                    header: recordTypeConverter.ConvertToCustom(Flora_Registration.FULL_HEADER),
-                    nullable: false);
+                    fieldIndex: (int)Flora_FieldIndex.Name,
+                    errorMask: errorMask);
             }
-            if (item.Model_IsSet)
+            if (item.Model_IsSet
+                && (translationMask?.GetShouldTranslate((int)Flora_FieldIndex.Model) ?? true))
             {
-                LoquiBinaryTranslation<Model>.Instance.Write(
-                    writer: writer,
+                LoquiXmlTranslation<Model>.Instance.Write(
+                    node: node,
                     item: item.Model,
+                    name: nameof(item.Model),
                     fieldIndex: (int)Flora_FieldIndex.Model,
                     errorMask: errorMask,
-                    masterReferences: masterReferences);
+                    translationMask: translationMask?.GetSubCrystal((int)Flora_FieldIndex.Model));
             }
-            if (item.Script_Property.HasBeenSet)
+            if (item.Script_Property.HasBeenSet
+                && (translationMask?.GetShouldTranslate((int)Flora_FieldIndex.Script) ?? true))
             {
-                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Script_Property,
-                    header: recordTypeConverter.ConvertToCustom(Flora_Registration.SCRI_HEADER),
-                    nullable: false,
-                    masterReferences: masterReferences);
+                FormKeyXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Script),
+                    item: item.Script_Property?.FormKey,
+                    fieldIndex: (int)Flora_FieldIndex.Script,
+                    errorMask: errorMask);
             }
-            if (item.Ingredient_Property.HasBeenSet)
+            if (item.Ingredient_Property.HasBeenSet
+                && (translationMask?.GetShouldTranslate((int)Flora_FieldIndex.Ingredient) ?? true))
             {
-                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Ingredient_Property,
-                    header: recordTypeConverter.ConvertToCustom(Flora_Registration.PFIG_HEADER),
-                    nullable: false,
-                    masterReferences: masterReferences);
+                FormKeyXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Ingredient),
+                    item: item.Ingredient_Property?.FormKey,
+                    fieldIndex: (int)Flora_FieldIndex.Ingredient,
+                    errorMask: errorMask);
             }
             if (item.PFPCDataTypeState.HasFlag(Flora.PFPCDataType.Has))
             {
-                using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Flora_Registration.PFPC_HEADER)))
+                if ((translationMask?.GetShouldTranslate((int)Flora_FieldIndex.Spring) ?? true))
                 {
-                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.Spring);
-                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.Summer);
-                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.Fall);
-                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.Winter);
+                    ByteXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.Spring),
+                        item: item.Spring,
+                        fieldIndex: (int)Flora_FieldIndex.Spring,
+                        errorMask: errorMask);
                 }
+                if ((translationMask?.GetShouldTranslate((int)Flora_FieldIndex.Summer) ?? true))
+                {
+                    ByteXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.Summer),
+                        item: item.Summer,
+                        fieldIndex: (int)Flora_FieldIndex.Summer,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Flora_FieldIndex.Fall) ?? true))
+                {
+                    ByteXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.Fall),
+                        item: item.Fall,
+                        fieldIndex: (int)Flora_FieldIndex.Fall,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Flora_FieldIndex.Winter) ?? true))
+                {
+                    ByteXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.Winter),
+                        item: item.Winter,
+                        fieldIndex: (int)Flora_FieldIndex.Winter,
+                        errorMask: errorMask);
+                }
+            }
+            if ((translationMask?.GetShouldTranslate((int)Flora_FieldIndex.PFPCDataTypeState) ?? true))
+            {
+                EnumXmlTranslation<Flora.PFPCDataType>.Instance.Write(
+                    node: node,
+                    name: nameof(item.PFPCDataTypeState),
+                    item: item.PFPCDataTypeState,
+                    fieldIndex: (int)Flora_FieldIndex.PFPCDataTypeState,
+                    errorMask: errorMask);
             }
         }
 
+        #region Xml Write
+        public void Write_Xml(
+            XElement node,
+            IFloraInternalGetter item,
+            bool doMasks,
+            out Flora_ErrorMask errorMask,
+            Flora_TranslationMask translationMask,
+            string name = null)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            Write_Xml(
+                name: name,
+                node: node,
+                item: item,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal());
+            errorMask = Flora_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public void Write_Xml(
+            XElement node,
+            IFloraInternalGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.Flora");
+            node.Add(elem);
+            if (name != null)
+            {
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.Flora");
+            }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         #endregion
 
     }
     #endregion
 
-    #region Modules
     #region Mask
     public class Flora_Mask<T> : OblivionMajorRecord_Mask<T>, IMask<T>, IEquatable<Flora_Mask<T>>
     {
@@ -2347,6 +2343,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.Summer = initialValue;
             this.Fall = initialValue;
             this.Winter = initialValue;
+            this.PFPCDataTypeState = initialValue;
         }
         #endregion
 
@@ -2359,6 +2356,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public T Summer;
         public T Fall;
         public T Winter;
+        public T PFPCDataTypeState;
         #endregion
 
         #region Equals
@@ -2380,6 +2378,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (!object.Equals(this.Summer, rhs.Summer)) return false;
             if (!object.Equals(this.Fall, rhs.Fall)) return false;
             if (!object.Equals(this.Winter, rhs.Winter)) return false;
+            if (!object.Equals(this.PFPCDataTypeState, rhs.PFPCDataTypeState)) return false;
             return true;
         }
         public override int GetHashCode()
@@ -2393,6 +2392,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret = ret.CombineHashCode(this.Summer?.GetHashCode());
             ret = ret.CombineHashCode(this.Fall?.GetHashCode());
             ret = ret.CombineHashCode(this.Winter?.GetHashCode());
+            ret = ret.CombineHashCode(this.PFPCDataTypeState?.GetHashCode());
             ret = ret.CombineHashCode(base.GetHashCode());
             return ret;
         }
@@ -2415,6 +2415,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (!eval(this.Summer)) return false;
             if (!eval(this.Fall)) return false;
             if (!eval(this.Winter)) return false;
+            if (!eval(this.PFPCDataTypeState)) return false;
             return true;
         }
         #endregion
@@ -2446,6 +2447,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             obj.Summer = eval(this.Summer);
             obj.Fall = eval(this.Fall);
             obj.Winter = eval(this.Winter);
+            obj.PFPCDataTypeState = eval(this.PFPCDataTypeState);
         }
         #endregion
 
@@ -2507,6 +2509,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     fg.AppendLine($"Winter => {Winter}");
                 }
+                if (printMask?.PFPCDataTypeState ?? true)
+                {
+                    fg.AppendLine($"PFPCDataTypeState => {PFPCDataTypeState}");
+                }
             }
             fg.AppendLine("]");
         }
@@ -2525,6 +2531,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Exception Summer;
         public Exception Fall;
         public Exception Winter;
+        public Exception PFPCDataTypeState;
         #endregion
 
         #region IErrorMask
@@ -2549,6 +2556,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return Fall;
                 case Flora_FieldIndex.Winter:
                     return Winter;
+                case Flora_FieldIndex.PFPCDataTypeState:
+                    return PFPCDataTypeState;
                 default:
                     return base.GetNthMask(index);
             }
@@ -2582,6 +2591,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     break;
                 case Flora_FieldIndex.Winter:
                     this.Winter = ex;
+                    break;
+                case Flora_FieldIndex.PFPCDataTypeState:
+                    this.PFPCDataTypeState = ex;
                     break;
                 default:
                     base.SetNthException(index, ex);
@@ -2618,6 +2630,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Flora_FieldIndex.Winter:
                     this.Winter = (Exception)obj;
                     break;
+                case Flora_FieldIndex.PFPCDataTypeState:
+                    this.PFPCDataTypeState = (Exception)obj;
+                    break;
                 default:
                     base.SetNthMask(index, obj);
                     break;
@@ -2635,6 +2650,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (Summer != null) return true;
             if (Fall != null) return true;
             if (Winter != null) return true;
+            if (PFPCDataTypeState != null) return true;
             return false;
         }
         #endregion
@@ -2678,6 +2694,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             fg.AppendLine($"Summer => {Summer}");
             fg.AppendLine($"Fall => {Fall}");
             fg.AppendLine($"Winter => {Winter}");
+            fg.AppendLine($"PFPCDataTypeState => {PFPCDataTypeState}");
         }
         #endregion
 
@@ -2693,6 +2710,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Summer = this.Summer.Combine(rhs.Summer);
             ret.Fall = this.Fall.Combine(rhs.Fall);
             ret.Winter = this.Winter.Combine(rhs.Winter);
+            ret.PFPCDataTypeState = this.PFPCDataTypeState.Combine(rhs.PFPCDataTypeState);
             return ret;
         }
         public static Flora_ErrorMask Combine(Flora_ErrorMask lhs, Flora_ErrorMask rhs)
@@ -2727,6 +2745,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.Summer = defaultOn;
             this.Fall = defaultOn;
             this.Winter = defaultOn;
+            this.PFPCDataTypeState = defaultOn;
         }
 
         #region Members
@@ -2738,6 +2757,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool Summer;
         public bool Fall;
         public bool Winter;
+        public bool PFPCDataTypeState;
         #endregion
 
     }
@@ -2753,6 +2773,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool Summer;
         public bool Fall;
         public bool Winter;
+        public bool PFPCDataTypeState;
         #endregion
 
         #region Ctors
@@ -2772,6 +2793,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.Summer = defaultOn;
             this.Fall = defaultOn;
             this.Winter = defaultOn;
+            this.PFPCDataTypeState = defaultOn;
         }
 
         #endregion
@@ -2787,7 +2809,143 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Add((Summer, null));
             ret.Add((Fall, null));
             ret.Add((Winter, null));
+            ret.Add((PFPCDataTypeState, null));
         }
+    }
+    #endregion
+
+    #region Binary Translation
+    public partial class FloraBinaryTranslation : OblivionMajorRecordBinaryTranslation
+    {
+        public new readonly static FloraBinaryTranslation Instance = new FloraBinaryTranslation();
+
+        public static void Write_Binary_Embedded(
+            IFloraInternalGetter item,
+            MutagenWriter writer,
+            ErrorMaskBuilder errorMask,
+            MasterReferences masterReferences)
+        {
+            OblivionMajorRecordBinaryTranslation.Write_Binary_Embedded(
+                item: item,
+                writer: writer,
+                errorMask: errorMask,
+                masterReferences: masterReferences);
+        }
+
+        public static void Write_Binary_RecordTypes(
+            IFloraInternalGetter item,
+            MutagenWriter writer,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask,
+            MasterReferences masterReferences)
+        {
+            MajorRecordBinaryTranslation.Write_Binary_RecordTypes(
+                item: item,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask,
+                masterReferences: masterReferences);
+            if (item.Name_IsSet)
+            {
+                Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Name,
+                    header: recordTypeConverter.ConvertToCustom(Flora_Registration.FULL_HEADER),
+                    nullable: false);
+            }
+            if (item.Model_IsSet)
+            {
+                LoquiBinaryTranslation<Model>.Instance.Write(
+                    writer: writer,
+                    item: item.Model,
+                    fieldIndex: (int)Flora_FieldIndex.Model,
+                    errorMask: errorMask,
+                    masterReferences: masterReferences);
+            }
+            if (item.Script_Property.HasBeenSet)
+            {
+                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Script_Property,
+                    header: recordTypeConverter.ConvertToCustom(Flora_Registration.SCRI_HEADER),
+                    nullable: false,
+                    masterReferences: masterReferences);
+            }
+            if (item.Ingredient_Property.HasBeenSet)
+            {
+                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Ingredient_Property,
+                    header: recordTypeConverter.ConvertToCustom(Flora_Registration.PFIG_HEADER),
+                    nullable: false,
+                    masterReferences: masterReferences);
+            }
+            if (item.PFPCDataTypeState.HasFlag(Flora.PFPCDataType.Has))
+            {
+                using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Flora_Registration.PFPC_HEADER)))
+                {
+                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.Spring);
+                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.Summer);
+                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.Fall);
+                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.Winter);
+                }
+            }
+        }
+
+        #region Binary Write
+        public void Write_Binary(
+            MutagenWriter writer,
+            IFloraInternalGetter item,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            bool doMasks,
+            out Flora_ErrorMask errorMask)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            Write_Binary(
+                masterReferences: masterReferences,
+                writer: writer,
+                item: item,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMaskBuilder);
+            errorMask = Flora_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public void Write_Binary(
+            MutagenWriter writer,
+            IFloraInternalGetter item,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            using (HeaderExport.ExportHeader(
+                writer: writer,
+                record: Flora_Registration.FLOR_HEADER,
+                type: ObjectType.Record))
+            {
+                Write_Binary_Embedded(
+                    item: item,
+                    writer: writer,
+                    errorMask: errorMask,
+                    masterReferences: masterReferences);
+                Write_Binary_RecordTypes(
+                    item: item,
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter,
+                    errorMask: errorMask,
+                    masterReferences: masterReferences);
+            }
+        }
+        #endregion
+
     }
     #endregion
 

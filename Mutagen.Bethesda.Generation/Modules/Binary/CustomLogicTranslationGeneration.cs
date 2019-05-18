@@ -38,7 +38,7 @@ namespace Mutagen.Bethesda.Generation
             Accessor errorMaskAccessor,
             Accessor translationMaskAccessor)
         {
-            CustomLogicTranslationGeneration.GenerateFill(
+            GenerateFill(
                 fg: fg,
                 field: typeGen,
                 frameAccessor: readerAccessor,
@@ -70,7 +70,7 @@ namespace Mutagen.Bethesda.Generation
             Accessor errorMaskAccessor,
             Accessor translationMaskAccessor)
         {
-            CustomLogicTranslationGeneration.GenerateWrite(
+            this.GenerateWrite(
                 fg: fg,
                 obj: objGen,
                 field: typeGen,
@@ -100,6 +100,33 @@ namespace Mutagen.Bethesda.Generation
                     }
                 }
                 fg.AppendLine();
+
+                using (var args = new FunctionWrapper(fg,
+                    $"public static void FillBinary_{field.Name}_Custom_Public"))
+                {
+                    args.Add($"{nameof(MutagenFrame)} frame");
+                    args.Add($"{obj.ObjectName} item");
+                    args.Add($"MasterReferences masterReferences");
+                    if (DoErrorMasksStatic)
+                    {
+                        args.Add($"ErrorMaskBuilder errorMask");
+                    }
+                }
+                using (new BraceWrapper(fg))
+                {
+                    using (var args = new ArgsWrapper(fg,
+                        $"FillBinary_{field.Name}_Custom"))
+                    {
+                        args.Add($"frame: frame");
+                        args.Add($"item: item");
+                        args.Add($"masterReferences: masterReferences");
+                        if (DoErrorMasksStatic)
+                        {
+                            args.Add($"errorMask: errorMask");
+                        }
+                    }
+                }
+                fg.AppendLine();
             }
             using (var args = new FunctionWrapper(fg,
                 $"static partial void WriteBinary_{field.Name}_Custom")
@@ -108,7 +135,7 @@ namespace Mutagen.Bethesda.Generation
             })
             {
                 args.Add($"{nameof(MutagenWriter)} writer");
-                args.Add($"{obj.ObjectName} item");
+                args.Add($"{obj.Interface(getter: true, internalInterface: obj.HasInternalInterface)} item");
                 args.Add($"MasterReferences masterReferences");
                 if (DoErrorMasksStatic)
                 {
@@ -120,7 +147,7 @@ namespace Mutagen.Bethesda.Generation
                 $"public static void WriteBinary_{field.Name}"))
             {
                 args.Add($"{nameof(MutagenWriter)} writer");
-                args.Add($"{obj.ObjectName} item");
+                args.Add($"{obj.Interface(getter: true, internalInterface: obj.HasInternalInterface)} item");
                 args.Add($"MasterReferences masterReferences");
                 if (DoErrorMasksStatic)
                 {
@@ -144,14 +171,14 @@ namespace Mutagen.Bethesda.Generation
             fg.AppendLine();
         }
 
-        public static void GenerateWrite(
+        public void GenerateWrite(
             FileGeneration fg,
             ObjectGeneration obj,
             TypeGeneration field,
             Accessor writerAccessor)
         {
             using (var args = new ArgsWrapper(fg,
-                $"{obj.ObjectName}.WriteBinary_{field.Name}"))
+                $"{this.Module.TranslationClass(obj)}.WriteBinary_{field.Name}"))
             {
                 args.Add($"writer: {writerAccessor}");
                 args.Add("item: item");
@@ -163,7 +190,7 @@ namespace Mutagen.Bethesda.Generation
             }
         }
 
-        public static void GenerateFill(
+        public void GenerateFill(
             FileGeneration fg,
             TypeGeneration field,
             Accessor frameAccessor,
@@ -171,7 +198,7 @@ namespace Mutagen.Bethesda.Generation
         {
             var data = field.GetFieldData();
             using (var args = new ArgsWrapper(fg,
-                $"{Loqui.Generation.Utility.Await(isAsync)}FillBinary_{field.Name}_Custom"))
+                $"{Loqui.Generation.Utility.Await(isAsync)}{this.Module.TranslationClass(field.ObjectGen)}.FillBinary_{field.Name}_Custom_Public"))
             {
                 args.Add($"frame: {(data.HasTrigger ? $"{frameAccessor}.SpawnWithLength(Mutagen.Bethesda.Constants.SUBRECORD_LENGTH + contentLength)" : frameAccessor)}");
                 args.Add("item: item");

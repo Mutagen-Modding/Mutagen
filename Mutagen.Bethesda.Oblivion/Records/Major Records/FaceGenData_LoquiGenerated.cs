@@ -369,7 +369,8 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Xml(
+            FaceGenDataXmlTranslation.Instance.Write_Xml(
+                item: this,
                 name: name,
                 node: node,
                 errorMask: errorMaskBuilder,
@@ -401,7 +402,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            this.Write_Xml(
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -432,7 +433,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            this.Write_Xml(
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -456,7 +457,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            this.Write_Xml(
                 name: name,
                 node: node,
                 errorMask: null,
@@ -469,7 +470,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            this.Write_Xml(
                 name: name,
                 node: node,
                 errorMask: null,
@@ -483,7 +484,7 @@ namespace Mutagen.Bethesda.Oblivion
             TranslationCrystal translationMask,
             string name = null)
         {
-            FaceGenDataCommon.Write_Xml(
+            FaceGenDataXmlTranslation.Instance.Write_Xml(
                 item: this,
                 name: name,
                 node: node,
@@ -568,7 +569,8 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Binary(
+            FaceGenDataBinaryTranslation.Instance.Write_Binary(
+                item: this,
                 masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: null,
@@ -593,7 +595,7 @@ namespace Mutagen.Bethesda.Oblivion
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            FaceGenDataCommon.Write_Binary(
+            FaceGenDataBinaryTranslation.Instance.Write_Binary(
                 item: this,
                 masterReferences: masterReferences,
                 writer: writer,
@@ -1317,84 +1319,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         #region Xml Translation
-        #region Xml Write
-        public static void Write_Xml(
-            XElement node,
-            FaceGenData item,
-            bool doMasks,
-            out FaceGenData_ErrorMask errorMask,
-            FaceGenData_TranslationMask translationMask,
-            string name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_Xml(
-                name: name,
-                node: node,
-                item: item,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = FaceGenData_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void Write_Xml(
-            XElement node,
-            FaceGenData item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.FaceGenData");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.FaceGenData");
-            }
-            WriteToNode_Xml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #endregion
-
-        public static void WriteToNode_Xml(
-            this FaceGenData item,
-            XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            if (item.SymmetricGeometry_IsSet
-                && (translationMask?.GetShouldTranslate((int)FaceGenData_FieldIndex.SymmetricGeometry) ?? true))
-            {
-                ByteArrayXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.SymmetricGeometry),
-                    item: item.SymmetricGeometry,
-                    fieldIndex: (int)FaceGenData_FieldIndex.SymmetricGeometry,
-                    errorMask: errorMask);
-            }
-            if (item.AsymmetricGeometry_IsSet
-                && (translationMask?.GetShouldTranslate((int)FaceGenData_FieldIndex.AsymmetricGeometry) ?? true))
-            {
-                ByteArrayXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.AsymmetricGeometry),
-                    item: item.AsymmetricGeometry,
-                    fieldIndex: (int)FaceGenData_FieldIndex.AsymmetricGeometry,
-                    errorMask: errorMask);
-            }
-            if (item.SymmetricTexture_IsSet
-                && (translationMask?.GetShouldTranslate((int)FaceGenData_FieldIndex.SymmetricTexture) ?? true))
-            {
-                ByteArrayXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.SymmetricTexture),
-                    item: item.SymmetricTexture,
-                    fieldIndex: (int)FaceGenData_FieldIndex.SymmetricTexture,
-                    errorMask: errorMask);
-            }
-        }
-
         public static void FillPublic_Xml(
             this FaceGenData item,
             XElement node,
@@ -1514,81 +1438,96 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        #region Binary Translation
-        #region Binary Write
-        public static void Write_Binary(
-            MutagenWriter writer,
-            FaceGenData item,
-            MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
+    }
+    #endregion
+
+    #region Modules
+    #region Xml Translation
+    public partial class FaceGenDataXmlTranslation
+    {
+        public readonly static FaceGenDataXmlTranslation Instance = new FaceGenDataXmlTranslation();
+
+        public static void WriteToNode_Xml(
+            IFaceGenDataGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            if (item.SymmetricGeometry_IsSet
+                && (translationMask?.GetShouldTranslate((int)FaceGenData_FieldIndex.SymmetricGeometry) ?? true))
+            {
+                ByteArrayXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.SymmetricGeometry),
+                    item: item.SymmetricGeometry,
+                    fieldIndex: (int)FaceGenData_FieldIndex.SymmetricGeometry,
+                    errorMask: errorMask);
+            }
+            if (item.AsymmetricGeometry_IsSet
+                && (translationMask?.GetShouldTranslate((int)FaceGenData_FieldIndex.AsymmetricGeometry) ?? true))
+            {
+                ByteArrayXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.AsymmetricGeometry),
+                    item: item.AsymmetricGeometry,
+                    fieldIndex: (int)FaceGenData_FieldIndex.AsymmetricGeometry,
+                    errorMask: errorMask);
+            }
+            if (item.SymmetricTexture_IsSet
+                && (translationMask?.GetShouldTranslate((int)FaceGenData_FieldIndex.SymmetricTexture) ?? true))
+            {
+                ByteArrayXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.SymmetricTexture),
+                    item: item.SymmetricTexture,
+                    fieldIndex: (int)FaceGenData_FieldIndex.SymmetricTexture,
+                    errorMask: errorMask);
+            }
+        }
+
+        #region Xml Write
+        public void Write_Xml(
+            XElement node,
+            IFaceGenDataGetter item,
             bool doMasks,
-            out FaceGenData_ErrorMask errorMask)
+            out FaceGenData_ErrorMask errorMask,
+            FaceGenData_TranslationMask translationMask,
+            string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_Binary(
-                masterReferences: masterReferences,
-                writer: writer,
+            Write_Xml(
+                name: name,
+                node: node,
                 item: item,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMaskBuilder);
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal());
             errorMask = FaceGenData_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void Write_Binary(
-            MutagenWriter writer,
-            FaceGenData item,
-            MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
-        {
-            Write_Binary_RecordTypes(
-                item: item,
-                writer: writer,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMask,
-                masterReferences: masterReferences);
-        }
-        #endregion
-
-        public static void Write_Binary_RecordTypes(
-            FaceGenData item,
-            MutagenWriter writer,
-            RecordTypeConverter recordTypeConverter,
+        public void Write_Xml(
+            XElement node,
+            IFaceGenDataGetter item,
             ErrorMaskBuilder errorMask,
-            MasterReferences masterReferences)
+            TranslationCrystal translationMask,
+            string name = null)
         {
-            if (item.SymmetricGeometry_IsSet)
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.FaceGenData");
+            node.Add(elem);
+            if (name != null)
             {
-                Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.SymmetricGeometry,
-                    header: recordTypeConverter.ConvertToCustom(FaceGenData_Registration.FGGS_HEADER),
-                    nullable: false);
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.FaceGenData");
             }
-            if (item.AsymmetricGeometry_IsSet)
-            {
-                Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.AsymmetricGeometry,
-                    header: recordTypeConverter.ConvertToCustom(FaceGenData_Registration.FGGA_HEADER),
-                    nullable: false);
-            }
-            if (item.SymmetricTexture_IsSet)
-            {
-                Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.SymmetricTexture,
-                    header: recordTypeConverter.ConvertToCustom(FaceGenData_Registration.FGTS_HEADER),
-                    nullable: false);
-            }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
         }
-
         #endregion
 
     }
     #endregion
 
-    #region Modules
     #region Mask
     public class FaceGenData_Mask<T> : IMask<T>, IEquatable<FaceGenData_Mask<T>>
     {
@@ -1916,6 +1855,82 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Add((AsymmetricGeometry, null));
             ret.Add((SymmetricTexture, null));
         }
+    }
+    #endregion
+
+    #region Binary Translation
+    public partial class FaceGenDataBinaryTranslation
+    {
+        public readonly static FaceGenDataBinaryTranslation Instance = new FaceGenDataBinaryTranslation();
+
+        public static void Write_Binary_RecordTypes(
+            IFaceGenDataGetter item,
+            MutagenWriter writer,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask,
+            MasterReferences masterReferences)
+        {
+            if (item.SymmetricGeometry_IsSet)
+            {
+                Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.SymmetricGeometry,
+                    header: recordTypeConverter.ConvertToCustom(FaceGenData_Registration.FGGS_HEADER),
+                    nullable: false);
+            }
+            if (item.AsymmetricGeometry_IsSet)
+            {
+                Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.AsymmetricGeometry,
+                    header: recordTypeConverter.ConvertToCustom(FaceGenData_Registration.FGGA_HEADER),
+                    nullable: false);
+            }
+            if (item.SymmetricTexture_IsSet)
+            {
+                Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.SymmetricTexture,
+                    header: recordTypeConverter.ConvertToCustom(FaceGenData_Registration.FGTS_HEADER),
+                    nullable: false);
+            }
+        }
+
+        #region Binary Write
+        public void Write_Binary(
+            MutagenWriter writer,
+            IFaceGenDataGetter item,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            bool doMasks,
+            out FaceGenData_ErrorMask errorMask)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            Write_Binary(
+                masterReferences: masterReferences,
+                writer: writer,
+                item: item,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMaskBuilder);
+            errorMask = FaceGenData_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public void Write_Binary(
+            MutagenWriter writer,
+            IFaceGenDataGetter item,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            Write_Binary_RecordTypes(
+                item: item,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask,
+                masterReferences: masterReferences);
+        }
+        #endregion
+
     }
     #endregion
 

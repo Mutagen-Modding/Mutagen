@@ -34,6 +34,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class BaseLayer : 
         LoquiNotifyingObject,
         IBaseLayer,
+        IBaseLayerInternal,
         ILoquiObject<BaseLayer>,
         ILoquiObjectSetter,
         ILinkSubContainer,
@@ -82,6 +83,23 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
         #endregion
+        #region BTXTDataTypeState
+        private BaseLayer.BTXTDataType _BTXTDataTypeState;
+        public BaseLayer.BTXTDataType BTXTDataTypeState
+        {
+            get => this._BTXTDataTypeState;
+            set => this.RaiseAndSetIfChanged(ref this._BTXTDataTypeState, value, nameof(BTXTDataTypeState));
+        }
+        BaseLayer.BTXTDataType IBaseLayerInternal.BTXTDataTypeState
+        {
+            get => this.BTXTDataTypeState;
+            set => this.BTXTDataTypeState = value;
+        }
+        BaseLayer.BTXTDataType IBaseLayerInternalGetter.BTXTDataTypeState
+        {
+            get => this.BTXTDataTypeState;
+        }
+        #endregion
 
         IMask<bool> IEqualsMask<BaseLayer>.GetEqualsMask(BaseLayer rhs, EqualsMaskHelper.Include include) => BaseLayerCommon.GetEqualsMask(this, rhs, include);
         IMask<bool> IEqualsMask<IBaseLayerGetter>.GetEqualsMask(IBaseLayerGetter rhs, EqualsMaskHelper.Include include) => BaseLayerCommon.GetEqualsMask(this, rhs, include);
@@ -120,6 +138,7 @@ namespace Mutagen.Bethesda.Oblivion
             if (!this.Texture_Property.Equals(rhs.Texture_Property)) return false;
             if (this.Quadrant != rhs.Quadrant) return false;
             if (this.LayerNumber != rhs.LayerNumber) return false;
+            if (this.BTXTDataTypeState != rhs.BTXTDataTypeState) return false;
             return true;
         }
 
@@ -129,6 +148,7 @@ namespace Mutagen.Bethesda.Oblivion
             ret = HashHelper.GetHashCode(Texture).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(Quadrant).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(LayerNumber).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(BTXTDataTypeState).CombineHashCode(ret);
             return ret;
         }
 
@@ -301,7 +321,8 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Xml(
+            BaseLayerXmlTranslation.Instance.Write_Xml(
+                item: this,
                 name: name,
                 node: node,
                 errorMask: errorMaskBuilder,
@@ -333,7 +354,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            this.Write_Xml(
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -364,7 +385,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            this.Write_Xml(
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -388,7 +409,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            this.Write_Xml(
                 name: name,
                 node: node,
                 errorMask: null,
@@ -401,7 +422,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            this.Write_Xml(
                 name: name,
                 node: node,
                 errorMask: null,
@@ -415,7 +436,7 @@ namespace Mutagen.Bethesda.Oblivion
             TranslationCrystal translationMask,
             string name = null)
         {
-            BaseLayerCommon.Write_Xml(
+            BaseLayerXmlTranslation.Instance.Write_Xml(
                 item: this,
                 name: name,
                 node: node,
@@ -477,6 +498,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case BaseLayer_FieldIndex.Texture:
                 case BaseLayer_FieldIndex.Quadrant:
                 case BaseLayer_FieldIndex.LayerNumber:
+                case BaseLayer_FieldIndex.BTXTDataTypeState:
                     return true;
                 default:
                     throw new ArgumentException($"Unknown field index: {index}");
@@ -484,7 +506,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         #region Mutagen
-        public BTXTDataType BTXTDataTypeState;
         [Flags]
         public enum BTXTDataType
         {
@@ -569,7 +590,8 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Binary(
+            BaseLayerBinaryTranslation.Instance.Write_Binary(
+                item: this,
                 masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: null,
@@ -594,7 +616,7 @@ namespace Mutagen.Bethesda.Oblivion
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            BaseLayerCommon.Write_Binary(
+            BaseLayerBinaryTranslation.Instance.Write_Binary(
                 item: this,
                 masterReferences: masterReferences,
                 writer: writer,
@@ -787,6 +809,9 @@ namespace Mutagen.Bethesda.Oblivion
                 case BaseLayer_FieldIndex.LayerNumber:
                     this.LayerNumber = (UInt16)obj;
                     break;
+                case BaseLayer_FieldIndex.BTXTDataTypeState:
+                    this.BTXTDataTypeState = (BaseLayer.BTXTDataType)obj;
+                    break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -833,6 +858,9 @@ namespace Mutagen.Bethesda.Oblivion
                 case BaseLayer_FieldIndex.LayerNumber:
                     obj.LayerNumber = (UInt16)pair.Value;
                     break;
+                case BaseLayer_FieldIndex.BTXTDataTypeState:
+                    obj.BTXTDataTypeState = (BaseLayer.BTXTDataType)pair.Value;
+                    break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
@@ -845,6 +873,13 @@ namespace Mutagen.Bethesda.Oblivion
     {
         new LandTexture Texture { get; set; }
         new AlphaLayer.QuadrantEnum Quadrant { get; set; }
+
+    }
+
+    public partial interface IBaseLayerInternal : IBaseLayer, IBaseLayerInternalGetter
+    {
+        new LandTexture Texture { get; set; }
+        new BaseLayer.BTXTDataType BTXTDataTypeState { get; set; }
 
     }
 
@@ -866,6 +901,15 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
+    public partial interface IBaseLayerInternalGetter : IBaseLayerGetter
+    {
+        #region BTXTDataTypeState
+        BaseLayer.BTXTDataType BTXTDataTypeState { get; }
+
+        #endregion
+
+    }
+
     #endregion
 
 }
@@ -878,6 +922,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         Texture = 0,
         Quadrant = 1,
         LayerNumber = 2,
+        BTXTDataTypeState = 3,
     }
     #endregion
 
@@ -895,9 +940,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const string GUID = "4b14f70e-5702-4ed0-b691-09996696e4d9";
 
-        public const ushort AdditionalFieldCount = 3;
+        public const ushort AdditionalFieldCount = 4;
 
-        public const ushort FieldCount = 3;
+        public const ushort FieldCount = 4;
 
         public static readonly Type MaskType = typeof(BaseLayer_Mask<>);
 
@@ -907,11 +952,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type GetterType = typeof(IBaseLayerGetter);
 
-        public static readonly Type InternalGetterType = null;
+        public static readonly Type InternalGetterType = typeof(IBaseLayerInternalGetter);
 
         public static readonly Type SetterType = typeof(IBaseLayer);
 
-        public static readonly Type InternalSetterType = null;
+        public static readonly Type InternalSetterType = typeof(IBaseLayerInternal);
 
         public static readonly Type CommonType = typeof(BaseLayerCommon);
 
@@ -935,6 +980,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (ushort)BaseLayer_FieldIndex.Quadrant;
                 case "LAYERNUMBER":
                     return (ushort)BaseLayer_FieldIndex.LayerNumber;
+                case "BTXTDATATYPESTATE":
+                    return (ushort)BaseLayer_FieldIndex.BTXTDataTypeState;
                 default:
                     return null;
             }
@@ -948,6 +995,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case BaseLayer_FieldIndex.Texture:
                 case BaseLayer_FieldIndex.Quadrant:
                 case BaseLayer_FieldIndex.LayerNumber:
+                case BaseLayer_FieldIndex.BTXTDataTypeState:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -962,6 +1010,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case BaseLayer_FieldIndex.Texture:
                 case BaseLayer_FieldIndex.Quadrant:
                 case BaseLayer_FieldIndex.LayerNumber:
+                case BaseLayer_FieldIndex.BTXTDataTypeState:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -976,6 +1025,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case BaseLayer_FieldIndex.Texture:
                 case BaseLayer_FieldIndex.Quadrant:
                 case BaseLayer_FieldIndex.LayerNumber:
+                case BaseLayer_FieldIndex.BTXTDataTypeState:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -993,6 +1043,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return "Quadrant";
                 case BaseLayer_FieldIndex.LayerNumber:
                     return "LayerNumber";
+                case BaseLayer_FieldIndex.BTXTDataTypeState:
+                    return "BTXTDataTypeState";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1006,6 +1058,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case BaseLayer_FieldIndex.Texture:
                 case BaseLayer_FieldIndex.Quadrant:
                 case BaseLayer_FieldIndex.LayerNumber:
+                case BaseLayer_FieldIndex.BTXTDataTypeState:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1021,6 +1074,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return true;
                 case BaseLayer_FieldIndex.Texture:
                 case BaseLayer_FieldIndex.Quadrant:
+                case BaseLayer_FieldIndex.BTXTDataTypeState:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1038,6 +1092,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return typeof(AlphaLayer.QuadrantEnum);
                 case BaseLayer_FieldIndex.LayerNumber:
                     return typeof(UInt16);
+                case BaseLayer_FieldIndex.BTXTDataTypeState:
+                    return typeof(BaseLayer.BTXTDataType);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1209,6 +1265,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     fg.AppendLine($"LayerNumber => {item.LayerNumber}");
                 }
+                if (printMask?.BTXTDataTypeState ?? true)
+                {
+                }
             }
             fg.AppendLine("]");
         }
@@ -1226,88 +1285,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Texture = true;
             ret.Quadrant = true;
             ret.LayerNumber = true;
+            ret.BTXTDataTypeState = true;
             return ret;
         }
 
         #region Xml Translation
-        #region Xml Write
-        public static void Write_Xml(
-            XElement node,
-            BaseLayer item,
-            bool doMasks,
-            out BaseLayer_ErrorMask errorMask,
-            BaseLayer_TranslationMask translationMask,
-            string name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_Xml(
-                name: name,
-                node: node,
-                item: item,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = BaseLayer_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void Write_Xml(
-            XElement node,
-            BaseLayer item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.BaseLayer");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.BaseLayer");
-            }
-            WriteToNode_Xml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #endregion
-
-        public static void WriteToNode_Xml(
-            this BaseLayer item,
-            XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            if (item.BTXTDataTypeState.HasFlag(BaseLayer.BTXTDataType.Has))
-            {
-                if ((translationMask?.GetShouldTranslate((int)BaseLayer_FieldIndex.Texture) ?? true))
-                {
-                    FormKeyXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.Texture),
-                        item: item.Texture_Property?.FormKey,
-                        fieldIndex: (int)BaseLayer_FieldIndex.Texture,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)BaseLayer_FieldIndex.Quadrant) ?? true))
-                {
-                    EnumXmlTranslation<AlphaLayer.QuadrantEnum>.Instance.Write(
-                        node: node,
-                        name: nameof(item.Quadrant),
-                        item: item.Quadrant,
-                        fieldIndex: (int)BaseLayer_FieldIndex.Quadrant,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)BaseLayer_FieldIndex.LayerNumber) ?? true))
-                {
-                    UInt16XmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.LayerNumber),
-                        item: item.LayerNumber,
-                        fieldIndex: (int)BaseLayer_FieldIndex.LayerNumber,
-                        errorMask: errorMask);
-                }
-            }
-        }
-
         public static void FillPublic_Xml(
             this BaseLayer item,
             XElement node,
@@ -1376,72 +1358,34 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask?.PopIndex();
                     }
                     break;
+                case "BTXTDataTypeState":
+                    try
+                    {
+                        errorMask?.PushIndex((int)BaseLayer_FieldIndex.BTXTDataTypeState);
+                        if (EnumXmlTranslation<BaseLayer.BTXTDataType>.Instance.Parse(
+                            node: node,
+                            item: out BaseLayer.BTXTDataType BTXTDataTypeStateParse,
+                            errorMask: errorMask))
+                        {
+                            item.BTXTDataTypeState = BTXTDataTypeStateParse;
+                        }
+                        else
+                        {
+                            item.BTXTDataTypeState = default(BaseLayer.BTXTDataType);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
                 default:
                     break;
-            }
-        }
-
-        #endregion
-
-        #region Binary Translation
-        #region Binary Write
-        public static void Write_Binary(
-            MutagenWriter writer,
-            BaseLayer item,
-            MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            bool doMasks,
-            out BaseLayer_ErrorMask errorMask)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_Binary(
-                masterReferences: masterReferences,
-                writer: writer,
-                item: item,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMaskBuilder);
-            errorMask = BaseLayer_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void Write_Binary(
-            MutagenWriter writer,
-            BaseLayer item,
-            MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
-        {
-            Write_Binary_RecordTypes(
-                item: item,
-                writer: writer,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMask,
-                masterReferences: masterReferences);
-        }
-        #endregion
-
-        public static void Write_Binary_RecordTypes(
-            BaseLayer item,
-            MutagenWriter writer,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask,
-            MasterReferences masterReferences)
-        {
-            if (item.BTXTDataTypeState.HasFlag(BaseLayer.BTXTDataType.Has))
-            {
-                using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(BaseLayer_Registration.BTXT_HEADER)))
-                {
-                    Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.Texture_Property,
-                        masterReferences: masterReferences);
-                    Mutagen.Bethesda.Binary.EnumBinaryTranslation<AlphaLayer.QuadrantEnum>.Instance.Write(
-                        writer,
-                        item.Quadrant,
-                        length: 2);
-                    Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.LayerNumber);
-                }
             }
         }
 
@@ -1451,6 +1395,101 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Modules
+    #region Xml Translation
+    public partial class BaseLayerXmlTranslation
+    {
+        public readonly static BaseLayerXmlTranslation Instance = new BaseLayerXmlTranslation();
+
+        public static void WriteToNode_Xml(
+            IBaseLayerInternalGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            if (item.BTXTDataTypeState.HasFlag(BaseLayer.BTXTDataType.Has))
+            {
+                if ((translationMask?.GetShouldTranslate((int)BaseLayer_FieldIndex.Texture) ?? true))
+                {
+                    FormKeyXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.Texture),
+                        item: item.Texture_Property?.FormKey,
+                        fieldIndex: (int)BaseLayer_FieldIndex.Texture,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)BaseLayer_FieldIndex.Quadrant) ?? true))
+                {
+                    EnumXmlTranslation<AlphaLayer.QuadrantEnum>.Instance.Write(
+                        node: node,
+                        name: nameof(item.Quadrant),
+                        item: item.Quadrant,
+                        fieldIndex: (int)BaseLayer_FieldIndex.Quadrant,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)BaseLayer_FieldIndex.LayerNumber) ?? true))
+                {
+                    UInt16XmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.LayerNumber),
+                        item: item.LayerNumber,
+                        fieldIndex: (int)BaseLayer_FieldIndex.LayerNumber,
+                        errorMask: errorMask);
+                }
+            }
+            if ((translationMask?.GetShouldTranslate((int)BaseLayer_FieldIndex.BTXTDataTypeState) ?? true))
+            {
+                EnumXmlTranslation<BaseLayer.BTXTDataType>.Instance.Write(
+                    node: node,
+                    name: nameof(item.BTXTDataTypeState),
+                    item: item.BTXTDataTypeState,
+                    fieldIndex: (int)BaseLayer_FieldIndex.BTXTDataTypeState,
+                    errorMask: errorMask);
+            }
+        }
+
+        #region Xml Write
+        public void Write_Xml(
+            XElement node,
+            IBaseLayerInternalGetter item,
+            bool doMasks,
+            out BaseLayer_ErrorMask errorMask,
+            BaseLayer_TranslationMask translationMask,
+            string name = null)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            Write_Xml(
+                name: name,
+                node: node,
+                item: item,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal());
+            errorMask = BaseLayer_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public void Write_Xml(
+            XElement node,
+            IBaseLayerInternalGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.BaseLayer");
+            node.Add(elem);
+            if (name != null)
+            {
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.BaseLayer");
+            }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        #endregion
+
+    }
+    #endregion
+
     #region Mask
     public class BaseLayer_Mask<T> : IMask<T>, IEquatable<BaseLayer_Mask<T>>
     {
@@ -1464,6 +1503,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.Texture = initialValue;
             this.Quadrant = initialValue;
             this.LayerNumber = initialValue;
+            this.BTXTDataTypeState = initialValue;
         }
         #endregion
 
@@ -1471,6 +1511,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public T Texture;
         public T Quadrant;
         public T LayerNumber;
+        public T BTXTDataTypeState;
         #endregion
 
         #region Equals
@@ -1486,6 +1527,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (!object.Equals(this.Texture, rhs.Texture)) return false;
             if (!object.Equals(this.Quadrant, rhs.Quadrant)) return false;
             if (!object.Equals(this.LayerNumber, rhs.LayerNumber)) return false;
+            if (!object.Equals(this.BTXTDataTypeState, rhs.BTXTDataTypeState)) return false;
             return true;
         }
         public override int GetHashCode()
@@ -1494,6 +1536,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret = ret.CombineHashCode(this.Texture?.GetHashCode());
             ret = ret.CombineHashCode(this.Quadrant?.GetHashCode());
             ret = ret.CombineHashCode(this.LayerNumber?.GetHashCode());
+            ret = ret.CombineHashCode(this.BTXTDataTypeState?.GetHashCode());
             return ret;
         }
 
@@ -1505,6 +1548,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (!eval(this.Texture)) return false;
             if (!eval(this.Quadrant)) return false;
             if (!eval(this.LayerNumber)) return false;
+            if (!eval(this.BTXTDataTypeState)) return false;
             return true;
         }
         #endregion
@@ -1522,6 +1566,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             obj.Texture = eval(this.Texture);
             obj.Quadrant = eval(this.Quadrant);
             obj.LayerNumber = eval(this.LayerNumber);
+            obj.BTXTDataTypeState = eval(this.BTXTDataTypeState);
         }
         #endregion
 
@@ -1562,6 +1607,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     fg.AppendLine($"LayerNumber => {LayerNumber}");
                 }
+                if (printMask?.BTXTDataTypeState ?? true)
+                {
+                    fg.AppendLine($"BTXTDataTypeState => {BTXTDataTypeState}");
+                }
             }
             fg.AppendLine("]");
         }
@@ -1588,6 +1637,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Exception Texture;
         public Exception Quadrant;
         public Exception LayerNumber;
+        public Exception BTXTDataTypeState;
         #endregion
 
         #region IErrorMask
@@ -1602,6 +1652,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return Quadrant;
                 case BaseLayer_FieldIndex.LayerNumber:
                     return LayerNumber;
+                case BaseLayer_FieldIndex.BTXTDataTypeState:
+                    return BTXTDataTypeState;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1620,6 +1672,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     break;
                 case BaseLayer_FieldIndex.LayerNumber:
                     this.LayerNumber = ex;
+                    break;
+                case BaseLayer_FieldIndex.BTXTDataTypeState:
+                    this.BTXTDataTypeState = ex;
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1640,6 +1695,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case BaseLayer_FieldIndex.LayerNumber:
                     this.LayerNumber = (Exception)obj;
                     break;
+                case BaseLayer_FieldIndex.BTXTDataTypeState:
+                    this.BTXTDataTypeState = (Exception)obj;
+                    break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1651,6 +1709,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (Texture != null) return true;
             if (Quadrant != null) return true;
             if (LayerNumber != null) return true;
+            if (BTXTDataTypeState != null) return true;
             return false;
         }
         #endregion
@@ -1688,6 +1747,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             fg.AppendLine($"Texture => {Texture}");
             fg.AppendLine($"Quadrant => {Quadrant}");
             fg.AppendLine($"LayerNumber => {LayerNumber}");
+            fg.AppendLine($"BTXTDataTypeState => {BTXTDataTypeState}");
         }
         #endregion
 
@@ -1698,6 +1758,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Texture = this.Texture.Combine(rhs.Texture);
             ret.Quadrant = this.Quadrant.Combine(rhs.Quadrant);
             ret.LayerNumber = this.LayerNumber.Combine(rhs.LayerNumber);
+            ret.BTXTDataTypeState = this.BTXTDataTypeState.Combine(rhs.BTXTDataTypeState);
             return ret;
         }
         public static BaseLayer_ErrorMask Combine(BaseLayer_ErrorMask lhs, BaseLayer_ErrorMask rhs)
@@ -1727,12 +1788,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.Texture = defaultOn;
             this.Quadrant = defaultOn;
             this.LayerNumber = defaultOn;
+            this.BTXTDataTypeState = defaultOn;
         }
 
         #region Members
         public bool Texture;
         public bool Quadrant;
         public bool LayerNumber;
+        public bool BTXTDataTypeState;
         #endregion
 
     }
@@ -1744,6 +1807,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool Texture;
         public bool Quadrant;
         public bool LayerNumber;
+        public bool BTXTDataTypeState;
         #endregion
 
         #region Ctors
@@ -1756,6 +1820,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.Texture = defaultOn;
             this.Quadrant = defaultOn;
             this.LayerNumber = defaultOn;
+            this.BTXTDataTypeState = defaultOn;
         }
 
         #endregion
@@ -1777,7 +1842,90 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Add((Texture, null));
             ret.Add((Quadrant, null));
             ret.Add((LayerNumber, null));
+            ret.Add((BTXTDataTypeState, null));
         }
+    }
+    #endregion
+
+    #region Binary Translation
+    public partial class BaseLayerBinaryTranslation
+    {
+        public readonly static BaseLayerBinaryTranslation Instance = new BaseLayerBinaryTranslation();
+
+        public static void Write_Binary_Embedded(
+            IBaseLayerInternalGetter item,
+            MutagenWriter writer,
+            ErrorMaskBuilder errorMask,
+            MasterReferences masterReferences)
+        {
+        }
+
+        public static void Write_Binary_RecordTypes(
+            IBaseLayerInternalGetter item,
+            MutagenWriter writer,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask,
+            MasterReferences masterReferences)
+        {
+            if (item.BTXTDataTypeState.HasFlag(BaseLayer.BTXTDataType.Has))
+            {
+                using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(BaseLayer_Registration.BTXT_HEADER)))
+                {
+                    Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.Texture_Property,
+                        masterReferences: masterReferences);
+                    Mutagen.Bethesda.Binary.EnumBinaryTranslation<AlphaLayer.QuadrantEnum>.Instance.Write(
+                        writer,
+                        item.Quadrant,
+                        length: 2);
+                    Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.LayerNumber);
+                }
+            }
+        }
+
+        #region Binary Write
+        public void Write_Binary(
+            MutagenWriter writer,
+            IBaseLayerInternalGetter item,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            bool doMasks,
+            out BaseLayer_ErrorMask errorMask)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            Write_Binary(
+                masterReferences: masterReferences,
+                writer: writer,
+                item: item,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMaskBuilder);
+            errorMask = BaseLayer_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public void Write_Binary(
+            MutagenWriter writer,
+            IBaseLayerInternalGetter item,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            Write_Binary_Embedded(
+                item: item,
+                writer: writer,
+                errorMask: errorMask,
+                masterReferences: masterReferences);
+            Write_Binary_RecordTypes(
+                item: item,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask,
+                masterReferences: masterReferences);
+        }
+        #endregion
+
     }
     #endregion
 

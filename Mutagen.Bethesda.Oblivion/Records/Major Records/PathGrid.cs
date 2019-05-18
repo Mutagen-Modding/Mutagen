@@ -9,9 +9,9 @@ using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Noggog;
 
-namespace Mutagen.Bethesda.Oblivion
+namespace Mutagen.Bethesda.Oblivion.Internals
 {
-    public partial class PathGrid
+    public partial class PathGridBinaryTranslation
     {
         public static readonly RecordType PGRP = new RecordType("PGRP");
         public static readonly RecordType PGRR = new RecordType("PGRR");
@@ -117,7 +117,7 @@ namespace Mutagen.Bethesda.Oblivion
             return pt;
         }
 
-        static partial void WriteBinary_PointToPointConnections_Custom(MutagenWriter writer, PathGrid item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
+        static partial void WriteBinary_PointToPointConnections_Custom(MutagenWriter writer, IPathGridInternalGetter item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
         {
             using (HeaderExport.ExportSubRecordHeader(writer, PathGrid_Registration.DATA_HEADER))
             {

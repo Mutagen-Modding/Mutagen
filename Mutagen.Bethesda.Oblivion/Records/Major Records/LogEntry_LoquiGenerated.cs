@@ -395,7 +395,8 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Xml(
+            LogEntryXmlTranslation.Instance.Write_Xml(
+                item: this,
                 name: name,
                 node: node,
                 errorMask: errorMaskBuilder,
@@ -427,7 +428,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            this.Write_Xml(
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -458,7 +459,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            this.Write_Xml(
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -482,7 +483,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            this.Write_Xml(
                 name: name,
                 node: node,
                 errorMask: null,
@@ -495,7 +496,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            this.Write_Xml(
                 name: name,
                 node: node,
                 errorMask: null,
@@ -509,7 +510,7 @@ namespace Mutagen.Bethesda.Oblivion
             TranslationCrystal translationMask,
             string name = null)
         {
-            LogEntryCommon.Write_Xml(
+            LogEntryXmlTranslation.Instance.Write_Xml(
                 item: this,
                 name: name,
                 node: node,
@@ -625,7 +626,8 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Binary(
+            LogEntryBinaryTranslation.Instance.Write_Binary(
+                item: this,
                 masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: null,
@@ -650,7 +652,7 @@ namespace Mutagen.Bethesda.Oblivion
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            LogEntryCommon.Write_Binary(
+            LogEntryBinaryTranslation.Instance.Write_Binary(
                 item: this,
                 masterReferences: masterReferences,
                 writer: writer,
@@ -1544,106 +1546,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         #region Xml Translation
-        #region Xml Write
-        public static void Write_Xml(
-            XElement node,
-            LogEntry item,
-            bool doMasks,
-            out LogEntry_ErrorMask errorMask,
-            LogEntry_TranslationMask translationMask,
-            string name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_Xml(
-                name: name,
-                node: node,
-                item: item,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = LogEntry_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void Write_Xml(
-            XElement node,
-            LogEntry item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.LogEntry");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.LogEntry");
-            }
-            WriteToNode_Xml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #endregion
-
-        public static void WriteToNode_Xml(
-            this LogEntry item,
-            XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            if (item.Flags_IsSet
-                && (translationMask?.GetShouldTranslate((int)LogEntry_FieldIndex.Flags) ?? true))
-            {
-                EnumXmlTranslation<LogEntry.Flag>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Flags),
-                    item: item.Flags,
-                    fieldIndex: (int)LogEntry_FieldIndex.Flags,
-                    errorMask: errorMask);
-            }
-            if (item.Conditions.HasBeenSet
-                && (translationMask?.GetShouldTranslate((int)LogEntry_FieldIndex.Conditions) ?? true))
-            {
-                ListXmlTranslation<Condition>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Conditions),
-                    item: item.Conditions,
-                    fieldIndex: (int)LogEntry_FieldIndex.Conditions,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)LogEntry_FieldIndex.Conditions),
-                    transl: (XElement subNode, Condition subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
-                    {
-                        LoquiXmlTranslation<Condition>.Instance.Write(
-                            node: subNode,
-                            item: subItem,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
-                    }
-                    );
-            }
-            if (item.Entry_IsSet
-                && (translationMask?.GetShouldTranslate((int)LogEntry_FieldIndex.Entry) ?? true))
-            {
-                StringXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Entry),
-                    item: item.Entry,
-                    fieldIndex: (int)LogEntry_FieldIndex.Entry,
-                    errorMask: errorMask);
-            }
-            if (item.ResultScript_IsSet
-                && (translationMask?.GetShouldTranslate((int)LogEntry_FieldIndex.ResultScript) ?? true))
-            {
-                LoquiXmlTranslation<ScriptFields>.Instance.Write(
-                    node: node,
-                    item: item.ResultScript,
-                    name: nameof(item.ResultScript),
-                    fieldIndex: (int)LogEntry_FieldIndex.ResultScript,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)LogEntry_FieldIndex.ResultScript));
-            }
-        }
-
         public static void FillPublic_Xml(
             this LogEntry item,
             XElement node,
@@ -1792,100 +1694,118 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        #region Binary Translation
-        #region Binary Write
-        public static void Write_Binary(
-            MutagenWriter writer,
-            LogEntry item,
-            MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            bool doMasks,
-            out LogEntry_ErrorMask errorMask)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_Binary(
-                masterReferences: masterReferences,
-                writer: writer,
-                item: item,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMaskBuilder);
-            errorMask = LogEntry_ErrorMask.Factory(errorMaskBuilder);
-        }
+    }
+    #endregion
 
-        public static void Write_Binary(
-            MutagenWriter writer,
-            LogEntry item,
-            MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
-        {
-            Write_Binary_RecordTypes(
-                item: item,
-                writer: writer,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMask,
-                masterReferences: masterReferences);
-        }
-        #endregion
+    #region Modules
+    #region Xml Translation
+    public partial class LogEntryXmlTranslation
+    {
+        public readonly static LogEntryXmlTranslation Instance = new LogEntryXmlTranslation();
 
-        public static void Write_Binary_RecordTypes(
-            LogEntry item,
-            MutagenWriter writer,
-            RecordTypeConverter recordTypeConverter,
+        public static void WriteToNode_Xml(
+            ILogEntryGetter item,
+            XElement node,
             ErrorMaskBuilder errorMask,
-            MasterReferences masterReferences)
+            TranslationCrystal translationMask)
         {
-            if (item.Flags_IsSet)
+            if (item.Flags_IsSet
+                && (translationMask?.GetShouldTranslate((int)LogEntry_FieldIndex.Flags) ?? true))
             {
-                Mutagen.Bethesda.Binary.EnumBinaryTranslation<LogEntry.Flag>.Instance.Write(
-                    writer,
-                    item.Flags,
-                    length: 1,
-                    header: recordTypeConverter.ConvertToCustom(LogEntry_Registration.QSDT_HEADER),
-                    nullable: false);
+                EnumXmlTranslation<LogEntry.Flag>.Instance.Write(
+                    node: node,
+                    name: nameof(item.Flags),
+                    item: item.Flags,
+                    fieldIndex: (int)LogEntry_FieldIndex.Flags,
+                    errorMask: errorMask);
             }
-            if (item.Conditions.HasBeenSet)
+            if (item.Conditions.HasBeenSet
+                && (translationMask?.GetShouldTranslate((int)LogEntry_FieldIndex.Conditions) ?? true))
             {
-                Mutagen.Bethesda.Binary.ListBinaryTranslation<Condition>.Instance.Write(
-                    writer: writer,
-                    items: item.Conditions,
+                ListXmlTranslation<Condition>.Instance.Write(
+                    node: node,
+                    name: nameof(item.Conditions),
+                    item: item.Conditions,
                     fieldIndex: (int)LogEntry_FieldIndex.Conditions,
                     errorMask: errorMask,
-                    transl: (MutagenWriter subWriter, Condition subItem, ErrorMaskBuilder listErrorMask) =>
+                    translationMask: translationMask?.GetSubCrystal((int)LogEntry_FieldIndex.Conditions),
+                    transl: (XElement subNode, Condition subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
                     {
-                        LoquiBinaryTranslation<Condition>.Instance.Write(
-                            writer: subWriter,
+                        LoquiXmlTranslation<Condition>.Instance.Write(
+                            node: subNode,
                             item: subItem,
-                            errorMask: listErrorMask,
-                            masterReferences: masterReferences);
+                            name: null,
+                            errorMask: listSubMask,
+                            translationMask: listTranslMask);
                     }
                     );
             }
-            if (item.Entry_IsSet)
+            if (item.Entry_IsSet
+                && (translationMask?.GetShouldTranslate((int)LogEntry_FieldIndex.Entry) ?? true))
             {
-                Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
-                    writer: writer,
+                StringXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Entry),
                     item: item.Entry,
-                    header: recordTypeConverter.ConvertToCustom(LogEntry_Registration.CNAM_HEADER),
-                    nullable: false);
+                    fieldIndex: (int)LogEntry_FieldIndex.Entry,
+                    errorMask: errorMask);
             }
-            if (item.ResultScript_IsSet)
+            if (item.ResultScript_IsSet
+                && (translationMask?.GetShouldTranslate((int)LogEntry_FieldIndex.ResultScript) ?? true))
             {
-                LoquiBinaryTranslation<ScriptFields>.Instance.Write(
-                    writer: writer,
+                LoquiXmlTranslation<ScriptFields>.Instance.Write(
+                    node: node,
                     item: item.ResultScript,
+                    name: nameof(item.ResultScript),
                     fieldIndex: (int)LogEntry_FieldIndex.ResultScript,
                     errorMask: errorMask,
-                    masterReferences: masterReferences);
+                    translationMask: translationMask?.GetSubCrystal((int)LogEntry_FieldIndex.ResultScript));
             }
         }
 
+        #region Xml Write
+        public void Write_Xml(
+            XElement node,
+            ILogEntryGetter item,
+            bool doMasks,
+            out LogEntry_ErrorMask errorMask,
+            LogEntry_TranslationMask translationMask,
+            string name = null)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            Write_Xml(
+                name: name,
+                node: node,
+                item: item,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal());
+            errorMask = LogEntry_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public void Write_Xml(
+            XElement node,
+            ILogEntryGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.LogEntry");
+            node.Add(elem);
+            if (name != null)
+            {
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.LogEntry");
+            }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         #endregion
 
     }
     #endregion
 
-    #region Modules
     #region Mask
     public class LogEntry_Mask<T> : IMask<T>, IEquatable<LogEntry_Mask<T>>
     {
@@ -2330,6 +2250,101 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Add((Entry, null));
             ret.Add((ResultScript?.Overall ?? true, ResultScript?.Specific?.GetCrystal()));
         }
+    }
+    #endregion
+
+    #region Binary Translation
+    public partial class LogEntryBinaryTranslation
+    {
+        public readonly static LogEntryBinaryTranslation Instance = new LogEntryBinaryTranslation();
+
+        public static void Write_Binary_RecordTypes(
+            ILogEntryGetter item,
+            MutagenWriter writer,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask,
+            MasterReferences masterReferences)
+        {
+            if (item.Flags_IsSet)
+            {
+                Mutagen.Bethesda.Binary.EnumBinaryTranslation<LogEntry.Flag>.Instance.Write(
+                    writer,
+                    item.Flags,
+                    length: 1,
+                    header: recordTypeConverter.ConvertToCustom(LogEntry_Registration.QSDT_HEADER),
+                    nullable: false);
+            }
+            if (item.Conditions.HasBeenSet)
+            {
+                Mutagen.Bethesda.Binary.ListBinaryTranslation<Condition>.Instance.Write(
+                    writer: writer,
+                    items: item.Conditions,
+                    fieldIndex: (int)LogEntry_FieldIndex.Conditions,
+                    errorMask: errorMask,
+                    transl: (MutagenWriter subWriter, Condition subItem, ErrorMaskBuilder listErrorMask) =>
+                    {
+                        LoquiBinaryTranslation<Condition>.Instance.Write(
+                            writer: subWriter,
+                            item: subItem,
+                            errorMask: listErrorMask,
+                            masterReferences: masterReferences);
+                    }
+                    );
+            }
+            if (item.Entry_IsSet)
+            {
+                Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Entry,
+                    header: recordTypeConverter.ConvertToCustom(LogEntry_Registration.CNAM_HEADER),
+                    nullable: false);
+            }
+            if (item.ResultScript_IsSet)
+            {
+                LoquiBinaryTranslation<ScriptFields>.Instance.Write(
+                    writer: writer,
+                    item: item.ResultScript,
+                    fieldIndex: (int)LogEntry_FieldIndex.ResultScript,
+                    errorMask: errorMask,
+                    masterReferences: masterReferences);
+            }
+        }
+
+        #region Binary Write
+        public void Write_Binary(
+            MutagenWriter writer,
+            ILogEntryGetter item,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            bool doMasks,
+            out LogEntry_ErrorMask errorMask)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            Write_Binary(
+                masterReferences: masterReferences,
+                writer: writer,
+                item: item,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMaskBuilder);
+            errorMask = LogEntry_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public void Write_Binary(
+            MutagenWriter writer,
+            ILogEntryGetter item,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            Write_Binary_RecordTypes(
+                item: item,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask,
+                masterReferences: masterReferences);
+        }
+        #endregion
+
     }
     #endregion
 

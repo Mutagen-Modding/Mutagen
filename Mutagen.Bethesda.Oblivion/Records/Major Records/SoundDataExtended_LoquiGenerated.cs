@@ -35,6 +35,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class SoundDataExtended : 
         SoundData,
         ISoundDataExtended,
+        ISoundDataExtendedInternal,
         ILoquiObject<SoundDataExtended>,
         ILoquiObjectSetter,
         IEquatable<SoundDataExtended>
@@ -302,7 +303,8 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Xml(
+            SoundDataExtendedXmlTranslation.Instance.Write_Xml(
+                item: this,
                 name: name,
                 node: node,
                 errorMask: errorMaskBuilder,
@@ -334,7 +336,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            this.Write_Xml(
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -365,7 +367,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            this.Write_Xml(
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -381,7 +383,8 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Xml(
+            SoundDataExtendedXmlTranslation.Instance.Write_Xml(
+                item: this,
                 name: name,
                 node: node,
                 errorMask: errorMaskBuilder,
@@ -397,7 +400,7 @@ namespace Mutagen.Bethesda.Oblivion
             TranslationCrystal translationMask,
             string name = null)
         {
-            SoundDataExtendedCommon.Write_Xml(
+            SoundDataExtendedXmlTranslation.Instance.Write_Xml(
                 item: this,
                 name: name,
                 node: node,
@@ -487,7 +490,8 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Binary(
+            SoundDataExtendedBinaryTranslation.Instance.Write_Binary(
+                item: this,
                 masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: null,
@@ -503,7 +507,8 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Binary(
+            SoundDataExtendedBinaryTranslation.Instance.Write_Binary(
+                item: this,
                 masterReferences: masterReferences,
                 writer: writer,
                 errorMask: errorMaskBuilder,
@@ -519,7 +524,7 @@ namespace Mutagen.Bethesda.Oblivion
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            SoundDataExtendedCommon.Write_Binary(
+            SoundDataExtendedBinaryTranslation.Instance.Write_Binary(
                 item: this,
                 masterReferences: masterReferences,
                 writer: writer,
@@ -527,81 +532,6 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask);
         }
         #endregion
-
-        static partial void FillBinary_StaticAttenuation_Custom(
-            MutagenFrame frame,
-            SoundDataExtended item,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask);
-
-        static partial void WriteBinary_StaticAttenuation_Custom(
-            MutagenWriter writer,
-            SoundDataExtended item,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask);
-
-        public static void WriteBinary_StaticAttenuation(
-            MutagenWriter writer,
-            SoundDataExtended item,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask)
-        {
-            WriteBinary_StaticAttenuation_Custom(
-                writer: writer,
-                item: item,
-                masterReferences: masterReferences,
-                errorMask: errorMask);
-        }
-
-        static partial void FillBinary_StopTime_Custom(
-            MutagenFrame frame,
-            SoundDataExtended item,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask);
-
-        static partial void WriteBinary_StopTime_Custom(
-            MutagenWriter writer,
-            SoundDataExtended item,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask);
-
-        public static void WriteBinary_StopTime(
-            MutagenWriter writer,
-            SoundDataExtended item,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask)
-        {
-            WriteBinary_StopTime_Custom(
-                writer: writer,
-                item: item,
-                masterReferences: masterReferences,
-                errorMask: errorMask);
-        }
-
-        static partial void FillBinary_StartTime_Custom(
-            MutagenFrame frame,
-            SoundDataExtended item,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask);
-
-        static partial void WriteBinary_StartTime_Custom(
-            MutagenWriter writer,
-            SoundDataExtended item,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask);
-
-        public static void WriteBinary_StartTime(
-            MutagenWriter writer,
-            SoundDataExtended item,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask)
-        {
-            WriteBinary_StartTime_Custom(
-                writer: writer,
-                item: item,
-                masterReferences: masterReferences,
-                errorMask: errorMask);
-        }
 
         protected static void Fill_Binary_Structs(
             SoundDataExtended item,
@@ -614,17 +544,17 @@ namespace Mutagen.Bethesda.Oblivion
                 frame: frame,
                 masterReferences: masterReferences,
                 errorMask: errorMask);
-            FillBinary_StaticAttenuation_Custom(
+            SoundDataExtendedBinaryTranslation.FillBinary_StaticAttenuation_Custom_Public(
                 frame: frame,
                 item: item,
                 masterReferences: masterReferences,
                 errorMask: errorMask);
-            FillBinary_StopTime_Custom(
+            SoundDataExtendedBinaryTranslation.FillBinary_StopTime_Custom_Public(
                 frame: frame,
                 item: item,
                 masterReferences: masterReferences,
                 errorMask: errorMask);
-            FillBinary_StartTime_Custom(
+            SoundDataExtendedBinaryTranslation.FillBinary_StartTime_Custom_Public(
                 frame: frame,
                 item: item,
                 masterReferences: masterReferences,
@@ -812,6 +742,10 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
+    public partial interface ISoundDataExtendedInternal : ISoundDataExtended, ISoundDataExtendedInternalGetter, ISoundDataInternal
+    {
+    }
+
     public partial interface ISoundDataExtendedGetter : ISoundDataGetter
     {
         #region StaticAttenuation
@@ -826,6 +760,11 @@ namespace Mutagen.Bethesda.Oblivion
         Single StartTime { get; }
 
         #endregion
+
+    }
+
+    public partial interface ISoundDataExtendedInternalGetter : ISoundDataExtendedGetter, ISoundDataInternalGetter
+    {
 
     }
 
@@ -874,11 +813,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type GetterType = typeof(ISoundDataExtendedGetter);
 
-        public static readonly Type InternalGetterType = null;
+        public static readonly Type InternalGetterType = typeof(ISoundDataExtendedInternalGetter);
 
         public static readonly Type SetterType = typeof(ISoundDataExtended);
 
-        public static readonly Type InternalSetterType = null;
+        public static readonly Type InternalSetterType = typeof(ISoundDataExtendedInternal);
 
         public static readonly Type CommonType = typeof(SoundDataExtendedCommon);
 
@@ -1232,86 +1171,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         #region Xml Translation
-        #region Xml Write
-        public static void Write_Xml(
-            XElement node,
-            SoundDataExtended item,
-            bool doMasks,
-            out SoundDataExtended_ErrorMask errorMask,
-            SoundDataExtended_TranslationMask translationMask,
-            string name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_Xml(
-                name: name,
-                node: node,
-                item: item,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = SoundDataExtended_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void Write_Xml(
-            XElement node,
-            SoundDataExtended item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.SoundDataExtended");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.SoundDataExtended");
-            }
-            WriteToNode_Xml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #endregion
-
-        public static void WriteToNode_Xml(
-            this SoundDataExtended item,
-            XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            SoundDataCommon.WriteToNode_Xml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            if ((translationMask?.GetShouldTranslate((int)SoundDataExtended_FieldIndex.StaticAttenuation) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.StaticAttenuation),
-                    item: item.StaticAttenuation,
-                    fieldIndex: (int)SoundDataExtended_FieldIndex.StaticAttenuation,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)SoundDataExtended_FieldIndex.StopTime) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.StopTime),
-                    item: item.StopTime,
-                    fieldIndex: (int)SoundDataExtended_FieldIndex.StopTime,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)SoundDataExtended_FieldIndex.StartTime) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.StartTime),
-                    item: item.StartTime,
-                    fieldIndex: (int)SoundDataExtended_FieldIndex.StartTime,
-                    errorMask: errorMask);
-            }
-        }
-
         public static void FillPublic_Xml(
             this SoundDataExtended item,
             XElement node,
@@ -1437,81 +1296,98 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        #region Binary Translation
-        #region Binary Write
-        public static void Write_Binary(
-            MutagenWriter writer,
-            SoundDataExtended item,
-            MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
+    }
+    #endregion
+
+    #region Modules
+    #region Xml Translation
+    public partial class SoundDataExtendedXmlTranslation : SoundDataXmlTranslation
+    {
+        public new readonly static SoundDataExtendedXmlTranslation Instance = new SoundDataExtendedXmlTranslation();
+
+        public static void WriteToNode_Xml(
+            ISoundDataExtendedInternalGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            SoundDataXmlTranslation.WriteToNode_Xml(
+                item: item,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+            if ((translationMask?.GetShouldTranslate((int)SoundDataExtended_FieldIndex.StaticAttenuation) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.StaticAttenuation),
+                    item: item.StaticAttenuation,
+                    fieldIndex: (int)SoundDataExtended_FieldIndex.StaticAttenuation,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)SoundDataExtended_FieldIndex.StopTime) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.StopTime),
+                    item: item.StopTime,
+                    fieldIndex: (int)SoundDataExtended_FieldIndex.StopTime,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)SoundDataExtended_FieldIndex.StartTime) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.StartTime),
+                    item: item.StartTime,
+                    fieldIndex: (int)SoundDataExtended_FieldIndex.StartTime,
+                    errorMask: errorMask);
+            }
+        }
+
+        #region Xml Write
+        public void Write_Xml(
+            XElement node,
+            ISoundDataExtendedInternalGetter item,
             bool doMasks,
-            out SoundDataExtended_ErrorMask errorMask)
+            out SoundDataExtended_ErrorMask errorMask,
+            SoundDataExtended_TranslationMask translationMask,
+            string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_Binary(
-                masterReferences: masterReferences,
-                writer: writer,
+            Write_Xml(
+                name: name,
+                node: node,
                 item: item,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMaskBuilder);
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal());
             errorMask = SoundDataExtended_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void Write_Binary(
-            MutagenWriter writer,
-            SoundDataExtended item,
-            MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
-        {
-            using (HeaderExport.ExportHeader(
-                writer: writer,
-                record: SoundDataExtended_Registration.SNDX_HEADER,
-                type: ObjectType.Subrecord))
-            {
-                Write_Binary_Embedded(
-                    item: item,
-                    writer: writer,
-                    errorMask: errorMask,
-                    masterReferences: masterReferences);
-            }
-        }
-        #endregion
-
-        public static void Write_Binary_Embedded(
-            SoundDataExtended item,
-            MutagenWriter writer,
+        public void Write_Xml(
+            XElement node,
+            ISoundDataExtendedInternalGetter item,
             ErrorMaskBuilder errorMask,
-            MasterReferences masterReferences)
+            TranslationCrystal translationMask,
+            string name = null)
         {
-            SoundDataCommon.Write_Binary_Embedded(
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.SoundDataExtended");
+            node.Add(elem);
+            if (name != null)
+            {
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.SoundDataExtended");
+            }
+            WriteToNode_Xml(
                 item: item,
-                writer: writer,
+                node: elem,
                 errorMask: errorMask,
-                masterReferences: masterReferences);
-            SoundDataExtended.WriteBinary_StaticAttenuation(
-                writer: writer,
-                item: item,
-                masterReferences: masterReferences,
-                errorMask: errorMask);
-            SoundDataExtended.WriteBinary_StopTime(
-                writer: writer,
-                item: item,
-                masterReferences: masterReferences,
-                errorMask: errorMask);
-            SoundDataExtended.WriteBinary_StartTime(
-                writer: writer,
-                item: item,
-                masterReferences: masterReferences,
-                errorMask: errorMask);
+                translationMask: translationMask);
         }
-
         #endregion
 
     }
     #endregion
 
-    #region Modules
     #region Mask
     public class SoundDataExtended_Mask<T> : SoundData_Mask<T>, IMask<T>, IEquatable<SoundDataExtended_Mask<T>>
     {
@@ -1824,6 +1700,196 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Add((StopTime, null));
             ret.Add((StartTime, null));
         }
+    }
+    #endregion
+
+    #region Binary Translation
+    public partial class SoundDataExtendedBinaryTranslation : SoundDataBinaryTranslation
+    {
+        public new readonly static SoundDataExtendedBinaryTranslation Instance = new SoundDataExtendedBinaryTranslation();
+
+        static partial void FillBinary_StaticAttenuation_Custom(
+            MutagenFrame frame,
+            SoundDataExtended item,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask);
+
+        public static void FillBinary_StaticAttenuation_Custom_Public(
+            MutagenFrame frame,
+            SoundDataExtended item,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask)
+        {
+            FillBinary_StaticAttenuation_Custom(
+                frame: frame,
+                item: item,
+                masterReferences: masterReferences,
+                errorMask: errorMask);
+        }
+
+        static partial void WriteBinary_StaticAttenuation_Custom(
+            MutagenWriter writer,
+            ISoundDataExtendedInternalGetter item,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask);
+
+        public static void WriteBinary_StaticAttenuation(
+            MutagenWriter writer,
+            ISoundDataExtendedInternalGetter item,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask)
+        {
+            WriteBinary_StaticAttenuation_Custom(
+                writer: writer,
+                item: item,
+                masterReferences: masterReferences,
+                errorMask: errorMask);
+        }
+
+        static partial void FillBinary_StopTime_Custom(
+            MutagenFrame frame,
+            SoundDataExtended item,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask);
+
+        public static void FillBinary_StopTime_Custom_Public(
+            MutagenFrame frame,
+            SoundDataExtended item,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask)
+        {
+            FillBinary_StopTime_Custom(
+                frame: frame,
+                item: item,
+                masterReferences: masterReferences,
+                errorMask: errorMask);
+        }
+
+        static partial void WriteBinary_StopTime_Custom(
+            MutagenWriter writer,
+            ISoundDataExtendedInternalGetter item,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask);
+
+        public static void WriteBinary_StopTime(
+            MutagenWriter writer,
+            ISoundDataExtendedInternalGetter item,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask)
+        {
+            WriteBinary_StopTime_Custom(
+                writer: writer,
+                item: item,
+                masterReferences: masterReferences,
+                errorMask: errorMask);
+        }
+
+        static partial void FillBinary_StartTime_Custom(
+            MutagenFrame frame,
+            SoundDataExtended item,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask);
+
+        public static void FillBinary_StartTime_Custom_Public(
+            MutagenFrame frame,
+            SoundDataExtended item,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask)
+        {
+            FillBinary_StartTime_Custom(
+                frame: frame,
+                item: item,
+                masterReferences: masterReferences,
+                errorMask: errorMask);
+        }
+
+        static partial void WriteBinary_StartTime_Custom(
+            MutagenWriter writer,
+            ISoundDataExtendedInternalGetter item,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask);
+
+        public static void WriteBinary_StartTime(
+            MutagenWriter writer,
+            ISoundDataExtendedInternalGetter item,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask)
+        {
+            WriteBinary_StartTime_Custom(
+                writer: writer,
+                item: item,
+                masterReferences: masterReferences,
+                errorMask: errorMask);
+        }
+
+        public static void Write_Binary_Embedded(
+            ISoundDataExtendedInternalGetter item,
+            MutagenWriter writer,
+            ErrorMaskBuilder errorMask,
+            MasterReferences masterReferences)
+        {
+            SoundDataBinaryTranslation.Write_Binary_Embedded(
+                item: item,
+                writer: writer,
+                errorMask: errorMask,
+                masterReferences: masterReferences);
+            SoundDataExtendedBinaryTranslation.WriteBinary_StaticAttenuation(
+                writer: writer,
+                item: item,
+                masterReferences: masterReferences,
+                errorMask: errorMask);
+            SoundDataExtendedBinaryTranslation.WriteBinary_StopTime(
+                writer: writer,
+                item: item,
+                masterReferences: masterReferences,
+                errorMask: errorMask);
+            SoundDataExtendedBinaryTranslation.WriteBinary_StartTime(
+                writer: writer,
+                item: item,
+                masterReferences: masterReferences,
+                errorMask: errorMask);
+        }
+
+        #region Binary Write
+        public void Write_Binary(
+            MutagenWriter writer,
+            ISoundDataExtendedInternalGetter item,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            bool doMasks,
+            out SoundDataExtended_ErrorMask errorMask)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            Write_Binary(
+                masterReferences: masterReferences,
+                writer: writer,
+                item: item,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMaskBuilder);
+            errorMask = SoundDataExtended_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public void Write_Binary(
+            MutagenWriter writer,
+            ISoundDataExtendedInternalGetter item,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            using (HeaderExport.ExportHeader(
+                writer: writer,
+                record: SoundDataExtended_Registration.SNDX_HEADER,
+                type: ObjectType.Subrecord))
+            {
+                Write_Binary_Embedded(
+                    item: item,
+                    writer: writer,
+                    errorMask: errorMask,
+                    masterReferences: masterReferences);
+            }
+        }
+        #endregion
+
     }
     #endregion
 

@@ -241,7 +241,7 @@ namespace Mutagen.Bethesda.Generation
             if (!obj.IsTopClass) return;
 
             using (var args = new FunctionWrapper(fg,
-                $"public{await obj.FunctionOverride()}async Task Write_Xml_Folder"))
+                $"public{obj.FunctionOverride()}async Task Write_Xml_Folder"))
             {
                 args.Add("DirectoryPath? dir");
                 args.Add("string name");

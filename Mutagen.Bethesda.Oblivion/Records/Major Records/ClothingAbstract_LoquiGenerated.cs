@@ -36,6 +36,7 @@ namespace Mutagen.Bethesda.Oblivion
     public abstract partial class ClothingAbstract : 
         ItemAbstract,
         IClothingAbstract,
+        IClothingAbstractInternal,
         ILoquiObject<ClothingAbstract>,
         ILoquiObjectSetter,
         INamed,
@@ -302,6 +303,23 @@ namespace Mutagen.Bethesda.Oblivion
             this.FemaleIcon_Set(default(String), false);
         }
         #endregion
+        #region BMDTDataTypeState
+        private ClothingAbstract.BMDTDataType _BMDTDataTypeState;
+        public ClothingAbstract.BMDTDataType BMDTDataTypeState
+        {
+            get => this._BMDTDataTypeState;
+            set => this.RaiseAndSetIfChanged(ref this._BMDTDataTypeState, value, nameof(BMDTDataTypeState));
+        }
+        ClothingAbstract.BMDTDataType IClothingAbstractInternal.BMDTDataTypeState
+        {
+            get => this.BMDTDataTypeState;
+            set => this.BMDTDataTypeState = value;
+        }
+        ClothingAbstract.BMDTDataType IClothingAbstractInternalGetter.BMDTDataTypeState
+        {
+            get => this.BMDTDataTypeState;
+        }
+        #endregion
 
         IMask<bool> IEqualsMask<ClothingAbstract>.GetEqualsMask(ClothingAbstract rhs, EqualsMaskHelper.Include include) => ClothingAbstractCommon.GetEqualsMask(this, rhs, include);
         IMask<bool> IEqualsMask<IClothingAbstractGetter>.GetEqualsMask(IClothingAbstractGetter rhs, EqualsMaskHelper.Include include) => ClothingAbstractCommon.GetEqualsMask(this, rhs, include);
@@ -390,6 +408,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 if (!string.Equals(this.FemaleIcon, rhs.FemaleIcon)) return false;
             }
+            if (this.BMDTDataTypeState != rhs.BMDTDataTypeState) return false;
             return true;
         }
 
@@ -438,6 +457,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 ret = HashHelper.GetHashCode(FemaleIcon).CombineHashCode(ret);
             }
+            ret = HashHelper.GetHashCode(BMDTDataTypeState).CombineHashCode(ret);
             ret = ret.CombineHashCode(base.GetHashCode());
             return ret;
         }
@@ -592,7 +612,8 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Xml(
+            ClothingAbstractXmlTranslation.Instance.Write_Xml(
+                item: this,
                 name: name,
                 node: node,
                 errorMask: errorMaskBuilder,
@@ -624,7 +645,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            this.Write_Xml(
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -655,7 +676,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            this.Write_Xml(
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -671,7 +692,8 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Xml(
+            ClothingAbstractXmlTranslation.Instance.Write_Xml(
+                item: this,
                 name: name,
                 node: node,
                 errorMask: errorMaskBuilder,
@@ -687,7 +709,8 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Xml(
+            ClothingAbstractXmlTranslation.Instance.Write_Xml(
+                item: this,
                 name: name,
                 node: node,
                 errorMask: errorMaskBuilder,
@@ -703,7 +726,8 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Xml(
+            ClothingAbstractXmlTranslation.Instance.Write_Xml(
+                item: this,
                 name: name,
                 node: node,
                 errorMask: errorMaskBuilder,
@@ -719,7 +743,7 @@ namespace Mutagen.Bethesda.Oblivion
             TranslationCrystal translationMask,
             string name = null)
         {
-            ClothingAbstractCommon.Write_Xml(
+            ClothingAbstractXmlTranslation.Instance.Write_Xml(
                 item: this,
                 name: name,
                 node: node,
@@ -772,6 +796,7 @@ namespace Mutagen.Bethesda.Oblivion
                     return Enchantment_Property.HasBeenSet;
                 case ClothingAbstract_FieldIndex.BipedFlags:
                 case ClothingAbstract_FieldIndex.Flags:
+                case ClothingAbstract_FieldIndex.BMDTDataTypeState:
                     return true;
                 default:
                     return base.GetHasBeenSet(index);
@@ -779,7 +804,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         #region Mutagen
-        public BMDTDataType BMDTDataTypeState;
         [Flags]
         public enum BMDTDataType
         {
@@ -830,7 +854,8 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Binary(
+            ClothingAbstractBinaryTranslation.Instance.Write_Binary(
+                item: this,
                 masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: null,
@@ -846,7 +871,8 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Binary(
+            ClothingAbstractBinaryTranslation.Instance.Write_Binary(
+                item: this,
                 masterReferences: masterReferences,
                 writer: writer,
                 errorMask: errorMaskBuilder,
@@ -861,7 +887,8 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Binary(
+            ClothingAbstractBinaryTranslation.Instance.Write_Binary(
+                item: this,
                 masterReferences: masterReferences,
                 writer: writer,
                 errorMask: errorMaskBuilder,
@@ -876,7 +903,8 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Binary(
+            ClothingAbstractBinaryTranslation.Instance.Write_Binary(
+                item: this,
                 masterReferences: masterReferences,
                 writer: writer,
                 errorMask: errorMaskBuilder,
@@ -892,7 +920,7 @@ namespace Mutagen.Bethesda.Oblivion
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            ClothingAbstractCommon.Write_Binary(
+            ClothingAbstractBinaryTranslation.Instance.Write_Binary(
                 item: this,
                 masterReferences: masterReferences,
                 writer: writer,
@@ -900,6 +928,19 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask);
         }
         #endregion
+
+        protected static void Fill_Binary_Structs(
+            ClothingAbstract item,
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            ErrorMaskBuilder errorMask)
+        {
+            ItemAbstract.Fill_Binary_Structs(
+                item: item,
+                frame: frame,
+                masterReferences: masterReferences,
+                errorMask: errorMask);
+        }
 
         protected static TryGet<int?> Fill_Binary_RecordTypes(
             ClothingAbstract item,
@@ -1289,6 +1330,9 @@ namespace Mutagen.Bethesda.Oblivion
                 case ClothingAbstract_FieldIndex.FemaleIcon:
                     this.FemaleIcon = (String)obj;
                     break;
+                case ClothingAbstract_FieldIndex.BMDTDataTypeState:
+                    this.BMDTDataTypeState = (ClothingAbstract.BMDTDataType)obj;
+                    break;
                 default:
                     base.SetNthObject(index, obj);
                     break;
@@ -1346,6 +1390,9 @@ namespace Mutagen.Bethesda.Oblivion
                 case ClothingAbstract_FieldIndex.FemaleIcon:
                     obj.FemaleIcon = (String)pair.Value;
                     break;
+                case ClothingAbstract_FieldIndex.BMDTDataTypeState:
+                    obj.BMDTDataTypeState = (ClothingAbstract.BMDTDataType)pair.Value;
+                    break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
@@ -1401,6 +1448,14 @@ namespace Mutagen.Bethesda.Oblivion
         new bool FemaleIcon_IsSet { get; set; }
         void FemaleIcon_Set(String item, bool hasBeenSet = true);
         void FemaleIcon_Unset();
+
+    }
+
+    public partial interface IClothingAbstractInternal : IClothingAbstract, IClothingAbstractInternalGetter, IItemAbstractInternal
+    {
+        new Script Script { get; set; }
+        new Enchantment Enchantment { get; set; }
+        new ClothingAbstract.BMDTDataType BMDTDataTypeState { get; set; }
 
     }
 
@@ -1467,6 +1522,15 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
+    public partial interface IClothingAbstractInternalGetter : IClothingAbstractGetter, IItemAbstractInternalGetter
+    {
+        #region BMDTDataTypeState
+        ClothingAbstract.BMDTDataType BMDTDataTypeState { get; }
+
+        #endregion
+
+    }
+
     #endregion
 
 }
@@ -1476,23 +1540,25 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #region Field Index
     public enum ClothingAbstract_FieldIndex
     {
-        FormKey = 0,
-        Version = 1,
-        EditorID = 2,
-        RecordType = 3,
-        OblivionMajorRecordFlags = 4,
-        Name = 5,
-        Script = 6,
-        Enchantment = 7,
-        EnchantmentPoints = 8,
-        BipedFlags = 9,
-        Flags = 10,
-        MaleBipedModel = 11,
-        MaleWorldModel = 12,
-        MaleIcon = 13,
-        FemaleBipedModel = 14,
-        FemaleWorldModel = 15,
-        FemaleIcon = 16,
+        MajorRecordFlagsRaw = 0,
+        FormKey = 1,
+        Version = 2,
+        EditorID = 3,
+        RecordType = 4,
+        OblivionMajorRecordFlags = 5,
+        Name = 6,
+        Script = 7,
+        Enchantment = 8,
+        EnchantmentPoints = 9,
+        BipedFlags = 10,
+        Flags = 11,
+        MaleBipedModel = 12,
+        MaleWorldModel = 13,
+        MaleIcon = 14,
+        FemaleBipedModel = 15,
+        FemaleWorldModel = 16,
+        FemaleIcon = 17,
+        BMDTDataTypeState = 18,
     }
     #endregion
 
@@ -1510,9 +1576,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const string GUID = "45098216-a539-4788-84f5-ece76ab7abf2";
 
-        public const ushort AdditionalFieldCount = 12;
+        public const ushort AdditionalFieldCount = 13;
 
-        public const ushort FieldCount = 17;
+        public const ushort FieldCount = 19;
 
         public static readonly Type MaskType = typeof(ClothingAbstract_Mask<>);
 
@@ -1522,11 +1588,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type GetterType = typeof(IClothingAbstractGetter);
 
-        public static readonly Type InternalGetterType = null;
+        public static readonly Type InternalGetterType = typeof(IClothingAbstractInternalGetter);
 
         public static readonly Type SetterType = typeof(IClothingAbstract);
 
-        public static readonly Type InternalSetterType = null;
+        public static readonly Type InternalSetterType = typeof(IClothingAbstractInternal);
 
         public static readonly Type CommonType = typeof(ClothingAbstractCommon);
 
@@ -1568,6 +1634,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (ushort)ClothingAbstract_FieldIndex.FemaleWorldModel;
                 case "FEMALEICON":
                     return (ushort)ClothingAbstract_FieldIndex.FemaleIcon;
+                case "BMDTDATATYPESTATE":
+                    return (ushort)ClothingAbstract_FieldIndex.BMDTDataTypeState;
                 default:
                     return null;
             }
@@ -1590,6 +1658,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case ClothingAbstract_FieldIndex.FemaleBipedModel:
                 case ClothingAbstract_FieldIndex.FemaleWorldModel:
                 case ClothingAbstract_FieldIndex.FemaleIcon:
+                case ClothingAbstract_FieldIndex.BMDTDataTypeState:
                     return false;
                 default:
                     return ItemAbstract_Registration.GetNthIsEnumerable(index);
@@ -1614,6 +1683,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case ClothingAbstract_FieldIndex.Flags:
                 case ClothingAbstract_FieldIndex.MaleIcon:
                 case ClothingAbstract_FieldIndex.FemaleIcon:
+                case ClothingAbstract_FieldIndex.BMDTDataTypeState:
                     return false;
                 default:
                     return ItemAbstract_Registration.GetNthIsLoqui(index);
@@ -1637,6 +1707,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case ClothingAbstract_FieldIndex.FemaleBipedModel:
                 case ClothingAbstract_FieldIndex.FemaleWorldModel:
                 case ClothingAbstract_FieldIndex.FemaleIcon:
+                case ClothingAbstract_FieldIndex.BMDTDataTypeState:
                     return false;
                 default:
                     return ItemAbstract_Registration.GetNthIsSingleton(index);
@@ -1672,6 +1743,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return "FemaleWorldModel";
                 case ClothingAbstract_FieldIndex.FemaleIcon:
                     return "FemaleIcon";
+                case ClothingAbstract_FieldIndex.BMDTDataTypeState:
+                    return "BMDTDataTypeState";
                 default:
                     return ItemAbstract_Registration.GetNthName(index);
             }
@@ -1694,6 +1767,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case ClothingAbstract_FieldIndex.FemaleBipedModel:
                 case ClothingAbstract_FieldIndex.FemaleWorldModel:
                 case ClothingAbstract_FieldIndex.FemaleIcon:
+                case ClothingAbstract_FieldIndex.BMDTDataTypeState:
                     return false;
                 default:
                     return ItemAbstract_Registration.IsNthDerivative(index);
@@ -1717,6 +1791,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case ClothingAbstract_FieldIndex.FemaleBipedModel:
                 case ClothingAbstract_FieldIndex.FemaleWorldModel:
                 case ClothingAbstract_FieldIndex.FemaleIcon:
+                case ClothingAbstract_FieldIndex.BMDTDataTypeState:
                     return false;
                 default:
                     return ItemAbstract_Registration.IsProtected(index);
@@ -1752,6 +1827,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return typeof(Model);
                 case ClothingAbstract_FieldIndex.FemaleIcon:
                     return typeof(String);
+                case ClothingAbstract_FieldIndex.BMDTDataTypeState:
+                    return typeof(ClothingAbstract.BMDTDataType);
                 default:
                     return ItemAbstract_Registration.GetNthType(index);
             }
@@ -2434,6 +2511,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     fg.AppendLine($"FemaleIcon => {item.FemaleIcon}");
                 }
+                if (printMask?.BMDTDataTypeState ?? true)
+                {
+                }
             }
             fg.AppendLine("]");
         }
@@ -2474,6 +2554,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.FemaleBipedModel = new MaskItem<bool, Model_Mask<bool>>(item.FemaleBipedModel_IsSet, ModelCommon.GetHasBeenSetMask(item.FemaleBipedModel));
             ret.FemaleWorldModel = new MaskItem<bool, Model_Mask<bool>>(item.FemaleWorldModel_IsSet, ModelCommon.GetHasBeenSetMask(item.FemaleWorldModel));
             ret.FemaleIcon = item.FemaleIcon_IsSet;
+            ret.BMDTDataTypeState = true;
             return ret;
         }
 
@@ -2487,6 +2568,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (index)
             {
+                case ItemAbstract_FieldIndex.MajorRecordFlagsRaw:
+                    return (ClothingAbstract_FieldIndex)((int)index);
                 case ItemAbstract_FieldIndex.FormKey:
                     return (ClothingAbstract_FieldIndex)((int)index);
                 case ItemAbstract_FieldIndex.Version:
@@ -2512,6 +2595,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (index)
             {
+                case OblivionMajorRecord_FieldIndex.MajorRecordFlagsRaw:
+                    return (ClothingAbstract_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.FormKey:
                     return (ClothingAbstract_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.Version:
@@ -2537,6 +2622,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (index)
             {
+                case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
+                    return (ClothingAbstract_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
                     return (ClothingAbstract_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.Version:
@@ -2551,184 +2638,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         #region Xml Translation
-        #region Xml Write
-        public static void Write_Xml(
-            XElement node,
-            ClothingAbstract item,
-            bool doMasks,
-            out ClothingAbstract_ErrorMask errorMask,
-            ClothingAbstract_TranslationMask translationMask,
-            string name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_Xml(
-                name: name,
-                node: node,
-                item: item,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = ClothingAbstract_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void Write_Xml(
-            XElement node,
-            ClothingAbstract item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.ClothingAbstract");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.ClothingAbstract");
-            }
-            WriteToNode_Xml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #endregion
-
-        public static void WriteToNode_Xml(
-            this ClothingAbstract item,
-            XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            ItemAbstractCommon.WriteToNode_Xml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            if (item.Name_IsSet
-                && (translationMask?.GetShouldTranslate((int)ClothingAbstract_FieldIndex.Name) ?? true))
-            {
-                StringXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Name),
-                    item: item.Name,
-                    fieldIndex: (int)ClothingAbstract_FieldIndex.Name,
-                    errorMask: errorMask);
-            }
-            if (item.Script_Property.HasBeenSet
-                && (translationMask?.GetShouldTranslate((int)ClothingAbstract_FieldIndex.Script) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Script),
-                    item: item.Script_Property?.FormKey,
-                    fieldIndex: (int)ClothingAbstract_FieldIndex.Script,
-                    errorMask: errorMask);
-            }
-            if (item.Enchantment_Property.HasBeenSet
-                && (translationMask?.GetShouldTranslate((int)ClothingAbstract_FieldIndex.Enchantment) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Enchantment),
-                    item: item.Enchantment_Property?.FormKey,
-                    fieldIndex: (int)ClothingAbstract_FieldIndex.Enchantment,
-                    errorMask: errorMask);
-            }
-            if (item.EnchantmentPoints_IsSet
-                && (translationMask?.GetShouldTranslate((int)ClothingAbstract_FieldIndex.EnchantmentPoints) ?? true))
-            {
-                UInt16XmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.EnchantmentPoints),
-                    item: item.EnchantmentPoints,
-                    fieldIndex: (int)ClothingAbstract_FieldIndex.EnchantmentPoints,
-                    errorMask: errorMask);
-            }
-            if (item.BMDTDataTypeState.HasFlag(ClothingAbstract.BMDTDataType.Has))
-            {
-                if ((translationMask?.GetShouldTranslate((int)ClothingAbstract_FieldIndex.BipedFlags) ?? true))
-                {
-                    EnumXmlTranslation<BipedFlag>.Instance.Write(
-                        node: node,
-                        name: nameof(item.BipedFlags),
-                        item: item.BipedFlags,
-                        fieldIndex: (int)ClothingAbstract_FieldIndex.BipedFlags,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)ClothingAbstract_FieldIndex.Flags) ?? true))
-                {
-                    EnumXmlTranslation<EquipmentFlag>.Instance.Write(
-                        node: node,
-                        name: nameof(item.Flags),
-                        item: item.Flags,
-                        fieldIndex: (int)ClothingAbstract_FieldIndex.Flags,
-                        errorMask: errorMask);
-                }
-            }
-            if (item.MaleBipedModel_IsSet
-                && (translationMask?.GetShouldTranslate((int)ClothingAbstract_FieldIndex.MaleBipedModel) ?? true))
-            {
-                LoquiXmlTranslation<Model>.Instance.Write(
-                    node: node,
-                    item: item.MaleBipedModel,
-                    name: nameof(item.MaleBipedModel),
-                    fieldIndex: (int)ClothingAbstract_FieldIndex.MaleBipedModel,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)ClothingAbstract_FieldIndex.MaleBipedModel));
-            }
-            if (item.MaleWorldModel_IsSet
-                && (translationMask?.GetShouldTranslate((int)ClothingAbstract_FieldIndex.MaleWorldModel) ?? true))
-            {
-                LoquiXmlTranslation<Model>.Instance.Write(
-                    node: node,
-                    item: item.MaleWorldModel,
-                    name: nameof(item.MaleWorldModel),
-                    fieldIndex: (int)ClothingAbstract_FieldIndex.MaleWorldModel,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)ClothingAbstract_FieldIndex.MaleWorldModel));
-            }
-            if (item.MaleIcon_IsSet
-                && (translationMask?.GetShouldTranslate((int)ClothingAbstract_FieldIndex.MaleIcon) ?? true))
-            {
-                StringXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.MaleIcon),
-                    item: item.MaleIcon,
-                    fieldIndex: (int)ClothingAbstract_FieldIndex.MaleIcon,
-                    errorMask: errorMask);
-            }
-            if (item.FemaleBipedModel_IsSet
-                && (translationMask?.GetShouldTranslate((int)ClothingAbstract_FieldIndex.FemaleBipedModel) ?? true))
-            {
-                LoquiXmlTranslation<Model>.Instance.Write(
-                    node: node,
-                    item: item.FemaleBipedModel,
-                    name: nameof(item.FemaleBipedModel),
-                    fieldIndex: (int)ClothingAbstract_FieldIndex.FemaleBipedModel,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)ClothingAbstract_FieldIndex.FemaleBipedModel));
-            }
-            if (item.FemaleWorldModel_IsSet
-                && (translationMask?.GetShouldTranslate((int)ClothingAbstract_FieldIndex.FemaleWorldModel) ?? true))
-            {
-                LoquiXmlTranslation<Model>.Instance.Write(
-                    node: node,
-                    item: item.FemaleWorldModel,
-                    name: nameof(item.FemaleWorldModel),
-                    fieldIndex: (int)ClothingAbstract_FieldIndex.FemaleWorldModel,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)ClothingAbstract_FieldIndex.FemaleWorldModel));
-            }
-            if (item.FemaleIcon_IsSet
-                && (translationMask?.GetShouldTranslate((int)ClothingAbstract_FieldIndex.FemaleIcon) ?? true))
-            {
-                StringXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.FemaleIcon),
-                    item: item.FemaleIcon,
-                    fieldIndex: (int)ClothingAbstract_FieldIndex.FemaleIcon,
-                    errorMask: errorMask);
-            }
-        }
-
         public static void FillPublic_Xml(
             this ClothingAbstract item,
             XElement node,
@@ -3042,6 +2951,32 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask?.PopIndex();
                     }
                     break;
+                case "BMDTDataTypeState":
+                    try
+                    {
+                        errorMask?.PushIndex((int)ClothingAbstract_FieldIndex.BMDTDataTypeState);
+                        if (EnumXmlTranslation<ClothingAbstract.BMDTDataType>.Instance.Parse(
+                            node: node,
+                            item: out ClothingAbstract.BMDTDataType BMDTDataTypeStateParse,
+                            errorMask: errorMask))
+                        {
+                            item.BMDTDataTypeState = BMDTDataTypeStateParse;
+                        }
+                        else
+                        {
+                            item.BMDTDataTypeState = default(ClothingAbstract.BMDTDataType);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
                 default:
                     ItemAbstractCommon.FillPublicElement_Xml(
                         item: item,
@@ -3055,55 +2990,864 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        #region Binary Translation
-        #region Binary Write
-        public static void Write_Binary(
-            MutagenWriter writer,
-            ClothingAbstract item,
-            MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
+    }
+    #endregion
+
+    #region Modules
+    #region Xml Translation
+    public partial class ClothingAbstractXmlTranslation : ItemAbstractXmlTranslation
+    {
+        public new readonly static ClothingAbstractXmlTranslation Instance = new ClothingAbstractXmlTranslation();
+
+        public static void WriteToNode_Xml(
+            IClothingAbstractInternalGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            ItemAbstractXmlTranslation.WriteToNode_Xml(
+                item: item,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+            if (item.Name_IsSet
+                && (translationMask?.GetShouldTranslate((int)ClothingAbstract_FieldIndex.Name) ?? true))
+            {
+                StringXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Name),
+                    item: item.Name,
+                    fieldIndex: (int)ClothingAbstract_FieldIndex.Name,
+                    errorMask: errorMask);
+            }
+            if (item.Script_Property.HasBeenSet
+                && (translationMask?.GetShouldTranslate((int)ClothingAbstract_FieldIndex.Script) ?? true))
+            {
+                FormKeyXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Script),
+                    item: item.Script_Property?.FormKey,
+                    fieldIndex: (int)ClothingAbstract_FieldIndex.Script,
+                    errorMask: errorMask);
+            }
+            if (item.Enchantment_Property.HasBeenSet
+                && (translationMask?.GetShouldTranslate((int)ClothingAbstract_FieldIndex.Enchantment) ?? true))
+            {
+                FormKeyXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Enchantment),
+                    item: item.Enchantment_Property?.FormKey,
+                    fieldIndex: (int)ClothingAbstract_FieldIndex.Enchantment,
+                    errorMask: errorMask);
+            }
+            if (item.EnchantmentPoints_IsSet
+                && (translationMask?.GetShouldTranslate((int)ClothingAbstract_FieldIndex.EnchantmentPoints) ?? true))
+            {
+                UInt16XmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.EnchantmentPoints),
+                    item: item.EnchantmentPoints,
+                    fieldIndex: (int)ClothingAbstract_FieldIndex.EnchantmentPoints,
+                    errorMask: errorMask);
+            }
+            if (item.BMDTDataTypeState.HasFlag(ClothingAbstract.BMDTDataType.Has))
+            {
+                if ((translationMask?.GetShouldTranslate((int)ClothingAbstract_FieldIndex.BipedFlags) ?? true))
+                {
+                    EnumXmlTranslation<BipedFlag>.Instance.Write(
+                        node: node,
+                        name: nameof(item.BipedFlags),
+                        item: item.BipedFlags,
+                        fieldIndex: (int)ClothingAbstract_FieldIndex.BipedFlags,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)ClothingAbstract_FieldIndex.Flags) ?? true))
+                {
+                    EnumXmlTranslation<EquipmentFlag>.Instance.Write(
+                        node: node,
+                        name: nameof(item.Flags),
+                        item: item.Flags,
+                        fieldIndex: (int)ClothingAbstract_FieldIndex.Flags,
+                        errorMask: errorMask);
+                }
+            }
+            if (item.MaleBipedModel_IsSet
+                && (translationMask?.GetShouldTranslate((int)ClothingAbstract_FieldIndex.MaleBipedModel) ?? true))
+            {
+                LoquiXmlTranslation<Model>.Instance.Write(
+                    node: node,
+                    item: item.MaleBipedModel,
+                    name: nameof(item.MaleBipedModel),
+                    fieldIndex: (int)ClothingAbstract_FieldIndex.MaleBipedModel,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)ClothingAbstract_FieldIndex.MaleBipedModel));
+            }
+            if (item.MaleWorldModel_IsSet
+                && (translationMask?.GetShouldTranslate((int)ClothingAbstract_FieldIndex.MaleWorldModel) ?? true))
+            {
+                LoquiXmlTranslation<Model>.Instance.Write(
+                    node: node,
+                    item: item.MaleWorldModel,
+                    name: nameof(item.MaleWorldModel),
+                    fieldIndex: (int)ClothingAbstract_FieldIndex.MaleWorldModel,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)ClothingAbstract_FieldIndex.MaleWorldModel));
+            }
+            if (item.MaleIcon_IsSet
+                && (translationMask?.GetShouldTranslate((int)ClothingAbstract_FieldIndex.MaleIcon) ?? true))
+            {
+                StringXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.MaleIcon),
+                    item: item.MaleIcon,
+                    fieldIndex: (int)ClothingAbstract_FieldIndex.MaleIcon,
+                    errorMask: errorMask);
+            }
+            if (item.FemaleBipedModel_IsSet
+                && (translationMask?.GetShouldTranslate((int)ClothingAbstract_FieldIndex.FemaleBipedModel) ?? true))
+            {
+                LoquiXmlTranslation<Model>.Instance.Write(
+                    node: node,
+                    item: item.FemaleBipedModel,
+                    name: nameof(item.FemaleBipedModel),
+                    fieldIndex: (int)ClothingAbstract_FieldIndex.FemaleBipedModel,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)ClothingAbstract_FieldIndex.FemaleBipedModel));
+            }
+            if (item.FemaleWorldModel_IsSet
+                && (translationMask?.GetShouldTranslate((int)ClothingAbstract_FieldIndex.FemaleWorldModel) ?? true))
+            {
+                LoquiXmlTranslation<Model>.Instance.Write(
+                    node: node,
+                    item: item.FemaleWorldModel,
+                    name: nameof(item.FemaleWorldModel),
+                    fieldIndex: (int)ClothingAbstract_FieldIndex.FemaleWorldModel,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)ClothingAbstract_FieldIndex.FemaleWorldModel));
+            }
+            if (item.FemaleIcon_IsSet
+                && (translationMask?.GetShouldTranslate((int)ClothingAbstract_FieldIndex.FemaleIcon) ?? true))
+            {
+                StringXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.FemaleIcon),
+                    item: item.FemaleIcon,
+                    fieldIndex: (int)ClothingAbstract_FieldIndex.FemaleIcon,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)ClothingAbstract_FieldIndex.BMDTDataTypeState) ?? true))
+            {
+                EnumXmlTranslation<ClothingAbstract.BMDTDataType>.Instance.Write(
+                    node: node,
+                    name: nameof(item.BMDTDataTypeState),
+                    item: item.BMDTDataTypeState,
+                    fieldIndex: (int)ClothingAbstract_FieldIndex.BMDTDataTypeState,
+                    errorMask: errorMask);
+            }
+        }
+
+        #region Xml Write
+        public void Write_Xml(
+            XElement node,
+            IClothingAbstractInternalGetter item,
             bool doMasks,
-            out ClothingAbstract_ErrorMask errorMask)
+            out ClothingAbstract_ErrorMask errorMask,
+            ClothingAbstract_TranslationMask translationMask,
+            string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_Binary(
-                masterReferences: masterReferences,
-                writer: writer,
+            Write_Xml(
+                name: name,
+                node: node,
                 item: item,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMaskBuilder);
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal());
             errorMask = ClothingAbstract_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void Write_Binary(
-            MutagenWriter writer,
-            ClothingAbstract item,
-            MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
+        public void Write_Xml(
+            XElement node,
+            IClothingAbstractInternalGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
         {
-            OblivionMajorRecordCommon.Write_Binary_Embedded(
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.ClothingAbstract");
+            node.Add(elem);
+            if (name != null)
+            {
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.ClothingAbstract");
+            }
+            WriteToNode_Xml(
                 item: item,
-                writer: writer,
+                node: elem,
                 errorMask: errorMask,
-                masterReferences: masterReferences);
-            Write_Binary_RecordTypes(
-                item: item,
-                writer: writer,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMask,
-                masterReferences: masterReferences);
+                translationMask: translationMask);
         }
         #endregion
 
+    }
+    #endregion
+
+    #region Mask
+    public class ClothingAbstract_Mask<T> : ItemAbstract_Mask<T>, IMask<T>, IEquatable<ClothingAbstract_Mask<T>>
+    {
+        #region Ctors
+        public ClothingAbstract_Mask()
+        {
+        }
+
+        public ClothingAbstract_Mask(T initialValue)
+        {
+            this.Name = initialValue;
+            this.Script = initialValue;
+            this.Enchantment = initialValue;
+            this.EnchantmentPoints = initialValue;
+            this.BipedFlags = initialValue;
+            this.Flags = initialValue;
+            this.MaleBipedModel = new MaskItem<T, Model_Mask<T>>(initialValue, new Model_Mask<T>(initialValue));
+            this.MaleWorldModel = new MaskItem<T, Model_Mask<T>>(initialValue, new Model_Mask<T>(initialValue));
+            this.MaleIcon = initialValue;
+            this.FemaleBipedModel = new MaskItem<T, Model_Mask<T>>(initialValue, new Model_Mask<T>(initialValue));
+            this.FemaleWorldModel = new MaskItem<T, Model_Mask<T>>(initialValue, new Model_Mask<T>(initialValue));
+            this.FemaleIcon = initialValue;
+            this.BMDTDataTypeState = initialValue;
+        }
+        #endregion
+
+        #region Members
+        public T Name;
+        public T Script;
+        public T Enchantment;
+        public T EnchantmentPoints;
+        public T BipedFlags;
+        public T Flags;
+        public MaskItem<T, Model_Mask<T>> MaleBipedModel { get; set; }
+        public MaskItem<T, Model_Mask<T>> MaleWorldModel { get; set; }
+        public T MaleIcon;
+        public MaskItem<T, Model_Mask<T>> FemaleBipedModel { get; set; }
+        public MaskItem<T, Model_Mask<T>> FemaleWorldModel { get; set; }
+        public T FemaleIcon;
+        public T BMDTDataTypeState;
+        #endregion
+
+        #region Equals
+        public override bool Equals(object obj)
+        {
+            if (!(obj is ClothingAbstract_Mask<T> rhs)) return false;
+            return Equals(rhs);
+        }
+
+        public bool Equals(ClothingAbstract_Mask<T> rhs)
+        {
+            if (rhs == null) return false;
+            if (!base.Equals(rhs)) return false;
+            if (!object.Equals(this.Name, rhs.Name)) return false;
+            if (!object.Equals(this.Script, rhs.Script)) return false;
+            if (!object.Equals(this.Enchantment, rhs.Enchantment)) return false;
+            if (!object.Equals(this.EnchantmentPoints, rhs.EnchantmentPoints)) return false;
+            if (!object.Equals(this.BipedFlags, rhs.BipedFlags)) return false;
+            if (!object.Equals(this.Flags, rhs.Flags)) return false;
+            if (!object.Equals(this.MaleBipedModel, rhs.MaleBipedModel)) return false;
+            if (!object.Equals(this.MaleWorldModel, rhs.MaleWorldModel)) return false;
+            if (!object.Equals(this.MaleIcon, rhs.MaleIcon)) return false;
+            if (!object.Equals(this.FemaleBipedModel, rhs.FemaleBipedModel)) return false;
+            if (!object.Equals(this.FemaleWorldModel, rhs.FemaleWorldModel)) return false;
+            if (!object.Equals(this.FemaleIcon, rhs.FemaleIcon)) return false;
+            if (!object.Equals(this.BMDTDataTypeState, rhs.BMDTDataTypeState)) return false;
+            return true;
+        }
+        public override int GetHashCode()
+        {
+            int ret = 0;
+            ret = ret.CombineHashCode(this.Name?.GetHashCode());
+            ret = ret.CombineHashCode(this.Script?.GetHashCode());
+            ret = ret.CombineHashCode(this.Enchantment?.GetHashCode());
+            ret = ret.CombineHashCode(this.EnchantmentPoints?.GetHashCode());
+            ret = ret.CombineHashCode(this.BipedFlags?.GetHashCode());
+            ret = ret.CombineHashCode(this.Flags?.GetHashCode());
+            ret = ret.CombineHashCode(this.MaleBipedModel?.GetHashCode());
+            ret = ret.CombineHashCode(this.MaleWorldModel?.GetHashCode());
+            ret = ret.CombineHashCode(this.MaleIcon?.GetHashCode());
+            ret = ret.CombineHashCode(this.FemaleBipedModel?.GetHashCode());
+            ret = ret.CombineHashCode(this.FemaleWorldModel?.GetHashCode());
+            ret = ret.CombineHashCode(this.FemaleIcon?.GetHashCode());
+            ret = ret.CombineHashCode(this.BMDTDataTypeState?.GetHashCode());
+            ret = ret.CombineHashCode(base.GetHashCode());
+            return ret;
+        }
+
+        #endregion
+
+        #region All Equal
+        public override bool AllEqual(Func<T, bool> eval)
+        {
+            if (!base.AllEqual(eval)) return false;
+            if (!eval(this.Name)) return false;
+            if (!eval(this.Script)) return false;
+            if (!eval(this.Enchantment)) return false;
+            if (!eval(this.EnchantmentPoints)) return false;
+            if (!eval(this.BipedFlags)) return false;
+            if (!eval(this.Flags)) return false;
+            if (MaleBipedModel != null)
+            {
+                if (!eval(this.MaleBipedModel.Overall)) return false;
+                if (this.MaleBipedModel.Specific != null && !this.MaleBipedModel.Specific.AllEqual(eval)) return false;
+            }
+            if (MaleWorldModel != null)
+            {
+                if (!eval(this.MaleWorldModel.Overall)) return false;
+                if (this.MaleWorldModel.Specific != null && !this.MaleWorldModel.Specific.AllEqual(eval)) return false;
+            }
+            if (!eval(this.MaleIcon)) return false;
+            if (FemaleBipedModel != null)
+            {
+                if (!eval(this.FemaleBipedModel.Overall)) return false;
+                if (this.FemaleBipedModel.Specific != null && !this.FemaleBipedModel.Specific.AllEqual(eval)) return false;
+            }
+            if (FemaleWorldModel != null)
+            {
+                if (!eval(this.FemaleWorldModel.Overall)) return false;
+                if (this.FemaleWorldModel.Specific != null && !this.FemaleWorldModel.Specific.AllEqual(eval)) return false;
+            }
+            if (!eval(this.FemaleIcon)) return false;
+            if (!eval(this.BMDTDataTypeState)) return false;
+            return true;
+        }
+        #endregion
+
+        #region Translate
+        public new ClothingAbstract_Mask<R> Translate<R>(Func<T, R> eval)
+        {
+            var ret = new ClothingAbstract_Mask<R>();
+            this.Translate_InternalFill(ret, eval);
+            return ret;
+        }
+
+        protected void Translate_InternalFill<R>(ClothingAbstract_Mask<R> obj, Func<T, R> eval)
+        {
+            base.Translate_InternalFill(obj, eval);
+            obj.Name = eval(this.Name);
+            obj.Script = eval(this.Script);
+            obj.Enchantment = eval(this.Enchantment);
+            obj.EnchantmentPoints = eval(this.EnchantmentPoints);
+            obj.BipedFlags = eval(this.BipedFlags);
+            obj.Flags = eval(this.Flags);
+            if (this.MaleBipedModel != null)
+            {
+                obj.MaleBipedModel = new MaskItem<R, Model_Mask<R>>();
+                obj.MaleBipedModel.Overall = eval(this.MaleBipedModel.Overall);
+                if (this.MaleBipedModel.Specific != null)
+                {
+                    obj.MaleBipedModel.Specific = this.MaleBipedModel.Specific.Translate(eval);
+                }
+            }
+            if (this.MaleWorldModel != null)
+            {
+                obj.MaleWorldModel = new MaskItem<R, Model_Mask<R>>();
+                obj.MaleWorldModel.Overall = eval(this.MaleWorldModel.Overall);
+                if (this.MaleWorldModel.Specific != null)
+                {
+                    obj.MaleWorldModel.Specific = this.MaleWorldModel.Specific.Translate(eval);
+                }
+            }
+            obj.MaleIcon = eval(this.MaleIcon);
+            if (this.FemaleBipedModel != null)
+            {
+                obj.FemaleBipedModel = new MaskItem<R, Model_Mask<R>>();
+                obj.FemaleBipedModel.Overall = eval(this.FemaleBipedModel.Overall);
+                if (this.FemaleBipedModel.Specific != null)
+                {
+                    obj.FemaleBipedModel.Specific = this.FemaleBipedModel.Specific.Translate(eval);
+                }
+            }
+            if (this.FemaleWorldModel != null)
+            {
+                obj.FemaleWorldModel = new MaskItem<R, Model_Mask<R>>();
+                obj.FemaleWorldModel.Overall = eval(this.FemaleWorldModel.Overall);
+                if (this.FemaleWorldModel.Specific != null)
+                {
+                    obj.FemaleWorldModel.Specific = this.FemaleWorldModel.Specific.Translate(eval);
+                }
+            }
+            obj.FemaleIcon = eval(this.FemaleIcon);
+            obj.BMDTDataTypeState = eval(this.BMDTDataTypeState);
+        }
+        #endregion
+
+        #region Clear Enumerables
+        public override void ClearEnumerables()
+        {
+            base.ClearEnumerables();
+        }
+        #endregion
+
+        #region To String
+        public override string ToString()
+        {
+            return ToString(printMask: null);
+        }
+
+        public string ToString(ClothingAbstract_Mask<bool> printMask = null)
+        {
+            var fg = new FileGeneration();
+            ToString(fg, printMask);
+            return fg.ToString();
+        }
+
+        public void ToString(FileGeneration fg, ClothingAbstract_Mask<bool> printMask = null)
+        {
+            fg.AppendLine($"{nameof(ClothingAbstract_Mask<T>)} =>");
+            fg.AppendLine("[");
+            using (new DepthWrapper(fg))
+            {
+                if (printMask?.Name ?? true)
+                {
+                    fg.AppendLine($"Name => {Name}");
+                }
+                if (printMask?.Script ?? true)
+                {
+                    fg.AppendLine($"Script => {Script}");
+                }
+                if (printMask?.Enchantment ?? true)
+                {
+                    fg.AppendLine($"Enchantment => {Enchantment}");
+                }
+                if (printMask?.EnchantmentPoints ?? true)
+                {
+                    fg.AppendLine($"EnchantmentPoints => {EnchantmentPoints}");
+                }
+                if (printMask?.BipedFlags ?? true)
+                {
+                    fg.AppendLine($"BipedFlags => {BipedFlags}");
+                }
+                if (printMask?.Flags ?? true)
+                {
+                    fg.AppendLine($"Flags => {Flags}");
+                }
+                if (printMask?.MaleBipedModel?.Overall ?? true)
+                {
+                    MaleBipedModel?.ToString(fg);
+                }
+                if (printMask?.MaleWorldModel?.Overall ?? true)
+                {
+                    MaleWorldModel?.ToString(fg);
+                }
+                if (printMask?.MaleIcon ?? true)
+                {
+                    fg.AppendLine($"MaleIcon => {MaleIcon}");
+                }
+                if (printMask?.FemaleBipedModel?.Overall ?? true)
+                {
+                    FemaleBipedModel?.ToString(fg);
+                }
+                if (printMask?.FemaleWorldModel?.Overall ?? true)
+                {
+                    FemaleWorldModel?.ToString(fg);
+                }
+                if (printMask?.FemaleIcon ?? true)
+                {
+                    fg.AppendLine($"FemaleIcon => {FemaleIcon}");
+                }
+                if (printMask?.BMDTDataTypeState ?? true)
+                {
+                    fg.AppendLine($"BMDTDataTypeState => {BMDTDataTypeState}");
+                }
+            }
+            fg.AppendLine("]");
+        }
+        #endregion
+
+    }
+
+    public class ClothingAbstract_ErrorMask : ItemAbstract_ErrorMask, IErrorMask<ClothingAbstract_ErrorMask>
+    {
+        #region Members
+        public Exception Name;
+        public Exception Script;
+        public Exception Enchantment;
+        public Exception EnchantmentPoints;
+        public Exception BipedFlags;
+        public Exception Flags;
+        public MaskItem<Exception, Model_ErrorMask> MaleBipedModel;
+        public MaskItem<Exception, Model_ErrorMask> MaleWorldModel;
+        public Exception MaleIcon;
+        public MaskItem<Exception, Model_ErrorMask> FemaleBipedModel;
+        public MaskItem<Exception, Model_ErrorMask> FemaleWorldModel;
+        public Exception FemaleIcon;
+        public Exception BMDTDataTypeState;
+        #endregion
+
+        #region IErrorMask
+        public override object GetNthMask(int index)
+        {
+            ClothingAbstract_FieldIndex enu = (ClothingAbstract_FieldIndex)index;
+            switch (enu)
+            {
+                case ClothingAbstract_FieldIndex.Name:
+                    return Name;
+                case ClothingAbstract_FieldIndex.Script:
+                    return Script;
+                case ClothingAbstract_FieldIndex.Enchantment:
+                    return Enchantment;
+                case ClothingAbstract_FieldIndex.EnchantmentPoints:
+                    return EnchantmentPoints;
+                case ClothingAbstract_FieldIndex.BipedFlags:
+                    return BipedFlags;
+                case ClothingAbstract_FieldIndex.Flags:
+                    return Flags;
+                case ClothingAbstract_FieldIndex.MaleBipedModel:
+                    return MaleBipedModel;
+                case ClothingAbstract_FieldIndex.MaleWorldModel:
+                    return MaleWorldModel;
+                case ClothingAbstract_FieldIndex.MaleIcon:
+                    return MaleIcon;
+                case ClothingAbstract_FieldIndex.FemaleBipedModel:
+                    return FemaleBipedModel;
+                case ClothingAbstract_FieldIndex.FemaleWorldModel:
+                    return FemaleWorldModel;
+                case ClothingAbstract_FieldIndex.FemaleIcon:
+                    return FemaleIcon;
+                case ClothingAbstract_FieldIndex.BMDTDataTypeState:
+                    return BMDTDataTypeState;
+                default:
+                    return base.GetNthMask(index);
+            }
+        }
+
+        public override void SetNthException(int index, Exception ex)
+        {
+            ClothingAbstract_FieldIndex enu = (ClothingAbstract_FieldIndex)index;
+            switch (enu)
+            {
+                case ClothingAbstract_FieldIndex.Name:
+                    this.Name = ex;
+                    break;
+                case ClothingAbstract_FieldIndex.Script:
+                    this.Script = ex;
+                    break;
+                case ClothingAbstract_FieldIndex.Enchantment:
+                    this.Enchantment = ex;
+                    break;
+                case ClothingAbstract_FieldIndex.EnchantmentPoints:
+                    this.EnchantmentPoints = ex;
+                    break;
+                case ClothingAbstract_FieldIndex.BipedFlags:
+                    this.BipedFlags = ex;
+                    break;
+                case ClothingAbstract_FieldIndex.Flags:
+                    this.Flags = ex;
+                    break;
+                case ClothingAbstract_FieldIndex.MaleBipedModel:
+                    this.MaleBipedModel = new MaskItem<Exception, Model_ErrorMask>(ex, null);
+                    break;
+                case ClothingAbstract_FieldIndex.MaleWorldModel:
+                    this.MaleWorldModel = new MaskItem<Exception, Model_ErrorMask>(ex, null);
+                    break;
+                case ClothingAbstract_FieldIndex.MaleIcon:
+                    this.MaleIcon = ex;
+                    break;
+                case ClothingAbstract_FieldIndex.FemaleBipedModel:
+                    this.FemaleBipedModel = new MaskItem<Exception, Model_ErrorMask>(ex, null);
+                    break;
+                case ClothingAbstract_FieldIndex.FemaleWorldModel:
+                    this.FemaleWorldModel = new MaskItem<Exception, Model_ErrorMask>(ex, null);
+                    break;
+                case ClothingAbstract_FieldIndex.FemaleIcon:
+                    this.FemaleIcon = ex;
+                    break;
+                case ClothingAbstract_FieldIndex.BMDTDataTypeState:
+                    this.BMDTDataTypeState = ex;
+                    break;
+                default:
+                    base.SetNthException(index, ex);
+                    break;
+            }
+        }
+
+        public override void SetNthMask(int index, object obj)
+        {
+            ClothingAbstract_FieldIndex enu = (ClothingAbstract_FieldIndex)index;
+            switch (enu)
+            {
+                case ClothingAbstract_FieldIndex.Name:
+                    this.Name = (Exception)obj;
+                    break;
+                case ClothingAbstract_FieldIndex.Script:
+                    this.Script = (Exception)obj;
+                    break;
+                case ClothingAbstract_FieldIndex.Enchantment:
+                    this.Enchantment = (Exception)obj;
+                    break;
+                case ClothingAbstract_FieldIndex.EnchantmentPoints:
+                    this.EnchantmentPoints = (Exception)obj;
+                    break;
+                case ClothingAbstract_FieldIndex.BipedFlags:
+                    this.BipedFlags = (Exception)obj;
+                    break;
+                case ClothingAbstract_FieldIndex.Flags:
+                    this.Flags = (Exception)obj;
+                    break;
+                case ClothingAbstract_FieldIndex.MaleBipedModel:
+                    this.MaleBipedModel = (MaskItem<Exception, Model_ErrorMask>)obj;
+                    break;
+                case ClothingAbstract_FieldIndex.MaleWorldModel:
+                    this.MaleWorldModel = (MaskItem<Exception, Model_ErrorMask>)obj;
+                    break;
+                case ClothingAbstract_FieldIndex.MaleIcon:
+                    this.MaleIcon = (Exception)obj;
+                    break;
+                case ClothingAbstract_FieldIndex.FemaleBipedModel:
+                    this.FemaleBipedModel = (MaskItem<Exception, Model_ErrorMask>)obj;
+                    break;
+                case ClothingAbstract_FieldIndex.FemaleWorldModel:
+                    this.FemaleWorldModel = (MaskItem<Exception, Model_ErrorMask>)obj;
+                    break;
+                case ClothingAbstract_FieldIndex.FemaleIcon:
+                    this.FemaleIcon = (Exception)obj;
+                    break;
+                case ClothingAbstract_FieldIndex.BMDTDataTypeState:
+                    this.BMDTDataTypeState = (Exception)obj;
+                    break;
+                default:
+                    base.SetNthMask(index, obj);
+                    break;
+            }
+        }
+
+        public override bool IsInError()
+        {
+            if (Overall != null) return true;
+            if (Name != null) return true;
+            if (Script != null) return true;
+            if (Enchantment != null) return true;
+            if (EnchantmentPoints != null) return true;
+            if (BipedFlags != null) return true;
+            if (Flags != null) return true;
+            if (MaleBipedModel != null) return true;
+            if (MaleWorldModel != null) return true;
+            if (MaleIcon != null) return true;
+            if (FemaleBipedModel != null) return true;
+            if (FemaleWorldModel != null) return true;
+            if (FemaleIcon != null) return true;
+            if (BMDTDataTypeState != null) return true;
+            return false;
+        }
+        #endregion
+
+        #region To String
+        public override string ToString()
+        {
+            var fg = new FileGeneration();
+            ToString(fg);
+            return fg.ToString();
+        }
+
+        public override void ToString(FileGeneration fg)
+        {
+            fg.AppendLine("ClothingAbstract_ErrorMask =>");
+            fg.AppendLine("[");
+            using (new DepthWrapper(fg))
+            {
+                if (this.Overall != null)
+                {
+                    fg.AppendLine("Overall =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendLine($"{this.Overall}");
+                    }
+                    fg.AppendLine("]");
+                }
+                ToString_FillInternal(fg);
+            }
+            fg.AppendLine("]");
+        }
+        protected override void ToString_FillInternal(FileGeneration fg)
+        {
+            base.ToString_FillInternal(fg);
+            fg.AppendLine($"Name => {Name}");
+            fg.AppendLine($"Script => {Script}");
+            fg.AppendLine($"Enchantment => {Enchantment}");
+            fg.AppendLine($"EnchantmentPoints => {EnchantmentPoints}");
+            fg.AppendLine($"BipedFlags => {BipedFlags}");
+            fg.AppendLine($"Flags => {Flags}");
+            MaleBipedModel?.ToString(fg);
+            MaleWorldModel?.ToString(fg);
+            fg.AppendLine($"MaleIcon => {MaleIcon}");
+            FemaleBipedModel?.ToString(fg);
+            FemaleWorldModel?.ToString(fg);
+            fg.AppendLine($"FemaleIcon => {FemaleIcon}");
+            fg.AppendLine($"BMDTDataTypeState => {BMDTDataTypeState}");
+        }
+        #endregion
+
+        #region Combine
+        public ClothingAbstract_ErrorMask Combine(ClothingAbstract_ErrorMask rhs)
+        {
+            var ret = new ClothingAbstract_ErrorMask();
+            ret.Name = this.Name.Combine(rhs.Name);
+            ret.Script = this.Script.Combine(rhs.Script);
+            ret.Enchantment = this.Enchantment.Combine(rhs.Enchantment);
+            ret.EnchantmentPoints = this.EnchantmentPoints.Combine(rhs.EnchantmentPoints);
+            ret.BipedFlags = this.BipedFlags.Combine(rhs.BipedFlags);
+            ret.Flags = this.Flags.Combine(rhs.Flags);
+            ret.MaleBipedModel = new MaskItem<Exception, Model_ErrorMask>(this.MaleBipedModel.Overall.Combine(rhs.MaleBipedModel.Overall), ((IErrorMask<Model_ErrorMask>)this.MaleBipedModel.Specific).Combine(rhs.MaleBipedModel.Specific));
+            ret.MaleWorldModel = new MaskItem<Exception, Model_ErrorMask>(this.MaleWorldModel.Overall.Combine(rhs.MaleWorldModel.Overall), ((IErrorMask<Model_ErrorMask>)this.MaleWorldModel.Specific).Combine(rhs.MaleWorldModel.Specific));
+            ret.MaleIcon = this.MaleIcon.Combine(rhs.MaleIcon);
+            ret.FemaleBipedModel = new MaskItem<Exception, Model_ErrorMask>(this.FemaleBipedModel.Overall.Combine(rhs.FemaleBipedModel.Overall), ((IErrorMask<Model_ErrorMask>)this.FemaleBipedModel.Specific).Combine(rhs.FemaleBipedModel.Specific));
+            ret.FemaleWorldModel = new MaskItem<Exception, Model_ErrorMask>(this.FemaleWorldModel.Overall.Combine(rhs.FemaleWorldModel.Overall), ((IErrorMask<Model_ErrorMask>)this.FemaleWorldModel.Specific).Combine(rhs.FemaleWorldModel.Specific));
+            ret.FemaleIcon = this.FemaleIcon.Combine(rhs.FemaleIcon);
+            ret.BMDTDataTypeState = this.BMDTDataTypeState.Combine(rhs.BMDTDataTypeState);
+            return ret;
+        }
+        public static ClothingAbstract_ErrorMask Combine(ClothingAbstract_ErrorMask lhs, ClothingAbstract_ErrorMask rhs)
+        {
+            if (lhs != null && rhs != null) return lhs.Combine(rhs);
+            return lhs ?? rhs;
+        }
+        #endregion
+
+        #region Factory
+        public static ClothingAbstract_ErrorMask Factory(ErrorMaskBuilder errorMask)
+        {
+            if (errorMask?.Empty ?? true) return null;
+            return new ClothingAbstract_ErrorMask();
+        }
+        #endregion
+
+    }
+    public class ClothingAbstract_CopyMask : ItemAbstract_CopyMask
+    {
+        public ClothingAbstract_CopyMask()
+        {
+        }
+
+        public ClothingAbstract_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
+        {
+            this.Name = defaultOn;
+            this.Script = defaultOn;
+            this.Enchantment = defaultOn;
+            this.EnchantmentPoints = defaultOn;
+            this.BipedFlags = defaultOn;
+            this.Flags = defaultOn;
+            this.MaleBipedModel = new MaskItem<CopyOption, Model_CopyMask>(deepCopyOption, default);
+            this.MaleWorldModel = new MaskItem<CopyOption, Model_CopyMask>(deepCopyOption, default);
+            this.MaleIcon = defaultOn;
+            this.FemaleBipedModel = new MaskItem<CopyOption, Model_CopyMask>(deepCopyOption, default);
+            this.FemaleWorldModel = new MaskItem<CopyOption, Model_CopyMask>(deepCopyOption, default);
+            this.FemaleIcon = defaultOn;
+            this.BMDTDataTypeState = defaultOn;
+        }
+
+        #region Members
+        public bool Name;
+        public bool Script;
+        public bool Enchantment;
+        public bool EnchantmentPoints;
+        public bool BipedFlags;
+        public bool Flags;
+        public MaskItem<CopyOption, Model_CopyMask> MaleBipedModel;
+        public MaskItem<CopyOption, Model_CopyMask> MaleWorldModel;
+        public bool MaleIcon;
+        public MaskItem<CopyOption, Model_CopyMask> FemaleBipedModel;
+        public MaskItem<CopyOption, Model_CopyMask> FemaleWorldModel;
+        public bool FemaleIcon;
+        public bool BMDTDataTypeState;
+        #endregion
+
+    }
+
+    public class ClothingAbstract_TranslationMask : ItemAbstract_TranslationMask
+    {
+        #region Members
+        public bool Name;
+        public bool Script;
+        public bool Enchantment;
+        public bool EnchantmentPoints;
+        public bool BipedFlags;
+        public bool Flags;
+        public MaskItem<bool, Model_TranslationMask> MaleBipedModel;
+        public MaskItem<bool, Model_TranslationMask> MaleWorldModel;
+        public bool MaleIcon;
+        public MaskItem<bool, Model_TranslationMask> FemaleBipedModel;
+        public MaskItem<bool, Model_TranslationMask> FemaleWorldModel;
+        public bool FemaleIcon;
+        public bool BMDTDataTypeState;
+        #endregion
+
+        #region Ctors
+        public ClothingAbstract_TranslationMask()
+            : base()
+        {
+        }
+
+        public ClothingAbstract_TranslationMask(bool defaultOn)
+            : base(defaultOn)
+        {
+            this.Name = defaultOn;
+            this.Script = defaultOn;
+            this.Enchantment = defaultOn;
+            this.EnchantmentPoints = defaultOn;
+            this.BipedFlags = defaultOn;
+            this.Flags = defaultOn;
+            this.MaleBipedModel = new MaskItem<bool, Model_TranslationMask>(defaultOn, null);
+            this.MaleWorldModel = new MaskItem<bool, Model_TranslationMask>(defaultOn, null);
+            this.MaleIcon = defaultOn;
+            this.FemaleBipedModel = new MaskItem<bool, Model_TranslationMask>(defaultOn, null);
+            this.FemaleWorldModel = new MaskItem<bool, Model_TranslationMask>(defaultOn, null);
+            this.FemaleIcon = defaultOn;
+            this.BMDTDataTypeState = defaultOn;
+        }
+
+        #endregion
+
+        protected override void GetCrystal(List<(bool On, TranslationCrystal SubCrystal)> ret)
+        {
+            base.GetCrystal(ret);
+            ret.Add((Name, null));
+            ret.Add((Script, null));
+            ret.Add((Enchantment, null));
+            ret.Add((EnchantmentPoints, null));
+            ret.Add((BipedFlags, null));
+            ret.Add((Flags, null));
+            ret.Add((MaleBipedModel?.Overall ?? true, MaleBipedModel?.Specific?.GetCrystal()));
+            ret.Add((MaleWorldModel?.Overall ?? true, MaleWorldModel?.Specific?.GetCrystal()));
+            ret.Add((MaleIcon, null));
+            ret.Add((FemaleBipedModel?.Overall ?? true, FemaleBipedModel?.Specific?.GetCrystal()));
+            ret.Add((FemaleWorldModel?.Overall ?? true, FemaleWorldModel?.Specific?.GetCrystal()));
+            ret.Add((FemaleIcon, null));
+            ret.Add((BMDTDataTypeState, null));
+        }
+    }
+    #endregion
+
+    #region Binary Translation
+    public partial class ClothingAbstractBinaryTranslation : ItemAbstractBinaryTranslation
+    {
+        public new readonly static ClothingAbstractBinaryTranslation Instance = new ClothingAbstractBinaryTranslation();
+
+        public static void Write_Binary_Embedded(
+            IClothingAbstractInternalGetter item,
+            MutagenWriter writer,
+            ErrorMaskBuilder errorMask,
+            MasterReferences masterReferences)
+        {
+            OblivionMajorRecordBinaryTranslation.Write_Binary_Embedded(
+                item: item,
+                writer: writer,
+                errorMask: errorMask,
+                masterReferences: masterReferences);
+        }
+
         public static void Write_Binary_RecordTypes(
-            ClothingAbstract item,
+            IClothingAbstractInternalGetter item,
             MutagenWriter writer,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask,
             MasterReferences masterReferences)
         {
-            MajorRecordCommon.Write_Binary_RecordTypes(
+            MajorRecordBinaryTranslation.Write_Binary_RecordTypes(
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
@@ -3214,615 +3958,46 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        #endregion
-
-    }
-    #endregion
-
-    #region Modules
-    #region Mask
-    public class ClothingAbstract_Mask<T> : ItemAbstract_Mask<T>, IMask<T>, IEquatable<ClothingAbstract_Mask<T>>
-    {
-        #region Ctors
-        public ClothingAbstract_Mask()
+        #region Binary Write
+        public void Write_Binary(
+            MutagenWriter writer,
+            IClothingAbstractInternalGetter item,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            bool doMasks,
+            out ClothingAbstract_ErrorMask errorMask)
         {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            Write_Binary(
+                masterReferences: masterReferences,
+                writer: writer,
+                item: item,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMaskBuilder);
+            errorMask = ClothingAbstract_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public ClothingAbstract_Mask(T initialValue)
+        public void Write_Binary(
+            MutagenWriter writer,
+            IClothingAbstractInternalGetter item,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
         {
-            this.Name = initialValue;
-            this.Script = initialValue;
-            this.Enchantment = initialValue;
-            this.EnchantmentPoints = initialValue;
-            this.BipedFlags = initialValue;
-            this.Flags = initialValue;
-            this.MaleBipedModel = new MaskItem<T, Model_Mask<T>>(initialValue, new Model_Mask<T>(initialValue));
-            this.MaleWorldModel = new MaskItem<T, Model_Mask<T>>(initialValue, new Model_Mask<T>(initialValue));
-            this.MaleIcon = initialValue;
-            this.FemaleBipedModel = new MaskItem<T, Model_Mask<T>>(initialValue, new Model_Mask<T>(initialValue));
-            this.FemaleWorldModel = new MaskItem<T, Model_Mask<T>>(initialValue, new Model_Mask<T>(initialValue));
-            this.FemaleIcon = initialValue;
-        }
-        #endregion
-
-        #region Members
-        public T Name;
-        public T Script;
-        public T Enchantment;
-        public T EnchantmentPoints;
-        public T BipedFlags;
-        public T Flags;
-        public MaskItem<T, Model_Mask<T>> MaleBipedModel { get; set; }
-        public MaskItem<T, Model_Mask<T>> MaleWorldModel { get; set; }
-        public T MaleIcon;
-        public MaskItem<T, Model_Mask<T>> FemaleBipedModel { get; set; }
-        public MaskItem<T, Model_Mask<T>> FemaleWorldModel { get; set; }
-        public T FemaleIcon;
-        #endregion
-
-        #region Equals
-        public override bool Equals(object obj)
-        {
-            if (!(obj is ClothingAbstract_Mask<T> rhs)) return false;
-            return Equals(rhs);
-        }
-
-        public bool Equals(ClothingAbstract_Mask<T> rhs)
-        {
-            if (rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (!object.Equals(this.Name, rhs.Name)) return false;
-            if (!object.Equals(this.Script, rhs.Script)) return false;
-            if (!object.Equals(this.Enchantment, rhs.Enchantment)) return false;
-            if (!object.Equals(this.EnchantmentPoints, rhs.EnchantmentPoints)) return false;
-            if (!object.Equals(this.BipedFlags, rhs.BipedFlags)) return false;
-            if (!object.Equals(this.Flags, rhs.Flags)) return false;
-            if (!object.Equals(this.MaleBipedModel, rhs.MaleBipedModel)) return false;
-            if (!object.Equals(this.MaleWorldModel, rhs.MaleWorldModel)) return false;
-            if (!object.Equals(this.MaleIcon, rhs.MaleIcon)) return false;
-            if (!object.Equals(this.FemaleBipedModel, rhs.FemaleBipedModel)) return false;
-            if (!object.Equals(this.FemaleWorldModel, rhs.FemaleWorldModel)) return false;
-            if (!object.Equals(this.FemaleIcon, rhs.FemaleIcon)) return false;
-            return true;
-        }
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = ret.CombineHashCode(this.Name?.GetHashCode());
-            ret = ret.CombineHashCode(this.Script?.GetHashCode());
-            ret = ret.CombineHashCode(this.Enchantment?.GetHashCode());
-            ret = ret.CombineHashCode(this.EnchantmentPoints?.GetHashCode());
-            ret = ret.CombineHashCode(this.BipedFlags?.GetHashCode());
-            ret = ret.CombineHashCode(this.Flags?.GetHashCode());
-            ret = ret.CombineHashCode(this.MaleBipedModel?.GetHashCode());
-            ret = ret.CombineHashCode(this.MaleWorldModel?.GetHashCode());
-            ret = ret.CombineHashCode(this.MaleIcon?.GetHashCode());
-            ret = ret.CombineHashCode(this.FemaleBipedModel?.GetHashCode());
-            ret = ret.CombineHashCode(this.FemaleWorldModel?.GetHashCode());
-            ret = ret.CombineHashCode(this.FemaleIcon?.GetHashCode());
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
-        }
-
-        #endregion
-
-        #region All Equal
-        public override bool AllEqual(Func<T, bool> eval)
-        {
-            if (!base.AllEqual(eval)) return false;
-            if (!eval(this.Name)) return false;
-            if (!eval(this.Script)) return false;
-            if (!eval(this.Enchantment)) return false;
-            if (!eval(this.EnchantmentPoints)) return false;
-            if (!eval(this.BipedFlags)) return false;
-            if (!eval(this.Flags)) return false;
-            if (MaleBipedModel != null)
-            {
-                if (!eval(this.MaleBipedModel.Overall)) return false;
-                if (this.MaleBipedModel.Specific != null && !this.MaleBipedModel.Specific.AllEqual(eval)) return false;
-            }
-            if (MaleWorldModel != null)
-            {
-                if (!eval(this.MaleWorldModel.Overall)) return false;
-                if (this.MaleWorldModel.Specific != null && !this.MaleWorldModel.Specific.AllEqual(eval)) return false;
-            }
-            if (!eval(this.MaleIcon)) return false;
-            if (FemaleBipedModel != null)
-            {
-                if (!eval(this.FemaleBipedModel.Overall)) return false;
-                if (this.FemaleBipedModel.Specific != null && !this.FemaleBipedModel.Specific.AllEqual(eval)) return false;
-            }
-            if (FemaleWorldModel != null)
-            {
-                if (!eval(this.FemaleWorldModel.Overall)) return false;
-                if (this.FemaleWorldModel.Specific != null && !this.FemaleWorldModel.Specific.AllEqual(eval)) return false;
-            }
-            if (!eval(this.FemaleIcon)) return false;
-            return true;
+            Write_Binary_Embedded(
+                item: item,
+                writer: writer,
+                errorMask: errorMask,
+                masterReferences: masterReferences);
+            Write_Binary_RecordTypes(
+                item: item,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask,
+                masterReferences: masterReferences);
         }
         #endregion
 
-        #region Translate
-        public new ClothingAbstract_Mask<R> Translate<R>(Func<T, R> eval)
-        {
-            var ret = new ClothingAbstract_Mask<R>();
-            this.Translate_InternalFill(ret, eval);
-            return ret;
-        }
-
-        protected void Translate_InternalFill<R>(ClothingAbstract_Mask<R> obj, Func<T, R> eval)
-        {
-            base.Translate_InternalFill(obj, eval);
-            obj.Name = eval(this.Name);
-            obj.Script = eval(this.Script);
-            obj.Enchantment = eval(this.Enchantment);
-            obj.EnchantmentPoints = eval(this.EnchantmentPoints);
-            obj.BipedFlags = eval(this.BipedFlags);
-            obj.Flags = eval(this.Flags);
-            if (this.MaleBipedModel != null)
-            {
-                obj.MaleBipedModel = new MaskItem<R, Model_Mask<R>>();
-                obj.MaleBipedModel.Overall = eval(this.MaleBipedModel.Overall);
-                if (this.MaleBipedModel.Specific != null)
-                {
-                    obj.MaleBipedModel.Specific = this.MaleBipedModel.Specific.Translate(eval);
-                }
-            }
-            if (this.MaleWorldModel != null)
-            {
-                obj.MaleWorldModel = new MaskItem<R, Model_Mask<R>>();
-                obj.MaleWorldModel.Overall = eval(this.MaleWorldModel.Overall);
-                if (this.MaleWorldModel.Specific != null)
-                {
-                    obj.MaleWorldModel.Specific = this.MaleWorldModel.Specific.Translate(eval);
-                }
-            }
-            obj.MaleIcon = eval(this.MaleIcon);
-            if (this.FemaleBipedModel != null)
-            {
-                obj.FemaleBipedModel = new MaskItem<R, Model_Mask<R>>();
-                obj.FemaleBipedModel.Overall = eval(this.FemaleBipedModel.Overall);
-                if (this.FemaleBipedModel.Specific != null)
-                {
-                    obj.FemaleBipedModel.Specific = this.FemaleBipedModel.Specific.Translate(eval);
-                }
-            }
-            if (this.FemaleWorldModel != null)
-            {
-                obj.FemaleWorldModel = new MaskItem<R, Model_Mask<R>>();
-                obj.FemaleWorldModel.Overall = eval(this.FemaleWorldModel.Overall);
-                if (this.FemaleWorldModel.Specific != null)
-                {
-                    obj.FemaleWorldModel.Specific = this.FemaleWorldModel.Specific.Translate(eval);
-                }
-            }
-            obj.FemaleIcon = eval(this.FemaleIcon);
-        }
-        #endregion
-
-        #region Clear Enumerables
-        public override void ClearEnumerables()
-        {
-            base.ClearEnumerables();
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            return ToString(printMask: null);
-        }
-
-        public string ToString(ClothingAbstract_Mask<bool> printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(fg, printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg, ClothingAbstract_Mask<bool> printMask = null)
-        {
-            fg.AppendLine($"{nameof(ClothingAbstract_Mask<T>)} =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (printMask?.Name ?? true)
-                {
-                    fg.AppendLine($"Name => {Name}");
-                }
-                if (printMask?.Script ?? true)
-                {
-                    fg.AppendLine($"Script => {Script}");
-                }
-                if (printMask?.Enchantment ?? true)
-                {
-                    fg.AppendLine($"Enchantment => {Enchantment}");
-                }
-                if (printMask?.EnchantmentPoints ?? true)
-                {
-                    fg.AppendLine($"EnchantmentPoints => {EnchantmentPoints}");
-                }
-                if (printMask?.BipedFlags ?? true)
-                {
-                    fg.AppendLine($"BipedFlags => {BipedFlags}");
-                }
-                if (printMask?.Flags ?? true)
-                {
-                    fg.AppendLine($"Flags => {Flags}");
-                }
-                if (printMask?.MaleBipedModel?.Overall ?? true)
-                {
-                    MaleBipedModel?.ToString(fg);
-                }
-                if (printMask?.MaleWorldModel?.Overall ?? true)
-                {
-                    MaleWorldModel?.ToString(fg);
-                }
-                if (printMask?.MaleIcon ?? true)
-                {
-                    fg.AppendLine($"MaleIcon => {MaleIcon}");
-                }
-                if (printMask?.FemaleBipedModel?.Overall ?? true)
-                {
-                    FemaleBipedModel?.ToString(fg);
-                }
-                if (printMask?.FemaleWorldModel?.Overall ?? true)
-                {
-                    FemaleWorldModel?.ToString(fg);
-                }
-                if (printMask?.FemaleIcon ?? true)
-                {
-                    fg.AppendLine($"FemaleIcon => {FemaleIcon}");
-                }
-            }
-            fg.AppendLine("]");
-        }
-        #endregion
-
-    }
-
-    public class ClothingAbstract_ErrorMask : ItemAbstract_ErrorMask, IErrorMask<ClothingAbstract_ErrorMask>
-    {
-        #region Members
-        public Exception Name;
-        public Exception Script;
-        public Exception Enchantment;
-        public Exception EnchantmentPoints;
-        public Exception BipedFlags;
-        public Exception Flags;
-        public MaskItem<Exception, Model_ErrorMask> MaleBipedModel;
-        public MaskItem<Exception, Model_ErrorMask> MaleWorldModel;
-        public Exception MaleIcon;
-        public MaskItem<Exception, Model_ErrorMask> FemaleBipedModel;
-        public MaskItem<Exception, Model_ErrorMask> FemaleWorldModel;
-        public Exception FemaleIcon;
-        #endregion
-
-        #region IErrorMask
-        public override object GetNthMask(int index)
-        {
-            ClothingAbstract_FieldIndex enu = (ClothingAbstract_FieldIndex)index;
-            switch (enu)
-            {
-                case ClothingAbstract_FieldIndex.Name:
-                    return Name;
-                case ClothingAbstract_FieldIndex.Script:
-                    return Script;
-                case ClothingAbstract_FieldIndex.Enchantment:
-                    return Enchantment;
-                case ClothingAbstract_FieldIndex.EnchantmentPoints:
-                    return EnchantmentPoints;
-                case ClothingAbstract_FieldIndex.BipedFlags:
-                    return BipedFlags;
-                case ClothingAbstract_FieldIndex.Flags:
-                    return Flags;
-                case ClothingAbstract_FieldIndex.MaleBipedModel:
-                    return MaleBipedModel;
-                case ClothingAbstract_FieldIndex.MaleWorldModel:
-                    return MaleWorldModel;
-                case ClothingAbstract_FieldIndex.MaleIcon:
-                    return MaleIcon;
-                case ClothingAbstract_FieldIndex.FemaleBipedModel:
-                    return FemaleBipedModel;
-                case ClothingAbstract_FieldIndex.FemaleWorldModel:
-                    return FemaleWorldModel;
-                case ClothingAbstract_FieldIndex.FemaleIcon:
-                    return FemaleIcon;
-                default:
-                    return base.GetNthMask(index);
-            }
-        }
-
-        public override void SetNthException(int index, Exception ex)
-        {
-            ClothingAbstract_FieldIndex enu = (ClothingAbstract_FieldIndex)index;
-            switch (enu)
-            {
-                case ClothingAbstract_FieldIndex.Name:
-                    this.Name = ex;
-                    break;
-                case ClothingAbstract_FieldIndex.Script:
-                    this.Script = ex;
-                    break;
-                case ClothingAbstract_FieldIndex.Enchantment:
-                    this.Enchantment = ex;
-                    break;
-                case ClothingAbstract_FieldIndex.EnchantmentPoints:
-                    this.EnchantmentPoints = ex;
-                    break;
-                case ClothingAbstract_FieldIndex.BipedFlags:
-                    this.BipedFlags = ex;
-                    break;
-                case ClothingAbstract_FieldIndex.Flags:
-                    this.Flags = ex;
-                    break;
-                case ClothingAbstract_FieldIndex.MaleBipedModel:
-                    this.MaleBipedModel = new MaskItem<Exception, Model_ErrorMask>(ex, null);
-                    break;
-                case ClothingAbstract_FieldIndex.MaleWorldModel:
-                    this.MaleWorldModel = new MaskItem<Exception, Model_ErrorMask>(ex, null);
-                    break;
-                case ClothingAbstract_FieldIndex.MaleIcon:
-                    this.MaleIcon = ex;
-                    break;
-                case ClothingAbstract_FieldIndex.FemaleBipedModel:
-                    this.FemaleBipedModel = new MaskItem<Exception, Model_ErrorMask>(ex, null);
-                    break;
-                case ClothingAbstract_FieldIndex.FemaleWorldModel:
-                    this.FemaleWorldModel = new MaskItem<Exception, Model_ErrorMask>(ex, null);
-                    break;
-                case ClothingAbstract_FieldIndex.FemaleIcon:
-                    this.FemaleIcon = ex;
-                    break;
-                default:
-                    base.SetNthException(index, ex);
-                    break;
-            }
-        }
-
-        public override void SetNthMask(int index, object obj)
-        {
-            ClothingAbstract_FieldIndex enu = (ClothingAbstract_FieldIndex)index;
-            switch (enu)
-            {
-                case ClothingAbstract_FieldIndex.Name:
-                    this.Name = (Exception)obj;
-                    break;
-                case ClothingAbstract_FieldIndex.Script:
-                    this.Script = (Exception)obj;
-                    break;
-                case ClothingAbstract_FieldIndex.Enchantment:
-                    this.Enchantment = (Exception)obj;
-                    break;
-                case ClothingAbstract_FieldIndex.EnchantmentPoints:
-                    this.EnchantmentPoints = (Exception)obj;
-                    break;
-                case ClothingAbstract_FieldIndex.BipedFlags:
-                    this.BipedFlags = (Exception)obj;
-                    break;
-                case ClothingAbstract_FieldIndex.Flags:
-                    this.Flags = (Exception)obj;
-                    break;
-                case ClothingAbstract_FieldIndex.MaleBipedModel:
-                    this.MaleBipedModel = (MaskItem<Exception, Model_ErrorMask>)obj;
-                    break;
-                case ClothingAbstract_FieldIndex.MaleWorldModel:
-                    this.MaleWorldModel = (MaskItem<Exception, Model_ErrorMask>)obj;
-                    break;
-                case ClothingAbstract_FieldIndex.MaleIcon:
-                    this.MaleIcon = (Exception)obj;
-                    break;
-                case ClothingAbstract_FieldIndex.FemaleBipedModel:
-                    this.FemaleBipedModel = (MaskItem<Exception, Model_ErrorMask>)obj;
-                    break;
-                case ClothingAbstract_FieldIndex.FemaleWorldModel:
-                    this.FemaleWorldModel = (MaskItem<Exception, Model_ErrorMask>)obj;
-                    break;
-                case ClothingAbstract_FieldIndex.FemaleIcon:
-                    this.FemaleIcon = (Exception)obj;
-                    break;
-                default:
-                    base.SetNthMask(index, obj);
-                    break;
-            }
-        }
-
-        public override bool IsInError()
-        {
-            if (Overall != null) return true;
-            if (Name != null) return true;
-            if (Script != null) return true;
-            if (Enchantment != null) return true;
-            if (EnchantmentPoints != null) return true;
-            if (BipedFlags != null) return true;
-            if (Flags != null) return true;
-            if (MaleBipedModel != null) return true;
-            if (MaleWorldModel != null) return true;
-            if (MaleIcon != null) return true;
-            if (FemaleBipedModel != null) return true;
-            if (FemaleWorldModel != null) return true;
-            if (FemaleIcon != null) return true;
-            return false;
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            var fg = new FileGeneration();
-            ToString(fg);
-            return fg.ToString();
-        }
-
-        public override void ToString(FileGeneration fg)
-        {
-            fg.AppendLine("ClothingAbstract_ErrorMask =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (this.Overall != null)
-                {
-                    fg.AppendLine("Overall =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        fg.AppendLine($"{this.Overall}");
-                    }
-                    fg.AppendLine("]");
-                }
-                ToString_FillInternal(fg);
-            }
-            fg.AppendLine("]");
-        }
-        protected override void ToString_FillInternal(FileGeneration fg)
-        {
-            base.ToString_FillInternal(fg);
-            fg.AppendLine($"Name => {Name}");
-            fg.AppendLine($"Script => {Script}");
-            fg.AppendLine($"Enchantment => {Enchantment}");
-            fg.AppendLine($"EnchantmentPoints => {EnchantmentPoints}");
-            fg.AppendLine($"BipedFlags => {BipedFlags}");
-            fg.AppendLine($"Flags => {Flags}");
-            MaleBipedModel?.ToString(fg);
-            MaleWorldModel?.ToString(fg);
-            fg.AppendLine($"MaleIcon => {MaleIcon}");
-            FemaleBipedModel?.ToString(fg);
-            FemaleWorldModel?.ToString(fg);
-            fg.AppendLine($"FemaleIcon => {FemaleIcon}");
-        }
-        #endregion
-
-        #region Combine
-        public ClothingAbstract_ErrorMask Combine(ClothingAbstract_ErrorMask rhs)
-        {
-            var ret = new ClothingAbstract_ErrorMask();
-            ret.Name = this.Name.Combine(rhs.Name);
-            ret.Script = this.Script.Combine(rhs.Script);
-            ret.Enchantment = this.Enchantment.Combine(rhs.Enchantment);
-            ret.EnchantmentPoints = this.EnchantmentPoints.Combine(rhs.EnchantmentPoints);
-            ret.BipedFlags = this.BipedFlags.Combine(rhs.BipedFlags);
-            ret.Flags = this.Flags.Combine(rhs.Flags);
-            ret.MaleBipedModel = new MaskItem<Exception, Model_ErrorMask>(this.MaleBipedModel.Overall.Combine(rhs.MaleBipedModel.Overall), ((IErrorMask<Model_ErrorMask>)this.MaleBipedModel.Specific).Combine(rhs.MaleBipedModel.Specific));
-            ret.MaleWorldModel = new MaskItem<Exception, Model_ErrorMask>(this.MaleWorldModel.Overall.Combine(rhs.MaleWorldModel.Overall), ((IErrorMask<Model_ErrorMask>)this.MaleWorldModel.Specific).Combine(rhs.MaleWorldModel.Specific));
-            ret.MaleIcon = this.MaleIcon.Combine(rhs.MaleIcon);
-            ret.FemaleBipedModel = new MaskItem<Exception, Model_ErrorMask>(this.FemaleBipedModel.Overall.Combine(rhs.FemaleBipedModel.Overall), ((IErrorMask<Model_ErrorMask>)this.FemaleBipedModel.Specific).Combine(rhs.FemaleBipedModel.Specific));
-            ret.FemaleWorldModel = new MaskItem<Exception, Model_ErrorMask>(this.FemaleWorldModel.Overall.Combine(rhs.FemaleWorldModel.Overall), ((IErrorMask<Model_ErrorMask>)this.FemaleWorldModel.Specific).Combine(rhs.FemaleWorldModel.Specific));
-            ret.FemaleIcon = this.FemaleIcon.Combine(rhs.FemaleIcon);
-            return ret;
-        }
-        public static ClothingAbstract_ErrorMask Combine(ClothingAbstract_ErrorMask lhs, ClothingAbstract_ErrorMask rhs)
-        {
-            if (lhs != null && rhs != null) return lhs.Combine(rhs);
-            return lhs ?? rhs;
-        }
-        #endregion
-
-        #region Factory
-        public static ClothingAbstract_ErrorMask Factory(ErrorMaskBuilder errorMask)
-        {
-            if (errorMask?.Empty ?? true) return null;
-            return new ClothingAbstract_ErrorMask();
-        }
-        #endregion
-
-    }
-    public class ClothingAbstract_CopyMask : ItemAbstract_CopyMask
-    {
-        public ClothingAbstract_CopyMask()
-        {
-        }
-
-        public ClothingAbstract_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
-        {
-            this.Name = defaultOn;
-            this.Script = defaultOn;
-            this.Enchantment = defaultOn;
-            this.EnchantmentPoints = defaultOn;
-            this.BipedFlags = defaultOn;
-            this.Flags = defaultOn;
-            this.MaleBipedModel = new MaskItem<CopyOption, Model_CopyMask>(deepCopyOption, default);
-            this.MaleWorldModel = new MaskItem<CopyOption, Model_CopyMask>(deepCopyOption, default);
-            this.MaleIcon = defaultOn;
-            this.FemaleBipedModel = new MaskItem<CopyOption, Model_CopyMask>(deepCopyOption, default);
-            this.FemaleWorldModel = new MaskItem<CopyOption, Model_CopyMask>(deepCopyOption, default);
-            this.FemaleIcon = defaultOn;
-        }
-
-        #region Members
-        public bool Name;
-        public bool Script;
-        public bool Enchantment;
-        public bool EnchantmentPoints;
-        public bool BipedFlags;
-        public bool Flags;
-        public MaskItem<CopyOption, Model_CopyMask> MaleBipedModel;
-        public MaskItem<CopyOption, Model_CopyMask> MaleWorldModel;
-        public bool MaleIcon;
-        public MaskItem<CopyOption, Model_CopyMask> FemaleBipedModel;
-        public MaskItem<CopyOption, Model_CopyMask> FemaleWorldModel;
-        public bool FemaleIcon;
-        #endregion
-
-    }
-
-    public class ClothingAbstract_TranslationMask : ItemAbstract_TranslationMask
-    {
-        #region Members
-        public bool Name;
-        public bool Script;
-        public bool Enchantment;
-        public bool EnchantmentPoints;
-        public bool BipedFlags;
-        public bool Flags;
-        public MaskItem<bool, Model_TranslationMask> MaleBipedModel;
-        public MaskItem<bool, Model_TranslationMask> MaleWorldModel;
-        public bool MaleIcon;
-        public MaskItem<bool, Model_TranslationMask> FemaleBipedModel;
-        public MaskItem<bool, Model_TranslationMask> FemaleWorldModel;
-        public bool FemaleIcon;
-        #endregion
-
-        #region Ctors
-        public ClothingAbstract_TranslationMask()
-            : base()
-        {
-        }
-
-        public ClothingAbstract_TranslationMask(bool defaultOn)
-            : base(defaultOn)
-        {
-            this.Name = defaultOn;
-            this.Script = defaultOn;
-            this.Enchantment = defaultOn;
-            this.EnchantmentPoints = defaultOn;
-            this.BipedFlags = defaultOn;
-            this.Flags = defaultOn;
-            this.MaleBipedModel = new MaskItem<bool, Model_TranslationMask>(defaultOn, null);
-            this.MaleWorldModel = new MaskItem<bool, Model_TranslationMask>(defaultOn, null);
-            this.MaleIcon = defaultOn;
-            this.FemaleBipedModel = new MaskItem<bool, Model_TranslationMask>(defaultOn, null);
-            this.FemaleWorldModel = new MaskItem<bool, Model_TranslationMask>(defaultOn, null);
-            this.FemaleIcon = defaultOn;
-        }
-
-        #endregion
-
-        protected override void GetCrystal(List<(bool On, TranslationCrystal SubCrystal)> ret)
-        {
-            base.GetCrystal(ret);
-            ret.Add((Name, null));
-            ret.Add((Script, null));
-            ret.Add((Enchantment, null));
-            ret.Add((EnchantmentPoints, null));
-            ret.Add((BipedFlags, null));
-            ret.Add((Flags, null));
-            ret.Add((MaleBipedModel?.Overall ?? true, MaleBipedModel?.Specific?.GetCrystal()));
-            ret.Add((MaleWorldModel?.Overall ?? true, MaleWorldModel?.Specific?.GetCrystal()));
-            ret.Add((MaleIcon, null));
-            ret.Add((FemaleBipedModel?.Overall ?? true, FemaleBipedModel?.Specific?.GetCrystal()));
-            ret.Add((FemaleWorldModel?.Overall ?? true, FemaleWorldModel?.Specific?.GetCrystal()));
-            ret.Add((FemaleIcon, null));
-        }
     }
     #endregion
 

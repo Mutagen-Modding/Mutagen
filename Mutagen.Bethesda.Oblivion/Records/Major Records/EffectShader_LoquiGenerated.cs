@@ -38,6 +38,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class EffectShader : 
         OblivionMajorRecord,
         IEffectShader,
+        IEffectShaderInternal,
         ILoquiObject<EffectShader>,
         ILoquiObjectSetter,
         IEquatable<EffectShader>
@@ -810,6 +811,23 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
         #endregion
+        #region DATADataTypeState
+        private EffectShader.DATADataType _DATADataTypeState;
+        public EffectShader.DATADataType DATADataTypeState
+        {
+            get => this._DATADataTypeState;
+            set => this.RaiseAndSetIfChanged(ref this._DATADataTypeState, value, nameof(DATADataTypeState));
+        }
+        EffectShader.DATADataType IEffectShaderInternal.DATADataTypeState
+        {
+            get => this.DATADataTypeState;
+            set => this.DATADataTypeState = value;
+        }
+        EffectShader.DATADataType IEffectShaderInternalGetter.DATADataTypeState
+        {
+            get => this.DATADataTypeState;
+        }
+        #endregion
 
         IMask<bool> IEqualsMask<EffectShader>.GetEqualsMask(EffectShader rhs, EqualsMaskHelper.Include include) => EffectShaderCommon.GetEqualsMask(this, rhs, include);
         IMask<bool> IEqualsMask<IEffectShaderGetter>.GetEqualsMask(IEffectShaderGetter rhs, EqualsMaskHelper.Include include) => EffectShaderCommon.GetEqualsMask(this, rhs, include);
@@ -912,6 +930,7 @@ namespace Mutagen.Bethesda.Oblivion
             if (!this.ColorKey1ColorKeyTime.EqualsWithin(rhs.ColorKey1ColorKeyTime)) return false;
             if (!this.ColorKey2ColorKeyTime.EqualsWithin(rhs.ColorKey2ColorKeyTime)) return false;
             if (!this.ColorKey3ColorKeyTime.EqualsWithin(rhs.ColorKey3ColorKeyTime)) return false;
+            if (this.DATADataTypeState != rhs.DATADataTypeState) return false;
             return true;
         }
 
@@ -982,6 +1001,7 @@ namespace Mutagen.Bethesda.Oblivion
             ret = HashHelper.GetHashCode(ColorKey1ColorKeyTime).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(ColorKey2ColorKeyTime).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(ColorKey3ColorKeyTime).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(DATADataTypeState).CombineHashCode(ret);
             ret = ret.CombineHashCode(base.GetHashCode());
             return ret;
         }
@@ -1156,7 +1176,8 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Xml(
+            EffectShaderXmlTranslation.Instance.Write_Xml(
+                item: this,
                 name: name,
                 node: node,
                 errorMask: errorMaskBuilder,
@@ -1188,7 +1209,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            this.Write_Xml(
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -1219,7 +1240,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            this.Write_Xml(
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -1235,7 +1256,8 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Xml(
+            EffectShaderXmlTranslation.Instance.Write_Xml(
+                item: this,
                 name: name,
                 node: node,
                 errorMask: errorMaskBuilder,
@@ -1251,7 +1273,8 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Xml(
+            EffectShaderXmlTranslation.Instance.Write_Xml(
+                item: this,
                 name: name,
                 node: node,
                 errorMask: errorMaskBuilder,
@@ -1267,7 +1290,7 @@ namespace Mutagen.Bethesda.Oblivion
             TranslationCrystal translationMask,
             string name = null)
         {
-            EffectShaderCommon.Write_Xml(
+            EffectShaderXmlTranslation.Instance.Write_Xml(
                 item: this,
                 name: name,
                 node: node,
@@ -1364,6 +1387,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case EffectShader_FieldIndex.ColorKey1ColorKeyTime:
                 case EffectShader_FieldIndex.ColorKey2ColorKeyTime:
                 case EffectShader_FieldIndex.ColorKey3ColorKeyTime:
+                case EffectShader_FieldIndex.DATADataTypeState:
                     return true;
                 default:
                     return base.GetHasBeenSet(index);
@@ -1372,7 +1396,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = EffectShader_Registration.TRIGGERING_RECORD_TYPE;
-        public DATADataType DATADataTypeState;
         [Flags]
         public enum DATADataType
         {
@@ -1456,7 +1479,8 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Binary(
+            EffectShaderBinaryTranslation.Instance.Write_Binary(
+                item: this,
                 masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: null,
@@ -1472,7 +1496,8 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Binary(
+            EffectShaderBinaryTranslation.Instance.Write_Binary(
+                item: this,
                 masterReferences: masterReferences,
                 writer: writer,
                 errorMask: errorMaskBuilder,
@@ -1487,7 +1512,8 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Binary(
+            EffectShaderBinaryTranslation.Instance.Write_Binary(
+                item: this,
                 masterReferences: masterReferences,
                 writer: writer,
                 errorMask: errorMaskBuilder,
@@ -1503,7 +1529,7 @@ namespace Mutagen.Bethesda.Oblivion
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            EffectShaderCommon.Write_Binary(
+            EffectShaderBinaryTranslation.Instance.Write_Binary(
                 item: this,
                 masterReferences: masterReferences,
                 writer: writer,
@@ -2449,6 +2475,9 @@ namespace Mutagen.Bethesda.Oblivion
                 case EffectShader_FieldIndex.ColorKey3ColorKeyTime:
                     this.ColorKey3ColorKeyTime = (Single)obj;
                     break;
+                case EffectShader_FieldIndex.DATADataTypeState:
+                    this.DATADataTypeState = (EffectShader.DATADataType)obj;
+                    break;
                 default:
                     base.SetNthObject(index, obj);
                     break;
@@ -2654,6 +2683,9 @@ namespace Mutagen.Bethesda.Oblivion
                 case EffectShader_FieldIndex.ColorKey3ColorKeyTime:
                     obj.ColorKey3ColorKeyTime = (Single)pair.Value;
                     break;
+                case EffectShader_FieldIndex.DATADataTypeState:
+                    obj.DATADataTypeState = (EffectShader.DATADataType)pair.Value;
+                    break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
@@ -2785,6 +2817,12 @@ namespace Mutagen.Bethesda.Oblivion
         new Single ColorKey2ColorKeyTime { get; set; }
 
         new Single ColorKey3ColorKeyTime { get; set; }
+
+    }
+
+    public partial interface IEffectShaderInternal : IEffectShader, IEffectShaderInternalGetter, IOblivionMajorRecordInternal
+    {
+        new EffectShader.DATADataType DATADataTypeState { get; set; }
 
     }
 
@@ -3027,6 +3065,15 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
+    public partial interface IEffectShaderInternalGetter : IEffectShaderGetter, IOblivionMajorRecordInternalGetter
+    {
+        #region DATADataTypeState
+        EffectShader.DATADataType DATADataTypeState { get; }
+
+        #endregion
+
+    }
+
     #endregion
 
 }
@@ -3036,69 +3083,71 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #region Field Index
     public enum EffectShader_FieldIndex
     {
-        FormKey = 0,
-        Version = 1,
-        EditorID = 2,
-        RecordType = 3,
-        OblivionMajorRecordFlags = 4,
-        FillTexture = 5,
-        ParticleShaderTexture = 6,
-        Flags = 7,
-        MembraneShaderSourceBlendMode = 8,
-        MembraneShaderBlendOperation = 9,
-        MembraneShaderZTestFunction = 10,
-        FillTextureEffectColor = 11,
-        FillTextureEffectAlphaFadeInTime = 12,
-        FillTextureEffectFullAlphaTime = 13,
-        FillTextureEffectAlphaFadeOutTime = 14,
-        FillTextureEffectPersistentAlphaRatio = 15,
-        FillTextureEffectAlphaPulseAmplitude = 16,
-        FillTextureEffectAlphaPulseFrequency = 17,
-        FillTextureEffectTextureAnimationSpeedU = 18,
-        FillTextureEffectTextureAnimationSpeedV = 19,
-        EdgeEffectFallOff = 20,
-        EdgeEffectColor = 21,
-        EdgeEffectAlphaFadeInTime = 22,
-        EdgeEffectFullAlphaTime = 23,
-        EdgeEffectAlphaFadeOutTime = 24,
-        EdgeEffectPersistentAlphaRatio = 25,
-        EdgeEffectAlphaPulseAmplitude = 26,
-        EdgeEffectAlphaPulseFrequency = 27,
-        FillTextureEffectFullAlphaRatio = 28,
-        EdgeEffectFullAlphaRatio = 29,
-        MembraneShaderDestBlendMode = 30,
-        ParticleShaderSourceBlendMode = 31,
-        ParticleShaderBlendOperation = 32,
-        ParticleShaderZTestFunction = 33,
-        ParticleShaderDestBlendMode = 34,
-        ParticleShaderParticleBirthRampUpTime = 35,
-        ParticleShaderFullParticleBirthTime = 36,
-        ParticleShaderParticleBirthRampDownTime = 37,
-        ParticleShaderFullParticleBirthRatio = 38,
-        ParticleShaderPersistentParticleBirthRatio = 39,
-        ParticleShaderParticleLifetime = 40,
-        ParticleShaderParticleLifetimePlusMinus = 41,
-        ParticleShaderInitialSpeedAlongNormal = 42,
-        ParticleShaderAccelerationAlongNormal = 43,
-        ParticleShaderInitialVelocity1 = 44,
-        ParticleShaderInitialVelocity2 = 45,
-        ParticleShaderInitialVelocity3 = 46,
-        ParticleShaderAcceleration1 = 47,
-        ParticleShaderAcceleration2 = 48,
-        ParticleShaderAcceleration3 = 49,
-        ParticleShaderScaleKey1 = 50,
-        ParticleShaderScaleKey2 = 51,
-        ParticleShaderScaleKey1Time = 52,
-        ParticleShaderScaleKey2Time = 53,
-        ColorKey1Color = 54,
-        ColorKey2Color = 55,
-        ColorKey3Color = 56,
-        ColorKey1ColorAlpha = 57,
-        ColorKey2ColorAlpha = 58,
-        ColorKey3ColorAlpha = 59,
-        ColorKey1ColorKeyTime = 60,
-        ColorKey2ColorKeyTime = 61,
-        ColorKey3ColorKeyTime = 62,
+        MajorRecordFlagsRaw = 0,
+        FormKey = 1,
+        Version = 2,
+        EditorID = 3,
+        RecordType = 4,
+        OblivionMajorRecordFlags = 5,
+        FillTexture = 6,
+        ParticleShaderTexture = 7,
+        Flags = 8,
+        MembraneShaderSourceBlendMode = 9,
+        MembraneShaderBlendOperation = 10,
+        MembraneShaderZTestFunction = 11,
+        FillTextureEffectColor = 12,
+        FillTextureEffectAlphaFadeInTime = 13,
+        FillTextureEffectFullAlphaTime = 14,
+        FillTextureEffectAlphaFadeOutTime = 15,
+        FillTextureEffectPersistentAlphaRatio = 16,
+        FillTextureEffectAlphaPulseAmplitude = 17,
+        FillTextureEffectAlphaPulseFrequency = 18,
+        FillTextureEffectTextureAnimationSpeedU = 19,
+        FillTextureEffectTextureAnimationSpeedV = 20,
+        EdgeEffectFallOff = 21,
+        EdgeEffectColor = 22,
+        EdgeEffectAlphaFadeInTime = 23,
+        EdgeEffectFullAlphaTime = 24,
+        EdgeEffectAlphaFadeOutTime = 25,
+        EdgeEffectPersistentAlphaRatio = 26,
+        EdgeEffectAlphaPulseAmplitude = 27,
+        EdgeEffectAlphaPulseFrequency = 28,
+        FillTextureEffectFullAlphaRatio = 29,
+        EdgeEffectFullAlphaRatio = 30,
+        MembraneShaderDestBlendMode = 31,
+        ParticleShaderSourceBlendMode = 32,
+        ParticleShaderBlendOperation = 33,
+        ParticleShaderZTestFunction = 34,
+        ParticleShaderDestBlendMode = 35,
+        ParticleShaderParticleBirthRampUpTime = 36,
+        ParticleShaderFullParticleBirthTime = 37,
+        ParticleShaderParticleBirthRampDownTime = 38,
+        ParticleShaderFullParticleBirthRatio = 39,
+        ParticleShaderPersistentParticleBirthRatio = 40,
+        ParticleShaderParticleLifetime = 41,
+        ParticleShaderParticleLifetimePlusMinus = 42,
+        ParticleShaderInitialSpeedAlongNormal = 43,
+        ParticleShaderAccelerationAlongNormal = 44,
+        ParticleShaderInitialVelocity1 = 45,
+        ParticleShaderInitialVelocity2 = 46,
+        ParticleShaderInitialVelocity3 = 47,
+        ParticleShaderAcceleration1 = 48,
+        ParticleShaderAcceleration2 = 49,
+        ParticleShaderAcceleration3 = 50,
+        ParticleShaderScaleKey1 = 51,
+        ParticleShaderScaleKey2 = 52,
+        ParticleShaderScaleKey1Time = 53,
+        ParticleShaderScaleKey2Time = 54,
+        ColorKey1Color = 55,
+        ColorKey2Color = 56,
+        ColorKey3Color = 57,
+        ColorKey1ColorAlpha = 58,
+        ColorKey2ColorAlpha = 59,
+        ColorKey3ColorAlpha = 60,
+        ColorKey1ColorKeyTime = 61,
+        ColorKey2ColorKeyTime = 62,
+        ColorKey3ColorKeyTime = 63,
+        DATADataTypeState = 64,
     }
     #endregion
 
@@ -3116,9 +3165,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const string GUID = "2fe14395-5518-4c4a-85ff-7aba6d405e2b";
 
-        public const ushort AdditionalFieldCount = 58;
+        public const ushort AdditionalFieldCount = 59;
 
-        public const ushort FieldCount = 63;
+        public const ushort FieldCount = 65;
 
         public static readonly Type MaskType = typeof(EffectShader_Mask<>);
 
@@ -3128,11 +3177,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type GetterType = typeof(IEffectShaderGetter);
 
-        public static readonly Type InternalGetterType = null;
+        public static readonly Type InternalGetterType = typeof(IEffectShaderInternalGetter);
 
         public static readonly Type SetterType = typeof(IEffectShader);
 
-        public static readonly Type InternalSetterType = null;
+        public static readonly Type InternalSetterType = typeof(IEffectShaderInternal);
 
         public static readonly Type CommonType = typeof(EffectShaderCommon);
 
@@ -3266,6 +3315,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (ushort)EffectShader_FieldIndex.ColorKey2ColorKeyTime;
                 case "COLORKEY3COLORKEYTIME":
                     return (ushort)EffectShader_FieldIndex.ColorKey3ColorKeyTime;
+                case "DATADATATYPESTATE":
+                    return (ushort)EffectShader_FieldIndex.DATADataTypeState;
                 default:
                     return null;
             }
@@ -3334,6 +3385,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case EffectShader_FieldIndex.ColorKey1ColorKeyTime:
                 case EffectShader_FieldIndex.ColorKey2ColorKeyTime:
                 case EffectShader_FieldIndex.ColorKey3ColorKeyTime:
+                case EffectShader_FieldIndex.DATADataTypeState:
                     return false;
                 default:
                     return OblivionMajorRecord_Registration.GetNthIsEnumerable(index);
@@ -3403,6 +3455,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case EffectShader_FieldIndex.ColorKey1ColorKeyTime:
                 case EffectShader_FieldIndex.ColorKey2ColorKeyTime:
                 case EffectShader_FieldIndex.ColorKey3ColorKeyTime:
+                case EffectShader_FieldIndex.DATADataTypeState:
                     return false;
                 default:
                     return OblivionMajorRecord_Registration.GetNthIsLoqui(index);
@@ -3472,6 +3525,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case EffectShader_FieldIndex.ColorKey1ColorKeyTime:
                 case EffectShader_FieldIndex.ColorKey2ColorKeyTime:
                 case EffectShader_FieldIndex.ColorKey3ColorKeyTime:
+                case EffectShader_FieldIndex.DATADataTypeState:
                     return false;
                 default:
                     return OblivionMajorRecord_Registration.GetNthIsSingleton(index);
@@ -3599,6 +3653,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return "ColorKey2ColorKeyTime";
                 case EffectShader_FieldIndex.ColorKey3ColorKeyTime:
                     return "ColorKey3ColorKeyTime";
+                case EffectShader_FieldIndex.DATADataTypeState:
+                    return "DATADataTypeState";
                 default:
                     return OblivionMajorRecord_Registration.GetNthName(index);
             }
@@ -3667,6 +3723,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case EffectShader_FieldIndex.ColorKey1ColorKeyTime:
                 case EffectShader_FieldIndex.ColorKey2ColorKeyTime:
                 case EffectShader_FieldIndex.ColorKey3ColorKeyTime:
+                case EffectShader_FieldIndex.DATADataTypeState:
                     return false;
                 default:
                     return OblivionMajorRecord_Registration.IsNthDerivative(index);
@@ -3736,6 +3793,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case EffectShader_FieldIndex.ColorKey1ColorKeyTime:
                 case EffectShader_FieldIndex.ColorKey2ColorKeyTime:
                 case EffectShader_FieldIndex.ColorKey3ColorKeyTime:
+                case EffectShader_FieldIndex.DATADataTypeState:
                     return false;
                 default:
                     return OblivionMajorRecord_Registration.IsProtected(index);
@@ -3863,6 +3921,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return typeof(Single);
                 case EffectShader_FieldIndex.ColorKey3ColorKeyTime:
                     return typeof(Single);
+                case EffectShader_FieldIndex.DATADataTypeState:
+                    return typeof(EffectShader.DATADataType);
                 default:
                     return OblivionMajorRecord_Registration.GetNthType(index);
             }
@@ -5341,6 +5401,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     fg.AppendLine($"ColorKey3ColorKeyTime => {item.ColorKey3ColorKeyTime}");
                 }
+                if (printMask?.DATADataTypeState ?? true)
+                {
+                }
             }
             fg.AppendLine("]");
         }
@@ -5415,6 +5478,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.ColorKey1ColorKeyTime = true;
             ret.ColorKey2ColorKeyTime = true;
             ret.ColorKey3ColorKeyTime = true;
+            ret.DATADataTypeState = true;
             return ret;
         }
 
@@ -5428,6 +5492,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (index)
             {
+                case OblivionMajorRecord_FieldIndex.MajorRecordFlagsRaw:
+                    return (EffectShader_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.FormKey:
                     return (EffectShader_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.Version:
@@ -5453,6 +5519,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (index)
             {
+                case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
+                    return (EffectShader_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
                     return (EffectShader_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.Version:
@@ -5467,593 +5535,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         #region Xml Translation
-        #region Xml Write
-        public static void Write_Xml(
-            XElement node,
-            EffectShader item,
-            bool doMasks,
-            out EffectShader_ErrorMask errorMask,
-            EffectShader_TranslationMask translationMask,
-            string name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_Xml(
-                name: name,
-                node: node,
-                item: item,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = EffectShader_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void Write_Xml(
-            XElement node,
-            EffectShader item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.EffectShader");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.EffectShader");
-            }
-            WriteToNode_Xml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #endregion
-
-        public static void WriteToNode_Xml(
-            this EffectShader item,
-            XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            OblivionMajorRecordCommon.WriteToNode_Xml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            if (item.FillTexture_IsSet
-                && (translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.FillTexture) ?? true))
-            {
-                StringXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.FillTexture),
-                    item: item.FillTexture,
-                    fieldIndex: (int)EffectShader_FieldIndex.FillTexture,
-                    errorMask: errorMask);
-            }
-            if (item.ParticleShaderTexture_IsSet
-                && (translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleShaderTexture) ?? true))
-            {
-                StringXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.ParticleShaderTexture),
-                    item: item.ParticleShaderTexture,
-                    fieldIndex: (int)EffectShader_FieldIndex.ParticleShaderTexture,
-                    errorMask: errorMask);
-            }
-            if (item.DATADataTypeState.HasFlag(EffectShader.DATADataType.Has))
-            {
-                if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.Flags) ?? true))
-                {
-                    EnumXmlTranslation<EffectShader.Flag>.Instance.Write(
-                        node: node,
-                        name: nameof(item.Flags),
-                        item: item.Flags,
-                        fieldIndex: (int)EffectShader_FieldIndex.Flags,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.MembraneShaderSourceBlendMode) ?? true))
-                {
-                    EnumXmlTranslation<EffectShader.SourceBlendMode>.Instance.Write(
-                        node: node,
-                        name: nameof(item.MembraneShaderSourceBlendMode),
-                        item: item.MembraneShaderSourceBlendMode,
-                        fieldIndex: (int)EffectShader_FieldIndex.MembraneShaderSourceBlendMode,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.MembraneShaderBlendOperation) ?? true))
-                {
-                    EnumXmlTranslation<EffectShader.BlendOperation>.Instance.Write(
-                        node: node,
-                        name: nameof(item.MembraneShaderBlendOperation),
-                        item: item.MembraneShaderBlendOperation,
-                        fieldIndex: (int)EffectShader_FieldIndex.MembraneShaderBlendOperation,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.MembraneShaderZTestFunction) ?? true))
-                {
-                    EnumXmlTranslation<EffectShader.ZTestFunction>.Instance.Write(
-                        node: node,
-                        name: nameof(item.MembraneShaderZTestFunction),
-                        item: item.MembraneShaderZTestFunction,
-                        fieldIndex: (int)EffectShader_FieldIndex.MembraneShaderZTestFunction,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.FillTextureEffectColor) ?? true))
-                {
-                    ColorXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.FillTextureEffectColor),
-                        item: item.FillTextureEffectColor,
-                        fieldIndex: (int)EffectShader_FieldIndex.FillTextureEffectColor,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.FillTextureEffectAlphaFadeInTime) ?? true))
-                {
-                    FloatXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.FillTextureEffectAlphaFadeInTime),
-                        item: item.FillTextureEffectAlphaFadeInTime,
-                        fieldIndex: (int)EffectShader_FieldIndex.FillTextureEffectAlphaFadeInTime,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.FillTextureEffectFullAlphaTime) ?? true))
-                {
-                    FloatXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.FillTextureEffectFullAlphaTime),
-                        item: item.FillTextureEffectFullAlphaTime,
-                        fieldIndex: (int)EffectShader_FieldIndex.FillTextureEffectFullAlphaTime,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.FillTextureEffectAlphaFadeOutTime) ?? true))
-                {
-                    FloatXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.FillTextureEffectAlphaFadeOutTime),
-                        item: item.FillTextureEffectAlphaFadeOutTime,
-                        fieldIndex: (int)EffectShader_FieldIndex.FillTextureEffectAlphaFadeOutTime,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.FillTextureEffectPersistentAlphaRatio) ?? true))
-                {
-                    FloatXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.FillTextureEffectPersistentAlphaRatio),
-                        item: item.FillTextureEffectPersistentAlphaRatio,
-                        fieldIndex: (int)EffectShader_FieldIndex.FillTextureEffectPersistentAlphaRatio,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.FillTextureEffectAlphaPulseAmplitude) ?? true))
-                {
-                    FloatXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.FillTextureEffectAlphaPulseAmplitude),
-                        item: item.FillTextureEffectAlphaPulseAmplitude,
-                        fieldIndex: (int)EffectShader_FieldIndex.FillTextureEffectAlphaPulseAmplitude,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.FillTextureEffectAlphaPulseFrequency) ?? true))
-                {
-                    FloatXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.FillTextureEffectAlphaPulseFrequency),
-                        item: item.FillTextureEffectAlphaPulseFrequency,
-                        fieldIndex: (int)EffectShader_FieldIndex.FillTextureEffectAlphaPulseFrequency,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.FillTextureEffectTextureAnimationSpeedU) ?? true))
-                {
-                    FloatXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.FillTextureEffectTextureAnimationSpeedU),
-                        item: item.FillTextureEffectTextureAnimationSpeedU,
-                        fieldIndex: (int)EffectShader_FieldIndex.FillTextureEffectTextureAnimationSpeedU,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.FillTextureEffectTextureAnimationSpeedV) ?? true))
-                {
-                    FloatXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.FillTextureEffectTextureAnimationSpeedV),
-                        item: item.FillTextureEffectTextureAnimationSpeedV,
-                        fieldIndex: (int)EffectShader_FieldIndex.FillTextureEffectTextureAnimationSpeedV,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.EdgeEffectFallOff) ?? true))
-                {
-                    FloatXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.EdgeEffectFallOff),
-                        item: item.EdgeEffectFallOff,
-                        fieldIndex: (int)EffectShader_FieldIndex.EdgeEffectFallOff,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.EdgeEffectColor) ?? true))
-                {
-                    ColorXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.EdgeEffectColor),
-                        item: item.EdgeEffectColor,
-                        fieldIndex: (int)EffectShader_FieldIndex.EdgeEffectColor,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.EdgeEffectAlphaFadeInTime) ?? true))
-                {
-                    FloatXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.EdgeEffectAlphaFadeInTime),
-                        item: item.EdgeEffectAlphaFadeInTime,
-                        fieldIndex: (int)EffectShader_FieldIndex.EdgeEffectAlphaFadeInTime,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.EdgeEffectFullAlphaTime) ?? true))
-                {
-                    FloatXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.EdgeEffectFullAlphaTime),
-                        item: item.EdgeEffectFullAlphaTime,
-                        fieldIndex: (int)EffectShader_FieldIndex.EdgeEffectFullAlphaTime,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.EdgeEffectAlphaFadeOutTime) ?? true))
-                {
-                    FloatXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.EdgeEffectAlphaFadeOutTime),
-                        item: item.EdgeEffectAlphaFadeOutTime,
-                        fieldIndex: (int)EffectShader_FieldIndex.EdgeEffectAlphaFadeOutTime,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.EdgeEffectPersistentAlphaRatio) ?? true))
-                {
-                    FloatXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.EdgeEffectPersistentAlphaRatio),
-                        item: item.EdgeEffectPersistentAlphaRatio,
-                        fieldIndex: (int)EffectShader_FieldIndex.EdgeEffectPersistentAlphaRatio,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.EdgeEffectAlphaPulseAmplitude) ?? true))
-                {
-                    FloatXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.EdgeEffectAlphaPulseAmplitude),
-                        item: item.EdgeEffectAlphaPulseAmplitude,
-                        fieldIndex: (int)EffectShader_FieldIndex.EdgeEffectAlphaPulseAmplitude,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.EdgeEffectAlphaPulseFrequency) ?? true))
-                {
-                    FloatXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.EdgeEffectAlphaPulseFrequency),
-                        item: item.EdgeEffectAlphaPulseFrequency,
-                        fieldIndex: (int)EffectShader_FieldIndex.EdgeEffectAlphaPulseFrequency,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.FillTextureEffectFullAlphaRatio) ?? true))
-                {
-                    FloatXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.FillTextureEffectFullAlphaRatio),
-                        item: item.FillTextureEffectFullAlphaRatio,
-                        fieldIndex: (int)EffectShader_FieldIndex.FillTextureEffectFullAlphaRatio,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.EdgeEffectFullAlphaRatio) ?? true))
-                {
-                    FloatXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.EdgeEffectFullAlphaRatio),
-                        item: item.EdgeEffectFullAlphaRatio,
-                        fieldIndex: (int)EffectShader_FieldIndex.EdgeEffectFullAlphaRatio,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.MembraneShaderDestBlendMode) ?? true))
-                {
-                    EnumXmlTranslation<EffectShader.SourceBlendMode>.Instance.Write(
-                        node: node,
-                        name: nameof(item.MembraneShaderDestBlendMode),
-                        item: item.MembraneShaderDestBlendMode,
-                        fieldIndex: (int)EffectShader_FieldIndex.MembraneShaderDestBlendMode,
-                        errorMask: errorMask);
-                }
-                if (!item.DATADataTypeState.HasFlag(EffectShader.DATADataType.Break0))
-                {
-                    if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleShaderSourceBlendMode) ?? true))
-                    {
-                        EnumXmlTranslation<EffectShader.SourceBlendMode>.Instance.Write(
-                            node: node,
-                            name: nameof(item.ParticleShaderSourceBlendMode),
-                            item: item.ParticleShaderSourceBlendMode,
-                            fieldIndex: (int)EffectShader_FieldIndex.ParticleShaderSourceBlendMode,
-                            errorMask: errorMask);
-                    }
-                    if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleShaderBlendOperation) ?? true))
-                    {
-                        EnumXmlTranslation<EffectShader.BlendOperation>.Instance.Write(
-                            node: node,
-                            name: nameof(item.ParticleShaderBlendOperation),
-                            item: item.ParticleShaderBlendOperation,
-                            fieldIndex: (int)EffectShader_FieldIndex.ParticleShaderBlendOperation,
-                            errorMask: errorMask);
-                    }
-                    if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleShaderZTestFunction) ?? true))
-                    {
-                        EnumXmlTranslation<EffectShader.ZTestFunction>.Instance.Write(
-                            node: node,
-                            name: nameof(item.ParticleShaderZTestFunction),
-                            item: item.ParticleShaderZTestFunction,
-                            fieldIndex: (int)EffectShader_FieldIndex.ParticleShaderZTestFunction,
-                            errorMask: errorMask);
-                    }
-                    if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleShaderDestBlendMode) ?? true))
-                    {
-                        EnumXmlTranslation<EffectShader.SourceBlendMode>.Instance.Write(
-                            node: node,
-                            name: nameof(item.ParticleShaderDestBlendMode),
-                            item: item.ParticleShaderDestBlendMode,
-                            fieldIndex: (int)EffectShader_FieldIndex.ParticleShaderDestBlendMode,
-                            errorMask: errorMask);
-                    }
-                    if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleShaderParticleBirthRampUpTime) ?? true))
-                    {
-                        FloatXmlTranslation.Instance.Write(
-                            node: node,
-                            name: nameof(item.ParticleShaderParticleBirthRampUpTime),
-                            item: item.ParticleShaderParticleBirthRampUpTime,
-                            fieldIndex: (int)EffectShader_FieldIndex.ParticleShaderParticleBirthRampUpTime,
-                            errorMask: errorMask);
-                    }
-                    if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleShaderFullParticleBirthTime) ?? true))
-                    {
-                        FloatXmlTranslation.Instance.Write(
-                            node: node,
-                            name: nameof(item.ParticleShaderFullParticleBirthTime),
-                            item: item.ParticleShaderFullParticleBirthTime,
-                            fieldIndex: (int)EffectShader_FieldIndex.ParticleShaderFullParticleBirthTime,
-                            errorMask: errorMask);
-                    }
-                    if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleShaderParticleBirthRampDownTime) ?? true))
-                    {
-                        FloatXmlTranslation.Instance.Write(
-                            node: node,
-                            name: nameof(item.ParticleShaderParticleBirthRampDownTime),
-                            item: item.ParticleShaderParticleBirthRampDownTime,
-                            fieldIndex: (int)EffectShader_FieldIndex.ParticleShaderParticleBirthRampDownTime,
-                            errorMask: errorMask);
-                    }
-                    if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleShaderFullParticleBirthRatio) ?? true))
-                    {
-                        FloatXmlTranslation.Instance.Write(
-                            node: node,
-                            name: nameof(item.ParticleShaderFullParticleBirthRatio),
-                            item: item.ParticleShaderFullParticleBirthRatio,
-                            fieldIndex: (int)EffectShader_FieldIndex.ParticleShaderFullParticleBirthRatio,
-                            errorMask: errorMask);
-                    }
-                    if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleShaderPersistentParticleBirthRatio) ?? true))
-                    {
-                        FloatXmlTranslation.Instance.Write(
-                            node: node,
-                            name: nameof(item.ParticleShaderPersistentParticleBirthRatio),
-                            item: item.ParticleShaderPersistentParticleBirthRatio,
-                            fieldIndex: (int)EffectShader_FieldIndex.ParticleShaderPersistentParticleBirthRatio,
-                            errorMask: errorMask);
-                    }
-                    if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleShaderParticleLifetime) ?? true))
-                    {
-                        FloatXmlTranslation.Instance.Write(
-                            node: node,
-                            name: nameof(item.ParticleShaderParticleLifetime),
-                            item: item.ParticleShaderParticleLifetime,
-                            fieldIndex: (int)EffectShader_FieldIndex.ParticleShaderParticleLifetime,
-                            errorMask: errorMask);
-                    }
-                    if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleShaderParticleLifetimePlusMinus) ?? true))
-                    {
-                        FloatXmlTranslation.Instance.Write(
-                            node: node,
-                            name: nameof(item.ParticleShaderParticleLifetimePlusMinus),
-                            item: item.ParticleShaderParticleLifetimePlusMinus,
-                            fieldIndex: (int)EffectShader_FieldIndex.ParticleShaderParticleLifetimePlusMinus,
-                            errorMask: errorMask);
-                    }
-                    if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleShaderInitialSpeedAlongNormal) ?? true))
-                    {
-                        FloatXmlTranslation.Instance.Write(
-                            node: node,
-                            name: nameof(item.ParticleShaderInitialSpeedAlongNormal),
-                            item: item.ParticleShaderInitialSpeedAlongNormal,
-                            fieldIndex: (int)EffectShader_FieldIndex.ParticleShaderInitialSpeedAlongNormal,
-                            errorMask: errorMask);
-                    }
-                    if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleShaderAccelerationAlongNormal) ?? true))
-                    {
-                        FloatXmlTranslation.Instance.Write(
-                            node: node,
-                            name: nameof(item.ParticleShaderAccelerationAlongNormal),
-                            item: item.ParticleShaderAccelerationAlongNormal,
-                            fieldIndex: (int)EffectShader_FieldIndex.ParticleShaderAccelerationAlongNormal,
-                            errorMask: errorMask);
-                    }
-                    if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleShaderInitialVelocity1) ?? true))
-                    {
-                        FloatXmlTranslation.Instance.Write(
-                            node: node,
-                            name: nameof(item.ParticleShaderInitialVelocity1),
-                            item: item.ParticleShaderInitialVelocity1,
-                            fieldIndex: (int)EffectShader_FieldIndex.ParticleShaderInitialVelocity1,
-                            errorMask: errorMask);
-                    }
-                    if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleShaderInitialVelocity2) ?? true))
-                    {
-                        FloatXmlTranslation.Instance.Write(
-                            node: node,
-                            name: nameof(item.ParticleShaderInitialVelocity2),
-                            item: item.ParticleShaderInitialVelocity2,
-                            fieldIndex: (int)EffectShader_FieldIndex.ParticleShaderInitialVelocity2,
-                            errorMask: errorMask);
-                    }
-                    if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleShaderInitialVelocity3) ?? true))
-                    {
-                        FloatXmlTranslation.Instance.Write(
-                            node: node,
-                            name: nameof(item.ParticleShaderInitialVelocity3),
-                            item: item.ParticleShaderInitialVelocity3,
-                            fieldIndex: (int)EffectShader_FieldIndex.ParticleShaderInitialVelocity3,
-                            errorMask: errorMask);
-                    }
-                    if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleShaderAcceleration1) ?? true))
-                    {
-                        FloatXmlTranslation.Instance.Write(
-                            node: node,
-                            name: nameof(item.ParticleShaderAcceleration1),
-                            item: item.ParticleShaderAcceleration1,
-                            fieldIndex: (int)EffectShader_FieldIndex.ParticleShaderAcceleration1,
-                            errorMask: errorMask);
-                    }
-                    if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleShaderAcceleration2) ?? true))
-                    {
-                        FloatXmlTranslation.Instance.Write(
-                            node: node,
-                            name: nameof(item.ParticleShaderAcceleration2),
-                            item: item.ParticleShaderAcceleration2,
-                            fieldIndex: (int)EffectShader_FieldIndex.ParticleShaderAcceleration2,
-                            errorMask: errorMask);
-                    }
-                    if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleShaderAcceleration3) ?? true))
-                    {
-                        FloatXmlTranslation.Instance.Write(
-                            node: node,
-                            name: nameof(item.ParticleShaderAcceleration3),
-                            item: item.ParticleShaderAcceleration3,
-                            fieldIndex: (int)EffectShader_FieldIndex.ParticleShaderAcceleration3,
-                            errorMask: errorMask);
-                    }
-                    if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleShaderScaleKey1) ?? true))
-                    {
-                        FloatXmlTranslation.Instance.Write(
-                            node: node,
-                            name: nameof(item.ParticleShaderScaleKey1),
-                            item: item.ParticleShaderScaleKey1,
-                            fieldIndex: (int)EffectShader_FieldIndex.ParticleShaderScaleKey1,
-                            errorMask: errorMask);
-                    }
-                    if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleShaderScaleKey2) ?? true))
-                    {
-                        FloatXmlTranslation.Instance.Write(
-                            node: node,
-                            name: nameof(item.ParticleShaderScaleKey2),
-                            item: item.ParticleShaderScaleKey2,
-                            fieldIndex: (int)EffectShader_FieldIndex.ParticleShaderScaleKey2,
-                            errorMask: errorMask);
-                    }
-                    if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleShaderScaleKey1Time) ?? true))
-                    {
-                        FloatXmlTranslation.Instance.Write(
-                            node: node,
-                            name: nameof(item.ParticleShaderScaleKey1Time),
-                            item: item.ParticleShaderScaleKey1Time,
-                            fieldIndex: (int)EffectShader_FieldIndex.ParticleShaderScaleKey1Time,
-                            errorMask: errorMask);
-                    }
-                    if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleShaderScaleKey2Time) ?? true))
-                    {
-                        FloatXmlTranslation.Instance.Write(
-                            node: node,
-                            name: nameof(item.ParticleShaderScaleKey2Time),
-                            item: item.ParticleShaderScaleKey2Time,
-                            fieldIndex: (int)EffectShader_FieldIndex.ParticleShaderScaleKey2Time,
-                            errorMask: errorMask);
-                    }
-                    if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ColorKey1Color) ?? true))
-                    {
-                        ColorXmlTranslation.Instance.Write(
-                            node: node,
-                            name: nameof(item.ColorKey1Color),
-                            item: item.ColorKey1Color,
-                            fieldIndex: (int)EffectShader_FieldIndex.ColorKey1Color,
-                            errorMask: errorMask);
-                    }
-                    if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ColorKey2Color) ?? true))
-                    {
-                        ColorXmlTranslation.Instance.Write(
-                            node: node,
-                            name: nameof(item.ColorKey2Color),
-                            item: item.ColorKey2Color,
-                            fieldIndex: (int)EffectShader_FieldIndex.ColorKey2Color,
-                            errorMask: errorMask);
-                    }
-                    if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ColorKey3Color) ?? true))
-                    {
-                        ColorXmlTranslation.Instance.Write(
-                            node: node,
-                            name: nameof(item.ColorKey3Color),
-                            item: item.ColorKey3Color,
-                            fieldIndex: (int)EffectShader_FieldIndex.ColorKey3Color,
-                            errorMask: errorMask);
-                    }
-                    if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ColorKey1ColorAlpha) ?? true))
-                    {
-                        FloatXmlTranslation.Instance.Write(
-                            node: node,
-                            name: nameof(item.ColorKey1ColorAlpha),
-                            item: item.ColorKey1ColorAlpha,
-                            fieldIndex: (int)EffectShader_FieldIndex.ColorKey1ColorAlpha,
-                            errorMask: errorMask);
-                    }
-                    if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ColorKey2ColorAlpha) ?? true))
-                    {
-                        FloatXmlTranslation.Instance.Write(
-                            node: node,
-                            name: nameof(item.ColorKey2ColorAlpha),
-                            item: item.ColorKey2ColorAlpha,
-                            fieldIndex: (int)EffectShader_FieldIndex.ColorKey2ColorAlpha,
-                            errorMask: errorMask);
-                    }
-                    if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ColorKey3ColorAlpha) ?? true))
-                    {
-                        FloatXmlTranslation.Instance.Write(
-                            node: node,
-                            name: nameof(item.ColorKey3ColorAlpha),
-                            item: item.ColorKey3ColorAlpha,
-                            fieldIndex: (int)EffectShader_FieldIndex.ColorKey3ColorAlpha,
-                            errorMask: errorMask);
-                    }
-                    if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ColorKey1ColorKeyTime) ?? true))
-                    {
-                        FloatXmlTranslation.Instance.Write(
-                            node: node,
-                            name: nameof(item.ColorKey1ColorKeyTime),
-                            item: item.ColorKey1ColorKeyTime,
-                            fieldIndex: (int)EffectShader_FieldIndex.ColorKey1ColorKeyTime,
-                            errorMask: errorMask);
-                    }
-                    if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ColorKey2ColorKeyTime) ?? true))
-                    {
-                        FloatXmlTranslation.Instance.Write(
-                            node: node,
-                            name: nameof(item.ColorKey2ColorKeyTime),
-                            item: item.ColorKey2ColorKeyTime,
-                            fieldIndex: (int)EffectShader_FieldIndex.ColorKey2ColorKeyTime,
-                            errorMask: errorMask);
-                    }
-                    if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ColorKey3ColorKeyTime) ?? true))
-                    {
-                        FloatXmlTranslation.Instance.Write(
-                            node: node,
-                            name: nameof(item.ColorKey3ColorKeyTime),
-                            item: item.ColorKey3ColorKeyTime,
-                            fieldIndex: (int)EffectShader_FieldIndex.ColorKey3ColorKeyTime,
-                            errorMask: errorMask);
-                    }
-                }
-                else
-                {
-                    node.Add(new XElement("HasDATADataType"));
-                }
-            }
-        }
-
         public static void FillPublic_Xml(
             this EffectShader item,
             XElement node,
@@ -7598,6 +7079,32 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask?.PopIndex();
                     }
                     break;
+                case "DATADataTypeState":
+                    try
+                    {
+                        errorMask?.PushIndex((int)EffectShader_FieldIndex.DATADataTypeState);
+                        if (EnumXmlTranslation<EffectShader.DATADataType>.Instance.Parse(
+                            node: node,
+                            item: out EffectShader.DATADataType DATADataTypeStateParse,
+                            errorMask: errorMask))
+                        {
+                            item.DATADataTypeState = DATADataTypeStateParse;
+                        }
+                        else
+                        {
+                            item.DATADataTypeState = default(EffectShader.DATADataType);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
                 default:
                     OblivionMajorRecordCommon.FillPublicElement_Xml(
                         item: item,
@@ -7611,281 +7118,614 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        #region Binary Translation
-        #region Binary Write
-        public static void Write_Binary(
-            MutagenWriter writer,
-            EffectShader item,
-            MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            bool doMasks,
-            out EffectShader_ErrorMask errorMask)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_Binary(
-                masterReferences: masterReferences,
-                writer: writer,
-                item: item,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMaskBuilder);
-            errorMask = EffectShader_ErrorMask.Factory(errorMaskBuilder);
-        }
+    }
+    #endregion
 
-        public static void Write_Binary(
-            MutagenWriter writer,
-            EffectShader item,
-            MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
-        {
-            using (HeaderExport.ExportHeader(
-                writer: writer,
-                record: EffectShader_Registration.EFSH_HEADER,
-                type: ObjectType.Record))
-            {
-                OblivionMajorRecordCommon.Write_Binary_Embedded(
-                    item: item,
-                    writer: writer,
-                    errorMask: errorMask,
-                    masterReferences: masterReferences);
-                Write_Binary_RecordTypes(
-                    item: item,
-                    writer: writer,
-                    recordTypeConverter: recordTypeConverter,
-                    errorMask: errorMask,
-                    masterReferences: masterReferences);
-            }
-        }
-        #endregion
+    #region Modules
+    #region Xml Translation
+    public partial class EffectShaderXmlTranslation : OblivionMajorRecordXmlTranslation
+    {
+        public new readonly static EffectShaderXmlTranslation Instance = new EffectShaderXmlTranslation();
 
-        public static void Write_Binary_RecordTypes(
-            EffectShader item,
-            MutagenWriter writer,
-            RecordTypeConverter recordTypeConverter,
+        public static void WriteToNode_Xml(
+            IEffectShaderInternalGetter item,
+            XElement node,
             ErrorMaskBuilder errorMask,
-            MasterReferences masterReferences)
+            TranslationCrystal translationMask)
         {
-            MajorRecordCommon.Write_Binary_RecordTypes(
+            OblivionMajorRecordXmlTranslation.WriteToNode_Xml(
                 item: item,
-                writer: writer,
-                recordTypeConverter: recordTypeConverter,
+                node: node,
                 errorMask: errorMask,
-                masterReferences: masterReferences);
-            if (item.FillTexture_IsSet)
+                translationMask: translationMask);
+            if (item.FillTexture_IsSet
+                && (translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.FillTexture) ?? true))
             {
-                Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
-                    writer: writer,
+                StringXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.FillTexture),
                     item: item.FillTexture,
-                    header: recordTypeConverter.ConvertToCustom(EffectShader_Registration.ICON_HEADER),
-                    nullable: false);
+                    fieldIndex: (int)EffectShader_FieldIndex.FillTexture,
+                    errorMask: errorMask);
             }
-            if (item.ParticleShaderTexture_IsSet)
+            if (item.ParticleShaderTexture_IsSet
+                && (translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleShaderTexture) ?? true))
             {
-                Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
-                    writer: writer,
+                StringXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.ParticleShaderTexture),
                     item: item.ParticleShaderTexture,
-                    header: recordTypeConverter.ConvertToCustom(EffectShader_Registration.ICO2_HEADER),
-                    nullable: false);
+                    fieldIndex: (int)EffectShader_FieldIndex.ParticleShaderTexture,
+                    errorMask: errorMask);
             }
             if (item.DATADataTypeState.HasFlag(EffectShader.DATADataType.Has))
             {
-                using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(EffectShader_Registration.DATA_HEADER)))
+                if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.Flags) ?? true))
                 {
-                    Mutagen.Bethesda.Binary.EnumBinaryTranslation<EffectShader.Flag>.Instance.Write(
-                        writer,
-                        item.Flags,
-                        length: 4);
-                    Mutagen.Bethesda.Binary.EnumBinaryTranslation<EffectShader.SourceBlendMode>.Instance.Write(
-                        writer,
-                        item.MembraneShaderSourceBlendMode,
-                        length: 4);
-                    Mutagen.Bethesda.Binary.EnumBinaryTranslation<EffectShader.BlendOperation>.Instance.Write(
-                        writer,
-                        item.MembraneShaderBlendOperation,
-                        length: 4);
-                    Mutagen.Bethesda.Binary.EnumBinaryTranslation<EffectShader.ZTestFunction>.Instance.Write(
-                        writer,
-                        item.MembraneShaderZTestFunction,
-                        length: 4);
-                    Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Write(
-                        writer: writer,
+                    EnumXmlTranslation<EffectShader.Flag>.Instance.Write(
+                        node: node,
+                        name: nameof(item.Flags),
+                        item: item.Flags,
+                        fieldIndex: (int)EffectShader_FieldIndex.Flags,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.MembraneShaderSourceBlendMode) ?? true))
+                {
+                    EnumXmlTranslation<EffectShader.SourceBlendMode>.Instance.Write(
+                        node: node,
+                        name: nameof(item.MembraneShaderSourceBlendMode),
+                        item: item.MembraneShaderSourceBlendMode,
+                        fieldIndex: (int)EffectShader_FieldIndex.MembraneShaderSourceBlendMode,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.MembraneShaderBlendOperation) ?? true))
+                {
+                    EnumXmlTranslation<EffectShader.BlendOperation>.Instance.Write(
+                        node: node,
+                        name: nameof(item.MembraneShaderBlendOperation),
+                        item: item.MembraneShaderBlendOperation,
+                        fieldIndex: (int)EffectShader_FieldIndex.MembraneShaderBlendOperation,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.MembraneShaderZTestFunction) ?? true))
+                {
+                    EnumXmlTranslation<EffectShader.ZTestFunction>.Instance.Write(
+                        node: node,
+                        name: nameof(item.MembraneShaderZTestFunction),
+                        item: item.MembraneShaderZTestFunction,
+                        fieldIndex: (int)EffectShader_FieldIndex.MembraneShaderZTestFunction,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.FillTextureEffectColor) ?? true))
+                {
+                    ColorXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.FillTextureEffectColor),
                         item: item.FillTextureEffectColor,
-                        extraByte: true);
-                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.FillTextureEffectAlphaFadeInTime);
-                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.FillTextureEffectFullAlphaTime);
-                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.FillTextureEffectAlphaFadeOutTime);
-                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.FillTextureEffectPersistentAlphaRatio);
-                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.FillTextureEffectAlphaPulseAmplitude);
-                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.FillTextureEffectAlphaPulseFrequency);
-                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.FillTextureEffectTextureAnimationSpeedU);
-                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.FillTextureEffectTextureAnimationSpeedV);
-                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.EdgeEffectFallOff);
-                    Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Write(
-                        writer: writer,
+                        fieldIndex: (int)EffectShader_FieldIndex.FillTextureEffectColor,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.FillTextureEffectAlphaFadeInTime) ?? true))
+                {
+                    FloatXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.FillTextureEffectAlphaFadeInTime),
+                        item: item.FillTextureEffectAlphaFadeInTime,
+                        fieldIndex: (int)EffectShader_FieldIndex.FillTextureEffectAlphaFadeInTime,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.FillTextureEffectFullAlphaTime) ?? true))
+                {
+                    FloatXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.FillTextureEffectFullAlphaTime),
+                        item: item.FillTextureEffectFullAlphaTime,
+                        fieldIndex: (int)EffectShader_FieldIndex.FillTextureEffectFullAlphaTime,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.FillTextureEffectAlphaFadeOutTime) ?? true))
+                {
+                    FloatXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.FillTextureEffectAlphaFadeOutTime),
+                        item: item.FillTextureEffectAlphaFadeOutTime,
+                        fieldIndex: (int)EffectShader_FieldIndex.FillTextureEffectAlphaFadeOutTime,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.FillTextureEffectPersistentAlphaRatio) ?? true))
+                {
+                    FloatXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.FillTextureEffectPersistentAlphaRatio),
+                        item: item.FillTextureEffectPersistentAlphaRatio,
+                        fieldIndex: (int)EffectShader_FieldIndex.FillTextureEffectPersistentAlphaRatio,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.FillTextureEffectAlphaPulseAmplitude) ?? true))
+                {
+                    FloatXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.FillTextureEffectAlphaPulseAmplitude),
+                        item: item.FillTextureEffectAlphaPulseAmplitude,
+                        fieldIndex: (int)EffectShader_FieldIndex.FillTextureEffectAlphaPulseAmplitude,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.FillTextureEffectAlphaPulseFrequency) ?? true))
+                {
+                    FloatXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.FillTextureEffectAlphaPulseFrequency),
+                        item: item.FillTextureEffectAlphaPulseFrequency,
+                        fieldIndex: (int)EffectShader_FieldIndex.FillTextureEffectAlphaPulseFrequency,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.FillTextureEffectTextureAnimationSpeedU) ?? true))
+                {
+                    FloatXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.FillTextureEffectTextureAnimationSpeedU),
+                        item: item.FillTextureEffectTextureAnimationSpeedU,
+                        fieldIndex: (int)EffectShader_FieldIndex.FillTextureEffectTextureAnimationSpeedU,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.FillTextureEffectTextureAnimationSpeedV) ?? true))
+                {
+                    FloatXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.FillTextureEffectTextureAnimationSpeedV),
+                        item: item.FillTextureEffectTextureAnimationSpeedV,
+                        fieldIndex: (int)EffectShader_FieldIndex.FillTextureEffectTextureAnimationSpeedV,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.EdgeEffectFallOff) ?? true))
+                {
+                    FloatXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.EdgeEffectFallOff),
+                        item: item.EdgeEffectFallOff,
+                        fieldIndex: (int)EffectShader_FieldIndex.EdgeEffectFallOff,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.EdgeEffectColor) ?? true))
+                {
+                    ColorXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.EdgeEffectColor),
                         item: item.EdgeEffectColor,
-                        extraByte: true);
-                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.EdgeEffectAlphaFadeInTime);
-                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.EdgeEffectFullAlphaTime);
-                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.EdgeEffectAlphaFadeOutTime);
-                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.EdgeEffectPersistentAlphaRatio);
-                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.EdgeEffectAlphaPulseAmplitude);
-                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.EdgeEffectAlphaPulseFrequency);
-                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.FillTextureEffectFullAlphaRatio);
-                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.EdgeEffectFullAlphaRatio);
-                    Mutagen.Bethesda.Binary.EnumBinaryTranslation<EffectShader.SourceBlendMode>.Instance.Write(
-                        writer,
-                        item.MembraneShaderDestBlendMode,
-                        length: 4);
-                    if (!item.DATADataTypeState.HasFlag(EffectShader.DATADataType.Break0))
+                        fieldIndex: (int)EffectShader_FieldIndex.EdgeEffectColor,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.EdgeEffectAlphaFadeInTime) ?? true))
+                {
+                    FloatXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.EdgeEffectAlphaFadeInTime),
+                        item: item.EdgeEffectAlphaFadeInTime,
+                        fieldIndex: (int)EffectShader_FieldIndex.EdgeEffectAlphaFadeInTime,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.EdgeEffectFullAlphaTime) ?? true))
+                {
+                    FloatXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.EdgeEffectFullAlphaTime),
+                        item: item.EdgeEffectFullAlphaTime,
+                        fieldIndex: (int)EffectShader_FieldIndex.EdgeEffectFullAlphaTime,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.EdgeEffectAlphaFadeOutTime) ?? true))
+                {
+                    FloatXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.EdgeEffectAlphaFadeOutTime),
+                        item: item.EdgeEffectAlphaFadeOutTime,
+                        fieldIndex: (int)EffectShader_FieldIndex.EdgeEffectAlphaFadeOutTime,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.EdgeEffectPersistentAlphaRatio) ?? true))
+                {
+                    FloatXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.EdgeEffectPersistentAlphaRatio),
+                        item: item.EdgeEffectPersistentAlphaRatio,
+                        fieldIndex: (int)EffectShader_FieldIndex.EdgeEffectPersistentAlphaRatio,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.EdgeEffectAlphaPulseAmplitude) ?? true))
+                {
+                    FloatXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.EdgeEffectAlphaPulseAmplitude),
+                        item: item.EdgeEffectAlphaPulseAmplitude,
+                        fieldIndex: (int)EffectShader_FieldIndex.EdgeEffectAlphaPulseAmplitude,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.EdgeEffectAlphaPulseFrequency) ?? true))
+                {
+                    FloatXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.EdgeEffectAlphaPulseFrequency),
+                        item: item.EdgeEffectAlphaPulseFrequency,
+                        fieldIndex: (int)EffectShader_FieldIndex.EdgeEffectAlphaPulseFrequency,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.FillTextureEffectFullAlphaRatio) ?? true))
+                {
+                    FloatXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.FillTextureEffectFullAlphaRatio),
+                        item: item.FillTextureEffectFullAlphaRatio,
+                        fieldIndex: (int)EffectShader_FieldIndex.FillTextureEffectFullAlphaRatio,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.EdgeEffectFullAlphaRatio) ?? true))
+                {
+                    FloatXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.EdgeEffectFullAlphaRatio),
+                        item: item.EdgeEffectFullAlphaRatio,
+                        fieldIndex: (int)EffectShader_FieldIndex.EdgeEffectFullAlphaRatio,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.MembraneShaderDestBlendMode) ?? true))
+                {
+                    EnumXmlTranslation<EffectShader.SourceBlendMode>.Instance.Write(
+                        node: node,
+                        name: nameof(item.MembraneShaderDestBlendMode),
+                        item: item.MembraneShaderDestBlendMode,
+                        fieldIndex: (int)EffectShader_FieldIndex.MembraneShaderDestBlendMode,
+                        errorMask: errorMask);
+                }
+                if (!item.DATADataTypeState.HasFlag(EffectShader.DATADataType.Break0))
+                {
+                    if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleShaderSourceBlendMode) ?? true))
                     {
-                        Mutagen.Bethesda.Binary.EnumBinaryTranslation<EffectShader.SourceBlendMode>.Instance.Write(
-                            writer,
-                            item.ParticleShaderSourceBlendMode,
-                            length: 4);
-                        Mutagen.Bethesda.Binary.EnumBinaryTranslation<EffectShader.BlendOperation>.Instance.Write(
-                            writer,
-                            item.ParticleShaderBlendOperation,
-                            length: 4);
-                        Mutagen.Bethesda.Binary.EnumBinaryTranslation<EffectShader.ZTestFunction>.Instance.Write(
-                            writer,
-                            item.ParticleShaderZTestFunction,
-                            length: 4);
-                        Mutagen.Bethesda.Binary.EnumBinaryTranslation<EffectShader.SourceBlendMode>.Instance.Write(
-                            writer,
-                            item.ParticleShaderDestBlendMode,
-                            length: 4);
-                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                            writer: writer,
-                            item: item.ParticleShaderParticleBirthRampUpTime);
-                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                            writer: writer,
-                            item: item.ParticleShaderFullParticleBirthTime);
-                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                            writer: writer,
-                            item: item.ParticleShaderParticleBirthRampDownTime);
-                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                            writer: writer,
-                            item: item.ParticleShaderFullParticleBirthRatio);
-                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                            writer: writer,
-                            item: item.ParticleShaderPersistentParticleBirthRatio);
-                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                            writer: writer,
-                            item: item.ParticleShaderParticleLifetime);
-                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                            writer: writer,
-                            item: item.ParticleShaderParticleLifetimePlusMinus);
-                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                            writer: writer,
-                            item: item.ParticleShaderInitialSpeedAlongNormal);
-                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                            writer: writer,
-                            item: item.ParticleShaderAccelerationAlongNormal);
-                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                            writer: writer,
-                            item: item.ParticleShaderInitialVelocity1);
-                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                            writer: writer,
-                            item: item.ParticleShaderInitialVelocity2);
-                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                            writer: writer,
-                            item: item.ParticleShaderInitialVelocity3);
-                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                            writer: writer,
-                            item: item.ParticleShaderAcceleration1);
-                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                            writer: writer,
-                            item: item.ParticleShaderAcceleration2);
-                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                            writer: writer,
-                            item: item.ParticleShaderAcceleration3);
-                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                            writer: writer,
-                            item: item.ParticleShaderScaleKey1);
-                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                            writer: writer,
-                            item: item.ParticleShaderScaleKey2);
-                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                            writer: writer,
-                            item: item.ParticleShaderScaleKey1Time);
-                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                            writer: writer,
-                            item: item.ParticleShaderScaleKey2Time);
-                        Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Write(
-                            writer: writer,
+                        EnumXmlTranslation<EffectShader.SourceBlendMode>.Instance.Write(
+                            node: node,
+                            name: nameof(item.ParticleShaderSourceBlendMode),
+                            item: item.ParticleShaderSourceBlendMode,
+                            fieldIndex: (int)EffectShader_FieldIndex.ParticleShaderSourceBlendMode,
+                            errorMask: errorMask);
+                    }
+                    if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleShaderBlendOperation) ?? true))
+                    {
+                        EnumXmlTranslation<EffectShader.BlendOperation>.Instance.Write(
+                            node: node,
+                            name: nameof(item.ParticleShaderBlendOperation),
+                            item: item.ParticleShaderBlendOperation,
+                            fieldIndex: (int)EffectShader_FieldIndex.ParticleShaderBlendOperation,
+                            errorMask: errorMask);
+                    }
+                    if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleShaderZTestFunction) ?? true))
+                    {
+                        EnumXmlTranslation<EffectShader.ZTestFunction>.Instance.Write(
+                            node: node,
+                            name: nameof(item.ParticleShaderZTestFunction),
+                            item: item.ParticleShaderZTestFunction,
+                            fieldIndex: (int)EffectShader_FieldIndex.ParticleShaderZTestFunction,
+                            errorMask: errorMask);
+                    }
+                    if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleShaderDestBlendMode) ?? true))
+                    {
+                        EnumXmlTranslation<EffectShader.SourceBlendMode>.Instance.Write(
+                            node: node,
+                            name: nameof(item.ParticleShaderDestBlendMode),
+                            item: item.ParticleShaderDestBlendMode,
+                            fieldIndex: (int)EffectShader_FieldIndex.ParticleShaderDestBlendMode,
+                            errorMask: errorMask);
+                    }
+                    if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleShaderParticleBirthRampUpTime) ?? true))
+                    {
+                        FloatXmlTranslation.Instance.Write(
+                            node: node,
+                            name: nameof(item.ParticleShaderParticleBirthRampUpTime),
+                            item: item.ParticleShaderParticleBirthRampUpTime,
+                            fieldIndex: (int)EffectShader_FieldIndex.ParticleShaderParticleBirthRampUpTime,
+                            errorMask: errorMask);
+                    }
+                    if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleShaderFullParticleBirthTime) ?? true))
+                    {
+                        FloatXmlTranslation.Instance.Write(
+                            node: node,
+                            name: nameof(item.ParticleShaderFullParticleBirthTime),
+                            item: item.ParticleShaderFullParticleBirthTime,
+                            fieldIndex: (int)EffectShader_FieldIndex.ParticleShaderFullParticleBirthTime,
+                            errorMask: errorMask);
+                    }
+                    if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleShaderParticleBirthRampDownTime) ?? true))
+                    {
+                        FloatXmlTranslation.Instance.Write(
+                            node: node,
+                            name: nameof(item.ParticleShaderParticleBirthRampDownTime),
+                            item: item.ParticleShaderParticleBirthRampDownTime,
+                            fieldIndex: (int)EffectShader_FieldIndex.ParticleShaderParticleBirthRampDownTime,
+                            errorMask: errorMask);
+                    }
+                    if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleShaderFullParticleBirthRatio) ?? true))
+                    {
+                        FloatXmlTranslation.Instance.Write(
+                            node: node,
+                            name: nameof(item.ParticleShaderFullParticleBirthRatio),
+                            item: item.ParticleShaderFullParticleBirthRatio,
+                            fieldIndex: (int)EffectShader_FieldIndex.ParticleShaderFullParticleBirthRatio,
+                            errorMask: errorMask);
+                    }
+                    if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleShaderPersistentParticleBirthRatio) ?? true))
+                    {
+                        FloatXmlTranslation.Instance.Write(
+                            node: node,
+                            name: nameof(item.ParticleShaderPersistentParticleBirthRatio),
+                            item: item.ParticleShaderPersistentParticleBirthRatio,
+                            fieldIndex: (int)EffectShader_FieldIndex.ParticleShaderPersistentParticleBirthRatio,
+                            errorMask: errorMask);
+                    }
+                    if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleShaderParticleLifetime) ?? true))
+                    {
+                        FloatXmlTranslation.Instance.Write(
+                            node: node,
+                            name: nameof(item.ParticleShaderParticleLifetime),
+                            item: item.ParticleShaderParticleLifetime,
+                            fieldIndex: (int)EffectShader_FieldIndex.ParticleShaderParticleLifetime,
+                            errorMask: errorMask);
+                    }
+                    if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleShaderParticleLifetimePlusMinus) ?? true))
+                    {
+                        FloatXmlTranslation.Instance.Write(
+                            node: node,
+                            name: nameof(item.ParticleShaderParticleLifetimePlusMinus),
+                            item: item.ParticleShaderParticleLifetimePlusMinus,
+                            fieldIndex: (int)EffectShader_FieldIndex.ParticleShaderParticleLifetimePlusMinus,
+                            errorMask: errorMask);
+                    }
+                    if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleShaderInitialSpeedAlongNormal) ?? true))
+                    {
+                        FloatXmlTranslation.Instance.Write(
+                            node: node,
+                            name: nameof(item.ParticleShaderInitialSpeedAlongNormal),
+                            item: item.ParticleShaderInitialSpeedAlongNormal,
+                            fieldIndex: (int)EffectShader_FieldIndex.ParticleShaderInitialSpeedAlongNormal,
+                            errorMask: errorMask);
+                    }
+                    if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleShaderAccelerationAlongNormal) ?? true))
+                    {
+                        FloatXmlTranslation.Instance.Write(
+                            node: node,
+                            name: nameof(item.ParticleShaderAccelerationAlongNormal),
+                            item: item.ParticleShaderAccelerationAlongNormal,
+                            fieldIndex: (int)EffectShader_FieldIndex.ParticleShaderAccelerationAlongNormal,
+                            errorMask: errorMask);
+                    }
+                    if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleShaderInitialVelocity1) ?? true))
+                    {
+                        FloatXmlTranslation.Instance.Write(
+                            node: node,
+                            name: nameof(item.ParticleShaderInitialVelocity1),
+                            item: item.ParticleShaderInitialVelocity1,
+                            fieldIndex: (int)EffectShader_FieldIndex.ParticleShaderInitialVelocity1,
+                            errorMask: errorMask);
+                    }
+                    if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleShaderInitialVelocity2) ?? true))
+                    {
+                        FloatXmlTranslation.Instance.Write(
+                            node: node,
+                            name: nameof(item.ParticleShaderInitialVelocity2),
+                            item: item.ParticleShaderInitialVelocity2,
+                            fieldIndex: (int)EffectShader_FieldIndex.ParticleShaderInitialVelocity2,
+                            errorMask: errorMask);
+                    }
+                    if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleShaderInitialVelocity3) ?? true))
+                    {
+                        FloatXmlTranslation.Instance.Write(
+                            node: node,
+                            name: nameof(item.ParticleShaderInitialVelocity3),
+                            item: item.ParticleShaderInitialVelocity3,
+                            fieldIndex: (int)EffectShader_FieldIndex.ParticleShaderInitialVelocity3,
+                            errorMask: errorMask);
+                    }
+                    if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleShaderAcceleration1) ?? true))
+                    {
+                        FloatXmlTranslation.Instance.Write(
+                            node: node,
+                            name: nameof(item.ParticleShaderAcceleration1),
+                            item: item.ParticleShaderAcceleration1,
+                            fieldIndex: (int)EffectShader_FieldIndex.ParticleShaderAcceleration1,
+                            errorMask: errorMask);
+                    }
+                    if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleShaderAcceleration2) ?? true))
+                    {
+                        FloatXmlTranslation.Instance.Write(
+                            node: node,
+                            name: nameof(item.ParticleShaderAcceleration2),
+                            item: item.ParticleShaderAcceleration2,
+                            fieldIndex: (int)EffectShader_FieldIndex.ParticleShaderAcceleration2,
+                            errorMask: errorMask);
+                    }
+                    if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleShaderAcceleration3) ?? true))
+                    {
+                        FloatXmlTranslation.Instance.Write(
+                            node: node,
+                            name: nameof(item.ParticleShaderAcceleration3),
+                            item: item.ParticleShaderAcceleration3,
+                            fieldIndex: (int)EffectShader_FieldIndex.ParticleShaderAcceleration3,
+                            errorMask: errorMask);
+                    }
+                    if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleShaderScaleKey1) ?? true))
+                    {
+                        FloatXmlTranslation.Instance.Write(
+                            node: node,
+                            name: nameof(item.ParticleShaderScaleKey1),
+                            item: item.ParticleShaderScaleKey1,
+                            fieldIndex: (int)EffectShader_FieldIndex.ParticleShaderScaleKey1,
+                            errorMask: errorMask);
+                    }
+                    if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleShaderScaleKey2) ?? true))
+                    {
+                        FloatXmlTranslation.Instance.Write(
+                            node: node,
+                            name: nameof(item.ParticleShaderScaleKey2),
+                            item: item.ParticleShaderScaleKey2,
+                            fieldIndex: (int)EffectShader_FieldIndex.ParticleShaderScaleKey2,
+                            errorMask: errorMask);
+                    }
+                    if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleShaderScaleKey1Time) ?? true))
+                    {
+                        FloatXmlTranslation.Instance.Write(
+                            node: node,
+                            name: nameof(item.ParticleShaderScaleKey1Time),
+                            item: item.ParticleShaderScaleKey1Time,
+                            fieldIndex: (int)EffectShader_FieldIndex.ParticleShaderScaleKey1Time,
+                            errorMask: errorMask);
+                    }
+                    if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleShaderScaleKey2Time) ?? true))
+                    {
+                        FloatXmlTranslation.Instance.Write(
+                            node: node,
+                            name: nameof(item.ParticleShaderScaleKey2Time),
+                            item: item.ParticleShaderScaleKey2Time,
+                            fieldIndex: (int)EffectShader_FieldIndex.ParticleShaderScaleKey2Time,
+                            errorMask: errorMask);
+                    }
+                    if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ColorKey1Color) ?? true))
+                    {
+                        ColorXmlTranslation.Instance.Write(
+                            node: node,
+                            name: nameof(item.ColorKey1Color),
                             item: item.ColorKey1Color,
-                            extraByte: true);
-                        Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Write(
-                            writer: writer,
+                            fieldIndex: (int)EffectShader_FieldIndex.ColorKey1Color,
+                            errorMask: errorMask);
+                    }
+                    if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ColorKey2Color) ?? true))
+                    {
+                        ColorXmlTranslation.Instance.Write(
+                            node: node,
+                            name: nameof(item.ColorKey2Color),
                             item: item.ColorKey2Color,
-                            extraByte: true);
-                        Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Write(
-                            writer: writer,
+                            fieldIndex: (int)EffectShader_FieldIndex.ColorKey2Color,
+                            errorMask: errorMask);
+                    }
+                    if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ColorKey3Color) ?? true))
+                    {
+                        ColorXmlTranslation.Instance.Write(
+                            node: node,
+                            name: nameof(item.ColorKey3Color),
                             item: item.ColorKey3Color,
-                            extraByte: true);
-                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                            writer: writer,
-                            item: item.ColorKey1ColorAlpha);
-                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                            writer: writer,
-                            item: item.ColorKey2ColorAlpha);
-                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                            writer: writer,
-                            item: item.ColorKey3ColorAlpha);
-                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                            writer: writer,
-                            item: item.ColorKey1ColorKeyTime);
-                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                            writer: writer,
-                            item: item.ColorKey2ColorKeyTime);
-                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                            writer: writer,
-                            item: item.ColorKey3ColorKeyTime);
+                            fieldIndex: (int)EffectShader_FieldIndex.ColorKey3Color,
+                            errorMask: errorMask);
+                    }
+                    if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ColorKey1ColorAlpha) ?? true))
+                    {
+                        FloatXmlTranslation.Instance.Write(
+                            node: node,
+                            name: nameof(item.ColorKey1ColorAlpha),
+                            item: item.ColorKey1ColorAlpha,
+                            fieldIndex: (int)EffectShader_FieldIndex.ColorKey1ColorAlpha,
+                            errorMask: errorMask);
+                    }
+                    if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ColorKey2ColorAlpha) ?? true))
+                    {
+                        FloatXmlTranslation.Instance.Write(
+                            node: node,
+                            name: nameof(item.ColorKey2ColorAlpha),
+                            item: item.ColorKey2ColorAlpha,
+                            fieldIndex: (int)EffectShader_FieldIndex.ColorKey2ColorAlpha,
+                            errorMask: errorMask);
+                    }
+                    if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ColorKey3ColorAlpha) ?? true))
+                    {
+                        FloatXmlTranslation.Instance.Write(
+                            node: node,
+                            name: nameof(item.ColorKey3ColorAlpha),
+                            item: item.ColorKey3ColorAlpha,
+                            fieldIndex: (int)EffectShader_FieldIndex.ColorKey3ColorAlpha,
+                            errorMask: errorMask);
+                    }
+                    if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ColorKey1ColorKeyTime) ?? true))
+                    {
+                        FloatXmlTranslation.Instance.Write(
+                            node: node,
+                            name: nameof(item.ColorKey1ColorKeyTime),
+                            item: item.ColorKey1ColorKeyTime,
+                            fieldIndex: (int)EffectShader_FieldIndex.ColorKey1ColorKeyTime,
+                            errorMask: errorMask);
+                    }
+                    if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ColorKey2ColorKeyTime) ?? true))
+                    {
+                        FloatXmlTranslation.Instance.Write(
+                            node: node,
+                            name: nameof(item.ColorKey2ColorKeyTime),
+                            item: item.ColorKey2ColorKeyTime,
+                            fieldIndex: (int)EffectShader_FieldIndex.ColorKey2ColorKeyTime,
+                            errorMask: errorMask);
+                    }
+                    if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ColorKey3ColorKeyTime) ?? true))
+                    {
+                        FloatXmlTranslation.Instance.Write(
+                            node: node,
+                            name: nameof(item.ColorKey3ColorKeyTime),
+                            item: item.ColorKey3ColorKeyTime,
+                            fieldIndex: (int)EffectShader_FieldIndex.ColorKey3ColorKeyTime,
+                            errorMask: errorMask);
                     }
                 }
+                else
+                {
+                    node.Add(new XElement("HasDATADataType"));
+                }
+            }
+            if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.DATADataTypeState) ?? true))
+            {
+                EnumXmlTranslation<EffectShader.DATADataType>.Instance.Write(
+                    node: node,
+                    name: nameof(item.DATADataTypeState),
+                    item: item.DATADataTypeState,
+                    fieldIndex: (int)EffectShader_FieldIndex.DATADataTypeState,
+                    errorMask: errorMask);
             }
         }
 
+        #region Xml Write
+        public void Write_Xml(
+            XElement node,
+            IEffectShaderInternalGetter item,
+            bool doMasks,
+            out EffectShader_ErrorMask errorMask,
+            EffectShader_TranslationMask translationMask,
+            string name = null)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            Write_Xml(
+                name: name,
+                node: node,
+                item: item,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal());
+            errorMask = EffectShader_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public void Write_Xml(
+            XElement node,
+            IEffectShaderInternalGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.EffectShader");
+            node.Add(elem);
+            if (name != null)
+            {
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.EffectShader");
+            }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         #endregion
 
     }
     #endregion
 
-    #region Modules
     #region Mask
     public class EffectShader_Mask<T> : OblivionMajorRecord_Mask<T>, IMask<T>, IEquatable<EffectShader_Mask<T>>
     {
@@ -7954,6 +7794,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.ColorKey1ColorKeyTime = initialValue;
             this.ColorKey2ColorKeyTime = initialValue;
             this.ColorKey3ColorKeyTime = initialValue;
+            this.DATADataTypeState = initialValue;
         }
         #endregion
 
@@ -8016,6 +7857,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public T ColorKey1ColorKeyTime;
         public T ColorKey2ColorKeyTime;
         public T ColorKey3ColorKeyTime;
+        public T DATADataTypeState;
         #endregion
 
         #region Equals
@@ -8087,6 +7929,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (!object.Equals(this.ColorKey1ColorKeyTime, rhs.ColorKey1ColorKeyTime)) return false;
             if (!object.Equals(this.ColorKey2ColorKeyTime, rhs.ColorKey2ColorKeyTime)) return false;
             if (!object.Equals(this.ColorKey3ColorKeyTime, rhs.ColorKey3ColorKeyTime)) return false;
+            if (!object.Equals(this.DATADataTypeState, rhs.DATADataTypeState)) return false;
             return true;
         }
         public override int GetHashCode()
@@ -8150,6 +7993,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret = ret.CombineHashCode(this.ColorKey1ColorKeyTime?.GetHashCode());
             ret = ret.CombineHashCode(this.ColorKey2ColorKeyTime?.GetHashCode());
             ret = ret.CombineHashCode(this.ColorKey3ColorKeyTime?.GetHashCode());
+            ret = ret.CombineHashCode(this.DATADataTypeState?.GetHashCode());
             ret = ret.CombineHashCode(base.GetHashCode());
             return ret;
         }
@@ -8218,6 +8062,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (!eval(this.ColorKey1ColorKeyTime)) return false;
             if (!eval(this.ColorKey2ColorKeyTime)) return false;
             if (!eval(this.ColorKey3ColorKeyTime)) return false;
+            if (!eval(this.DATADataTypeState)) return false;
             return true;
         }
         #endregion
@@ -8291,6 +8136,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             obj.ColorKey1ColorKeyTime = eval(this.ColorKey1ColorKeyTime);
             obj.ColorKey2ColorKeyTime = eval(this.ColorKey2ColorKeyTime);
             obj.ColorKey3ColorKeyTime = eval(this.ColorKey3ColorKeyTime);
+            obj.DATADataTypeState = eval(this.DATADataTypeState);
         }
         #endregion
 
@@ -8552,6 +8398,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     fg.AppendLine($"ColorKey3ColorKeyTime => {ColorKey3ColorKeyTime}");
                 }
+                if (printMask?.DATADataTypeState ?? true)
+                {
+                    fg.AppendLine($"DATADataTypeState => {DATADataTypeState}");
+                }
             }
             fg.AppendLine("]");
         }
@@ -8620,6 +8470,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Exception ColorKey1ColorKeyTime;
         public Exception ColorKey2ColorKeyTime;
         public Exception ColorKey3ColorKeyTime;
+        public Exception DATADataTypeState;
         #endregion
 
         #region IErrorMask
@@ -8744,6 +8595,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return ColorKey2ColorKeyTime;
                 case EffectShader_FieldIndex.ColorKey3ColorKeyTime:
                     return ColorKey3ColorKeyTime;
+                case EffectShader_FieldIndex.DATADataTypeState:
+                    return DATADataTypeState;
                 default:
                     return base.GetNthMask(index);
             }
@@ -8927,6 +8780,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     break;
                 case EffectShader_FieldIndex.ColorKey3ColorKeyTime:
                     this.ColorKey3ColorKeyTime = ex;
+                    break;
+                case EffectShader_FieldIndex.DATADataTypeState:
+                    this.DATADataTypeState = ex;
                     break;
                 default:
                     base.SetNthException(index, ex);
@@ -9113,6 +8969,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case EffectShader_FieldIndex.ColorKey3ColorKeyTime:
                     this.ColorKey3ColorKeyTime = (Exception)obj;
                     break;
+                case EffectShader_FieldIndex.DATADataTypeState:
+                    this.DATADataTypeState = (Exception)obj;
+                    break;
                 default:
                     base.SetNthMask(index, obj);
                     break;
@@ -9180,6 +9039,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (ColorKey1ColorKeyTime != null) return true;
             if (ColorKey2ColorKeyTime != null) return true;
             if (ColorKey3ColorKeyTime != null) return true;
+            if (DATADataTypeState != null) return true;
             return false;
         }
         #endregion
@@ -9273,6 +9133,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             fg.AppendLine($"ColorKey1ColorKeyTime => {ColorKey1ColorKeyTime}");
             fg.AppendLine($"ColorKey2ColorKeyTime => {ColorKey2ColorKeyTime}");
             fg.AppendLine($"ColorKey3ColorKeyTime => {ColorKey3ColorKeyTime}");
+            fg.AppendLine($"DATADataTypeState => {DATADataTypeState}");
         }
         #endregion
 
@@ -9338,6 +9199,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.ColorKey1ColorKeyTime = this.ColorKey1ColorKeyTime.Combine(rhs.ColorKey1ColorKeyTime);
             ret.ColorKey2ColorKeyTime = this.ColorKey2ColorKeyTime.Combine(rhs.ColorKey2ColorKeyTime);
             ret.ColorKey3ColorKeyTime = this.ColorKey3ColorKeyTime.Combine(rhs.ColorKey3ColorKeyTime);
+            ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
             return ret;
         }
         public static EffectShader_ErrorMask Combine(EffectShader_ErrorMask lhs, EffectShader_ErrorMask rhs)
@@ -9422,6 +9284,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.ColorKey1ColorKeyTime = defaultOn;
             this.ColorKey2ColorKeyTime = defaultOn;
             this.ColorKey3ColorKeyTime = defaultOn;
+            this.DATADataTypeState = defaultOn;
         }
 
         #region Members
@@ -9483,6 +9346,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool ColorKey1ColorKeyTime;
         public bool ColorKey2ColorKeyTime;
         public bool ColorKey3ColorKeyTime;
+        public bool DATADataTypeState;
         #endregion
 
     }
@@ -9548,6 +9412,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool ColorKey1ColorKeyTime;
         public bool ColorKey2ColorKeyTime;
         public bool ColorKey3ColorKeyTime;
+        public bool DATADataTypeState;
         #endregion
 
         #region Ctors
@@ -9617,6 +9482,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.ColorKey1ColorKeyTime = defaultOn;
             this.ColorKey2ColorKeyTime = defaultOn;
             this.ColorKey3ColorKeyTime = defaultOn;
+            this.DATADataTypeState = defaultOn;
         }
 
         #endregion
@@ -9682,7 +9548,297 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Add((ColorKey1ColorKeyTime, null));
             ret.Add((ColorKey2ColorKeyTime, null));
             ret.Add((ColorKey3ColorKeyTime, null));
+            ret.Add((DATADataTypeState, null));
         }
+    }
+    #endregion
+
+    #region Binary Translation
+    public partial class EffectShaderBinaryTranslation : OblivionMajorRecordBinaryTranslation
+    {
+        public new readonly static EffectShaderBinaryTranslation Instance = new EffectShaderBinaryTranslation();
+
+        public static void Write_Binary_Embedded(
+            IEffectShaderInternalGetter item,
+            MutagenWriter writer,
+            ErrorMaskBuilder errorMask,
+            MasterReferences masterReferences)
+        {
+            OblivionMajorRecordBinaryTranslation.Write_Binary_Embedded(
+                item: item,
+                writer: writer,
+                errorMask: errorMask,
+                masterReferences: masterReferences);
+        }
+
+        public static void Write_Binary_RecordTypes(
+            IEffectShaderInternalGetter item,
+            MutagenWriter writer,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask,
+            MasterReferences masterReferences)
+        {
+            MajorRecordBinaryTranslation.Write_Binary_RecordTypes(
+                item: item,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask,
+                masterReferences: masterReferences);
+            if (item.FillTexture_IsSet)
+            {
+                Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.FillTexture,
+                    header: recordTypeConverter.ConvertToCustom(EffectShader_Registration.ICON_HEADER),
+                    nullable: false);
+            }
+            if (item.ParticleShaderTexture_IsSet)
+            {
+                Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.ParticleShaderTexture,
+                    header: recordTypeConverter.ConvertToCustom(EffectShader_Registration.ICO2_HEADER),
+                    nullable: false);
+            }
+            if (item.DATADataTypeState.HasFlag(EffectShader.DATADataType.Has))
+            {
+                using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(EffectShader_Registration.DATA_HEADER)))
+                {
+                    Mutagen.Bethesda.Binary.EnumBinaryTranslation<EffectShader.Flag>.Instance.Write(
+                        writer,
+                        item.Flags,
+                        length: 4);
+                    Mutagen.Bethesda.Binary.EnumBinaryTranslation<EffectShader.SourceBlendMode>.Instance.Write(
+                        writer,
+                        item.MembraneShaderSourceBlendMode,
+                        length: 4);
+                    Mutagen.Bethesda.Binary.EnumBinaryTranslation<EffectShader.BlendOperation>.Instance.Write(
+                        writer,
+                        item.MembraneShaderBlendOperation,
+                        length: 4);
+                    Mutagen.Bethesda.Binary.EnumBinaryTranslation<EffectShader.ZTestFunction>.Instance.Write(
+                        writer,
+                        item.MembraneShaderZTestFunction,
+                        length: 4);
+                    Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.FillTextureEffectColor,
+                        extraByte: true);
+                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.FillTextureEffectAlphaFadeInTime);
+                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.FillTextureEffectFullAlphaTime);
+                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.FillTextureEffectAlphaFadeOutTime);
+                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.FillTextureEffectPersistentAlphaRatio);
+                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.FillTextureEffectAlphaPulseAmplitude);
+                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.FillTextureEffectAlphaPulseFrequency);
+                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.FillTextureEffectTextureAnimationSpeedU);
+                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.FillTextureEffectTextureAnimationSpeedV);
+                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.EdgeEffectFallOff);
+                    Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.EdgeEffectColor,
+                        extraByte: true);
+                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.EdgeEffectAlphaFadeInTime);
+                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.EdgeEffectFullAlphaTime);
+                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.EdgeEffectAlphaFadeOutTime);
+                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.EdgeEffectPersistentAlphaRatio);
+                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.EdgeEffectAlphaPulseAmplitude);
+                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.EdgeEffectAlphaPulseFrequency);
+                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.FillTextureEffectFullAlphaRatio);
+                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.EdgeEffectFullAlphaRatio);
+                    Mutagen.Bethesda.Binary.EnumBinaryTranslation<EffectShader.SourceBlendMode>.Instance.Write(
+                        writer,
+                        item.MembraneShaderDestBlendMode,
+                        length: 4);
+                    if (!item.DATADataTypeState.HasFlag(EffectShader.DATADataType.Break0))
+                    {
+                        Mutagen.Bethesda.Binary.EnumBinaryTranslation<EffectShader.SourceBlendMode>.Instance.Write(
+                            writer,
+                            item.ParticleShaderSourceBlendMode,
+                            length: 4);
+                        Mutagen.Bethesda.Binary.EnumBinaryTranslation<EffectShader.BlendOperation>.Instance.Write(
+                            writer,
+                            item.ParticleShaderBlendOperation,
+                            length: 4);
+                        Mutagen.Bethesda.Binary.EnumBinaryTranslation<EffectShader.ZTestFunction>.Instance.Write(
+                            writer,
+                            item.ParticleShaderZTestFunction,
+                            length: 4);
+                        Mutagen.Bethesda.Binary.EnumBinaryTranslation<EffectShader.SourceBlendMode>.Instance.Write(
+                            writer,
+                            item.ParticleShaderDestBlendMode,
+                            length: 4);
+                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                            writer: writer,
+                            item: item.ParticleShaderParticleBirthRampUpTime);
+                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                            writer: writer,
+                            item: item.ParticleShaderFullParticleBirthTime);
+                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                            writer: writer,
+                            item: item.ParticleShaderParticleBirthRampDownTime);
+                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                            writer: writer,
+                            item: item.ParticleShaderFullParticleBirthRatio);
+                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                            writer: writer,
+                            item: item.ParticleShaderPersistentParticleBirthRatio);
+                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                            writer: writer,
+                            item: item.ParticleShaderParticleLifetime);
+                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                            writer: writer,
+                            item: item.ParticleShaderParticleLifetimePlusMinus);
+                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                            writer: writer,
+                            item: item.ParticleShaderInitialSpeedAlongNormal);
+                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                            writer: writer,
+                            item: item.ParticleShaderAccelerationAlongNormal);
+                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                            writer: writer,
+                            item: item.ParticleShaderInitialVelocity1);
+                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                            writer: writer,
+                            item: item.ParticleShaderInitialVelocity2);
+                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                            writer: writer,
+                            item: item.ParticleShaderInitialVelocity3);
+                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                            writer: writer,
+                            item: item.ParticleShaderAcceleration1);
+                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                            writer: writer,
+                            item: item.ParticleShaderAcceleration2);
+                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                            writer: writer,
+                            item: item.ParticleShaderAcceleration3);
+                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                            writer: writer,
+                            item: item.ParticleShaderScaleKey1);
+                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                            writer: writer,
+                            item: item.ParticleShaderScaleKey2);
+                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                            writer: writer,
+                            item: item.ParticleShaderScaleKey1Time);
+                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                            writer: writer,
+                            item: item.ParticleShaderScaleKey2Time);
+                        Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Write(
+                            writer: writer,
+                            item: item.ColorKey1Color,
+                            extraByte: true);
+                        Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Write(
+                            writer: writer,
+                            item: item.ColorKey2Color,
+                            extraByte: true);
+                        Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Write(
+                            writer: writer,
+                            item: item.ColorKey3Color,
+                            extraByte: true);
+                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                            writer: writer,
+                            item: item.ColorKey1ColorAlpha);
+                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                            writer: writer,
+                            item: item.ColorKey2ColorAlpha);
+                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                            writer: writer,
+                            item: item.ColorKey3ColorAlpha);
+                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                            writer: writer,
+                            item: item.ColorKey1ColorKeyTime);
+                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                            writer: writer,
+                            item: item.ColorKey2ColorKeyTime);
+                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                            writer: writer,
+                            item: item.ColorKey3ColorKeyTime);
+                    }
+                }
+            }
+        }
+
+        #region Binary Write
+        public void Write_Binary(
+            MutagenWriter writer,
+            IEffectShaderInternalGetter item,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            bool doMasks,
+            out EffectShader_ErrorMask errorMask)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            Write_Binary(
+                masterReferences: masterReferences,
+                writer: writer,
+                item: item,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMaskBuilder);
+            errorMask = EffectShader_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public void Write_Binary(
+            MutagenWriter writer,
+            IEffectShaderInternalGetter item,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            using (HeaderExport.ExportHeader(
+                writer: writer,
+                record: EffectShader_Registration.EFSH_HEADER,
+                type: ObjectType.Record))
+            {
+                Write_Binary_Embedded(
+                    item: item,
+                    writer: writer,
+                    errorMask: errorMask,
+                    masterReferences: masterReferences);
+                Write_Binary_RecordTypes(
+                    item: item,
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter,
+                    errorMask: errorMask,
+                    masterReferences: masterReferences);
+            }
+        }
+        #endregion
+
     }
     #endregion
 

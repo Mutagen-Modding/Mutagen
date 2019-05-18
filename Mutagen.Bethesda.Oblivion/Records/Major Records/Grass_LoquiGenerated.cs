@@ -36,6 +36,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class Grass : 
         OblivionMajorRecord,
         IGrass,
+        IGrassInternal,
         ILoquiObject<Grass>,
         ILoquiObjectSetter,
         IEquatable<Grass>
@@ -223,6 +224,23 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
         #endregion
+        #region DATADataTypeState
+        private Grass.DATADataType _DATADataTypeState;
+        public Grass.DATADataType DATADataTypeState
+        {
+            get => this._DATADataTypeState;
+            set => this.RaiseAndSetIfChanged(ref this._DATADataTypeState, value, nameof(DATADataTypeState));
+        }
+        Grass.DATADataType IGrassInternal.DATADataTypeState
+        {
+            get => this.DATADataTypeState;
+            set => this.DATADataTypeState = value;
+        }
+        Grass.DATADataType IGrassInternalGetter.DATADataTypeState
+        {
+            get => this.DATADataTypeState;
+        }
+        #endregion
 
         IMask<bool> IEqualsMask<Grass>.GetEqualsMask(Grass rhs, EqualsMaskHelper.Include include) => GrassCommon.GetEqualsMask(this, rhs, include);
         IMask<bool> IEqualsMask<IGrassGetter>.GetEqualsMask(IGrassGetter rhs, EqualsMaskHelper.Include include) => GrassCommon.GetEqualsMask(this, rhs, include);
@@ -276,6 +294,7 @@ namespace Mutagen.Bethesda.Oblivion
             if (!this.ColorRange.EqualsWithin(rhs.ColorRange)) return false;
             if (!this.WavePeriod.EqualsWithin(rhs.WavePeriod)) return false;
             if (this.Flags != rhs.Flags) return false;
+            if (this.DATADataTypeState != rhs.DATADataTypeState) return false;
             return true;
         }
 
@@ -298,6 +317,7 @@ namespace Mutagen.Bethesda.Oblivion
             ret = HashHelper.GetHashCode(ColorRange).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(WavePeriod).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(Flags).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(DATADataTypeState).CombineHashCode(ret);
             ret = ret.CombineHashCode(base.GetHashCode());
             return ret;
         }
@@ -471,7 +491,8 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Xml(
+            GrassXmlTranslation.Instance.Write_Xml(
+                item: this,
                 name: name,
                 node: node,
                 errorMask: errorMaskBuilder,
@@ -503,7 +524,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            this.Write_Xml(
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -534,7 +555,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            this.Write_Xml(
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -550,7 +571,8 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Xml(
+            GrassXmlTranslation.Instance.Write_Xml(
+                item: this,
                 name: name,
                 node: node,
                 errorMask: errorMaskBuilder,
@@ -566,7 +588,8 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Xml(
+            GrassXmlTranslation.Instance.Write_Xml(
+                item: this,
                 name: name,
                 node: node,
                 errorMask: errorMaskBuilder,
@@ -582,7 +605,7 @@ namespace Mutagen.Bethesda.Oblivion
             TranslationCrystal translationMask,
             string name = null)
         {
-            GrassCommon.Write_Xml(
+            GrassXmlTranslation.Instance.Write_Xml(
                 item: this,
                 name: name,
                 node: node,
@@ -634,6 +657,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case Grass_FieldIndex.ColorRange:
                 case Grass_FieldIndex.WavePeriod:
                 case Grass_FieldIndex.Flags:
+                case Grass_FieldIndex.DATADataTypeState:
                     return true;
                 default:
                     return base.GetHasBeenSet(index);
@@ -642,7 +666,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = Grass_Registration.TRIGGERING_RECORD_TYPE;
-        public DATADataType DATADataTypeState;
         [Flags]
         public enum DATADataType
         {
@@ -725,7 +748,8 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Binary(
+            GrassBinaryTranslation.Instance.Write_Binary(
+                item: this,
                 masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: null,
@@ -741,7 +765,8 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Binary(
+            GrassBinaryTranslation.Instance.Write_Binary(
+                item: this,
                 masterReferences: masterReferences,
                 writer: writer,
                 errorMask: errorMaskBuilder,
@@ -756,7 +781,8 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Binary(
+            GrassBinaryTranslation.Instance.Write_Binary(
+                item: this,
                 masterReferences: masterReferences,
                 writer: writer,
                 errorMask: errorMaskBuilder,
@@ -772,7 +798,7 @@ namespace Mutagen.Bethesda.Oblivion
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            GrassCommon.Write_Binary(
+            GrassBinaryTranslation.Instance.Write_Binary(
                 item: this,
                 masterReferences: masterReferences,
                 writer: writer,
@@ -1130,6 +1156,9 @@ namespace Mutagen.Bethesda.Oblivion
                 case Grass_FieldIndex.Flags:
                     this.Flags = (Grass.GrassFlag)obj;
                     break;
+                case Grass_FieldIndex.DATADataTypeState:
+                    this.DATADataTypeState = (Grass.DATADataType)obj;
+                    break;
                 default:
                     base.SetNthObject(index, obj);
                     break;
@@ -1200,6 +1229,9 @@ namespace Mutagen.Bethesda.Oblivion
                 case Grass_FieldIndex.Flags:
                     obj.Flags = (Grass.GrassFlag)pair.Value;
                     break;
+                case Grass_FieldIndex.DATADataTypeState:
+                    obj.DATADataTypeState = (Grass.DATADataType)pair.Value;
+                    break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
@@ -1238,6 +1270,12 @@ namespace Mutagen.Bethesda.Oblivion
         new Single WavePeriod { get; set; }
 
         new Grass.GrassFlag Flags { get; set; }
+
+    }
+
+    public partial interface IGrassInternal : IGrass, IGrassInternalGetter, IOblivionMajorRecordInternal
+    {
+        new Grass.DATADataType DATADataTypeState { get; set; }
 
     }
 
@@ -1299,6 +1337,15 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
+    public partial interface IGrassInternalGetter : IGrassGetter, IOblivionMajorRecordInternalGetter
+    {
+        #region DATADataTypeState
+        Grass.DATADataType DATADataTypeState { get; }
+
+        #endregion
+
+    }
+
     #endregion
 
 }
@@ -1308,24 +1355,26 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #region Field Index
     public enum Grass_FieldIndex
     {
-        FormKey = 0,
-        Version = 1,
-        EditorID = 2,
-        RecordType = 3,
-        OblivionMajorRecordFlags = 4,
-        Model = 5,
-        Density = 6,
-        MinSlope = 7,
-        MaxSlope = 8,
-        Fluff1 = 9,
-        UnitFromWaterAmount = 10,
-        Fluff2 = 11,
-        UnitFromWaterMode = 12,
-        PositionRange = 13,
-        HeightRange = 14,
-        ColorRange = 15,
-        WavePeriod = 16,
-        Flags = 17,
+        MajorRecordFlagsRaw = 0,
+        FormKey = 1,
+        Version = 2,
+        EditorID = 3,
+        RecordType = 4,
+        OblivionMajorRecordFlags = 5,
+        Model = 6,
+        Density = 7,
+        MinSlope = 8,
+        MaxSlope = 9,
+        Fluff1 = 10,
+        UnitFromWaterAmount = 11,
+        Fluff2 = 12,
+        UnitFromWaterMode = 13,
+        PositionRange = 14,
+        HeightRange = 15,
+        ColorRange = 16,
+        WavePeriod = 17,
+        Flags = 18,
+        DATADataTypeState = 19,
     }
     #endregion
 
@@ -1343,9 +1392,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const string GUID = "08091e89-54fe-4950-b16d-c11d6c7faef3";
 
-        public const ushort AdditionalFieldCount = 13;
+        public const ushort AdditionalFieldCount = 14;
 
-        public const ushort FieldCount = 18;
+        public const ushort FieldCount = 20;
 
         public static readonly Type MaskType = typeof(Grass_Mask<>);
 
@@ -1355,11 +1404,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type GetterType = typeof(IGrassGetter);
 
-        public static readonly Type InternalGetterType = null;
+        public static readonly Type InternalGetterType = typeof(IGrassInternalGetter);
 
         public static readonly Type SetterType = typeof(IGrass);
 
-        public static readonly Type InternalSetterType = null;
+        public static readonly Type InternalSetterType = typeof(IGrassInternal);
 
         public static readonly Type CommonType = typeof(GrassCommon);
 
@@ -1403,6 +1452,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (ushort)Grass_FieldIndex.WavePeriod;
                 case "FLAGS":
                     return (ushort)Grass_FieldIndex.Flags;
+                case "DATADATATYPESTATE":
+                    return (ushort)Grass_FieldIndex.DATADataTypeState;
                 default:
                     return null;
             }
@@ -1426,6 +1477,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Grass_FieldIndex.ColorRange:
                 case Grass_FieldIndex.WavePeriod:
                 case Grass_FieldIndex.Flags:
+                case Grass_FieldIndex.DATADataTypeState:
                     return false;
                 default:
                     return OblivionMajorRecord_Registration.GetNthIsEnumerable(index);
@@ -1451,6 +1503,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Grass_FieldIndex.ColorRange:
                 case Grass_FieldIndex.WavePeriod:
                 case Grass_FieldIndex.Flags:
+                case Grass_FieldIndex.DATADataTypeState:
                     return false;
                 default:
                     return OblivionMajorRecord_Registration.GetNthIsLoqui(index);
@@ -1475,6 +1528,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Grass_FieldIndex.ColorRange:
                 case Grass_FieldIndex.WavePeriod:
                 case Grass_FieldIndex.Flags:
+                case Grass_FieldIndex.DATADataTypeState:
                     return false;
                 default:
                     return OblivionMajorRecord_Registration.GetNthIsSingleton(index);
@@ -1512,6 +1566,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return "WavePeriod";
                 case Grass_FieldIndex.Flags:
                     return "Flags";
+                case Grass_FieldIndex.DATADataTypeState:
+                    return "DATADataTypeState";
                 default:
                     return OblivionMajorRecord_Registration.GetNthName(index);
             }
@@ -1535,6 +1591,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Grass_FieldIndex.ColorRange:
                 case Grass_FieldIndex.WavePeriod:
                 case Grass_FieldIndex.Flags:
+                case Grass_FieldIndex.DATADataTypeState:
                     return false;
                 default:
                     return OblivionMajorRecord_Registration.IsNthDerivative(index);
@@ -1559,6 +1616,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Grass_FieldIndex.ColorRange:
                 case Grass_FieldIndex.WavePeriod:
                 case Grass_FieldIndex.Flags:
+                case Grass_FieldIndex.DATADataTypeState:
                     return false;
                 default:
                     return OblivionMajorRecord_Registration.IsProtected(index);
@@ -1596,6 +1654,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return typeof(Single);
                 case Grass_FieldIndex.Flags:
                     return typeof(Grass.GrassFlag);
+                case Grass_FieldIndex.DATADataTypeState:
+                    return typeof(Grass.DATADataType);
                 default:
                     return OblivionMajorRecord_Registration.GetNthType(index);
             }
@@ -2054,6 +2114,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     fg.AppendLine($"Flags => {item.Flags}");
                 }
+                if (printMask?.DATADataTypeState ?? true)
+                {
+                }
             }
             fg.AppendLine("]");
         }
@@ -2083,6 +2146,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.ColorRange = true;
             ret.WavePeriod = true;
             ret.Flags = true;
+            ret.DATADataTypeState = true;
             return ret;
         }
 
@@ -2096,6 +2160,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (index)
             {
+                case OblivionMajorRecord_FieldIndex.MajorRecordFlagsRaw:
+                    return (Grass_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.FormKey:
                     return (Grass_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.Version:
@@ -2121,6 +2187,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (index)
             {
+                case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
+                    return (Grass_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
                     return (Grass_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.Version:
@@ -2135,181 +2203,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         #region Xml Translation
-        #region Xml Write
-        public static void Write_Xml(
-            XElement node,
-            Grass item,
-            bool doMasks,
-            out Grass_ErrorMask errorMask,
-            Grass_TranslationMask translationMask,
-            string name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_Xml(
-                name: name,
-                node: node,
-                item: item,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = Grass_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void Write_Xml(
-            XElement node,
-            Grass item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.Grass");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.Grass");
-            }
-            WriteToNode_Xml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #endregion
-
-        public static void WriteToNode_Xml(
-            this Grass item,
-            XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            OblivionMajorRecordCommon.WriteToNode_Xml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            if (item.Model_IsSet
-                && (translationMask?.GetShouldTranslate((int)Grass_FieldIndex.Model) ?? true))
-            {
-                LoquiXmlTranslation<Model>.Instance.Write(
-                    node: node,
-                    item: item.Model,
-                    name: nameof(item.Model),
-                    fieldIndex: (int)Grass_FieldIndex.Model,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Grass_FieldIndex.Model));
-            }
-            if (item.DATADataTypeState.HasFlag(Grass.DATADataType.Has))
-            {
-                if ((translationMask?.GetShouldTranslate((int)Grass_FieldIndex.Density) ?? true))
-                {
-                    ByteXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.Density),
-                        item: item.Density,
-                        fieldIndex: (int)Grass_FieldIndex.Density,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Grass_FieldIndex.MinSlope) ?? true))
-                {
-                    ByteXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.MinSlope),
-                        item: item.MinSlope,
-                        fieldIndex: (int)Grass_FieldIndex.MinSlope,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Grass_FieldIndex.MaxSlope) ?? true))
-                {
-                    ByteXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.MaxSlope),
-                        item: item.MaxSlope,
-                        fieldIndex: (int)Grass_FieldIndex.MaxSlope,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Grass_FieldIndex.Fluff1) ?? true))
-                {
-                    ByteXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.Fluff1),
-                        item: item.Fluff1,
-                        fieldIndex: (int)Grass_FieldIndex.Fluff1,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Grass_FieldIndex.UnitFromWaterAmount) ?? true))
-                {
-                    UInt16XmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.UnitFromWaterAmount),
-                        item: item.UnitFromWaterAmount,
-                        fieldIndex: (int)Grass_FieldIndex.UnitFromWaterAmount,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Grass_FieldIndex.Fluff2) ?? true))
-                {
-                    UInt16XmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.Fluff2),
-                        item: item.Fluff2,
-                        fieldIndex: (int)Grass_FieldIndex.Fluff2,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Grass_FieldIndex.UnitFromWaterMode) ?? true))
-                {
-                    EnumXmlTranslation<Grass.UnitFromWaterType>.Instance.Write(
-                        node: node,
-                        name: nameof(item.UnitFromWaterMode),
-                        item: item.UnitFromWaterMode,
-                        fieldIndex: (int)Grass_FieldIndex.UnitFromWaterMode,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Grass_FieldIndex.PositionRange) ?? true))
-                {
-                    FloatXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.PositionRange),
-                        item: item.PositionRange,
-                        fieldIndex: (int)Grass_FieldIndex.PositionRange,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Grass_FieldIndex.HeightRange) ?? true))
-                {
-                    FloatXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.HeightRange),
-                        item: item.HeightRange,
-                        fieldIndex: (int)Grass_FieldIndex.HeightRange,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Grass_FieldIndex.ColorRange) ?? true))
-                {
-                    FloatXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.ColorRange),
-                        item: item.ColorRange,
-                        fieldIndex: (int)Grass_FieldIndex.ColorRange,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Grass_FieldIndex.WavePeriod) ?? true))
-                {
-                    FloatXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.WavePeriod),
-                        item: item.WavePeriod,
-                        fieldIndex: (int)Grass_FieldIndex.WavePeriod,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Grass_FieldIndex.Flags) ?? true))
-                {
-                    EnumXmlTranslation<Grass.GrassFlag>.Instance.Write(
-                        node: node,
-                        name: nameof(item.Flags),
-                        item: item.Flags,
-                        fieldIndex: (int)Grass_FieldIndex.Flags,
-                        errorMask: errorMask);
-                }
-            }
-        }
-
         public static void FillPublic_Xml(
             this Grass item,
             XElement node,
@@ -2684,6 +2577,32 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask?.PopIndex();
                     }
                     break;
+                case "DATADataTypeState":
+                    try
+                    {
+                        errorMask?.PushIndex((int)Grass_FieldIndex.DATADataTypeState);
+                        if (EnumXmlTranslation<Grass.DATADataType>.Instance.Parse(
+                            node: node,
+                            item: out Grass.DATADataType DATADataTypeStateParse,
+                            errorMask: errorMask))
+                        {
+                            item.DATADataTypeState = DATADataTypeStateParse;
+                        }
+                        else
+                        {
+                            item.DATADataTypeState = default(Grass.DATADataType);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
                 default:
                     OblivionMajorRecordCommon.FillPublicElement_Xml(
                         item: item,
@@ -2697,127 +2616,202 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        #region Binary Translation
-        #region Binary Write
-        public static void Write_Binary(
-            MutagenWriter writer,
-            Grass item,
-            MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            bool doMasks,
-            out Grass_ErrorMask errorMask)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_Binary(
-                masterReferences: masterReferences,
-                writer: writer,
-                item: item,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMaskBuilder);
-            errorMask = Grass_ErrorMask.Factory(errorMaskBuilder);
-        }
+    }
+    #endregion
 
-        public static void Write_Binary(
-            MutagenWriter writer,
-            Grass item,
-            MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
-        {
-            using (HeaderExport.ExportHeader(
-                writer: writer,
-                record: Grass_Registration.GRAS_HEADER,
-                type: ObjectType.Record))
-            {
-                OblivionMajorRecordCommon.Write_Binary_Embedded(
-                    item: item,
-                    writer: writer,
-                    errorMask: errorMask,
-                    masterReferences: masterReferences);
-                Write_Binary_RecordTypes(
-                    item: item,
-                    writer: writer,
-                    recordTypeConverter: recordTypeConverter,
-                    errorMask: errorMask,
-                    masterReferences: masterReferences);
-            }
-        }
-        #endregion
+    #region Modules
+    #region Xml Translation
+    public partial class GrassXmlTranslation : OblivionMajorRecordXmlTranslation
+    {
+        public new readonly static GrassXmlTranslation Instance = new GrassXmlTranslation();
 
-        public static void Write_Binary_RecordTypes(
-            Grass item,
-            MutagenWriter writer,
-            RecordTypeConverter recordTypeConverter,
+        public static void WriteToNode_Xml(
+            IGrassInternalGetter item,
+            XElement node,
             ErrorMaskBuilder errorMask,
-            MasterReferences masterReferences)
+            TranslationCrystal translationMask)
         {
-            MajorRecordCommon.Write_Binary_RecordTypes(
+            OblivionMajorRecordXmlTranslation.WriteToNode_Xml(
                 item: item,
-                writer: writer,
-                recordTypeConverter: recordTypeConverter,
+                node: node,
                 errorMask: errorMask,
-                masterReferences: masterReferences);
-            if (item.Model_IsSet)
+                translationMask: translationMask);
+            if (item.Model_IsSet
+                && (translationMask?.GetShouldTranslate((int)Grass_FieldIndex.Model) ?? true))
             {
-                LoquiBinaryTranslation<Model>.Instance.Write(
-                    writer: writer,
+                LoquiXmlTranslation<Model>.Instance.Write(
+                    node: node,
                     item: item.Model,
+                    name: nameof(item.Model),
                     fieldIndex: (int)Grass_FieldIndex.Model,
                     errorMask: errorMask,
-                    masterReferences: masterReferences);
+                    translationMask: translationMask?.GetSubCrystal((int)Grass_FieldIndex.Model));
             }
             if (item.DATADataTypeState.HasFlag(Grass.DATADataType.Has))
             {
-                using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Grass_Registration.DATA_HEADER)))
+                if ((translationMask?.GetShouldTranslate((int)Grass_FieldIndex.Density) ?? true))
                 {
-                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.Density);
-                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.MinSlope);
-                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.MaxSlope);
-                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.Fluff1);
-                    Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.UnitFromWaterAmount);
-                    Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.Fluff2);
-                    Mutagen.Bethesda.Binary.EnumBinaryTranslation<Grass.UnitFromWaterType>.Instance.Write(
-                        writer,
-                        item.UnitFromWaterMode,
-                        length: 4);
-                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.PositionRange);
-                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.HeightRange);
-                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.ColorRange);
-                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.WavePeriod);
-                    Mutagen.Bethesda.Binary.EnumBinaryTranslation<Grass.GrassFlag>.Instance.Write(
-                        writer,
-                        item.Flags,
-                        length: 4);
+                    ByteXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.Density),
+                        item: item.Density,
+                        fieldIndex: (int)Grass_FieldIndex.Density,
+                        errorMask: errorMask);
                 }
+                if ((translationMask?.GetShouldTranslate((int)Grass_FieldIndex.MinSlope) ?? true))
+                {
+                    ByteXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.MinSlope),
+                        item: item.MinSlope,
+                        fieldIndex: (int)Grass_FieldIndex.MinSlope,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Grass_FieldIndex.MaxSlope) ?? true))
+                {
+                    ByteXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.MaxSlope),
+                        item: item.MaxSlope,
+                        fieldIndex: (int)Grass_FieldIndex.MaxSlope,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Grass_FieldIndex.Fluff1) ?? true))
+                {
+                    ByteXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.Fluff1),
+                        item: item.Fluff1,
+                        fieldIndex: (int)Grass_FieldIndex.Fluff1,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Grass_FieldIndex.UnitFromWaterAmount) ?? true))
+                {
+                    UInt16XmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.UnitFromWaterAmount),
+                        item: item.UnitFromWaterAmount,
+                        fieldIndex: (int)Grass_FieldIndex.UnitFromWaterAmount,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Grass_FieldIndex.Fluff2) ?? true))
+                {
+                    UInt16XmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.Fluff2),
+                        item: item.Fluff2,
+                        fieldIndex: (int)Grass_FieldIndex.Fluff2,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Grass_FieldIndex.UnitFromWaterMode) ?? true))
+                {
+                    EnumXmlTranslation<Grass.UnitFromWaterType>.Instance.Write(
+                        node: node,
+                        name: nameof(item.UnitFromWaterMode),
+                        item: item.UnitFromWaterMode,
+                        fieldIndex: (int)Grass_FieldIndex.UnitFromWaterMode,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Grass_FieldIndex.PositionRange) ?? true))
+                {
+                    FloatXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.PositionRange),
+                        item: item.PositionRange,
+                        fieldIndex: (int)Grass_FieldIndex.PositionRange,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Grass_FieldIndex.HeightRange) ?? true))
+                {
+                    FloatXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.HeightRange),
+                        item: item.HeightRange,
+                        fieldIndex: (int)Grass_FieldIndex.HeightRange,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Grass_FieldIndex.ColorRange) ?? true))
+                {
+                    FloatXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.ColorRange),
+                        item: item.ColorRange,
+                        fieldIndex: (int)Grass_FieldIndex.ColorRange,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Grass_FieldIndex.WavePeriod) ?? true))
+                {
+                    FloatXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.WavePeriod),
+                        item: item.WavePeriod,
+                        fieldIndex: (int)Grass_FieldIndex.WavePeriod,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)Grass_FieldIndex.Flags) ?? true))
+                {
+                    EnumXmlTranslation<Grass.GrassFlag>.Instance.Write(
+                        node: node,
+                        name: nameof(item.Flags),
+                        item: item.Flags,
+                        fieldIndex: (int)Grass_FieldIndex.Flags,
+                        errorMask: errorMask);
+                }
+            }
+            if ((translationMask?.GetShouldTranslate((int)Grass_FieldIndex.DATADataTypeState) ?? true))
+            {
+                EnumXmlTranslation<Grass.DATADataType>.Instance.Write(
+                    node: node,
+                    name: nameof(item.DATADataTypeState),
+                    item: item.DATADataTypeState,
+                    fieldIndex: (int)Grass_FieldIndex.DATADataTypeState,
+                    errorMask: errorMask);
             }
         }
 
+        #region Xml Write
+        public void Write_Xml(
+            XElement node,
+            IGrassInternalGetter item,
+            bool doMasks,
+            out Grass_ErrorMask errorMask,
+            Grass_TranslationMask translationMask,
+            string name = null)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            Write_Xml(
+                name: name,
+                node: node,
+                item: item,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal());
+            errorMask = Grass_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public void Write_Xml(
+            XElement node,
+            IGrassInternalGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.Grass");
+            node.Add(elem);
+            if (name != null)
+            {
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.Grass");
+            }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
         #endregion
 
     }
     #endregion
 
-    #region Modules
     #region Mask
     public class Grass_Mask<T> : OblivionMajorRecord_Mask<T>, IMask<T>, IEquatable<Grass_Mask<T>>
     {
@@ -2841,6 +2835,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.ColorRange = initialValue;
             this.WavePeriod = initialValue;
             this.Flags = initialValue;
+            this.DATADataTypeState = initialValue;
         }
         #endregion
 
@@ -2858,6 +2853,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public T ColorRange;
         public T WavePeriod;
         public T Flags;
+        public T DATADataTypeState;
         #endregion
 
         #region Equals
@@ -2884,6 +2880,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (!object.Equals(this.ColorRange, rhs.ColorRange)) return false;
             if (!object.Equals(this.WavePeriod, rhs.WavePeriod)) return false;
             if (!object.Equals(this.Flags, rhs.Flags)) return false;
+            if (!object.Equals(this.DATADataTypeState, rhs.DATADataTypeState)) return false;
             return true;
         }
         public override int GetHashCode()
@@ -2902,6 +2899,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret = ret.CombineHashCode(this.ColorRange?.GetHashCode());
             ret = ret.CombineHashCode(this.WavePeriod?.GetHashCode());
             ret = ret.CombineHashCode(this.Flags?.GetHashCode());
+            ret = ret.CombineHashCode(this.DATADataTypeState?.GetHashCode());
             ret = ret.CombineHashCode(base.GetHashCode());
             return ret;
         }
@@ -2929,6 +2927,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (!eval(this.ColorRange)) return false;
             if (!eval(this.WavePeriod)) return false;
             if (!eval(this.Flags)) return false;
+            if (!eval(this.DATADataTypeState)) return false;
             return true;
         }
         #endregion
@@ -2965,6 +2964,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             obj.ColorRange = eval(this.ColorRange);
             obj.WavePeriod = eval(this.WavePeriod);
             obj.Flags = eval(this.Flags);
+            obj.DATADataTypeState = eval(this.DATADataTypeState);
         }
         #endregion
 
@@ -3046,6 +3046,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     fg.AppendLine($"Flags => {Flags}");
                 }
+                if (printMask?.DATADataTypeState ?? true)
+                {
+                    fg.AppendLine($"DATADataTypeState => {DATADataTypeState}");
+                }
             }
             fg.AppendLine("]");
         }
@@ -3069,6 +3073,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Exception ColorRange;
         public Exception WavePeriod;
         public Exception Flags;
+        public Exception DATADataTypeState;
         #endregion
 
         #region IErrorMask
@@ -3103,6 +3108,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return WavePeriod;
                 case Grass_FieldIndex.Flags:
                     return Flags;
+                case Grass_FieldIndex.DATADataTypeState:
+                    return DATADataTypeState;
                 default:
                     return base.GetNthMask(index);
             }
@@ -3151,6 +3158,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     break;
                 case Grass_FieldIndex.Flags:
                     this.Flags = ex;
+                    break;
+                case Grass_FieldIndex.DATADataTypeState:
+                    this.DATADataTypeState = ex;
                     break;
                 default:
                     base.SetNthException(index, ex);
@@ -3202,6 +3212,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Grass_FieldIndex.Flags:
                     this.Flags = (Exception)obj;
                     break;
+                case Grass_FieldIndex.DATADataTypeState:
+                    this.DATADataTypeState = (Exception)obj;
+                    break;
                 default:
                     base.SetNthMask(index, obj);
                     break;
@@ -3224,6 +3237,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (ColorRange != null) return true;
             if (WavePeriod != null) return true;
             if (Flags != null) return true;
+            if (DATADataTypeState != null) return true;
             return false;
         }
         #endregion
@@ -3272,6 +3286,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             fg.AppendLine($"ColorRange => {ColorRange}");
             fg.AppendLine($"WavePeriod => {WavePeriod}");
             fg.AppendLine($"Flags => {Flags}");
+            fg.AppendLine($"DATADataTypeState => {DATADataTypeState}");
         }
         #endregion
 
@@ -3292,6 +3307,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.ColorRange = this.ColorRange.Combine(rhs.ColorRange);
             ret.WavePeriod = this.WavePeriod.Combine(rhs.WavePeriod);
             ret.Flags = this.Flags.Combine(rhs.Flags);
+            ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
             return ret;
         }
         public static Grass_ErrorMask Combine(Grass_ErrorMask lhs, Grass_ErrorMask rhs)
@@ -3331,6 +3347,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.ColorRange = defaultOn;
             this.WavePeriod = defaultOn;
             this.Flags = defaultOn;
+            this.DATADataTypeState = defaultOn;
         }
 
         #region Members
@@ -3347,6 +3364,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool ColorRange;
         public bool WavePeriod;
         public bool Flags;
+        public bool DATADataTypeState;
         #endregion
 
     }
@@ -3367,6 +3385,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool ColorRange;
         public bool WavePeriod;
         public bool Flags;
+        public bool DATADataTypeState;
         #endregion
 
         #region Ctors
@@ -3391,6 +3410,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.ColorRange = defaultOn;
             this.WavePeriod = defaultOn;
             this.Flags = defaultOn;
+            this.DATADataTypeState = defaultOn;
         }
 
         #endregion
@@ -3411,7 +3431,143 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Add((ColorRange, null));
             ret.Add((WavePeriod, null));
             ret.Add((Flags, null));
+            ret.Add((DATADataTypeState, null));
         }
+    }
+    #endregion
+
+    #region Binary Translation
+    public partial class GrassBinaryTranslation : OblivionMajorRecordBinaryTranslation
+    {
+        public new readonly static GrassBinaryTranslation Instance = new GrassBinaryTranslation();
+
+        public static void Write_Binary_Embedded(
+            IGrassInternalGetter item,
+            MutagenWriter writer,
+            ErrorMaskBuilder errorMask,
+            MasterReferences masterReferences)
+        {
+            OblivionMajorRecordBinaryTranslation.Write_Binary_Embedded(
+                item: item,
+                writer: writer,
+                errorMask: errorMask,
+                masterReferences: masterReferences);
+        }
+
+        public static void Write_Binary_RecordTypes(
+            IGrassInternalGetter item,
+            MutagenWriter writer,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask,
+            MasterReferences masterReferences)
+        {
+            MajorRecordBinaryTranslation.Write_Binary_RecordTypes(
+                item: item,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask,
+                masterReferences: masterReferences);
+            if (item.Model_IsSet)
+            {
+                LoquiBinaryTranslation<Model>.Instance.Write(
+                    writer: writer,
+                    item: item.Model,
+                    fieldIndex: (int)Grass_FieldIndex.Model,
+                    errorMask: errorMask,
+                    masterReferences: masterReferences);
+            }
+            if (item.DATADataTypeState.HasFlag(Grass.DATADataType.Has))
+            {
+                using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Grass_Registration.DATA_HEADER)))
+                {
+                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.Density);
+                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.MinSlope);
+                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.MaxSlope);
+                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.Fluff1);
+                    Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.UnitFromWaterAmount);
+                    Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.Fluff2);
+                    Mutagen.Bethesda.Binary.EnumBinaryTranslation<Grass.UnitFromWaterType>.Instance.Write(
+                        writer,
+                        item.UnitFromWaterMode,
+                        length: 4);
+                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.PositionRange);
+                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.HeightRange);
+                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.ColorRange);
+                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.WavePeriod);
+                    Mutagen.Bethesda.Binary.EnumBinaryTranslation<Grass.GrassFlag>.Instance.Write(
+                        writer,
+                        item.Flags,
+                        length: 4);
+                }
+            }
+        }
+
+        #region Binary Write
+        public void Write_Binary(
+            MutagenWriter writer,
+            IGrassInternalGetter item,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            bool doMasks,
+            out Grass_ErrorMask errorMask)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            Write_Binary(
+                masterReferences: masterReferences,
+                writer: writer,
+                item: item,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMaskBuilder);
+            errorMask = Grass_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public void Write_Binary(
+            MutagenWriter writer,
+            IGrassInternalGetter item,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            using (HeaderExport.ExportHeader(
+                writer: writer,
+                record: Grass_Registration.GRAS_HEADER,
+                type: ObjectType.Record))
+            {
+                Write_Binary_Embedded(
+                    item: item,
+                    writer: writer,
+                    errorMask: errorMask,
+                    masterReferences: masterReferences);
+                Write_Binary_RecordTypes(
+                    item: item,
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter,
+                    errorMask: errorMask,
+                    masterReferences: masterReferences);
+            }
+        }
+        #endregion
+
     }
     #endregion
 

@@ -21,8 +21,6 @@ namespace Mutagen.Bethesda
     [DebuggerDisplay("{GetType().Name} {this.EditorID?.ToString()} {this.FormKey.ToString()}")]
     public partial class MajorRecord : ILinkSubContainer
     {
-        public int MajorRecordFlagsRaw { get; set; }
-
         public MajorRecordFlag MajorRecordFlags
         {
             get => (MajorRecordFlag)this.MajorRecordFlagsRaw;
@@ -42,16 +40,6 @@ namespace Mutagen.Bethesda
         {
             get => this.MajorRecordFlags.HasFlag(MajorRecordFlag.Compressed);
             set => this.MajorRecordFlags.SetFlag(MajorRecordFlag.Compressed, value);
-        }
-
-        static partial void FillBinary_MajorRecordFlagsRaw_Custom(MutagenFrame frame, MajorRecord item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
-        {
-            item.MajorRecordFlagsRaw = frame.ReadInt32();
-        }
-
-        static partial void WriteBinary_MajorRecordFlagsRaw_Custom(MutagenWriter writer, MajorRecord item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
-        {
-            writer.Write(item.MajorRecordFlagsRaw);
         }
 
         public static void Fill_Binary(

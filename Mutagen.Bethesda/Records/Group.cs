@@ -36,26 +36,6 @@ namespace Mutagen.Bethesda
             isThreadSafe: true);
         }
 
-        static partial void FillBinary_ContainedRecordType_Custom(
-            MutagenFrame frame,
-            Group<T> item,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask)
-        {
-            frame.Reader.Position += 4;
-        }
-
-        static partial void WriteBinary_ContainedRecordType_Custom(
-            MutagenWriter writer,
-            Group<T> item,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask)
-        {
-            Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Write(
-                writer,
-                GRUP_RECORD_TYPE.TypeInt);
-        }
-
         public override string ToString()
         {
             return $"Group<{typeof(T).Name}>({this.Items.Count})";
@@ -150,7 +130,8 @@ namespace Mutagen.Bethesda
                 {
                     if (group.Items.Count == 0) return;
                     XElement topNode = new XElement("Group");
-                    group.WriteToNode_Xml(
+                    GroupXmlTranslation<T>.WriteToNode_Xml(
+                        group,
                         topNode,
                         errorMask,
                         translationMask: GroupExt.XmlFolderTranslationCrystal);
@@ -189,6 +170,32 @@ namespace Mutagen.Bethesda
                         topNode.SaveIfChanged(Path.Combine(dir.Path, $"{name}.xml"));
                     }
                 }
+            }
+        }
+    }
+
+    namespace Internals
+    {
+        public partial class GroupBinaryTranslation<T>
+        {
+            static partial void FillBinary_ContainedRecordType_Custom(
+                MutagenFrame frame,
+                Group<T> item,
+                MasterReferences masterReferences,
+                ErrorMaskBuilder errorMask)
+            {
+                frame.Reader.Position += 4;
+            }
+
+            static partial void WriteBinary_ContainedRecordType_Custom(
+                MutagenWriter writer,
+                IGroupGetter<T> item,
+                MasterReferences masterReferences,
+                ErrorMaskBuilder errorMask)
+            {
+                Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Write(
+                    writer,
+                    Group<T>.GRUP_RECORD_TYPE.TypeInt);
             }
         }
     }

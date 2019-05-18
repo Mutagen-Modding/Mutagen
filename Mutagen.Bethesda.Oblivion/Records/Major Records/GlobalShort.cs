@@ -53,16 +53,22 @@ namespace Mutagen.Bethesda.Oblivion
                 .Select(x => (float)x)
                 .BindTo(this, x => x.RawFloat);
         }
+    }
 
-        static partial void FillBinary_Data_Custom(MutagenFrame frame, GlobalShort item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
+    namespace Internals
+    {
+        public partial class GlobalShortBinaryTranslation
         {
-        }
-
-        static partial void WriteBinary_Data_Custom(MutagenWriter writer, GlobalShort item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
-        {
-            using (HeaderExport.ExportSubRecordHeader(writer, GlobalShort_Registration.FLTV_HEADER))
+            static partial void FillBinary_Data_Custom(MutagenFrame frame, GlobalShort item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
             {
-                writer.Write((float)item.Data);
+            }
+
+            static partial void WriteBinary_Data_Custom(MutagenWriter writer, IGlobalShortInternalGetter item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
+            {
+                using (HeaderExport.ExportSubRecordHeader(writer, GlobalShort_Registration.FLTV_HEADER))
+                {
+                    writer.Write((float)item.Data);
+                }
             }
         }
     }

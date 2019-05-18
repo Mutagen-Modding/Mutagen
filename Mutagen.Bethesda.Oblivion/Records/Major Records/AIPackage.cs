@@ -54,68 +54,74 @@ namespace Mutagen.Bethesda.Oblivion
             FleeNotCombat = 10,
             CastMagic = 11,
         }
+    }
 
-        static partial void FillBinary_Flags_Custom(MutagenFrame frame, AIPackage item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
+    namespace Internals
+    {
+        public partial class AIPackageBinaryTranslation
         {
-            if (frame.Remaining == 8)
+            static partial void FillBinary_Flags_Custom(MutagenFrame frame, AIPackage item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
             {
-                if (EnumBinaryTranslation<AIPackage.Flag>.Instance.Parse(
-                    frame: frame.SpawnWithLength(4),
-                    item: out AIPackage.Flag FlagsParse))
+                if (frame.Remaining == 8)
                 {
-                    item.Flags = FlagsParse;
-                }
-                if (EnumBinaryTranslation<AIPackage.GeneralTypeEnum>.Instance.Parse(
+                    if (EnumBinaryTranslation<AIPackage.Flag>.Instance.Parse(
                         frame: frame.SpawnWithLength(4),
-                        item: out AIPackage.GeneralTypeEnum GeneralTypeParse))
+                        item: out AIPackage.Flag FlagsParse))
+                    {
+                        item.Flags = FlagsParse;
+                    }
+                    if (EnumBinaryTranslation<AIPackage.GeneralTypeEnum>.Instance.Parse(
+                            frame: frame.SpawnWithLength(4),
+                            item: out AIPackage.GeneralTypeEnum GeneralTypeParse))
+                    {
+                        item.GeneralType = GeneralTypeParse;
+                    }
+                }
+                else if (frame.Remaining == 4)
                 {
-                    item.GeneralType = GeneralTypeParse;
+                    byte[] buff = new byte[4];
+                    frame.Reader.Read(buff, 0, 2);
+                    var subFrame = new MutagenFrame(
+                        new MutagenMemoryReadStream(buff, offsetReference: frame.FinalWithOffset - 2));
+                    if (EnumBinaryTranslation<AIPackage.Flag>.Instance.Parse(
+                        frame: subFrame,
+                        item: out AIPackage.Flag FlagsParse))
+                    {
+                        item.Flags = FlagsParse;
+                    }
+                    if (EnumBinaryTranslation<AIPackage.GeneralTypeEnum>.Instance.Parse(
+                            frame: frame.SpawnWithLength(1),
+                            item: out AIPackage.GeneralTypeEnum GeneralTypeParse))
+                    {
+                        item.GeneralType = GeneralTypeParse;
+                    }
+                    frame.Position += 1;
+                }
+                else
+                {
+                    throw new ArgumentException($"Odd length for general AI field: {frame.Remaining}");
                 }
             }
-            else if (frame.Remaining == 4)
+
+            static partial void WriteBinary_Flags_Custom(MutagenWriter writer, IAIPackageInternalGetter item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
             {
-                byte[] buff = new byte[4];
-                frame.Reader.Read(buff, 0, 2);
-                var subFrame = new MutagenFrame(
-                    new MutagenMemoryReadStream(buff, offsetReference: frame.FinalWithOffset - 2));
-                if (EnumBinaryTranslation<AIPackage.Flag>.Instance.Parse(
-                    frame: subFrame,
-                    item: out AIPackage.Flag FlagsParse))
-                {
-                    item.Flags = FlagsParse;
-                }
-                if (EnumBinaryTranslation<AIPackage.GeneralTypeEnum>.Instance.Parse(
-                        frame: frame.SpawnWithLength(1),
-                        item: out AIPackage.GeneralTypeEnum GeneralTypeParse))
-                {
-                    item.GeneralType = GeneralTypeParse;
-                }
-                frame.Position += 1;
+                Mutagen.Bethesda.Binary.EnumBinaryTranslation<AIPackage.Flag>.Instance.Write(
+                    writer,
+                    item.Flags,
+                    length: 4);
+                Mutagen.Bethesda.Binary.EnumBinaryTranslation<AIPackage.GeneralTypeEnum>.Instance.Write(
+                    writer,
+                    item.GeneralType,
+                    length: 4);
             }
-            else
+
+            static partial void FillBinary_GeneralType_Custom(MutagenFrame frame, AIPackage item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
             {
-                throw new ArgumentException($"Odd length for general AI field: {frame.Remaining}");
             }
-        }
 
-        static partial void WriteBinary_Flags_Custom(MutagenWriter writer, AIPackage item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
-        {
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<AIPackage.Flag>.Instance.Write(
-                writer,
-                item.Flags,
-                length: 4);
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<AIPackage.GeneralTypeEnum>.Instance.Write(
-                writer,
-                item.GeneralType,
-                length: 4);
-        }
-
-        static partial void FillBinary_GeneralType_Custom(MutagenFrame frame, AIPackage item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
-        {
-        }
-
-        static partial void WriteBinary_GeneralType_Custom(MutagenWriter writer, AIPackage item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
-        {
+            static partial void WriteBinary_GeneralType_Custom(MutagenWriter writer, IAIPackageInternalGetter item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
+            {
+            }
         }
     }
 }

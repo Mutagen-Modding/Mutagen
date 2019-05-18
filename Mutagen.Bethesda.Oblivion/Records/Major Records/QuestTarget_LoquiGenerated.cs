@@ -36,6 +36,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class QuestTarget : 
         LoquiNotifyingObject,
         IQuestTarget,
+        IQuestTargetInternal,
         ILoquiObject<QuestTarget>,
         ILoquiObjectSetter,
         ILinkSubContainer,
@@ -90,6 +91,23 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #endregion
+        #region QSTADataTypeState
+        private QuestTarget.QSTADataType _QSTADataTypeState;
+        public QuestTarget.QSTADataType QSTADataTypeState
+        {
+            get => this._QSTADataTypeState;
+            set => this.RaiseAndSetIfChanged(ref this._QSTADataTypeState, value, nameof(QSTADataTypeState));
+        }
+        QuestTarget.QSTADataType IQuestTargetInternal.QSTADataTypeState
+        {
+            get => this.QSTADataTypeState;
+            set => this.QSTADataTypeState = value;
+        }
+        QuestTarget.QSTADataType IQuestTargetInternalGetter.QSTADataTypeState
+        {
+            get => this.QSTADataTypeState;
+        }
+        #endregion
 
         IMask<bool> IEqualsMask<QuestTarget>.GetEqualsMask(QuestTarget rhs, EqualsMaskHelper.Include include) => QuestTargetCommon.GetEqualsMask(this, rhs, include);
         IMask<bool> IEqualsMask<IQuestTargetGetter>.GetEqualsMask(IQuestTargetGetter rhs, EqualsMaskHelper.Include include) => QuestTargetCommon.GetEqualsMask(this, rhs, include);
@@ -132,6 +150,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 if (!this.Conditions.SequenceEqual(rhs.Conditions)) return false;
             }
+            if (this.QSTADataTypeState != rhs.QSTADataTypeState) return false;
             return true;
         }
 
@@ -144,6 +163,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 ret = HashHelper.GetHashCode(Conditions).CombineHashCode(ret);
             }
+            ret = HashHelper.GetHashCode(QSTADataTypeState).CombineHashCode(ret);
             return ret;
         }
 
@@ -310,7 +330,8 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Xml(
+            QuestTargetXmlTranslation.Instance.Write_Xml(
+                item: this,
                 name: name,
                 node: node,
                 errorMask: errorMaskBuilder,
@@ -342,7 +363,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            this.Write_Xml(
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -373,7 +394,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            this.Write_Xml(
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -397,7 +418,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            this.Write_Xml(
                 name: name,
                 node: node,
                 errorMask: null,
@@ -410,7 +431,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            this.Write_Xml(
                 name: name,
                 node: node,
                 errorMask: null,
@@ -424,7 +445,7 @@ namespace Mutagen.Bethesda.Oblivion
             TranslationCrystal translationMask,
             string name = null)
         {
-            QuestTargetCommon.Write_Xml(
+            QuestTargetXmlTranslation.Instance.Write_Xml(
                 item: this,
                 name: name,
                 node: node,
@@ -444,6 +465,7 @@ namespace Mutagen.Bethesda.Oblivion
                     return Conditions.HasBeenSet;
                 case QuestTarget_FieldIndex.Target:
                 case QuestTarget_FieldIndex.Flags:
+                case QuestTarget_FieldIndex.QSTADataTypeState:
                     return true;
                 default:
                     throw new ArgumentException($"Unknown field index: {index}");
@@ -452,7 +474,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = QuestTarget_Registration.TRIGGERING_RECORD_TYPE;
-        public QSTADataType QSTADataTypeState;
         [Flags]
         public enum QSTADataType
         {
@@ -537,7 +558,8 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Binary(
+            QuestTargetBinaryTranslation.Instance.Write_Binary(
+                item: this,
                 masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: null,
@@ -562,7 +584,7 @@ namespace Mutagen.Bethesda.Oblivion
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            QuestTargetCommon.Write_Binary(
+            QuestTargetBinaryTranslation.Instance.Write_Binary(
                 item: this,
                 masterReferences: masterReferences,
                 writer: writer,
@@ -766,6 +788,9 @@ namespace Mutagen.Bethesda.Oblivion
                 case QuestTarget_FieldIndex.Conditions:
                     this._Conditions.SetTo((IEnumerable<Condition>)obj);
                     break;
+                case QuestTarget_FieldIndex.QSTADataTypeState:
+                    this.QSTADataTypeState = (QuestTarget.QSTADataType)obj;
+                    break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -812,6 +837,9 @@ namespace Mutagen.Bethesda.Oblivion
                 case QuestTarget_FieldIndex.Conditions:
                     obj._Conditions.SetTo((IEnumerable<Condition>)pair.Value);
                     break;
+                case QuestTarget_FieldIndex.QSTADataTypeState:
+                    obj.QSTADataTypeState = (QuestTarget.QSTADataType)pair.Value;
+                    break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
@@ -826,6 +854,14 @@ namespace Mutagen.Bethesda.Oblivion
         new QuestTarget.Flag Flags { get; set; }
 
         new ISourceSetList<Condition> Conditions { get; }
+    }
+
+    public partial interface IQuestTargetInternal : IQuestTarget, IQuestTargetInternalGetter
+    {
+        new IPlaced Target { get; set; }
+        new ISourceSetList<Condition> Conditions { get; }
+        new QuestTarget.QSTADataType QSTADataTypeState { get; set; }
+
     }
 
     public partial interface IQuestTargetGetter : ILoquiObject
@@ -845,6 +881,15 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
+    public partial interface IQuestTargetInternalGetter : IQuestTargetGetter
+    {
+        #region QSTADataTypeState
+        QuestTarget.QSTADataType QSTADataTypeState { get; }
+
+        #endregion
+
+    }
+
     #endregion
 
 }
@@ -857,6 +902,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         Target = 0,
         Flags = 1,
         Conditions = 2,
+        QSTADataTypeState = 3,
     }
     #endregion
 
@@ -874,9 +920,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const string GUID = "f3941d6e-a418-41e7-8bfd-dcb8b5520b6a";
 
-        public const ushort AdditionalFieldCount = 3;
+        public const ushort AdditionalFieldCount = 4;
 
-        public const ushort FieldCount = 3;
+        public const ushort FieldCount = 4;
 
         public static readonly Type MaskType = typeof(QuestTarget_Mask<>);
 
@@ -886,11 +932,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type GetterType = typeof(IQuestTargetGetter);
 
-        public static readonly Type InternalGetterType = null;
+        public static readonly Type InternalGetterType = typeof(IQuestTargetInternalGetter);
 
         public static readonly Type SetterType = typeof(IQuestTarget);
 
-        public static readonly Type InternalSetterType = null;
+        public static readonly Type InternalSetterType = typeof(IQuestTargetInternal);
 
         public static readonly Type CommonType = typeof(QuestTargetCommon);
 
@@ -914,6 +960,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (ushort)QuestTarget_FieldIndex.Flags;
                 case "CONDITIONS":
                     return (ushort)QuestTarget_FieldIndex.Conditions;
+                case "QSTADATATYPESTATE":
+                    return (ushort)QuestTarget_FieldIndex.QSTADataTypeState;
                 default:
                     return null;
             }
@@ -928,6 +976,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return true;
                 case QuestTarget_FieldIndex.Target:
                 case QuestTarget_FieldIndex.Flags:
+                case QuestTarget_FieldIndex.QSTADataTypeState:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -943,6 +992,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return true;
                 case QuestTarget_FieldIndex.Target:
                 case QuestTarget_FieldIndex.Flags:
+                case QuestTarget_FieldIndex.QSTADataTypeState:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -957,6 +1007,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case QuestTarget_FieldIndex.Target:
                 case QuestTarget_FieldIndex.Flags:
                 case QuestTarget_FieldIndex.Conditions:
+                case QuestTarget_FieldIndex.QSTADataTypeState:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -974,6 +1025,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return "Flags";
                 case QuestTarget_FieldIndex.Conditions:
                     return "Conditions";
+                case QuestTarget_FieldIndex.QSTADataTypeState:
+                    return "QSTADataTypeState";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -987,6 +1040,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case QuestTarget_FieldIndex.Target:
                 case QuestTarget_FieldIndex.Flags:
                 case QuestTarget_FieldIndex.Conditions:
+                case QuestTarget_FieldIndex.QSTADataTypeState:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1001,6 +1055,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case QuestTarget_FieldIndex.Target:
                 case QuestTarget_FieldIndex.Flags:
                 case QuestTarget_FieldIndex.Conditions:
+                case QuestTarget_FieldIndex.QSTADataTypeState:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1018,6 +1073,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return typeof(QuestTarget.Flag);
                 case QuestTarget_FieldIndex.Conditions:
                     return typeof(SourceSetList<Condition>);
+                case QuestTarget_FieldIndex.QSTADataTypeState:
+                    return typeof(QuestTarget.QSTADataType);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1232,6 +1289,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     fg.AppendLine("]");
                 }
+                if (printMask?.QSTADataTypeState ?? true)
+                {
+                }
             }
             fg.AppendLine("]");
         }
@@ -1250,100 +1310,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Target = true;
             ret.Flags = true;
             ret.Conditions = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Condition_Mask<bool>>>>(item.Conditions.HasBeenSet, item.Conditions.WithIndex().Select((i) => new MaskItemIndexed<bool, Condition_Mask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            ret.QSTADataTypeState = true;
             return ret;
         }
 
         #region Xml Translation
-        #region Xml Write
-        public static void Write_Xml(
-            XElement node,
-            QuestTarget item,
-            bool doMasks,
-            out QuestTarget_ErrorMask errorMask,
-            QuestTarget_TranslationMask translationMask,
-            string name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_Xml(
-                name: name,
-                node: node,
-                item: item,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = QuestTarget_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void Write_Xml(
-            XElement node,
-            QuestTarget item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.QuestTarget");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.QuestTarget");
-            }
-            WriteToNode_Xml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #endregion
-
-        public static void WriteToNode_Xml(
-            this QuestTarget item,
-            XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            if (item.QSTADataTypeState.HasFlag(QuestTarget.QSTADataType.Has))
-            {
-                if ((translationMask?.GetShouldTranslate((int)QuestTarget_FieldIndex.Target) ?? true))
-                {
-                    FormKeyXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.Target),
-                        item: item.Target_Property?.FormKey,
-                        fieldIndex: (int)QuestTarget_FieldIndex.Target,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)QuestTarget_FieldIndex.Flags) ?? true))
-                {
-                    EnumXmlTranslation<QuestTarget.Flag>.Instance.Write(
-                        node: node,
-                        name: nameof(item.Flags),
-                        item: item.Flags,
-                        fieldIndex: (int)QuestTarget_FieldIndex.Flags,
-                        errorMask: errorMask);
-                }
-            }
-            if (item.Conditions.HasBeenSet
-                && (translationMask?.GetShouldTranslate((int)QuestTarget_FieldIndex.Conditions) ?? true))
-            {
-                ListXmlTranslation<Condition>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Conditions),
-                    item: item.Conditions,
-                    fieldIndex: (int)QuestTarget_FieldIndex.Conditions,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)QuestTarget_FieldIndex.Conditions),
-                    transl: (XElement subNode, Condition subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
-                    {
-                        LoquiXmlTranslation<Condition>.Instance.Write(
-                            node: subNode,
-                            item: subItem,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
-                    }
-                    );
-            }
-        }
-
         public static void FillPublic_Xml(
             this QuestTarget item,
             XElement node,
@@ -1440,86 +1411,34 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask?.PopIndex();
                     }
                     break;
+                case "QSTADataTypeState":
+                    try
+                    {
+                        errorMask?.PushIndex((int)QuestTarget_FieldIndex.QSTADataTypeState);
+                        if (EnumXmlTranslation<QuestTarget.QSTADataType>.Instance.Parse(
+                            node: node,
+                            item: out QuestTarget.QSTADataType QSTADataTypeStateParse,
+                            errorMask: errorMask))
+                        {
+                            item.QSTADataTypeState = QSTADataTypeStateParse;
+                        }
+                        else
+                        {
+                            item.QSTADataTypeState = default(QuestTarget.QSTADataType);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
                 default:
                     break;
-            }
-        }
-
-        #endregion
-
-        #region Binary Translation
-        #region Binary Write
-        public static void Write_Binary(
-            MutagenWriter writer,
-            QuestTarget item,
-            MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            bool doMasks,
-            out QuestTarget_ErrorMask errorMask)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_Binary(
-                masterReferences: masterReferences,
-                writer: writer,
-                item: item,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMaskBuilder);
-            errorMask = QuestTarget_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void Write_Binary(
-            MutagenWriter writer,
-            QuestTarget item,
-            MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
-        {
-            Write_Binary_RecordTypes(
-                item: item,
-                writer: writer,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMask,
-                masterReferences: masterReferences);
-        }
-        #endregion
-
-        public static void Write_Binary_RecordTypes(
-            QuestTarget item,
-            MutagenWriter writer,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask,
-            MasterReferences masterReferences)
-        {
-            if (item.QSTADataTypeState.HasFlag(QuestTarget.QSTADataType.Has))
-            {
-                using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(QuestTarget_Registration.QSTA_HEADER)))
-                {
-                    Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.Target_Property,
-                        masterReferences: masterReferences);
-                    Mutagen.Bethesda.Binary.EnumBinaryTranslation<QuestTarget.Flag>.Instance.Write(
-                        writer,
-                        item.Flags,
-                        length: 4);
-                }
-            }
-            if (item.Conditions.HasBeenSet)
-            {
-                Mutagen.Bethesda.Binary.ListBinaryTranslation<Condition>.Instance.Write(
-                    writer: writer,
-                    items: item.Conditions,
-                    fieldIndex: (int)QuestTarget_FieldIndex.Conditions,
-                    errorMask: errorMask,
-                    transl: (MutagenWriter subWriter, Condition subItem, ErrorMaskBuilder listErrorMask) =>
-                    {
-                        LoquiBinaryTranslation<Condition>.Instance.Write(
-                            writer: subWriter,
-                            item: subItem,
-                            errorMask: listErrorMask,
-                            masterReferences: masterReferences);
-                    }
-                    );
             }
         }
 
@@ -1529,6 +1448,113 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Modules
+    #region Xml Translation
+    public partial class QuestTargetXmlTranslation
+    {
+        public readonly static QuestTargetXmlTranslation Instance = new QuestTargetXmlTranslation();
+
+        public static void WriteToNode_Xml(
+            IQuestTargetInternalGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            if (item.QSTADataTypeState.HasFlag(QuestTarget.QSTADataType.Has))
+            {
+                if ((translationMask?.GetShouldTranslate((int)QuestTarget_FieldIndex.Target) ?? true))
+                {
+                    FormKeyXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.Target),
+                        item: item.Target_Property?.FormKey,
+                        fieldIndex: (int)QuestTarget_FieldIndex.Target,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)QuestTarget_FieldIndex.Flags) ?? true))
+                {
+                    EnumXmlTranslation<QuestTarget.Flag>.Instance.Write(
+                        node: node,
+                        name: nameof(item.Flags),
+                        item: item.Flags,
+                        fieldIndex: (int)QuestTarget_FieldIndex.Flags,
+                        errorMask: errorMask);
+                }
+            }
+            if (item.Conditions.HasBeenSet
+                && (translationMask?.GetShouldTranslate((int)QuestTarget_FieldIndex.Conditions) ?? true))
+            {
+                ListXmlTranslation<Condition>.Instance.Write(
+                    node: node,
+                    name: nameof(item.Conditions),
+                    item: item.Conditions,
+                    fieldIndex: (int)QuestTarget_FieldIndex.Conditions,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)QuestTarget_FieldIndex.Conditions),
+                    transl: (XElement subNode, Condition subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
+                    {
+                        LoquiXmlTranslation<Condition>.Instance.Write(
+                            node: subNode,
+                            item: subItem,
+                            name: null,
+                            errorMask: listSubMask,
+                            translationMask: listTranslMask);
+                    }
+                    );
+            }
+            if ((translationMask?.GetShouldTranslate((int)QuestTarget_FieldIndex.QSTADataTypeState) ?? true))
+            {
+                EnumXmlTranslation<QuestTarget.QSTADataType>.Instance.Write(
+                    node: node,
+                    name: nameof(item.QSTADataTypeState),
+                    item: item.QSTADataTypeState,
+                    fieldIndex: (int)QuestTarget_FieldIndex.QSTADataTypeState,
+                    errorMask: errorMask);
+            }
+        }
+
+        #region Xml Write
+        public void Write_Xml(
+            XElement node,
+            IQuestTargetInternalGetter item,
+            bool doMasks,
+            out QuestTarget_ErrorMask errorMask,
+            QuestTarget_TranslationMask translationMask,
+            string name = null)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            Write_Xml(
+                name: name,
+                node: node,
+                item: item,
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal());
+            errorMask = QuestTarget_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public void Write_Xml(
+            XElement node,
+            IQuestTargetInternalGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask,
+            string name = null)
+        {
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.QuestTarget");
+            node.Add(elem);
+            if (name != null)
+            {
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.QuestTarget");
+            }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        #endregion
+
+    }
+    #endregion
+
     #region Mask
     public class QuestTarget_Mask<T> : IMask<T>, IEquatable<QuestTarget_Mask<T>>
     {
@@ -1542,6 +1568,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.Target = initialValue;
             this.Flags = initialValue;
             this.Conditions = new MaskItem<T, IEnumerable<MaskItemIndexed<T, Condition_Mask<T>>>>(initialValue, null);
+            this.QSTADataTypeState = initialValue;
         }
         #endregion
 
@@ -1549,6 +1576,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public T Target;
         public T Flags;
         public MaskItem<T, IEnumerable<MaskItemIndexed<T, Condition_Mask<T>>>> Conditions;
+        public T QSTADataTypeState;
         #endregion
 
         #region Equals
@@ -1564,6 +1592,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (!object.Equals(this.Target, rhs.Target)) return false;
             if (!object.Equals(this.Flags, rhs.Flags)) return false;
             if (!object.Equals(this.Conditions, rhs.Conditions)) return false;
+            if (!object.Equals(this.QSTADataTypeState, rhs.QSTADataTypeState)) return false;
             return true;
         }
         public override int GetHashCode()
@@ -1572,6 +1601,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret = ret.CombineHashCode(this.Target?.GetHashCode());
             ret = ret.CombineHashCode(this.Flags?.GetHashCode());
             ret = ret.CombineHashCode(this.Conditions?.GetHashCode());
+            ret = ret.CombineHashCode(this.QSTADataTypeState?.GetHashCode());
             return ret;
         }
 
@@ -1594,6 +1624,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                 }
             }
+            if (!eval(this.QSTADataTypeState)) return false;
             return true;
         }
         #endregion
@@ -1635,6 +1666,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                 }
             }
+            obj.QSTADataTypeState = eval(this.QSTADataTypeState);
         }
         #endregion
 
@@ -1697,6 +1729,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     fg.AppendLine("]");
                 }
+                if (printMask?.QSTADataTypeState ?? true)
+                {
+                    fg.AppendLine($"QSTADataTypeState => {QSTADataTypeState}");
+                }
             }
             fg.AppendLine("]");
         }
@@ -1723,6 +1759,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Exception Target;
         public Exception Flags;
         public MaskItem<Exception, IEnumerable<MaskItem<Exception, Condition_ErrorMask>>> Conditions;
+        public Exception QSTADataTypeState;
         #endregion
 
         #region IErrorMask
@@ -1737,6 +1774,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return Flags;
                 case QuestTarget_FieldIndex.Conditions:
                     return Conditions;
+                case QuestTarget_FieldIndex.QSTADataTypeState:
+                    return QSTADataTypeState;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1755,6 +1794,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     break;
                 case QuestTarget_FieldIndex.Conditions:
                     this.Conditions = new MaskItem<Exception, IEnumerable<MaskItem<Exception, Condition_ErrorMask>>>(ex, null);
+                    break;
+                case QuestTarget_FieldIndex.QSTADataTypeState:
+                    this.QSTADataTypeState = ex;
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1775,6 +1817,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case QuestTarget_FieldIndex.Conditions:
                     this.Conditions = (MaskItem<Exception, IEnumerable<MaskItem<Exception, Condition_ErrorMask>>>)obj;
                     break;
+                case QuestTarget_FieldIndex.QSTADataTypeState:
+                    this.QSTADataTypeState = (Exception)obj;
+                    break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1786,6 +1831,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (Target != null) return true;
             if (Flags != null) return true;
             if (Conditions != null) return true;
+            if (QSTADataTypeState != null) return true;
             return false;
         }
         #endregion
@@ -1844,6 +1890,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
             }
             fg.AppendLine("]");
+            fg.AppendLine($"QSTADataTypeState => {QSTADataTypeState}");
         }
         #endregion
 
@@ -1854,6 +1901,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Target = this.Target.Combine(rhs.Target);
             ret.Flags = this.Flags.Combine(rhs.Flags);
             ret.Conditions = new MaskItem<Exception, IEnumerable<MaskItem<Exception, Condition_ErrorMask>>>(this.Conditions.Overall.Combine(rhs.Conditions.Overall), new List<MaskItem<Exception, Condition_ErrorMask>>(this.Conditions.Specific.And(rhs.Conditions.Specific)));
+            ret.QSTADataTypeState = this.QSTADataTypeState.Combine(rhs.QSTADataTypeState);
             return ret;
         }
         public static QuestTarget_ErrorMask Combine(QuestTarget_ErrorMask lhs, QuestTarget_ErrorMask rhs)
@@ -1883,12 +1931,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.Target = defaultOn;
             this.Flags = defaultOn;
             this.Conditions = new MaskItem<CopyOption, Condition_CopyMask>(deepCopyOption, default);
+            this.QSTADataTypeState = defaultOn;
         }
 
         #region Members
         public bool Target;
         public bool Flags;
         public MaskItem<CopyOption, Condition_CopyMask> Conditions;
+        public bool QSTADataTypeState;
         #endregion
 
     }
@@ -1900,6 +1950,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool Target;
         public bool Flags;
         public MaskItem<bool, Condition_TranslationMask> Conditions;
+        public bool QSTADataTypeState;
         #endregion
 
         #region Ctors
@@ -1912,6 +1963,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.Target = defaultOn;
             this.Flags = defaultOn;
             this.Conditions = new MaskItem<bool, Condition_TranslationMask>(defaultOn, null);
+            this.QSTADataTypeState = defaultOn;
         }
 
         #endregion
@@ -1933,7 +1985,104 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Add((Target, null));
             ret.Add((Flags, null));
             ret.Add((Conditions?.Overall ?? true, Conditions?.Specific?.GetCrystal()));
+            ret.Add((QSTADataTypeState, null));
         }
+    }
+    #endregion
+
+    #region Binary Translation
+    public partial class QuestTargetBinaryTranslation
+    {
+        public readonly static QuestTargetBinaryTranslation Instance = new QuestTargetBinaryTranslation();
+
+        public static void Write_Binary_Embedded(
+            IQuestTargetInternalGetter item,
+            MutagenWriter writer,
+            ErrorMaskBuilder errorMask,
+            MasterReferences masterReferences)
+        {
+        }
+
+        public static void Write_Binary_RecordTypes(
+            IQuestTargetInternalGetter item,
+            MutagenWriter writer,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask,
+            MasterReferences masterReferences)
+        {
+            if (item.QSTADataTypeState.HasFlag(QuestTarget.QSTADataType.Has))
+            {
+                using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(QuestTarget_Registration.QSTA_HEADER)))
+                {
+                    Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.Target_Property,
+                        masterReferences: masterReferences);
+                    Mutagen.Bethesda.Binary.EnumBinaryTranslation<QuestTarget.Flag>.Instance.Write(
+                        writer,
+                        item.Flags,
+                        length: 4);
+                }
+            }
+            if (item.Conditions.HasBeenSet)
+            {
+                Mutagen.Bethesda.Binary.ListBinaryTranslation<Condition>.Instance.Write(
+                    writer: writer,
+                    items: item.Conditions,
+                    fieldIndex: (int)QuestTarget_FieldIndex.Conditions,
+                    errorMask: errorMask,
+                    transl: (MutagenWriter subWriter, Condition subItem, ErrorMaskBuilder listErrorMask) =>
+                    {
+                        LoquiBinaryTranslation<Condition>.Instance.Write(
+                            writer: subWriter,
+                            item: subItem,
+                            errorMask: listErrorMask,
+                            masterReferences: masterReferences);
+                    }
+                    );
+            }
+        }
+
+        #region Binary Write
+        public void Write_Binary(
+            MutagenWriter writer,
+            IQuestTargetInternalGetter item,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            bool doMasks,
+            out QuestTarget_ErrorMask errorMask)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            Write_Binary(
+                masterReferences: masterReferences,
+                writer: writer,
+                item: item,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMaskBuilder);
+            errorMask = QuestTarget_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public void Write_Binary(
+            MutagenWriter writer,
+            IQuestTargetInternalGetter item,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            Write_Binary_Embedded(
+                item: item,
+                writer: writer,
+                errorMask: errorMask,
+                masterReferences: masterReferences);
+            Write_Binary_RecordTypes(
+                item: item,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask,
+                masterReferences: masterReferences);
+        }
+        #endregion
+
     }
     #endregion
 

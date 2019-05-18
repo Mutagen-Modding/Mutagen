@@ -288,7 +288,8 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Xml(
+            MapDataXmlTranslation.Instance.Write_Xml(
+                item: this,
                 name: name,
                 node: node,
                 errorMask: errorMaskBuilder,
@@ -320,7 +321,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            this.Write_Xml(
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -351,7 +352,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            this.Write_Xml(
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -375,7 +376,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            this.Write_Xml(
                 name: name,
                 node: node,
                 errorMask: null,
@@ -388,7 +389,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            this.Write_Xml(
                 name: name,
                 node: node,
                 errorMask: null,
@@ -402,7 +403,7 @@ namespace Mutagen.Bethesda.Oblivion
             TranslationCrystal translationMask,
             string name = null)
         {
-            MapDataCommon.Write_Xml(
+            MapDataXmlTranslation.Instance.Write_Xml(
                 item: this,
                 name: name,
                 node: node,
@@ -493,7 +494,8 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Binary(
+            MapDataBinaryTranslation.Instance.Write_Binary(
+                item: this,
                 masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: null,
@@ -518,7 +520,7 @@ namespace Mutagen.Bethesda.Oblivion
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            MapDataCommon.Write_Binary(
+            MapDataBinaryTranslation.Instance.Write_Binary(
                 item: this,
                 masterReferences: masterReferences,
                 writer: writer,
@@ -1138,81 +1140,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         #region Xml Translation
-        #region Xml Write
-        public static void Write_Xml(
-            XElement node,
-            MapData item,
-            bool doMasks,
-            out MapData_ErrorMask errorMask,
-            MapData_TranslationMask translationMask,
-            string name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_Xml(
-                name: name,
-                node: node,
-                item: item,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = MapData_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void Write_Xml(
-            XElement node,
-            MapData item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.MapData");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.MapData");
-            }
-            WriteToNode_Xml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #endregion
-
-        public static void WriteToNode_Xml(
-            this MapData item,
-            XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            if ((translationMask?.GetShouldTranslate((int)MapData_FieldIndex.UsableDimensions) ?? true))
-            {
-                P2IntXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.UsableDimensions),
-                    item: item.UsableDimensions,
-                    fieldIndex: (int)MapData_FieldIndex.UsableDimensions,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)MapData_FieldIndex.CellCoordinatesNWCell) ?? true))
-            {
-                P2Int16XmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.CellCoordinatesNWCell),
-                    item: item.CellCoordinatesNWCell,
-                    fieldIndex: (int)MapData_FieldIndex.CellCoordinatesNWCell,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)MapData_FieldIndex.CellCoordinatesSECell) ?? true))
-            {
-                P2Int16XmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.CellCoordinatesSECell),
-                    item: item.CellCoordinatesSECell,
-                    fieldIndex: (int)MapData_FieldIndex.CellCoordinatesSECell,
-                    errorMask: errorMask);
-            }
-        }
-
         public static void FillPublic_Xml(
             this MapData item,
             XElement node,
@@ -1332,70 +1259,93 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        #region Binary Translation
-        #region Binary Write
-        public static void Write_Binary(
-            MutagenWriter writer,
-            MapData item,
-            MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
+    }
+    #endregion
+
+    #region Modules
+    #region Xml Translation
+    public partial class MapDataXmlTranslation
+    {
+        public readonly static MapDataXmlTranslation Instance = new MapDataXmlTranslation();
+
+        public static void WriteToNode_Xml(
+            IMapDataGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            if ((translationMask?.GetShouldTranslate((int)MapData_FieldIndex.UsableDimensions) ?? true))
+            {
+                P2IntXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.UsableDimensions),
+                    item: item.UsableDimensions,
+                    fieldIndex: (int)MapData_FieldIndex.UsableDimensions,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)MapData_FieldIndex.CellCoordinatesNWCell) ?? true))
+            {
+                P2Int16XmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.CellCoordinatesNWCell),
+                    item: item.CellCoordinatesNWCell,
+                    fieldIndex: (int)MapData_FieldIndex.CellCoordinatesNWCell,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)MapData_FieldIndex.CellCoordinatesSECell) ?? true))
+            {
+                P2Int16XmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.CellCoordinatesSECell),
+                    item: item.CellCoordinatesSECell,
+                    fieldIndex: (int)MapData_FieldIndex.CellCoordinatesSECell,
+                    errorMask: errorMask);
+            }
+        }
+
+        #region Xml Write
+        public void Write_Xml(
+            XElement node,
+            IMapDataGetter item,
             bool doMasks,
-            out MapData_ErrorMask errorMask)
+            out MapData_ErrorMask errorMask,
+            MapData_TranslationMask translationMask,
+            string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_Binary(
-                masterReferences: masterReferences,
-                writer: writer,
+            Write_Xml(
+                name: name,
+                node: node,
                 item: item,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMaskBuilder);
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal());
             errorMask = MapData_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void Write_Binary(
-            MutagenWriter writer,
-            MapData item,
-            MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
-        {
-            using (HeaderExport.ExportHeader(
-                writer: writer,
-                record: MapData_Registration.MNAM_HEADER,
-                type: ObjectType.Subrecord))
-            {
-                Write_Binary_Embedded(
-                    item: item,
-                    writer: writer,
-                    errorMask: errorMask,
-                    masterReferences: masterReferences);
-            }
-        }
-        #endregion
-
-        public static void Write_Binary_Embedded(
-            MapData item,
-            MutagenWriter writer,
+        public void Write_Xml(
+            XElement node,
+            IMapDataGetter item,
             ErrorMaskBuilder errorMask,
-            MasterReferences masterReferences)
+            TranslationCrystal translationMask,
+            string name = null)
         {
-            Mutagen.Bethesda.Binary.P2IntBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.UsableDimensions);
-            Mutagen.Bethesda.Binary.P2Int16BinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.CellCoordinatesNWCell);
-            Mutagen.Bethesda.Binary.P2Int16BinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.CellCoordinatesSECell);
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.MapData");
+            node.Add(elem);
+            if (name != null)
+            {
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.MapData");
+            }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
         }
-
         #endregion
 
     }
     #endregion
 
-    #region Modules
     #region Mask
     public class MapData_Mask<T> : IMask<T>, IEquatable<MapData_Mask<T>>
     {
@@ -1723,6 +1673,71 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Add((CellCoordinatesNWCell, null));
             ret.Add((CellCoordinatesSECell, null));
         }
+    }
+    #endregion
+
+    #region Binary Translation
+    public partial class MapDataBinaryTranslation
+    {
+        public readonly static MapDataBinaryTranslation Instance = new MapDataBinaryTranslation();
+
+        public static void Write_Binary_Embedded(
+            IMapDataGetter item,
+            MutagenWriter writer,
+            ErrorMaskBuilder errorMask,
+            MasterReferences masterReferences)
+        {
+            Mutagen.Bethesda.Binary.P2IntBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.UsableDimensions);
+            Mutagen.Bethesda.Binary.P2Int16BinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.CellCoordinatesNWCell);
+            Mutagen.Bethesda.Binary.P2Int16BinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.CellCoordinatesSECell);
+        }
+
+        #region Binary Write
+        public void Write_Binary(
+            MutagenWriter writer,
+            IMapDataGetter item,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            bool doMasks,
+            out MapData_ErrorMask errorMask)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            Write_Binary(
+                masterReferences: masterReferences,
+                writer: writer,
+                item: item,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMaskBuilder);
+            errorMask = MapData_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public void Write_Binary(
+            MutagenWriter writer,
+            IMapDataGetter item,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            using (HeaderExport.ExportHeader(
+                writer: writer,
+                record: MapData_Registration.MNAM_HEADER,
+                type: ObjectType.Subrecord))
+            {
+                Write_Binary_Embedded(
+                    item: item,
+                    writer: writer,
+                    errorMask: errorMask,
+                    masterReferences: masterReferences);
+            }
+        }
+        #endregion
+
     }
     #endregion
 

@@ -398,7 +398,8 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Xml(
+            RankXmlTranslation.Instance.Write_Xml(
+                item: this,
                 name: name,
                 node: node,
                 errorMask: errorMaskBuilder,
@@ -430,7 +431,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            this.Write_Xml(
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -461,7 +462,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            this.Write_Xml(
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -485,7 +486,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            this.Write_Xml(
                 name: name,
                 node: node,
                 errorMask: null,
@@ -498,7 +499,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name = null)
         {
             var node = new XElement("topnode");
-            Write_Xml(
+            this.Write_Xml(
                 name: name,
                 node: node,
                 errorMask: null,
@@ -512,7 +513,7 @@ namespace Mutagen.Bethesda.Oblivion
             TranslationCrystal translationMask,
             string name = null)
         {
-            RankCommon.Write_Xml(
+            RankXmlTranslation.Instance.Write_Xml(
                 item: this,
                 name: name,
                 node: node,
@@ -598,7 +599,8 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            this.Write_Binary(
+            RankBinaryTranslation.Instance.Write_Binary(
+                item: this,
                 masterReferences: masterReferences,
                 writer: writer,
                 recordTypeConverter: null,
@@ -623,7 +625,7 @@ namespace Mutagen.Bethesda.Oblivion
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            RankCommon.Write_Binary(
+            RankBinaryTranslation.Instance.Write_Binary(
                 item: this,
                 masterReferences: masterReferences,
                 writer: writer,
@@ -1434,94 +1436,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         #region Xml Translation
-        #region Xml Write
-        public static void Write_Xml(
-            XElement node,
-            Rank item,
-            bool doMasks,
-            out Rank_ErrorMask errorMask,
-            Rank_TranslationMask translationMask,
-            string name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_Xml(
-                name: name,
-                node: node,
-                item: item,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = Rank_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void Write_Xml(
-            XElement node,
-            Rank item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.Rank");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.Rank");
-            }
-            WriteToNode_Xml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #endregion
-
-        public static void WriteToNode_Xml(
-            this Rank item,
-            XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-        {
-            if (item.RankNumber_IsSet
-                && (translationMask?.GetShouldTranslate((int)Rank_FieldIndex.RankNumber) ?? true))
-            {
-                Int32XmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.RankNumber),
-                    item: item.RankNumber,
-                    fieldIndex: (int)Rank_FieldIndex.RankNumber,
-                    errorMask: errorMask);
-            }
-            if (item.MaleName_IsSet
-                && (translationMask?.GetShouldTranslate((int)Rank_FieldIndex.MaleName) ?? true))
-            {
-                StringXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.MaleName),
-                    item: item.MaleName,
-                    fieldIndex: (int)Rank_FieldIndex.MaleName,
-                    errorMask: errorMask);
-            }
-            if (item.FemaleName_IsSet
-                && (translationMask?.GetShouldTranslate((int)Rank_FieldIndex.FemaleName) ?? true))
-            {
-                StringXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.FemaleName),
-                    item: item.FemaleName,
-                    fieldIndex: (int)Rank_FieldIndex.FemaleName,
-                    errorMask: errorMask);
-            }
-            if (item.Insignia_IsSet
-                && (translationMask?.GetShouldTranslate((int)Rank_FieldIndex.Insignia) ?? true))
-            {
-                StringXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Insignia),
-                    item: item.Insignia,
-                    fieldIndex: (int)Rank_FieldIndex.Insignia,
-                    errorMask: errorMask);
-            }
-        }
-
         public static void FillPublic_Xml(
             this Rank item,
             XElement node,
@@ -1667,89 +1581,106 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        #region Binary Translation
-        #region Binary Write
-        public static void Write_Binary(
-            MutagenWriter writer,
-            Rank item,
-            MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
+    }
+    #endregion
+
+    #region Modules
+    #region Xml Translation
+    public partial class RankXmlTranslation
+    {
+        public readonly static RankXmlTranslation Instance = new RankXmlTranslation();
+
+        public static void WriteToNode_Xml(
+            IRankGetter item,
+            XElement node,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+        {
+            if (item.RankNumber_IsSet
+                && (translationMask?.GetShouldTranslate((int)Rank_FieldIndex.RankNumber) ?? true))
+            {
+                Int32XmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.RankNumber),
+                    item: item.RankNumber,
+                    fieldIndex: (int)Rank_FieldIndex.RankNumber,
+                    errorMask: errorMask);
+            }
+            if (item.MaleName_IsSet
+                && (translationMask?.GetShouldTranslate((int)Rank_FieldIndex.MaleName) ?? true))
+            {
+                StringXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.MaleName),
+                    item: item.MaleName,
+                    fieldIndex: (int)Rank_FieldIndex.MaleName,
+                    errorMask: errorMask);
+            }
+            if (item.FemaleName_IsSet
+                && (translationMask?.GetShouldTranslate((int)Rank_FieldIndex.FemaleName) ?? true))
+            {
+                StringXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.FemaleName),
+                    item: item.FemaleName,
+                    fieldIndex: (int)Rank_FieldIndex.FemaleName,
+                    errorMask: errorMask);
+            }
+            if (item.Insignia_IsSet
+                && (translationMask?.GetShouldTranslate((int)Rank_FieldIndex.Insignia) ?? true))
+            {
+                StringXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Insignia),
+                    item: item.Insignia,
+                    fieldIndex: (int)Rank_FieldIndex.Insignia,
+                    errorMask: errorMask);
+            }
+        }
+
+        #region Xml Write
+        public void Write_Xml(
+            XElement node,
+            IRankGetter item,
             bool doMasks,
-            out Rank_ErrorMask errorMask)
+            out Rank_ErrorMask errorMask,
+            Rank_TranslationMask translationMask,
+            string name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            Write_Binary(
-                masterReferences: masterReferences,
-                writer: writer,
+            Write_Xml(
+                name: name,
+                node: node,
                 item: item,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMaskBuilder);
+                errorMask: errorMaskBuilder,
+                translationMask: translationMask?.GetCrystal());
             errorMask = Rank_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void Write_Binary(
-            MutagenWriter writer,
-            Rank item,
-            MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
-        {
-            Write_Binary_RecordTypes(
-                item: item,
-                writer: writer,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMask,
-                masterReferences: masterReferences);
-        }
-        #endregion
-
-        public static void Write_Binary_RecordTypes(
-            Rank item,
-            MutagenWriter writer,
-            RecordTypeConverter recordTypeConverter,
+        public void Write_Xml(
+            XElement node,
+            IRankGetter item,
             ErrorMaskBuilder errorMask,
-            MasterReferences masterReferences)
+            TranslationCrystal translationMask,
+            string name = null)
         {
-            if (item.RankNumber_IsSet)
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.Rank");
+            node.Add(elem);
+            if (name != null)
             {
-                Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.RankNumber,
-                    header: recordTypeConverter.ConvertToCustom(Rank_Registration.RNAM_HEADER),
-                    nullable: false);
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.Rank");
             }
-            if (item.MaleName_IsSet)
-            {
-                Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.MaleName,
-                    header: recordTypeConverter.ConvertToCustom(Rank_Registration.MNAM_HEADER),
-                    nullable: false);
-            }
-            if (item.FemaleName_IsSet)
-            {
-                Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.FemaleName,
-                    header: recordTypeConverter.ConvertToCustom(Rank_Registration.FNAM_HEADER),
-                    nullable: false);
-            }
-            if (item.Insignia_IsSet)
-            {
-                Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Insignia,
-                    header: recordTypeConverter.ConvertToCustom(Rank_Registration.INAM_HEADER),
-                    nullable: false);
-            }
+            WriteToNode_Xml(
+                item: item,
+                node: elem,
+                errorMask: errorMask,
+                translationMask: translationMask);
         }
-
         #endregion
 
     }
     #endregion
 
-    #region Modules
     #region Mask
     public class Rank_Mask<T> : IMask<T>, IEquatable<Rank_Mask<T>>
     {
@@ -2104,6 +2035,90 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Add((FemaleName, null));
             ret.Add((Insignia, null));
         }
+    }
+    #endregion
+
+    #region Binary Translation
+    public partial class RankBinaryTranslation
+    {
+        public readonly static RankBinaryTranslation Instance = new RankBinaryTranslation();
+
+        public static void Write_Binary_RecordTypes(
+            IRankGetter item,
+            MutagenWriter writer,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask,
+            MasterReferences masterReferences)
+        {
+            if (item.RankNumber_IsSet)
+            {
+                Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.RankNumber,
+                    header: recordTypeConverter.ConvertToCustom(Rank_Registration.RNAM_HEADER),
+                    nullable: false);
+            }
+            if (item.MaleName_IsSet)
+            {
+                Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.MaleName,
+                    header: recordTypeConverter.ConvertToCustom(Rank_Registration.MNAM_HEADER),
+                    nullable: false);
+            }
+            if (item.FemaleName_IsSet)
+            {
+                Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.FemaleName,
+                    header: recordTypeConverter.ConvertToCustom(Rank_Registration.FNAM_HEADER),
+                    nullable: false);
+            }
+            if (item.Insignia_IsSet)
+            {
+                Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Insignia,
+                    header: recordTypeConverter.ConvertToCustom(Rank_Registration.INAM_HEADER),
+                    nullable: false);
+            }
+        }
+
+        #region Binary Write
+        public void Write_Binary(
+            MutagenWriter writer,
+            IRankGetter item,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            bool doMasks,
+            out Rank_ErrorMask errorMask)
+        {
+            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            Write_Binary(
+                masterReferences: masterReferences,
+                writer: writer,
+                item: item,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMaskBuilder);
+            errorMask = Rank_ErrorMask.Factory(errorMaskBuilder);
+        }
+
+        public void Write_Binary(
+            MutagenWriter writer,
+            IRankGetter item,
+            MasterReferences masterReferences,
+            RecordTypeConverter recordTypeConverter,
+            ErrorMaskBuilder errorMask)
+        {
+            Write_Binary_RecordTypes(
+                item: item,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask,
+                masterReferences: masterReferences);
+        }
+        #endregion
+
     }
     #endregion
 
