@@ -3293,8 +3293,9 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case 0x34534554: // TES4
                 {
-                    using (errorMask.PushIndex((int)OblivionMod_FieldIndex.TES4))
+                    try
                     {
+                        errorMask?.PushIndex((int)OblivionMod_FieldIndex.TES4);
                         var tmpTES4 = TES4.Create_Binary(
                             frame: frame,
                             errorMask: errorMask,
@@ -3306,14 +3307,24 @@ namespace Mutagen.Bethesda.Oblivion
                             copyMask: null,
                             errorMask: errorMask);
                     }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
                     return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.TES4);
                 }
                 case 0x54534D47: // GMST
                 {
                     if (importMask?.GameSettings ?? true)
                     {
-                        using (errorMask.PushIndex((int)OblivionMod_FieldIndex.GameSettings))
+                        try
                         {
+                            errorMask?.PushIndex((int)OblivionMod_FieldIndex.GameSettings);
                             var tmpGameSettings = await Group<GameSetting>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
@@ -3324,6 +3335,15 @@ namespace Mutagen.Bethesda.Oblivion
                                 def: null,
                                 copyMask: null,
                                 errorMask: errorMask);
+                        }
+                        catch (Exception ex)
+                        when (errorMask != null)
+                        {
+                            errorMask.ReportException(ex);
+                        }
+                        finally
+                        {
+                            errorMask?.PopIndex();
                         }
                     }
                     else
@@ -3336,8 +3356,9 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (importMask?.Globals ?? true)
                     {
-                        using (errorMask.PushIndex((int)OblivionMod_FieldIndex.Globals))
+                        try
                         {
+                            errorMask?.PushIndex((int)OblivionMod_FieldIndex.Globals);
                             var tmpGlobals = await Group<Global>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
@@ -3348,6 +3369,15 @@ namespace Mutagen.Bethesda.Oblivion
                                 def: null,
                                 copyMask: null,
                                 errorMask: errorMask);
+                        }
+                        catch (Exception ex)
+                        when (errorMask != null)
+                        {
+                            errorMask.ReportException(ex);
+                        }
+                        finally
+                        {
+                            errorMask?.PopIndex();
                         }
                     }
                     else
@@ -3360,8 +3390,9 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (importMask?.Classes ?? true)
                     {
-                        using (errorMask.PushIndex((int)OblivionMod_FieldIndex.Classes))
+                        try
                         {
+                            errorMask?.PushIndex((int)OblivionMod_FieldIndex.Classes);
                             var tmpClasses = await Group<Class>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
@@ -3372,6 +3403,15 @@ namespace Mutagen.Bethesda.Oblivion
                                 def: null,
                                 copyMask: null,
                                 errorMask: errorMask);
+                        }
+                        catch (Exception ex)
+                        when (errorMask != null)
+                        {
+                            errorMask.ReportException(ex);
+                        }
+                        finally
+                        {
+                            errorMask?.PopIndex();
                         }
                     }
                     else
@@ -3384,8 +3424,9 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (importMask?.Factions ?? true)
                     {
-                        using (errorMask.PushIndex((int)OblivionMod_FieldIndex.Factions))
+                        try
                         {
+                            errorMask?.PushIndex((int)OblivionMod_FieldIndex.Factions);
                             var tmpFactions = await Group<Faction>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
@@ -3396,6 +3437,15 @@ namespace Mutagen.Bethesda.Oblivion
                                 def: null,
                                 copyMask: null,
                                 errorMask: errorMask);
+                        }
+                        catch (Exception ex)
+                        when (errorMask != null)
+                        {
+                            errorMask.ReportException(ex);
+                        }
+                        finally
+                        {
+                            errorMask?.PopIndex();
                         }
                     }
                     else
@@ -3408,8 +3458,9 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (importMask?.Hairs ?? true)
                     {
-                        using (errorMask.PushIndex((int)OblivionMod_FieldIndex.Hairs))
+                        try
                         {
+                            errorMask?.PushIndex((int)OblivionMod_FieldIndex.Hairs);
                             var tmpHairs = await Group<Hair>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
@@ -3420,6 +3471,15 @@ namespace Mutagen.Bethesda.Oblivion
                                 def: null,
                                 copyMask: null,
                                 errorMask: errorMask);
+                        }
+                        catch (Exception ex)
+                        when (errorMask != null)
+                        {
+                            errorMask.ReportException(ex);
+                        }
+                        finally
+                        {
+                            errorMask?.PopIndex();
                         }
                     }
                     else
@@ -3432,8 +3492,9 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (importMask?.Eyes ?? true)
                     {
-                        using (errorMask.PushIndex((int)OblivionMod_FieldIndex.Eyes))
+                        try
                         {
+                            errorMask?.PushIndex((int)OblivionMod_FieldIndex.Eyes);
                             var tmpEyes = await Group<Eye>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
@@ -3444,6 +3505,15 @@ namespace Mutagen.Bethesda.Oblivion
                                 def: null,
                                 copyMask: null,
                                 errorMask: errorMask);
+                        }
+                        catch (Exception ex)
+                        when (errorMask != null)
+                        {
+                            errorMask.ReportException(ex);
+                        }
+                        finally
+                        {
+                            errorMask?.PopIndex();
                         }
                     }
                     else
@@ -3456,8 +3526,9 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (importMask?.Races ?? true)
                     {
-                        using (errorMask.PushIndex((int)OblivionMod_FieldIndex.Races))
+                        try
                         {
+                            errorMask?.PushIndex((int)OblivionMod_FieldIndex.Races);
                             var tmpRaces = await Group<Race>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
@@ -3468,6 +3539,15 @@ namespace Mutagen.Bethesda.Oblivion
                                 def: null,
                                 copyMask: null,
                                 errorMask: errorMask);
+                        }
+                        catch (Exception ex)
+                        when (errorMask != null)
+                        {
+                            errorMask.ReportException(ex);
+                        }
+                        finally
+                        {
+                            errorMask?.PopIndex();
                         }
                     }
                     else
@@ -3480,8 +3560,9 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (importMask?.Sounds ?? true)
                     {
-                        using (errorMask.PushIndex((int)OblivionMod_FieldIndex.Sounds))
+                        try
                         {
+                            errorMask?.PushIndex((int)OblivionMod_FieldIndex.Sounds);
                             var tmpSounds = await Group<Sound>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
@@ -3492,6 +3573,15 @@ namespace Mutagen.Bethesda.Oblivion
                                 def: null,
                                 copyMask: null,
                                 errorMask: errorMask);
+                        }
+                        catch (Exception ex)
+                        when (errorMask != null)
+                        {
+                            errorMask.ReportException(ex);
+                        }
+                        finally
+                        {
+                            errorMask?.PopIndex();
                         }
                     }
                     else
@@ -3504,8 +3594,9 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (importMask?.Skills ?? true)
                     {
-                        using (errorMask.PushIndex((int)OblivionMod_FieldIndex.Skills))
+                        try
                         {
+                            errorMask?.PushIndex((int)OblivionMod_FieldIndex.Skills);
                             var tmpSkills = await Group<SkillRecord>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
@@ -3516,6 +3607,15 @@ namespace Mutagen.Bethesda.Oblivion
                                 def: null,
                                 copyMask: null,
                                 errorMask: errorMask);
+                        }
+                        catch (Exception ex)
+                        when (errorMask != null)
+                        {
+                            errorMask.ReportException(ex);
+                        }
+                        finally
+                        {
+                            errorMask?.PopIndex();
                         }
                     }
                     else
@@ -3528,8 +3628,9 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (importMask?.MagicEffects ?? true)
                     {
-                        using (errorMask.PushIndex((int)OblivionMod_FieldIndex.MagicEffects))
+                        try
                         {
+                            errorMask?.PushIndex((int)OblivionMod_FieldIndex.MagicEffects);
                             var tmpMagicEffects = await Group<MagicEffect>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
@@ -3540,6 +3641,15 @@ namespace Mutagen.Bethesda.Oblivion
                                 def: null,
                                 copyMask: null,
                                 errorMask: errorMask);
+                        }
+                        catch (Exception ex)
+                        when (errorMask != null)
+                        {
+                            errorMask.ReportException(ex);
+                        }
+                        finally
+                        {
+                            errorMask?.PopIndex();
                         }
                     }
                     else
@@ -3552,8 +3662,9 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (importMask?.Scripts ?? true)
                     {
-                        using (errorMask.PushIndex((int)OblivionMod_FieldIndex.Scripts))
+                        try
                         {
+                            errorMask?.PushIndex((int)OblivionMod_FieldIndex.Scripts);
                             var tmpScripts = await Group<Script>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
@@ -3564,6 +3675,15 @@ namespace Mutagen.Bethesda.Oblivion
                                 def: null,
                                 copyMask: null,
                                 errorMask: errorMask);
+                        }
+                        catch (Exception ex)
+                        when (errorMask != null)
+                        {
+                            errorMask.ReportException(ex);
+                        }
+                        finally
+                        {
+                            errorMask?.PopIndex();
                         }
                     }
                     else
@@ -3576,8 +3696,9 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (importMask?.LandTextures ?? true)
                     {
-                        using (errorMask.PushIndex((int)OblivionMod_FieldIndex.LandTextures))
+                        try
                         {
+                            errorMask?.PushIndex((int)OblivionMod_FieldIndex.LandTextures);
                             var tmpLandTextures = await Group<LandTexture>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
@@ -3588,6 +3709,15 @@ namespace Mutagen.Bethesda.Oblivion
                                 def: null,
                                 copyMask: null,
                                 errorMask: errorMask);
+                        }
+                        catch (Exception ex)
+                        when (errorMask != null)
+                        {
+                            errorMask.ReportException(ex);
+                        }
+                        finally
+                        {
+                            errorMask?.PopIndex();
                         }
                     }
                     else
@@ -3600,8 +3730,9 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (importMask?.Enchantments ?? true)
                     {
-                        using (errorMask.PushIndex((int)OblivionMod_FieldIndex.Enchantments))
+                        try
                         {
+                            errorMask?.PushIndex((int)OblivionMod_FieldIndex.Enchantments);
                             var tmpEnchantments = await Group<Enchantment>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
@@ -3612,6 +3743,15 @@ namespace Mutagen.Bethesda.Oblivion
                                 def: null,
                                 copyMask: null,
                                 errorMask: errorMask);
+                        }
+                        catch (Exception ex)
+                        when (errorMask != null)
+                        {
+                            errorMask.ReportException(ex);
+                        }
+                        finally
+                        {
+                            errorMask?.PopIndex();
                         }
                     }
                     else
@@ -3624,8 +3764,9 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (importMask?.Spells ?? true)
                     {
-                        using (errorMask.PushIndex((int)OblivionMod_FieldIndex.Spells))
+                        try
                         {
+                            errorMask?.PushIndex((int)OblivionMod_FieldIndex.Spells);
                             var tmpSpells = await Group<SpellUnleveled>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
@@ -3636,6 +3777,15 @@ namespace Mutagen.Bethesda.Oblivion
                                 def: null,
                                 copyMask: null,
                                 errorMask: errorMask);
+                        }
+                        catch (Exception ex)
+                        when (errorMask != null)
+                        {
+                            errorMask.ReportException(ex);
+                        }
+                        finally
+                        {
+                            errorMask?.PopIndex();
                         }
                     }
                     else
@@ -3648,8 +3798,9 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (importMask?.Birthsigns ?? true)
                     {
-                        using (errorMask.PushIndex((int)OblivionMod_FieldIndex.Birthsigns))
+                        try
                         {
+                            errorMask?.PushIndex((int)OblivionMod_FieldIndex.Birthsigns);
                             var tmpBirthsigns = await Group<Birthsign>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
@@ -3660,6 +3811,15 @@ namespace Mutagen.Bethesda.Oblivion
                                 def: null,
                                 copyMask: null,
                                 errorMask: errorMask);
+                        }
+                        catch (Exception ex)
+                        when (errorMask != null)
+                        {
+                            errorMask.ReportException(ex);
+                        }
+                        finally
+                        {
+                            errorMask?.PopIndex();
                         }
                     }
                     else
@@ -3672,8 +3832,9 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (importMask?.Activators ?? true)
                     {
-                        using (errorMask.PushIndex((int)OblivionMod_FieldIndex.Activators))
+                        try
                         {
+                            errorMask?.PushIndex((int)OblivionMod_FieldIndex.Activators);
                             var tmpActivators = await Group<Activator>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
@@ -3684,6 +3845,15 @@ namespace Mutagen.Bethesda.Oblivion
                                 def: null,
                                 copyMask: null,
                                 errorMask: errorMask);
+                        }
+                        catch (Exception ex)
+                        when (errorMask != null)
+                        {
+                            errorMask.ReportException(ex);
+                        }
+                        finally
+                        {
+                            errorMask?.PopIndex();
                         }
                     }
                     else
@@ -3696,8 +3866,9 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (importMask?.AlchemicalApparatus ?? true)
                     {
-                        using (errorMask.PushIndex((int)OblivionMod_FieldIndex.AlchemicalApparatus))
+                        try
                         {
+                            errorMask?.PushIndex((int)OblivionMod_FieldIndex.AlchemicalApparatus);
                             var tmpAlchemicalApparatus = await Group<AlchemicalApparatus>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
@@ -3708,6 +3879,15 @@ namespace Mutagen.Bethesda.Oblivion
                                 def: null,
                                 copyMask: null,
                                 errorMask: errorMask);
+                        }
+                        catch (Exception ex)
+                        when (errorMask != null)
+                        {
+                            errorMask.ReportException(ex);
+                        }
+                        finally
+                        {
+                            errorMask?.PopIndex();
                         }
                     }
                     else
@@ -3720,8 +3900,9 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (importMask?.Armors ?? true)
                     {
-                        using (errorMask.PushIndex((int)OblivionMod_FieldIndex.Armors))
+                        try
                         {
+                            errorMask?.PushIndex((int)OblivionMod_FieldIndex.Armors);
                             var tmpArmors = await Group<Armor>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
@@ -3732,6 +3913,15 @@ namespace Mutagen.Bethesda.Oblivion
                                 def: null,
                                 copyMask: null,
                                 errorMask: errorMask);
+                        }
+                        catch (Exception ex)
+                        when (errorMask != null)
+                        {
+                            errorMask.ReportException(ex);
+                        }
+                        finally
+                        {
+                            errorMask?.PopIndex();
                         }
                     }
                     else
@@ -3744,8 +3934,9 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (importMask?.Books ?? true)
                     {
-                        using (errorMask.PushIndex((int)OblivionMod_FieldIndex.Books))
+                        try
                         {
+                            errorMask?.PushIndex((int)OblivionMod_FieldIndex.Books);
                             var tmpBooks = await Group<Book>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
@@ -3756,6 +3947,15 @@ namespace Mutagen.Bethesda.Oblivion
                                 def: null,
                                 copyMask: null,
                                 errorMask: errorMask);
+                        }
+                        catch (Exception ex)
+                        when (errorMask != null)
+                        {
+                            errorMask.ReportException(ex);
+                        }
+                        finally
+                        {
+                            errorMask?.PopIndex();
                         }
                     }
                     else
@@ -3768,8 +3968,9 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (importMask?.Clothes ?? true)
                     {
-                        using (errorMask.PushIndex((int)OblivionMod_FieldIndex.Clothes))
+                        try
                         {
+                            errorMask?.PushIndex((int)OblivionMod_FieldIndex.Clothes);
                             var tmpClothes = await Group<Clothing>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
@@ -3780,6 +3981,15 @@ namespace Mutagen.Bethesda.Oblivion
                                 def: null,
                                 copyMask: null,
                                 errorMask: errorMask);
+                        }
+                        catch (Exception ex)
+                        when (errorMask != null)
+                        {
+                            errorMask.ReportException(ex);
+                        }
+                        finally
+                        {
+                            errorMask?.PopIndex();
                         }
                     }
                     else
@@ -3792,8 +4002,9 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (importMask?.Containers ?? true)
                     {
-                        using (errorMask.PushIndex((int)OblivionMod_FieldIndex.Containers))
+                        try
                         {
+                            errorMask?.PushIndex((int)OblivionMod_FieldIndex.Containers);
                             var tmpContainers = await Group<Container>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
@@ -3804,6 +4015,15 @@ namespace Mutagen.Bethesda.Oblivion
                                 def: null,
                                 copyMask: null,
                                 errorMask: errorMask);
+                        }
+                        catch (Exception ex)
+                        when (errorMask != null)
+                        {
+                            errorMask.ReportException(ex);
+                        }
+                        finally
+                        {
+                            errorMask?.PopIndex();
                         }
                     }
                     else
@@ -3816,8 +4036,9 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (importMask?.Doors ?? true)
                     {
-                        using (errorMask.PushIndex((int)OblivionMod_FieldIndex.Doors))
+                        try
                         {
+                            errorMask?.PushIndex((int)OblivionMod_FieldIndex.Doors);
                             var tmpDoors = await Group<Door>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
@@ -3828,6 +4049,15 @@ namespace Mutagen.Bethesda.Oblivion
                                 def: null,
                                 copyMask: null,
                                 errorMask: errorMask);
+                        }
+                        catch (Exception ex)
+                        when (errorMask != null)
+                        {
+                            errorMask.ReportException(ex);
+                        }
+                        finally
+                        {
+                            errorMask?.PopIndex();
                         }
                     }
                     else
@@ -3840,8 +4070,9 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (importMask?.Ingredients ?? true)
                     {
-                        using (errorMask.PushIndex((int)OblivionMod_FieldIndex.Ingredients))
+                        try
                         {
+                            errorMask?.PushIndex((int)OblivionMod_FieldIndex.Ingredients);
                             var tmpIngredients = await Group<Ingredient>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
@@ -3852,6 +4083,15 @@ namespace Mutagen.Bethesda.Oblivion
                                 def: null,
                                 copyMask: null,
                                 errorMask: errorMask);
+                        }
+                        catch (Exception ex)
+                        when (errorMask != null)
+                        {
+                            errorMask.ReportException(ex);
+                        }
+                        finally
+                        {
+                            errorMask?.PopIndex();
                         }
                     }
                     else
@@ -3864,8 +4104,9 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (importMask?.Lights ?? true)
                     {
-                        using (errorMask.PushIndex((int)OblivionMod_FieldIndex.Lights))
+                        try
                         {
+                            errorMask?.PushIndex((int)OblivionMod_FieldIndex.Lights);
                             var tmpLights = await Group<Light>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
@@ -3876,6 +4117,15 @@ namespace Mutagen.Bethesda.Oblivion
                                 def: null,
                                 copyMask: null,
                                 errorMask: errorMask);
+                        }
+                        catch (Exception ex)
+                        when (errorMask != null)
+                        {
+                            errorMask.ReportException(ex);
+                        }
+                        finally
+                        {
+                            errorMask?.PopIndex();
                         }
                     }
                     else
@@ -3888,8 +4138,9 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (importMask?.Miscellaneous ?? true)
                     {
-                        using (errorMask.PushIndex((int)OblivionMod_FieldIndex.Miscellaneous))
+                        try
                         {
+                            errorMask?.PushIndex((int)OblivionMod_FieldIndex.Miscellaneous);
                             var tmpMiscellaneous = await Group<Miscellaneous>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
@@ -3900,6 +4151,15 @@ namespace Mutagen.Bethesda.Oblivion
                                 def: null,
                                 copyMask: null,
                                 errorMask: errorMask);
+                        }
+                        catch (Exception ex)
+                        when (errorMask != null)
+                        {
+                            errorMask.ReportException(ex);
+                        }
+                        finally
+                        {
+                            errorMask?.PopIndex();
                         }
                     }
                     else
@@ -3912,8 +4172,9 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (importMask?.Statics ?? true)
                     {
-                        using (errorMask.PushIndex((int)OblivionMod_FieldIndex.Statics))
+                        try
                         {
+                            errorMask?.PushIndex((int)OblivionMod_FieldIndex.Statics);
                             var tmpStatics = await Group<Static>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
@@ -3924,6 +4185,15 @@ namespace Mutagen.Bethesda.Oblivion
                                 def: null,
                                 copyMask: null,
                                 errorMask: errorMask);
+                        }
+                        catch (Exception ex)
+                        when (errorMask != null)
+                        {
+                            errorMask.ReportException(ex);
+                        }
+                        finally
+                        {
+                            errorMask?.PopIndex();
                         }
                     }
                     else
@@ -3936,8 +4206,9 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (importMask?.Grasses ?? true)
                     {
-                        using (errorMask.PushIndex((int)OblivionMod_FieldIndex.Grasses))
+                        try
                         {
+                            errorMask?.PushIndex((int)OblivionMod_FieldIndex.Grasses);
                             var tmpGrasses = await Group<Grass>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
@@ -3948,6 +4219,15 @@ namespace Mutagen.Bethesda.Oblivion
                                 def: null,
                                 copyMask: null,
                                 errorMask: errorMask);
+                        }
+                        catch (Exception ex)
+                        when (errorMask != null)
+                        {
+                            errorMask.ReportException(ex);
+                        }
+                        finally
+                        {
+                            errorMask?.PopIndex();
                         }
                     }
                     else
@@ -3960,8 +4240,9 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (importMask?.Trees ?? true)
                     {
-                        using (errorMask.PushIndex((int)OblivionMod_FieldIndex.Trees))
+                        try
                         {
+                            errorMask?.PushIndex((int)OblivionMod_FieldIndex.Trees);
                             var tmpTrees = await Group<Tree>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
@@ -3972,6 +4253,15 @@ namespace Mutagen.Bethesda.Oblivion
                                 def: null,
                                 copyMask: null,
                                 errorMask: errorMask);
+                        }
+                        catch (Exception ex)
+                        when (errorMask != null)
+                        {
+                            errorMask.ReportException(ex);
+                        }
+                        finally
+                        {
+                            errorMask?.PopIndex();
                         }
                     }
                     else
@@ -3984,8 +4274,9 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (importMask?.Flora ?? true)
                     {
-                        using (errorMask.PushIndex((int)OblivionMod_FieldIndex.Flora))
+                        try
                         {
+                            errorMask?.PushIndex((int)OblivionMod_FieldIndex.Flora);
                             var tmpFlora = await Group<Flora>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
@@ -3996,6 +4287,15 @@ namespace Mutagen.Bethesda.Oblivion
                                 def: null,
                                 copyMask: null,
                                 errorMask: errorMask);
+                        }
+                        catch (Exception ex)
+                        when (errorMask != null)
+                        {
+                            errorMask.ReportException(ex);
+                        }
+                        finally
+                        {
+                            errorMask?.PopIndex();
                         }
                     }
                     else
@@ -4008,8 +4308,9 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (importMask?.Furnature ?? true)
                     {
-                        using (errorMask.PushIndex((int)OblivionMod_FieldIndex.Furnature))
+                        try
                         {
+                            errorMask?.PushIndex((int)OblivionMod_FieldIndex.Furnature);
                             var tmpFurnature = await Group<Furnature>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
@@ -4020,6 +4321,15 @@ namespace Mutagen.Bethesda.Oblivion
                                 def: null,
                                 copyMask: null,
                                 errorMask: errorMask);
+                        }
+                        catch (Exception ex)
+                        when (errorMask != null)
+                        {
+                            errorMask.ReportException(ex);
+                        }
+                        finally
+                        {
+                            errorMask?.PopIndex();
                         }
                     }
                     else
@@ -4032,8 +4342,9 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (importMask?.Weapons ?? true)
                     {
-                        using (errorMask.PushIndex((int)OblivionMod_FieldIndex.Weapons))
+                        try
                         {
+                            errorMask?.PushIndex((int)OblivionMod_FieldIndex.Weapons);
                             var tmpWeapons = await Group<Weapon>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
@@ -4044,6 +4355,15 @@ namespace Mutagen.Bethesda.Oblivion
                                 def: null,
                                 copyMask: null,
                                 errorMask: errorMask);
+                        }
+                        catch (Exception ex)
+                        when (errorMask != null)
+                        {
+                            errorMask.ReportException(ex);
+                        }
+                        finally
+                        {
+                            errorMask?.PopIndex();
                         }
                     }
                     else
@@ -4056,8 +4376,9 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (importMask?.Ammo ?? true)
                     {
-                        using (errorMask.PushIndex((int)OblivionMod_FieldIndex.Ammo))
+                        try
                         {
+                            errorMask?.PushIndex((int)OblivionMod_FieldIndex.Ammo);
                             var tmpAmmo = await Group<Ammo>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
@@ -4068,6 +4389,15 @@ namespace Mutagen.Bethesda.Oblivion
                                 def: null,
                                 copyMask: null,
                                 errorMask: errorMask);
+                        }
+                        catch (Exception ex)
+                        when (errorMask != null)
+                        {
+                            errorMask.ReportException(ex);
+                        }
+                        finally
+                        {
+                            errorMask?.PopIndex();
                         }
                     }
                     else
@@ -4080,8 +4410,9 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (importMask?.NPCs ?? true)
                     {
-                        using (errorMask.PushIndex((int)OblivionMod_FieldIndex.NPCs))
+                        try
                         {
+                            errorMask?.PushIndex((int)OblivionMod_FieldIndex.NPCs);
                             var tmpNPCs = await Group<NPC>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
@@ -4092,6 +4423,15 @@ namespace Mutagen.Bethesda.Oblivion
                                 def: null,
                                 copyMask: null,
                                 errorMask: errorMask);
+                        }
+                        catch (Exception ex)
+                        when (errorMask != null)
+                        {
+                            errorMask.ReportException(ex);
+                        }
+                        finally
+                        {
+                            errorMask?.PopIndex();
                         }
                     }
                     else
@@ -4104,8 +4444,9 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (importMask?.Creatures ?? true)
                     {
-                        using (errorMask.PushIndex((int)OblivionMod_FieldIndex.Creatures))
+                        try
                         {
+                            errorMask?.PushIndex((int)OblivionMod_FieldIndex.Creatures);
                             var tmpCreatures = await Group<Creature>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
@@ -4116,6 +4457,15 @@ namespace Mutagen.Bethesda.Oblivion
                                 def: null,
                                 copyMask: null,
                                 errorMask: errorMask);
+                        }
+                        catch (Exception ex)
+                        when (errorMask != null)
+                        {
+                            errorMask.ReportException(ex);
+                        }
+                        finally
+                        {
+                            errorMask?.PopIndex();
                         }
                     }
                     else
@@ -4128,8 +4478,9 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (importMask?.LeveledCreatures ?? true)
                     {
-                        using (errorMask.PushIndex((int)OblivionMod_FieldIndex.LeveledCreatures))
+                        try
                         {
+                            errorMask?.PushIndex((int)OblivionMod_FieldIndex.LeveledCreatures);
                             var tmpLeveledCreatures = await Group<LeveledCreature>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
@@ -4140,6 +4491,15 @@ namespace Mutagen.Bethesda.Oblivion
                                 def: null,
                                 copyMask: null,
                                 errorMask: errorMask);
+                        }
+                        catch (Exception ex)
+                        when (errorMask != null)
+                        {
+                            errorMask.ReportException(ex);
+                        }
+                        finally
+                        {
+                            errorMask?.PopIndex();
                         }
                     }
                     else
@@ -4152,8 +4512,9 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (importMask?.SoulGems ?? true)
                     {
-                        using (errorMask.PushIndex((int)OblivionMod_FieldIndex.SoulGems))
+                        try
                         {
+                            errorMask?.PushIndex((int)OblivionMod_FieldIndex.SoulGems);
                             var tmpSoulGems = await Group<SoulGem>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
@@ -4164,6 +4525,15 @@ namespace Mutagen.Bethesda.Oblivion
                                 def: null,
                                 copyMask: null,
                                 errorMask: errorMask);
+                        }
+                        catch (Exception ex)
+                        when (errorMask != null)
+                        {
+                            errorMask.ReportException(ex);
+                        }
+                        finally
+                        {
+                            errorMask?.PopIndex();
                         }
                     }
                     else
@@ -4176,8 +4546,9 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (importMask?.Keys ?? true)
                     {
-                        using (errorMask.PushIndex((int)OblivionMod_FieldIndex.Keys))
+                        try
                         {
+                            errorMask?.PushIndex((int)OblivionMod_FieldIndex.Keys);
                             var tmpKeys = await Group<Key>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
@@ -4188,6 +4559,15 @@ namespace Mutagen.Bethesda.Oblivion
                                 def: null,
                                 copyMask: null,
                                 errorMask: errorMask);
+                        }
+                        catch (Exception ex)
+                        when (errorMask != null)
+                        {
+                            errorMask.ReportException(ex);
+                        }
+                        finally
+                        {
+                            errorMask?.PopIndex();
                         }
                     }
                     else
@@ -4200,8 +4580,9 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (importMask?.Potions ?? true)
                     {
-                        using (errorMask.PushIndex((int)OblivionMod_FieldIndex.Potions))
+                        try
                         {
+                            errorMask?.PushIndex((int)OblivionMod_FieldIndex.Potions);
                             var tmpPotions = await Group<Potion>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
@@ -4212,6 +4593,15 @@ namespace Mutagen.Bethesda.Oblivion
                                 def: null,
                                 copyMask: null,
                                 errorMask: errorMask);
+                        }
+                        catch (Exception ex)
+                        when (errorMask != null)
+                        {
+                            errorMask.ReportException(ex);
+                        }
+                        finally
+                        {
+                            errorMask?.PopIndex();
                         }
                     }
                     else
@@ -4224,8 +4614,9 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (importMask?.Subspaces ?? true)
                     {
-                        using (errorMask.PushIndex((int)OblivionMod_FieldIndex.Subspaces))
+                        try
                         {
+                            errorMask?.PushIndex((int)OblivionMod_FieldIndex.Subspaces);
                             var tmpSubspaces = await Group<Subspace>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
@@ -4236,6 +4627,15 @@ namespace Mutagen.Bethesda.Oblivion
                                 def: null,
                                 copyMask: null,
                                 errorMask: errorMask);
+                        }
+                        catch (Exception ex)
+                        when (errorMask != null)
+                        {
+                            errorMask.ReportException(ex);
+                        }
+                        finally
+                        {
+                            errorMask?.PopIndex();
                         }
                     }
                     else
@@ -4248,8 +4648,9 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (importMask?.SigilStones ?? true)
                     {
-                        using (errorMask.PushIndex((int)OblivionMod_FieldIndex.SigilStones))
+                        try
                         {
+                            errorMask?.PushIndex((int)OblivionMod_FieldIndex.SigilStones);
                             var tmpSigilStones = await Group<SigilStone>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
@@ -4260,6 +4661,15 @@ namespace Mutagen.Bethesda.Oblivion
                                 def: null,
                                 copyMask: null,
                                 errorMask: errorMask);
+                        }
+                        catch (Exception ex)
+                        when (errorMask != null)
+                        {
+                            errorMask.ReportException(ex);
+                        }
+                        finally
+                        {
+                            errorMask?.PopIndex();
                         }
                     }
                     else
@@ -4272,8 +4682,9 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (importMask?.LeveledItems ?? true)
                     {
-                        using (errorMask.PushIndex((int)OblivionMod_FieldIndex.LeveledItems))
+                        try
                         {
+                            errorMask?.PushIndex((int)OblivionMod_FieldIndex.LeveledItems);
                             var tmpLeveledItems = await Group<LeveledItem>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
@@ -4284,6 +4695,15 @@ namespace Mutagen.Bethesda.Oblivion
                                 def: null,
                                 copyMask: null,
                                 errorMask: errorMask);
+                        }
+                        catch (Exception ex)
+                        when (errorMask != null)
+                        {
+                            errorMask.ReportException(ex);
+                        }
+                        finally
+                        {
+                            errorMask?.PopIndex();
                         }
                     }
                     else
@@ -4296,8 +4716,9 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (importMask?.Weathers ?? true)
                     {
-                        using (errorMask.PushIndex((int)OblivionMod_FieldIndex.Weathers))
+                        try
                         {
+                            errorMask?.PushIndex((int)OblivionMod_FieldIndex.Weathers);
                             var tmpWeathers = await Group<Weather>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
@@ -4308,6 +4729,15 @@ namespace Mutagen.Bethesda.Oblivion
                                 def: null,
                                 copyMask: null,
                                 errorMask: errorMask);
+                        }
+                        catch (Exception ex)
+                        when (errorMask != null)
+                        {
+                            errorMask.ReportException(ex);
+                        }
+                        finally
+                        {
+                            errorMask?.PopIndex();
                         }
                     }
                     else
@@ -4320,8 +4750,9 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (importMask?.Climates ?? true)
                     {
-                        using (errorMask.PushIndex((int)OblivionMod_FieldIndex.Climates))
+                        try
                         {
+                            errorMask?.PushIndex((int)OblivionMod_FieldIndex.Climates);
                             var tmpClimates = await Group<Climate>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
@@ -4332,6 +4763,15 @@ namespace Mutagen.Bethesda.Oblivion
                                 def: null,
                                 copyMask: null,
                                 errorMask: errorMask);
+                        }
+                        catch (Exception ex)
+                        when (errorMask != null)
+                        {
+                            errorMask.ReportException(ex);
+                        }
+                        finally
+                        {
+                            errorMask?.PopIndex();
                         }
                     }
                     else
@@ -4344,8 +4784,9 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (importMask?.Regions ?? true)
                     {
-                        using (errorMask.PushIndex((int)OblivionMod_FieldIndex.Regions))
+                        try
                         {
+                            errorMask?.PushIndex((int)OblivionMod_FieldIndex.Regions);
                             var tmpRegions = await Group<Region>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
@@ -4356,6 +4797,15 @@ namespace Mutagen.Bethesda.Oblivion
                                 def: null,
                                 copyMask: null,
                                 errorMask: errorMask);
+                        }
+                        catch (Exception ex)
+                        when (errorMask != null)
+                        {
+                            errorMask.ReportException(ex);
+                        }
+                        finally
+                        {
+                            errorMask?.PopIndex();
                         }
                     }
                     else
@@ -4368,8 +4818,9 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (importMask?.Cells ?? true)
                     {
-                        using (errorMask.PushIndex((int)OblivionMod_FieldIndex.Cells))
+                        try
                         {
+                            errorMask?.PushIndex((int)OblivionMod_FieldIndex.Cells);
                             var tmpCells = await ListGroup<CellBlock>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
@@ -4380,6 +4831,15 @@ namespace Mutagen.Bethesda.Oblivion
                                 def: null,
                                 copyMask: null,
                                 errorMask: errorMask);
+                        }
+                        catch (Exception ex)
+                        when (errorMask != null)
+                        {
+                            errorMask.ReportException(ex);
+                        }
+                        finally
+                        {
+                            errorMask?.PopIndex();
                         }
                     }
                     else
@@ -4392,8 +4852,9 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (importMask?.Worldspaces ?? true)
                     {
-                        using (errorMask.PushIndex((int)OblivionMod_FieldIndex.Worldspaces))
+                        try
                         {
+                            errorMask?.PushIndex((int)OblivionMod_FieldIndex.Worldspaces);
                             var tmpWorldspaces = await Group<Worldspace>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
@@ -4404,6 +4865,15 @@ namespace Mutagen.Bethesda.Oblivion
                                 def: null,
                                 copyMask: null,
                                 errorMask: errorMask);
+                        }
+                        catch (Exception ex)
+                        when (errorMask != null)
+                        {
+                            errorMask.ReportException(ex);
+                        }
+                        finally
+                        {
+                            errorMask?.PopIndex();
                         }
                     }
                     else
@@ -4416,8 +4886,9 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (importMask?.DialogTopics ?? true)
                     {
-                        using (errorMask.PushIndex((int)OblivionMod_FieldIndex.DialogTopics))
+                        try
                         {
+                            errorMask?.PushIndex((int)OblivionMod_FieldIndex.DialogTopics);
                             var tmpDialogTopics = await Group<DialogTopic>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
@@ -4428,6 +4899,15 @@ namespace Mutagen.Bethesda.Oblivion
                                 def: null,
                                 copyMask: null,
                                 errorMask: errorMask);
+                        }
+                        catch (Exception ex)
+                        when (errorMask != null)
+                        {
+                            errorMask.ReportException(ex);
+                        }
+                        finally
+                        {
+                            errorMask?.PopIndex();
                         }
                     }
                     else
@@ -4440,8 +4920,9 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (importMask?.Quests ?? true)
                     {
-                        using (errorMask.PushIndex((int)OblivionMod_FieldIndex.Quests))
+                        try
                         {
+                            errorMask?.PushIndex((int)OblivionMod_FieldIndex.Quests);
                             var tmpQuests = await Group<Quest>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
@@ -4452,6 +4933,15 @@ namespace Mutagen.Bethesda.Oblivion
                                 def: null,
                                 copyMask: null,
                                 errorMask: errorMask);
+                        }
+                        catch (Exception ex)
+                        when (errorMask != null)
+                        {
+                            errorMask.ReportException(ex);
+                        }
+                        finally
+                        {
+                            errorMask?.PopIndex();
                         }
                     }
                     else
@@ -4464,8 +4954,9 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (importMask?.IdleAnimations ?? true)
                     {
-                        using (errorMask.PushIndex((int)OblivionMod_FieldIndex.IdleAnimations))
+                        try
                         {
+                            errorMask?.PushIndex((int)OblivionMod_FieldIndex.IdleAnimations);
                             var tmpIdleAnimations = await Group<IdleAnimation>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
@@ -4476,6 +4967,15 @@ namespace Mutagen.Bethesda.Oblivion
                                 def: null,
                                 copyMask: null,
                                 errorMask: errorMask);
+                        }
+                        catch (Exception ex)
+                        when (errorMask != null)
+                        {
+                            errorMask.ReportException(ex);
+                        }
+                        finally
+                        {
+                            errorMask?.PopIndex();
                         }
                     }
                     else
@@ -4488,8 +4988,9 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (importMask?.AIPackages ?? true)
                     {
-                        using (errorMask.PushIndex((int)OblivionMod_FieldIndex.AIPackages))
+                        try
                         {
+                            errorMask?.PushIndex((int)OblivionMod_FieldIndex.AIPackages);
                             var tmpAIPackages = await Group<AIPackage>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
@@ -4500,6 +5001,15 @@ namespace Mutagen.Bethesda.Oblivion
                                 def: null,
                                 copyMask: null,
                                 errorMask: errorMask);
+                        }
+                        catch (Exception ex)
+                        when (errorMask != null)
+                        {
+                            errorMask.ReportException(ex);
+                        }
+                        finally
+                        {
+                            errorMask?.PopIndex();
                         }
                     }
                     else
@@ -4512,8 +5022,9 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (importMask?.CombatStyles ?? true)
                     {
-                        using (errorMask.PushIndex((int)OblivionMod_FieldIndex.CombatStyles))
+                        try
                         {
+                            errorMask?.PushIndex((int)OblivionMod_FieldIndex.CombatStyles);
                             var tmpCombatStyles = await Group<CombatStyle>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
@@ -4524,6 +5035,15 @@ namespace Mutagen.Bethesda.Oblivion
                                 def: null,
                                 copyMask: null,
                                 errorMask: errorMask);
+                        }
+                        catch (Exception ex)
+                        when (errorMask != null)
+                        {
+                            errorMask.ReportException(ex);
+                        }
+                        finally
+                        {
+                            errorMask?.PopIndex();
                         }
                     }
                     else
@@ -4536,8 +5056,9 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (importMask?.LoadScreens ?? true)
                     {
-                        using (errorMask.PushIndex((int)OblivionMod_FieldIndex.LoadScreens))
+                        try
                         {
+                            errorMask?.PushIndex((int)OblivionMod_FieldIndex.LoadScreens);
                             var tmpLoadScreens = await Group<LoadScreen>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
@@ -4548,6 +5069,15 @@ namespace Mutagen.Bethesda.Oblivion
                                 def: null,
                                 copyMask: null,
                                 errorMask: errorMask);
+                        }
+                        catch (Exception ex)
+                        when (errorMask != null)
+                        {
+                            errorMask.ReportException(ex);
+                        }
+                        finally
+                        {
+                            errorMask?.PopIndex();
                         }
                     }
                     else
@@ -4560,8 +5090,9 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (importMask?.LeveledSpells ?? true)
                     {
-                        using (errorMask.PushIndex((int)OblivionMod_FieldIndex.LeveledSpells))
+                        try
                         {
+                            errorMask?.PushIndex((int)OblivionMod_FieldIndex.LeveledSpells);
                             var tmpLeveledSpells = await Group<LeveledSpell>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
@@ -4572,6 +5103,15 @@ namespace Mutagen.Bethesda.Oblivion
                                 def: null,
                                 copyMask: null,
                                 errorMask: errorMask);
+                        }
+                        catch (Exception ex)
+                        when (errorMask != null)
+                        {
+                            errorMask.ReportException(ex);
+                        }
+                        finally
+                        {
+                            errorMask?.PopIndex();
                         }
                     }
                     else
@@ -4584,8 +5124,9 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (importMask?.AnimatedObjects ?? true)
                     {
-                        using (errorMask.PushIndex((int)OblivionMod_FieldIndex.AnimatedObjects))
+                        try
                         {
+                            errorMask?.PushIndex((int)OblivionMod_FieldIndex.AnimatedObjects);
                             var tmpAnimatedObjects = await Group<AnimatedObject>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
@@ -4596,6 +5137,15 @@ namespace Mutagen.Bethesda.Oblivion
                                 def: null,
                                 copyMask: null,
                                 errorMask: errorMask);
+                        }
+                        catch (Exception ex)
+                        when (errorMask != null)
+                        {
+                            errorMask.ReportException(ex);
+                        }
+                        finally
+                        {
+                            errorMask?.PopIndex();
                         }
                     }
                     else
@@ -4608,8 +5158,9 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (importMask?.Waters ?? true)
                     {
-                        using (errorMask.PushIndex((int)OblivionMod_FieldIndex.Waters))
+                        try
                         {
+                            errorMask?.PushIndex((int)OblivionMod_FieldIndex.Waters);
                             var tmpWaters = await Group<Water>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
@@ -4620,6 +5171,15 @@ namespace Mutagen.Bethesda.Oblivion
                                 def: null,
                                 copyMask: null,
                                 errorMask: errorMask);
+                        }
+                        catch (Exception ex)
+                        when (errorMask != null)
+                        {
+                            errorMask.ReportException(ex);
+                        }
+                        finally
+                        {
+                            errorMask?.PopIndex();
                         }
                     }
                     else
@@ -4632,8 +5192,9 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (importMask?.EffectShaders ?? true)
                     {
-                        using (errorMask.PushIndex((int)OblivionMod_FieldIndex.EffectShaders))
+                        try
                         {
+                            errorMask?.PushIndex((int)OblivionMod_FieldIndex.EffectShaders);
                             var tmpEffectShaders = await Group<EffectShader>.Create_Binary(
                                 frame: frame,
                                 errorMask: errorMask,
@@ -4644,6 +5205,15 @@ namespace Mutagen.Bethesda.Oblivion
                                 def: null,
                                 copyMask: null,
                                 errorMask: errorMask);
+                        }
+                        catch (Exception ex)
+                        when (errorMask != null)
+                        {
+                            errorMask.ReportException(ex);
+                        }
+                        finally
+                        {
+                            errorMask?.PopIndex();
                         }
                     }
                     else

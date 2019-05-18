@@ -943,18 +943,11 @@ namespace Mutagen.Bethesda.Oblivion
                     try
                     {
                         errorMask?.PushIndex((int)Class_FieldIndex.Training);
-                        if (LoquiBinaryTranslation<ClassTraining>.Instance.Parse(
+                        item.Training = ClassTraining.Create_Binary(
                             frame: dataFrame,
+                            recordTypeConverter: null,
                             masterReferences: masterReferences,
-                            item: out ClassTraining TrainingParse,
-                            errorMask: errorMask))
-                        {
-                            item.Training = TrainingParse;
-                        }
-                        else
-                        {
-                            item.Training = default(ClassTraining);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

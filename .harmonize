@@ -10,10 +10,10 @@
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>01162f5b3bf8443f2040e2a562014a40b75c746e</Sha>
+         <Sha>18b71ed93c95c9c9e24ac14e5e00f784c2598050</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>05-18-2019 15:01:53</CommitDate>
-         <Description>Exports are now done in an external translation class utilizing interfaces</Description>
+         <CommitDate>05-18-2019 17:15:25</CommitDate>
+         <Description>Merge remote-tracking branch 'origin/laptop'</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>

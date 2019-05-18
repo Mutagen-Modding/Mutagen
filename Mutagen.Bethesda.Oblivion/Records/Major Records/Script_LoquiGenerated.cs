@@ -671,8 +671,9 @@ namespace Mutagen.Bethesda.Oblivion
                 case 0x56524353: // SCRV
                 case 0x4F524353: // SCRO
                 {
-                    using (errorMask.PushIndex((int)Script_FieldIndex.Fields))
+                    try
                     {
+                        errorMask?.PushIndex((int)Script_FieldIndex.Fields);
                         var tmpFields = ScriptFields.Create_Binary(
                             frame: frame,
                             errorMask: errorMask,
@@ -683,6 +684,15 @@ namespace Mutagen.Bethesda.Oblivion
                             def: null,
                             copyMask: null,
                             errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
                     }
                     return TryGet<int?>.Succeed((int)Script_FieldIndex.Fields);
                 }

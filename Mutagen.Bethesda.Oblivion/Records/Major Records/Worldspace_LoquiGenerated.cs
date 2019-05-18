@@ -1230,18 +1230,11 @@ namespace Mutagen.Bethesda.Oblivion
                     try
                     {
                         errorMask?.PushIndex((int)Worldspace_FieldIndex.MapData);
-                        if (LoquiBinaryTranslation<MapData>.Instance.Parse(
+                        item.MapData = MapData.Create_Binary(
                             frame: frame,
+                            recordTypeConverter: null,
                             masterReferences: masterReferences,
-                            item: out MapData MapDataParse,
-                            errorMask: errorMask))
-                        {
-                            item.MapData = MapDataParse;
-                        }
-                        else
-                        {
-                            item.MapData = default(MapData);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

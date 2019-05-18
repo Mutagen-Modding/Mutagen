@@ -6,7 +6,8 @@ namespace Loqui
     public class ProtocolDefinition_Oblivion : IProtocolRegistration
     {
         public readonly static ProtocolKey ProtocolKey = new ProtocolKey("Oblivion");
-        public void Register()
+        void IProtocolRegistration.Register() => Register();
+        public static void Register()
         {
             LoquiRegistration.Register(Mutagen.Bethesda.Oblivion.Internals.Header_Registration.Instance);
             LoquiRegistration.Register(Mutagen.Bethesda.Oblivion.Internals.TES4_Registration.Instance);

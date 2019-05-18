@@ -37,10 +37,6 @@ namespace Mutagen.Bethesda.Oblivion
             List<Task> tasks = new List<Task>();
             foreach (var item in this.Items)
             {
-                //using (errorMask.PushIndex(blockCounter))
-                //{
-                //    try
-                //    {
                 int stampedCounter = blockCounter++;
                 tasks.Add(Task.Run(() =>
                 {
@@ -48,13 +44,6 @@ namespace Mutagen.Bethesda.Oblivion
                         path: Path.Combine(subDir, $"{stampedCounter.ToString()}.xml"),
                         errorMask: errorMask);
                 }));
-                //    }
-                //    catch (Exception ex)
-                //    when (errorMask != null)
-                //    {
-                //        errorMask.ReportException(ex);
-                //    }
-                //}
             }
             await Task.WhenAll(tasks);
         }

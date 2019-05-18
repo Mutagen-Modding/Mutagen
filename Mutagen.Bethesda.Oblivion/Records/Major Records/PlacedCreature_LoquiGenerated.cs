@@ -937,18 +937,11 @@ namespace Mutagen.Bethesda.Oblivion
                     try
                     {
                         errorMask?.PushIndex((int)PlacedCreature_FieldIndex.EnableParent);
-                        if (LoquiBinaryTranslation<EnableParent>.Instance.Parse(
+                        item.EnableParent = EnableParent.Create_Binary(
                             frame: frame,
+                            recordTypeConverter: null,
                             masterReferences: masterReferences,
-                            item: out EnableParent EnableParentParse,
-                            errorMask: errorMask))
-                        {
-                            item.EnableParent = EnableParentParse;
-                        }
-                        else
-                        {
-                            item.EnableParent = default(EnableParent);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

@@ -846,18 +846,11 @@ namespace Mutagen.Bethesda.Oblivion
                     try
                     {
                         errorMask?.PushIndex((int)AIPackage_FieldIndex.Location);
-                        if (LoquiBinaryTranslation<AIPackageLocation>.Instance.Parse(
+                        item.Location = AIPackageLocation.Create_Binary(
                             frame: frame,
+                            recordTypeConverter: null,
                             masterReferences: masterReferences,
-                            item: out AIPackageLocation LocationParse,
-                            errorMask: errorMask))
-                        {
-                            item.Location = LocationParse;
-                        }
-                        else
-                        {
-                            item.Location = default(AIPackageLocation);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -875,18 +868,11 @@ namespace Mutagen.Bethesda.Oblivion
                     try
                     {
                         errorMask?.PushIndex((int)AIPackage_FieldIndex.Schedule);
-                        if (LoquiBinaryTranslation<AIPackageSchedule>.Instance.Parse(
+                        item.Schedule = AIPackageSchedule.Create_Binary(
                             frame: frame,
+                            recordTypeConverter: null,
                             masterReferences: masterReferences,
-                            item: out AIPackageSchedule ScheduleParse,
-                            errorMask: errorMask))
-                        {
-                            item.Schedule = ScheduleParse;
-                        }
-                        else
-                        {
-                            item.Schedule = default(AIPackageSchedule);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -904,18 +890,11 @@ namespace Mutagen.Bethesda.Oblivion
                     try
                     {
                         errorMask?.PushIndex((int)AIPackage_FieldIndex.Target);
-                        if (LoquiBinaryTranslation<AIPackageTarget>.Instance.Parse(
+                        item.Target = AIPackageTarget.Create_Binary(
                             frame: frame,
+                            recordTypeConverter: null,
                             masterReferences: masterReferences,
-                            item: out AIPackageTarget TargetParse,
-                            errorMask: errorMask))
-                        {
-                            item.Target = TargetParse;
-                        }
-                        else
-                        {
-                            item.Target = default(AIPackageTarget);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

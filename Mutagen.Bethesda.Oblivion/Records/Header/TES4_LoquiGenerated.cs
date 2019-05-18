@@ -791,18 +791,11 @@ namespace Mutagen.Bethesda.Oblivion
                     try
                     {
                         errorMask?.PushIndex((int)TES4_FieldIndex.Header);
-                        if (LoquiBinaryTranslation<Header>.Instance.Parse(
+                        item.Header = Header.Create_Binary(
                             frame: frame,
+                            recordTypeConverter: null,
                             masterReferences: masterReferences,
-                            item: out Header HeaderParse,
-                            errorMask: errorMask))
-                        {
-                            item.Header = HeaderParse;
-                        }
-                        else
-                        {
-                            item.Header = default(Header);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

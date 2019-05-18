@@ -1031,18 +1031,11 @@ namespace Mutagen.Bethesda.Oblivion
                     try
                     {
                         errorMask?.PushIndex((int)MagicEffect_FieldIndex.Model);
-                        if (LoquiBinaryTranslation<Model>.Instance.Parse(
+                        item.Model = Model.Create_Binary(
                             frame: frame,
+                            recordTypeConverter: null,
                             masterReferences: masterReferences,
-                            item: out Model ModelParse,
-                            errorMask: errorMask))
-                        {
-                            item.Model = ModelParse;
-                        }
-                        else
-                        {
-                            item.Model = default(Model);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1149,18 +1142,11 @@ namespace Mutagen.Bethesda.Oblivion
                     try
                     {
                         errorMask?.PushIndex((int)MagicEffect_FieldIndex.SubData);
-                        if (LoquiBinaryTranslation<MagicEffectSubData>.Instance.Parse(
+                        item.SubData = MagicEffectSubData.Create_Binary(
                             frame: dataFrame,
+                            recordTypeConverter: null,
                             masterReferences: masterReferences,
-                            item: out MagicEffectSubData SubDataParse,
-                            errorMask: errorMask))
-                        {
-                            item.SubData = SubDataParse;
-                        }
-                        else
-                        {
-                            item.SubData = default(MagicEffectSubData);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

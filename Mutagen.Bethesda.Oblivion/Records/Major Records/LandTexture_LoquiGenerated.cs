@@ -778,18 +778,11 @@ namespace Mutagen.Bethesda.Oblivion
                     try
                     {
                         errorMask?.PushIndex((int)LandTexture_FieldIndex.Havok);
-                        if (LoquiBinaryTranslation<HavokData>.Instance.Parse(
+                        item.Havok = HavokData.Create_Binary(
                             frame: frame,
+                            recordTypeConverter: null,
                             masterReferences: masterReferences,
-                            item: out HavokData HavokParse,
-                            errorMask: errorMask))
-                        {
-                            item.Havok = HavokParse;
-                        }
-                        else
-                        {
-                            item.Havok = default(HavokData);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
