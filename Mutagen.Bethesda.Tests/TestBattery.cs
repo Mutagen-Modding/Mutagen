@@ -52,6 +52,10 @@ namespace Mutagen.Bethesda.Tests
             {
                 yield return FlattenedMod_Tests.Oblivion_FlattenMod(settings);
             }
+            if (settings.TestBenchmarks)
+            {
+                Mutagen.Bethesda.Tests.Benchmarks.Benchmarks.Run();
+            }
         }
     }
 }

@@ -5,6 +5,7 @@
       <Bool name="TestGroupMasks" />
       <Bool name="TestModList" />
       <Bool name="TestFlattenedMod" />
+      <Bool name="TestBenchmarks" />
       <RefDirect name="PassthroughSettings" refName="PassthroughSettings" />
       <RefDirect name="OblivionESM" refName="Passthrough" />
       <RefList name="OtherPassthroughs" refName="Passthrough" />

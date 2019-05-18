@@ -9,6 +9,7 @@
          <xs:element name="TestGroupMasks" type="ValueType" minOccurs="0" maxOccurs="1" />
          <xs:element name="TestModList" type="ValueType" minOccurs="0" maxOccurs="1" />
          <xs:element name="TestFlattenedMod" type="ValueType" minOccurs="0" maxOccurs="1" />
+         <xs:element name="TestBenchmarks" type="ValueType" minOccurs="0" maxOccurs="1" />
          <xs:element name="PassthroughSettings" type="PassthroughSettingsType" minOccurs="0" maxOccurs="1" />
          <xs:element name="OblivionESM" type="PassthroughType" minOccurs="0" maxOccurs="1" />
          <xs:element name="OtherPassthroughs" type="OtherPassthroughsType" minOccurs="0" maxOccurs="1" />
