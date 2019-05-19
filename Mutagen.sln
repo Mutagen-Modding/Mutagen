@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27130.2020
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.28902.138
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Dependencies", "Dependencies", "{AF36576B-C728-4057-AE4F-937BFB04F43D}"
 EndProject
@@ -11,11 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Loqui", "..\Loqui\Loqui\Loq
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Loqui.Generation", "..\Loqui\Loqui.Generation\Loqui.Generation.csproj", "{5ED43AC5-E456-4894-A253-60B3B3D35D87}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mutagen.Bethesda.Tests", "Mutagen.Bethesda.Tests\Mutagen.Bethesda.Tests.csproj", "{8838681B-F77C-421D-BD96-46D2C89388C5}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CSharpExt.Tests", "..\CSharpExt\CSharpExt.Tests\CSharpExt.Tests.csproj", "{7445A66B-6B75-4B65-BB6D-D7DA88318985}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mutagen.Bethesda.Tester", "Mutagen.Bethesda.Tester\Mutagen.Bethesda.Tester.csproj", "{7E9B22E1-1C07-4277-93AB-C986E9BAEF66}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Loqui.Generation.Presentation", "..\Loqui\Loqui.Generation.Presentation\Loqui.Generation.Presentation.csproj", "{70DC5884-5522-4552-82B5-56C95065155E}"
 EndProject
@@ -28,6 +24,12 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mutagen.Bethesda.Oblivion", "Mutagen.Bethesda.Oblivion\Mutagen.Bethesda.Oblivion.csproj", "{D4EBF681-3A69-4919-BF64-D9CC6896A0C6}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mutagen.Bethesda.Generation", "Mutagen.Bethesda.Generation\Mutagen.Bethesda.Generation.csproj", "{3EBDABC9-FFE9-41DF-91E2-102E57C6F992}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CSharpExt.Benchmark", "..\CSharpExt\CSharpExt.Benchmark\CSharpExt.Benchmark.csproj", "{FFB18690-4914-40D3-9BA2-4968DFFB3225}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mutagen.Bethesda.Tests", "Mutagen.Bethesda.Tests\Mutagen.Bethesda.Tests.csproj", "{E64E58E8-E2C6-4B2C-B649-2934FFFA603F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mutagen.Bethesda.Tester", "Mutagen.Bethesda.Tester\Mutagen.Bethesda.Tester.csproj", "{01D07ECE-426E-49A6-AB3F-326BFAAFE407}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -47,18 +49,10 @@ Global
 		{5ED43AC5-E456-4894-A253-60B3B3D35D87}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5ED43AC5-E456-4894-A253-60B3B3D35D87}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5ED43AC5-E456-4894-A253-60B3B3D35D87}.Release|Any CPU.Build.0 = Release|Any CPU
-		{8838681B-F77C-421D-BD96-46D2C89388C5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8838681B-F77C-421D-BD96-46D2C89388C5}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8838681B-F77C-421D-BD96-46D2C89388C5}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8838681B-F77C-421D-BD96-46D2C89388C5}.Release|Any CPU.Build.0 = Release|Any CPU
 		{7445A66B-6B75-4B65-BB6D-D7DA88318985}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{7445A66B-6B75-4B65-BB6D-D7DA88318985}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7445A66B-6B75-4B65-BB6D-D7DA88318985}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7445A66B-6B75-4B65-BB6D-D7DA88318985}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7E9B22E1-1C07-4277-93AB-C986E9BAEF66}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7E9B22E1-1C07-4277-93AB-C986E9BAEF66}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7E9B22E1-1C07-4277-93AB-C986E9BAEF66}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7E9B22E1-1C07-4277-93AB-C986E9BAEF66}.Release|Any CPU.Build.0 = Release|Any CPU
 		{70DC5884-5522-4552-82B5-56C95065155E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{70DC5884-5522-4552-82B5-56C95065155E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{70DC5884-5522-4552-82B5-56C95065155E}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -83,6 +77,18 @@ Global
 		{3EBDABC9-FFE9-41DF-91E2-102E57C6F992}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3EBDABC9-FFE9-41DF-91E2-102E57C6F992}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3EBDABC9-FFE9-41DF-91E2-102E57C6F992}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FFB18690-4914-40D3-9BA2-4968DFFB3225}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FFB18690-4914-40D3-9BA2-4968DFFB3225}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FFB18690-4914-40D3-9BA2-4968DFFB3225}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FFB18690-4914-40D3-9BA2-4968DFFB3225}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E64E58E8-E2C6-4B2C-B649-2934FFFA603F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E64E58E8-E2C6-4B2C-B649-2934FFFA603F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E64E58E8-E2C6-4B2C-B649-2934FFFA603F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E64E58E8-E2C6-4B2C-B649-2934FFFA603F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{01D07ECE-426E-49A6-AB3F-326BFAAFE407}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{01D07ECE-426E-49A6-AB3F-326BFAAFE407}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{01D07ECE-426E-49A6-AB3F-326BFAAFE407}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{01D07ECE-426E-49A6-AB3F-326BFAAFE407}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -95,6 +101,7 @@ Global
 		{70DC5884-5522-4552-82B5-56C95065155E} = {AF36576B-C728-4057-AE4F-937BFB04F43D}
 		{B5F2E08D-4A16-4B38-82E6-AD3BB2BBFB29} = {AF36576B-C728-4057-AE4F-937BFB04F43D}
 		{A5513654-AD62-4CC9-968B-F5F8F72C4142} = {AF36576B-C728-4057-AE4F-937BFB04F43D}
+		{FFB18690-4914-40D3-9BA2-4968DFFB3225} = {AF36576B-C728-4057-AE4F-937BFB04F43D}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {3C76E1C6-5B27-4005-8051-03C82E3A4849}

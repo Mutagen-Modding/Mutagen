@@ -7,8 +7,6 @@ using System.Threading.Tasks;
 
 namespace Mutagen.Bethesda.Tests.Benchmarks
 {
-    [KeepBenchmarkFiles]
-    [AsciiDocExporter]
     public class FormKeyParsing
     {
         private const string OblivionMaster = "Oblivion.esm";

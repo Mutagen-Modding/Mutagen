@@ -2,10 +2,10 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>8fa46655f51f0016e3ad3ca608bbf849ea8ea3a0</Sha>
+         <Sha>d5fd07fc55ad8d6aea11025bdb83c9cb84e66a51</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>05-09-2019 22:13:28</CommitDate>
-         <Description>ObservableExt.Unit and NotNull.  Made some parameters optional on keybinds</Description>
+         <CommitDate>05-13-2019 17:34:52</CommitDate>
+         <Description>Nuget Update</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>

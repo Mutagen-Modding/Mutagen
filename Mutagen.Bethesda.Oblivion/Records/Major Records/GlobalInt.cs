@@ -50,6 +50,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.WhenAny(x => x.Data)
                 .Skip(1)
                 .DistinctUntilChanged()
+                .Select(i => (float)i)
                 .BindTo(this, x => x.RawFloat);
         }
     }
