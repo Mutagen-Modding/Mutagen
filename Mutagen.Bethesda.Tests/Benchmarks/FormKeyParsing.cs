@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace Mutagen.Bethesda.Tests.Benchmarks
 {
+    [MemoryDiagnoser]
     public class FormKeyParsing
     {
         private const string OblivionMaster = "Oblivion.esm";

@@ -9,6 +9,7 @@ Frequency=3984652 Hz, Resolution=250.9629 ns, Timer=TSC
 
 
 ```
-|             Method |     Mean |    Error |   StdDev |  Gen 0 | Gen 1 | Gen 2 | Allocated |
-|------------------- |---------:|---------:|---------:|-------:|------:|------:|----------:|
-| ParseStringFormKey | 458.5 ns | 4.422 ns | 3.920 ns | 0.1030 |     - |     - |     432 B |
+|       Method |    Mean |    Error |   StdDev |
+|------------- |--------:|---------:|---------:|
+| CreateBinary | 17.23 s | 0.3422 s | 0.4684 s |
+| WriteBinary  | 3.845 s | 0.0782 s | 0.0693 s |
