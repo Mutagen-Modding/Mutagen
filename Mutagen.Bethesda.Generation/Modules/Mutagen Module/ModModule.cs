@@ -192,7 +192,7 @@ namespace Mutagen.Bethesda.Generation
             }
             using (new BraceWrapper(fg))
             {
-                fg.AppendLine("this.TES4.Header.NumRecords = GetRecordCount();");
+                fg.AppendLine("this.ModHeader.Stats.NumRecords = GetRecordCount();");
             }
             fg.AppendLine();
 

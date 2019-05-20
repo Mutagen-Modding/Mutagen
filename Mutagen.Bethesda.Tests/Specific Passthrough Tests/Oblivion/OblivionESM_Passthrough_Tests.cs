@@ -20,7 +20,7 @@ namespace Mutagen.Bethesda.Tests
         public static async Task OblivionESM_GroupMask_Import(PassthroughSettings settings, Passthrough passthrough)
         {
             var mod = await OblivionMod.Create_Binary(
-                Path.Combine(settings.DataFolder, passthrough.Path),
+                Path.Combine(settings.OblivionDataFolder, passthrough.Path),
                 modKey: Mutagen.Bethesda.Oblivion.Constants.Oblivion,
                 importMask: new GroupMask()
                 {
@@ -54,7 +54,7 @@ namespace Mutagen.Bethesda.Tests
         public static async Task OblivionESM_GroupMask_Export(PassthroughSettings settings, Passthrough passthrough)
         {
             var mod = await OblivionMod.Create_Binary(
-                Path.Combine(settings.DataFolder, passthrough.Path),
+                Path.Combine(settings.OblivionDataFolder, passthrough.Path),
                 modKey: Mutagen.Bethesda.Oblivion.Constants.Oblivion);
 
             using (var tmp = new TempFolder("Mutagen_Oblivion_Binary_GroupMask_Export"))

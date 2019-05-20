@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="ModHeader" recordType="TES4" objType="Record" GUID="d26d9f2a-53af-4c45-9490-dfdb377b6655" ID="2">
+    <Fields>
+      <ByteArray name="Fluff" length="12" nullable="NotNull" hasBeenSet="False" />
+      <RefDirect name="Stats" refName="ModStats" nullable="NotNull" hasBeenSet="False" />
+      <ByteArray name="TypeOffsets" recordType="OFST" hasBeenSet="True" />
+      <ByteArray name="Deleted" recordType="DELE" hasBeenSet="True" />
+      <String name="Author" recordType="CNAM" maxLength="512" hasBeenSet="True" />
+      <String name="Description" recordType="SNAM" maxLength="512" hasBeenSet="True" />
+      <RefList name="MasterReferences" refName="Bethesda.MasterReference" />
+      <UInt64 name="VestigialData" recordType="DATA" />
+    </Fields>
+  </Object>
+  <Object name="ModStats" recordType="HEDR" objType="Subrecord" GUID="88a14b36-530f-42a1-aa1f-b8ee1852e625" ID="1">
+    <Fields>
+      <Float name="Version" />
+      <Int32 name="NumRecords" />
+      <UInt32 name="NextObjectID" />
+    </Fields>
+  </Object>
+</Loqui>

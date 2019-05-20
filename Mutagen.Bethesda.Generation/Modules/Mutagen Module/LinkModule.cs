@@ -121,8 +121,11 @@ namespace Mutagen.Bethesda.Generation
         public override async Task GenerateInClass(ObjectGeneration obj, FileGeneration fg)
         {
             await base.GenerateInClass(obj, fg);
-            var linkCase = await HasLinks(obj, includeBaseClass: false);
-            if (linkCase == LinkCase.No) return;
+            if (obj.GetObjectType() != ObjectType.Mod)
+            {
+                var linkCase = await HasLinks(obj, includeBaseClass: false);
+                if (linkCase == LinkCase.No) return;
+            }
             fg.AppendLine($"public{await obj.FunctionOverride(async (o) => (await HasLinks(o, includeBaseClass: false)) != LinkCase.No)}IEnumerable<ILink> Links => GetLinks();");
 
             fg.AppendLine("private IEnumerable<ILink> GetLinks()");

@@ -23,5 +23,6 @@ namespace Mutagen.Bethesda
         public static readonly int GRUP_HEADER_OFFSET = -8;
         public const string TRIGGERING_RECORDTYPE_MEMBER = "TRIGGERING_RECORD_TYPE";
         public const string GRUP_RECORDTYPE_MEMBER = "GRUP_RECORD_TYPE";
+        public static readonly RecordType EditorID = new RecordType("EDID");
     }
 }

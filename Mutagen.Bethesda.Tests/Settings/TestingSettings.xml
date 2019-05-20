@@ -19,7 +19,8 @@
       <Bool name="TestImport" />
       <Bool name="TestObservable" />
       <Bool name="TestFolder" />
-      <String name="DataFolder" />
+      <String name="OblivionDataFolder" />
+      <String name="SkyrimDataFolder" />
     </Fields>
   </Object>
   <Object name="Passthrough" GUID="4eabe8e5-a068-4934-a847-401d92253ade" ID="2">

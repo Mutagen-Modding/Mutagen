@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="SkyrimMajorRecord" objType="Record" abstract="true" baseClass="Bethesda.MajorRecord" GUID="4c3a4042-d85b-4f7e-8f54-443bb2efefd4" ID="4">
+    <Fields>
+      <Enum name="SkyrimMajorRecordFlags" enumName="SkyrimMajorRecord.SkyrimMajorRecordFlag" binary="NoGeneration" generateClassMembers="false" />
+    </Fields>
+  </Object>
+</Loqui>

@@ -1,7 +1,6 @@
 ﻿using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
-using Mutagen.Bethesda.Oblivion.Internals;
 using Noggog.Notifying;
 using System;
 using ReactiveUI;
@@ -9,7 +8,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reactive.Linq;
 
-namespace Mutagen.Bethesda.Oblivion
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class GameSetting : IGameSettingCommon
     {

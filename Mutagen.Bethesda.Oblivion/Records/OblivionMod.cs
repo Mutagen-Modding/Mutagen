@@ -23,7 +23,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public partial class OblivionMod : IMod, ILinkContainer
     {
-        public ISourceList<MasterReference> MasterReferences => this.TES4.MasterReferences;
+        public ISourceList<MasterReference> MasterReferences => this.ModHeader.MasterReferences;
         public ModKey ModKey { get; }
 
         public OblivionMod(ModKey modKey)
@@ -34,7 +34,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         partial void CustomCtor()
         {
-            this.TES4.Header.NextObjectID = 0xD62; // first available ID on empty CS plugins
+            this.ModHeader.Stats.NextObjectID = 0xD62; // first available ID on empty CS plugins
 
             Observable.Merge<IChangeSet<IMajorRecord>>(
                     this.Cells.Items.Connect()
@@ -108,7 +108,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return new FormKey(
                 this.ModKey,
-                this.TES4.Header.NextObjectID++);
+                this.ModHeader.Stats.NextObjectID++);
         }
 
         partial void GetCustomRecordCount(Action<int> setter)

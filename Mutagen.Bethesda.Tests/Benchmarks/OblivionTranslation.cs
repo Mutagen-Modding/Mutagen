@@ -34,7 +34,7 @@ namespace Mutagen.Bethesda.Tests.Benchmarks
             // Setup folders and paths
             ModKey = new ModKey("Oblivion.esm", true);
             TempFolder = new TempFolder(deleteAfter: true);
-            DataPath = Path.Combine(Settings.PassthroughSettings.DataFolder, "Oblivion.esm");
+            DataPath = Path.Combine(Settings.PassthroughSettings.OblivionDataFolder, "Oblivion.esm");
             BinaryPath = Path.Combine(TempFolder.Dir.Path, "Oblivion.esm");
             XmlFolder = new DirectoryPath(Path.Combine(TempFolder.Dir.Path, "Folder"));
             XmlFolder.Create();

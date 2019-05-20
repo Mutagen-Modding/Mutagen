@@ -1,0 +1,46 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Mutagen.Bethesda.Binary;
+using ReactiveUI;
+using System.Reactive.Linq;
+using Noggog;
+using Noggog.Notifying;
+using CSharpExt.Rx;
+using DynamicData;
+using System.Collections.ObjectModel;
+using System.Threading;
+using Loqui.Internal;
+using Mutagen.Bethesda.Internals;
+using System.IO;
+using System.Xml.Linq;
+using Loqui.Xml;
+
+namespace Mutagen.Bethesda.Skyrim
+{
+    public partial class SkyrimMod : IMod, ILinkContainer
+    {
+        public ISourceList<MasterReference> MasterReferences => this.ModHeader.MasterReferences;
+        public ModKey ModKey { get; }
+
+        public SkyrimMod(ModKey modKey)
+            : this()
+        {
+            this.ModKey = modKey;
+        }
+
+        void IMod.Write_Binary(string path, ModKey modKey)
+        {
+            this.Write_Binary(path, modKey, importMask: null);
+        }
+
+        public FormKey GetNextFormKey()
+        {
+            return new FormKey(
+                this.ModKey,
+                this.ModHeader.Stats.NextObjectID++);
+        }
+    }
+}

@@ -25,7 +25,7 @@ namespace Mutagen.Bethesda.Tests
 
         public Oblivion_Passthrough_Test(PassthroughSettings settings, Passthrough passthrough)
         {
-            this.FilePath = Path.Combine(settings.DataFolder, passthrough.Path);
+            this.FilePath = Path.Combine(settings.OblivionDataFolder, passthrough.Path);
             this.Nickname = passthrough.Path;
             this.NumMasters = passthrough.NumMasters;
             this.settings = settings;

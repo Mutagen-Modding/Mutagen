@@ -108,20 +108,20 @@ namespace Mutagen.Bethesda.Oblivion
                 _Waters_Object.Items.Connect().Transform<IMajorRecord, Water, FormKey>((i) => i),
                 _EffectShaders_Object.Items.Connect().Transform<IMajorRecord, EffectShader, FormKey>((i) => i))
                 .PopulateInto(_majorRecords);
-            _hasBeenSetTracker[(int)OblivionMod_FieldIndex.TES4] = true;
+            _hasBeenSetTracker[(int)OblivionMod_FieldIndex.ModHeader] = true;
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
-        #region TES4
-        private TES4 _TES4_Object = new TES4();
-        public bool TES4_IsSet => true;
-        bool IOblivionModGetter.TES4_IsSet => TES4_IsSet;
+        #region ModHeader
+        private ModHeader _ModHeader_Object = new ModHeader();
+        public bool ModHeader_IsSet => true;
+        bool IOblivionModGetter.ModHeader_IsSet => ModHeader_IsSet;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public TES4 TES4 => _TES4_Object;
+        public ModHeader ModHeader => _ModHeader_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        TES4 IOblivionModGetter.TES4 => this.TES4;
+        ModHeader IOblivionModGetter.ModHeader => this.ModHeader;
         #endregion
         #region GameSettings
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -438,10 +438,10 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Equals(OblivionMod rhs)
         {
             if (rhs == null) return false;
-            if (TES4_IsSet != rhs.TES4_IsSet) return false;
-            if (TES4_IsSet)
+            if (ModHeader_IsSet != rhs.ModHeader_IsSet) return false;
+            if (ModHeader_IsSet)
             {
-                if (!object.Equals(this.TES4, rhs.TES4)) return false;
+                if (!object.Equals(this.ModHeader, rhs.ModHeader)) return false;
             }
             if (!object.Equals(this.GameSettings, rhs.GameSettings)) return false;
             if (!object.Equals(this.Globals, rhs.Globals)) return false;
@@ -505,9 +505,9 @@ namespace Mutagen.Bethesda.Oblivion
         public override int GetHashCode()
         {
             int ret = 0;
-            if (TES4_IsSet)
+            if (ModHeader_IsSet)
             {
-                ret = HashHelper.GetHashCode(TES4).CombineHashCode(ret);
+                ret = HashHelper.GetHashCode(ModHeader).CombineHashCode(ret);
             }
             ret = HashHelper.GetHashCode(GameSettings).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(Globals).CombineHashCode(ret);
@@ -875,12 +875,12 @@ namespace Mutagen.Bethesda.Oblivion
         {
             switch (name)
             {
-                case "TES4":
+                case "ModHeader":
                     try
                     {
-                        errorMask?.PushIndex((int)OblivionMod_FieldIndex.TES4);
-                        item.TES4.CopyFieldsFrom(
-                            rhs: TES4.Create_Xml(
+                        errorMask?.PushIndex((int)OblivionMod_FieldIndex.ModHeader);
+                        item.ModHeader.CopyFieldsFrom(
+                            rhs: ModHeader.Create_Xml(
                                 node: node,
                                 errorMask: errorMask,
                                 translationMask: translationMask)
@@ -935,7 +935,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             switch ((OblivionMod_FieldIndex)index)
             {
-                case OblivionMod_FieldIndex.TES4:
+                case OblivionMod_FieldIndex.ModHeader:
                     return _hasBeenSetTracker[index];
                 case OblivionMod_FieldIndex.GameSettings:
                 case OblivionMod_FieldIndex.Globals:
@@ -2069,7 +2069,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public void SyncRecordCount()
         {
-            this.TES4.Header.NumRecords = GetRecordCount();
+            this.ModHeader.Stats.NumRecords = GetRecordCount();
         }
 
         public int GetRecordCount()
@@ -2348,8 +2348,8 @@ namespace Mutagen.Bethesda.Oblivion
         {
             var ret = new OblivionMod(modKey);
             var tasks = new List<Task>();
-            ret.TES4.CopyFieldsFrom(TES4.Create_Xml(
-                path: Path.Combine(dir.Path, "TES4.xml"),
+            ret.ModHeader.CopyFieldsFrom(ModHeader.Create_Xml(
+                path: Path.Combine(dir.Path, "ModHeader.xml"),
                 errorMask: errorMask,
                 translationMask: null));
             tasks.Add(Task.Run(() => ret.GameSettings.Create_Xml_Folder<GameSetting>(
@@ -2650,8 +2650,8 @@ namespace Mutagen.Bethesda.Oblivion
             using (new FolderCleaner(dir, FolderCleaner.CleanType.AccessTime))
             {
                 var tasks = new List<Task>();
-                tasks.Add(Task.Run(() => this.TES4.Write_Xml(
-                    path: Path.Combine(dir.Path, "TES4.xml"),
+                tasks.Add(Task.Run(() => this.ModHeader.Write_Xml(
+                    path: Path.Combine(dir.Path, "ModHeader.xml"),
                     errorMask: errorMaskBuilder,
                     translationMask: null)));
                 tasks.Add(Task.Run(() => GameSettings.Write_Xml_Folder<GameSetting, GameSetting_ErrorMask>(
@@ -2981,7 +2981,7 @@ namespace Mutagen.Bethesda.Oblivion
             GroupMask importMask = null)
         {
             var ret = new OblivionMod(modKey);
-            var masterReferences = new MasterReferences(ret.TES4.MasterReferences, modKey);
+            var masterReferences = new MasterReferences(ret.ModHeader.MasterReferences, modKey);
             await UtilityAsyncTranslation.ModParse(
                 record: ret,
                 frame: frame,
@@ -3295,14 +3295,14 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     try
                     {
-                        errorMask?.PushIndex((int)OblivionMod_FieldIndex.TES4);
-                        var tmpTES4 = TES4.Create_Binary(
+                        errorMask?.PushIndex((int)OblivionMod_FieldIndex.ModHeader);
+                        var tmpModHeader = ModHeader.Create_Binary(
                             frame: frame,
                             errorMask: errorMask,
                             recordTypeConverter: null,
                             masterReferences: masterReferences);
-                        item.TES4.CopyFieldsFrom(
-                            rhs: tmpTES4,
+                        item.ModHeader.CopyFieldsFrom(
+                            rhs: tmpModHeader,
                             def: null,
                             copyMask: null,
                             errorMask: errorMask);
@@ -3316,7 +3316,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         errorMask?.PopIndex();
                     }
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.TES4);
+                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.ModHeader);
                 }
                 case 0x54534D47: // GMST
                 {
@@ -5343,8 +5343,8 @@ namespace Mutagen.Bethesda.Oblivion
             OblivionMod_FieldIndex enu = (OblivionMod_FieldIndex)index;
             switch (enu)
             {
-                case OblivionMod_FieldIndex.TES4:
-                    this.TES4.CopyFieldsFrom(rhs: (TES4)obj);
+                case OblivionMod_FieldIndex.ModHeader:
+                    this.ModHeader.CopyFieldsFrom(rhs: (ModHeader)obj);
                     break;
                 case OblivionMod_FieldIndex.GameSettings:
                     this._GameSettings_Object.CopyFieldsFrom<GameSetting_CopyMask>(rhs: (Group<GameSetting>)obj);
@@ -5551,8 +5551,8 @@ namespace Mutagen.Bethesda.Oblivion
             }
             switch (enu)
             {
-                case OblivionMod_FieldIndex.TES4:
-                    obj.TES4.CopyFieldsFrom(rhs: (TES4)pair.Value);
+                case OblivionMod_FieldIndex.ModHeader:
+                    obj.ModHeader.CopyFieldsFrom(rhs: (ModHeader)pair.Value);
                     break;
                 case OblivionMod_FieldIndex.GameSettings:
                     obj._GameSettings_Object.CopyFieldsFrom<GameSetting_CopyMask>(rhs: (Group<GameSetting>)pair.Value);
@@ -5736,9 +5736,9 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface IOblivionModGetter : ILoquiObject
     {
-        #region TES4
-        TES4 TES4 { get; }
-        bool TES4_IsSet { get; }
+        #region ModHeader
+        ModHeader ModHeader { get; }
+        bool ModHeader_IsSet { get; }
 
         #endregion
         #region GameSettings
@@ -5921,7 +5921,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #region Field Index
     public enum OblivionMod_FieldIndex
     {
-        TES4 = 0,
+        ModHeader = 0,
         GameSettings = 1,
         Globals = 2,
         Classes = 3,
@@ -6029,8 +6029,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (str.Upper)
             {
-                case "TES4":
-                    return (ushort)OblivionMod_FieldIndex.TES4;
+                case "MODHEADER":
+                    return (ushort)OblivionMod_FieldIndex.ModHeader;
                 case "GAMESETTINGS":
                     return (ushort)OblivionMod_FieldIndex.GameSettings;
                 case "GLOBALS":
@@ -6153,7 +6153,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             OblivionMod_FieldIndex enu = (OblivionMod_FieldIndex)index;
             switch (enu)
             {
-                case OblivionMod_FieldIndex.TES4:
+                case OblivionMod_FieldIndex.ModHeader:
                 case OblivionMod_FieldIndex.GameSettings:
                 case OblivionMod_FieldIndex.Globals:
                 case OblivionMod_FieldIndex.Classes:
@@ -6221,7 +6221,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             OblivionMod_FieldIndex enu = (OblivionMod_FieldIndex)index;
             switch (enu)
             {
-                case OblivionMod_FieldIndex.TES4:
+                case OblivionMod_FieldIndex.ModHeader:
                 case OblivionMod_FieldIndex.GameSettings:
                 case OblivionMod_FieldIndex.Globals:
                 case OblivionMod_FieldIndex.Classes:
@@ -6289,7 +6289,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             OblivionMod_FieldIndex enu = (OblivionMod_FieldIndex)index;
             switch (enu)
             {
-                case OblivionMod_FieldIndex.TES4:
+                case OblivionMod_FieldIndex.ModHeader:
                 case OblivionMod_FieldIndex.GameSettings:
                 case OblivionMod_FieldIndex.Globals:
                 case OblivionMod_FieldIndex.Classes:
@@ -6357,8 +6357,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             OblivionMod_FieldIndex enu = (OblivionMod_FieldIndex)index;
             switch (enu)
             {
-                case OblivionMod_FieldIndex.TES4:
-                    return "TES4";
+                case OblivionMod_FieldIndex.ModHeader:
+                    return "ModHeader";
                 case OblivionMod_FieldIndex.GameSettings:
                     return "GameSettings";
                 case OblivionMod_FieldIndex.Globals:
@@ -6481,7 +6481,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             OblivionMod_FieldIndex enu = (OblivionMod_FieldIndex)index;
             switch (enu)
             {
-                case OblivionMod_FieldIndex.TES4:
+                case OblivionMod_FieldIndex.ModHeader:
                 case OblivionMod_FieldIndex.GameSettings:
                 case OblivionMod_FieldIndex.Globals:
                 case OblivionMod_FieldIndex.Classes:
@@ -6549,7 +6549,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             OblivionMod_FieldIndex enu = (OblivionMod_FieldIndex)index;
             switch (enu)
             {
-                case OblivionMod_FieldIndex.TES4:
+                case OblivionMod_FieldIndex.ModHeader:
                 case OblivionMod_FieldIndex.Cells:
                     return true;
                 case OblivionMod_FieldIndex.GameSettings:
@@ -6618,8 +6618,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             OblivionMod_FieldIndex enu = (OblivionMod_FieldIndex)index;
             switch (enu)
             {
-                case OblivionMod_FieldIndex.TES4:
-                    return typeof(TES4);
+                case OblivionMod_FieldIndex.ModHeader:
+                    return typeof(ModHeader);
                 case OblivionMod_FieldIndex.GameSettings:
                     return typeof(Group<GameSetting>);
                 case OblivionMod_FieldIndex.Globals:
@@ -6849,17 +6849,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             OblivionMod_CopyMask copyMask)
         {
-            if (copyMask?.TES4.Overall ?? true)
+            if (copyMask?.ModHeader.Overall ?? true)
             {
-                errorMask?.PushIndex((int)OblivionMod_FieldIndex.TES4);
+                errorMask?.PushIndex((int)OblivionMod_FieldIndex.ModHeader);
                 try
                 {
-                    TES4Common.CopyFieldsFrom(
-                        item: item.TES4,
-                        rhs: rhs.TES4,
-                        def: def?.TES4,
+                    ModHeaderCommon.CopyFieldsFrom(
+                        item: item.ModHeader,
+                        rhs: rhs.ModHeader,
+                        def: def?.ModHeader,
                         errorMask: errorMask,
-                        copyMask: copyMask?.TES4.Specific);
+                        copyMask: copyMask?.ModHeader.Specific);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -8132,11 +8132,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.TES4 = EqualsMaskHelper.EqualsHelper(
-                item.TES4_IsSet,
-                rhs.TES4_IsSet,
-                item.TES4,
-                rhs.TES4,
+            ret.ModHeader = EqualsMaskHelper.EqualsHelper(
+                item.ModHeader_IsSet,
+                rhs.ModHeader_IsSet,
+                item.ModHeader,
+                rhs.ModHeader,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
                 include);
             ret.GameSettings = MaskItemExt.Factory(GroupCommon.GetEqualsMask(item.GameSettings, rhs.GameSettings, include), include);
@@ -8224,9 +8224,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
-                if (printMask?.TES4?.Overall ?? true)
+                if (printMask?.ModHeader?.Overall ?? true)
                 {
-                    item.TES4?.ToString(fg, "TES4");
+                    item.ModHeader?.ToString(fg, "ModHeader");
                 }
                 if (printMask?.GameSettings?.Overall ?? true)
                 {
@@ -8460,15 +8460,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this IOblivionModGetter item,
             OblivionMod_Mask<bool?> checkMask)
         {
-            if (checkMask.TES4.Overall.HasValue && checkMask.TES4.Overall.Value != item.TES4_IsSet) return false;
-            if (checkMask.TES4.Specific != null && (item.TES4 == null || !item.TES4.HasBeenSet(checkMask.TES4.Specific))) return false;
+            if (checkMask.ModHeader.Overall.HasValue && checkMask.ModHeader.Overall.Value != item.ModHeader_IsSet) return false;
+            if (checkMask.ModHeader.Specific != null && (item.ModHeader == null || !item.ModHeader.HasBeenSet(checkMask.ModHeader.Specific))) return false;
             return true;
         }
 
         public static OblivionMod_Mask<bool> GetHasBeenSetMask(IOblivionModGetter item)
         {
             var ret = new OblivionMod_Mask<bool>();
-            ret.TES4 = new MaskItem<bool, TES4_Mask<bool>>(item.TES4_IsSet, TES4Common.GetHasBeenSetMask(item.TES4));
+            ret.ModHeader = new MaskItem<bool, ModHeader_Mask<bool>>(item.ModHeader_IsSet, ModHeaderCommon.GetHasBeenSetMask(item.ModHeader));
             ret.GameSettings = new MaskItem<bool, Group_Mask<bool>>(true, GroupCommon.GetHasBeenSetMask(item.GameSettings));
             ret.Globals = new MaskItem<bool, Group_Mask<bool>>(true, GroupCommon.GetHasBeenSetMask(item.Globals));
             ret.Classes = new MaskItem<bool, Group_Mask<bool>>(true, GroupCommon.GetHasBeenSetMask(item.Classes));
@@ -9905,16 +9905,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
         {
-            if (item.TES4_IsSet
-                && (translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.TES4) ?? true))
+            if (item.ModHeader_IsSet
+                && (translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.ModHeader) ?? true))
             {
-                LoquiXmlTranslation<TES4>.Instance.Write(
+                LoquiXmlTranslation<ModHeader>.Instance.Write(
                     node: node,
-                    item: item.TES4,
-                    name: nameof(item.TES4),
-                    fieldIndex: (int)OblivionMod_FieldIndex.TES4,
+                    item: item.ModHeader,
+                    name: nameof(item.ModHeader),
+                    fieldIndex: (int)OblivionMod_FieldIndex.ModHeader,
                     errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.TES4));
+                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.ModHeader));
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.GameSettings) ?? true))
             {
@@ -10531,7 +10531,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public OblivionMod_Mask(T initialValue)
         {
-            this.TES4 = new MaskItem<T, TES4_Mask<T>>(initialValue, new TES4_Mask<T>(initialValue));
+            this.ModHeader = new MaskItem<T, ModHeader_Mask<T>>(initialValue, new ModHeader_Mask<T>(initialValue));
             this.GameSettings = new MaskItem<T, Group_Mask<T>>(initialValue, new Group_Mask<T>(initialValue));
             this.Globals = new MaskItem<T, Group_Mask<T>>(initialValue, new Group_Mask<T>(initialValue));
             this.Classes = new MaskItem<T, Group_Mask<T>>(initialValue, new Group_Mask<T>(initialValue));
@@ -10592,7 +10592,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region Members
-        public MaskItem<T, TES4_Mask<T>> TES4 { get; set; }
+        public MaskItem<T, ModHeader_Mask<T>> ModHeader { get; set; }
         public MaskItem<T, Group_Mask<T>> GameSettings { get; set; }
         public MaskItem<T, Group_Mask<T>> Globals { get; set; }
         public MaskItem<T, Group_Mask<T>> Classes { get; set; }
@@ -10661,7 +10661,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool Equals(OblivionMod_Mask<T> rhs)
         {
             if (rhs == null) return false;
-            if (!object.Equals(this.TES4, rhs.TES4)) return false;
+            if (!object.Equals(this.ModHeader, rhs.ModHeader)) return false;
             if (!object.Equals(this.GameSettings, rhs.GameSettings)) return false;
             if (!object.Equals(this.Globals, rhs.Globals)) return false;
             if (!object.Equals(this.Classes, rhs.Classes)) return false;
@@ -10723,7 +10723,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override int GetHashCode()
         {
             int ret = 0;
-            ret = ret.CombineHashCode(this.TES4?.GetHashCode());
+            ret = ret.CombineHashCode(this.ModHeader?.GetHashCode());
             ret = ret.CombineHashCode(this.GameSettings?.GetHashCode());
             ret = ret.CombineHashCode(this.Globals?.GetHashCode());
             ret = ret.CombineHashCode(this.Classes?.GetHashCode());
@@ -10788,10 +10788,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region All Equal
         public bool AllEqual(Func<T, bool> eval)
         {
-            if (TES4 != null)
+            if (ModHeader != null)
             {
-                if (!eval(this.TES4.Overall)) return false;
-                if (this.TES4.Specific != null && !this.TES4.Specific.AllEqual(eval)) return false;
+                if (!eval(this.ModHeader.Overall)) return false;
+                if (this.ModHeader.Specific != null && !this.ModHeader.Specific.AllEqual(eval)) return false;
             }
             if (GameSettings != null)
             {
@@ -11087,13 +11087,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         protected void Translate_InternalFill<R>(OblivionMod_Mask<R> obj, Func<T, R> eval)
         {
-            if (this.TES4 != null)
+            if (this.ModHeader != null)
             {
-                obj.TES4 = new MaskItem<R, TES4_Mask<R>>();
-                obj.TES4.Overall = eval(this.TES4.Overall);
-                if (this.TES4.Specific != null)
+                obj.ModHeader = new MaskItem<R, ModHeader_Mask<R>>();
+                obj.ModHeader.Overall = eval(this.ModHeader.Overall);
+                if (this.ModHeader.Specific != null)
                 {
-                    obj.TES4.Specific = this.TES4.Specific.Translate(eval);
+                    obj.ModHeader.Specific = this.ModHeader.Specific.Translate(eval);
                 }
             }
             if (this.GameSettings != null)
@@ -11628,9 +11628,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
-                if (printMask?.TES4?.Overall ?? true)
+                if (printMask?.ModHeader?.Overall ?? true)
                 {
-                    TES4?.ToString(fg);
+                    ModHeader?.ToString(fg);
                 }
                 if (printMask?.GameSettings?.Overall ?? true)
                 {
@@ -11879,7 +11879,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 return _warnings;
             }
         }
-        public MaskItem<Exception, TES4_ErrorMask> TES4;
+        public MaskItem<Exception, ModHeader_ErrorMask> ModHeader;
         public MaskItem<Exception, Group_ErrorMask<GameSetting_ErrorMask>> GameSettings;
         public MaskItem<Exception, Group_ErrorMask<Global_ErrorMask>> Globals;
         public MaskItem<Exception, Group_ErrorMask<Class_ErrorMask>> Classes;
@@ -11944,8 +11944,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             OblivionMod_FieldIndex enu = (OblivionMod_FieldIndex)index;
             switch (enu)
             {
-                case OblivionMod_FieldIndex.TES4:
-                    return TES4;
+                case OblivionMod_FieldIndex.ModHeader:
+                    return ModHeader;
                 case OblivionMod_FieldIndex.GameSettings:
                     return GameSettings;
                 case OblivionMod_FieldIndex.Globals:
@@ -12068,8 +12068,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             OblivionMod_FieldIndex enu = (OblivionMod_FieldIndex)index;
             switch (enu)
             {
-                case OblivionMod_FieldIndex.TES4:
-                    this.TES4 = new MaskItem<Exception, TES4_ErrorMask>(ex, null);
+                case OblivionMod_FieldIndex.ModHeader:
+                    this.ModHeader = new MaskItem<Exception, ModHeader_ErrorMask>(ex, null);
                     break;
                 case OblivionMod_FieldIndex.GameSettings:
                     this.GameSettings = new MaskItem<Exception, Group_ErrorMask<GameSetting_ErrorMask>>(ex, null);
@@ -12249,8 +12249,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             OblivionMod_FieldIndex enu = (OblivionMod_FieldIndex)index;
             switch (enu)
             {
-                case OblivionMod_FieldIndex.TES4:
-                    this.TES4 = (MaskItem<Exception, TES4_ErrorMask>)obj;
+                case OblivionMod_FieldIndex.ModHeader:
+                    this.ModHeader = (MaskItem<Exception, ModHeader_ErrorMask>)obj;
                     break;
                 case OblivionMod_FieldIndex.GameSettings:
                     this.GameSettings = (MaskItem<Exception, Group_ErrorMask<GameSetting_ErrorMask>>)obj;
@@ -12428,7 +12428,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool IsInError()
         {
             if (Overall != null) return true;
-            if (TES4 != null) return true;
+            if (ModHeader != null) return true;
             if (GameSettings != null) return true;
             if (Globals != null) return true;
             if (Classes != null) return true;
@@ -12519,7 +12519,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         protected void ToString_FillInternal(FileGeneration fg)
         {
-            TES4?.ToString(fg);
+            ModHeader?.ToString(fg);
             GameSettings?.ToString(fg);
             Globals?.ToString(fg);
             Classes?.ToString(fg);
@@ -12583,7 +12583,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public OblivionMod_ErrorMask Combine(OblivionMod_ErrorMask rhs)
         {
             var ret = new OblivionMod_ErrorMask();
-            ret.TES4 = new MaskItem<Exception, TES4_ErrorMask>(this.TES4.Overall.Combine(rhs.TES4.Overall), ((IErrorMask<TES4_ErrorMask>)this.TES4.Specific).Combine(rhs.TES4.Specific));
+            ret.ModHeader = new MaskItem<Exception, ModHeader_ErrorMask>(this.ModHeader.Overall.Combine(rhs.ModHeader.Overall), ((IErrorMask<ModHeader_ErrorMask>)this.ModHeader.Specific).Combine(rhs.ModHeader.Specific));
             ret.GameSettings = new MaskItem<Exception, Group_ErrorMask<GameSetting_ErrorMask>>(this.GameSettings.Overall.Combine(rhs.GameSettings.Overall), ((IErrorMask<Group_ErrorMask<GameSetting_ErrorMask>>)this.GameSettings.Specific).Combine(rhs.GameSettings.Specific));
             ret.Globals = new MaskItem<Exception, Group_ErrorMask<Global_ErrorMask>>(this.Globals.Overall.Combine(rhs.Globals.Overall), ((IErrorMask<Group_ErrorMask<Global_ErrorMask>>)this.Globals.Specific).Combine(rhs.Globals.Specific));
             ret.Classes = new MaskItem<Exception, Group_ErrorMask<Class_ErrorMask>>(this.Classes.Overall.Combine(rhs.Classes.Overall), ((IErrorMask<Group_ErrorMask<Class_ErrorMask>>)this.Classes.Specific).Combine(rhs.Classes.Specific));
@@ -12666,7 +12666,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public OblivionMod_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
         {
-            this.TES4 = new MaskItem<bool, TES4_CopyMask>(defaultOn, default);
+            this.ModHeader = new MaskItem<bool, ModHeader_CopyMask>(defaultOn, default);
             this.GameSettings = new MaskItem<bool, Group_CopyMask<GameSetting_CopyMask>>(defaultOn, default);
             this.Globals = new MaskItem<bool, Group_CopyMask<Global_CopyMask>>(defaultOn, default);
             this.Classes = new MaskItem<bool, Group_CopyMask<Class_CopyMask>>(defaultOn, default);
@@ -12726,7 +12726,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         #region Members
-        public MaskItem<bool, TES4_CopyMask> TES4;
+        public MaskItem<bool, ModHeader_CopyMask> ModHeader;
         public MaskItem<bool, Group_CopyMask<GameSetting_CopyMask>> GameSettings;
         public MaskItem<bool, Group_CopyMask<Global_CopyMask>> Globals;
         public MaskItem<bool, Group_CopyMask<Class_CopyMask>> Classes;
@@ -12791,7 +12791,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         #region Members
         private TranslationCrystal _crystal;
-        public MaskItem<bool, TES4_TranslationMask> TES4;
+        public MaskItem<bool, ModHeader_TranslationMask> ModHeader;
         public MaskItem<bool, Group_TranslationMask<GameSetting_TranslationMask>> GameSettings;
         public MaskItem<bool, Group_TranslationMask<Global_TranslationMask>> Globals;
         public MaskItem<bool, Group_TranslationMask<Class_TranslationMask>> Classes;
@@ -12857,7 +12857,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public OblivionMod_TranslationMask(bool defaultOn)
         {
-            this.TES4 = new MaskItem<bool, TES4_TranslationMask>(defaultOn, null);
+            this.ModHeader = new MaskItem<bool, ModHeader_TranslationMask>(defaultOn, null);
             this.GameSettings = new MaskItem<bool, Group_TranslationMask<GameSetting_TranslationMask>>(defaultOn, null);
             this.Globals = new MaskItem<bool, Group_TranslationMask<Global_TranslationMask>>(defaultOn, null);
             this.Classes = new MaskItem<bool, Group_TranslationMask<Class_TranslationMask>>(defaultOn, null);
@@ -12932,7 +12932,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         protected void GetCrystal(List<(bool On, TranslationCrystal SubCrystal)> ret)
         {
-            ret.Add((TES4?.Overall ?? true, TES4?.Specific?.GetCrystal()));
+            ret.Add((ModHeader?.Overall ?? true, ModHeader?.Specific?.GetCrystal()));
             ret.Add((GameSettings?.Overall ?? true, GameSettings?.Specific?.GetCrystal()));
             ret.Add((Globals?.Overall ?? true, Globals?.Specific?.GetCrystal()));
             ret.Add((Classes?.Overall ?? true, Classes?.Specific?.GetCrystal()));
@@ -13130,13 +13130,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
         {
-            MasterReferences masterReferences = new MasterReferences(item.TES4.MasterReferences, modKey);
-            if (item.TES4_IsSet)
+            MasterReferences masterReferences = new MasterReferences(item.ModHeader.MasterReferences, modKey);
+            if (item.ModHeader_IsSet)
             {
-                LoquiBinaryTranslation<TES4>.Instance.Write(
+                LoquiBinaryTranslation<ModHeader>.Instance.Write(
                     writer: writer,
-                    item: item.TES4,
-                    fieldIndex: (int)OblivionMod_FieldIndex.TES4,
+                    item: item.ModHeader,
+                    fieldIndex: (int)OblivionMod_FieldIndex.ModHeader,
                     errorMask: errorMask,
                     masterReferences: masterReferences);
             }
