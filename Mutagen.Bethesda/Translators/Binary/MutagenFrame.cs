@@ -333,5 +333,65 @@ namespace Mutagen.Bethesda.Binary
         }
 
         IMutagenReadStream IMutagenReadStream.ReadAndReframe(int length) => this.ReadAndReframe(length);
+
+        public bool GetBool()
+        {
+            return Reader.GetBool();
+        }
+
+        public byte GetUInt8()
+        {
+            return Reader.GetUInt8();
+        }
+
+        public ushort GetUInt16()
+        {
+            return Reader.GetUInt16();
+        }
+
+        public uint GetUInt32()
+        {
+            return Reader.GetUInt32();
+        }
+
+        public ulong GetUInt64()
+        {
+            return Reader.GetUInt64();
+        }
+
+        public sbyte GetInt8()
+        {
+            return Reader.GetInt8();
+        }
+
+        public short GetInt16()
+        {
+            return Reader.GetInt16();
+        }
+
+        public int GetInt32()
+        {
+            return Reader.GetInt32();
+        }
+
+        public long GetInt64()
+        {
+            return Reader.GetInt64();
+        }
+
+        public float GetFloat()
+        {
+            return Reader.GetFloat();
+        }
+
+        public double GetDouble()
+        {
+            return Reader.GetDouble();
+        }
+
+        public string GetString(int amount)
+        {
+            return Reader.GetString(amount);
+        }
     }
 }
