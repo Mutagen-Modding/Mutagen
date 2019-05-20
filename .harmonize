@@ -2,10 +2,10 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>e8651d43584817196c0106fac5ba4d826f5530bc</Sha>
+         <Sha>66a80d8fd14b11a51adca765c9b7e58a54a93ac8</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>05-19-2019 03:24:25</CommitDate>
-         <Description>Some initial benchmarking setup</Description>
+         <CommitDate>05-20-2019 18:16:05</CommitDate>
+         <Description>BinaryMemoryReadStream:  Swapped GetBytes to span.ToArray()</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>

@@ -230,7 +230,7 @@ namespace Mutagen.Bethesda
                 return true;
             }
             errorMask.ReportExceptionOrThrow(
-                new ArgumentException($"Could not convert to {NullableName}"));
+                new ArgumentException($"Could not convert to {NullableName}: {str}"));
             value = FormKey.NULL;
             return false;
         }
