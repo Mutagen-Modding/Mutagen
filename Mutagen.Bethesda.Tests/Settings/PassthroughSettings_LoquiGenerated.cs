@@ -61,12 +61,6 @@ namespace Mutagen.Bethesda.Tests
         #region TestFolder
         public Boolean TestFolder { get; set; }
         #endregion
-        #region OblivionDataFolder
-        public String OblivionDataFolder { get; set; }
-        #endregion
-        #region SkyrimDataFolder
-        public String SkyrimDataFolder { get; set; }
-        #endregion
 
         IMask<bool> IEqualsMask<PassthroughSettings>.GetEqualsMask(PassthroughSettings rhs, EqualsMaskHelper.Include include) => PassthroughSettingsCommon.GetEqualsMask(this, rhs, include);
         IMask<bool> IEqualsMask<IPassthroughSettingsGetter>.GetEqualsMask(IPassthroughSettingsGetter rhs, EqualsMaskHelper.Include include) => PassthroughSettingsCommon.GetEqualsMask(this, rhs, include);
@@ -113,8 +107,6 @@ namespace Mutagen.Bethesda.Tests
             if (this.TestImport != rhs.TestImport) return false;
             if (this.TestObservable != rhs.TestObservable) return false;
             if (this.TestFolder != rhs.TestFolder) return false;
-            if (!string.Equals(this.OblivionDataFolder, rhs.OblivionDataFolder)) return false;
-            if (!string.Equals(this.SkyrimDataFolder, rhs.SkyrimDataFolder)) return false;
             return true;
         }
 
@@ -127,8 +119,6 @@ namespace Mutagen.Bethesda.Tests
             ret = HashHelper.GetHashCode(TestImport).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(TestObservable).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(TestFolder).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(OblivionDataFolder).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(SkyrimDataFolder).CombineHashCode(ret);
             return ret;
         }
 
@@ -648,12 +638,6 @@ namespace Mutagen.Bethesda.Tests
                 case PassthroughSettings_FieldIndex.TestFolder:
                     this.TestFolder = (Boolean)obj;
                     break;
-                case PassthroughSettings_FieldIndex.OblivionDataFolder:
-                    this.OblivionDataFolder = (String)obj;
-                    break;
-                case PassthroughSettings_FieldIndex.SkyrimDataFolder:
-                    this.SkyrimDataFolder = (String)obj;
-                    break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -709,12 +693,6 @@ namespace Mutagen.Bethesda.Tests
                 case PassthroughSettings_FieldIndex.TestFolder:
                     obj.TestFolder = (Boolean)pair.Value;
                     break;
-                case PassthroughSettings_FieldIndex.OblivionDataFolder:
-                    obj.OblivionDataFolder = (String)pair.Value;
-                    break;
-                case PassthroughSettings_FieldIndex.SkyrimDataFolder:
-                    obj.SkyrimDataFolder = (String)pair.Value;
-                    break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
@@ -736,10 +714,6 @@ namespace Mutagen.Bethesda.Tests
         new Boolean TestObservable { get; set; }
 
         new Boolean TestFolder { get; set; }
-
-        new String OblivionDataFolder { get; set; }
-
-        new String SkyrimDataFolder { get; set; }
 
     }
 
@@ -769,14 +743,6 @@ namespace Mutagen.Bethesda.Tests
         Boolean TestFolder { get; }
 
         #endregion
-        #region OblivionDataFolder
-        String OblivionDataFolder { get; }
-
-        #endregion
-        #region SkyrimDataFolder
-        String SkyrimDataFolder { get; }
-
-        #endregion
 
     }
 
@@ -795,8 +761,6 @@ namespace Mutagen.Bethesda.Tests.Internals
         TestImport = 3,
         TestObservable = 4,
         TestFolder = 5,
-        OblivionDataFolder = 6,
-        SkyrimDataFolder = 7,
     }
     #endregion
 
@@ -814,9 +778,9 @@ namespace Mutagen.Bethesda.Tests.Internals
 
         public const string GUID = "b6e04291-8a1a-4f43-baa4-0f5fc5074d8b";
 
-        public const ushort AdditionalFieldCount = 8;
+        public const ushort AdditionalFieldCount = 6;
 
-        public const ushort FieldCount = 8;
+        public const ushort FieldCount = 6;
 
         public static readonly Type MaskType = typeof(PassthroughSettings_Mask<>);
 
@@ -860,10 +824,6 @@ namespace Mutagen.Bethesda.Tests.Internals
                     return (ushort)PassthroughSettings_FieldIndex.TestObservable;
                 case "TESTFOLDER":
                     return (ushort)PassthroughSettings_FieldIndex.TestFolder;
-                case "OBLIVIONDATAFOLDER":
-                    return (ushort)PassthroughSettings_FieldIndex.OblivionDataFolder;
-                case "SKYRIMDATAFOLDER":
-                    return (ushort)PassthroughSettings_FieldIndex.SkyrimDataFolder;
                 default:
                     return null;
             }
@@ -880,8 +840,6 @@ namespace Mutagen.Bethesda.Tests.Internals
                 case PassthroughSettings_FieldIndex.TestImport:
                 case PassthroughSettings_FieldIndex.TestObservable:
                 case PassthroughSettings_FieldIndex.TestFolder:
-                case PassthroughSettings_FieldIndex.OblivionDataFolder:
-                case PassthroughSettings_FieldIndex.SkyrimDataFolder:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -899,8 +857,6 @@ namespace Mutagen.Bethesda.Tests.Internals
                 case PassthroughSettings_FieldIndex.TestImport:
                 case PassthroughSettings_FieldIndex.TestObservable:
                 case PassthroughSettings_FieldIndex.TestFolder:
-                case PassthroughSettings_FieldIndex.OblivionDataFolder:
-                case PassthroughSettings_FieldIndex.SkyrimDataFolder:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -918,8 +874,6 @@ namespace Mutagen.Bethesda.Tests.Internals
                 case PassthroughSettings_FieldIndex.TestImport:
                 case PassthroughSettings_FieldIndex.TestObservable:
                 case PassthroughSettings_FieldIndex.TestFolder:
-                case PassthroughSettings_FieldIndex.OblivionDataFolder:
-                case PassthroughSettings_FieldIndex.SkyrimDataFolder:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -943,10 +897,6 @@ namespace Mutagen.Bethesda.Tests.Internals
                     return "TestObservable";
                 case PassthroughSettings_FieldIndex.TestFolder:
                     return "TestFolder";
-                case PassthroughSettings_FieldIndex.OblivionDataFolder:
-                    return "OblivionDataFolder";
-                case PassthroughSettings_FieldIndex.SkyrimDataFolder:
-                    return "SkyrimDataFolder";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -963,8 +913,6 @@ namespace Mutagen.Bethesda.Tests.Internals
                 case PassthroughSettings_FieldIndex.TestImport:
                 case PassthroughSettings_FieldIndex.TestObservable:
                 case PassthroughSettings_FieldIndex.TestFolder:
-                case PassthroughSettings_FieldIndex.OblivionDataFolder:
-                case PassthroughSettings_FieldIndex.SkyrimDataFolder:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -982,8 +930,6 @@ namespace Mutagen.Bethesda.Tests.Internals
                 case PassthroughSettings_FieldIndex.TestImport:
                 case PassthroughSettings_FieldIndex.TestObservable:
                 case PassthroughSettings_FieldIndex.TestFolder:
-                case PassthroughSettings_FieldIndex.OblivionDataFolder:
-                case PassthroughSettings_FieldIndex.SkyrimDataFolder:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1007,10 +953,6 @@ namespace Mutagen.Bethesda.Tests.Internals
                     return typeof(Boolean);
                 case PassthroughSettings_FieldIndex.TestFolder:
                     return typeof(Boolean);
-                case PassthroughSettings_FieldIndex.OblivionDataFolder:
-                    return typeof(String);
-                case PassthroughSettings_FieldIndex.SkyrimDataFolder:
-                    return typeof(String);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1093,18 +1035,6 @@ namespace Mutagen.Bethesda.Tests.Internals
                 item.TestFolder = rhs.TestFolder;
                 errorMask?.PopIndex();
             }
-            if (copyMask?.OblivionDataFolder ?? true)
-            {
-                errorMask?.PushIndex((int)PassthroughSettings_FieldIndex.OblivionDataFolder);
-                item.OblivionDataFolder = rhs.OblivionDataFolder;
-                errorMask?.PopIndex();
-            }
-            if (copyMask?.SkyrimDataFolder ?? true)
-            {
-                errorMask?.PushIndex((int)PassthroughSettings_FieldIndex.SkyrimDataFolder);
-                item.SkyrimDataFolder = rhs.SkyrimDataFolder;
-                errorMask?.PopIndex();
-            }
         }
 
         #endregion
@@ -1117,8 +1047,6 @@ namespace Mutagen.Bethesda.Tests.Internals
             item.TestImport = default(Boolean);
             item.TestObservable = default(Boolean);
             item.TestFolder = default(Boolean);
-            item.OblivionDataFolder = default(String);
-            item.SkyrimDataFolder = default(String);
         }
 
         public static PassthroughSettings_Mask<bool> GetEqualsMask(
@@ -1148,8 +1076,6 @@ namespace Mutagen.Bethesda.Tests.Internals
             ret.TestImport = item.TestImport == rhs.TestImport;
             ret.TestObservable = item.TestObservable == rhs.TestObservable;
             ret.TestFolder = item.TestFolder == rhs.TestFolder;
-            ret.OblivionDataFolder = string.Equals(item.OblivionDataFolder, rhs.OblivionDataFolder);
-            ret.SkyrimDataFolder = string.Equals(item.SkyrimDataFolder, rhs.SkyrimDataFolder);
         }
 
         public static string ToString(
@@ -1203,14 +1129,6 @@ namespace Mutagen.Bethesda.Tests.Internals
                 {
                     fg.AppendLine($"TestFolder => {item.TestFolder}");
                 }
-                if (printMask?.OblivionDataFolder ?? true)
-                {
-                    fg.AppendLine($"OblivionDataFolder => {item.OblivionDataFolder}");
-                }
-                if (printMask?.SkyrimDataFolder ?? true)
-                {
-                    fg.AppendLine($"SkyrimDataFolder => {item.SkyrimDataFolder}");
-                }
             }
             fg.AppendLine("]");
         }
@@ -1231,8 +1149,6 @@ namespace Mutagen.Bethesda.Tests.Internals
             ret.TestImport = true;
             ret.TestObservable = true;
             ret.TestFolder = true;
-            ret.OblivionDataFolder = true;
-            ret.SkyrimDataFolder = true;
             return ret;
         }
 
@@ -1445,64 +1361,6 @@ namespace Mutagen.Bethesda.Tests.Internals
                         }
                     }
                     break;
-                case "OblivionDataFolder":
-                    if ((translationMask?.GetShouldTranslate((int)PassthroughSettings_FieldIndex.OblivionDataFolder) ?? true))
-                    {
-                        try
-                        {
-                            errorMask?.PushIndex((int)PassthroughSettings_FieldIndex.OblivionDataFolder);
-                            if (StringXmlTranslation.Instance.Parse(
-                                node: node,
-                                item: out String OblivionDataFolderParse,
-                                errorMask: errorMask))
-                            {
-                                item.OblivionDataFolder = OblivionDataFolderParse;
-                            }
-                            else
-                            {
-                                item.OblivionDataFolder = default(String);
-                            }
-                        }
-                        catch (Exception ex)
-                        when (errorMask != null)
-                        {
-                            errorMask.ReportException(ex);
-                        }
-                        finally
-                        {
-                            errorMask?.PopIndex();
-                        }
-                    }
-                    break;
-                case "SkyrimDataFolder":
-                    if ((translationMask?.GetShouldTranslate((int)PassthroughSettings_FieldIndex.SkyrimDataFolder) ?? true))
-                    {
-                        try
-                        {
-                            errorMask?.PushIndex((int)PassthroughSettings_FieldIndex.SkyrimDataFolder);
-                            if (StringXmlTranslation.Instance.Parse(
-                                node: node,
-                                item: out String SkyrimDataFolderParse,
-                                errorMask: errorMask))
-                            {
-                                item.SkyrimDataFolder = SkyrimDataFolderParse;
-                            }
-                            else
-                            {
-                                item.SkyrimDataFolder = default(String);
-                            }
-                        }
-                        catch (Exception ex)
-                        when (errorMask != null)
-                        {
-                            errorMask.ReportException(ex);
-                        }
-                        finally
-                        {
-                            errorMask?.PopIndex();
-                        }
-                    }
-                    break;
                 default:
                     break;
             }
@@ -1579,24 +1437,6 @@ namespace Mutagen.Bethesda.Tests.Internals
                     fieldIndex: (int)PassthroughSettings_FieldIndex.TestFolder,
                     errorMask: errorMask);
             }
-            if ((translationMask?.GetShouldTranslate((int)PassthroughSettings_FieldIndex.OblivionDataFolder) ?? true))
-            {
-                StringXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.OblivionDataFolder),
-                    item: item.OblivionDataFolder,
-                    fieldIndex: (int)PassthroughSettings_FieldIndex.OblivionDataFolder,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)PassthroughSettings_FieldIndex.SkyrimDataFolder) ?? true))
-            {
-                StringXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.SkyrimDataFolder),
-                    item: item.SkyrimDataFolder,
-                    fieldIndex: (int)PassthroughSettings_FieldIndex.SkyrimDataFolder,
-                    errorMask: errorMask);
-            }
         }
 
         #region Xml Write
@@ -1658,8 +1498,6 @@ namespace Mutagen.Bethesda.Tests.Internals
             this.TestImport = initialValue;
             this.TestObservable = initialValue;
             this.TestFolder = initialValue;
-            this.OblivionDataFolder = initialValue;
-            this.SkyrimDataFolder = initialValue;
         }
         #endregion
 
@@ -1670,8 +1508,6 @@ namespace Mutagen.Bethesda.Tests.Internals
         public T TestImport;
         public T TestObservable;
         public T TestFolder;
-        public T OblivionDataFolder;
-        public T SkyrimDataFolder;
         #endregion
 
         #region Equals
@@ -1690,8 +1526,6 @@ namespace Mutagen.Bethesda.Tests.Internals
             if (!object.Equals(this.TestImport, rhs.TestImport)) return false;
             if (!object.Equals(this.TestObservable, rhs.TestObservable)) return false;
             if (!object.Equals(this.TestFolder, rhs.TestFolder)) return false;
-            if (!object.Equals(this.OblivionDataFolder, rhs.OblivionDataFolder)) return false;
-            if (!object.Equals(this.SkyrimDataFolder, rhs.SkyrimDataFolder)) return false;
             return true;
         }
         public override int GetHashCode()
@@ -1703,8 +1537,6 @@ namespace Mutagen.Bethesda.Tests.Internals
             ret = ret.CombineHashCode(this.TestImport?.GetHashCode());
             ret = ret.CombineHashCode(this.TestObservable?.GetHashCode());
             ret = ret.CombineHashCode(this.TestFolder?.GetHashCode());
-            ret = ret.CombineHashCode(this.OblivionDataFolder?.GetHashCode());
-            ret = ret.CombineHashCode(this.SkyrimDataFolder?.GetHashCode());
             return ret;
         }
 
@@ -1719,8 +1551,6 @@ namespace Mutagen.Bethesda.Tests.Internals
             if (!eval(this.TestImport)) return false;
             if (!eval(this.TestObservable)) return false;
             if (!eval(this.TestFolder)) return false;
-            if (!eval(this.OblivionDataFolder)) return false;
-            if (!eval(this.SkyrimDataFolder)) return false;
             return true;
         }
         #endregion
@@ -1741,8 +1571,6 @@ namespace Mutagen.Bethesda.Tests.Internals
             obj.TestImport = eval(this.TestImport);
             obj.TestObservable = eval(this.TestObservable);
             obj.TestFolder = eval(this.TestFolder);
-            obj.OblivionDataFolder = eval(this.OblivionDataFolder);
-            obj.SkyrimDataFolder = eval(this.SkyrimDataFolder);
         }
         #endregion
 
@@ -1795,14 +1623,6 @@ namespace Mutagen.Bethesda.Tests.Internals
                 {
                     fg.AppendLine($"TestFolder => {TestFolder}");
                 }
-                if (printMask?.OblivionDataFolder ?? true)
-                {
-                    fg.AppendLine($"OblivionDataFolder => {OblivionDataFolder}");
-                }
-                if (printMask?.SkyrimDataFolder ?? true)
-                {
-                    fg.AppendLine($"SkyrimDataFolder => {SkyrimDataFolder}");
-                }
             }
             fg.AppendLine("]");
         }
@@ -1832,8 +1652,6 @@ namespace Mutagen.Bethesda.Tests.Internals
         public Exception TestImport;
         public Exception TestObservable;
         public Exception TestFolder;
-        public Exception OblivionDataFolder;
-        public Exception SkyrimDataFolder;
         #endregion
 
         #region IErrorMask
@@ -1854,10 +1672,6 @@ namespace Mutagen.Bethesda.Tests.Internals
                     return TestObservable;
                 case PassthroughSettings_FieldIndex.TestFolder:
                     return TestFolder;
-                case PassthroughSettings_FieldIndex.OblivionDataFolder:
-                    return OblivionDataFolder;
-                case PassthroughSettings_FieldIndex.SkyrimDataFolder:
-                    return SkyrimDataFolder;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1885,12 +1699,6 @@ namespace Mutagen.Bethesda.Tests.Internals
                     break;
                 case PassthroughSettings_FieldIndex.TestFolder:
                     this.TestFolder = ex;
-                    break;
-                case PassthroughSettings_FieldIndex.OblivionDataFolder:
-                    this.OblivionDataFolder = ex;
-                    break;
-                case PassthroughSettings_FieldIndex.SkyrimDataFolder:
-                    this.SkyrimDataFolder = ex;
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1920,12 +1728,6 @@ namespace Mutagen.Bethesda.Tests.Internals
                 case PassthroughSettings_FieldIndex.TestFolder:
                     this.TestFolder = (Exception)obj;
                     break;
-                case PassthroughSettings_FieldIndex.OblivionDataFolder:
-                    this.OblivionDataFolder = (Exception)obj;
-                    break;
-                case PassthroughSettings_FieldIndex.SkyrimDataFolder:
-                    this.SkyrimDataFolder = (Exception)obj;
-                    break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1940,8 +1742,6 @@ namespace Mutagen.Bethesda.Tests.Internals
             if (TestImport != null) return true;
             if (TestObservable != null) return true;
             if (TestFolder != null) return true;
-            if (OblivionDataFolder != null) return true;
-            if (SkyrimDataFolder != null) return true;
             return false;
         }
         #endregion
@@ -1982,8 +1782,6 @@ namespace Mutagen.Bethesda.Tests.Internals
             fg.AppendLine($"TestImport => {TestImport}");
             fg.AppendLine($"TestObservable => {TestObservable}");
             fg.AppendLine($"TestFolder => {TestFolder}");
-            fg.AppendLine($"OblivionDataFolder => {OblivionDataFolder}");
-            fg.AppendLine($"SkyrimDataFolder => {SkyrimDataFolder}");
         }
         #endregion
 
@@ -1997,8 +1795,6 @@ namespace Mutagen.Bethesda.Tests.Internals
             ret.TestImport = this.TestImport.Combine(rhs.TestImport);
             ret.TestObservable = this.TestObservable.Combine(rhs.TestObservable);
             ret.TestFolder = this.TestFolder.Combine(rhs.TestFolder);
-            ret.OblivionDataFolder = this.OblivionDataFolder.Combine(rhs.OblivionDataFolder);
-            ret.SkyrimDataFolder = this.SkyrimDataFolder.Combine(rhs.SkyrimDataFolder);
             return ret;
         }
         public static PassthroughSettings_ErrorMask Combine(PassthroughSettings_ErrorMask lhs, PassthroughSettings_ErrorMask rhs)
@@ -2031,8 +1827,6 @@ namespace Mutagen.Bethesda.Tests.Internals
             this.TestImport = defaultOn;
             this.TestObservable = defaultOn;
             this.TestFolder = defaultOn;
-            this.OblivionDataFolder = defaultOn;
-            this.SkyrimDataFolder = defaultOn;
         }
 
         #region Members
@@ -2042,8 +1836,6 @@ namespace Mutagen.Bethesda.Tests.Internals
         public bool TestImport;
         public bool TestObservable;
         public bool TestFolder;
-        public bool OblivionDataFolder;
-        public bool SkyrimDataFolder;
         #endregion
 
     }
@@ -2058,8 +1850,6 @@ namespace Mutagen.Bethesda.Tests.Internals
         public bool TestImport;
         public bool TestObservable;
         public bool TestFolder;
-        public bool OblivionDataFolder;
-        public bool SkyrimDataFolder;
         #endregion
 
         #region Ctors
@@ -2075,8 +1865,6 @@ namespace Mutagen.Bethesda.Tests.Internals
             this.TestImport = defaultOn;
             this.TestObservable = defaultOn;
             this.TestFolder = defaultOn;
-            this.OblivionDataFolder = defaultOn;
-            this.SkyrimDataFolder = defaultOn;
         }
 
         #endregion
@@ -2101,8 +1889,6 @@ namespace Mutagen.Bethesda.Tests.Internals
             ret.Add((TestImport, null));
             ret.Add((TestObservable, null));
             ret.Add((TestFolder, null));
-            ret.Add((OblivionDataFolder, null));
-            ret.Add((SkyrimDataFolder, null));
         }
     }
     #endregion

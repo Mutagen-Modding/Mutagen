@@ -10,8 +10,6 @@
          <xs:element name="TestImport" type="ValueType" minOccurs="0" maxOccurs="1" />
          <xs:element name="TestObservable" type="ValueType" minOccurs="0" maxOccurs="1" />
          <xs:element name="TestFolder" type="ValueType" minOccurs="0" maxOccurs="1" />
-         <xs:element name="OblivionDataFolder" type="NullableValueType" minOccurs="0" maxOccurs="1" />
-         <xs:element name="SkyrimDataFolder" type="NullableValueType" minOccurs="0" maxOccurs="1" />
       </xs:choice>
    </xs:complexType>
 </xs:schema>

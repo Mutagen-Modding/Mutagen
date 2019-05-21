@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <xs:schema id="TestingSettings" targetNamespace="Tests" elementFormDefault="qualified" xmlns="Tests" xmlns:xs="http://www.w3.org/2001/XMLSchema">
-   <xs:include schemaLocation="Passthrough.xsd" />
+   <xs:include schemaLocation="PassthroughGroup.xsd" />
    <xs:include schemaLocation="PassthroughSettings.xsd" />
+   <xs:include schemaLocation="DataFolderLocations.xsd" />
    <xs:include schemaLocation="Common.xsd" />
    <xs:element name="TestingSettings" type="TestingSettingsType" />
    <xs:complexType name="TestingSettingsType">
@@ -10,14 +11,14 @@
          <xs:element name="TestModList" type="ValueType" minOccurs="0" maxOccurs="1" />
          <xs:element name="TestFlattenedMod" type="ValueType" minOccurs="0" maxOccurs="1" />
          <xs:element name="TestBenchmarks" type="ValueType" minOccurs="0" maxOccurs="1" />
+         <xs:element name="DataFolderLocations" type="DataFolderLocationsType" minOccurs="0" maxOccurs="1" />
          <xs:element name="PassthroughSettings" type="PassthroughSettingsType" minOccurs="0" maxOccurs="1" />
-         <xs:element name="OblivionESM" type="PassthroughType" minOccurs="0" maxOccurs="1" />
-         <xs:element name="OtherPassthroughs" type="OtherPassthroughsType" minOccurs="0" maxOccurs="1" />
+         <xs:element name="PassthroughGroups" type="PassthroughGroupsType" minOccurs="0" maxOccurs="1" />
       </xs:choice>
    </xs:complexType>
-   <xs:complexType name="OtherPassthroughsType">
+   <xs:complexType name="PassthroughGroupsType">
       <xs:choice minOccurs="0" maxOccurs="unbounded">
-         <xs:element name="Item" type="PassthroughType" />
+         <xs:element name="Item" type="PassthroughGroupType" />
       </xs:choice>
    </xs:complexType>
 </xs:schema>
