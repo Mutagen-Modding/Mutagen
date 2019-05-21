@@ -1,4 +1,5 @@
 using System;
+using System.Buffers.Binary;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -33,11 +34,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 frame.Reader.Position -= Mutagen.Bethesda.Constants.RECORD_LENGTH;
                 return;
             }
-            var pointBytes = frame.Reader.ReadBytes(pointsLen);
-            var bytePointsNum = pointBytes.Length / POINT_LEN;
+            var pointDataSpan = frame.Reader.ReadSpan(pointsLen);
+            var bytePointsNum = pointDataSpan.Length / POINT_LEN;
             if (bytePointsNum != ptCount)
             {
-                throw new ArgumentException($"Unexpected point byte length, when compared to expected point count. {pointBytes.Length} bytes: {bytePointsNum} != {ptCount} points.");
+                throw new ArgumentException($"Unexpected point byte length, when compared to expected point count. {pointDataSpan.Length} bytes: {bytePointsNum} != {ptCount} points.");
             }
 
             bool readPGRR = false;
@@ -62,27 +63,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         break;
                     case 0x52524750: // "PGRR":
                         frame.Reader.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                        var connectionBytes = frame.Reader.ReadBytes(len);
-                        using (var ptByteReader = new BinaryMemoryReadStream(pointBytes))
+                        var connectionInts = frame.Reader.ReadSpan(len).AsInt16Span();
+                        int numPts = pointDataSpan.Length / POINT_LEN;
+                        PathGridPoint[] pathGridPoints = new PathGridPoint[numPts];
+                        for (int i = 0; i < numPts; i++)
                         {
-                            using (var connectionReader = new BinaryMemoryReadStream(connectionBytes))
-                            {
-                                item.PointToPointConnections.AddRange(
-                                    EnumerableExt.For(0, pointBytes.Length, POINT_LEN)
-                                    .Select(i =>
-                                    {
-                                        var pt = ReadPathGridPoint(ptByteReader, out var numConn);
-                                        pt.Connections.AddRange(
-                                            EnumerableExt.For(0, numConn)
-                                                .Select(j => connectionReader.ReadInt16()));
-                                        return pt;
-                                    }));
-                                if (!connectionReader.Complete)
-                                {
-                                    throw new ArgumentException("Connection reader did not complete as expected.");
-                                }
-                            }
+                            var pt = ReadPathGridPoint(pointDataSpan, out var numConn);
+                            pt.Connections.AddRange(connectionInts.Slice(0, numConn).ToArray());
+                            pathGridPoints[i] = pt;
+                            pointDataSpan = pointDataSpan.Slice(16);
+                            connectionInts = connectionInts.Slice(numConn);
                         }
+                        item.PointToPointConnections.AddRange(pathGridPoints);
                         readPGRR = true;
                         break;
                     default:
@@ -93,27 +85,25 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (!readPGRR)
             {
                 List<PathGridPoint> list = new List<PathGridPoint>();
-                using (var ptByteReader = new BinaryMemoryReadStream(pointBytes))
+                while (pointDataSpan.Length > 0)
                 {
-                    while (!ptByteReader.Complete)
-                    {
-                        list.Add(
-                            ReadPathGridPoint(ptByteReader, out var numConn));
-                    }
+                    list.Add(
+                        ReadPathGridPoint(pointDataSpan, out var numConn));
+                    pointDataSpan = pointDataSpan.Slice(16);
                 }
                 item.PointToPointConnections.AddRange(list);
             }
         }
 
-        private static PathGridPoint ReadPathGridPoint(IBinaryReadStream reader, out byte numConn)
+        private static PathGridPoint ReadPathGridPoint(ReadOnlySpan<byte> reader, out byte numConn)
         {
             var pt = new PathGridPoint();
             pt.Point = new Noggog.P3Float(
-                reader.ReadFloat(),
-                reader.ReadFloat(),
-                reader.ReadFloat());
-            numConn = reader.ReadUInt8();
-            pt.NumConnectionsFluffBytes = reader.ReadBytes(3);
+                reader.GetFloat(),
+                reader.Slice(4).GetFloat(),
+                reader.Slice(8).GetFloat());
+            numConn = reader[12];
+            pt.NumConnectionsFluffBytes = reader.Slice(13, 3).ToArray();
             return pt;
         }
 
