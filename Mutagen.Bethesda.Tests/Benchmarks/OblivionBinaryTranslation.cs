@@ -1,5 +1,7 @@
 ﻿using BenchmarkDotNet.Attributes;
+using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Oblivion;
+using Mutagen.Bethesda.Oblivion.Internals;
 using Noggog;
 using Noggog.Utility;
 using System;
@@ -19,6 +21,9 @@ namespace Mutagen.Bethesda.Tests.Benchmarks
         public static ModKey ModKey;
         public static string DataPath;
         public static string BinaryPath;
+        public static TempFolder ProcessedFilesFolder;
+        public static byte[] PathGridBytes;
+        public static MutagenMemoryReadStream PathGridReader;
 
         [GlobalSetup]
         public async Task Setup()
@@ -40,12 +45,22 @@ namespace Mutagen.Bethesda.Tests.Benchmarks
             Mod = await OblivionMod.Create_Binary(
                 DataPath,
                 ModKey);
+
+            var passthrough = new Oblivion_Passthrough_Test(Settings.PassthroughSettings, Settings.OblivionESM);
+            ProcessedFilesFolder = await passthrough.SetupProcessedFiles();
+            using (var stream = new BinaryReadStream(passthrough.ProcessedPath(ProcessedFilesFolder)))
+            {
+                stream.Position = 0xCF614B;
+                PathGridBytes = stream.ReadBytes(0x14C7);
+            }
+            PathGridReader = new MutagenMemoryReadStream(PathGridBytes);
         }
 
         [GlobalCleanup]
         public void Cleanup()
         {
             TempFolder.Dispose();
+            ProcessedFilesFolder.Dispose();
         }
 
         [Benchmark]
@@ -62,6 +77,19 @@ namespace Mutagen.Bethesda.Tests.Benchmarks
             Mod.Write_Binary(
                 BinaryPath,
                 ModKey);
+        }
+
+        [Benchmark]
+        public PathGrid PathGridImporting()
+        {
+            PathGridReader.Position = 0;
+            var pathGrid = new PathGrid(FormKey.NULL);
+            PathGridBinaryTranslation.FillBinary_PointToPointConnections_Custom_Public(
+                new Binary.MutagenFrame(PathGridReader),
+                pathGrid,
+                masterReferences: null,
+                errorMask: null);
+            return pathGrid;
         }
     }
 }

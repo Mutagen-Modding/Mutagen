@@ -19,9 +19,14 @@ namespace Mutagen.Bethesda.Tests
         public string Nickname { get; }
         public FilePath FilePath { get; set; }
         public byte NumMasters { get; }
-        public string ProcessedPath(TempFolder tmp) => Path.Combine(tmp.Dir.Path, $"{this.Nickname}_Processed");
         private PassthroughSettings settings;
         private HashSet<string> magicEffectEDIDs = new HashSet<string>();
+        public string ExportFileName(TempFolder tmp) => Path.Combine(tmp.Dir.Path, $"{this.Nickname}_NormalExport");
+        public string ObservableExportFileName(TempFolder tmp) => Path.Combine(tmp.Dir.Path, $"{this.Nickname}_ObservableExport");
+        public string UncompressedFileName(TempFolder tmp) => Path.Combine(tmp.Dir.Path, $"{this.Nickname}_Uncompressed");
+        public string AlignedFileName(TempFolder tmp) => Path.Combine(tmp.Dir.Path, $"{this.Nickname}_Aligned");
+        public string OrderedFileName(TempFolder tmp) => Path.Combine(tmp.Dir.Path, $"{this.Nickname}_Ordered");
+        public string ProcessedPath(TempFolder tmp) => Path.Combine(tmp.Dir.Path, $"{this.Nickname}_Processed");
 
         public Oblivion_Passthrough_Test(PassthroughSettings settings, Passthrough passthrough)
         {
@@ -1427,11 +1432,11 @@ namespace Mutagen.Bethesda.Tests
         {
             var tmp = new TempFolder(new DirectoryInfo(Path.Combine(Path.GetTempPath(), $"Mutagen_Binary_Tests/{Nickname}")), deleteAfter: settings.DeleteCachesAfter);
 
-            var outputPath = Path.Combine(tmp.Dir.Path, $"{this.Nickname}_NormalExport");
-            var observableOutputPath = Path.Combine(tmp.Dir.Path, $"{this.Nickname}_ObservableExport");
-            var uncompressedPath = Path.Combine(tmp.Dir.Path, $"{this.Nickname}_Uncompressed");
-            var alignedPath = Path.Combine(tmp.Dir.Path, $"{this.Nickname}_Aligned");
-            var orderedPath = Path.Combine(tmp.Dir.Path, $"{this.Nickname}_Ordered");
+            var outputPath = ExportFileName(tmp);
+            var observableOutputPath = ObservableExportFileName(tmp);
+            var uncompressedPath = UncompressedFileName(tmp);
+            var alignedPath = AlignedFileName(tmp);
+            var orderedPath = OrderedFileName(tmp);
             var preprocessedPath = alignedPath;
             var processedPath = ProcessedPath(tmp);
 
