@@ -16,6 +16,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType PGRR = new RecordType("PGRR");
         public const int POINT_LEN = 16;
 
+        //ToDo
+        //Upgrade to spans
         static partial void FillBinary_Points_Custom(MutagenFrame frame, Road item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
         {
             var nextRec = HeaderTranslation.ReadNextSubRecordType(frame.Reader, out var len);
