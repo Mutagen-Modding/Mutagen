@@ -32,6 +32,8 @@ namespace Mutagen.Bethesda.Binary
 
         public long OffsetReference => this.Reader.OffsetReference;
 
+        public ReadOnlySpan<byte> RemainingSpan => Reader.RemainingSpan;
+
         [DebuggerStepThrough]
         public MutagenFrame(IMutagenReadStream reader)
         {
@@ -241,9 +243,9 @@ namespace Mutagen.Bethesda.Binary
             return Reader.ReadDouble();
         }
 
-        public string ReadString(int amount)
+        public string ReadStringUTF8(int amount)
         {
-            return Reader.ReadString(amount);
+            return Reader.ReadStringUTF8(amount);
         }
 
         public void WriteTo(Stream stream, int amount)
@@ -321,9 +323,9 @@ namespace Mutagen.Bethesda.Binary
             return Reader.GetDouble(offset);
         }
 
-        public string GetString(int amount, int offset)
+        public string GetStringUTF8(int amount, int offset)
         {
-            return Reader.GetString(amount, offset);
+            return Reader.GetStringUTF8(amount, offset);
         }
 
         public MutagenFrame ReadAndReframe(int length)
@@ -389,9 +391,9 @@ namespace Mutagen.Bethesda.Binary
             return Reader.GetDouble();
         }
 
-        public string GetString(int amount)
+        public string GetStringUTF8(int amount)
         {
-            return Reader.GetString(amount);
+            return Reader.GetStringUTF8(amount);
         }
 
         public ReadOnlySpan<byte> ReadSpan(int amount)

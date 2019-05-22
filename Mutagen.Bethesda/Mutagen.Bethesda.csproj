@@ -8,10 +8,12 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <NoWarn>1701;1702; 1998</NoWarn>
     <WarningsAsErrors>NU1605, CS4014</WarningsAsErrors>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <WarningsAsErrors>NU1605, CS4014</WarningsAsErrors>
     <NoWarn>1701;1702; 1998</NoWarn>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="DotNetZip" Version="1.13.3" />
@@ -26,6 +28,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BinaryFileProcessor.cs" />
+    <Compile Include="Translators\Binary\BinaryStringUtility.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="Enums\GroupTypeEnum.cs" />
     <Compile Include="Extensions\IBinaryStreamExt.cs" />

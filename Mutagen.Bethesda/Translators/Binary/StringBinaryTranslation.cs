@@ -1,4 +1,4 @@
-﻿using Loqui;
+using Loqui;
 using Loqui.Internal;
 using Noggog;
 using Noggog.Notifying;
@@ -65,41 +65,22 @@ namespace Mutagen.Bethesda.Binary
         {
             if (parseWhole)
             {
-                item = frame.Reader.ReadString(checked((int)frame.Remaining));
-                item = item.TrimEnd('\0');
+                var span = frame.ReadSpan(checked((int)frame.Remaining));
+                span = BinaryStringUtility.ProcessNullTermination(span);
+                item = BinaryStringUtility.ToBethesdaString(span);
             }
             else
             {
-                item = ReadStringUntil(frame.Reader, '\0', include: false);
-                frame.Reader.Position += 1;
+                var span = frame.Reader.RemainingSpan;
+                var index = span.IndexOf(default(byte));
+                if (index == -1)
+                {
+                    throw new ArgumentException();
+                }
+                frame.Reader.Position += index + 1;
+                item = BinaryStringUtility.ToBethesdaString(span.Slice(0, index));
             }
             return true;
-        }
-
-        public static string ReadStringUntil(
-            IBinaryReadStream reader,
-            char stopChar,
-            bool include)
-        {
-            List<byte> chars = new List<byte>();
-            while (!reader.Complete)
-            {
-                var nextChar = reader.ReadUInt8();
-                if (nextChar == stopChar)
-                {
-                    if (include)
-                    {
-                        chars.Add(nextChar);
-                    }
-                    else
-                    {
-                        reader.Position -= 1;
-                    }
-                    break;
-                }
-                chars.Add(nextChar);
-            }
-            return BinaryUtility.BytesToString(chars.ToArray());
         }
 
         public void Write(

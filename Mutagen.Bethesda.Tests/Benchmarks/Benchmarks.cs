@@ -13,6 +13,7 @@ namespace Mutagen.Bethesda.Tests.Benchmarks
         {
             BenchmarkRunner.Run<FormKeyParsing>();
             BenchmarkRunner.Run<OblivionBinaryTranslation>();
+            BenchmarkRunner.Run<StringParsing>();
         }
     }
 }

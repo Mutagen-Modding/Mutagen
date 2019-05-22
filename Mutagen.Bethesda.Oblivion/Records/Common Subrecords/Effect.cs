@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Oblivion.Internals;
+using Noggog;
 
 namespace Mutagen.Bethesda.Oblivion
 {
@@ -17,7 +18,7 @@ namespace Mutagen.Bethesda.Oblivion
             Touch = 1,
             Target = 2
         }
-        
+
         static partial void SpecialParse_EffectInitial(Effect item, MutagenFrame frame, ErrorMaskBuilder errorMask)
         {
             var recType = HeaderTranslation.ReadNextSubRecordType(frame.Reader, out var contentLen);
@@ -25,16 +26,16 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 throw new ArgumentException($"Magic effect name must be length 4.  Was: {contentLen}");
             }
-            var magicEffName = frame.Reader.ReadString(4);
+            var magicEffName = frame.ReadSpan(4);
             var efit = HeaderTranslation.GetNextSubRecordType(frame.Reader, out var efitLength);
             if (efitLength < 4)
             {
                 throw new ArgumentException($"Magic effect ref length was less than 4.  Was: {efitLength}");
             }
-            var magicEffName2 = frame.Reader.GetString(amount: 4, offset: Mutagen.Bethesda.Constants.SUBRECORD_LENGTH);
-            if (!magicEffName.Equals(magicEffName2))
+            var magicEffName2 = frame.GetSpan(amount: 4, offset: Mutagen.Bethesda.Constants.SUBRECORD_LENGTH);
+            if (!magicEffName.SequenceEqual(magicEffName2))
             {
-                throw new ArgumentException($"Magic effect names did not match. {magicEffName} != {magicEffName2}");
+                throw new ArgumentException($"Magic effect names did not match. {BinaryStringUtility.ToBethesdaString(magicEffName)} != {BinaryStringUtility.ToBethesdaString(magicEffName2)}");
             }
         }
 
