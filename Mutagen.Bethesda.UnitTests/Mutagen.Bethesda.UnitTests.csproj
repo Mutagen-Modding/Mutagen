@@ -43,6 +43,7 @@
   <ItemGroup>
     <Compile Include="BinaryProcessor_Tests.cs" />
     <Compile Include="FormID_Tests.cs" />
+    <Compile Include="FormKey_Tests.cs" />
     <Compile Include="Misc_Tests.cs" />
     <Compile Include="ModKey_Tests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

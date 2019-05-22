@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Mutagen.Bethesda.Tests
+namespace Mutagen.Bethesda.UnitTests
 {
     public class ModKey_Tests
     {

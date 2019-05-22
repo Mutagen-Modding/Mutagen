@@ -11,13 +11,36 @@ namespace Mutagen.Bethesda.Tests.Benchmarks
     public class FormKeyParsing
     {
         private const string OblivionMaster = "Oblivion.esm";
-        private const string OblivionFormKey = "123456Oblivion.esm";
+        private const string IDString = "01123456";
+        private const string IDString0x = "0x01123456";
+        private readonly string OblivionFormKey = $"123456Oblivion.esm";
 
         [Benchmark]
-        public FormKey ParseStringFormKey()
+        public FormKey ParseFormKey()
         {
             Bethesda.FormKey.TryFactory(OblivionFormKey, out var formKey);
             return formKey;
+        }
+
+        [Benchmark]
+        public ModKey ParseModKey()
+        {
+            Bethesda.ModKey.TryFactory(OblivionMaster, out var modKey);
+            return modKey;
+        }
+
+        [Benchmark]
+        public FormID? ParseFormID()
+        {
+            Bethesda.FormID.TryFactory(IDString, out FormID? formID);
+            return formID;
+        }
+
+        [Benchmark]
+        public FormID? ParseFormID0x()
+        {
+            Bethesda.FormID.TryFactory(IDString0x, out FormID? formID);
+            return formID;
         }
     }
 }

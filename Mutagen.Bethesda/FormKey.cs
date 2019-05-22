@@ -50,11 +50,6 @@ namespace Mutagen.Bethesda
                 return false;
             }
 
-            if (str.StartsWith("0x"))
-            {
-                str = str.Substring(2);
-            }
-
             if (str.Length < 6)
             {
                 formKey = default(FormKey);
