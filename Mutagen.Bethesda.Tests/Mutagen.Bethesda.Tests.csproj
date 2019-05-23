@@ -21,7 +21,7 @@
   <ItemGroup>
     <Compile Include="Benchmarks\Benchmarks.cs" />
     <Compile Include="Benchmarks\FormKeyParsing.cs" />
-    <Compile Include="Benchmarks\OblivionTranslation.cs" />
+    <Compile Include="Benchmarks\OblivionBinaryTranslation.cs" />
     <Compile Include="ComparisonStream.cs" />
     <Compile Include="FlattenedMod_Tests.cs" />
     <Compile Include="ModList_Tests.cs" />

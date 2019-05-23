@@ -393,5 +393,25 @@ namespace Mutagen.Bethesda.Binary
         {
             return Reader.GetString(amount);
         }
+
+        public ReadOnlySpan<byte> ReadSpan(int amount)
+        {
+            return Reader.ReadSpan(amount);
+        }
+
+        public ReadOnlySpan<byte> ReadSpan(int amount, int offset)
+        {
+            return Reader.ReadSpan(amount, offset);
+        }
+
+        public ReadOnlySpan<byte> GetSpan(int amount)
+        {
+            return Reader.GetSpan(amount);
+        }
+
+        public ReadOnlySpan<byte> GetSpan(int amount, int offset)
+        {
+            return Reader.GetSpan(amount, offset);
+        }
     }
 }

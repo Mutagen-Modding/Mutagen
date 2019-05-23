@@ -60,6 +60,13 @@ namespace Mutagen.Bethesda.Binary
             this.Writer.Write(b);
         }
 
+        public void Write(ReadOnlySpan<byte> b)
+        {
+            // ToDo
+            // Remove ToArray call when direct span parameter added in future .NET
+            this.Writer.Write(b.ToArray());
+        }
+
         public void Write(ushort b)
         {
             this.Writer.Write(b);
