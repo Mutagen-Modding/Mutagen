@@ -639,36 +639,9 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 item.Function = default(Function);
             }
-            if (Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
-                frame: frame,
-                item: out Int32 FirstParameterParse))
-            {
-                item.FirstParameter = FirstParameterParse;
-            }
-            else
-            {
-                item.FirstParameter = default(Int32);
-            }
-            if (Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
-                frame: frame,
-                item: out Int32 SecondParameterParse))
-            {
-                item.SecondParameter = SecondParameterParse;
-            }
-            else
-            {
-                item.SecondParameter = default(Int32);
-            }
-            if (Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
-                frame: frame,
-                item: out Int32 ThirdParameterParse))
-            {
-                item.ThirdParameter = ThirdParameterParse;
-            }
-            else
-            {
-                item.ThirdParameter = default(Int32);
-            }
+            item.FirstParameter = frame.ReadInt32();
+            item.SecondParameter = frame.ReadInt32();
+            item.ThirdParameter = frame.ReadInt32();
         }
 
         #endregion
@@ -2363,15 +2336,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer,
                 item.Function,
                 length: 4);
-            Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.FirstParameter);
-            Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.SecondParameter);
-            Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.ThirdParameter);
+            writer.Write(item.FirstParameter);
+            writer.Write(item.SecondParameter);
+            writer.Write(item.ThirdParameter);
         }
 
         #region Binary Write

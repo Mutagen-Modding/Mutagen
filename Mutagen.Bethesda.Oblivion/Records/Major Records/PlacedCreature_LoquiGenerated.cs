@@ -911,16 +911,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case 0x4B4E5258: // XRNK
                 {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    if (Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        item: out Int32 FactionRankParse))
-                    {
-                        item.FactionRank = FactionRankParse;
-                    }
-                    else
-                    {
-                        item.FactionRank = default(Int32);
-                    }
+                    item.FactionRank = frame.ReadInt32();
                     return TryGet<int?>.Succeed((int)PlacedCreature_FieldIndex.FactionRank);
                 }
                 case 0x424C4758: // XGLB

@@ -1106,16 +1106,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.Resistance = default(Resistance);
                     }
-                    if (Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out UInt32 CounterEffectCountParse))
-                    {
-                        item.CounterEffectCount = CounterEffectCountParse;
-                    }
-                    else
-                    {
-                        item.CounterEffectCount = default(UInt32);
-                    }
+                    item.CounterEffectCount = dataFrame.ReadUInt32();
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
                         frame: dataFrame,
                         masterReferences: masterReferences,
@@ -4098,9 +4089,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         writer,
                         item.Resistance,
                         length: 4);
-                    Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.CounterEffectCount);
+                    writer.Write(item.CounterEffectCount);
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                         writer: writer,
                         item: item.Light_Property,

@@ -993,16 +993,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.ENITDataTypeState = ENITDataType.Has;
                     }
-                    if (Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out UInt32 ValueParse))
-                    {
-                        item.Value = ValueParse;
-                    }
-                    else
-                    {
-                        item.Value = default(UInt32);
-                    }
+                    item.Value = dataFrame.ReadUInt32();
                     if (EnumBinaryTranslation<IngredientFlag>.Instance.Parse(
                         frame: dataFrame.SpawnWithLength(4),
                         item: out IngredientFlag FlagsParse))
@@ -3210,9 +3201,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Ingredient_Registration.ENIT_HEADER)))
                 {
-                    Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.Value);
+                    writer.Write(item.Value);
                     Mutagen.Bethesda.Binary.EnumBinaryTranslation<IngredientFlag>.Instance.Write(
                         writer,
                         item.Flags,

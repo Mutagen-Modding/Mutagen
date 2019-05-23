@@ -545,26 +545,8 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 item.Version = default(Single);
             }
-            if (Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
-                frame: frame,
-                item: out Int32 NumRecordsParse))
-            {
-                item.NumRecords = NumRecordsParse;
-            }
-            else
-            {
-                item.NumRecords = default(Int32);
-            }
-            if (Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
-                frame: frame,
-                item: out UInt32 NextObjectIDParse))
-            {
-                item.NextObjectID = NextObjectIDParse;
-            }
-            else
-            {
-                item.NextObjectID = default(UInt32);
-            }
+            item.NumRecords = frame.ReadInt32();
+            item.NextObjectID = frame.ReadUInt32();
         }
 
         #endregion
@@ -1690,12 +1672,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Version);
-            Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.NumRecords);
-            Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.NextObjectID);
+            writer.Write(item.NumRecords);
+            writer.Write(item.NextObjectID);
         }
 
         #region Binary Write

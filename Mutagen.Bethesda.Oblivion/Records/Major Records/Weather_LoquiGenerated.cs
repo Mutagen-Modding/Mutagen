@@ -1620,116 +1620,17 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.DATADataTypeState = DATADataType.Has;
                     }
-                    if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Byte WindSpeedParse))
-                    {
-                        item.WindSpeed = WindSpeedParse;
-                    }
-                    else
-                    {
-                        item.WindSpeed = default(Byte);
-                    }
-                    if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Byte CloudSpeedLowerParse))
-                    {
-                        item.CloudSpeedLower = CloudSpeedLowerParse;
-                    }
-                    else
-                    {
-                        item.CloudSpeedLower = default(Byte);
-                    }
-                    if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Byte CloudSpeedUpperParse))
-                    {
-                        item.CloudSpeedUpper = CloudSpeedUpperParse;
-                    }
-                    else
-                    {
-                        item.CloudSpeedUpper = default(Byte);
-                    }
-                    if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Byte TransDeltaParse))
-                    {
-                        item.TransDelta = TransDeltaParse;
-                    }
-                    else
-                    {
-                        item.TransDelta = default(Byte);
-                    }
-                    if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Byte SunGlareParse))
-                    {
-                        item.SunGlare = SunGlareParse;
-                    }
-                    else
-                    {
-                        item.SunGlare = default(Byte);
-                    }
-                    if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Byte SunDamageParse))
-                    {
-                        item.SunDamage = SunDamageParse;
-                    }
-                    else
-                    {
-                        item.SunDamage = default(Byte);
-                    }
-                    if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Byte PrecipitationBeginFadeInParse))
-                    {
-                        item.PrecipitationBeginFadeIn = PrecipitationBeginFadeInParse;
-                    }
-                    else
-                    {
-                        item.PrecipitationBeginFadeIn = default(Byte);
-                    }
-                    if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Byte PrecipitationEndFadeOutParse))
-                    {
-                        item.PrecipitationEndFadeOut = PrecipitationEndFadeOutParse;
-                    }
-                    else
-                    {
-                        item.PrecipitationEndFadeOut = default(Byte);
-                    }
-                    if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Byte ThunderLightningBeginFadeInParse))
-                    {
-                        item.ThunderLightningBeginFadeIn = ThunderLightningBeginFadeInParse;
-                    }
-                    else
-                    {
-                        item.ThunderLightningBeginFadeIn = default(Byte);
-                    }
-                    if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Byte ThunderLightningEndFadeOutParse))
-                    {
-                        item.ThunderLightningEndFadeOut = ThunderLightningEndFadeOutParse;
-                    }
-                    else
-                    {
-                        item.ThunderLightningEndFadeOut = default(Byte);
-                    }
-                    if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Byte ThunderLightningFrequencyParse))
-                    {
-                        item.ThunderLightningFrequency = ThunderLightningFrequencyParse;
-                    }
-                    else
-                    {
-                        item.ThunderLightningFrequency = default(Byte);
-                    }
+                    item.WindSpeed = dataFrame.ReadUInt8();
+                    item.CloudSpeedLower = dataFrame.ReadUInt8();
+                    item.CloudSpeedUpper = dataFrame.ReadUInt8();
+                    item.TransDelta = dataFrame.ReadUInt8();
+                    item.SunGlare = dataFrame.ReadUInt8();
+                    item.SunDamage = dataFrame.ReadUInt8();
+                    item.PrecipitationBeginFadeIn = dataFrame.ReadUInt8();
+                    item.PrecipitationEndFadeOut = dataFrame.ReadUInt8();
+                    item.ThunderLightningBeginFadeIn = dataFrame.ReadUInt8();
+                    item.ThunderLightningEndFadeOut = dataFrame.ReadUInt8();
+                    item.ThunderLightningFrequency = dataFrame.ReadUInt8();
                     if (EnumBinaryTranslation<Weather.WeatherClassification>.Instance.Parse(
                         frame: dataFrame.SpawnWithLength(1),
                         item: out Weather.WeatherClassification ClassificationParse))
@@ -7378,39 +7279,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Weather_Registration.DATA_HEADER)))
                 {
-                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.WindSpeed);
-                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.CloudSpeedLower);
-                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.CloudSpeedUpper);
-                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.TransDelta);
-                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.SunGlare);
-                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.SunDamage);
-                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.PrecipitationBeginFadeIn);
-                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.PrecipitationEndFadeOut);
-                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.ThunderLightningBeginFadeIn);
-                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.ThunderLightningEndFadeOut);
-                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.ThunderLightningFrequency);
+                    writer.Write(item.WindSpeed);
+                    writer.Write(item.CloudSpeedLower);
+                    writer.Write(item.CloudSpeedUpper);
+                    writer.Write(item.TransDelta);
+                    writer.Write(item.SunGlare);
+                    writer.Write(item.SunDamage);
+                    writer.Write(item.PrecipitationBeginFadeIn);
+                    writer.Write(item.PrecipitationEndFadeOut);
+                    writer.Write(item.ThunderLightningBeginFadeIn);
+                    writer.Write(item.ThunderLightningEndFadeOut);
+                    writer.Write(item.ThunderLightningFrequency);
                     Mutagen.Bethesda.Binary.EnumBinaryTranslation<Weather.WeatherClassification>.Instance.Write(
                         writer,
                         item.Classification,

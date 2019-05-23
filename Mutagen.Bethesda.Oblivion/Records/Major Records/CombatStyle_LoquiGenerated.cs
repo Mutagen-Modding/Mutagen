@@ -1228,26 +1228,8 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.CSTDDataTypeState = CSTDDataType.Has;
                     }
-                    if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Byte DodgePercentChanceParse))
-                    {
-                        item.DodgePercentChance = DodgePercentChanceParse;
-                    }
-                    else
-                    {
-                        item.DodgePercentChance = default(Byte);
-                    }
-                    if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Byte LeftRightPercentChanceParse))
-                    {
-                        item.LeftRightPercentChance = LeftRightPercentChanceParse;
-                    }
-                    else
-                    {
-                        item.LeftRightPercentChance = default(Byte);
-                    }
+                    item.DodgePercentChance = dataFrame.ReadUInt8();
+                    item.LeftRightPercentChance = dataFrame.ReadUInt8();
                     dataFrame.SetPosition(dataFrame.Position + 2);
                     if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                         frame: dataFrame,
@@ -1329,26 +1311,8 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.IdleTimerMax = default(Single);
                     }
-                    if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Byte BlockPercentChanceParse))
-                    {
-                        item.BlockPercentChance = BlockPercentChanceParse;
-                    }
-                    else
-                    {
-                        item.BlockPercentChance = default(Byte);
-                    }
-                    if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Byte AttackPercentChanceParse))
-                    {
-                        item.AttackPercentChance = AttackPercentChanceParse;
-                    }
-                    else
-                    {
-                        item.AttackPercentChance = default(Byte);
-                    }
+                    item.BlockPercentChance = dataFrame.ReadUInt8();
+                    item.AttackPercentChance = dataFrame.ReadUInt8();
                     dataFrame.SetPosition(dataFrame.Position + 2);
                     if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                         frame: dataFrame,
@@ -1380,16 +1344,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.HandToHandBonusToAttack = default(Single);
                     }
-                    if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Byte PowerAttackPercentChanceParse))
-                    {
-                        item.PowerAttackPercentChance = PowerAttackPercentChanceParse;
-                    }
-                    else
-                    {
-                        item.PowerAttackPercentChance = default(Byte);
-                    }
+                    item.PowerAttackPercentChance = dataFrame.ReadUInt8();
                     dataFrame.SetPosition(dataFrame.Position + 3);
                     if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                         frame: dataFrame,
@@ -1411,56 +1366,11 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.UnconsciousBonusToPowerAttack = default(Single);
                     }
-                    if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Byte PowerAttackNormalParse))
-                    {
-                        item.PowerAttackNormal = PowerAttackNormalParse;
-                    }
-                    else
-                    {
-                        item.PowerAttackNormal = default(Byte);
-                    }
-                    if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Byte PowerAttackForwardParse))
-                    {
-                        item.PowerAttackForward = PowerAttackForwardParse;
-                    }
-                    else
-                    {
-                        item.PowerAttackForward = default(Byte);
-                    }
-                    if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Byte PowerAttackBackParse))
-                    {
-                        item.PowerAttackBack = PowerAttackBackParse;
-                    }
-                    else
-                    {
-                        item.PowerAttackBack = default(Byte);
-                    }
-                    if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Byte PowerAttackLeftParse))
-                    {
-                        item.PowerAttackLeft = PowerAttackLeftParse;
-                    }
-                    else
-                    {
-                        item.PowerAttackLeft = default(Byte);
-                    }
-                    if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Byte PowerAttackRightParse))
-                    {
-                        item.PowerAttackRight = PowerAttackRightParse;
-                    }
-                    else
-                    {
-                        item.PowerAttackRight = default(Byte);
-                    }
+                    item.PowerAttackNormal = dataFrame.ReadUInt8();
+                    item.PowerAttackForward = dataFrame.ReadUInt8();
+                    item.PowerAttackBack = dataFrame.ReadUInt8();
+                    item.PowerAttackLeft = dataFrame.ReadUInt8();
+                    item.PowerAttackRight = dataFrame.ReadUInt8();
                     dataFrame.SetPosition(dataFrame.Position + 3);
                     if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                         frame: dataFrame,
@@ -1492,16 +1402,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.Flags = default(CombatStyle.Flag);
                     }
-                    if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Byte AcrobaticDodgePercentChanceParse))
-                    {
-                        item.AcrobaticDodgePercentChance = AcrobaticDodgePercentChanceParse;
-                    }
-                    else
-                    {
-                        item.AcrobaticDodgePercentChance = default(Byte);
-                    }
+                    item.AcrobaticDodgePercentChance = dataFrame.ReadUInt8();
                     dataFrame.SetPosition(dataFrame.Position + 2);
                     if (dataFrame.Complete)
                     {
@@ -1593,16 +1494,7 @@ namespace Mutagen.Bethesda.Oblivion
                         item.CSTDDataTypeState |= CSTDDataType.Break3;
                         return TryGet<int?>.Succeed((int)CombatStyle_FieldIndex.GroupStandoffDistance);
                     }
-                    if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Byte RushingAttackPercentChanceParse))
-                    {
-                        item.RushingAttackPercentChance = RushingAttackPercentChanceParse;
-                    }
-                    else
-                    {
-                        item.RushingAttackPercentChance = default(Byte);
-                    }
+                    item.RushingAttackPercentChance = dataFrame.ReadUInt8();
                     dataFrame.SetPosition(dataFrame.Position + 3);
                     if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                         frame: dataFrame,
@@ -6826,12 +6718,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(CombatStyle_Registration.CSTD_HEADER)))
                 {
-                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.DodgePercentChance);
-                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.LeftRightPercentChance);
+                    writer.Write(item.DodgePercentChance);
+                    writer.Write(item.LeftRightPercentChance);
                     writer.WriteZeros(2);
                     Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                         writer: writer,
@@ -6857,12 +6745,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                         writer: writer,
                         item: item.IdleTimerMax);
-                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.BlockPercentChance);
-                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.AttackPercentChance);
+                    writer.Write(item.BlockPercentChance);
+                    writer.Write(item.AttackPercentChance);
                     writer.WriteZeros(2);
                     Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                         writer: writer,
@@ -6873,9 +6757,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                         writer: writer,
                         item: item.HandToHandBonusToAttack);
-                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.PowerAttackPercentChance);
+                    writer.Write(item.PowerAttackPercentChance);
                     writer.WriteZeros(3);
                     Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                         writer: writer,
@@ -6883,21 +6765,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                         writer: writer,
                         item: item.UnconsciousBonusToPowerAttack);
-                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.PowerAttackNormal);
-                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.PowerAttackForward);
-                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.PowerAttackBack);
-                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.PowerAttackLeft);
-                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.PowerAttackRight);
+                    writer.Write(item.PowerAttackNormal);
+                    writer.Write(item.PowerAttackForward);
+                    writer.Write(item.PowerAttackBack);
+                    writer.Write(item.PowerAttackLeft);
+                    writer.Write(item.PowerAttackRight);
                     writer.WriteZeros(3);
                     Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                         writer: writer,
@@ -6909,9 +6781,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         writer,
                         item.Flags,
                         length: 1);
-                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.AcrobaticDodgePercentChance);
+                    writer.Write(item.AcrobaticDodgePercentChance);
                     writer.WriteZeros(2);
                     if (!item.CSTDDataTypeState.HasFlag(CombatStyle.CSTDDataType.Break0))
                     {
@@ -6942,9 +6812,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                     item: item.GroupStandoffDistance);
                                 if (!item.CSTDDataTypeState.HasFlag(CombatStyle.CSTDDataType.Break3))
                                 {
-                                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                                        writer: writer,
-                                        item: item.RushingAttackPercentChance);
+                                    writer.Write(item.RushingAttackPercentChance);
                                     writer.WriteZeros(3);
                                     Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                                         writer: writer,

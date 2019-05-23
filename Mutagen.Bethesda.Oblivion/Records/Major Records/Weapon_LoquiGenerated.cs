@@ -1052,16 +1052,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case 0x4D414E41: // ANAM
                 {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    if (Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        item: out UInt16 EnchantmentPointsParse))
-                    {
-                        item.EnchantmentPoints = EnchantmentPointsParse;
-                    }
-                    else
-                    {
-                        item.EnchantmentPoints = default(UInt16);
-                    }
+                    item.EnchantmentPoints = frame.ReadUInt16();
                     return TryGet<int?>.Succeed((int)Weapon_FieldIndex.EnchantmentPoints);
                 }
                 case 0x41544144: // DATA
@@ -1112,26 +1103,8 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.Flags = default(Weapon.WeaponFlag);
                     }
-                    if (Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out UInt32 ValueParse))
-                    {
-                        item.Value = ValueParse;
-                    }
-                    else
-                    {
-                        item.Value = default(UInt32);
-                    }
-                    if (Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out UInt32 HealthParse))
-                    {
-                        item.Health = HealthParse;
-                    }
-                    else
-                    {
-                        item.Health = default(UInt32);
-                    }
+                    item.Value = dataFrame.ReadUInt32();
+                    item.Health = dataFrame.ReadUInt32();
                     if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                         frame: dataFrame,
                         item: out Single WeightParse))
@@ -1142,16 +1115,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.Weight = default(Single);
                     }
-                    if (Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out UInt16 DamageParse))
-                    {
-                        item.Damage = DamageParse;
-                    }
-                    else
-                    {
-                        item.Damage = default(UInt16);
-                    }
+                    item.Damage = dataFrame.ReadUInt16();
                     return TryGet<int?>.Succeed((int)Weapon_FieldIndex.Damage);
                 }
                 default:
@@ -3870,18 +3834,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         writer,
                         item.Flags,
                         length: 4);
-                    Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.Value);
-                    Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.Health);
+                    writer.Write(item.Value);
+                    writer.Write(item.Health);
                     Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                         writer: writer,
                         item: item.Weight);
-                    Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.Damage);
+                    writer.Write(item.Damage);
                 }
             }
         }

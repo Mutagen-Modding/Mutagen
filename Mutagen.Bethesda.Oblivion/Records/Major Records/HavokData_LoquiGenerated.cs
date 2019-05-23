@@ -545,26 +545,8 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 item.Material = default(HavokData.MaterialType);
             }
-            if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                frame: frame,
-                item: out Byte FrictionParse))
-            {
-                item.Friction = FrictionParse;
-            }
-            else
-            {
-                item.Friction = default(Byte);
-            }
-            if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                frame: frame,
-                item: out Byte RestitutionParse))
-            {
-                item.Restitution = RestitutionParse;
-            }
-            else
-            {
-                item.Restitution = default(Byte);
-            }
+            item.Friction = frame.ReadUInt8();
+            item.Restitution = frame.ReadUInt8();
         }
 
         #endregion
@@ -1691,12 +1673,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer,
                 item.Material,
                 length: 1);
-            Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.Friction);
-            Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.Restitution);
+            writer.Write(item.Friction);
+            writer.Write(item.Restitution);
         }
 
         #region Binary Write

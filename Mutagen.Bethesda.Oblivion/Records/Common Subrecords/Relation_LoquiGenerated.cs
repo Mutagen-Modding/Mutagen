@@ -544,16 +544,7 @@ namespace Mutagen.Bethesda.Oblivion
                 frame: frame,
                 masterReferences: masterReferences,
                 item: item.Faction_Property);
-            if (Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
-                frame: frame,
-                item: out Int32 ModifierParse))
-            {
-                item.Modifier = ModifierParse;
-            }
-            else
-            {
-                item.Modifier = default(Int32);
-            }
+            item.Modifier = frame.ReadInt32();
         }
 
         #endregion
@@ -1551,9 +1542,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 item: item.Faction_Property,
                 masterReferences: masterReferences);
-            Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.Modifier);
+            writer.Write(item.Modifier);
         }
 
         #region Binary Write

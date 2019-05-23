@@ -544,16 +544,7 @@ namespace Mutagen.Bethesda.Oblivion
                 frame: frame,
                 masterReferences: masterReferences,
                 item: item.Item_Property);
-            if (Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
-                frame: frame,
-                item: out UInt32 CountParse))
-            {
-                item.Count = CountParse;
-            }
-            else
-            {
-                item.Count = default(UInt32);
-            }
+            item.Count = frame.ReadUInt32();
         }
 
         #endregion
@@ -1551,9 +1542,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 item: item.Item_Property,
                 masterReferences: masterReferences);
-            Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.Count);
+            writer.Write(item.Count);
         }
 
         #region Binary Write

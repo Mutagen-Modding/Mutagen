@@ -517,16 +517,7 @@ namespace Mutagen.Bethesda.Oblivion
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            if (Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
-                frame: frame,
-                item: out Int32 PointIDParse))
-            {
-                item.PointID = PointIDParse;
-            }
-            else
-            {
-                item.PointID = default(Int32);
-            }
+            item.PointID = frame.ReadInt32();
             if (Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(
                 frame: frame,
                 item: out P3Float PointParse))
@@ -1547,9 +1538,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             MasterReferences masterReferences)
         {
-            Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.PointID);
+            writer.Write(item.PointID);
             Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Point);

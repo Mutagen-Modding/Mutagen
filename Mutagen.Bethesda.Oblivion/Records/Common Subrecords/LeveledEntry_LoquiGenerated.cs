@@ -658,16 +658,7 @@ namespace Mutagen.Bethesda.Oblivion
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            if (Mutagen.Bethesda.Binary.Int16BinaryTranslation.Instance.Parse(
-                frame: frame,
-                item: out Int16 LevelParse))
-            {
-                item.Level = LevelParse;
-            }
-            else
-            {
-                item.Level = default(Int16);
-            }
+            item.Level = frame.ReadInt16();
             if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
                 frame: frame.SpawnWithLength(2),
                 item: out Byte[] FluffParse))
@@ -683,16 +674,7 @@ namespace Mutagen.Bethesda.Oblivion
                 masterReferences: masterReferences,
                 item: item.Reference_Property);
             if (frame.Complete) return;
-            if (Mutagen.Bethesda.Binary.Int16BinaryTranslation.Instance.Parse(
-                frame: frame,
-                item: out Int16 CountParse))
-            {
-                item.Count = CountParse;
-            }
-            else
-            {
-                item.Count = default(Int16);
-            }
+            item.Count = frame.ReadInt16();
             if (frame.Complete) return;
             if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
                 frame: frame.SpawnWithLength(2),
@@ -2103,9 +2085,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             MasterReferences masterReferences)
         {
-            Mutagen.Bethesda.Binary.Int16BinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.Level);
+            writer.Write(item.Level);
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Fluff);
@@ -2115,9 +2095,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 masterReferences: masterReferences);
             if (item.Count_IsSet)
             {
-                Mutagen.Bethesda.Binary.Int16BinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Count);
+                writer.Write(item.Count);
             }
             if (item.Fluff2_IsSet)
             {

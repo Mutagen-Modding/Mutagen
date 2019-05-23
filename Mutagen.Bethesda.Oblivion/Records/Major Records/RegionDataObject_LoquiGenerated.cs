@@ -719,16 +719,7 @@ namespace Mutagen.Bethesda.Oblivion
                 frame: frame,
                 masterReferences: masterReferences,
                 item: item.Object_Property);
-            if (Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Parse(
-                frame: frame,
-                item: out UInt16 ParentIndexParse))
-            {
-                item.ParentIndex = ParentIndexParse;
-            }
-            else
-            {
-                item.ParentIndex = default(UInt16);
-            }
+            item.ParentIndex = frame.ReadUInt16();
             if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
                 frame: frame.SpawnWithLength(2),
                 item: out Byte[] Unknown1Parse))
@@ -749,36 +740,9 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 item.Density = default(Single);
             }
-            if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                frame: frame,
-                item: out Byte ClusteringParse))
-            {
-                item.Clustering = ClusteringParse;
-            }
-            else
-            {
-                item.Clustering = default(Byte);
-            }
-            if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                frame: frame,
-                item: out Byte MinSlopeParse))
-            {
-                item.MinSlope = MinSlopeParse;
-            }
-            else
-            {
-                item.MinSlope = default(Byte);
-            }
-            if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                frame: frame,
-                item: out Byte MaxSlopeParse))
-            {
-                item.MaxSlope = MaxSlopeParse;
-            }
-            else
-            {
-                item.MaxSlope = default(Byte);
-            }
+            item.Clustering = frame.ReadUInt8();
+            item.MinSlope = frame.ReadUInt8();
+            item.MaxSlope = frame.ReadUInt8();
             if (EnumBinaryTranslation<RegionDataObject.Flag>.Instance.Parse(
                 frame: frame.SpawnWithLength(1),
                 item: out RegionDataObject.Flag FlagsParse))
@@ -789,26 +753,8 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 item.Flags = default(RegionDataObject.Flag);
             }
-            if (Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Parse(
-                frame: frame,
-                item: out UInt16 RadiusWrtPercentParse))
-            {
-                item.RadiusWrtPercent = RadiusWrtPercentParse;
-            }
-            else
-            {
-                item.RadiusWrtPercent = default(UInt16);
-            }
-            if (Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Parse(
-                frame: frame,
-                item: out UInt16 RadiusParse))
-            {
-                item.Radius = RadiusParse;
-            }
-            else
-            {
-                item.Radius = default(UInt16);
-            }
+            item.RadiusWrtPercent = frame.ReadUInt16();
+            item.Radius = frame.ReadUInt16();
             if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                 frame: frame,
                 item: out Single MinHeightParse))
@@ -3524,34 +3470,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 item: item.Object_Property,
                 masterReferences: masterReferences);
-            Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.ParentIndex);
+            writer.Write(item.ParentIndex);
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Unknown1);
             Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Density);
-            Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.Clustering);
-            Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.MinSlope);
-            Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.MaxSlope);
+            writer.Write(item.Clustering);
+            writer.Write(item.MinSlope);
+            writer.Write(item.MaxSlope);
             Mutagen.Bethesda.Binary.EnumBinaryTranslation<RegionDataObject.Flag>.Instance.Write(
                 writer,
                 item.Flags,
                 length: 1);
-            Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.RadiusWrtPercent);
-            Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.Radius);
+            writer.Write(item.RadiusWrtPercent);
+            writer.Write(item.Radius);
             Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.MinHeight);

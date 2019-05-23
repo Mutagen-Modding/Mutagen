@@ -798,16 +798,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case 0x4D414E53: // SNAM
                 {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        item: out Byte TextureSpecularExponentParse))
-                    {
-                        item.TextureSpecularExponent = TextureSpecularExponentParse;
-                    }
-                    else
-                    {
-                        item.TextureSpecularExponent = default(Byte);
-                    }
+                    item.TextureSpecularExponent = frame.ReadUInt8();
                     return TryGet<int?>.Succeed((int)LandTexture_FieldIndex.TextureSpecularExponent);
                 }
                 case 0x4D414E47: // GNAM

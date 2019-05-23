@@ -603,26 +603,8 @@ namespace Mutagen.Bethesda.Oblivion
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            if (Mutagen.Bethesda.Binary.Int16BinaryTranslation.Instance.Parse(
-                frame: frame,
-                item: out Int16 BlockNumberYParse))
-            {
-                item.BlockNumberY = BlockNumberYParse;
-            }
-            else
-            {
-                item.BlockNumberY = default(Int16);
-            }
-            if (Mutagen.Bethesda.Binary.Int16BinaryTranslation.Instance.Parse(
-                frame: frame,
-                item: out Int16 BlockNumberXParse))
-            {
-                item.BlockNumberX = BlockNumberXParse;
-            }
-            else
-            {
-                item.BlockNumberX = default(Int16);
-            }
+            item.BlockNumberY = frame.ReadInt16();
+            item.BlockNumberX = frame.ReadInt16();
             if (EnumBinaryTranslation<GroupTypeEnum>.Instance.Parse(
                 frame: frame.SpawnWithLength(4),
                 item: out GroupTypeEnum GroupTypeParse))
@@ -2152,12 +2134,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             MasterReferences masterReferences)
         {
-            Mutagen.Bethesda.Binary.Int16BinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.BlockNumberY);
-            Mutagen.Bethesda.Binary.Int16BinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.BlockNumberX);
+            writer.Write(item.BlockNumberY);
+            writer.Write(item.BlockNumberX);
             Mutagen.Bethesda.Binary.EnumBinaryTranslation<GroupTypeEnum>.Instance.Write(
                 writer,
                 item.GroupType,

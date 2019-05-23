@@ -1525,16 +1525,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case 0x4B4E5258: // XRNK
                 {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    if (Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        item: out Int32 FactionRankParse))
-                    {
-                        item.FactionRank = FactionRankParse;
-                    }
-                    else
-                    {
-                        item.FactionRank = default(Int32);
-                    }
+                    item.FactionRank = frame.ReadInt32();
                     return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.FactionRank);
                 }
                 case 0x424C4758: // XGLB
@@ -1580,16 +1571,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case 0x44455358: // XSED
                 {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        item: out Byte SpeedTreeSeedParse))
-                    {
-                        item.SpeedTreeSeed = SpeedTreeSeedParse;
-                    }
-                    else
-                    {
-                        item.SpeedTreeSeed = default(Byte);
-                    }
+                    item.SpeedTreeSeed = frame.ReadUInt8();
                     return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.SpeedTreeSeed);
                 }
                 case 0x444F4C58: // XLOD
@@ -1632,31 +1614,13 @@ namespace Mutagen.Bethesda.Oblivion
                 case 0x544C4858: // XHLT
                 {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    if (Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        item: out Int32 HealthParse))
-                    {
-                        item.Health = HealthParse;
-                    }
-                    else
-                    {
-                        item.Health = default(Int32);
-                    }
+                    item.Health = frame.ReadInt32();
                     return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Health);
                 }
                 case 0x4D434C58: // XLCM
                 {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    if (Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        item: out Int32 LevelModifierParse))
-                    {
-                        item.LevelModifier = LevelModifierParse;
-                    }
-                    else
-                    {
-                        item.LevelModifier = default(Int32);
-                    }
+                    item.LevelModifier = frame.ReadInt32();
                     return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.LevelModifier);
                 }
                 case 0x4D545258: // XRTM
@@ -1686,16 +1650,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case 0x544E4358: // XCNT
                 {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    if (Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        item: out Int32 CountParse))
-                    {
-                        item.Count = CountParse;
-                    }
-                    else
-                    {
-                        item.Count = default(Int32);
-                    }
+                    item.Count = frame.ReadInt32();
                     return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Count);
                 }
                 case 0x4B524D58: // XMRK

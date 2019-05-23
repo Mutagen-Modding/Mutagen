@@ -653,16 +653,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.SLSDDataTypeState = SLSDDataType.Has;
                     }
-                    if (Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Int32 IndexParse))
-                    {
-                        item.Index = IndexParse;
-                    }
-                    else
-                    {
-                        item.Index = default(Int32);
-                    }
+                    item.Index = dataFrame.ReadInt32();
                     if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
                         frame: dataFrame.SpawnWithLength(12),
                         item: out Byte[] FluffParse))
@@ -2192,9 +2183,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(LocalVariable_Registration.SLSD_HEADER)))
                 {
-                    Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.Index);
+                    writer.Write(item.Index);
                     Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                         writer: writer,
                         item: item.Fluff);

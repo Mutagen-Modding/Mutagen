@@ -594,31 +594,13 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 item.Fluff = default(Byte[]);
             }
-            if (Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
-                frame: frame,
-                item: out UInt32 RefCountParse))
-            {
-                item.RefCount = RefCountParse;
-            }
-            else
-            {
-                item.RefCount = default(UInt32);
-            }
+            item.RefCount = frame.ReadUInt32();
             ScriptMetaSummaryBinaryTranslation.FillBinary_CompiledSize_Custom_Public(
                 frame: frame,
                 item: item,
                 masterReferences: masterReferences,
                 errorMask: errorMask);
-            if (Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
-                frame: frame,
-                item: out UInt32 VariableCountParse))
-            {
-                item.VariableCount = VariableCountParse;
-            }
-            else
-            {
-                item.VariableCount = default(UInt32);
-            }
+            item.VariableCount = frame.ReadUInt32();
             if (EnumBinaryTranslation<ScriptFields.ScriptType>.Instance.Parse(
                 frame: frame.SpawnWithLength(4),
                 item: out ScriptFields.ScriptType TypeParse))
@@ -1955,17 +1937,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Fluff);
-            Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.RefCount);
+            writer.Write(item.RefCount);
             ScriptMetaSummaryBinaryTranslation.WriteBinary_CompiledSize(
                 writer: writer,
                 item: item,
                 masterReferences: masterReferences,
                 errorMask: errorMask);
-            Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.VariableCount);
+            writer.Write(item.VariableCount);
             Mutagen.Bethesda.Binary.EnumBinaryTranslation<ScriptFields.ScriptType>.Instance.Write(
                 writer,
                 item.Type,

@@ -549,16 +549,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 item.TrainedSkill = default(Skill);
             }
-            if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                frame: frame,
-                item: out Byte MaximumTrainingLevelParse))
-            {
-                item.MaximumTrainingLevel = MaximumTrainingLevelParse;
-            }
-            else
-            {
-                item.MaximumTrainingLevel = default(Byte);
-            }
+            item.MaximumTrainingLevel = frame.ReadUInt8();
             if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
                 frame: frame.SpawnWithLength(2),
                 item: out Byte[] FluffParse))
@@ -1693,9 +1684,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer,
                 item.TrainedSkill,
                 length: 1);
-            Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.MaximumTrainingLevel);
+            writer.Write(item.MaximumTrainingLevel);
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Fluff);

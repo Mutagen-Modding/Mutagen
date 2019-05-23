@@ -581,16 +581,7 @@ namespace Mutagen.Bethesda
                 case 0x41544144: // DATA
                 {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    if (Mutagen.Bethesda.Binary.UInt64BinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        item: out UInt64 FileSizeParse))
-                    {
-                        item.FileSize = FileSizeParse;
-                    }
-                    else
-                    {
-                        item.FileSize = default(UInt64);
-                    }
+                    item.FileSize = frame.ReadUInt64();
                     return TryGet<int?>.Succeed((int)MasterReference_FieldIndex.FileSize);
                 }
                 default:

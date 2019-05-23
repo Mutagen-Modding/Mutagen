@@ -527,16 +527,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 item.Skill = default(ActorValue);
             }
-            if (Mutagen.Bethesda.Binary.Int8BinaryTranslation.Instance.Parse(
-                frame: frame,
-                item: out SByte BoostParse))
-            {
-                item.Boost = BoostParse;
-            }
-            else
-            {
-                item.Boost = default(SByte);
-            }
+            item.Boost = frame.ReadInt8();
         }
 
         #endregion
@@ -1551,9 +1542,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer,
                 item.Skill,
                 length: 1);
-            Mutagen.Bethesda.Binary.Int8BinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.Boost);
+            writer.Write(item.Boost);
         }
 
         #region Binary Write

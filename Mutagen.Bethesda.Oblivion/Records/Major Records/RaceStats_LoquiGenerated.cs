@@ -583,86 +583,14 @@ namespace Mutagen.Bethesda.Oblivion
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                frame: frame,
-                item: out Byte StrengthParse))
-            {
-                item.Strength = StrengthParse;
-            }
-            else
-            {
-                item.Strength = default(Byte);
-            }
-            if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                frame: frame,
-                item: out Byte IntelligenceParse))
-            {
-                item.Intelligence = IntelligenceParse;
-            }
-            else
-            {
-                item.Intelligence = default(Byte);
-            }
-            if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                frame: frame,
-                item: out Byte WillpowerParse))
-            {
-                item.Willpower = WillpowerParse;
-            }
-            else
-            {
-                item.Willpower = default(Byte);
-            }
-            if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                frame: frame,
-                item: out Byte AgilityParse))
-            {
-                item.Agility = AgilityParse;
-            }
-            else
-            {
-                item.Agility = default(Byte);
-            }
-            if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                frame: frame,
-                item: out Byte SpeedParse))
-            {
-                item.Speed = SpeedParse;
-            }
-            else
-            {
-                item.Speed = default(Byte);
-            }
-            if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                frame: frame,
-                item: out Byte EnduranceParse))
-            {
-                item.Endurance = EnduranceParse;
-            }
-            else
-            {
-                item.Endurance = default(Byte);
-            }
-            if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                frame: frame,
-                item: out Byte PersonalityParse))
-            {
-                item.Personality = PersonalityParse;
-            }
-            else
-            {
-                item.Personality = default(Byte);
-            }
-            if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                frame: frame,
-                item: out Byte LuckParse))
-            {
-                item.Luck = LuckParse;
-            }
-            else
-            {
-                item.Luck = default(Byte);
-            }
+            item.Strength = frame.ReadUInt8();
+            item.Intelligence = frame.ReadUInt8();
+            item.Willpower = frame.ReadUInt8();
+            item.Agility = frame.ReadUInt8();
+            item.Speed = frame.ReadUInt8();
+            item.Endurance = frame.ReadUInt8();
+            item.Personality = frame.ReadUInt8();
+            item.Luck = frame.ReadUInt8();
         }
 
         #endregion
@@ -2333,30 +2261,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             MasterReferences masterReferences)
         {
-            Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.Strength);
-            Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.Intelligence);
-            Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.Willpower);
-            Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.Agility);
-            Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.Speed);
-            Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.Endurance);
-            Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.Personality);
-            Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.Luck);
+            writer.Write(item.Strength);
+            writer.Write(item.Intelligence);
+            writer.Write(item.Willpower);
+            writer.Write(item.Agility);
+            writer.Write(item.Speed);
+            writer.Write(item.Endurance);
+            writer.Write(item.Personality);
+            writer.Write(item.Luck);
         }
 
         #region Binary Write

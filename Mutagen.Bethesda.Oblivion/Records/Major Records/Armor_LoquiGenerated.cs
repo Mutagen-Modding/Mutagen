@@ -753,26 +753,8 @@ namespace Mutagen.Bethesda.Oblivion
                         item: item,
                         masterReferences: masterReferences,
                         errorMask: errorMask);
-                    if (Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out UInt32 ValueParse))
-                    {
-                        item.Value = ValueParse;
-                    }
-                    else
-                    {
-                        item.Value = default(UInt32);
-                    }
-                    if (Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out UInt32 HealthParse))
-                    {
-                        item.Health = HealthParse;
-                    }
-                    else
-                    {
-                        item.Health = default(UInt32);
-                    }
+                    item.Value = dataFrame.ReadUInt32();
+                    item.Health = dataFrame.ReadUInt32();
                     if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                         frame: dataFrame,
                         item: out Single WeightParse))
@@ -2346,12 +2328,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         item: item,
                         errorMask: errorMask,
                         masterReferences: masterReferences);
-                    Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.Value);
-                    Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.Health);
+                    writer.Write(item.Value);
+                    writer.Write(item.Health);
                     Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                         writer: writer,
                         item: item.Weight);

@@ -876,46 +876,10 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.PFPCDataTypeState = PFPCDataType.Has;
                     }
-                    if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Byte SpringParse))
-                    {
-                        item.Spring = SpringParse;
-                    }
-                    else
-                    {
-                        item.Spring = default(Byte);
-                    }
-                    if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Byte SummerParse))
-                    {
-                        item.Summer = SummerParse;
-                    }
-                    else
-                    {
-                        item.Summer = default(Byte);
-                    }
-                    if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Byte FallParse))
-                    {
-                        item.Fall = FallParse;
-                    }
-                    else
-                    {
-                        item.Fall = default(Byte);
-                    }
-                    if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Byte WinterParse))
-                    {
-                        item.Winter = WinterParse;
-                    }
-                    else
-                    {
-                        item.Winter = default(Byte);
-                    }
+                    item.Spring = dataFrame.ReadUInt8();
+                    item.Summer = dataFrame.ReadUInt8();
+                    item.Fall = dataFrame.ReadUInt8();
+                    item.Winter = dataFrame.ReadUInt8();
                     return TryGet<int?>.Succeed((int)Flora_FieldIndex.Winter);
                 }
                 default:
@@ -2877,18 +2841,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Flora_Registration.PFPC_HEADER)))
                 {
-                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.Spring);
-                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.Summer);
-                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.Fall);
-                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.Winter);
+                    writer.Write(item.Spring);
+                    writer.Write(item.Summer);
+                    writer.Write(item.Fall);
+                    writer.Write(item.Winter);
                 }
             }
         }

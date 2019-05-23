@@ -669,16 +669,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.Quadrant = default(AlphaLayer.QuadrantEnum);
                     }
-                    if (Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out UInt16 LayerNumberParse))
-                    {
-                        item.LayerNumber = LayerNumberParse;
-                    }
-                    else
-                    {
-                        item.LayerNumber = default(UInt16);
-                    }
+                    item.LayerNumber = dataFrame.ReadUInt16();
                     return TryGet<int?>.Succeed((int)BaseLayer_FieldIndex.LayerNumber);
                 }
                 default:
@@ -1879,9 +1870,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         writer,
                         item.Quadrant,
                         length: 2);
-                    Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.LayerNumber);
+                    writer.Write(item.LayerNumber);
                 }
             }
         }

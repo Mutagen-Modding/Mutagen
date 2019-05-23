@@ -714,16 +714,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.Emotion = default(EmotionType);
                     }
-                    if (Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Int32 EmotionValueParse))
-                    {
-                        item.EmotionValue = EmotionValueParse;
-                    }
-                    else
-                    {
-                        item.EmotionValue = default(Int32);
-                    }
+                    item.EmotionValue = dataFrame.ReadInt32();
                     if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
                         frame: dataFrame.SpawnWithLength(4),
                         item: out Byte[] Fluff1Parse))
@@ -734,16 +725,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.Fluff1 = default(Byte[]);
                     }
-                    if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Byte ResponseNumberParse))
-                    {
-                        item.ResponseNumber = ResponseNumberParse;
-                    }
-                    else
-                    {
-                        item.ResponseNumber = default(Byte);
-                    }
+                    item.ResponseNumber = dataFrame.ReadUInt8();
                     if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
                         frame: dataFrame.SpawnWithLength(3),
                         item: out Byte[] Fluff2Parse))
@@ -2513,15 +2495,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         writer,
                         item.Emotion,
                         length: 4);
-                    Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.EmotionValue);
+                    writer.Write(item.EmotionValue);
                     Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                         writer: writer,
                         item: item.Fluff1);
-                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.ResponseNumber);
+                    writer.Write(item.ResponseNumber);
                     Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                         writer: writer,
                         item: item.Fluff2);

@@ -820,16 +820,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.Type = default(Spell.SpellType);
                     }
-                    if (Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out UInt32 CostParse))
-                    {
-                        item.Cost = CostParse;
-                    }
-                    else
-                    {
-                        item.Cost = default(UInt32);
-                    }
+                    item.Cost = dataFrame.ReadUInt32();
                     if (EnumBinaryTranslation<Spell.SpellLevel>.Instance.Parse(
                         frame: dataFrame.SpawnWithLength(4),
                         item: out Spell.SpellLevel LevelParse))
@@ -2598,9 +2589,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         writer,
                         item.Type,
                         length: 4);
-                    Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.Cost);
+                    writer.Write(item.Cost);
                     Mutagen.Bethesda.Binary.EnumBinaryTranslation<Spell.SpellLevel>.Instance.Write(
                         writer,
                         item.Level,

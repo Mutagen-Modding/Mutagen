@@ -1003,16 +1003,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.LeafDimmingValue = default(Single);
                     }
-                    if (Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Int32 ShadowRadiusParse))
-                    {
-                        item.ShadowRadius = ShadowRadiusParse;
-                    }
-                    else
-                    {
-                        item.ShadowRadius = default(Int32);
-                    }
+                    item.ShadowRadius = dataFrame.ReadInt32();
                     if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                         frame: dataFrame,
                         item: out Single RockingSpeedParse))
@@ -3803,9 +3794,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                         writer: writer,
                         item: item.LeafDimmingValue);
-                    Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.ShadowRadius);
+                    writer.Write(item.ShadowRadius);
                     Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                         writer: writer,
                         item: item.RockingSpeed);

@@ -1328,16 +1328,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case 0x4D414E41: // ANAM
                 {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        item: out Byte OpacityParse))
-                    {
-                        item.Opacity = OpacityParse;
-                    }
-                    else
-                    {
-                        item.Opacity = default(Byte);
-                    }
+                    item.Opacity = frame.ReadUInt8();
                     return TryGet<int?>.Succeed((int)Water_FieldIndex.Opacity);
                 }
                 case 0x4D414E46: // FNAM
@@ -1551,16 +1542,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.ReflectionColor = default(Color);
                     }
-                    if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Byte TextureBlendParse))
-                    {
-                        item.TextureBlend = TextureBlendParse;
-                    }
-                    else
-                    {
-                        item.TextureBlend = default(Byte);
-                    }
+                    item.TextureBlend = dataFrame.ReadUInt8();
                     dataFrame.SetPosition(dataFrame.Position + 3);
                     WaterBinaryTranslation.FillBinary_OilCustomLogic_Custom_Public(
                         frame: dataFrame,
@@ -1682,16 +1664,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.DisplacementSimulatorStartingSize = default(Single);
                     }
-                    if (Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out UInt16 DamageParse))
-                    {
-                        item.Damage = DamageParse;
-                    }
-                    else
-                    {
-                        item.Damage = default(UInt16);
-                    }
+                    item.Damage = dataFrame.ReadUInt16();
                     return TryGet<int?>.Succeed((int)Water_FieldIndex.Damage);
                 }
                 case 0x4D414E47: // GNAM
@@ -6625,9 +6598,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 writer: writer,
                                 item: item.ReflectionColor,
                                 extraByte: true);
-                            Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                                writer: writer,
-                                item: item.TextureBlend);
+                            writer.Write(item.TextureBlend);
                             writer.WriteZeros(3);
                             WaterBinaryTranslation.WriteBinary_OilCustomLogic(
                                 writer: writer,
@@ -6673,9 +6644,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                     Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                                         writer: writer,
                                         item: item.DisplacementSimulatorStartingSize);
-                                    Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Write(
-                                        writer: writer,
-                                        item: item.Damage);
+                                    writer.Write(item.Damage);
                                 }
                             }
                         }

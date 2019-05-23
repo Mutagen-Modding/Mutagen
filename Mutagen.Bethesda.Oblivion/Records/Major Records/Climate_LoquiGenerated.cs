@@ -993,16 +993,7 @@ namespace Mutagen.Bethesda.Oblivion
                         item: item,
                         masterReferences: masterReferences,
                         errorMask: errorMask);
-                    if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Byte VolatilityParse))
-                    {
-                        item.Volatility = VolatilityParse;
-                    }
-                    else
-                    {
-                        item.Volatility = default(Byte);
-                    }
+                    item.Volatility = dataFrame.ReadUInt8();
                     ClimateBinaryTranslation.FillBinary_Phase_Custom_Public(
                         frame: dataFrame,
                         item: item,
@@ -3735,9 +3726,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         item: item,
                         errorMask: errorMask,
                         masterReferences: masterReferences);
-                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.Volatility);
+                    writer.Write(item.Volatility);
                     ClimateBinaryTranslation.WriteBinary_Phase(
                         writer: writer,
                         item: item,

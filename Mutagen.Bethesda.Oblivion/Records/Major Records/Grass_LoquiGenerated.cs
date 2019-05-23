@@ -862,66 +862,12 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.DATADataTypeState = DATADataType.Has;
                     }
-                    if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Byte DensityParse))
-                    {
-                        item.Density = DensityParse;
-                    }
-                    else
-                    {
-                        item.Density = default(Byte);
-                    }
-                    if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Byte MinSlopeParse))
-                    {
-                        item.MinSlope = MinSlopeParse;
-                    }
-                    else
-                    {
-                        item.MinSlope = default(Byte);
-                    }
-                    if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Byte MaxSlopeParse))
-                    {
-                        item.MaxSlope = MaxSlopeParse;
-                    }
-                    else
-                    {
-                        item.MaxSlope = default(Byte);
-                    }
-                    if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Byte Fluff1Parse))
-                    {
-                        item.Fluff1 = Fluff1Parse;
-                    }
-                    else
-                    {
-                        item.Fluff1 = default(Byte);
-                    }
-                    if (Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out UInt16 UnitFromWaterAmountParse))
-                    {
-                        item.UnitFromWaterAmount = UnitFromWaterAmountParse;
-                    }
-                    else
-                    {
-                        item.UnitFromWaterAmount = default(UInt16);
-                    }
-                    if (Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out UInt16 Fluff2Parse))
-                    {
-                        item.Fluff2 = Fluff2Parse;
-                    }
-                    else
-                    {
-                        item.Fluff2 = default(UInt16);
-                    }
+                    item.Density = dataFrame.ReadUInt8();
+                    item.MinSlope = dataFrame.ReadUInt8();
+                    item.MaxSlope = dataFrame.ReadUInt8();
+                    item.Fluff1 = dataFrame.ReadUInt8();
+                    item.UnitFromWaterAmount = dataFrame.ReadUInt16();
+                    item.Fluff2 = dataFrame.ReadUInt16();
                     if (EnumBinaryTranslation<Grass.UnitFromWaterType>.Instance.Parse(
                         frame: dataFrame.SpawnWithLength(4),
                         item: out Grass.UnitFromWaterType UnitFromWaterModeParse))
@@ -3473,24 +3419,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Grass_Registration.DATA_HEADER)))
                 {
-                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.Density);
-                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.MinSlope);
-                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.MaxSlope);
-                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.Fluff1);
-                    Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.UnitFromWaterAmount);
-                    Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.Fluff2);
+                    writer.Write(item.Density);
+                    writer.Write(item.MinSlope);
+                    writer.Write(item.MaxSlope);
+                    writer.Write(item.Fluff1);
+                    writer.Write(item.UnitFromWaterAmount);
+                    writer.Write(item.Fluff2);
                     Mutagen.Bethesda.Binary.EnumBinaryTranslation<Grass.UnitFromWaterType>.Instance.Write(
                         writer,
                         item.UnitFromWaterMode,

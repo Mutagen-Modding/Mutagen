@@ -79,17 +79,17 @@ namespace Mutagen.Bethesda.Tests.Benchmarks
                 ModKey);
         }
 
-        [Benchmark]
-        public PathGrid PathGridImporting()
-        {
-            PathGridReader.Position = 0;
-            var pathGrid = new PathGrid(FormKey.NULL);
-            PathGridBinaryTranslation.FillBinary_PointToPointConnections_Custom_Public(
-                new Binary.MutagenFrame(PathGridReader),
-                pathGrid,
-                masterReferences: null,
-                errorMask: null);
-            return pathGrid;
-        }
+        //[Benchmark]
+        //public PathGrid PathGridImporting()
+        //{
+        //    PathGridReader.Position = 0;
+        //    var pathGrid = new PathGrid(FormKey.NULL);
+        //    PathGridBinaryTranslation.FillBinary_PointToPointConnections_Custom_Public(
+        //        new Binary.MutagenFrame(PathGridReader),
+        //        pathGrid,
+        //        masterReferences: null,
+        //        errorMask: null);
+        //    return pathGrid;
+        //}
     }
 }

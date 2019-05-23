@@ -1,23 +1,46 @@
+<?xml version="1.0" encoding="us-ascii"?>
 <Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <LangVersion>7.3</LangVersion>
+    <EnableDefaultCompileItems>False</EnableDefaultCompileItems>
   </PropertyGroup>
-
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
-
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
-
+  <ItemGroup>
+    <Compile Include="Benchmarks\Benchmarks.cs" />
+    <Compile Include="Benchmarks\FormKeyParsing.cs" />
+    <Compile Include="Benchmarks\MiscOverhead.cs" />
+    <Compile Include="Benchmarks\OblivionBinaryTranslation.cs" />
+    <Compile Include="Benchmarks\OblivionXmlTranslation.cs" />
+    <Compile Include="Benchmarks\StringParsing.cs" />
+    <Compile Include="ComparisonStream.cs" />
+    <Compile Include="FlattenedMod_Tests.cs" />
+    <Compile Include="ModList_Tests.cs" />
+    <Compile Include="Passthrough_Tests.cs" />
+    <Compile Include="Settings\PassthroughSettings_LoquiGenerated.cs">
+      <DependentUpon>TestingSettings.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Settings\Passthrough_LoquiGenerated.cs">
+      <DependentUpon>TestingSettings.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Settings\ProtocolDefinition_Tests.cs" />
+    <Compile Include="Settings\TestingSettings_LoquiGenerated.cs">
+      <DependentUpon>TestingSettings.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Specific Passthrough Tests\Oblivion\OblivionESM_Passthrough_Tests.cs" />
+    <Compile Include="Specific Passthrough Tests\Oblivion\Oblivion_Passthrough_Test.cs" />
+    <Compile Include="TestBattery.cs" />
+    <Compile Include="TestingConstants.cs" />
+  </ItemGroup>
   <ItemGroup>
     <PackageReference Include="BenchmarkDotNet" Version="0.11.5" />
     <PackageReference Include="xunit" Version="2.4.1" />
   </ItemGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\..\CSharpExt\CSharpExt\CSharpExt.csproj" />
     <ProjectReference Include="..\..\DynamicData\DynamicData\DynamicData.csproj" />
@@ -26,5 +49,16 @@
     <ProjectReference Include="..\Mutagen.Bethesda.Oblivion\Mutagen.Bethesda.Oblivion.csproj" />
     <ProjectReference Include="..\Mutagen.Bethesda\Mutagen.Bethesda.csproj" />
   </ItemGroup>
-
+  <ItemGroup>
+    <None Include="Settings\TestingSettings.xsd">
+      <DependentUpon>TestingSettings.xml</DependentUpon>
+    </None>
+    <None Include="Settings\PassthroughSettings.xsd">
+      <DependentUpon>TestingSettings.xml</DependentUpon>
+    </None>
+    <None Include="Settings\Passthrough.xsd">
+      <DependentUpon>TestingSettings.xml</DependentUpon>
+    </None>
+    <None Include="Settings\Common.xsd" />
+  </ItemGroup>
 </Project>

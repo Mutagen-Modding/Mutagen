@@ -569,16 +569,7 @@ namespace Mutagen.Bethesda.Oblivion
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                frame: frame,
-                item: out Byte LockLevelParse))
-            {
-                item.LockLevel = LockLevelParse;
-            }
-            else
-            {
-                item.LockLevel = default(Byte);
-            }
+            item.LockLevel = frame.ReadUInt8();
             if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
                 frame: frame.SpawnWithLength(3),
                 item: out Byte[] FluffParse))
@@ -1816,9 +1807,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             MasterReferences masterReferences)
         {
-            Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.LockLevel);
+            writer.Write(item.LockLevel);
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Fluff);

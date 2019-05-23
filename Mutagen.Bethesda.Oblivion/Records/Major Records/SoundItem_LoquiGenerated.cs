@@ -599,16 +599,7 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)SoundItem_FieldIndex.Chance) return TryGet<int?>.Failure;
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        item: out Byte ChanceParse))
-                    {
-                        item.Chance = ChanceParse;
-                    }
-                    else
-                    {
-                        item.Chance = default(Byte);
-                    }
+                    item.Chance = frame.ReadUInt8();
                     return TryGet<int?>.Succeed((int)SoundItem_FieldIndex.Chance);
                 }
                 default:

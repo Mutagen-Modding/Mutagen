@@ -1028,16 +1028,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case 0x4D414E41: // ANAM
                 {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    if (Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        item: out UInt16 EnchantmentPointsParse))
-                    {
-                        item.EnchantmentPoints = EnchantmentPointsParse;
-                    }
-                    else
-                    {
-                        item.EnchantmentPoints = default(UInt16);
-                    }
+                    item.EnchantmentPoints = frame.ReadUInt16();
                     return TryGet<int?>.Succeed((int)Book_FieldIndex.EnchantmentPoints);
                 }
                 case 0x43534544: // DESC

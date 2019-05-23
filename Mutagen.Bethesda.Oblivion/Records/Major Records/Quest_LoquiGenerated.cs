@@ -929,16 +929,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.Flags = default(Quest.Flag);
                     }
-                    if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Byte PriorityParse))
-                    {
-                        item.Priority = PriorityParse;
-                    }
-                    else
-                    {
-                        item.Priority = default(Byte);
-                    }
+                    item.Priority = dataFrame.ReadUInt8();
                     return TryGet<int?>.Succeed((int)Quest_FieldIndex.Priority);
                 }
                 case 0x41445443: // CTDA
@@ -3310,9 +3301,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         writer,
                         item.Flags,
                         length: 1);
-                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.Priority);
+                    writer.Write(item.Priority);
                 }
             }
             if (item.Conditions.HasBeenSet)

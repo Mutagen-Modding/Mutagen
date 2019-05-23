@@ -42,51 +42,64 @@ namespace Mutagen.Bethesda.Generation
             this.ShouldGenerateCopyIn = false;
             this.TranslationMaskParameter = false;
             this._typeGenerations[typeof(LoquiType)] = new LoquiBinaryTranslationGeneration(ModuleNickname);
-            this._typeGenerations[typeof(BoolNullType)] = new PrimitiveBinaryTranslationGeneration<bool?>();
             this._typeGenerations[typeof(BoolType)] = new PrimitiveBinaryTranslationGeneration<bool>();
-            this._typeGenerations[typeof(CharNullType)] = new PrimitiveBinaryTranslationGeneration<char?>();
             this._typeGenerations[typeof(CharType)] = new PrimitiveBinaryTranslationGeneration<char>();
-            this._typeGenerations[typeof(DateTimeNullType)] = new PrimitiveBinaryTranslationGeneration<DateTime?>();
             this._typeGenerations[typeof(DateTimeType)] = new PrimitiveBinaryTranslationGeneration<DateTime>();
-            this._typeGenerations[typeof(DoubleNullType)] = new PrimitiveBinaryTranslationGeneration<double?>();
             this._typeGenerations[typeof(DoubleType)] = new PrimitiveBinaryTranslationGeneration<double>();
             this._typeGenerations[typeof(EnumType)] = new EnumBinaryTranslationGeneration();
-            this._typeGenerations[typeof(EnumNullType)] = new EnumBinaryTranslationGeneration();
-            this._typeGenerations[typeof(FloatNullType)] = new PrimitiveBinaryTranslationGeneration<float?>("Float");
-            this._typeGenerations[typeof(FloatType)] = new PrimitiveBinaryTranslationGeneration<float>("Float");
-            this._typeGenerations[typeof(Int8NullType)] = new PrimitiveBinaryTranslationGeneration<sbyte?>("Int8");
+            this._typeGenerations[typeof(FloatType)] = new PrimitiveBinaryTranslationGeneration<float>("Float")
+            {
+                PreferDirectTranslation = false
+            };
             this._typeGenerations[typeof(Int8Type)] = new PrimitiveBinaryTranslationGeneration<sbyte>("Int8");
-            this._typeGenerations[typeof(Int16NullType)] = new PrimitiveBinaryTranslationGeneration<short?>();
             this._typeGenerations[typeof(Int16Type)] = new PrimitiveBinaryTranslationGeneration<short>();
-            this._typeGenerations[typeof(Int32NullType)] = new PrimitiveBinaryTranslationGeneration<int?>();
             this._typeGenerations[typeof(Int32Type)] = new PrimitiveBinaryTranslationGeneration<int>();
-            this._typeGenerations[typeof(Int64NullType)] = new PrimitiveBinaryTranslationGeneration<long?>();
             this._typeGenerations[typeof(Int64Type)] = new PrimitiveBinaryTranslationGeneration<long>();
-            this._typeGenerations[typeof(P3UInt16NullType)] = new PrimitiveBinaryTranslationGeneration<P3UInt16?>();
-            this._typeGenerations[typeof(P3UInt16Type)] = new PrimitiveBinaryTranslationGeneration<P3UInt16>();
-            this._typeGenerations[typeof(P2FloatNullType)] = new PrimitiveBinaryTranslationGeneration<P2Float?>();
-            this._typeGenerations[typeof(P2FloatType)] = new PrimitiveBinaryTranslationGeneration<P2Float>();
-            this._typeGenerations[typeof(P3FloatNullType)] = new PrimitiveBinaryTranslationGeneration<P3Float?>();
-            this._typeGenerations[typeof(P3FloatType)] = new PrimitiveBinaryTranslationGeneration<P3Float>();
-            this._typeGenerations[typeof(P2Int32NullType)] = new PrimitiveBinaryTranslationGeneration<P2Int?>();
-            this._typeGenerations[typeof(P2Int32Type)] = new PrimitiveBinaryTranslationGeneration<P2Int>();
-            this._typeGenerations[typeof(P2Int16NullType)] = new PrimitiveBinaryTranslationGeneration<P2Int16?>();
-            this._typeGenerations[typeof(P2Int16Type)] = new PrimitiveBinaryTranslationGeneration<P2Int16>();
-            this._typeGenerations[typeof(P2FloatNullType)] = new PrimitiveBinaryTranslationGeneration<P2Float?>();
-            this._typeGenerations[typeof(P2FloatType)] = new PrimitiveBinaryTranslationGeneration<P2Float>();
-            this._typeGenerations[typeof(StringType)] = new StringBinaryTranslationGeneration();
+            this._typeGenerations[typeof(P3UInt16Type)] = new PrimitiveBinaryTranslationGeneration<P3UInt16>()
+            {
+                PreferDirectTranslation = false
+            };
+            this._typeGenerations[typeof(P2FloatType)] = new PrimitiveBinaryTranslationGeneration<P2Float>()
+            {
+                PreferDirectTranslation = false
+            };
+            this._typeGenerations[typeof(P3FloatType)] = new PrimitiveBinaryTranslationGeneration<P3Float>()
+            {
+                PreferDirectTranslation = false
+            };
+            this._typeGenerations[typeof(P2Int32Type)] = new PrimitiveBinaryTranslationGeneration<P2Int>()
+            {
+                PreferDirectTranslation = false
+            };
+            this._typeGenerations[typeof(P2Int16Type)] = new PrimitiveBinaryTranslationGeneration<P2Int16>()
+            {
+                PreferDirectTranslation = false
+            };
+            this._typeGenerations[typeof(P2FloatType)] = new PrimitiveBinaryTranslationGeneration<P2Float>()
+            {
+                PreferDirectTranslation = false
+            };
+            this._typeGenerations[typeof(StringType)] = new StringBinaryTranslationGeneration()
+            {
+                PreferDirectTranslation = false
+            };
             this._typeGenerations[typeof(FilePathType)] = new FilePathBinaryTranslationGeneration();
-            this._typeGenerations[typeof(UInt8NullType)] = new PrimitiveBinaryTranslationGeneration<byte?>();
-            this._typeGenerations[typeof(UInt8Type)] = new PrimitiveBinaryTranslationGeneration<byte>();
-            this._typeGenerations[typeof(UInt16NullType)] = new PrimitiveBinaryTranslationGeneration<ushort?>();
+            this._typeGenerations[typeof(UInt8Type)] = new PrimitiveBinaryTranslationGeneration<byte>()
+            {
+                customRead = (fg, reader, item) => fg.AppendLine($"{item.DirectAccess} = {reader.DirectAccess}.ReadUInt8();")
+            };
             this._typeGenerations[typeof(UInt16Type)] = new PrimitiveBinaryTranslationGeneration<ushort>();
-            this._typeGenerations[typeof(UInt32NullType)] = new PrimitiveBinaryTranslationGeneration<uint?>();
             this._typeGenerations[typeof(UInt32Type)] = new PrimitiveBinaryTranslationGeneration<uint>();
-            this._typeGenerations[typeof(UInt64NullType)] = new PrimitiveBinaryTranslationGeneration<ulong?>();
             this._typeGenerations[typeof(UInt64Type)] = new PrimitiveBinaryTranslationGeneration<ulong>();
-            this._typeGenerations[typeof(FormIDType)] = new PrimitiveBinaryTranslationGeneration<FormID>();
+            this._typeGenerations[typeof(FormIDType)] = new PrimitiveBinaryTranslationGeneration<FormID>()
+            {
+                PreferDirectTranslation = false
+            };
             this._typeGenerations[typeof(FormKeyType)] = new FormKeyBinaryTranslationGeneration();
-            this._typeGenerations[typeof(ModKeyType)] = new PrimitiveBinaryTranslationGeneration<ModKey>();
+            this._typeGenerations[typeof(ModKeyType)] = new PrimitiveBinaryTranslationGeneration<ModKey>()
+            {
+                PreferDirectTranslation = false
+            };
             this._typeGenerations[typeof(FormIDLinkType)] = new FormIDLinkBinaryTranslationGeneration();
             this._typeGenerations[typeof(ListType)] = new ListBinaryTranslationGeneration();
             this._typeGenerations[typeof(LoquiListType)] = new ListBinaryTranslationGeneration();
@@ -94,7 +107,10 @@ namespace Mutagen.Bethesda.Generation
             this._typeGenerations[typeof(ByteArrayType)] = new ByteArrayBinaryTranslationGeneration();
             this._typeGenerations[typeof(BufferType)] = new BufferBinaryTranslationGeneration();
             this._typeGenerations[typeof(DataType)] = new DataBinaryTranslationGeneration();
-            this._typeGenerations[typeof(ColorType)] = new ColorBinaryTranslationGeneration();
+            this._typeGenerations[typeof(ColorType)] = new ColorBinaryTranslationGeneration()
+            {
+                PreferDirectTranslation = false
+            };
             this._typeGenerations[typeof(SpecialParseType)] = new SpecialParseTranslationGeneration();
             this._typeGenerations[typeof(ZeroType)] = new ZeroBinaryTranslationGeneration();
             this._typeGenerations[typeof(CustomLogic)] = new CustomLogicTranslationGeneration();

@@ -16,6 +16,7 @@ namespace Mutagen.Bethesda.Generation
             this.AdditionalWriteParams.Add(AdditionalParam);
             this.AdditionalCopyInParams.Add(AdditionalParam);
             this.AdditionalCopyInRetParams.Add(AdditionalParam);
+            this.PreferDirectTranslation = false;
         }
 
         protected override string ItemWriteAccess(Accessor itemAccessor)

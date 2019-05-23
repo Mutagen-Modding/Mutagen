@@ -808,26 +808,8 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.Type = default(Enchantment.EnchantmentType);
                     }
-                    if (Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out UInt32 ChargeAmountParse))
-                    {
-                        item.ChargeAmount = ChargeAmountParse;
-                    }
-                    else
-                    {
-                        item.ChargeAmount = default(UInt32);
-                    }
-                    if (Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out UInt32 EnchantCostParse))
-                    {
-                        item.EnchantCost = EnchantCostParse;
-                    }
-                    else
-                    {
-                        item.EnchantCost = default(UInt32);
-                    }
+                    item.ChargeAmount = dataFrame.ReadUInt32();
+                    item.EnchantCost = dataFrame.ReadUInt32();
                     if (EnumBinaryTranslation<Enchantment.Flag>.Instance.Parse(
                         frame: dataFrame.SpawnWithLength(4),
                         item: out Enchantment.Flag FlagsParse))
@@ -2667,12 +2649,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         writer,
                         item.Type,
                         length: 4);
-                    Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.ChargeAmount);
-                    Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.EnchantCost);
+                    writer.Write(item.ChargeAmount);
+                    writer.Write(item.EnchantCost);
                     Mutagen.Bethesda.Binary.EnumBinaryTranslation<Enchantment.Flag>.Instance.Write(
                         writer,
                         item.Flags,

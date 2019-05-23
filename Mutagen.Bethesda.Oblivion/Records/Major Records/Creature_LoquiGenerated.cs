@@ -1979,66 +1979,12 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.Flags = default(Creature.CreatureFlag);
                     }
-                    if (Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out UInt16 BaseSpellPointsParse))
-                    {
-                        item.BaseSpellPoints = BaseSpellPointsParse;
-                    }
-                    else
-                    {
-                        item.BaseSpellPoints = default(UInt16);
-                    }
-                    if (Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out UInt16 FatigueParse))
-                    {
-                        item.Fatigue = FatigueParse;
-                    }
-                    else
-                    {
-                        item.Fatigue = default(UInt16);
-                    }
-                    if (Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out UInt16 BarterGoldParse))
-                    {
-                        item.BarterGold = BarterGoldParse;
-                    }
-                    else
-                    {
-                        item.BarterGold = default(UInt16);
-                    }
-                    if (Mutagen.Bethesda.Binary.Int16BinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Int16 LevelOffsetParse))
-                    {
-                        item.LevelOffset = LevelOffsetParse;
-                    }
-                    else
-                    {
-                        item.LevelOffset = default(Int16);
-                    }
-                    if (Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out UInt16 CalcMinParse))
-                    {
-                        item.CalcMin = CalcMinParse;
-                    }
-                    else
-                    {
-                        item.CalcMin = default(UInt16);
-                    }
-                    if (Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out UInt16 CalcMaxParse))
-                    {
-                        item.CalcMax = CalcMaxParse;
-                    }
-                    else
-                    {
-                        item.CalcMax = default(UInt16);
-                    }
+                    item.BaseSpellPoints = dataFrame.ReadUInt16();
+                    item.Fatigue = dataFrame.ReadUInt16();
+                    item.BarterGold = dataFrame.ReadUInt16();
+                    item.LevelOffset = dataFrame.ReadInt16();
+                    item.CalcMin = dataFrame.ReadUInt16();
+                    item.CalcMax = dataFrame.ReadUInt16();
                     return TryGet<int?>.Succeed((int)Creature_FieldIndex.CalcMax);
                 }
                 case 0x4D414E53: // SNAM
@@ -2087,46 +2033,10 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.AIDTDataTypeState = AIDTDataType.Has;
                     }
-                    if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Byte AggressionParse))
-                    {
-                        item.Aggression = AggressionParse;
-                    }
-                    else
-                    {
-                        item.Aggression = default(Byte);
-                    }
-                    if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Byte ConfidenceParse))
-                    {
-                        item.Confidence = ConfidenceParse;
-                    }
-                    else
-                    {
-                        item.Confidence = default(Byte);
-                    }
-                    if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Byte EnergyLevelParse))
-                    {
-                        item.EnergyLevel = EnergyLevelParse;
-                    }
-                    else
-                    {
-                        item.EnergyLevel = default(Byte);
-                    }
-                    if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Byte ResponsibilityParse))
-                    {
-                        item.Responsibility = ResponsibilityParse;
-                    }
-                    else
-                    {
-                        item.Responsibility = default(Byte);
-                    }
+                    item.Aggression = dataFrame.ReadUInt8();
+                    item.Confidence = dataFrame.ReadUInt8();
+                    item.EnergyLevel = dataFrame.ReadUInt8();
+                    item.Responsibility = dataFrame.ReadUInt8();
                     if (EnumBinaryTranslation<NPC.BuySellServiceFlag>.Instance.Parse(
                         frame: dataFrame.SpawnWithLength(4),
                         item: out NPC.BuySellServiceFlag BuySellServicesParse))
@@ -2147,16 +2057,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.Teaches = default(Skill);
                     }
-                    if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Byte MaximumTrainingLevelParse))
-                    {
-                        item.MaximumTrainingLevel = MaximumTrainingLevelParse;
-                    }
-                    else
-                    {
-                        item.MaximumTrainingLevel = default(Byte);
-                    }
+                    item.MaximumTrainingLevel = dataFrame.ReadUInt8();
                     dataFrame.SetPosition(dataFrame.Position + 2);
                     return TryGet<int?>.Succeed((int)Creature_FieldIndex.MaximumTrainingLevel);
                 }
@@ -2206,36 +2107,9 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.CreatureType = default(Creature.CreatureTypeEnum);
                     }
-                    if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Byte CombatSkillParse))
-                    {
-                        item.CombatSkill = CombatSkillParse;
-                    }
-                    else
-                    {
-                        item.CombatSkill = default(Byte);
-                    }
-                    if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Byte MagicSkillParse))
-                    {
-                        item.MagicSkill = MagicSkillParse;
-                    }
-                    else
-                    {
-                        item.MagicSkill = default(Byte);
-                    }
-                    if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Byte StealthSkillParse))
-                    {
-                        item.StealthSkill = StealthSkillParse;
-                    }
-                    else
-                    {
-                        item.StealthSkill = default(Byte);
-                    }
+                    item.CombatSkill = dataFrame.ReadUInt8();
+                    item.MagicSkill = dataFrame.ReadUInt8();
+                    item.StealthSkill = dataFrame.ReadUInt8();
                     if (EnumBinaryTranslation<SoulLevel>.Instance.Parse(
                         frame: dataFrame.SpawnWithLength(2),
                         item: out SoulLevel SoulLevelParse))
@@ -2246,121 +2120,22 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.SoulLevel = default(SoulLevel);
                     }
-                    if (Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out UInt32 HealthParse))
-                    {
-                        item.Health = HealthParse;
-                    }
-                    else
-                    {
-                        item.Health = default(UInt32);
-                    }
-                    if (Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out UInt16 AttackDamageParse))
-                    {
-                        item.AttackDamage = AttackDamageParse;
-                    }
-                    else
-                    {
-                        item.AttackDamage = default(UInt16);
-                    }
-                    if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Byte StrengthParse))
-                    {
-                        item.Strength = StrengthParse;
-                    }
-                    else
-                    {
-                        item.Strength = default(Byte);
-                    }
-                    if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Byte IntelligenceParse))
-                    {
-                        item.Intelligence = IntelligenceParse;
-                    }
-                    else
-                    {
-                        item.Intelligence = default(Byte);
-                    }
-                    if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Byte WillpowerParse))
-                    {
-                        item.Willpower = WillpowerParse;
-                    }
-                    else
-                    {
-                        item.Willpower = default(Byte);
-                    }
-                    if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Byte AgilityParse))
-                    {
-                        item.Agility = AgilityParse;
-                    }
-                    else
-                    {
-                        item.Agility = default(Byte);
-                    }
-                    if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Byte SpeedParse))
-                    {
-                        item.Speed = SpeedParse;
-                    }
-                    else
-                    {
-                        item.Speed = default(Byte);
-                    }
-                    if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Byte EnduranceParse))
-                    {
-                        item.Endurance = EnduranceParse;
-                    }
-                    else
-                    {
-                        item.Endurance = default(Byte);
-                    }
-                    if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Byte PersonalityParse))
-                    {
-                        item.Personality = PersonalityParse;
-                    }
-                    else
-                    {
-                        item.Personality = default(Byte);
-                    }
-                    if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Byte LuckParse))
-                    {
-                        item.Luck = LuckParse;
-                    }
-                    else
-                    {
-                        item.Luck = default(Byte);
-                    }
+                    item.Health = dataFrame.ReadUInt32();
+                    item.AttackDamage = dataFrame.ReadUInt16();
+                    item.Strength = dataFrame.ReadUInt8();
+                    item.Intelligence = dataFrame.ReadUInt8();
+                    item.Willpower = dataFrame.ReadUInt8();
+                    item.Agility = dataFrame.ReadUInt8();
+                    item.Speed = dataFrame.ReadUInt8();
+                    item.Endurance = dataFrame.ReadUInt8();
+                    item.Personality = dataFrame.ReadUInt8();
+                    item.Luck = dataFrame.ReadUInt8();
                     return TryGet<int?>.Succeed((int)Creature_FieldIndex.Luck);
                 }
                 case 0x4D414E52: // RNAM
                 {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        item: out Byte AttackReachParse))
-                    {
-                        item.AttackReach = AttackReachParse;
-                    }
-                    else
-                    {
-                        item.AttackReach = default(Byte);
-                    }
+                    item.AttackReach = frame.ReadUInt8();
                     return TryGet<int?>.Succeed((int)Creature_FieldIndex.AttackReach);
                 }
                 case 0x4D414E5A: // ZNAM
@@ -10137,24 +9912,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         writer,
                         item.Flags,
                         length: 4);
-                    Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.BaseSpellPoints);
-                    Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.Fatigue);
-                    Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.BarterGold);
-                    Mutagen.Bethesda.Binary.Int16BinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.LevelOffset);
-                    Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.CalcMin);
-                    Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.CalcMax);
+                    writer.Write(item.BaseSpellPoints);
+                    writer.Write(item.Fatigue);
+                    writer.Write(item.BarterGold);
+                    writer.Write(item.LevelOffset);
+                    writer.Write(item.CalcMin);
+                    writer.Write(item.CalcMax);
                 }
             }
             if (item.Factions.HasBeenSet)
@@ -10196,18 +9959,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Creature_Registration.AIDT_HEADER)))
                 {
-                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.Aggression);
-                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.Confidence);
-                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.EnergyLevel);
-                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.Responsibility);
+                    writer.Write(item.Aggression);
+                    writer.Write(item.Confidence);
+                    writer.Write(item.EnergyLevel);
+                    writer.Write(item.Responsibility);
                     Mutagen.Bethesda.Binary.EnumBinaryTranslation<NPC.BuySellServiceFlag>.Instance.Write(
                         writer,
                         item.BuySellServices,
@@ -10216,9 +9971,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         writer,
                         item.Teaches,
                         length: 1);
-                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.MaximumTrainingLevel);
+                    writer.Write(item.MaximumTrainingLevel);
                     writer.WriteZeros(2);
                 }
             }
@@ -10254,49 +10007,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         writer,
                         item.CreatureType,
                         length: 1);
-                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.CombatSkill);
-                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.MagicSkill);
-                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.StealthSkill);
+                    writer.Write(item.CombatSkill);
+                    writer.Write(item.MagicSkill);
+                    writer.Write(item.StealthSkill);
                     Mutagen.Bethesda.Binary.EnumBinaryTranslation<SoulLevel>.Instance.Write(
                         writer,
                         item.SoulLevel,
                         length: 2);
-                    Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.Health);
-                    Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.AttackDamage);
-                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.Strength);
-                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.Intelligence);
-                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.Willpower);
-                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.Agility);
-                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.Speed);
-                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.Endurance);
-                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.Personality);
-                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.Luck);
+                    writer.Write(item.Health);
+                    writer.Write(item.AttackDamage);
+                    writer.Write(item.Strength);
+                    writer.Write(item.Intelligence);
+                    writer.Write(item.Willpower);
+                    writer.Write(item.Agility);
+                    writer.Write(item.Speed);
+                    writer.Write(item.Endurance);
+                    writer.Write(item.Personality);
+                    writer.Write(item.Luck);
                 }
             }
             if (item.AttackReach_IsSet)

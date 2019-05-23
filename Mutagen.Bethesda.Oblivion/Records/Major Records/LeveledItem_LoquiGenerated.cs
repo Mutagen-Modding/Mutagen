@@ -774,16 +774,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case 0x444C564C: // LVLD
                 {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        item: out Byte ChanceNoneParse))
-                    {
-                        item.ChanceNone = ChanceNoneParse;
-                    }
-                    else
-                    {
-                        item.ChanceNone = default(Byte);
-                    }
+                    item.ChanceNone = frame.ReadUInt8();
                     return TryGet<int?>.Succeed((int)LeveledItem_FieldIndex.ChanceNone);
                 }
                 case 0x464C564C: // LVLF

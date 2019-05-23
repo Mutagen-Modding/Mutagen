@@ -586,16 +586,7 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)QuestStage_FieldIndex.Stage) return TryGet<int?>.Failure;
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    if (Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        item: out UInt16 StageParse))
-                    {
-                        item.Stage = StageParse;
-                    }
-                    else
-                    {
-                        item.Stage = default(UInt16);
-                    }
+                    item.Stage = frame.ReadUInt16();
                     return TryGet<int?>.Succeed((int)QuestStage_FieldIndex.Stage);
                 }
                 case 0x54445351: // QSDT

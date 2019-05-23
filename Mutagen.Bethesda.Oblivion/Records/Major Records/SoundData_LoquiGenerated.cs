@@ -553,16 +553,7 @@ namespace Mutagen.Bethesda.Oblivion
                 item: item,
                 masterReferences: masterReferences,
                 errorMask: errorMask);
-            if (Mutagen.Bethesda.Binary.Int8BinaryTranslation.Instance.Parse(
-                frame: frame,
-                item: out SByte FrequencyAdjustmentParse))
-            {
-                item.FrequencyAdjustment = FrequencyAdjustmentParse;
-            }
-            else
-            {
-                item.FrequencyAdjustment = default(SByte);
-            }
+            item.FrequencyAdjustment = frame.ReadInt8();
             frame.Position += 1;
             if (EnumBinaryTranslation<SoundData.Flag>.Instance.Parse(
                 frame: frame.SpawnWithLength(4),
@@ -1913,9 +1904,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item,
                 masterReferences: masterReferences,
                 errorMask: errorMask);
-            Mutagen.Bethesda.Binary.Int8BinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.FrequencyAdjustment);
+            writer.Write(item.FrequencyAdjustment);
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Marker);

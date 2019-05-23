@@ -1056,26 +1056,8 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.DATADataTypeState = DATADataType.Has;
                     }
-                    if (Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Int32 TimeParse))
-                    {
-                        item.Time = TimeParse;
-                    }
-                    else
-                    {
-                        item.Time = default(Int32);
-                    }
-                    if (Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out UInt32 RadiusParse))
-                    {
-                        item.Radius = RadiusParse;
-                    }
-                    else
-                    {
-                        item.Radius = default(UInt32);
-                    }
+                    item.Time = dataFrame.ReadInt32();
+                    item.Radius = dataFrame.ReadUInt32();
                     if (Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
                         frame: dataFrame,
                         extraByte: true,
@@ -1121,16 +1103,7 @@ namespace Mutagen.Bethesda.Oblivion
                             item.FOV = default(Single);
                         }
                     }
-                    if (Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out UInt32 ValueParse))
-                    {
-                        item.Value = ValueParse;
-                    }
-                    else
-                    {
-                        item.Value = default(UInt32);
-                    }
+                    item.Value = dataFrame.ReadUInt32();
                     if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                         frame: dataFrame,
                         item: out Single WeightParse))
@@ -3856,12 +3829,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Light_Registration.DATA_HEADER)))
                 {
-                    Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.Time);
-                    Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.Radius);
+                    writer.Write(item.Time);
+                    writer.Write(item.Radius);
                     Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Write(
                         writer: writer,
                         item: item.Color,
@@ -3879,9 +3848,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             writer: writer,
                             item: item.FOV);
                     }
-                    Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.Value);
+                    writer.Write(item.Value);
                     Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                         writer: writer,
                         item: item.Weight);

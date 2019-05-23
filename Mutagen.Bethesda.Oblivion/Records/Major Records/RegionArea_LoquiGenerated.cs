@@ -582,16 +582,7 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)RegionArea_FieldIndex.EdgeFallOff) return TryGet<int?>.Failure;
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    if (Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        item: out UInt32 EdgeFallOffParse))
-                    {
-                        item.EdgeFallOff = EdgeFallOffParse;
-                    }
-                    else
-                    {
-                        item.EdgeFallOff = default(UInt32);
-                    }
+                    item.EdgeFallOff = frame.ReadUInt32();
                     return TryGet<int?>.Succeed((int)RegionArea_FieldIndex.EdgeFallOff);
                 }
                 case 0x444C5052: // RPLD

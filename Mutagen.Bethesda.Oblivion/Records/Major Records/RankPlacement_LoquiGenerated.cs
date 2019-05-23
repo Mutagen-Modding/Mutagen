@@ -562,16 +562,7 @@ namespace Mutagen.Bethesda.Oblivion
                 frame: frame,
                 masterReferences: masterReferences,
                 item: item.Faction_Property);
-            if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                frame: frame,
-                item: out Byte RankParse))
-            {
-                item.Rank = RankParse;
-            }
-            else
-            {
-                item.Rank = default(Byte);
-            }
+            item.Rank = frame.ReadUInt8();
             if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
                 frame: frame.SpawnWithLength(3),
                 item: out Byte[] FluffParse))
@@ -1689,9 +1680,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 item: item.Faction_Property,
                 masterReferences: masterReferences);
-            Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.Rank);
+            writer.Write(item.Rank);
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Fluff);

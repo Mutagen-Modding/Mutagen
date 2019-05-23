@@ -1562,46 +1562,19 @@ namespace Mutagen.Bethesda.Oblivion
                 case 0x4D414E43: // CNAM
                 {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        item: out Byte DefaultHairColorParse))
-                    {
-                        item.DefaultHairColor = DefaultHairColorParse;
-                    }
-                    else
-                    {
-                        item.DefaultHairColor = default(Byte);
-                    }
+                    item.DefaultHairColor = frame.ReadUInt8();
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.DefaultHairColor);
                 }
                 case 0x4D414E50: // PNAM
                 {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    if (Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        item: out Int32 FaceGenMainClampParse))
-                    {
-                        item.FaceGenMainClamp = FaceGenMainClampParse;
-                    }
-                    else
-                    {
-                        item.FaceGenMainClamp = default(Int32);
-                    }
+                    item.FaceGenMainClamp = frame.ReadInt32();
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.FaceGenMainClamp);
                 }
                 case 0x4D414E55: // UNAM
                 {
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    if (Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        item: out Int32 FaceGenFaceClampParse))
-                    {
-                        item.FaceGenFaceClamp = FaceGenFaceClampParse;
-                    }
-                    else
-                    {
-                        item.FaceGenFaceClamp = default(Int32);
-                    }
+                    item.FaceGenFaceClamp = frame.ReadInt32();
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.FaceGenFaceClamp);
                 }
                 case 0x52545441: // ATTR

@@ -545,26 +545,8 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 item.ObjectType = default(AIPackageTarget.ObjectTypeEnum);
             }
-            if (Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
-                frame: frame,
-                item: out Int32 ObjectParse))
-            {
-                item.Object = ObjectParse;
-            }
-            else
-            {
-                item.Object = default(Int32);
-            }
-            if (Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
-                frame: frame,
-                item: out Int32 CountParse))
-            {
-                item.Count = CountParse;
-            }
-            else
-            {
-                item.Count = default(Int32);
-            }
+            item.Object = frame.ReadInt32();
+            item.Count = frame.ReadInt32();
         }
 
         #endregion
@@ -1691,12 +1673,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer,
                 item.ObjectType,
                 length: 4);
-            Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.Object);
-            Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.Count);
+            writer.Write(item.Object);
+            writer.Write(item.Count);
         }
 
         #region Binary Write

@@ -607,16 +607,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.Flags = default(RegionData.RegionDataFlag);
                     }
-                    if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Byte PriorityParse))
-                    {
-                        item.Priority = PriorityParse;
-                    }
-                    else
-                    {
-                        item.Priority = default(Byte);
-                    }
+                    item.Priority = dataFrame.ReadUInt8();
                     dataFrame.SetPosition(dataFrame.Position + 2);
                     return TryGet<int?>.Succeed((int)RegionData_FieldIndex.Priority);
                 }
@@ -1797,9 +1788,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         writer,
                         item.Flags,
                         length: 1);
-                    Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.Priority);
+                    writer.Write(item.Priority);
                     writer.WriteZeros(2);
                 }
             }

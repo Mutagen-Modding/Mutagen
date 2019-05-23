@@ -656,26 +656,8 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 item.FogFar = default(Single);
             }
-            if (Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
-                frame: frame,
-                item: out Int32 DirectionalRotationXYParse))
-            {
-                item.DirectionalRotationXY = DirectionalRotationXYParse;
-            }
-            else
-            {
-                item.DirectionalRotationXY = default(Int32);
-            }
-            if (Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
-                frame: frame,
-                item: out Int32 DirectionalRotationZParse))
-            {
-                item.DirectionalRotationZ = DirectionalRotationZParse;
-            }
-            else
-            {
-                item.DirectionalRotationZ = default(Int32);
-            }
+            item.DirectionalRotationXY = frame.ReadInt32();
+            item.DirectionalRotationZ = frame.ReadInt32();
             if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                 frame: frame,
                 item: out Single DirectionalFadeParse))
@@ -2496,12 +2478,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.FogFar);
-            Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.DirectionalRotationXY);
-            Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.DirectionalRotationZ);
+            writer.Write(item.DirectionalRotationXY);
+            writer.Write(item.DirectionalRotationZ);
             Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.DirectionalFade);

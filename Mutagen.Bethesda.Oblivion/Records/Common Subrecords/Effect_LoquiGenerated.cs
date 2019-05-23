@@ -733,36 +733,9 @@ namespace Mutagen.Bethesda.Oblivion
                     Mutagen.Bethesda.Binary.RecordTypeBinaryTranslation.Instance.ParseInto(
                         frame: dataFrame,
                         item: item.MagicEffect_Property);
-                    if (Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out UInt32 MagnitudeParse))
-                    {
-                        item.Magnitude = MagnitudeParse;
-                    }
-                    else
-                    {
-                        item.Magnitude = default(UInt32);
-                    }
-                    if (Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out UInt32 AreaParse))
-                    {
-                        item.Area = AreaParse;
-                    }
-                    else
-                    {
-                        item.Area = default(UInt32);
-                    }
-                    if (Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out UInt32 DurationParse))
-                    {
-                        item.Duration = DurationParse;
-                    }
-                    else
-                    {
-                        item.Duration = default(UInt32);
-                    }
+                    item.Magnitude = dataFrame.ReadUInt32();
+                    item.Area = dataFrame.ReadUInt32();
+                    item.Duration = dataFrame.ReadUInt32();
                     if (EnumBinaryTranslation<Effect.EffectType>.Instance.Parse(
                         frame: dataFrame.SpawnWithLength(4),
                         item: out Effect.EffectType TypeParse))
@@ -2543,15 +2516,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     Mutagen.Bethesda.Binary.RecordTypeBinaryTranslation.Instance.Write(
                         writer: writer,
                         item: item.MagicEffect_Property);
-                    Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.Magnitude);
-                    Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.Area);
-                    Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.Duration);
+                    writer.Write(item.Magnitude);
+                    writer.Write(item.Area);
+                    writer.Write(item.Duration);
                     Mutagen.Bethesda.Binary.EnumBinaryTranslation<Effect.EffectType>.Instance.Write(
                         writer,
                         item.Type,

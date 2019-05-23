@@ -594,16 +594,7 @@ namespace Mutagen.Bethesda
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            if (Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
-                frame: frame,
-                item: out Int32 MajorRecordFlagsRawParse))
-            {
-                item.MajorRecordFlagsRaw = MajorRecordFlagsRawParse;
-            }
-            else
-            {
-                item.MajorRecordFlagsRaw = default(Int32);
-            }
+            item.MajorRecordFlagsRaw = frame.ReadInt32();
             if (Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.Parse(
                 frame: frame,
                 masterReferences: masterReferences,
@@ -615,16 +606,7 @@ namespace Mutagen.Bethesda
             {
                 item.FormKey = default(FormKey);
             }
-            if (Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
-                frame: frame,
-                item: out UInt32 VersionParse))
-            {
-                item.Version = VersionParse;
-            }
-            else
-            {
-                item.Version = default(UInt32);
-            }
+            item.Version = frame.ReadUInt32();
         }
 
         protected static TryGet<int?> Fill_Binary_RecordTypes(
@@ -2046,16 +2028,12 @@ namespace Mutagen.Bethesda.Internals
             ErrorMaskBuilder errorMask,
             MasterReferences masterReferences)
         {
-            Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.MajorRecordFlagsRaw);
+            writer.Write(item.MajorRecordFlagsRaw);
             Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.FormKey,
                 masterReferences: masterReferences);
-            Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.Version);
+            writer.Write(item.Version);
         }
 
         public static void Write_Binary_RecordTypes(

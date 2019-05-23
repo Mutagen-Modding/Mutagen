@@ -659,16 +659,7 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)Rank_FieldIndex.RankNumber) return TryGet<int?>.Failure;
                     frame.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;
-                    if (Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        item: out Int32 RankNumberParse))
-                    {
-                        item.RankNumber = RankNumberParse;
-                    }
-                    else
-                    {
-                        item.RankNumber = default(Int32);
-                    }
+                    item.RankNumber = frame.ReadInt32();
                     return TryGet<int?>.Succeed((int)Rank_FieldIndex.RankNumber);
                 }
                 case 0x4D414E4D: // MNAM

@@ -540,16 +540,7 @@ namespace Mutagen.Bethesda.Oblivion
                 frame: frame,
                 masterReferences: masterReferences,
                 item: item.Weather_Property);
-            if (Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
-                frame: frame,
-                item: out Int32 ChanceParse))
-            {
-                item.Chance = ChanceParse;
-            }
-            else
-            {
-                item.Chance = default(Int32);
-            }
+            item.Chance = frame.ReadInt32();
         }
 
         #endregion
@@ -1545,9 +1536,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 item: item.Weather_Property,
                 masterReferences: masterReferences);
-            Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.Chance);
+            writer.Write(item.Chance);
         }
 
         #region Binary Write

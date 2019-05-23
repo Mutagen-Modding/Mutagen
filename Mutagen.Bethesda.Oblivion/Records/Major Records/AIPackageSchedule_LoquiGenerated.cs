@@ -577,36 +577,9 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 item.DayOfWeek = default(Weekday);
             }
-            if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                frame: frame,
-                item: out Byte DayParse))
-            {
-                item.Day = DayParse;
-            }
-            else
-            {
-                item.Day = default(Byte);
-            }
-            if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                frame: frame,
-                item: out Byte TimeParse))
-            {
-                item.Time = TimeParse;
-            }
-            else
-            {
-                item.Time = default(Byte);
-            }
-            if (Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
-                frame: frame,
-                item: out Int32 DurationParse))
-            {
-                item.Duration = DurationParse;
-            }
-            else
-            {
-                item.Duration = default(Int32);
-            }
+            item.Day = frame.ReadUInt8();
+            item.Time = frame.ReadUInt8();
+            item.Duration = frame.ReadInt32();
         }
 
         #endregion
@@ -1957,15 +1930,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer,
                 item.DayOfWeek,
                 length: 1);
-            Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.Day);
-            Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.Time);
-            Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.Duration);
+            writer.Write(item.Day);
+            writer.Write(item.Time);
+            writer.Write(item.Duration);
         }
 
         #region Binary Write

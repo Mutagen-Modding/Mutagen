@@ -941,16 +941,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         item.Type = default(AlchemicalApparatus.ApparatusType);
                     }
-                    if (Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out UInt32 ValueParse))
-                    {
-                        item.Value = ValueParse;
-                    }
-                    else
-                    {
-                        item.Value = default(UInt32);
-                    }
+                    item.Value = dataFrame.ReadUInt32();
                     if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                         frame: dataFrame,
                         item: out Single WeightParse))
@@ -2995,9 +2986,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         writer,
                         item.Type,
                         length: 1);
-                    Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.Value);
+                    writer.Write(item.Value);
                     Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                         writer: writer,
                         item: item.Weight);
