@@ -133,7 +133,7 @@ namespace Mutagen.Bethesda.Tests
          * Some records that seem older have an odd record order.  Rather than accommodating, dynamically mark as exceptions
          */
         protected override void AddDynamicProcessorInstructions(
-            BinaryReadStream stream,
+            IMutagenReadStream stream,
             byte numMasters,
             FormID formID,
             RecordType recType,
@@ -169,7 +169,7 @@ namespace Mutagen.Bethesda.Tests
         }
 
         protected override void PreProcessorJobs(
-            BinaryReadStream stream,
+            IMutagenReadStream stream,
             RecordLocator.FileLocations fileLocs,
             BinaryFileProcessor.Config instructions,
             RecordLocator.FileLocations alignedFileLocs)
@@ -186,7 +186,7 @@ namespace Mutagen.Bethesda.Tests
         }
 
         private void ProcessLengths(
-            BinaryReadStream stream,
+            IMutagenReadStream stream,
             int amount,
             RangeInt64 loc,
             FormID formID,
@@ -216,14 +216,14 @@ namespace Mutagen.Bethesda.Tests
         }
 
         private void ProcessNPC(
-            BinaryReadStream stream,
+            IMutagenReadStream stream,
             RecordType recType,
             BinaryFileProcessor.Config instr,
             RangeInt64 loc)
         {
             if (!NPC_Registration.NPC__HEADER.Equals(recType)) return;
             stream.Position = loc.Min;
-            var str = stream.ReadStringUTF8((int)loc.Width);
+            var str = stream.ReadZString((int)loc.Width);
             this.DynamicMove(
                 str,
                 instr,
@@ -245,7 +245,7 @@ namespace Mutagen.Bethesda.Tests
         }
 
         private void ProcessCreature(
-            BinaryReadStream stream,
+            IMutagenReadStream stream,
             RecordType recType,
             BinaryFileProcessor.Config instr,
             RangeInt64 loc)
@@ -284,7 +284,7 @@ namespace Mutagen.Bethesda.Tests
         }
 
         private void ProcessLeveledItemDataFields(
-            BinaryReadStream stream,
+            IMutagenReadStream stream,
             FormID formID,
             RecordType recType,
             BinaryFileProcessor.Config instr,
@@ -294,7 +294,7 @@ namespace Mutagen.Bethesda.Tests
         {
             if (!LeveledItem_Registration.LVLI_HEADER.Equals(recType)) return;
             stream.Position = loc.Min;
-            var str = stream.ReadStringUTF8((int)loc.Width + Constants.RECORD_HEADER_LENGTH);
+            var str = stream.ReadZString((int)loc.Width + Constants.RECORD_HEADER_LENGTH);
             var dataIndex = str.IndexOf("DATA");
             if (dataIndex == -1) return;
 
@@ -349,7 +349,7 @@ namespace Mutagen.Bethesda.Tests
         }
 
         private void ProcessRegions(
-            BinaryReadStream stream,
+            IMutagenReadStream stream,
             FormID formID,
             RecordType recType,
             BinaryFileProcessor.Config instr,
@@ -360,7 +360,7 @@ namespace Mutagen.Bethesda.Tests
             if (!Region_Registration.REGN_HEADER.Equals(recType)) return;
             stream.Position = loc.Min;
             var lenToRead = (int)loc.Width + Constants.RECORD_HEADER_LENGTH;
-            var str = stream.ReadStringUTF8(lenToRead);
+            var str = stream.ReadZString(lenToRead);
             int amount = 0;
             var rdatIndex = str.IndexOf("RDAT");
             if (rdatIndex == -1) return;
@@ -399,7 +399,7 @@ namespace Mutagen.Bethesda.Tests
                 // Get icon string
                 var iconLoc = rdats[(int)RegionData.RegionDataType.Icon];
                 stream.Position = iconLoc.Min + RegionBinaryTranslation.RDAT_LEN + 6;
-                var iconStr = stream.ReadStringUTF8((int)(iconLoc.Max - stream.Position));
+                var iconStr = stream.ReadZString((int)(iconLoc.Max - stream.Position));
 
                 // Get icon bytes
                 MemoryStream memStream = new MemoryStream();
@@ -438,7 +438,7 @@ namespace Mutagen.Bethesda.Tests
         private static byte[] ZeroFloat = new byte[] { 0, 0, 0, 0x80 };
 
         private void ProcessPlacedObject(
-            BinaryReadStream stream,
+            IMutagenReadStream stream,
             FormID formID,
             RecordType recType,
             BinaryFileProcessor.Config instr,
@@ -450,7 +450,7 @@ namespace Mutagen.Bethesda.Tests
 
             int amount = 0;
             stream.Position = loc.Min;
-            var str = stream.ReadStringUTF8((int)loc.Width);
+            var str = stream.ReadZString((int)loc.Width);
             var datIndex = str.IndexOf("XLOC");
             if (datIndex != -1)
             {
@@ -527,7 +527,7 @@ namespace Mutagen.Bethesda.Tests
         }
 
         private void ProcessPlacedCreature(
-            BinaryReadStream stream,
+            IMutagenReadStream stream,
             FormID formID,
             RecordType recType,
             BinaryFileProcessor.Config instr,
@@ -539,7 +539,7 @@ namespace Mutagen.Bethesda.Tests
 
             int amount = 0;
             stream.Position = loc.Min;
-            var str = stream.ReadStringUTF8((int)loc.Width);
+            var str = stream.ReadZString((int)loc.Width);
 
             var datIndex = str.IndexOf("DATA");
             if (datIndex != -1)
@@ -564,7 +564,7 @@ namespace Mutagen.Bethesda.Tests
         }
 
         private void ProcessPlacedNPC(
-            BinaryReadStream stream,
+            IMutagenReadStream stream,
             FormID formID,
             RecordType recType,
             BinaryFileProcessor.Config instr,
@@ -576,7 +576,7 @@ namespace Mutagen.Bethesda.Tests
 
             int amount = 0;
             stream.Position = loc.Min;
-            var str = stream.ReadStringUTF8((int)loc.Width);
+            var str = stream.ReadZString((int)loc.Width);
 
             var datIndex = str.IndexOf("DATA");
             if (datIndex != -1)
@@ -601,7 +601,7 @@ namespace Mutagen.Bethesda.Tests
         }
 
         private void ProcessCells(
-            BinaryReadStream stream,
+            IMutagenReadStream stream,
             FormID formID,
             RecordType recType,
             BinaryFileProcessor.Config instr,
@@ -617,7 +617,7 @@ namespace Mutagen.Bethesda.Tests
             var len = stream.ReadUInt32();
             stream.Position += len + 12;
             var grupPos = stream.Position;
-            var grup = stream.ReadStringUTF8(4);
+            var grup = stream.ReadZString(4);
             if (!grup.Equals("GRUP")) return;
             var grupLen = stream.ReadUInt32();
             if (grupLen == 0x14)
@@ -634,7 +634,7 @@ namespace Mutagen.Bethesda.Tests
                 for (int i = 0; i < 3; i++)
                 {
                     var startPos = stream.Position;
-                    var subGrup = stream.ReadStringUTF8(4);
+                    var subGrup = stream.ReadZString(4);
                     if (!subGrup.Equals("GRUP")) break;
                     var subGrupLen = stream.ReadUInt32();
                     stream.Position = startPos + subGrupLen;
@@ -676,7 +676,7 @@ namespace Mutagen.Bethesda.Tests
         }
 
         private void ProcessDialogTopics(
-            BinaryReadStream stream,
+            IMutagenReadStream stream,
             FormID formID,
             RecordType recType,
             BinaryFileProcessor.Config instr,
@@ -691,7 +691,7 @@ namespace Mutagen.Bethesda.Tests
             var len = stream.ReadUInt32();
             stream.Position += len + 12;
             var grupPos = stream.Position;
-            var grup = stream.ReadStringUTF8(4);
+            var grup = stream.ReadZString(4);
             int amount = 0;
             if (grup.Equals("GRUP"))
             {
@@ -716,7 +716,7 @@ namespace Mutagen.Bethesda.Tests
         }
 
         private void ProcessDialogItems(
-            BinaryReadStream stream,
+            IMutagenReadStream stream,
             FormID formID,
             RecordType recType,
             BinaryFileProcessor.Config instr,
@@ -727,7 +727,7 @@ namespace Mutagen.Bethesda.Tests
             if (!DialogItem_Registration.INFO_HEADER.Equals(recType)) return;
 
             stream.Position = loc.Min;
-            var str = stream.ReadStringUTF8((int)loc.Width + Constants.RECORD_HEADER_LENGTH);
+            var str = stream.ReadZString((int)loc.Width + Constants.RECORD_HEADER_LENGTH);
             var dataIndex = -1;
             int amount = 0;
             while ((dataIndex = str.IndexOf("CTDT", dataIndex + 1)) != -1)
@@ -770,7 +770,7 @@ namespace Mutagen.Bethesda.Tests
         }
 
         private void ProcessIdleAnimations(
-            BinaryReadStream stream,
+            IMutagenReadStream stream,
             FormID formID,
             RecordType recType,
             BinaryFileProcessor.Config instr,
@@ -781,7 +781,7 @@ namespace Mutagen.Bethesda.Tests
             if (!IdleAnimation_Registration.IDLE_HEADER.Equals(recType)) return;
 
             stream.Position = loc.Min;
-            var str = stream.ReadStringUTF8((int)loc.Width + Constants.RECORD_HEADER_LENGTH);
+            var str = stream.ReadZString((int)loc.Width + Constants.RECORD_HEADER_LENGTH);
             var dataIndex = -1;
             int amount = 0;
             while ((dataIndex = str.IndexOf("CTDT", dataIndex + 1)) != -1)
@@ -806,7 +806,7 @@ namespace Mutagen.Bethesda.Tests
         }
 
         private void ProcessAIPackages(
-            BinaryReadStream stream,
+            IMutagenReadStream stream,
             FormID formID,
             RecordType recType,
             BinaryFileProcessor.Config instr,
@@ -817,7 +817,7 @@ namespace Mutagen.Bethesda.Tests
             if (!AIPackage_Registration.PACK_HEADER.Equals(recType)) return;
 
             stream.Position = loc.Min;
-            var str = stream.ReadStringUTF8((int)loc.Width + Constants.RECORD_HEADER_LENGTH);
+            var str = stream.ReadZString((int)loc.Width + Constants.RECORD_HEADER_LENGTH);
             var dataIndex = -1;
             int amount = 0;
             while ((dataIndex = str.IndexOf("CTDT", dataIndex + 1)) != -1)
@@ -865,7 +865,7 @@ namespace Mutagen.Bethesda.Tests
         }
 
         private void ProcessCombatStyle(
-            BinaryReadStream stream,
+            IMutagenReadStream stream,
             FormID formID,
             RecordType recType,
             BinaryFileProcessor.Config instr,
@@ -875,7 +875,7 @@ namespace Mutagen.Bethesda.Tests
         {
             if (!CombatStyle_Registration.TRIGGERING_RECORD_TYPE.Equals(recType)) return;
             stream.Position = loc.Min;
-            var str = stream.ReadStringUTF8((int)loc.Width + Constants.RECORD_HEADER_LENGTH);
+            var str = stream.ReadZString((int)loc.Width + Constants.RECORD_HEADER_LENGTH);
             var dataIndex = str.IndexOf("CSTD");
             stream.Position = loc.Min + dataIndex + 4;
             var len = stream.ReadUInt16();
@@ -914,7 +914,7 @@ namespace Mutagen.Bethesda.Tests
         }
 
         private void ProcessWater(
-            BinaryReadStream stream,
+            IMutagenReadStream stream,
             FormID formID,
             RecordType recType,
             BinaryFileProcessor.Config instr,
@@ -924,7 +924,7 @@ namespace Mutagen.Bethesda.Tests
         {
             if (!Water_Registration.TRIGGERING_RECORD_TYPE.Equals(recType)) return;
             stream.Position = loc.Min;
-            var str = stream.ReadStringUTF8((int)loc.Width + Constants.RECORD_HEADER_LENGTH);
+            var str = stream.ReadZString((int)loc.Width + Constants.RECORD_HEADER_LENGTH);
             var dataIndex = str.IndexOf("DATA");
             stream.Position = loc.Min + dataIndex + 4;
             var amount = 0;
@@ -999,7 +999,7 @@ namespace Mutagen.Bethesda.Tests
         }
 
         private void ProcessGameSettings(
-            BinaryReadStream stream,
+            IMutagenReadStream stream,
             FormID formID,
             RecordType recType,
             BinaryFileProcessor.Config instr,
@@ -1009,7 +1009,7 @@ namespace Mutagen.Bethesda.Tests
         {
             if (!GameSetting_Registration.TRIGGERING_RECORD_TYPE.Equals(recType)) return;
             stream.Position = loc.Min;
-            var str = stream.ReadStringUTF8((int)loc.Width + Constants.RECORD_HEADER_LENGTH);
+            var str = stream.ReadZString((int)loc.Width + Constants.RECORD_HEADER_LENGTH);
 
             var edidIndex = str.IndexOf("EDID");
             stream.Position = loc.Min + edidIndex + 6;
@@ -1024,7 +1024,7 @@ namespace Mutagen.Bethesda.Tests
         }
 
         private void ProcessBooks(
-            BinaryReadStream stream,
+            IMutagenReadStream stream,
             FormID formID,
             RecordType recType,
             BinaryFileProcessor.Config instr,
@@ -1034,7 +1034,7 @@ namespace Mutagen.Bethesda.Tests
         {
             if (!Book_Registration.TRIGGERING_RECORD_TYPE.Equals(recType)) return;
             stream.Position = loc.Min;
-            var str = stream.ReadStringUTF8((int)loc.Width + Constants.RECORD_HEADER_LENGTH);
+            var str = stream.ReadZString((int)loc.Width + Constants.RECORD_HEADER_LENGTH);
 
             var dataIndex = str.IndexOf("DATA");
             if (dataIndex != -1)
@@ -1046,7 +1046,7 @@ namespace Mutagen.Bethesda.Tests
         }
 
         private void ProcessLights(
-            BinaryReadStream stream,
+            IMutagenReadStream stream,
             FormID formID,
             RecordType recType,
             BinaryFileProcessor.Config instr,
@@ -1056,7 +1056,7 @@ namespace Mutagen.Bethesda.Tests
         {
             if (!Light_Registration.TRIGGERING_RECORD_TYPE.Equals(recType)) return;
             stream.Position = loc.Min;
-            var str = stream.ReadStringUTF8((int)loc.Width + Constants.RECORD_HEADER_LENGTH);
+            var str = stream.ReadZString((int)loc.Width + Constants.RECORD_HEADER_LENGTH);
 
             var dataIndex = str.IndexOf("DATA");
             if (dataIndex != -1)
@@ -1069,7 +1069,7 @@ namespace Mutagen.Bethesda.Tests
             }
         }
 
-        private static void ProcessZeroFloat(BinaryReadStream stream, BinaryFileProcessor.Config instr)
+        private static void ProcessZeroFloat(IMutagenReadStream stream, BinaryFileProcessor.Config instr)
         {
             var f = stream.ReadFloat();
             if (f == float.Epsilon)
@@ -1091,7 +1091,7 @@ namespace Mutagen.Bethesda.Tests
         }
 
         private void ProcessSpell(
-            BinaryReadStream stream,
+            IMutagenReadStream stream,
             FormID formID,
             RecordType recType,
             BinaryFileProcessor.Config instr,
@@ -1102,7 +1102,7 @@ namespace Mutagen.Bethesda.Tests
         {
             if (!SpellUnleveled_Registration.TRIGGERING_RECORD_TYPE.Equals(recType)) return;
             stream.Position = loc.Min;
-            var str = stream.ReadStringUTF8((int)loc.Width + Constants.RECORD_HEADER_LENGTH);
+            var str = stream.ReadZString((int)loc.Width + Constants.RECORD_HEADER_LENGTH);
             foreach (var scitIndex in IterateTypes(str, new RecordType("SCIT")))
             {
                 stream.Position = loc.Min + scitIndex + 4;
@@ -1160,14 +1160,14 @@ namespace Mutagen.Bethesda.Tests
         }
 
         private void AlignRecords(
-            BinaryReadStream stream,
+            IMutagenReadStream stream,
             BinaryFileProcessor.Config instr,
             RangeInt64 loc,
             IEnumerable<RecordType> rectypes)
         {
             stream.Position = loc.Min;
             var bytes = stream.ReadBytes((int)loc.Width);
-            var str = BinaryStringUtility.ToBethesdaString(bytes);
+            var str = BinaryStringUtility.ToZString(bytes);
             List<(RecordType rec, int sourceIndex, int loc)> list = new List<(RecordType rec, int sourceIndex, int loc)>();
             int recTypeIndex = -1;
             foreach (var rec in rectypes)
@@ -1232,7 +1232,7 @@ namespace Mutagen.Bethesda.Tests
         }
 
         private void ProcessMisindexedRecords(
-            BinaryReadStream stream,
+            IMutagenReadStream stream,
             FormID formID,
             BinaryFileProcessor.Config instr,
             RangeInt64 loc,
@@ -1246,7 +1246,7 @@ namespace Mutagen.Bethesda.Tests
         }
 
         private void ProcessFormID(
-            BinaryReadStream stream,
+            IMutagenReadStream stream,
             BinaryFileProcessor.Config instr,
             long pos,
             byte numMasters)
@@ -1271,7 +1271,7 @@ namespace Mutagen.Bethesda.Tests
         }
 
         private void LookForMagicEffects(
-            BinaryReadStream stream,
+            IMutagenReadStream stream,
             FormID formID,
             RecordType recType,
             BinaryFileProcessor.Config instr,
@@ -1280,7 +1280,7 @@ namespace Mutagen.Bethesda.Tests
             if (!MagicEffect_Registration.MGEF_HEADER.Equals(recType)) return;
 
             stream.Position = loc.Min;
-            var str = stream.ReadStringUTF8((int)loc.Width + Constants.RECORD_HEADER_LENGTH);
+            var str = stream.ReadZString((int)loc.Width + Constants.RECORD_HEADER_LENGTH);
 
             var edidIndex = str.IndexOf("EDID");
             if (edidIndex != -1)
@@ -1288,17 +1288,17 @@ namespace Mutagen.Bethesda.Tests
                 stream.Position = loc.Min + edidIndex;
                 stream.Position += 4;
                 var len = stream.ReadUInt16();
-                var edid = stream.ReadStringUTF8(len - 1);
+                var edid = stream.ReadZString(len - 1);
                 magicEffectEDIDs.Add(edid);
             }
         }
 
         private void ProcessMagicEDID(
-            BinaryReadStream stream,
+            IMutagenReadStream stream,
             BinaryFileProcessor.Config instr)
         {
             var startLoc = stream.Position;
-            var edid = stream.ReadStringUTF8(4);
+            var edid = stream.ReadZString(4);
             if (!magicEffectEDIDs.Contains(edid))
             {
                 instr.SetSubstitution(
@@ -1308,7 +1308,7 @@ namespace Mutagen.Bethesda.Tests
         }
 
         private void ProcessMagicEffects(
-            BinaryReadStream stream,
+            IMutagenReadStream stream,
             FormID formID,
             RecordType recType,
             BinaryFileProcessor.Config instr,
@@ -1319,7 +1319,7 @@ namespace Mutagen.Bethesda.Tests
             if (!MagicEffect_Registration.MGEF_HEADER.Equals(recType)) return;
 
             stream.Position = loc.Min;
-            var str = stream.ReadStringUTF8((int)loc.Width + Constants.RECORD_HEADER_LENGTH);
+            var str = stream.ReadZString((int)loc.Width + Constants.RECORD_HEADER_LENGTH);
 
             var edidForms = str.IndexOf("ESCE");
             if (edidForms != -1)
@@ -1342,14 +1342,14 @@ namespace Mutagen.Bethesda.Tests
         }
 
         private void ProcessEffectsList(
-            BinaryReadStream stream,
+            IMutagenReadStream stream,
             FormID formID,
             RecordType recType,
             BinaryFileProcessor.Config instr,
             RangeInt64 loc)
         {
             stream.Position = loc.Min;
-            var str = stream.ReadStringUTF8((int)loc.Width + Constants.RECORD_HEADER_LENGTH);
+            var str = stream.ReadZString((int)loc.Width + Constants.RECORD_HEADER_LENGTH);
 
             foreach (var index in IterateTypes(str, new RecordType("EFIT")))
             {
@@ -1380,7 +1380,7 @@ namespace Mutagen.Bethesda.Tests
         }
 
         private void ProcessEnchantments(
-            BinaryReadStream stream,
+            IMutagenReadStream stream,
             FormID formID,
             RecordType recType,
             BinaryFileProcessor.Config instr,
@@ -1393,7 +1393,7 @@ namespace Mutagen.Bethesda.Tests
         }
 
         private void ProcessIngredient(
-            BinaryReadStream stream,
+            IMutagenReadStream stream,
             FormID formID,
             RecordType recType,
             BinaryFileProcessor.Config instr,
@@ -1406,7 +1406,7 @@ namespace Mutagen.Bethesda.Tests
         }
 
         private void ProcessPotion(
-            BinaryReadStream stream,
+            IMutagenReadStream stream,
             FormID formID,
             RecordType recType,
             BinaryFileProcessor.Config instr,
@@ -1419,7 +1419,7 @@ namespace Mutagen.Bethesda.Tests
         }
 
         private void ProcessSigilStone(
-            BinaryReadStream stream,
+            IMutagenReadStream stream,
             FormID formID,
             RecordType recType,
             BinaryFileProcessor.Config instr,

@@ -11,14 +11,14 @@ namespace Noggog
     {
         // ToDo
         // Utilize string.Create when it comes out
-        public unsafe static string ToBethesdaString(ReadOnlySpan<byte> bytes)
+        public unsafe static string ToZString(ReadOnlySpan<byte> bytes)
         {
             Span<char> chars = stackalloc char[bytes.Length];
-            ToBethesdaStringBuffer(bytes, chars);
+            ToZStringBuffer(bytes, chars);
             return chars.ToString();
         }
 
-        public static void ToBethesdaStringBuffer(ReadOnlySpan<byte> bytes, Span<char> temporaryCharBuffer)
+        public static void ToZStringBuffer(ReadOnlySpan<byte> bytes, Span<char> temporaryCharBuffer)
         {
             for (int i = 0; i < bytes.Length; i++)
             {

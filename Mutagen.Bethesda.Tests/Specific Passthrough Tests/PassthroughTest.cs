@@ -1,4 +1,5 @@
-﻿using Noggog;
+﻿using Mutagen.Bethesda.Binary;
+using Noggog;
 using Noggog.Utility;
 using System;
 using System.Collections.Generic;
@@ -41,7 +42,7 @@ namespace Mutagen.Bethesda.Tests
         }
 
         protected virtual void AddDynamicProcessorInstructions(
-            BinaryReadStream stream,
+            IMutagenReadStream stream,
             byte numMasters,
             FormID formID,
             RecordType recType,
@@ -53,7 +54,7 @@ namespace Mutagen.Bethesda.Tests
         }
 
         protected virtual void PreProcessorJobs(
-            BinaryReadStream stream,
+            IMutagenReadStream stream,
             RecordLocator.FileLocations fileLocs,
             BinaryFileProcessor.Config instructions,
             RecordLocator.FileLocations alignedFileLocs)
@@ -108,7 +109,7 @@ namespace Mutagen.Bethesda.Tests
 
                 Dictionary<long, uint> lengthTracker = new Dictionary<long, uint>();
 
-                using (var reader = new BinaryReadStream(preprocessedPath))
+                using (var reader = new MutagenBinaryReadStream(preprocessedPath))
                 {
                     foreach (var grup in alignedFileLocs.GrupLocations.And(alignedFileLocs.ListedRecords.Keys))
                     {
@@ -121,7 +122,7 @@ namespace Mutagen.Bethesda.Tests
                     lengthTracker,
                     alignedFileLocs);
 
-                using (var stream = new BinaryReadStream(preprocessedPath))
+                using (var stream = new MutagenBinaryReadStream(preprocessedPath))
                 {
                     var fileLocs = RecordLocator.GetFileLocations(this.FilePath.Path);
                     PreProcessorJobs(
@@ -143,7 +144,7 @@ namespace Mutagen.Bethesda.Tests
                     }
                 }
 
-                using (var reader = new BinaryReadStream(preprocessedPath))
+                using (var reader = new MutagenBinaryReadStream(preprocessedPath))
                 {
                     foreach (var grup in lengthTracker)
                     {
@@ -195,7 +196,7 @@ namespace Mutagen.Bethesda.Tests
                         Mutagen.Bethesda.Oblivion.Constants.Oblivion);
                     GC.Collect();
 
-                    using (var stream = new BinaryReadStream(processedPath))
+                    using (var stream = new MutagenBinaryReadStream(processedPath))
                     {
                         var ret = Passthrough_Tests.AssertFilesEqual(
                             stream,
@@ -210,7 +211,7 @@ namespace Mutagen.Bethesda.Tests
 
                 if (Settings.TestObservable)
                 {
-                    using (var stream = new BinaryReadStream(processedPath))
+                    using (var stream = new MutagenBinaryReadStream(processedPath))
                     {
                         var ret = Passthrough_Tests.AssertFilesEqual(
                             stream,

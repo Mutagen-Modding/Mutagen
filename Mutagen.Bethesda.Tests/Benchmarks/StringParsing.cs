@@ -18,7 +18,7 @@ namespace Mutagen.Bethesda.Tests
         {
             var span = data.AsSpan();
             var chars = ArrayPool<char>.Shared.Rent(span.Length);
-            BinaryStringUtility.ToBethesdaStringBuffer(span, chars);
+            BinaryStringUtility.ToZStringBuffer(span, chars);
             var ret = new string(chars, 0, span.Length);
             ArrayPool<char>.Shared.Return(chars);
             return ret;
@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Tests
         {
             var span = data.AsSpan();
             char[] chars = new char[span.Length];
-            BinaryStringUtility.ToBethesdaStringBuffer(span, chars);
+            BinaryStringUtility.ToZStringBuffer(span, chars);
             var charSpan = chars.AsSpan();
             return charSpan.ToString();
         }
@@ -39,7 +39,7 @@ namespace Mutagen.Bethesda.Tests
         {
             var span = data.AsSpan();
             Span<char> chars = stackalloc char[span.Length];
-            BinaryStringUtility.ToBethesdaStringBuffer(span, chars);
+            BinaryStringUtility.ToZStringBuffer(span, chars);
             return chars.ToString();
         }
     }

@@ -27,5 +27,10 @@ namespace Mutagen.Bethesda.Binary
             var offset = this.OffsetReference + this.Position;
             return new MutagenMemoryReadStream(this.ReadBytes(length), offsetReference: offset);
         }
+
+        public string ReadZString(int length)
+        {
+            return BinaryStringUtility.ToZString(this.ReadSpan(length));
+        }
     }
 }

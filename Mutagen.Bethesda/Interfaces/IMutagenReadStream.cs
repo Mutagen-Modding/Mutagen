@@ -9,5 +9,6 @@ namespace Mutagen.Bethesda.Binary
     {
         long OffsetReference { get; }
         IMutagenReadStream ReadAndReframe(int length);
+        string ReadZString(int length);
     }
 }

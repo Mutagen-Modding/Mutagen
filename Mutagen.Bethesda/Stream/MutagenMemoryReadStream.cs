@@ -19,5 +19,10 @@ namespace Mutagen.Bethesda.Binary
         {
             return new MutagenMemoryReadStream(this.Data, this.OffsetReference + this.Position);
         }
+
+        public string ReadZString(int length)
+        {
+            return BinaryStringUtility.ToZString(this.ReadSpan(length));
+        }
     }
 }

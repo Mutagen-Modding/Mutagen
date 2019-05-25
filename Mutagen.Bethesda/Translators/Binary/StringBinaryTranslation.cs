@@ -67,7 +67,7 @@ namespace Mutagen.Bethesda.Binary
             {
                 var span = frame.ReadSpan(checked((int)frame.Remaining));
                 span = BinaryStringUtility.ProcessNullTermination(span);
-                item = BinaryStringUtility.ToBethesdaString(span);
+                item = BinaryStringUtility.ToZString(span);
             }
             else
             {
@@ -78,7 +78,7 @@ namespace Mutagen.Bethesda.Binary
                     throw new ArgumentException();
                 }
                 frame.Reader.Position += index + 1;
-                item = BinaryStringUtility.ToBethesdaString(span.Slice(0, index));
+                item = BinaryStringUtility.ToZString(span.Slice(0, index));
             }
             return true;
         }

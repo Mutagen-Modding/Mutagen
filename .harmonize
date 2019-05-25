@@ -10,10 +10,10 @@
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>18b71ed93c95c9c9e24ac14e5e00f784c2598050</Sha>
+         <Sha>97b7b30ae033be9a860b441793a8c6cc00e4af84</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>05-18-2019 17:15:25</CommitDate>
-         <Description>Merge remote-tracking branch 'origin/laptop'</Description>
+         <CommitDate>05-24-2019 17:33:14</CommitDate>
+         <Description>Bugfix for EnumXml subgen</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>
