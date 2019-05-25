@@ -1,4 +1,4 @@
-﻿using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda.Binary;
 using Noggog;
 using Noggog.Utility;
 using System;
@@ -75,21 +75,43 @@ namespace Mutagen.Bethesda.Tests
 
             if (!Settings.ReuseCaches || !File.Exists(uncompressedPath))
             {
-                using (var outStream = new FileStream(uncompressedPath, FileMode.Create, FileAccess.Write))
+                try
                 {
-                    ModDecompressor.Decompress(
-                        streamCreator: () => File.OpenRead(this.FilePath.Path),
-                        outputStream: outStream);
+                    using (var outStream = new FileStream(uncompressedPath, FileMode.Create, FileAccess.Write))
+                    {
+                        ModDecompressor.Decompress(
+                            streamCreator: () => File.OpenRead(this.FilePath.Path),
+                            outputStream: outStream);
+                    }
+                }
+                catch (Exception)
+                {
+                    if (File.Exists(uncompressedPath))
+                    {
+                        File.Delete(uncompressedPath);
+                    }
+                    throw;
                 }
             }
 
             if (!Settings.ReuseCaches || !File.Exists(orderedPath))
             {
-                using (var outStream = new FileStream(orderedPath, FileMode.Create))
+                try
                 {
-                    ModRecordSorter.Sort(
-                        streamCreator: () => File.OpenRead(uncompressedPath),
-                        outputStream: outStream);
+                    using (var outStream = new FileStream(orderedPath, FileMode.Create))
+                    {
+                        ModRecordSorter.Sort(
+                            streamCreator: () => File.OpenRead(uncompressedPath),
+                            outputStream: outStream);
+                    }
+                }
+                catch (Exception)
+                {
+                    if (File.Exists(orderedPath))
+                    {
+                        File.Delete(orderedPath);
+                    }
+                    throw;
                 }
             }
 
@@ -160,9 +182,20 @@ namespace Mutagen.Bethesda.Tests
                     new FileStream(preprocessedPath, FileMode.Open, FileAccess.Read),
                     instructions))
                 {
-                    using (var outStream = new FileStream(processedPath, FileMode.Create, FileAccess.Write))
+                    try
                     {
-                        processor.CopyTo(outStream);
+                        using (var outStream = new FileStream(processedPath, FileMode.Create, FileAccess.Write))
+                        {
+                            processor.CopyTo(outStream);
+                        }
+                    }
+                    catch (Exception)
+                    {
+                        if (File.Exists(processedPath))
+                        {
+                            File.Delete(processedPath);
+                        }
+                        throw;
                     }
                 }
             }
