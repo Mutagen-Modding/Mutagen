@@ -27,16 +27,17 @@
     <Folder Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BinaryFileProcessor.cs" />
+    <Compile Include="Preprocessing\BinaryFileProcessor.cs" />
+    <Compile Include="Preprocessing\ModRecordAligner.cs" />
     <Compile Include="Translators\Binary\BinaryStringUtility.cs" />
-    <Compile Include="Constants.cs" />
+    <Compile Include="Core\Constants.cs" />
     <Compile Include="Enums\GameMode.cs" />
     <Compile Include="Enums\GroupTypeEnum.cs" />
     <Compile Include="Extensions\IBinaryStreamExt.cs" />
     <Compile Include="Extensions\NoggogRxExt.cs" />
     <Compile Include="Extensions\XmlExt.cs" />
-    <Compile Include="FormID.cs" />
-    <Compile Include="FormKey.cs" />
+    <Compile Include="Core\Structs\FormID.cs" />
+    <Compile Include="Core\Structs\FormKey.cs" />
     <Compile Include="Interfaces\IDuplicatable.cs" />
     <Compile Include="Interfaces\IFormKey.cs" />
     <Compile Include="Interfaces\Major Records\IGameSettingCommon.cs" />
@@ -44,29 +45,27 @@
     <Compile Include="Interfaces\IMod.cs" />
     <Compile Include="Interfaces\IMutagenReadStream.cs" />
     <Compile Include="Interfaces\INamed.cs" />
-    <Compile Include="Links\EDIDLink.cs" />
-    <Compile Include="Links\EDIDSetLink.cs" />
-    <Compile Include="Links\FormIDLink.cs" />
-    <Compile Include="Links\FormIDLinkTesterHelper.cs" />
-    <Compile Include="Links\FormIDSetLink.cs" />
-    <Compile Include="Links\IEDIDLink.cs" />
-    <Compile Include="Links\IFormIDLink.cs" />
-    <Compile Include="Links\ILink.cs" />
-    <Compile Include="Links\ILinkContainer.cs" />
-    <Compile Include="Links\LinkExt.cs" />
-    <Compile Include="Links\NamedFormID.cs" />
-    <Compile Include="MasterReferences.cs" />
-    <Compile Include="ModDecompressor.cs" />
-    <Compile Include="ModID.cs" />
-    <Compile Include="ModKey.cs" />
-    <Compile Include="ModList.cs" />
-    <Compile Include="ModListing.cs" />
-    <Compile Include="ModRecordAligner.cs" />
-    <Compile Include="ModRecordSorter.cs" />
-    <Compile Include="ObjectType.cs" />
-    <Compile Include="Pipeline.cs" />
-    <Compile Include="RecordInterest.cs" />
-    <Compile Include="RecordLocator.cs" />
+    <Compile Include="Core\Links\EDIDLink.cs" />
+    <Compile Include="Core\Links\EDIDSetLink.cs" />
+    <Compile Include="Core\Links\FormIDLink.cs" />
+    <Compile Include="Core\Links\FormIDLinkTesterHelper.cs" />
+    <Compile Include="Core\Links\FormIDSetLink.cs" />
+    <Compile Include="Core\Links\IEDIDLink.cs" />
+    <Compile Include="Core\Links\IFormIDLink.cs" />
+    <Compile Include="Core\Links\ILink.cs" />
+    <Compile Include="Core\Links\ILinkContainer.cs" />
+    <Compile Include="Core\Links\LinkExt.cs" />
+    <Compile Include="Core\MasterReferences.cs" />
+    <Compile Include="Preprocessing\ModDecompressor.cs" />
+    <Compile Include="Core\Structs\ModID.cs" />
+    <Compile Include="Core\Structs\ModKey.cs" />
+    <Compile Include="Core\ModList.cs" />
+    <Compile Include="Core\ModListing.cs" />
+    <Compile Include="Preprocessing\ModRecordSorter.cs" />
+    <Compile Include="Enums\ObjectType.cs" />
+    <Compile Include="Patching\Pipeline.cs" />
+    <Compile Include="Locators\RecordInterest.cs" />
+    <Compile Include="Locators\RecordLocator.cs" />
     <Compile Include="Records\Group.cs">
       <DependentUpon>Group.xml</DependentUpon>
     </Compile>
@@ -86,10 +85,10 @@
       <DependentUpon>MasterReference.xml</DependentUpon>
     </Compile>
     <Compile Include="ProtocolDefinition_Bethesda.cs" />
-    <Compile Include="RecordType.cs" />
-    <Compile Include="RecordTypeConverter.cs" />
-    <Compile Include="Stream\MutagenBinaryReadStream.cs" />
-    <Compile Include="Stream\MutagenMemoryReadStream.cs" />
+    <Compile Include="Core\Structs\RecordType.cs" />
+    <Compile Include="Core\RecordTypeConverter.cs" />
+    <Compile Include="Streams\MutagenBinaryReadStream.cs" />
+    <Compile Include="Streams\MutagenMemoryReadStream.cs" />
     <Compile Include="Translators\Binary\BooleanBinaryTranslation.cs" />
     <Compile Include="Translators\Binary\ByteArrayBinaryTranslation.cs" />
     <Compile Include="Translators\Binary\ByteBinaryTranslation.cs" />
@@ -134,6 +133,5 @@
       <DependentUpon>MajorRecord.xml</DependentUpon>
     </Compile>
     <Compile Include="Translators\XML\ModKeyXmlTranslation.cs" />
-    <Compile Include="Utility.cs" />
   </ItemGroup>
 </Project>

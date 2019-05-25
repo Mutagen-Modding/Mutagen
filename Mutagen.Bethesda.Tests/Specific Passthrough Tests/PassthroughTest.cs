@@ -1,4 +1,5 @@
 using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda.Preprocessing;
 using Noggog;
 using Noggog.Utility;
 using System;
